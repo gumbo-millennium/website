@@ -1,0 +1,90 @@
+version: '3'
+
+networks:
+  laravel:
+
+volumes:
+  mariadb-data:
+
+services:
+  # Webserver
+  web:
+    build:
+      context: ./
+      dockerfile: library/docker/nginx/Dockerfile
+    volumes:
+      - ./:/var/www
+    ports:
+      - 127.13.37.1:80:80
+    environment:
+      VIRTUAL_HOST: gumbo.localhost
+    networks:
+      - laravel
+
+  # Application
+  app:
+    build:
+      context: ./
+      dockerfile: library/docker/laravel/Dockerfile
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel
+    env_file:
+      - ./.env.docker
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  # mariadb database
+  database:
+    image: mariadb:latest
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./library/docker/mariadb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: silenceisgolden
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - 127.13.37.1:3306:3306
+    networks:
+      - laravel
+
+  # Redis
+  redis:
+    image: redis:alpine
+    networks:
+      - laravel
+    ports:
+      - 127.13.37.1:6379:6379
+
+  # PhpMyAdmin
+  pma:
+    build:
+      context: ./
+      dockerfile: library/docker/phpmyadmin/Dockerfile
+    networks:
+      laravel:
+        aliases:
+          - phpmyadmin.docker
+    environment:
+      PMA_HOST: database
+      PMA_USER: laravel
+      PMA_PASSWORD: laravel
+      VIRTUAL_HOST: pma.gumbo.localhost
+    ports:
+      - 127.13.37.1:8000:80
+    depends_on:
+      - database
+
+  mail:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - 127.13.37.1:8025:8025
+    environment:
+      VIRTUAL_HOST: mail.gumbo.localhost
+      VIRTUAL_PORT: 8025
