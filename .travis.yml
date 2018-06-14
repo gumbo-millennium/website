@@ -1,0 +1,34 @@
+sudo: false
+
+language: php
+
+php:
+  - 7.2
+
+services:
+  - mysql
+
+addons:
+  mariadb: '10.3'
+
+before_install:
+  - nvm install node
+  - npm install -g yarn
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+  - mysql -e 'GRANT ALL ON test.* TO travis;' || true
+  - mysql -e 'FLUSH PRIVILEGES;'
+
+install:
+  - cp .env.travis .env
+  - composer install
+  - php artisan key:generate --force
+  - yarn install
+
+script:
+  - vendor/bin/phpunit
+  - vendor/bin/phpcs
+  - php artisan migrate:fresh
+  - yarn run production
+
+matrix:
+  fast_finish: true
