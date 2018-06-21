@@ -2,6 +2,7 @@ version: '3'
 
 networks:
   laravel:
+    name: gumbo-corcel-laravel
 
 volumes:
   mariadb-data:
@@ -40,10 +41,10 @@ services:
       - mariadb-data:/var/lib/mysql
       - ./library/docker/mariadb:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_ROOT_PASSWORD: silenceisgolden
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_DATABASE: laravel
       MYSQL_USER: laravel
-      MYSQL_PASSWORD: laravel
+      MYSQL_PASSWORD: kiepo9Eeth0hoech5ooLa6ed8oaphaih
     ports:
       - 127.13.37.1:3306:3306
     networks:
@@ -69,7 +70,7 @@ services:
     environment:
       PMA_HOST: database
       PMA_USER: laravel
-      PMA_PASSWORD: laravel
+      PMA_PASSWORD: kiepo9Eeth0hoech5ooLa6ed8oaphaih
       VIRTUAL_HOST: pma.gumbo.localhost
     ports:
       - 127.13.37.1:8000:80
