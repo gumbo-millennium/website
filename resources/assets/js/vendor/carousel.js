@@ -21,7 +21,7 @@ const heroSliderLight = () => {
   }
 }
 
-if (sliders.length === 0) {
+if (sliders.length === 1 && jQuery.fn.flexslider) {
   sliders.flexslider({
     animation: 'fade',
     animationSpeed: 1000,
