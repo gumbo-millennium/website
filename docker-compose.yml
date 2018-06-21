@@ -31,12 +31,7 @@ services:
     networks:
       - laravel
     env_file:
-      - ./.env.docker
-    environment:
-      DB_HOST: database
-      DB_PORT: 3306
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      - ./library/docker/laravel/docker.env
 
   # mariadb database
   database:
@@ -81,6 +76,7 @@ services:
     depends_on:
       - database
 
+  # Mailhog (to test e-mail)
   mail:
     image: mailhog/mailhog:v1.0.0
     ports:
@@ -88,3 +84,15 @@ services:
     environment:
       VIRTUAL_HOST: mail.gumbo.localhost
       VIRTUAL_PORT: 8025
+
+  # WordPress (CMS)
+  wordpress:
+    build:
+      context: ./
+      dockerfile: library/docker/wordpress/Dockerfile
+    networks:
+      - laravel
+    ports:
+      - 127.13.37.1:8080:80
+    env_file:
+      - ./library/docker/wordpress/docker.env
