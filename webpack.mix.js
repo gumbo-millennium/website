@@ -1,15 +1,40 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
+const SassVars = require('babel-plugin-sass-vars')
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
+// Configure javascript, with separate vendor
+mix
+  .js('resources/assets/js/app.js', 'public/app.js')
+  .extract([
+    'jquery',
+    'popper.js',
+    'bootstrap',
+    'owl.carousel'
+  ])
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+// Configure SCSS, also with separate vendor (bootstrap)
+mix
+  .sass('resources/assets/sass/vendor.scss', 'public/vendor.css')
+  .sass('resources/assets/sass/app.scss', 'public/app.css')
+
+// Browsersync, used with 'yarn run watch'
+mix.browserSync({
+  proxy: "gumbo.localhost",
+  files: [
+    './resources/assets/js/**/*.js',
+    './resources/assets/sass/**/*.scss'
+  ]
+})
+
+// Always make jQuery and Popper available
+mix.autoload({
+  jquery: ['$', 'window.jQuery'],
+  'popper.js': ['Popper']
+})
+
+// Add source maps if not in production
+if (!mix.inProduction()) {
+  mix.sourceMaps();
+}
+
+// Linters
+// TODO

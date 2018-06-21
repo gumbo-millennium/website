@@ -1,0 +1,31 @@
+///
+// Handles screen reader utilities
+//
+// @author Roelof Roos <github@roelof.io>
+///
+
+.sr-jump-to-body {
+  @include sr-only;
+  @include sr-only-focusable;
+
+  transition: none;
+
+  &:active,
+  &:focus {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9040;
+
+    display: block;
+    padding: .8rem 1rem;
+
+    background-color: $primary;
+    color: $white;
+
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-align: center;
+  }
+}

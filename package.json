@@ -1,22 +1,42 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
-    },
-    "devDependencies": {
-        "axios": "^0.18",
-        "bootstrap": "^4.0.0",
-        "popper.js": "^1.12",
-        "cross-env": "^5.1",
-        "jquery": "^3.2",
-        "laravel-mix": "^2.0",
-        "lodash": "^4.17.4",
-        "vue": "^2.5.7"
+  "name": "@gumbomillennium/site",
+  "version": "1.0.0",
+  "description": "Gumbo Millennium Website Theme",
+  "repository": "git@gitlab.com:gumbo-millennium/theme.git",
+  "contributors": [
+    {
+      "name": "Roelof Roos",
+      "email": "github@roelof.io",
+      "url": "https://github.com/roelofr"
     }
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "scripts": {
+    "build": "yarn run dev",
+    "dev": "yarn run development",
+    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "yarn run development -- --watch",
+    "watch-poll": "yarn run watch -- --watch-poll",
+    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "prod": "yarn run production",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "devDependencies": {
+    "babel-plugin-sass-vars": "^0.2.1",
+    "bootstrap": "^4.1",
+    "browser-sync": "^2.24.4",
+    "browser-sync-webpack-plugin": "2.0.1",
+    "cross-env": "^5.1",
+    "debounce": "^1.1.0",
+    "detect-it": "^3.0.5",
+    "flexslider": "^2.7.1",
+    "jarallax": "^1.10.3",
+    "jquery": "^3.3",
+    "laravel-mix": "^2.0",
+    "lodash.throttle": "^4.1.1",
+    "owl.carousel": "^2.3.4",
+    "particles.js": "^2.0.0",
+    "popper.js": "^1.12"
+  }
 }

@@ -1,0 +1,32 @@
+/**
+ * Creates margin and padding modifiers for top and bottom margins
+ *
+ * Also includes breakpoints
+ */
+
+.m-0 { margin: 0 !important; }
+.p-0 { padding: 0 !important; }
+
+@for $i from 0 through 28 {
+  $index: $i * 5;
+  $pixels: $i * 5px;
+
+  .m-t-#{$index} { margin-top: #{$pixels} !important; }
+  .m-b-#{$index} { margin-bottom: #{$pixels} !important; }
+  .p-t-#{$index} { padding-top: #{$pixels} !important; }
+  .p-b-#{$index} { padding-bottom: #{$pixels} !important; }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    @for $i from 0 through 28 {
+      $index: $i * 5;
+      $pixels: $i * 5px;
+
+      .m-t-#{$breakpoint}-#{$index} { margin-top: #{$pixels} !important; }
+      .m-b-#{$breakpoint}-#{$index} { margin-bottom: #{$pixels} !important; }
+      .p-t-#{$breakpoint}-#{$index} { padding-top: #{$pixels} !important; }
+      .p-b-#{$breakpoint}-#{$index} { padding-bottom: #{$pixels} !important; }
+    }
+  }
+}

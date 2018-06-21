@@ -1,0 +1,186 @@
+/*! -----------------------------------------------------------------
+[Colors]
+*/
+
+::-moz-selection {
+    background: #47b475;
+    color: #fff !important;
+}
+
+::-webkit-selection {
+    background: #47b475;
+    color: #fff !important;
+}
+
+::selection {
+    background: #47b475;
+    color: #fff !important;
+}
+
+a {
+    color: #47b475;
+}
+
+h1 > a:hover,
+h1 > a:focus,
+h2 > a:hover,
+h2 > a:focus,
+h3 > a:hover,
+h3 > a:focus,
+h4 > a:hover,
+h4 > a:focus,
+h5 > a:hover,
+h5 > a:focus,
+h6 > a:hover,
+h6 > a:focus {
+    color: #47b475;
+}
+
+a:hover,
+a:focus {
+    color: #398f5d;
+}
+
+blockquote:hover {
+    border-color: #47b475;
+}
+
+.alert-brand {
+    background: #6ac490;
+}
+
+.icon-box-icon,
+.icon-box-left .icon-box-icon,
+.counter .counter-number,
+.icon-list .fa,
+.icon-list .icon,
+.breadcrumb-item > a:hover,
+.breadcrumb-item > a:focus,
+.page-item.active .page-link,
+.page-link:focus,
+.page-link:hover,
+.social-icons > li > a:hover,
+.social-icons > li > a:focus,
+.comment-meta-author a:hover,
+.comment-meta-author a:focus,
+.comment-meta-date a:hover,
+.comment-meta-date a:focus,
+.ps-all a:hover,
+.ps-next a:hover,
+.ps-prev a:hover,
+.widget a:hover,
+.widget a:focus,
+.search-button:hover,
+.post-meta a:hover,
+.post-meta a:focus,
+.product-rating a:hover {
+    color: #47b475;
+}
+
+.btn.btn-brand {
+    background-color: #47b475;
+    border-color: #47b475;
+    color: #fff;
+    /* &.btn-link {
+		background: transparent;
+		border: 0;
+		padding: 0;
+		color: $background;
+
+		&:hover,
+		&:focus {
+			background-color: transparent;
+			text-decoration: none;
+			color: darken($background, 5%);
+		}
+	} */
+}
+
+.btn.btn-brand:hover,
+.btn.btn-brand:focus {
+    background-color: #3b9762;
+    border-color: #3b9762;
+    color: #fff;
+}
+
+.btn.btn-brand.btn-outline {
+    background: transparent;
+    border-color: #47b475;
+    color: #47b475;
+}
+
+.btn.btn-brand.btn-outline:hover,
+.btn.btn-brand.btn-outline:focus {
+    background: #47b475;
+    color: #fff;
+}
+
+.btn.btn-white {
+    background-color: #fff;
+    border-color: #fff;
+    color: #444;
+    /* &.btn-link {
+		background: transparent;
+		border: 0;
+		padding: 0;
+		color: $background;
+
+		&:hover,
+		&:focus {
+			background-color: transparent;
+			text-decoration: none;
+			color: darken($background, 5%);
+		}
+	} */
+}
+
+.btn.btn-white:hover,
+.btn.btn-white:focus {
+    background-color: #47b475;
+    border-color: #47b475;
+    color: #fff;
+}
+
+.btn.btn-white.btn-outline {
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn.btn-white.btn-outline:hover,
+.btn.btn-white.btn-outline:focus {
+    background: #fff;
+    color: #444;
+}
+
+.scroll-top,
+.label-brand,
+.pace .pace-progress,
+.post-tags a:hover,
+.comment-reply > a:hover,
+.comment-reply > a:focus,
+.widget_tag_cloud .tagcloud > a:hover,
+.progress-bar.progress-bar-brand {
+    background: #47b475;
+}
+
+.special-heading h1,
+.special-heading h2,
+.special-heading h3,
+.special-heading h4,
+.special-heading h5,
+.special-heading h6 {
+    border-color: #47b475;
+}
+
+.footer .widget_tag_cloud .tagcloud > a:hover,
+.off-canvas-cart .widget_tag_cloud .tagcloud > a:hover {
+    background-color: #47b475;
+    border-color: #47b475;
+}
+
+.bg-gradient:after {
+    background-color: #47b475;
+    background: -webkit-linear-gradient(45deg, #47b475 0%, rgba(71, 180, 117, .3) 100%);
+    background: linear-gradient(45deg, #47b475 0%, rgba(71, 180, 117, .3) 100%);
+}

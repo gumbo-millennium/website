@@ -1,14 +1,26 @@
+/**
+ * Gumbo Millennium Theme
+ *
+ * Theme
+ */
 
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+// Own variables
+@import 'variables';
 
-// Variables
-@import "variables";
+// Bootstrap functions, mixins and root element
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/root";
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// Theme snippets
+@import 'snippets/margins';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+// Load theme css
+@import 'default/template';
+@import 'default/template-green';
+
+// Load our components
+@import 'theme/date';
+@import 'theme/screenreader';
+
