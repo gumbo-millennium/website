@@ -20,7 +20,7 @@ before_install:
 
 install:
   - cp .env.travis .env
-  - composer install
+  - composer install --no-progress --no-suggest -an
   - php artisan key:generate --force
   - yarn install
 
