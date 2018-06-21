@@ -8,20 +8,20 @@ import jQuery from 'jquery'
 import isMobile from './mobiletest'
 
 // get elements
-const header = jQuery('.header');
-const sliders = jQuery('.flexslider');
+const header = jQuery('.header')
+const sliders = jQuery('.flexslider')
 
 const heroSliderLight = () => {
   if (jQuery('li.bg-dark').hasClass('flex-active-slide')) {
-    header.addClass('header-light');
+    header.addClass('header-light')
     jQuery('.flexslider').removeClass('dark-nav')
   } else {
-    header.removeClass('header-light');
+    header.removeClass('header-light')
     jQuery('.flexslider').addClass('dark-nav')
   }
 }
 
-if (sliders.length > 0) {
+if (sliders.length === 0) {
   sliders.flexslider({
     animation: 'fade',
     animationSpeed: 1000,
@@ -36,19 +36,19 @@ if (sliders.length > 0) {
       if (!isMobile) {
         jQuery('.flexslider .container').fadeOut(500).animate({
           opacity: '0'
-        }, 500);
-        slider.slides.eq(slider.currentSlide).delay(500);
-        slider.slides.eq(slider.animatingTo).delay(500);
+        }, 500)
+        slider.slides.eq(slider.currentSlide).delay(500)
+        slider.slides.eq(slider.animatingTo).delay(500)
       }
     },
     after: (slider) => {
-      heroSliderLight();
+      heroSliderLight()
       if (!isMobile) {
         jQuery('.flexslider .container').fadeIn(500).animate({
           opacity: '1'
-        }, 500);
+        }, 500)
       }
     },
     useCSS: true
-  });
-};
+  })
+}

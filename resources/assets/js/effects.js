@@ -13,18 +13,18 @@ import 'jarallax'
 import config from './config'
 
 // Add particles to canvases that request it
-if (document.querySelector("#particles-js") !== null) {
+if (document.querySelector('#particles-js') !== null) {
   particlesJS('particles-js', config.particles)
 }
 
 // Only run if Jarallax is available
 if (jQuery.fn.jarallax) {
-  jQuery('.parallax').jarallax({ speed: .4 });
+  jQuery('.parallax').jarallax({ speed: 0.4 })
 }
 
 // Fade in page after it's done loading
 const fadeInPage = () => {
-  console.log("Loaded");
+  console.log('Loaded')
 
   let layout = document.querySelector('.layout')
   if (layout) {

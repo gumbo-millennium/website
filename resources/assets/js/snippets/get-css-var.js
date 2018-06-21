@@ -5,10 +5,10 @@
  */
 
 // Get body style
-const bodyStyle = window.getComputedStyle(document.body);
+const bodyStyle = window.getComputedStyle(document.body)
 
 // Prepared regexes
-const testRegex = /^(?:0|[\d\.]+\s?[a-z]{2, 5})$/
+const testRegex = /^(?:0|[\d.]+\s?[a-z]{2, 5})$/
 const matchRegex = /^(\d+|\d+\.\d+|\.\d+)\s?([a-z]{2, 5})/
 
 /**
@@ -34,12 +34,12 @@ export const getUnit = (name, unit = 'px') => {
 
   // Check if valid variable
   if (!testRegex.test(variable)) {
-    return null;
+    return null
   }
 
   // Return zero if the variable is zero
   if (variable === '0') {
-    return 0;
+    return 0
   }
 
   // Get value and type
@@ -48,7 +48,7 @@ export const getUnit = (name, unit = 'px') => {
   let varUnit = matches[2].toLowerCase()
 
   // Returns the value if the variable unit matches the requested unit
-  return (varUnit !== unit) ? null : varValue;
+  return (varUnit !== unit) ? null : varValue
 }
 
 /**
@@ -58,4 +58,3 @@ export const regexes = {
   test: testRegex,
   match: matchRegex
 }
-

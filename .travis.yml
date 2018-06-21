@@ -25,9 +25,12 @@ install:
   - yarn install
 
 script:
+  - vendor/bin/phpcs
+  - find resources/assets -type f -name '*.scss' -print | xargs node_modules/.bin/stylelint
+  - find resources/assets -type f -name '*.js' -print | xargs node_modules/.bin/eslint
+
   - yarn run production
   - vendor/bin/phpunit
-  - vendor/bin/phpcs
   - php artisan migrate:fresh
 
 matrix:

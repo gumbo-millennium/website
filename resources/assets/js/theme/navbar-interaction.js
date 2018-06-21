@@ -41,7 +41,7 @@ const closeMenus = (exception = null) => {
  * @param {Event} event DOM event (usually a MouseEvent)
  */
 const mouseEnterSubMenu = (event) => {
-  console.log("Entered submenu %o", event.currentTarget)
+  console.log('Entered submenu %o', event.currentTarget)
   event.currentTarget.classList.add(openClass)
 }
 
@@ -50,7 +50,7 @@ const mouseEnterSubMenu = (event) => {
  * @param {Event} event DOM event (usually a MouseEvent)
  */
 const mouseLeaveSubMenu = (event) => {
-  console.log("Left submenu %o", event.currentTarget)
+  console.log('Left submenu %o', event.currentTarget)
   event.currentTarget.classList.remove(openClass)
 }
 
@@ -95,7 +95,6 @@ const unbindListeners = () => {
   navBarLinks.forEach(node => node.removeEventListener('click', mouseClickSubMenu))
 }
 
-
 /**
  * Binds the navbar to open menus on hover
  */
@@ -119,7 +118,7 @@ const bindClickEvents = () => {
  * Binds click or hover events, depending on screen width and mouse support
  */
 const rebindEvents = () => {
-  let windowWidth = window.innerWidth;
+  let windowWidth = window.innerWidth
 
   // Unbind everything
   unbindListeners()
@@ -140,30 +139,32 @@ const rebindEvents = () => {
  * Handles aligning menu's, making them always be within view
  */
 const refitMenus = () => {
-  let width = window.innerWidth;
+  let width = window.innerWidth
 
   // Reset margins on menus
-  navBarMenus.forEach(node => node.style.marginLeft = 0)
+  navBarMenus.forEach((node) => {
+    node.style.marginLeft = 0
+  })
 
   // Fix position of the mega menu's
   // If not A and B
   if (width > breakpointLg && detectIt.hasMouse) {
     navBarMenus.forEach(domNode => {
       let node = $(domNode)
-      let offset = node.offset();
-      let position = node.width() + offset.left;
-      let target = width - (position + 30);
+      let offset = node.offset()
+      let position = node.width() + offset.left
+      let target = width - (position + 30)
 
       node.css({
         marginLeft: position > width ? target : 0
-      });
+      })
     })
   }
 }
 
 // Debounce the resize event, causing it to only fire AFTER the resize action has completed
 window.addEventListener('resize', debounce(() => {
-  console.log('Find');
+  console.log('Find')
 
   refitMenus()
   rebindEvents()
@@ -203,9 +204,8 @@ const addMobileLinks = () => {
 }
 
 // Bind events too
-rebindEvents();
-refitMenus();
+rebindEvents()
+refitMenus()
 
 // And add the extra links
-addMobileLinks();
-
+addMobileLinks()

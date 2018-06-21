@@ -1,40 +1,40 @@
 /**
- * Handles navbar colour and opacity when scrolling and on page load
- *
- * @author Roelof Roos <github@roelof.io>
- */
+* Handles navbar colour and opacity when scrolling and on page load
+*
+* @author Roelof Roos <github@roelof.io>
+*/
 
 import throttle from 'lodash.throttle'
 
 /**
- * Page header
- */
+* Page header
+*/
 const header = document.querySelector('.header')
 
 /**
- * Header module
- */
-const moduleHeader = document.querySelector('.module-header');
+* Header module
+*/
+const moduleHeader = document.querySelector('.module-header')
 
 /**
- * True if the page contains a fancy title
- */
-const hasFancyTitle = moduleHeader !== null || document.querySelector('.module-slides, .flexslider') !== null;
+* True if the page contains a fancy title
+*/
+const hasFancyTitle = moduleHeader !== null || document.querySelector('.module-slides, .flexslider') !== null
 
 console.log({
   header,
   moduleHeader,
   hasFancyTitle
-});
+})
 
 /**
- * Make the navbar opaque and with a shadow when scrolling
- */
+* Make the navbar opaque and with a shadow when scrolling
+*/
 const handleNavbarScroll = () => {
-    let hasScroll = (window.scrollY || window.pageYOffset) >= 20;
+  let hasScroll = (window.scrollY || window.pageYOffset) >= 20
 
-    header.classList.toggle('header-shadow', hasScroll)
-    header.classList.toggle('header-small', hasScroll || !hasFancyTitle)
+  header.classList.toggle('header-shadow', hasScroll)
+  header.classList.toggle('header-small', hasScroll || !hasFancyTitle)
 }
 
 // Bind to window

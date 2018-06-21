@@ -5,7 +5,7 @@
  */
 
 // Own variables
-@import 'variables';
+@import "variables";
 
 // Bootstrap functions, mixins and root element
 @import "~bootstrap/scss/functions";
@@ -14,13 +14,12 @@
 @import "~bootstrap/scss/root";
 
 // Theme snippets
-@import 'snippets/margins';
+@import "snippets/margins";
 
 // Load theme css
-@import 'default/template';
-@import 'default/template-green';
+@import "default/template";
+@import "default/template-green";
 
 // Load our components
-@import 'theme/date';
-@import 'theme/screenreader';
-
+@import "theme/date";
+@import "theme/screenreader";

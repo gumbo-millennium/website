@@ -1,5 +1,5 @@
-const mix = require('laravel-mix');
-const SassVars = require('babel-plugin-sass-vars')
+const mix = require('laravel-mix')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 // Configure javascript, with separate vendor
 mix
@@ -18,7 +18,7 @@ mix
 
 // Browsersync, used with 'yarn run watch'
 mix.browserSync({
-  proxy: "gumbo.localhost",
+  proxy: 'gumbo.localhost',
   files: [
     './resources/assets/js/**/*.js',
     './resources/assets/sass/**/*.scss'
@@ -33,8 +33,31 @@ mix.autoload({
 
 // Add source maps if not in production
 if (!mix.inProduction()) {
-  mix.sourceMaps();
+  mix.sourceMaps()
 }
 
 // Linters
-// TODO
+mix.webpackConfig({
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          cache: true,
+          failOnError: true,
+          failOnWarning: true
+        }
+      }
+    ]
+  },
+  plugins: [
+    new StyleLintPlugin({
+      files: [
+        'resources/assets/sass/**/*.s?(a|c)ss'
+      ]
+    })
+  ]
+})
