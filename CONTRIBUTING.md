@@ -15,11 +15,11 @@ The following guide quickly describes how to get started with the project.
 
 Run the following steps to make a hasty getaway.
 
-### 1. Clone repo
+### Clone repo
 
 Clone this repo somewhere.
 
-### 2. Build Docker
+### Build Docker
 
 Build requires the entire project as context, and since `node_modules` and `vendor` are big maps, we'll
 build the images first.
@@ -28,33 +28,50 @@ build the images first.
 docker-compose build
 ```
 
-### 3. Install dependencies
+### Install dependencies
+
+Install Yarn (node) and Composer dependencies
 
 ```
 yarn install
 composer install
 ```
 
-### 4. Configure env
+### Configure env
+
+We need a `.env` file for our development environment. Just copy the `env.dev` and
+generate a key, and you're good to go.
 
 ```
 cp .env.dev .env
 php artisan key:generate
 ```
 
-### 5. Fire up docker envs
+### Build assets
 
-```
-docker-compose up -d
-```
-
-### 6. Build assets
+Now that the environment is ready, tiem to create some assets.
 
 ```
 yarn build
 ```
 
-### 7. Get cracking
+### Fire up docker envs
+
+Now it's time to launch the docker environments so we have a database.
+
+```
+docker-compose up -d
+```
+
+### Prepare database
+
+After the database is ready, run the migrations and the seeder.
+
+```
+php artisan migrate:fresh --seed
+```
+
+### Get cracking
 
 These endpoints are now available:
 
@@ -73,6 +90,14 @@ If you're using the [`nginx-proxy` for Docker](https://github.com/jwilder/nginx-
 local network for this project.
 
 ```bash
-NGINX_ID="$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )"
-docker network connect gumbo-corcel-laravel "${NGINX_ID}"
+docker network connect \
+    gumbo-corcel-laravel \
+    "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )""
 ```
+
+Now you *should* be able to connect over the following domains:
+
+- Website: [http://gumbo.localhost/](http://gumbo.localhost/)
+- PhpMyAdmin: [http://pma.gumbo.localhost/](http://pma.gumbo.localhost/)
+- MailHog: [http://mail.gumbo.localhost/](http://mail.gumbo.localhost/)
+- Wordpress: [http://wordpress.gumbo.localhost/](http://wordpress.gumbo.localhost/)

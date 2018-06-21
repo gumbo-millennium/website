@@ -97,3 +97,6 @@ services:
       - 127.13.37.1:8080:80
     env_file:
       - ./library/docker/wordpress/docker.env
+    environment:
+      VIRTUAL_HOST: wordpress.gumbo.localhost
+      VIRTUAL_PORT: 8080
