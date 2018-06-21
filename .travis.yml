@@ -25,10 +25,10 @@ install:
   - yarn install
 
 script:
+  - yarn run production
   - vendor/bin/phpunit
   - vendor/bin/phpcs
   - php artisan migrate:fresh
-  - yarn run production
 
 matrix:
   fast_finish: true
