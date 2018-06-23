@@ -2,7 +2,7 @@
  * Template functions
  *
  * @author web-master72
- * @copyright SEE /NOTICE.md
+ * @copyright SEE /LICENSE.md
  */
 
 import jQuery from 'jquery'

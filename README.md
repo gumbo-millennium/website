@@ -28,4 +28,4 @@ when copying work.
 
 [shield-license]: https://img.shields.io/badge/license-Mozilla%20Public%20License%20version%202.0-orange.svg
 [link-mpl]: MPL-V2.md
-[link-license]: NOTICE.md
+[link-license]: LICENSE.md

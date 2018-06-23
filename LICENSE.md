@@ -15,7 +15,7 @@ Files used under the WrapBootstrap license are recognizable by the headers
 listed below. These headers will **always** be at the top section of the files
 (usually lines 1 - 6).
 
-### For Javascript files
+### For Javascript and CSS files
 
 The `[File description]` has an arbitrary value. The `@author` and `@copyright`
 sections are what indicates copyright.
@@ -25,7 +25,7 @@ sections are what indicates copyright.
  * [File description]
  *
  * @author web-master72
- * @copyright SEE /NOTICE.md
+ * @copyright SEE /LICENSE.md
  */
 ```
 ### For Sass / SCSS files
@@ -38,7 +38,7 @@ sections are what indicates copyright.
 // [File description]
 //
 // @author web-master72
-// @copyright SEE /NOTICE.md
+// @copyright SEE /LICENSE.md
 ///
 ```
 
