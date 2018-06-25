@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 networks:
   laravel:
@@ -69,8 +69,8 @@ services:
           - phpmyadmin.docker
     environment:
       PMA_HOST: database
-      PMA_USER: laravel
-      PMA_PASSWORD: kiepo9Eeth0hoech5ooLa6ed8oaphaih
+      PMA_USER: phpmyadmin
+      PMA_PASSWORD: 'etah2raith4Thee5eijeiYei(f3foh8I'
       VIRTUAL_HOST: pma.gumbo.localhost
     ports:
       - 127.13.37.1:8000:80
