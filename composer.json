@@ -50,6 +50,17 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
+        ],
+        "contribute": [
+          "docker-compose build",
+          "@composer install --dev",
+          "yarn install --dev",
+          "@php -r \"file_exists('.env') || copy('.env.dev', '.env');\"",
+          "@php artisan key:generate",
+          "yarn run build",
+          "docker-compose up -d",
+          "echo \"Waiting for MySQL to get ready\" && sleep 10s",
+          "@php artisan migrate:fresh --seed"
         ]
     },
     "config": {

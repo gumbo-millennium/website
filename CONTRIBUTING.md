@@ -11,6 +11,21 @@ The following guide quickly describes how to get started with the project.
 - Docker + docker-compose
 - Visual Studio Code (recommended)
 
+## Quick start
+
+After installing the above dependencies, make sure the following commands work in your console:
+
+- `composer`
+- `php`
+- `yarn`
+- `docker-compose`
+
+When that works, simply run the following commands to quickly configure and launch the project:
+
+```
+composer run contribute
+```
+
 ## Getting started
 
 Run the following steps to make a hasty getaway.
