@@ -107,7 +107,7 @@ local network for this project.
 ```bash
 docker network connect \
     gumbo-corcel-laravel \
-    "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )""
+    "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )"
 ```
 
 Now you *should* be able to connect over the following domains:
