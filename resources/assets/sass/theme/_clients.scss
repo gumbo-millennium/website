@@ -1,0 +1,49 @@
+///
+// Clients / Sponsors
+//
+// @author web-master72
+// @copyright SEE /LICENSE.md
+///
+
+// Client hover
+.client {
+  text-align: center;
+  padding: 20px;
+  opacity: .5;
+  transition: opacity .4s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Mobile
+.clients-row {
+  line-height: 6.25rem;
+  border: 1px solid $gray-100;
+  border-bottom: 0;
+
+  & > [class^="col-"] {
+    border: 0 solid $gray-100;
+    border-width: 0 0 1px 0;
+  }
+}
+
+// Desktop
+@include media-breakpoint-up(lg) {
+  .clients-row {
+    border-width: 0 1px 0 0;
+
+    & > [class^="col-"] {
+      border-width: 0 1px 0 0;
+
+      &:last-child {
+        border-right-width: 0;
+      }
+    }
+
+    & + & {
+      border-top-width: 1px;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-@extends('layout.theme')
+@extends('layout.default')
 
 @section('content')
     @include('example.files-single')

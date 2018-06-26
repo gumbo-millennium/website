@@ -31,6 +31,9 @@ mix.autoload({
   'popper.js': ['Popper']
 })
 
+// Copy all SVG files
+mix.copyDirectory('resources/assets/svg', 'public/svg')
+
 // Add source maps if not in production
 if (!mix.inProduction()) {
   mix.sourceMaps()

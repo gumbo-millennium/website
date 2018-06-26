@@ -4,10 +4,12 @@
         <!-- Logos-->
         <div class="inner-header">
             <a class="inner-brand" href="index.html">
-                <img class="brand-dark" src="assets/images/logo.png" width="77px" alt="">
-                <img class="brand-light" src="assets/images/logo-light.png" width="77px" alt="">
-                <!-- Or simple text-->
-                <!-- Core-->
+                <img class="brand-dark" src="/svg/logo-text.svg" width="100px" alt="Logo Gumbo Millennium">
+                <img class="brand-light" src="/svg/logo-text-white.svg" width="100px" alt="Logo Gumbo Millennium">
+                {{--
+                    Or just simle text:
+                    Gumbo Millennium
+                --}}
             </a>
         </div>
         <!-- Navigation-->

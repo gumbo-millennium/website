@@ -7,7 +7,7 @@
                 <h1 class="h1 m-b-20">Wij zijn Gumbo Millennium</h1>
                 <p class="m-b-40">En wij zijn er om jóuw studententijd onvergetelijk te maken!</p>
                 <p>
-                    <a class="btn btn-lg btn-circle btn-brand" href="#">Wordt lid</a>
+                    <a class="btn btn-lg btn-circle btn-brand" href="#">Word lid</a>
                 </p>
             </div>
         </div>

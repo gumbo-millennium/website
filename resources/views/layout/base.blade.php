@@ -18,24 +18,22 @@
 
         {{-- Non-floating elements --}}
         <div class="layout">
-            {{-- Header --}}
-            @include('layout.header')
 
+            {{-- Before layout --}}
+            @yield('layout.content-before')
+
+            {{-- The main wrapper --}}
             <div class="wrapper">
+                {{-- Jump-to-content target --}}
                 <div class="sr-only" id="start-of-content"></div>
+
                 {{-- Content block --}}
-                @yield('content')
+                @yield('layout.content')
             </div>
 
-            {{-- Footer, including image --}}
-            @include('layout.footer')
-
-            {{-- Back to top button --}}
-            <a class="scroll-top" href="#top"><i class="fa fa-angle-up"></i></a>
+            {{-- Layout content --}}
+            @yield('layout.content-after')
         </div>
-
-        {{-- Offcanvas menu --}}
-        @include('layout.offcanvas')
 
         {{-- Scripts --}}
         @include('layout.scripts')

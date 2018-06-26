@@ -1,0 +1,105 @@
+///
+// Theme blocks, with cards and contact info
+//
+// @author web-master72
+// @copyright SEE /LICENSE.md
+///
+
+.team-image {
+  position: relative;
+  overflow: hidden;
+
+  & > img {
+    width: 100%;
+  }
+
+  &::after {
+    background: transparent;
+    position: absolute;
+    display: block;
+    content: " ";
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    transition: all .3s ease-in-out 0s;
+  }
+}
+
+.team-content,
+.team-content-social {
+  transition: .3s ease-in;
+  opacity: 0;
+  z-index: 2;
+}
+
+.team-content {
+  position: absolute;
+  padding: 20px 0 0;
+  width: 100%;
+  top: 50%;
+  transform: translate(10px, -50%);
+
+  p,
+  h5 {
+    color: $white;
+  }
+
+  h5 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 14px;
+    opacity: .8;
+    margin: 0;
+  }
+
+  &-social {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    font-size: 18px;
+
+    ul > li {
+      display: inline-block;
+      margin-right: 26px;
+    }
+
+    ul > li:last-child {
+      margin-right: 0;
+    }
+
+    ul > li > a {
+      color: $white;
+      opacity: .5;
+    }
+
+    ul > li > a:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.team-item {
+  text-align: center;
+
+  &:hover {
+    .team-image:after {
+      background: rgba($gray-800, .95);
+    }
+
+    .team-content,
+    .team-content-social {
+      opacity: 1;
+    }
+
+    .team-content {
+      transform: translate(0, -50%);
+    }
+  }
+}

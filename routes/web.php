@@ -59,3 +59,12 @@ Route::get('/files', function () {
 Route::get('/files/single', function () {
     return view('files.single');
 });
+
+// Login
+Route::get('/auth', function () {
+    return view('auth.login');
+});
+
+Route::get('/auth/reset', function () {
+    return view('auth.reset');
+});
