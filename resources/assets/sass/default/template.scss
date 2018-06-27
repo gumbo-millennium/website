@@ -5,7 +5,6 @@
 * @copyright SEE /LICENSE.md
 */
 
-
 /*------------------------------------------------------------------
 [Alerts]
 */
@@ -597,13 +596,13 @@ select.form-control-sm:not([size]):not([multiple]) {
 }
 
 .accordion .card:last-child {
-  border-bottom-left-radius: .25em;
-  border-bottom-right-radius: .25em;
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
 }
 
 .accordion .card:first-child {
-  border-top-left-radius: .25em;
-  border-top-right-radius: .25em;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
 }
 
 .accordion .card .card-body {
@@ -638,7 +637,7 @@ select.form-control-sm:not([size]):not([multiple]) {
   top: 50%;
   right: 0;
   margin-top: -7px;
-  font-family: "FontAwesome";
+  font-family: "FontAwesome", serif;
   font-size: 14px;
   line-height: 1;
 }
@@ -1011,7 +1010,6 @@ select.form-control-sm:not([size]):not([multiple]) {
   top: 0;
   left: 0;
   overflow-y: auto;
-  overflow-scrolling: touch;
   height: 100%;
 }
 
@@ -1133,9 +1131,6 @@ select.form-control-sm:not([size]):not([multiple]) {
 .flexslider .slides {
   height: 100% !important;
   transition-delay: 1s;
-}
-
-.flexslider .slides {
   overflow: hidden;
 }
 
@@ -1161,13 +1156,12 @@ select.form-control-sm:not([size]):not([multiple]) {
 }
 
 .flex-direction-nav a:before {
-  font-family: "linea-arrows-10" !important;
+  font-family: "linea-arrows-10", serif !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
   text-transform: none !important;
   speak: none;
-  font-smoothing: grayscale;
   text-shadow: none;
   color: $white;
 }
@@ -1681,7 +1675,7 @@ body.off-canvas-sidebar-open .layout {
 }
 
 .timeline > ul > li::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 50px;
@@ -1772,7 +1766,6 @@ body.off-canvas-sidebar-open .layout {
   color: gray(200);
   z-index: 999;
   background-color: $gray-800;
-  touch-callout: none;
   user-select: none;
 }
 
@@ -1787,7 +1780,7 @@ body.off-canvas-sidebar-open .layout {
 }
 
 .panel-toggle i {
-  font-size: 1.1em;
+  font-size: 1.1rem;
 }
 
 .panel-options,
@@ -1812,7 +1805,7 @@ body.off-canvas-sidebar-open .layout {
 .st-sw-layout {
   display: block;
   padding: 2px 0;
-  font-weight: 400;
+  font-weight: normal;
 }
 
 .color-picker {
@@ -2022,6 +2015,7 @@ body.off-canvas-sidebar-open .layout {
   font-weight: 600;
   font-size: 12px;
   height: 100%;
+  transition: transform .4s ease;
 }
 
 .inner-nav > ul > li > a::after,
@@ -2137,32 +2131,27 @@ body.off-canvas-sidebar-open .layout {
 .inner-nav .mega-menu {
   white-space: nowrap;
   padding: 0;
-}
 
-.inner-nav .mega-menu .sub-menu {
-  box-shadow: none;
-  left: 0;
-}
+  .sub-menu {
+    box-shadow: none;
+    left: 0;
+    position: relative;
 
-.inner-nav .mega-menu .sub-menu + .sub-menu {
-  padding-top: 0;
-}
+    .sub-menu {
+      left: auto;
+      padding: 15px 0 0;
+    }
 
-.inner-nav .mega-menu .sub-menu .sub-menu {
-  padding: 15px 0 0;
+    & + .sub-menu {
+      padding-top: 0;
+    }
+  }
 }
 
 .inner-nav .sub-menu.mega-menu-row {
   padding: 0 5px;
 }
 
-.inner-nav .mega-menu .sub-menu {
-  position: relative;
-}
-
-.inner-nav .mega-menu .sub-menu .sub-menu {
-  left: auto;
-}
 
 .inner-nav .mega-menu .sub-menu .mega-menu-col {
   display: inline-block;
@@ -2182,7 +2171,7 @@ body.off-canvas-sidebar-open .layout {
   right: 15px;
   top: 50%;
   margin-top: -8px;
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1 FontAwesome, serif;
   font-size: 13px;
   content: "\f105";
   color: $gray-500;
@@ -2397,7 +2386,7 @@ body.off-canvas-sidebar-open .layout {
     right: 0;
     top: 50%;
     margin-top: -8px;
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 FontAwesome, serif;
     font-size: 13px;
     content: "\f107";
     color: $gray-500;
@@ -2948,8 +2937,6 @@ body.off-canvas-sidebar-open .layout {
 }
 
 .module-title h2 {
-  margin: 0 0 20px;
-  font-size: 34px;
   margin: 0 -4px 10px 0;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -3016,16 +3003,15 @@ body.off-canvas-sidebar-open .layout {
 
 .bg-gradient:before {
   position: absolute;
-  height: 100%;
-  width: 100%;
-}
-
-.bg-gradient:before {
-  background-color: $primary;
-  background: linear-gradient(45deg, $primary 0%, rgba(74, 144, 226, .3) 100%);
-  content: "";
   left: 0;
   top: 0;
+
+  height: 100%;
+  width: 100%;
+  content: "";
+
+  background: $primary;
+  background: linear-gradient(45deg, $primary 0%, rgba(74, 144, 226, .3) 100%);
 }
 
 .no-gutter {
@@ -3112,9 +3098,7 @@ body.off-canvas-sidebar-open .layout {
   display: inline-block;
   margin: 20px 15px;
   line-height: 20px;
-}
 
-.filters > li {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 12px;
@@ -3660,7 +3644,7 @@ a[rel~="gallery"]:hover {
 
 .post-meta > li:not(:last-child):after {
   position: absolute;
-  content: '|';
+  content: "|";
   right: -5px;
   top: 0;
 }
@@ -3784,7 +3768,7 @@ a[rel~="gallery"]:hover {
 .post-background:before {
   border-radius: 3px;
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 80%;
   background: linear-gradient(to bottom, transparent 0%, $gray-800 100%);
@@ -4209,17 +4193,17 @@ a[rel~="gallery"]:hover {
   background: none;
 }
 
-.calendar_wrap tfoot #next,
-.calendar_wrap tfoot #prev {
+.calendar_wrap tfoot .next,
+.calendar_wrap tfoot .prev {
   text-transform: uppercase;
   font-size: 10px;
 }
 
-.calendar_wrap tfoot #next {
+.calendar_wrap tfoot .next {
   text-align: right;
 }
 
-.calendar_wrap tfoot #prev {
+.calendar_wrap tfoot .prev {
   padding-top: 10px;
 }
 
@@ -4577,7 +4561,7 @@ a[rel~="gallery"]:hover {
   margin: 0 0 10px;
 }
 
-.coupon [class^='col-md'] {
+.coupon [class^="col-md"] {
   padding-top: 10px;
 }
 
@@ -4592,7 +4576,7 @@ a[rel~="gallery"]:hover {
 */
 
 .star-rating {
-  font-family: FontAwesome;
+  font-family: FontAwesome, serif;
   letter-spacing: -1px;
   color: #f1c40f;
 }

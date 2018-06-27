@@ -16,12 +16,12 @@ a {
   }
 }
 
-h1 > a,
-h2 > a,
-h3 > a,
-h4 > a,
-h5 > a,
-h6 > a {
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
   color: #313131;
 
   &:focus,
@@ -58,8 +58,17 @@ h6,
 .h6 {
   font-family: "Poppins", Arial, serif;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: bold;
   color: #313131;
+
+  a {
+    color: #313131;
+  }
+
+  a:focus,
+  a:hover {
+    color: $primary;
+  }
 }
 
 h1,
@@ -107,6 +116,8 @@ h6,
 
 hr {
   border-color: rgba($gray-300, 0.9);
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 ul,
@@ -124,11 +135,6 @@ em {
   opacity: .7;
 }
 
-hr {
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
 blockquote {
   border: 0;
   border-left: 2px solid #eaeaea;
@@ -141,12 +147,12 @@ blockquote {
   transition: all .3s ease-in-out;
 
   & p:last-child {
-  margin-bottom: 0;
-}
+    margin-bottom: 0;
+  }
 
-&:hover {
-  border-color: #4a90e2;
-}
+  &:hover {
+    border-color: #4a90e2;
+  }
 }
 
 .lead {
@@ -175,7 +181,8 @@ pre {
 }
 
 .arrow-list > li:before {
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1 serif;
+  font-family: "FontAwesome", serif;
   speak: none;
   font-style: normal;
   font-weight: normal;
