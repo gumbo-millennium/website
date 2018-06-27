@@ -54,6 +54,7 @@
     "extends": "stylelint-config-recommended-scss",
     "ignoreFiles": [
       "default/*.css",
+      "default/*.scss",
       "node_modules/*",
       "bower_components/*",
       "vendor/*"
@@ -78,8 +79,13 @@
         "deg",
         "px",
         "rem",
-        "s"
-      ]
+        "s",
+        "vw",
+        "vh",
+        "vmin",
+        "vmax"
+      ],
+      "no-descending-specificity": null
     }
   }
 }
