@@ -16,6 +16,9 @@ Route::get('/', function () {
     return view('index');
 });
 
+// Sitemap
+Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
+
 // About
 Route::get('/about', function () {
     return view('pages.about');
