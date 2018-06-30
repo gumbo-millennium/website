@@ -93,6 +93,8 @@ services:
       dockerfile: library/docker/wordpress/Dockerfile
     networks:
       - laravel
+    volumes:
+      - ./plugin:/var/www/html/wp-content/mu-plugins:ro
     ports:
       - 127.13.37.1:8080:80
     env_file:

@@ -1,0 +1,21 @@
+{
+    "name": "gumbo-millennium/plugin",
+    "license": "MPL-2.0",
+    "authors": [
+        {
+            "name": "Roelof Roos",
+            "email": "github@roelof.io"
+        }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "Gumbo\\Plugin\\": "./"
+      }
+    },
+    "config": {
+      "optimize-autoloader": true,
+      "preferred-install": "dist",
+      "sort-packages": true
+    }
+}

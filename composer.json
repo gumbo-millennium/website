@@ -49,7 +49,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover",
+            "@composer dump-autoload -d plugin/gumbo-millennium"
         ],
         "contribute": [
           "docker-compose build",
