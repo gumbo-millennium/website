@@ -106,8 +106,6 @@ abstract class MetaBox
      */
     protected function register() : void
     {
-        printf("<!-- Registering meta box %s for %s -->", get_class($this), $this->context);
-
         add_meta_box(
             "{$this->name}_meta",
             $this->title,
