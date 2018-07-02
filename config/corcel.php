@@ -32,7 +32,7 @@ return [
     */
 
     'post_types' => [
-//        'video' => App\Models\Video::class,
+       'gumbo-activity' => App\Activity::class,
     ],
 
     /*
