@@ -10,14 +10,15 @@
 
                 {{-- Login form --}}
                 <form class="up-form" method="post">
+                    @csrf
                     <div class="form-group">
-                        <input class="form-control form-control-lg" type="email" placeholder="Email">
+                        <input class="form-control form-control-lg" type="text" name="username" placeholder="Gebruikersnaam" value="{{ old('username') }}">
                     </div>
                     <div class="form-group">
-                        <input class="form-control form-control-lg" type="password" placeholder="Pasword">
+                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Wachtwoord">
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-block btn-lg btn-round btn-brand" type="submit">Log in</button>
+                        <button class="btn btn-block btn-lg btn-round btn-brand" type="submit">Inloggen</button>
                     </div>
                 </form>
 
