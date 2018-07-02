@@ -14,7 +14,31 @@ class TextField extends HelpField
     /**
      * {@inheritDoc}
      */
-    protected function printHtml($value) : void
+    protected function printDisplay($value) : void
+    {
+        $html = <<<'HTML'
+<tr>
+    <th>
+        <label for="%1$s" class="%1$s_label">%2$s</label>
+    </th>
+    <td>
+        <p id="%1$s">%3$s</p>
+    </td>
+</tr>
+HTML;
+
+        printf(
+            $html,
+            $this->name,
+            $this->label,
+            empty($value) ? '<em>n/a</em>' : esc_attr($value)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function printField($value) : void
     {
         $html = <<<'HTML'
 <tr>

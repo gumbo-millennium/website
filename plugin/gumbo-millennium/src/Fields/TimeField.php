@@ -9,12 +9,12 @@ namespace Gumbo\Plugin\Fields;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class TimeField extends HelpField
+class TimeField extends TextField
 {
     /**
      * {@inheritDoc}
      */
-    protected function printHtml($value) : void
+    protected function printField($value) : void
     {
         $html = <<<'HTML'
 <tr>
@@ -29,6 +29,7 @@ class TimeField extends HelpField
             class="%1$s_field"
             placeholder="hh:mm"
             value="%4$s"
+            format="[0-2][0-9]:[0-5][0-9]"
             data-cleave="time"
             %5$s>
         %6$s
@@ -60,11 +61,11 @@ HTML;
         }
 
         // Non-date values
-        if (!preg_match('/^(?:[0-1]\d|2[0-3]):[0-5]\d$/', $value)) {
+        if (!preg_match('/^(?:[0-1]\d|2[0-3]):[0-5][0-9]$/', $value)) {
             return null;
         }
 
         // Convert to date object, then back to timestamp. This takes out any weird date constructs
-        return \DateTimeImmutable::createFromFormat('h:m', $value)->format('h:m');
+        return \DateTimeImmutable::createFromFormat('H:i', $value)->format('H:i');
     }
 }

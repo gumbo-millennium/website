@@ -40,7 +40,6 @@ class ActivityType extends PostType
                 'editor',
                 'thumbnail',
                 'excerpt',
-                'custom-fields',
                 'revisions'
             ]
         ];

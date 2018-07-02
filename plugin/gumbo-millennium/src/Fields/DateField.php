@@ -9,12 +9,12 @@ namespace Gumbo\Plugin\Fields;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class DateField extends HelpField
+class DateField extends TextField
 {
     /**
      * {@inheritDoc}
      */
-    protected function printHtml($value) : void
+    protected function printField($value) : void
     {
         $html = <<<'HTML'
 <tr>
@@ -28,23 +28,21 @@ class DateField extends HelpField
             name="%1$s"
             class="%1$s_field"
             placeholder="dd-mm-yyyy"
-            value="%4$s"
+            value="%3$s"
             data-cleave="date"
-            %5$s>
-        %6$s
+            %4$s>
+        %5$s
     </td>
 </tr>
 HTML;
 
-        printf(
-            $html,
+        vprintf($html, [
             $this->name,
             $this->label,
-            esc_attr($this->label),
             esc_attr($value),
             $this->hasHelp() ? $this->getHelpAria() : null,
             $this->hasHelp() ? $this->getHelpHtml() : null
-        );
+        ]);
     }
 
     /**
@@ -60,7 +58,7 @@ HTML;
         }
 
         // Non-date values
-        if (!preg_match('/^[0-3]\d-[0-1]\d-20\d\d$/', $value)) {
+        if (!preg_match('/^[0-3]\d-[0-1]\d-\d{4}$/', $value)) {
             return null;
         }
 

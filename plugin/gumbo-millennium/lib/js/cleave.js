@@ -5,10 +5,11 @@
 * @license MPL-2.0
 */
 
-import { Cleave } from 'cleave.js'
+// Newer form is not supported :/
+const Cleave = require('cleave.js')
 
 const createCleave = (element, config) => {
-  element.dataSet.cleave = new Cleave(element, config)
+  element.dataset.cleave = new Cleave(element, config)
 }
 
 const init = () => {

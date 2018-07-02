@@ -54,7 +54,11 @@ class Plugin
      */
     protected function bindActions() : void
     {
-        // TODO
+        // Add Javascript
+        add_action('admin_enqueue_scripts', function () {
+            $path = plugin_dir_url(__DIR__) . 'dist/gumbo-plugin.js';
+            wp_enqueue_script('gumbo-millennium-fields-script', $path, [], null, true);
+        });
     }
 
     /**

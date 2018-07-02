@@ -46,15 +46,19 @@ abstract class Field
      * @param \WP_Post $post
      * @return void
      */
-    public function render(\WP_Post $post) : void
+    public function render(\WP_Post $post, bool $authorized) : void
     {
-        $value = get_post_meta($post->ID, $this->value, true);
+        $value = get_post_meta($post->ID, $this->name, true);
 
-        if (is_array($value) || $value === '') {
+        if ($value === '') {
             $value = $this->getDefaultValue();
         }
 
-        $this->printHtml($value);
+        if ($authorized) {
+            $this->printField($value);
+        } else {
+            $this->printDisplay($value);
+        }
     }
 
     /**
@@ -63,7 +67,7 @@ abstract class Field
      * @param int $id
      * @return void
      */
-    protected function store(\WP_Post $post) : void
+    public function store(\WP_Post $post) : void
     {
         // Get value from form submission
         $value = filter_has_var(INPUT_POST, $this->name) ? filter_input(INPUT_POST, $this->name) : null;
@@ -72,15 +76,28 @@ abstract class Field
         $value = ($value === null || $value === '') ? null : $this->filterData($value);
 
         // Update the meta field in the database.
-        update_post_meta($id, $this->name, $value);
+        update_post_meta($post->ID, $this->name, $value);
+    }
+
+    /**
+     * Prints the display of the value. Called instead of printField when the user
+     * is not allowed to change the value.
+     *
+     * @param mixed $value
+     * @return void
+     */
+    protected function printDisplay($value) : void
+    {
+        $this->printField($value);
     }
 
     /**
      * Renders HTML for the form
      *
+     * @param mixed $value
      * @return void
      */
-    abstract protected function printHtml($value) : void;
+    abstract protected function printField($value) : void;
 
     /**
      * Sanitizes data for the field

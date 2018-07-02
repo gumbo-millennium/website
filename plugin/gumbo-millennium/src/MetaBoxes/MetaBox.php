@@ -35,18 +35,18 @@ abstract class MetaBox
     protected $title = null;
 
     /**
-     * Context to display the meta box in. usually the post type
+     * Post type to display the meta box at
      *
      * @var string
      */
-    protected $context = null;
+    protected $postType = null;
 
     /**
-     * Screen to display the meta box on. One of 'normal', 'side' and 'advanced'.
+     * Context to display the meta box on. One of 'normal', 'side' and 'advanced'.
      *
      * @var string|null
      */
-    protected $screen = null;
+    protected $context = null;
 
     /**
      * Createsa a new MetaBox, for the given post type.
@@ -56,7 +56,7 @@ abstract class MetaBox
     public function __construct(string $postType)
     {
         // Register fields
-        $this->context = $postType;
+        $this->postType = $postType;
 
         // Get local fields
         $this->fields = $this->registerFields();
@@ -75,8 +75,8 @@ abstract class MetaBox
     public function hook() : void
     {
         // Register hooks, with the protected methods
-        add_action("add_meta_boxes_{$this->context}", \Closure::fromCallable([$this, 'register']));
-        add_action("save_post_{$this->context}", \Closure::fromCallable([$this, 'store']), 10, 2);
+        add_action("add_meta_boxes_{$this->postType}", \Closure::fromCallable([$this, 'register']));
+        add_action("save_post_{$this->postType}", \Closure::fromCallable([$this, 'store']), 10, 2);
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class MetaBox
      */
     final protected function getNonceName() : string
     {
-        return "{$this->name}_nonce";
+        return "wp_{$this->name}_nonce";
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class MetaBox
      */
     final protected function getNonceAction() : string
     {
-        return "{$this->name}_nonce_act";
+        return "wp_{$this->name}_nonce_act";
     }
 
     /**
@@ -110,8 +110,8 @@ abstract class MetaBox
             "{$this->name}_meta",
             $this->title,
             \Closure::fromCallable([$this, 'render']),
-            $this->context,
-            $this->screen ?? 'advanced'
+            $this->postType,
+            $this->context ?? 'advanced'
         );
     }
 
@@ -129,10 +129,13 @@ abstract class MetaBox
         // Open table
         echo '<table class="form-table">';
 
+        // Check if authorized
+        $authorized = $this->isAuthorized();
+
         // Print each field
         foreach ($this->fields as $field) {
             if ($field instanceof Field) {
-                $field->render($post);
+                $field->render($post, $authorized);
             }
         }
 
@@ -151,7 +154,7 @@ abstract class MetaBox
     {
         // Nonce validation
         $nonceValue = filter_input(INPUT_POST, $this->getNonceName());
-        if (!wp_verify_nonce($this->getNonceAction(), $nonceValue)) {
+        if (!wp_verify_nonce($nonceValue, $this->getNonceAction())) {
             return;
         }
 

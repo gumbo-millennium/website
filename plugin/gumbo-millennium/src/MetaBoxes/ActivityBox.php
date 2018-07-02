@@ -44,7 +44,7 @@ class ActivityBox extends MetaBox
      */
     protected function isAuthorized() : bool
     {
-        return current_user_can('edit_activity');
+        return current_user_can('edit_post');
     }
 
     /**
