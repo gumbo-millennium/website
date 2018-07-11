@@ -1,20 +1,32 @@
 const mix = require('laravel-mix')
+const glob = require('glob')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
+const PurgecssPlugin = require('purgecss-webpack-plugin')
 
 // Configure javascript, with separate vendor
 mix
-  .js('resources/assets/js/app.js', 'public/app.js')
+  .js('resources/assets/js/theme.js', 'public/app.js')
   .extract([
-    'jquery',
-    'popper.js',
+    '@zeitiger/elevatezoom',
     'bootstrap',
-    'owl.carousel'
+    'debounce',
+    'gmaps',
+    'imagesloaded',
+    'jarallax',
+    'jquery',
+    'jquery.simple-text-rotator',
+    'lodash.throttle',
+    'magnific-popup',
+    'masonry-layout',
+    'mobile-detect',
+    'pikaday',
+    'popper.js',
+    'zoomerang'
   ])
 
 // Configure SCSS, also with separate vendor (bootstrap)
 mix
-  .sass('resources/assets/sass/vendor.scss', 'public/vendor.css')
-  .sass('resources/assets/sass/app.scss', 'public/app.css')
+  .sass('resources/assets/sass/theme.scss', 'public/app.css')
 
 // Browsersync, used with 'yarn run watch'
 mix.browserSync({
@@ -61,6 +73,12 @@ mix.webpackConfig({
       files: [
         'resources/assets/sass/**/*.s?(a|c)ss'
       ]
+    }),
+    new PurgecssPlugin({
+      paths: () => [].concat(
+        glob.sync(`${__dirname}/resources/views/*.blade.php`),
+        glob.sync(`${__dirname}/resources/views/**/*.blade.php`)
+      )
     })
   ]
 })
