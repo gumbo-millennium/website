@@ -1,5 +1,19 @@
+///
+// Contains theme-wide variables
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
 
-// Override brand and primary
-$brand: #4a90e2;
+// Override Bootstrap's primary and brand colours
 $brand: #007d00;
-$primary: $brand;
+// $primary: $brand;
+
+$primary: #0275d8;
+$secondary: #6a7177;
+$success: #5cb85c;
+$info: #5bc0de;
+$warning: #f0ad4e;
+$danger: #d9534f;
+$light: #a9a9a9;
+$dark: #222;
