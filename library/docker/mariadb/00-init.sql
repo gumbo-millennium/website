@@ -1,19 +1,19 @@
 -- Create databases
 CREATE SCHEMA IF NOT EXISTS laravel
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_unicode_ci;
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 CREATE SCHEMA IF NOT EXISTS laravel_test
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_unicode_ci;
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 CREATE SCHEMA IF NOT EXISTS wordpress
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_unicode_ci;
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 CREATE SCHEMA IF NOT EXISTS wordpress_test
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_unicode_ci;
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 -- Create users
 CREATE USER IF NOT EXISTS laravel
