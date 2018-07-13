@@ -1,0 +1,9 @@
+#
+# CODE OWNERS FILE
+# Used by GitHub
+#
+# Mark Gerco as owner to everything
+*                   @nyxus
+
+# Mark Roelof as validator on anything WordPress
+/library/wordpress/ @roelofr
