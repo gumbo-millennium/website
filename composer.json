@@ -62,7 +62,9 @@
           "yarn run build",
           "docker-compose up -d",
           "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-          "@php artisan migrate:fresh --seed"
+          "@php artisan migrate:fresh --seed",
+          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
+          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build"
         ]
     },
     "config": {
