@@ -16,6 +16,11 @@ Route::get('/', function () {
     return view('index');
 });
 
+// Join
+route::get('/word-lid', function () {
+    abort(404, "not done yet");
+})->name('join');
+
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 
