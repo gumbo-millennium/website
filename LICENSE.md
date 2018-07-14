@@ -1,9 +1,9 @@
 # License notice
 
-The software is licensed under the [Mozilla Public License Version 2.0][1], but not all
+The software is licensed under the [Mozilla Public License Version 2.0][mpl], but not all
 assets of this code can be licensed that way.
 
-The website's theme is based on the [Core Theme][2] created by "web-master72".
+The website's theme is based on the [Spacial][spacial] theme.
 This project contains a version of this theme translated to Sass.  **These files
 are under strict copyright**. Publishing these files *without* proper licensing
 is a breach of copyright and "web-master72" is in his/her full right to
@@ -44,9 +44,9 @@ sections are what indicates copyright.
 
 ## Other content
 
-All other content is available under terms and conditions specified in the [Mozilla Public License Version 2.0][1].
-If you do use some of this content, linking back to this repository or [gumbo-millennium.nl][3] is highly appreciated.
+All other content is available under terms and conditions specified in the [Mozilla Public License Version 2.0][mpl].
+If you do use some of this content, linking back to this repository or [gumbo-millennium.nl][gumbo] is highly appreciated.
 
-[1]: ./LICENSE.md
-[2]: https://wrapbootstrap.com/theme/core-multipurpose-bootstrap-4-theme-WB0822P51
-[3]: https://www.gumbo-millennium.nl/
+[mpl]: ./LICENSE.md
+[spacial]: https://wrapbootstrap.com/theme/spacial-responsive-bootstrap-4-theme-WB0P249P1
+[gumbo]: https://www.gumbo-millennium.nl/
