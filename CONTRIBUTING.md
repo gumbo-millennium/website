@@ -100,15 +100,6 @@ yarn --cwd=library/wordpress/themes/gumbo-millennium/ install
 yarn --cwd=library/wordpress/themes/gumbo-millennium/ build
 ```
 
-### Get cracking
-
-These endpoints are now available:
-
-- [The Website](http://127.13.37.1) at `http://127.13.37.1/`, to see the end result.
-- [PHPMyAdmin](http://127.13.37.1::8000) at `http://127.13.37.1:8000/`, to manage the database (if required).
-- [MailHog](http://127.13.37.1::8025) at `http://127.13.37.1:8025/`, to test e-mail delivery. Docker will auto-deliver here.
-- [WordPress](http://127.13.37.1::8080) at `http://127.13.37.1:8080/`, to manage the website, this is your CMS.
-
 ### Connect nginx-proxy
 
 Please install the [`nginx-proxy` for Docker](https://github.com/jwilder/nginx-proxy),
