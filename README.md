@@ -9,7 +9,7 @@
 This is the website for the Gumbo Millennium student community
 ("studentenvereniging" in Dutch). The website is powered by [Laravel][laravel]
 and [Corcel][corcel] and are powered by a remote-hosted CMS (WordPress). The
-website theme is based on the [Core HTML theme][core], but we severely tweaked
+website theme is based on the [Spacial][spacial] theme, but we severely tweaked
 it and rewrote it to work in a modular fashion, using Sass.
 
 The stylesheets and scripts are built using Laravel's Mix.
@@ -54,7 +54,7 @@ waive your personal copyright.
 <!-- Introduction -->
 [laravel]: https://laravel.com/
 [corcel]: https://github.com/corcel/corcel
-[core]: https://wrapbootstrap.com/theme/core-multipurpose-bootstrap-4-theme-WB0822P51
+[spacial]: https://wrapbootstrap.com/theme/spacial-responsive-bootstrap-4-theme-WB0P249P1
 
 
 <!-- Contributing -->
