@@ -9,22 +9,39 @@
 @import "theme-variables";
 @import "variables";
 
-// Mixins
-@import '~@fortawesome/fontawesome-pro/scss/mixins';
-@import "custom/mixins/font-smoothing";
-@import "custom/mixins/font-awesome";
-
-// Modules
-@import "custom/modules/custom_effects";
-
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
 // Bootstrap overrides
 @import "bootstrap/overrides";
 
+/*
+  VENDOR DEPENDENCIES
+*/
+@import "vendor";
+
+/*
+  GUMBO MILLENNIUM THEME
+*/
+// Load mixins
+@import "theme/mixins/font-smoothing";
+@import "theme/mixins/font-awesome";
+
+// Load modules
+@import "theme/modules/basic-effects";
+
+// Load components
+@import "theme/components/skip-to-content";
+@import "theme/components/alerts";
+@import "theme/components/heroes";
+
+// Load pages
+@import "theme/pages/homepage";
+
+/*
+  BASE THEME
+*/
 // Theme components
-@import "custom/components/alerts";
 @import "custom/components/animation";
 @import "custom/components/badges";
 @import "custom/components/buttons";
@@ -33,17 +50,6 @@
 @import "custom/components/navs";
 @import "custom/components/select";
 @import "custom/components/stats_cards";
-@import "custom/components/skip-to-content";
-
-// Theme dependencies
-@import "~animate.css/animate";
-@import '~magnific-popup/src/css/main.scss';
-@import '~pikaday/scss/pikaday';
-
-// Icons (via Font Awesome Pro)
-@import '~@fortawesome/fontawesome-pro/scss/fontawesome';
-@import '~@fortawesome/fontawesome-pro/scss/fa-brands';
-@import '~@fortawesome/fontawesome-pro/scss/fa-light';
 
 // Snippets
 @import "custom/snippets/slider_effects";

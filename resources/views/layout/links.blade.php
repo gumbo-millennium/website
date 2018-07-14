@@ -8,22 +8,8 @@
 <link rel="apple-touch-icon" sizes="114x114" href="assets/images/apple-touch-icon-114x114.png">
 
 {{-- Main stylesheet --}}
-@if (request()->has('base'))
-    <!-- DEFAULT CSS -->
-    <!-- Bootstrap core CSS-->
-    <link href="default/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Plugins and Icon Fonts-->
-    <link href="default/css/plugins.min.css" rel="stylesheet">
-
-    <!-- Template core CSS-->
-    <link href="default/css/template.min.css" rel="stylesheet">
-    <link href="default/css/template-green.min.css" rel="stylesheet">
-@else
-    <!-- Website theme -->
-    <link href="{{ mix('/vendor.css') }}" rel="stylesheet">
-    <link href="{{ mix('/app.css') }}" rel="stylesheet">
-@endif
+<!-- Website theme -->
+<link href="{{ mix('/gumbo.css') }}" rel="stylesheet">
 
 {{-- Web fonts --}}
 <link href="https://fonts.googleapis.com/css?family=Hind:400,700%7cLora:400i%7cPoppins:500,600,700" rel="stylesheet">
