@@ -6,10 +6,11 @@
 */
 
 import UserAgent from './utils.user-agent'
+import CssUtils from './utils.css'
 const ua = new UserAgent()
 
-export default class Utils {
-  static UserAgent () {
-    return ua
-  }
+export default {
+  UserAgent: ua,
+  GetVariable: CssUtils.unit,
+  GetNumber: CssUtils.value
 }

@@ -1,82 +1,64 @@
-{{-- Header --}}
-<header class="header header-center header-sub-menu-dark">
-    <div class="container-fluid">
-        <!-- Logos-->
-        <div class="inner-header">
-            <a class="inner-brand" href="index.html">
-                <img class="brand-dark" src="/svg/logo-text.svg" width="100px" alt="Logo Gumbo Millennium">
-                <img class="brand-light" src="/svg/logo-text-white.svg" width="100px" alt="Logo Gumbo Millennium">
-                {{--
-                    Or just simle text:
-                    Gumbo Millennium
-                --}}
-            </a>
-        </div>
-        <!-- Navigation-->
-        <div class="inner-navigation collapse">
-            <div class="inner-navigation-inline">
-                <div class="inner-nav">
-                    <ul>
-                        <!-- Homepage -->
-                        <li><a href="/">Home</a></li>
+{{-- Header v2 --}}
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" role="navigation">
+    <div class="container no-override">
+        {{-- Expand button for mobile --}}
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse" aria-label="Toon navigatie">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                        <!-- About -->
-                        <li class="menu-item-has-children">
-                            <a href="/about">Over gumbo</a>
-                            <ul class="sub-menu">
-                                <li><a href="/about/history">Geschiendenis</a></li>
-                                <li><a href="/about/board">Bestuur</a></li>
-                                <li><a href="/about/commission">Commissiepagina</a></li>
-                            </ul>
-                        </li>
+        {{-- Brand logo --}}
+        <a class="navbar-brand" href="index.html">
+            <img src="/svg/logo-text-white.svg" class="d-none d-lg-inline mr-2 w-100" alt="" aria-labelledby="navbar-brand-text" />
+            <span class="sr-only" id="navbar-brand-text">Gumbo Millennium</span>
+        </a>
 
-                        <!-- Blog -->
-                        <li class="menu-item-has-children">
-                            <a href="/blog">Blog</a>
-                            <ul class="sub-menu">
-                                <li><a href="/blog">Overzicht</a></li>
-                                <li><a href="/blog/single">Post</a></li>
-                            </ul>
-                        </li>
+        {{-- Navigation, retrieved from WordPress --}}
+        <div class="collapse navbar-collapse justify-content-end" id="navbar-collapse">
+            <ul class="navbar-nav">
+                @forelse ($menu as $menuItem)
+                {{-- Loop throuh menus --}}
 
-                        <!-- Event -->
-                        <li class="menu-item-has-children">
-                            <a href="/event">Event</a>
-                            <ul class="sub-menu">
-                                <li><a href="/event/single">Post</a></li>
-                            </ul>
-                        </li>
+                @if ($menuItem['children'])
+                {{-- Menu item with submenu --}}
+                <li class="nav-item dropdown">
 
-                        <!-- Files -->
-                        <li class="menu-item-has-children">
-                            <a href="/files">Files</a>
-                            <ul class="sub-menu">
-                                <li><a href="/files/single">Post</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- Extra menu-->
-        <div class="extra-nav">
-            <ul>
-                <li>
-                    <a href="/sign-up">
+                    {{-- Render text and arrow down --}}
+                    <a href="{{ $menuItem['url'] }}" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        {{ $menuItem['title'] }}
+                        <i class="fal fa-chevron-down"></i>
+                    </a>
+
+                    {{-- Render child nodes --}}
+                    <div class="dropdown-menu dropdown-menu-dark" role="menu">
+                        {{-- Loop through children --}}
+                        @foreach ($menuItem['children'] as $subMenu)
+                        <a class="dropdown-item" href="{{ $subMenu['url'] }}">{{ $subMenu['title'] }}</a>
+                        @endforeach
+                        {{-- End of submenu --}}
+                    </div>
+                </li>
+                @else
+                {{-- Menu item --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ $menuItem['url'] }}">{{ $menuItem['title'] }}</a>
+                </li>
+                @endif
+                @empty
+
+                {{-- Render home link --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Homepage</a>
+                </li>
+
+                @endforelse
+
+                <li class="nav-item">
+                    <a class="nav-link nav-link--rounded" href="/sign-up">
                         <span>Word lid</span>
                         <span class="far fa-thumbs-up"></span>
                     </a>
                 </li>
             </ul>
         </div>
-        <!-- Mobile menu-->
-        <div class="nav-toggle">
-            <a href="#" data-toggle="collapse" data-target=".inner-navigation">
-                <span class="sr-only">Toon navigatie</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-        </div>
     </div>
-</header>
+</nav>

@@ -1,18 +1,37 @@
 @extends('layout.base')
 
+{{--
+    Include header and navigation
+--}}
 @section('layout.content-before')
 {{-- Header --}}
-    @include('layout.header')
+@include('layout.header')
+
+{{-- Include header stack --}}
+@stack('stack.header')
 @endsection
 
+{{--
+    Content section
+--}}
 @section('layout.content')
-    @yield('content')
+{{-- Include pre content stack --}}
+@stack('stack.before')
+
+{{-- Include content --}}
+@yield('content')
+
+{{-- Include post content stack --}}
+@stack('stack.after')
 @endsection
 
+{{--
+    Footer section
+--}}
 @section('layout.content-after')
-    {{-- Footer, including image --}}
-    @include('layout.footer')
+{{-- Include footer stack --}}
+@stack('stack.footer')
 
-    {{-- Back to top button --}}
-    <a class="scroll-top" href="#top"><i class="fa fa-angle-up"></i></a>
+{{-- Footer, including image --}}
+@include('layout.footer')
 @endsection

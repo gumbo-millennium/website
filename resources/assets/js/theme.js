@@ -5,22 +5,25 @@
  * @license MPL-2.0
  */
 
-import { default as animation } from './theme/animation'
-import { default as ecommerce } from './theme/ecommerce'
-import { default as globalNotices } from './theme/global-notices'
-import { default as navbar } from './theme/navbar'
-import { default as offcanvas } from './theme/offcanvas'
-import { default as pricingCharts } from './theme/pricing-charts'
-import { default as retina } from './theme/retina'
-import { default as zoomerang } from './theme/zoomerang'
+import animation from './theme/animation'
+import ecommerce from './theme/ecommerce'
+import globalNotices from './theme/global-notices'
+import navbar from './theme/navbar'
+import offcanvas from './theme/offcanvas'
+import pricingCharts from './theme/pricing-charts'
+import retina from './theme/retina'
+import vendor from './vendor'
+import zoomerang from './theme/zoomerang'
 
-document.addEventListener('DOMContentLoaded', () => {
-  animation()
-  ecommerce()
-  globalNotices()
-  navbar()
-  offcanvas()
-  pricingCharts()
-  retina()
-  zoomerang()
-})
+// Load dependencies
+vendor()
+
+// Load the rest
+animation()
+ecommerce()
+globalNotices()
+navbar()
+offcanvas()
+pricingCharts()
+retina()
+zoomerang()

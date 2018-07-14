@@ -5,7 +5,7 @@ const PurgecssPlugin = require('purgecss-webpack-plugin')
 
 // Configure javascript, with separate vendor
 mix
-  .js('resources/assets/js/theme.js', 'public/app.js')
+  .js('resources/assets/js/theme.js', 'public/gumbo.js')
   .extract([
     '@zeitiger/elevatezoom',
     'bootstrap',
@@ -26,7 +26,7 @@ mix
 
 // Configure SCSS, also with separate vendor (bootstrap)
 mix
-  .sass('resources/assets/sass/theme.scss', 'public/app.css')
+  .sass('resources/assets/sass/theme.scss', 'public/gumbo.css')
 
 // Browsersync, used with 'yarn run watch'
 mix.browserSync({
@@ -61,9 +61,7 @@ mix.webpackConfig({
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          cache: true,
-          failOnError: true,
-          failOnWarning: true
+          cache: true
         }
       }
     ]

@@ -38,6 +38,12 @@ const bindSearch = () => {
 const bindCart = () => {
   let cart = document.querySelector('.store-navbar .cart')
   let modal = document.querySelector('#cart-modal')
+
+  // Disable if without e-commerce elements
+  if (!cart || !modal) {
+    return
+  }
+
   let timeout = null
 
   const showModal = function () {

@@ -5,90 +5,88 @@
 * @license MPL-2.0
 */
 
-import { default as Utils } from './utils'
 import jQuery from 'jquery'
 import throttle from 'lodash.throttle'
 
-export default () => {
-  let navbar = jQuery('.navbar')
-
-  if (!Utils.UserAgent.isMobile()) {
-    dropdownHover()
-    transparentFixed(navbar)
-  }
-
-  // prevent dropdown link click to hide dropdown
-  jQuery('.navbar-nav .dropdown-item').on('click', event => {
-    event.stopPropagation()
-  })
-
-  // toggle for dropdown submenus
-  jQuery('.dropdown-submenu .dropdown-toggle').click(event => {
-    event.preventDefault()
-    let element = jQuery(this)
-    element.parent().toggleClass('show')
-    element.siblings('.dropdown-menu').toggleClass('show')
-  })
-
-  // Handle sticking the navbar to the bottom of the screen
-  fixedBottom(navbar)
-
-  // offcanvas collapsable
-  jQuery('[data-toggle="offcanvas"]').on('click', () => {
-    jQuery('.offcanvas-collapse').toggleClass('open')
-  })
+const passiveEvent = {
+  passive: true,
+  capture: false
 }
+
+const template = '<a class="dropdown-item" href="#"></a>'
 
 /**
- * Expand dropdowns on hover
- */
-const dropdownHover = () => {
-  document.querySelectorAll('.navbar-nav .dropdown').forEach(node => {
-    node.addEventListener('mouseenter', () => {
-      node.classList.add('show')
-    })
-    node.addEventListener('mouseleave', () => {
-      node.classList.remove('show')
-    })
-  })
-}
-
-const transparentFixed = navbar => {
+* Handles the navbar's opacity when scrolling down the page
+*
+* @param {JQuery} navbar
+*/
+const bindTransparantNavbar = navbar => {
+  // Don't do anything if the navbar isn't the right kind
   if (!navbar.hasClass('bg-transparent') || !navbar.hasClass('fixed-top')) {
     return
   }
 
-  let navbarTop = navbar.offset().top + 1
+  // Get current top
+  const navbarTop = navbar.offset().top + 15
 
-  let scrollingFn = function () {
+  // Handle changes
+  const handleFunction = () => {
     let offsetTop = window.scrollY || window.pageYOffset
-
-    if (offsetTop >= navbarTop && navbar.hasClass('bg-transparent')) {
-      navbar.removeClass('bg-transparent')
-    } else if (offsetTop < navbarTop && !navbar.hasClass('bg-transparent')) {
-      navbar.addClass('bg-transparent')
-    }
+    navbar.toggleClass('bg-transparent', offsetTop <= navbarTop)
   }
 
-  window.addEventListener('scroll', throttle(scrollingFn, 200))
+  window.addEventListener('scroll', throttle(handleFunction, 200), passiveEvent)
 }
 
-const fixedBottom = navbar => {
-  if (!navbar.hasClass('navbar-fixed-bottom')) {
-    return
-  }
+/**
+* Bind events to expand dropdowns when being hovered
+*/
+const bindHoverNavigation = navbar => {
+  navbar.find('.navbar-nav .dropdown:not(.dropdown-submenu)').each((index, item) => {
+    let node = jQuery(item)
 
-  let navbarTop = navbar.offset().top + 1
+    // Add item
+    let link = node.find('[data-toggle="dropdown"]').eq(0)
+    let list = node.children('.dropdown-menu').eq(0)
 
-  let scrollingFn = function () {
-    let offsetTop = window.scrollY || window.pageYOffset
+    let linkNode = jQuery(template)
+      .attr('href', link.attr('href'))
+      .text(link.text())
+      .addClass('d-lg-n')
 
-    if (offsetTop >= navbarTop && !navbar.hasClass('navbar-fixed-bottom--stick')) {
-      navbar.addClass('navbar-fixed-bottom--stick')
-    } else if (offsetTop < navbarTop && navbar.hasClass('navbar-fixed-bottom--stick')) {
-      navbar.removeClass('navbar-fixed-bottom--stick')
-    }
-  }
+    // Insert before first link item
+    linkNode.insertBefore(list.children().eq(0))
 
-  window.addEventListener('scroll', throttle(scrollingFn, 200))
+    // Add node
+    node.hover(
+      () => {
+        if (!node.hasClass('show')) {
+          link.click()
+        }
+      },
+      () => {
+        if (node.hasClass('show')) {
+          link.click()
+        }
+      }
+    )
+  })
+}
+
+/**
+* Constructor
+*/
+export default () => {
+  const navbar = jQuery('.navbar')
+
+  // Bind offcanvas
+  jQuery('[data-toggle="offcanvas"]').on('click', () => {
+    jQuery('.offcanvas-collapse').toggleClass('open')
+  })
+
+  // Bind hover nav
+  bindHoverNavigation(navbar)
+
+  // Bind transparent nav
+  bindTransparantNavbar(navbar)
 }

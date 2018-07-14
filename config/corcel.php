@@ -32,7 +32,7 @@ return [
     */
 
     'post_types' => [
-       'gumbo-activity' => App\Activity::class,
+       'gumbo_activity' => App\Activity::class,
     ],
 
     /*
