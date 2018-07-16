@@ -2,25 +2,42 @@ sudo: false
 
 language: php
 
+# Run on PHP 7.2 and newer
 php:
   - 7.2
+  - nightly
 
+# Don't check out the submodules, we'll do so manually.
+git:
+  submodules: false
+
+# We need MySQL, but only so MariaDB can replace it below
 services:
   - mysql
 
+# We use MariaDB over MySQL, since it's more up-to-date (especially concerning keys and charsets)
 addons:
   mariadb: '10.3'
 
 before_install:
+  # Install NodeJS
   - nvm install node
   - npm install -g yarn
+
+  # Get a database going
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
   - mysql -e 'GRANT ALL ON test.* TO travis;' || true
   - mysql -e 'FLUSH PRIVILEGES;'
+
+  # Set NPM and Yarn token for FontAwesome Pro
   - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
   - npm config set "//npm.fontawesome.com/:_authToken" "${FA_TOKEN}" > /dev/null
   - yarn config set "@fortawesome:registry" https://npm.fontawesome.com/
   - yarn config set "//npm.fontawesome.com/:_authToken" "${FA_TOKEN}" > /dev/null
+
+  # Install Submodules
+  - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
+  - git submodule update --init
 
 install:
   - cp .env.travis .env
@@ -29,14 +46,25 @@ install:
   - yarn install
 
 script:
+  # Lint PHP code
   - vendor/bin/phpcs
-  - ( cd plugin/gumbo-millennium && ../../vendor/bin/phpcs )
+
+  # Lint Sass files
   - find resources/assets -type f -name '*.scss' -print | xargs node_modules/.bin/stylelint
+
+  # Lint Javascript
   - find resources/assets -type f -name '*.js' -print | xargs node_modules/.bin/eslint
 
+  # Build front-end assets
   - yarn run production
+
+  # Run tests
   - vendor/bin/phpunit
+
+  # Run migrations as a test
   - php artisan migrate:fresh
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - php: nightly
