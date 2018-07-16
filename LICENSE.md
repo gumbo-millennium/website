@@ -17,28 +17,28 @@ listed below. These headers will **always** be at the top section of the files
 
 ### For Javascript and CSS files
 
-The `[File description]` has an arbitrary value. The `@author` and `@copyright`
+The `[File description]` has an arbitrary value. The `@copyright` and `@package`
 sections are what indicates copyright.
 
 ```js
 /**
  * [File description]
  *
- * @author web-master72
- * @copyright SEE /LICENSE.md
+ * @copyright Erick Alvarez (https://goo.gl/Qy5byk)
+ * @package Spacial
  */
 ```
 ### For Sass / SCSS files
 
-The `[File description]` has an arbitrary value. The `@author` and `@copyright`
+The `[File description]` has an arbitrary value. The `@copyright` and `@package`
 sections are what indicates copyright.
 
 ```scss
 ///
 // [File description]
 //
-// @author web-master72
-// @copyright SEE /LICENSE.md
+// @copyright Erick Alvarez (https://goo.gl/Qy5byk)
+// @package Spacial
 ///
 ```
 
