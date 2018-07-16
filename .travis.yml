@@ -24,9 +24,10 @@ before_install:
   - nvm install node
   - npm install -g yarn
 
-  # Get a database going
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
-  - mysql -e 'GRANT ALL ON test.* TO travis;' || true
+  # Get a database going, add the Travis user as granted user
+  - find library/docker/mariadb -type f -name '*.sql' -print -exec mysql \< \{\} \;
+  - mysql -e 'GRANT ALL ON laravel.* TO travis;' || true
+  - mysql -e 'GRANT SELECT, INSERT, UPDATE, DELETE ON wordpress.* TO travis;' || true
   - mysql -e 'FLUSH PRIVILEGES;'
 
   # Set NPM and Yarn token for FontAwesome Pro
@@ -40,9 +41,8 @@ before_install:
   - git submodule update --init
 
 install:
-  - cp .env.travis .env
   - composer install --no-progress --no-suggest -an
-  - php artisan key:generate --force
+  - php artisan app:env travis --force
   - yarn install
 
 script:
