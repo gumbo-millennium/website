@@ -1,21 +1,24 @@
+@inject('menuHelper', 'App\Services\MenuProvider')
+
 {{-- Header v2 --}}
 <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" role="navigation">
     <div class="container no-override">
+        {{-- Brand logo --}}
+        <a class="navbar-brand" href="index.html">
+            <img src="/svg/logo-text-white.svg" class="mr-2 w-100" alt="" aria-labelledby="navbar-brand-text" />
+            <span class="sr-only" id="navbar-brand-text">Gumbo Millennium</span>
+        </a>
+
         {{-- Expand button for mobile --}}
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse" aria-label="Toon navigatie">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        {{-- Brand logo --}}
-        <a class="navbar-brand" href="index.html">
-            <img src="/svg/logo-text-white.svg" class="d-none d-lg-inline mr-2 w-100" alt="" aria-labelledby="navbar-brand-text" />
-            <span class="sr-only" id="navbar-brand-text">Gumbo Millennium</span>
-        </a>
-
         {{-- Navigation, retrieved from WordPress --}}
+        @if ($menuHelper->hasLocation('header'))
         <div class="collapse navbar-collapse justify-content-end" id="navbar-collapse">
             <ul class="navbar-nav">
-                @forelse ($menu as $menuItem)
+                @forelse ($menuHelper->location('header') as $menuItem)
                 {{-- Loop throuh menus --}}
 
                 @if ($menuItem['children'])
@@ -60,5 +63,6 @@
                 </li>
             </ul>
         </div>
+        @endif
     </div>
 </nav>
