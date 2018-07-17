@@ -1,0 +1,59 @@
+///
+// Navigation tweaks
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.navbar {
+  .navbar-brand {
+    order: 1;
+  }
+
+  .navbar-toggler {
+    order: 2;
+  }
+
+  .navbar-collapse {
+    order: 3;
+  }
+}
+
+.navbar-brand {
+  &__logo {
+    height: 100%;
+    max-height: 40px;
+    margin-right: map-get($spacers, 2);
+  }
+}
+
+.navbar .dropdown-menu {
+  border: none;
+  background-color: transparent;
+
+  @include media-breakpoint-up(lg) {
+    background-color: rgba(theme-color-level('brand', 6), 0.6);
+  }
+
+  .dropdown-item {
+    background-color: transparent;
+
+    &:hover,
+    &:active,
+    &.active &:hover
+    &.active &:active {
+      background-color: rgba(theme-color-level('brand', 2), 0.4);
+    }
+
+    @include media-breakpoint-up(lg) {
+      color: #{gray('200')};
+
+      &:hover,
+      &:active,
+      &.active &:hover
+      &.active &:active {
+        color: #{gray('200')};
+      }
+    }
+  }
+}
