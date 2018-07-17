@@ -1,20 +1,3 @@
-<!-- Page Header-->
-<section class="module-header full-height parallax bg-dark bg-dark-90" data-background="default/images/module-1.jpg" data-jarallax-video="https://www.youtube.com/watch?v=BgwAeU2Jt7E">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="h6 m-b-20">Dubbel N, Dubbel L, Dubbel genieten</h1>
-                <h1 class="h1 m-b-20">Wij zijn Gumbo Millennium</h1>
-                <p class="m-b-40">En wij zijn er om jóuw studententijd onvergetelijk te maken!</p>
-                <p>
-                    <a class="btn btn-lg btn-circle btn-brand" href="#">Word lid</a>
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Page Header end-->
-
 <!-- Services-->
 <section class="module">
     <div class="container">
