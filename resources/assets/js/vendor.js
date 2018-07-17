@@ -17,16 +17,25 @@ const pikaday = require('pikaday')
 const scrolltrigger = require('scrolltrigger-classes')
 const jarallax = require('jarallax')
 
+const register = {
+  jQuery,
+  bootstrap,
+  GMaps,
+  imagesloaded,
+  elevatezoom,
+  MagnificPopup,
+  SimpleTextRotator,
+  masonry,
+  pikaday,
+  scrolltrigger,
+  jarallax
+}
+
 export default () => {
-  window.jQuery = jQuery
-  window.bootstrap = bootstrap
-  window.GMaps = GMaps
-  window.imagesloaded = imagesloaded
-  window.elevatezoom = elevatezoom
-  window.MagnificPopup = MagnificPopup
-  window.SimpleTextRotator = SimpleTextRotator
-  window.masonry = masonry
-  window.pikaday = pikaday
-  window.scrolltrigger = scrolltrigger
-  window.jarallax = jarallax
+  for (const scriptName in register) {
+    if (register.hasOwnProperty(scriptName)) {
+      const script = register[scriptName]
+      window[scriptName] = document[scriptName] = script
+    }
+  }
 }
