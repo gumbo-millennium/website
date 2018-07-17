@@ -18,6 +18,11 @@ services:
 # We use MariaDB over MySQL, since it's more up-to-date (especially concerning keys and charsets)
 addons:
   mariadb: '10.3'
+  apt:
+    packages:
+      - libjpeg-dev
+      - libpng-dev
+      - imagemagick
 
 before_install:
   # Install NodeJS
@@ -25,10 +30,7 @@ before_install:
   - npm install -g yarn
 
   # Get a database going, add the Travis user as granted user
-  - find library/docker/mariadb -type f -name '*.sql' -print -exec mysql \< \{\} \;
-  - mysql -e 'GRANT ALL ON laravel.* TO travis;' || true
-  - mysql -e 'GRANT SELECT, INSERT, UPDATE, DELETE ON wordpress.* TO travis;' || true
-  - mysql -e 'FLUSH PRIVILEGES;'
+  - ./library/travis/init-db
 
   # Set NPM and Yarn token for FontAwesome Pro
   - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
