@@ -68,11 +68,15 @@ Route::get('/files/single', function () {
     return view('files.single');
 });
 
-// Login
-Route::get('/auth', function () {
-    return view('auth.login');
-});
+Route::prefix('/auth/')->namespace('Auth')->group(function () {
+        // Authentication Routes...
+        $this->get('login', 'LoginController@showLoginForm')->name('auth.login');
+        $this->post('login', 'LoginController@login');
+        $this->post('logout', 'LoginController@logout')->name('auth.logout');
 
-Route::get('/auth/reset', function () {
-    return view('auth.reset');
+            // Password Reset Routes...
+        $this->get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('auth.password.request');
+        $this->post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('auth.password.email');
+        $this->get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('auth.password.reset');
+        $this->post('password/reset', 'ResetPasswordController@reset');
 });

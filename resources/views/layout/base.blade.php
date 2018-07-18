@@ -12,7 +12,7 @@
     {{-- Stylesheets, icons and SEO links --}}
     @include('layout.links')
 </head>
-<body>
+<body class="@stack('stack.body-class')">
     {{-- Continue to content link --}}
     <a href="#start-of-content" tabindex="1" class="skip-to-content">Skip to content</a>
 
