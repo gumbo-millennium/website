@@ -1,3 +1,21 @@
+{{-- Meet Gumbo --}}
+<div class="central-intro">
+    <div class="central-intro__container">
+        <h3 class="central-intro__title">
+            Maak kennis met Gumbo Millennium
+        </h3>
+        <hr class="central-intro__divider">
+        <p class="central-intro__content">
+            Sinds 1991 staat Gumbo Millennium voor gezelligheid en om een fantastische studententijd te beleven.
+            <br />
+            Met onze eigen plek op Windesheim om te relaxen,
+            soosavonden in Studentencafé Het Vliegende Paard
+            en veel variërende activiteiten,
+            is er voor ieder wat wils binnen Gumbo.
+        </p>
+    </div>
+</div>
+
 <!-- Services-->
 <section class="module">
     <div class="container">
