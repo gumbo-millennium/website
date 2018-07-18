@@ -15,14 +15,19 @@ git:
 services:
   - mysql
 
+# Cache yarn
+cache:
+  yarn: true
+  directories:
+    - $HOME/.composer
+    - vendor/
+
 # We use MariaDB over MySQL, since it's more up-to-date (especially concerning keys and charsets)
 addons:
   mariadb: '10.3'
   apt:
     packages:
-      - libjpeg-dev
-      - libpng-dev
-      - imagemagick
+      - nasm
 
 before_install:
   # Install NodeJS
@@ -37,9 +42,14 @@ before_install:
   - git submodule update --init
 
 install:
+  # Download composer assets
   - composer install --no-progress --no-suggest -an
+
+  # Configure .env file
   - php artisan app:env travis --force
-  - yarn install
+
+  # Download Yarn assets using lockfile
+  - yarn install --frozen-lockfile
 
 script:
   # Lint PHP code
