@@ -1,0 +1,235 @@
+/* single product view as grid */
+.store-product {
+
+  min-height: 400px;
+  margin-bottom: 50px;
+
+  @media(max-width: 991px) {
+    min-height: 340px;
+    margin-bottom: 40px;
+  }
+
+  @media(max-width: 767px) {
+    min-height: auto;
+    margin-bottom: 20px;
+  }
+
+  a {
+    display: block;
+    position: relative;
+    text-decoration: none;
+
+    .flag {
+      display: inline-block;
+      position: absolute;
+      top: 19px;
+      left: -8px;
+      padding: 2px 11px;
+      background: #{theme-color-level('success', -2)};
+      color: #{color('white')};
+      font-family: $lato;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+
+      &:after {
+        position: absolute;
+        bottom: -5px;
+        left: 2px;
+        width: 11px;
+        height: 9px;
+        background: #{theme-color-level('success', 2)};
+        transform: rotate(45deg);
+        content: '';
+        z-index: -1;
+      }
+    }
+
+    .img-fluid {
+      display: block;
+      margin: 0 auto;
+
+      @media(max-width: 767px) {
+        max-height: 210px;
+      }
+    }
+  }
+
+  .info {
+    display: block;
+    margin-top: 20px;
+
+    @media(max-width: 767px) {
+      text-align: center;
+    }
+
+    .name {
+      display: block;
+      color: #{theme-color('dark')};
+      font-family: $georgia;
+      font-size: 16px;
+      text-decoration: none;
+
+      .vendor {
+        color: #{theme-color-level('light', 5)};
+        font-size: 15px;
+      }
+    }
+
+    .price {
+      display: block;
+      margin-top: 5px;
+      color: #{theme-color-level('success', 1)};
+      font-family: $georgia;
+      font-size: 22px;
+
+      @media(max-width: 991px) {
+        font-size: 19px;
+      }
+
+      @media(max-width: 767px) {
+        font-size: 22px;
+      }
+
+      .from {
+        font-size: 15px;
+      }
+
+      .before {
+        display: inline-block;
+        margin-right: 8px;
+        color: #{theme-color-level('dark', -7)};
+        font-size: 18px;
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  .rating {
+    margin-top: 6px;
+
+    @media(max-width: 767px) {
+      text-align: center;
+    }
+
+    i {
+      margin-right: 2px;
+      color: #{theme-color-level('info', 1)};
+    }
+  }
+}
+
+/* single product view as list */
+.list-product {
+  margin-bottom: 40px;
+
+  .image {
+    display: block;
+    position: relative;
+    width: 25%;
+    float: left;
+
+    @media(max-width: 767px) {
+      width: 100%;
+      float: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .flag {
+      display: inline-block;
+      position: absolute;
+      top: 19px;
+      left: -8px;
+      padding: 2px 11px;
+      background: #{theme-color-level('success', -2)};
+      color: #{color('white')};
+      font-family: $lato;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+
+      &:after {
+        position: absolute;
+        bottom: -5px;
+        left: 2px;
+        width: 11px;
+        height: 9px;
+        background: #{theme-color-level('success', 2)};
+        transform: rotate(45deg);
+        content: '';
+        z-index: -1;
+      }
+    }
+  }
+
+  .info {
+
+    width: 75%;
+    margin-top: 20px;
+
+    padding-left: 40px;
+    float: left;
+
+    @media(max-width: 767px) {
+      width: 100%;
+      padding-left: 0;
+      float: none;
+    }
+
+    .name {
+      display: block;
+      font-family: $georgia;
+      font-size: 17px;
+      text-decoration: none;
+
+      .vendor {
+        color: #{theme-color-level('light', 5)};
+        font-size: 14px;
+      }
+    }
+
+    .price {
+      margin-top: 5px;
+      color: #{theme-color-level('success', 1)};
+      font-family: $georgia;
+      font-size: 22px;
+
+      .from {
+        font-size: 15px;
+      }
+
+      .before {
+        display: inline-block;
+        margin-right: 8px;
+        color: #{theme-color-level('dark', -7)};
+        font-size: 18px;
+        text-decoration: line-through;
+      }
+    }
+
+    .rating {
+      margin-top: 6px;
+
+      i {
+        margin-right: 2px;
+        color: #{theme-color-level('info', 1)};
+      }
+    }
+
+    .description {
+      width: 90%;
+      margin-top: 20px;
+
+      @media(max-width: 991px) {
+        width: auto;
+      }
+    }
+  }
+}

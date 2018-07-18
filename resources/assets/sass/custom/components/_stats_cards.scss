@@ -1,0 +1,135 @@
+.statcard {
+  &.statcard-primary {
+
+    border-radius: 5px;
+    background: #{theme-color-level('info', 3)};
+
+    .statcard-number {
+      color: #{color('white')};
+    }
+
+    .statcard-desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-indicator {
+      color: #{color('white')};
+    }
+  }
+
+  &.statcard-success {
+    border-radius: 5px;
+    background: #{color('teal')};
+
+    .statcard-number {
+      color: #{color('white')};
+    }
+
+    .statcard-desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-indicator {
+      color: #{color('white')};
+    }
+  }
+
+  &.statcard-dark {
+    border-radius: 5px;
+    background: #{theme-color-level('dark', -1)};
+
+    .statcard-number {
+      color: #{color('white')};
+    }
+
+    .statcard-desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-indicator {
+      color: #{color('white')};
+    }
+  }
+
+  &.statcard-danger {
+    border-radius: 5px;
+    background: #{color('red')};
+
+    .statcard-number {
+      color: #{color('white')};
+    }
+
+    .statcard-desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-indicator {
+      color: #{color('white')};
+    }
+  }
+
+  &.statcard-warning {
+    border-radius: 5px;
+    background: #{color('yellow')};
+
+    .statcard-number {
+      color: #{color('white')};
+    }
+
+    .statcard-desc {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .stat-indicator {
+      color: #{color('white')};
+    }
+  }
+}
+
+.statcard-number {
+  .stat-indicator {
+
+    position: relative;
+    top: -7px;
+    left: 4px;
+    font-size: 13px;
+
+    &:after {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 3px;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
+      content: '';
+      vertical-align: middle;
+    }
+  }
+
+  .indicator-positive {
+    color: #{color('green')};
+
+    &:after {
+      border-top: 0;
+      border-bottom: 5px solid;
+    }
+  }
+
+  .indicator-negative {
+    color: #{color('red')};
+
+    &:after {
+      border-top: 5px solid;
+      border-bottom: 0;
+    }
+  }
+}
+
+.statcard-desc {
+  color: #{theme-color-level('secondary', -1)};
+
+  font-size: 85%;
+  font-weight: 500;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}

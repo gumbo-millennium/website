@@ -1,0 +1,150 @@
+.agency-contact-hero {
+
+  position: relative;
+  min-height: 290px;
+  background-image: url('#{$imagesPath}/graphics/hero-02.jpg');
+  background-position: center -40px;
+  background-size: cover;
+
+  @media(max-width: 767px) {
+    min-height: 270px;
+    background-position: center center;
+  }
+
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    content: '';
+  }
+
+  h3 {
+    position: relative;
+    top: 200px;
+    color: #{color('white')};
+    text-align: center;
+    font-size: 29px;
+    font-weight: normal;
+    line-height: 43px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+
+    @media(max-width: 767px) {
+      top: 130px;
+      font-size: 25px;
+    }
+  }
+}
+
+.agency-contact-intro {
+  margin-top: 50px;
+
+  p {
+
+    width: 75%;
+    margin: 27px auto 0;
+    color: #{theme-color-level('secondary', 1)};
+    text-align: center;
+    font-size: 18px;
+
+    font-weight: 300;
+    line-height: 32px;
+
+    @media(max-width: 767px) {
+      width: auto;
+      font-size: 15px;
+      line-height: 27px;
+    }
+  }
+}
+
+.agency-contact-form {
+  form {
+    width: 550px;
+    margin: 35px auto 0;
+
+    @media(max-width: 767px) {
+      width: 100%;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+
+      width: 100%;
+      margin-top: 20px;
+
+      padding: 18px 20px;
+      border: 1px solid #{theme-color-level('secondary', -8)};
+
+      border-radius: 4px;
+      background: white;
+      color: #{theme-color-level('dark', -6)};
+      font-size: 18px;
+      transition: all .2s;
+      outline: none;
+
+      &::placeholder {
+        color: #{gray('500')};
+      }
+
+      @media(max-width: 767px) {
+        padding: 15px 20px;
+        font-size: 16px;
+      }
+
+      &:focus {
+        border-color: #{theme-color-level('light', 5)};
+
+        &::placeholder {
+          color: #{theme-color-level('light', 5)};
+        }
+      }
+    }
+
+    input[type="submit"] {
+
+      width: 100%;
+      margin-top: 23px;
+
+      padding: 18px 20px;
+      border: none;
+
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #{theme-color-level('primary', -5)} 0, #{theme-color-level('primary', -1)} 100%);
+      color: #{color('white')};
+
+      text-align: center;
+
+      font-size: 18px;
+
+      font-weight: 500;
+      transition: all .2s;
+      box-shadow: rgba(23, 43, 99, 0.24) 0 7px 28px;
+      cursor: pointer;
+      outline: none;
+      text-shadow: 1px 1px 0 rgba(106, 132, 158, 0.6);
+
+      &:hover {
+        color: #{color('white')};
+      }
+    }
+  }
+}
+
+.agency-contact-map {
+
+  position: relative;
+  width: 100%;
+
+  height: 450px;
+  margin-top: 120px;
+
+  &-inner {
+    width: 100%;
+    height: 450px;
+  }
+}

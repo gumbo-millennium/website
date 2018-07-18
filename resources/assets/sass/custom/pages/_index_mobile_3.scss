@@ -1,0 +1,89 @@
+.index-mobile-alt-header {
+  position: relative;
+  background-image: radial-gradient(ellipse farthest-side at 100% 0, #{theme-color-level('info', -6)} -10%, #{theme-color-level('info', 1)} 20%, #{theme-color-level('primary', 7)} 110%);
+  overflow: hidden;
+
+  .container {
+    position: relative;
+    min-height: 630px;
+    padding-top: 200px;
+
+    @media(max-width: 767px) {
+      padding-top: 120px;
+    }
+
+    .iphone {
+      position: absolute;
+      bottom: -50px;
+      left: 50px;
+      transition: all .2s linear;
+
+      @media(max-width: 991px) {
+        display: none;
+      }
+
+      &:hover {
+        bottom: -20px;
+      }
+    }
+
+    .info {
+      width: 560px;
+      float: right;
+
+      @media(max-width: 991px) {
+        width: auto;
+        float: none;
+      }
+
+      h1 {
+        color: #{color('white')};
+        font-size: 34px;
+        font-weight: normal;
+        line-height: 42px;
+        text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+
+        @media(max-width: 767px) {
+          font-size: 28px;
+        }
+      }
+
+      p {
+        margin-top: 25px;
+        color: #{theme-color-level('info', -9)};
+        font-size: 16px;
+        animation-delay: .3s;
+        line-height: 24px;
+      }
+
+      .buttons {
+        margin-top: 60px;
+        animation-delay: .3s;
+
+        @media(max-width: 767px) {
+          text-align: center;
+        }
+
+        a {
+          margin-right: 20px;
+
+          @media(max-width: 767px) {
+            display: block;
+            margin: 0;
+            margin-bottom: 20px;
+          }
+        }
+
+        img {
+          border: 0;
+        }
+      }
+    }
+  }
+}
+
+.index-devices.mobile-alt {
+  @media(min-width: 992px) {
+    padding-top: 170px;
+  }
+}

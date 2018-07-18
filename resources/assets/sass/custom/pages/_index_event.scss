@@ -1,0 +1,390 @@
+.event-bg {
+  background: #{gray('100')};
+}
+
+.event-title {
+
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  color: #{theme-color-level('dark', 2)};
+
+  font-size: 27px;
+  font-weight: normal;
+  line-height: 38px;
+
+  &:after {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    left: 0;
+    width: 90%;
+    height: 1px;
+    margin: auto;
+    background: #{theme-color-level('light', -6)};
+    content: '';
+  }
+}
+
+.event-hero {
+
+  position: relative;
+  min-height: 540px;
+  background-image: url('#{$imagesPath}/unsplash/aranxa-esteve-130749.jpg');
+  background-position: center center;
+  background-size: cover;
+
+  @media(max-width: 991px) {
+    min-height: 480px;
+  }
+
+  @media(max-width: 767px) {
+    min-height: 370px;
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+  }
+
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(150deg,rgba(111, 32, 154, 0.19) 0,rgba(227, 249, 47, 0.15) 100%);
+    content: '';
+    z-index: 0;
+  }
+
+  h2 {
+    padding-top: 240px;
+    color: #{color('white')};
+    text-align: center;
+    font-size: 2.9rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    @media(max-width: 767px) {
+      padding-top: 100px;
+      font-size: 2.2rem;
+    }
+  }
+
+  .tickets {
+    position: absolute;
+    right: 0;
+    bottom: -50px;
+    left: 0;
+    padding: 23px 65px;
+    background: #{color('white')};
+    box-shadow: 0 8px 30px 0 rgba(0,0,0,0.2);
+    z-index: 10;
+
+    p {
+      color: #{theme-color-level('dark', 2)};
+      font-size: 16px;
+    }
+  }
+}
+
+.btn-get-tickets {
+  display: inline-block;
+  padding: 16px 30px;
+  border: 2px solid #{color('purple')};
+
+  border-radius: 60px;
+  color: #{color('purple')};
+
+  font-weight: 600;
+  transition: all .2s;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  &:hover {
+    background: #{color('purple')};
+    color: #{color('white')};
+  }
+
+  @media(max-width: 767px) {
+    margin-bottom: 20px;
+  }
+}
+
+.event-intro {
+  margin-top: 200px;
+
+  @media(max-width: 991px) {
+    margin-top: 130px;
+  }
+
+  .event-title {
+    @media(min-width: 992px) {
+      width: 80%;
+    }
+
+    &:after {
+      width: 50%;
+      margin-left: 0;
+    }
+  }
+
+  p {
+    color: #{gray('800')};
+    line-height: 21px;
+
+    @media(min-width: 992px) {
+      width: 80%;
+    }
+  }
+}
+
+.event-speakers {
+  margin-top: 180px;
+
+  @media(max-width: 991px) {
+    margin-top: 80px;
+  }
+
+  .event-title {
+    margin-bottom: 90px;
+  }
+
+  .speaker {
+
+    max-width: 309px;
+    margin: auto;
+    background: #{color('white')};
+
+    @media(min-width: 768px) {
+      &.mt-half {
+        margin-top: 60px;
+      }
+
+      &.mt-full {
+        margin-top: 120px;
+      }
+    }
+
+    @media(max-width: 767px) {
+      margin-bottom: 30px;
+    }
+  }
+
+  .speaker-name {
+
+    padding: 12px 15px 7px;
+    color: #{theme-color-level('primary', 2)};
+    font-size: 19px;
+  }
+
+  .speaker-role {
+
+    padding: 0 15px;
+    color: #{theme-color-level('dark', 2)};
+    font-size: 13px;
+  }
+
+  .speaker-company {
+
+    padding: 10px 15px;
+    color: #{theme-color-level('light', -1)};
+    font-size: 16px;
+  }
+}
+
+.event-schedule {
+  margin-top: 120px;
+
+  @media(max-width: 991px) {
+    margin-top: 80px;
+  }
+
+  .event-title {
+    margin-bottom: 30px;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  .date-tab {
+
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 38px;
+
+    &:after {
+      position: absolute;
+      right: 0;
+      bottom: -20px;
+      left: -5px;
+      width: 110%;
+      height: 1px;
+      margin: auto;
+      background: #{theme-color-level('light', -6)};
+      content: '';
+
+      @media(max-width: 576px) {
+        width: 100%;
+      }
+    }
+  }
+
+  .activity {
+
+    position: relative;
+    width: 330px;
+    margin: auto;
+    padding: 32px 30px 0;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 143px;
+      width: 1px;
+      height: 100%;
+      background: #{theme-color-level('light', -6)};
+      content: '';
+    }
+
+    &:after {
+      display: block;
+      position: absolute;
+      bottom: 3px;
+      left: 138px;
+      width: 11px;
+      height: 11px;
+      border: 1px solid #{color('purple')};
+      border-radius: 100%;
+      background: #{gray('100')};
+      content: '';
+    }
+
+    .time {
+      display: inline-block;
+      width: 40%;
+      float: left;
+    }
+
+    .title {
+      display: inline-block;
+      width: 60%;
+      padding-left: 30px;
+      text-align: left;
+    }
+  }
+}
+
+.event-tickets {
+  margin-top: 120px;
+
+  @media(max-width: 991px) {
+    margin-top: 80px;
+  }
+
+  .event-title {
+    margin-bottom: 80px;
+  }
+
+  .ticket {
+
+    padding: 40px;
+    background: #{color('white')};
+    transition: all .2s;
+
+    @media(max-width: 767px) {
+      margin-bottom: 30px;
+    }
+
+    &:hover {
+      box-shadow: 0 9px 30px 0 rgba(0,0,0,.09);
+    }
+  }
+
+  .ticket-title {
+
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 29px;
+  }
+
+  h5 {
+    margin-top: 45px;
+  }
+}
+
+.event-location {
+  margin-top: 120px;
+
+  @media(max-width: 991px) {
+    margin-top: 80px;
+  }
+
+  .event-title {
+    margin-bottom: 80px;
+  }
+
+  .address-container {
+    box-shadow: 0 9px 30px 0 rgba(0,0,0,.09);
+  }
+
+  .address {
+
+    padding: 50px 30px;
+    background: #{color('white')};
+  }
+
+  .map {
+    width: 100%;
+    height: 470px;
+  }
+
+  i {
+
+    position: relative;
+    top: 6px;
+    margin-right: 10px;
+    font-size: 27px;
+  }
+
+  .social-link {
+    display: inline-block;
+    position: relative;
+    margin-top: 15px;
+
+    margin-right: 6px;
+
+    i {
+      font-size: 25px;
+
+      &.ion-social-twitter {
+        color: #{theme-color-level('primary', -4)};
+      }
+
+      &.ion-social-facebook {
+        color: #{theme-color-level('primary', 3)};
+      }
+    }
+  }
+}
+
+.event-sponsors {
+  margin-top: 130px;
+  margin-bottom: 160px;
+
+  @media(max-width: 991px) {
+    margin-top: 80px;
+  }
+
+  .event-title {
+    margin-bottom: 80px;
+  }
+
+  img {
+    margin-bottom: 50px;
+  }
+}

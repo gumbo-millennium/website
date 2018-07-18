@@ -1,0 +1,309 @@
+.pricing-header {
+  height: 320px;
+  background-image: linear-gradient(90deg, #{theme-color-level('primary', 7)} 0, #{theme-color-level('secondary', 1)} 100%);
+
+  @media(max-width: 767px) {
+    height: 260px;
+  }
+
+  section {
+    padding-top: 170px;
+
+    @media(max-width: 767px) {
+      padding-top: 100px;
+    }
+
+    h3 {
+      color: #{color('white')};
+      text-align: center;
+      font-size: 28px;
+      font-weight: normal;
+
+      @media(max-width: 767px) {
+        font-size: 23px;
+      }
+    }
+  }
+}
+
+.pricing-plans {
+  .container {
+    @media (min-width: 1200px) {
+      width: 920px;
+    }
+  }
+
+  .wrapper {
+
+    position: relative;
+    top: -70px;
+    margin-bottom: -100px;
+
+    padding: 30px;
+    border-radius: 6px 6px 0 0;
+    background: #{color('white')};
+
+    @media(max-width: 991px) {
+      padding: 20px;
+    }
+
+    @media(max-width: 767px) {
+      padding: 0;
+    }
+
+    .plans {
+      border: 1px solid #{gray('300')};
+      border-radius: 4px;
+
+      .plan {
+        padding: 36px 45px;
+        border-bottom: 1px solid #{gray('300')};
+
+        @media(max-width: 767px) {
+          padding: 20px;
+        }
+
+        &:first-child {
+          padding-bottom: 28px;
+        }
+
+        &:last-child {
+          position: relative;
+          top: -8px;
+          margin-bottom: -5px;
+          border-bottom: 0;
+
+          @media(max-width: 767px) {
+            top: 0;
+          }
+        }
+
+        &.popular {
+          background: #{gray('100')};
+
+          @media(min-width: 768px) {
+            position: relative;
+            top: -8px;
+            left: -12px;
+            width: calc(100% + 24px);
+            padding: 36px 55px;
+            border: 1px solid #{theme-color-level('primary', -5)};
+            border-radius: 4px;
+          }
+
+          .flag {
+            position: absolute;
+            top: 65px;
+            left: -71px;
+            padding: 3px 10px 2px;
+            border-radius: 3px 3px 0 0;
+            background: #{color('blue')};
+            color: #{color('white')};
+            font-size: 13px;
+            font-weight: 600;
+            transform: rotate(270deg);
+            text-transform: uppercase;
+
+            @media(max-width: 991px) {
+              left: -67px;
+              font-size: 12px;
+            }
+
+            @media(max-width: 767px) {
+              display: none;
+            }
+          }
+
+          .choose a {
+            top: 10px;
+            padding: 12px 18px;
+
+            @media(max-width: 767px) {
+              top: -20px;
+              padding: 12px;
+              font-size: 12px;
+            }
+          }
+        }
+
+        > div {
+          width: 25%;
+          text-align: center;
+          float: left;
+
+          &:first-child {
+            text-align: left;
+
+            & + div {
+              text-align: left;
+            }
+          }
+        }
+
+        .plan-details {
+          margin-top: 15px;
+          color: #{theme-color-level('primary', -1)};
+          float: left;
+
+          @media(max-width: 767px) {
+            font-size: 13px;
+          }
+
+          strong {
+            font-weight: 600;
+          }
+        }
+
+        .name {
+          position: relative;
+          top: -3px;
+          font-size: 20px;
+
+          @media(max-width: 767px) {
+            width: auto;
+            font-size: 18px;
+            float: none;
+          }
+        }
+
+        .users {
+          color: #{theme-color-level('dark', -3)};
+          font-size: 18px;
+
+          @media(max-width: 767px) {
+            width: 40%;
+            font-size: 15px;
+          }
+        }
+
+        .price {
+          position: relative;
+          top: -7px;
+          color: #{gray('600')};
+          font-size: 30px;
+
+          @media(max-width: 767px) {
+            font-size: 24px;
+          }
+
+          small {
+            position: relative;
+            top: -2px;
+            font-size: 16px;
+            font-weight: normal;
+
+            @media(max-width: 767px) {
+              font-size: 14px;
+            }
+          }
+        }
+
+        .choose {
+          @media(max-width: 767px) {
+            width: 30%;
+            float: right;
+          }
+
+          a {
+            position: relative;
+            top: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: uppercase;
+
+            @media(max-width: 767px) {
+              top: 0;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+
+    .free-plan {
+      margin-top: 30px;
+      color: #{theme-color-level('dark', -3)};
+      text-align: center;
+
+      a {
+        color: #{theme-color-level('dark', -6)};
+        font-size: 15px;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.pricing-features {
+  margin-top: 80px;
+
+  .title {
+
+    margin-bottom: 10px;
+    text-align: center;
+
+    font-size: 22px;
+    font-weight: normal;
+  }
+
+  .features {
+
+    width: 92%;
+    margin: auto;
+
+    @media(max-width: 991px) {
+      width: auto;
+    }
+
+    .icon {
+      @media(max-width: 767px) {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+
+    .feature {
+      margin-top: 70px;
+
+      @media(max-width: 767px) {
+        margin-top: 40px;
+      }
+    }
+
+    section {
+      width: 83%;
+      float: right;
+
+      @media(max-width: 991px) {
+        width: 80%;
+      }
+
+      @media(max-width: 767px) {
+        width: auto;
+        margin-top: 10px;
+        text-align: center;
+        float: none;
+      }
+
+      h4 {
+        margin-top: 0;
+        color: #{theme-color-level('secondary', 3)};
+        font-size: 17px;
+      }
+
+      p {
+        width: 95%;
+        margin-top: 18px;
+        color: #{theme-color-level('light', 5)};
+        font-size: 15px;
+        line-height: 24px;
+
+        @media(max-width: 767px) {
+          width: auto;
+        }
+      }
+    }
+  }
+}

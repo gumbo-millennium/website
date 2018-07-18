@@ -1,0 +1,263 @@
+.blog-post {
+  margin-top: 70px;
+
+  @media(max-width: 767px) {
+    margin-top: 40px;
+  }
+
+  > .container {
+    @media (min-width: 1200px) {
+      width: 880px;
+    }
+  }
+}
+
+.blog-post-title {
+  color: #{theme-color-level('dark', -2)};
+  font-size: 31px;
+  font-weight: normal;
+
+  @media(max-width: 991px) {
+    font-size: 28px;
+  }
+
+  @media(max-width: 767px) {
+    font-size: 24px;
+    line-height: 35px;
+  }
+}
+
+.blog-post-header {
+  margin-top: 20px;
+}
+
+.blog-post-author {
+  display: inline-block;
+  color: #{theme-color-level('dark', -6)};
+
+  img {
+    position: relative;
+    top: -2px;
+    width: 55px;
+    margin-right: 17px;
+    border-radius: 100%;
+  }
+
+  span {
+    color: #{theme-color-level('dark', -1)};
+  }
+}
+
+.blog-post-date {
+  display: inline-block;
+  margin-left: 35px;
+  color: #{theme-color-level('dark', -6)};
+
+  @media(max-width: 767px) {
+    margin-left: 15px;
+  }
+
+  span {
+    color: #{theme-color-level('dark', -1)};
+  }
+}
+
+.blog-post-share {
+
+  color: #{theme-color-level('dark', -6)};
+  float: right;
+
+  @media(max-width: 767px) {
+    float: none;
+  }
+
+  a {
+    position: relative;
+    top: 3px;
+    margin-left: 13px;
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 25px;
+
+    &.ion-social-twitter {
+      color: #{theme-color-level('primary', -4)};
+    }
+
+    &.ion-social-facebook {
+      margin-right: 3px;
+      color: #{theme-color-level('primary', 3)};
+      font-size: 28px;
+    }
+
+    &.ion-social-buffer {
+      color: #{theme-color-level('light', 9)};
+    }
+  }
+}
+
+.blog-post-content {
+  margin-top: 50px;
+
+  @media(max-width: 767px) {
+    margin-top: 30px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin: 45px 0 20px;
+    font-size: 23px;
+  }
+
+  p {
+
+    margin-bottom: 20px;
+    color: #{theme-color-level('dark', -4)};
+    font-size: 16px;
+    line-height: 29px;
+
+    @media(max-width: 991px) {
+      font-size: 14px;
+    }
+  }
+
+  .blog-post-video {
+    margin: 40px 0;
+
+    iframe {
+      display: block;
+      width: 92%;
+      margin: 0 auto;
+
+      @media(max-width: 991px) {
+        height: 350px;
+      }
+
+      @media(max-width: 767px) {
+        width: 100%;
+        height: 270px;
+      }
+    }
+  }
+
+  .blog-post-gallery {
+    margin: 45px -20px;
+
+    @media(max-width: 991px) {
+      margin: 45px 0;
+    }
+
+    img {
+      @media(max-width: 767px) {
+        margin-top: 20px !important;
+      }
+    }
+
+    .zoomerang {
+      display: block;
+    }
+  }
+
+  .blog-post-quote-wrapper {
+
+    position: relative;
+    margin: 60px 0;
+
+    &:before {
+      position: absolute;
+      left: -25px;
+      width: 3px;
+      height: 100%;
+      background: #{gray('300')};
+      content: '';
+    }
+
+    .quote {
+      width: 95%;
+      color: #{theme-color-level('dark', -2)};
+      font-family: $georgia;
+      font-size: 21px;
+      font-style: italic;
+      line-height: 32px;
+
+      @media(max-width: 767px) {
+        width: 100%;
+        font-size: 18px;
+      }
+    }
+
+    .author {
+      margin-top: 15px;
+      padding-bottom: 10px;
+      color: #{theme-color-level('secondary', -3)};
+      font-size: 15px;
+    }
+  }
+
+  .blog-post-side-image {
+    margin: 50px 0;
+
+    @media(max-width: 767px) {
+      margin-bottom: 30px;
+    }
+
+    img {
+      max-width: 315px;
+      margin-right: 40px;
+
+      margin-left: -120px;
+      float: left;
+
+      @media(max-width: 767px) {
+        max-width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        float: none;
+      }
+    }
+
+    p {
+      margin-top: 20px;
+    }
+  }
+}
+
+.blog-post-subscribe {
+
+  margin-top: 80px;
+  margin-bottom: 100px;
+  padding-top: 40px;
+  border-top: 1px solid #{theme-color-level('light', -10)};
+  text-align: center;
+
+  h3 {
+    font-size: 19px;
+  }
+
+  form {
+    margin-top: 30px;
+
+    input {
+      position: relative;
+      top: 1px;
+      width: 230px;
+      margin-right: 20px;
+      padding: 10px 15px;
+      border: 1px solid #{theme-color-level('light', -7)};
+      border-radius: 5px;
+      font-size: 16px;
+      transition: all .2s;
+      outline: none;
+
+      @media(max-width: 767px) {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 30px;
+      }
+
+      &:focus {
+        border-color: #{theme-color-level('dark', -1)};
+      }
+    }
+  }
+}

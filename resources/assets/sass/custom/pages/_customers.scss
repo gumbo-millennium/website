@@ -1,0 +1,147 @@
+.customers-header {
+  height: 260px;
+  background-image: linear-gradient(-45deg, #{theme-color-level('primary', 2)} 0, #{theme-color-level('primary', 3)} 20%, #{theme-color-level('primary', 9)} 100%);
+
+  section {
+    padding-top: 170px;
+
+    @media(max-width: 767px) {
+      padding-top: 110px;
+    }
+
+    h1 {
+      color: #{color('white')};
+      text-align: center;
+
+      font-size: 30px;
+      font-weight: normal;
+      line-height: 44px;
+
+      @media(max-width: 991px) {
+        font-size: 26px;
+      }
+
+      @media(max-width: 767px) {
+        font-size: 24px;
+        line-height: 34px;
+      }
+    }
+  }
+}
+
+.customers-grid {
+  margin-top: 80px;
+
+  @media(max-width: 767px) {
+    margin-top: 60px;
+  }
+
+  &--bottom {
+    margin-bottom: 150px;
+
+    @media(max-width: 767px) {
+      margin-bottom: 100px;
+    }
+  }
+
+  .logo {
+    margin-top: 20px;
+  }
+
+  p {
+    margin-top: 20px;
+    color: #{gray('600')};
+    line-height: 21px;
+  }
+
+  a.read-story {
+    display: inline-block;
+    margin-top: 10px;
+    color: #{theme-color-level('primary', -1)};
+    font-size: 12px;
+
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    @media(max-width: 767px) {
+      margin-bottom: 40px;
+    }
+  }
+}
+
+.customer-testimonial {
+  margin-top: 80px;
+
+  @media(max-width: 767px) {
+    margin-top: 60px;
+  }
+
+  .row {
+    padding: 20px;
+    padding-top: 70px;
+    padding-bottom: 50px;
+    border-top: 1px solid #{gray('100')};
+    border-bottom: 1px solid #{gray('100')};
+
+    @media(max-width: 767px) {
+      padding-top: 50px;
+    }
+  }
+
+  .customer-pic {
+    width: 100px;
+    margin: 0 auto;
+    border-radius: 100%;
+  }
+
+  .logo {
+    display: block;
+    width: 105px;
+    margin: 15px auto;
+
+    @media(max-width: 991px) {
+      width: 90px;
+    }
+  }
+
+  .author {
+
+    position: relative;
+    top: -5px;
+    margin-right: 20px;
+    text-align: right;
+    font-weight: 500;
+
+    @media(max-width: 767px) {
+      top: 0;
+    }
+  }
+
+  p {
+
+    position: relative;
+    color: #{theme-color-level('dark', -5)};
+    font-size: 20px;
+    line-height: 33px;
+
+    @media(max-width: 991px) {
+      margin-left: 20px;
+      font-size: 17px;
+      line-height: 28px;
+    }
+
+    @media(max-width: 767px) {
+      margin-top: 30px;
+      margin-left: 10px;
+    }
+
+    span {
+      position: absolute;
+      top: 0;
+      left: -25px;
+      font-family: $georgia;
+      font-size: 49px;
+    }
+  }
+}

@@ -1,0 +1,99 @@
+.signup-page {
+  background-color: #{gray('100')};
+
+  .wrapper {
+    text-align: center;
+  }
+
+  .header {
+    margin-top: 80px;
+
+    .logo {
+      display: block;
+      margin: 0 auto;
+
+      img {
+        max-width: 80px;
+      }
+    }
+  }
+
+  form {
+    width: 360px;
+    margin: 45px auto 60px;
+
+    @media(max-width: 575px) {
+      width: auto;
+      padding: 0 20px;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      height: 52px;
+      padding: 0 15px;
+      border: 1px solid #{theme-color-level('secondary', -8)};
+
+      border-radius: 3px;
+      background: rgb(220, 222, 228);
+      font-size: 18px;
+      transition: all .25s;
+      box-shadow: inset 0 1px 0 #{gray('400')};
+      outline: none;
+
+      &::placeholder {
+        color: #{theme-color-level('secondary', -1)};
+      }
+
+      &:focus {
+        border-color: #{theme-color-level('primary', -2)};
+        background: #{color('white')};
+
+        &::placeholder {
+          color: #{theme-color-level('light', -2)};
+        }
+      }
+    }
+
+    .terms {
+
+      margin-top: 18px;
+      color: #{theme-color-level('secondary', -4)};
+      font-size: 15px;
+      font-weight: 500;
+
+      input[type="checkbox"] {
+        margin-right: 6px;
+        font-size: 20px;
+      }
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    .form-action {
+      margin-top: 30px;
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 14px 23px;
+        box-shadow: rgba(23, 43, 99, 0.35) 0 7px 28px;
+      }
+    }
+
+    .form-bottom {
+      margin-top: 40px;
+      color: #{theme-color-level('secondary', -1)};
+
+      a {
+        margin-left: 5px;
+      }
+    }
+  }
+}

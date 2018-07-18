@@ -1,0 +1,142 @@
+// icon nav
+.iconav {
+
+  border: 1px solid #{theme-color-level('light', -10)};
+  background-color: #{color('white')};
+  overflow-y: auto;
+
+  @media(min-width: 768px) {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 70px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .iconav-nav {
+    flex-wrap: nowrap;
+  }
+
+  .iconav-brand {
+    display: block;
+    padding-top: 27px;
+    padding-bottom: 27px;
+    border-bottom: 0;
+    background-color: #{gray('100')};
+    color: #{theme-color-level('secondary', -3)};
+    text-align: center;
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .nav-item {
+    + .nav-item {
+      .nav-link {
+        border-top: 1px solid #{theme-color-level('light', -10)};
+      }
+    }
+  }
+
+  .nav-slider {
+    @media (max-width: 767px) {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+    }
+  }
+
+  .nav-link {
+    position: relative;
+    color: #{theme-color-level('secondary', -2)};
+    text-align: center;
+    font-size: 23px;
+
+    &.active {
+      background-color: #{gray('100')};
+      color: #{theme-color-level('secondary', 3)};
+    }
+  }
+
+  .nav-link-label {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  &.iconav-inverse {
+    border: none;
+    background-color: #{gray('800')};
+
+    .iconav-brand {
+      background-color: #{theme-color-level('dark', 7)};
+      color: #{gray('600')};
+    }
+
+    .nav-item {
+      + .nav-item {
+        .nav-link {
+          border-top: 1px solid #{theme-color('dark')};
+        }
+      }
+    }
+
+    .nav-link {
+      color: #{color('white')};
+
+      &.active {
+        background-color: #{gray('900')};
+        color: #{theme-color-level('primary', -5)};
+      }
+    }
+  }
+}
+
+// nav bordered
+.nav-bordered {
+  &.nav-vertical {
+    .nav-link.active:after {
+      top: 2px;
+
+      bottom: inherit;
+      left: -5px;
+      width: 3px;
+      height: 80%;
+      margin: auto 0;
+    }
+
+    .nav-header {
+
+      padding: 0.5rem 1rem;
+      color: #{theme-color-level('dark', -4)};
+      font-size: 90%;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    li + .nav-header {
+      margin-top: 20px;
+    }
+  }
+
+  .nav-link {
+    &.active {
+
+      position: relative;
+      color: #{theme-color-level('dark', -1)};
+
+      &:after {
+        position: absolute;
+        right: 0;
+        bottom: -5px;
+        left: 0;
+        width: 75%;
+        height: 3px;
+        margin: 0 auto;
+        background-color: #{theme-color-level('light', 4)};
+        content: '';
+      }
+    }
+  }
+}

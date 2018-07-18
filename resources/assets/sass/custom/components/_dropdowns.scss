@@ -1,0 +1,49 @@
+///
+// Navbar dropdowns
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+.dropdown-menu {
+  border-color: #{theme-color-level('dark', 8)};
+  background: #{theme-color-level('dark', 7)};
+  font-size: 0.9rem;
+
+  .dropdown-item {
+    color: #{theme-color-level('light', -7)};
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: #{theme-color-level('dark', 5)};
+      color: #{theme-color-level('light', -9)};
+    }
+  }
+
+  .dropdown-divider {
+    border-top: 1px solid #{theme-color-level('dark', 5)};
+  }
+
+  @media(min-width: 992px) {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all .3s;
+    z-index: 1;
+  }
+
+}
+
+.show > .dropdown-menu {
+  @media(min-width: 992px) {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    z-index: 1000;
+  }
+}
+
+.navbar .dropdown-toggle::after {
+  display: none;
+}

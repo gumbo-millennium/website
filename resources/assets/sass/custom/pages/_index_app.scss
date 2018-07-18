@@ -1,0 +1,267 @@
+.index-app-hero {
+
+  position: relative;
+  height: 590px;
+  padding-top: 150px;
+  background: url('#{$imagesPath}/unsplash/jared-erondu-10472.jpg');
+  background-position: center 0;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow: hidden;
+
+  @media(max-width: 1024px) {
+    background-attachment: inherit;
+  }
+
+  @media(max-width: 767px) {
+    padding-top: 60px;
+    text-align: center;
+  }
+
+  &:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(26, 35, 62, 0.58);
+    content: '';
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+  }
+
+  h2 {
+    width: 590px;
+    margin-top: 40px;
+    color: #{color('white')};
+    font-size: 44px;
+    font-weight: 200;
+    animation-delay: .1s;
+    line-height: 54px;
+    text-shadow: 0 2px 1px rgba(0, 0, 0, 0.11);
+
+    @media(max-width: 991px) {
+      font-size: 38px;
+      line-height: 52px;
+    }
+
+    @media(max-width: 767px) {
+      width: auto;
+    }
+  }
+
+  p {
+    margin-top: 30px;
+    color: #{theme-color-level('primary', -10)};
+    font-size: 17px;
+    font-weight: normal;
+    animation-delay: .5s;
+    line-height: 27px;
+  }
+
+  .btn-pill {
+    margin-top: 30px;
+    padding: 13px 44px 16px;
+    font-weight: 600;
+    animation-delay: .5s;
+
+    &:active {
+      border-color: #{theme-color-level('success', 5)};
+    }
+
+    @media(max-width: 767px) {
+      margin-top: 30px;
+    }
+  }
+}
+
+.index-app-news {
+
+  padding: 25px 0;
+  border-bottom: 1px solid #{theme-color-level('light', -7)};
+  background: #{gray('100')};
+  color: #{theme-color-level('light', 4)};
+  text-align: center;
+  font-size: 15px;
+
+  span {
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    margin-right: 5px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: #{theme-color-level('primary', -3)};
+    color: #{color('white')};
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  strong {
+    margin-right: 10px;
+    color: #{theme-color-level('dark', -1)};
+    font-weight: 600;
+  }
+
+  a {
+    margin-left: 5px;
+    color: #{theme-color('primary')};
+
+    @media(max-width: 991px) {
+      display: block;
+      margin-top: 7px;
+    }
+  }
+}
+
+.index-app-features {
+  padding-top: 160px;
+  overflow-x: hidden;
+
+  @media(max-width: 767px) {
+    padding-top: 60px;
+    text-align: center;
+  }
+
+  section {
+
+    position: relative;
+    width: 870px;
+
+    min-height: 473px;
+    margin: 0 auto;
+
+    @media(max-width: 991px) {
+      width: auto;
+      padding: 0 30px;
+    }
+
+    @media(max-width: 767px) {
+      min-height: auto;
+    }
+  }
+
+  img.browser {
+    position: absolute;
+    top: -15px;
+    left: 450px;
+
+    @media(max-width: 767px) {
+      position: relative;
+      top: 0;
+      left: 0;
+      max-width: 100%;
+      margin-bottom: 40px;
+    }
+  }
+
+  .info {
+    width: 330px;
+
+    @media(max-width: 767px) {
+      width: auto;
+    }
+  }
+
+  h3 {
+    color: #{theme-color-level('info', 1)};
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 17px;
+    text-transform: uppercase;
+  }
+
+  h4 {
+
+    margin-top: 15px;
+    color: #{theme-color-level('light', 7)};
+    font-size: 29px;
+    font-weight: 300;
+    line-height: 38px;
+  }
+
+  p {
+
+    width: 90%;
+    margin-top: 30px;
+    color: #{theme-color-level('secondary', -2)};
+    font-size: 15px;
+    line-height: 26px;
+
+    @media(max-width: 767px) {
+      width: auto;
+    }
+  }
+}
+
+.index-features-files.index-app {
+  margin-top: 50px;
+  border-bottom: 1px solid #{gray('200')};
+}
+
+.business-single-client.index-app {
+  margin-top: 100px;
+}
+
+.index-app-devices {
+  margin-top: 220px;
+  margin-bottom: 180px;
+
+  @media(max-width: 767px) {
+    margin-top: 150px;
+    margin-bottom: 0;
+  }
+
+  .cta {
+    margin-top: 90px;
+    text-align: center;
+
+    @media(max-width: 767px) {
+      margin-top: 70px;
+    }
+
+    h3 {
+      font-size: 29px;
+
+      @media(max-width: 767px) {
+
+        font-size: 26px;
+        line-height: 35px;
+      }
+    }
+
+    p {
+
+      margin-top: 20px;
+      color: #{theme-color-level('dark', -5)};
+      font-size: 17px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 25px;
+
+      padding: 13px 30px;
+      border-radius: 50px;
+      background: #{theme-color-level('primary', -3)};
+      color: #{color('white')};
+
+      font-size: 13px;
+      font-weight: bold;
+      transition: all .2s;
+      letter-spacing: 1px;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      &:hover {
+        background: #{theme-color-level('primary', -5)};
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.btn-group {
+  .btn-primary {
+    border-color: #{theme-color-level('primary', 4)};
+  }
+
+  .btn-success {
+    border-color: #{theme-color-level('success', 2)};
+  }
+
+  .btn-info {
+    border-color: #{theme-color-level('info', 2)};
+  }
+
+  .btn-warning {
+    border-color: #{theme-color-level('warning', 2)};
+  }
+
+  .btn-danger {
+    border-color: #{theme-color-level('danger', 3)};
+  }
+}

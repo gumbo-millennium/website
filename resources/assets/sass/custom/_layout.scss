@@ -1,0 +1,399 @@
+///
+// Base layout
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+
+/* navbar light */
+.navbar-light {
+  background-color: #{color('white')};
+  transition: all .4s;
+  box-shadow: 0 1px 1px #{theme-color-level('light', -8)};
+
+  @media(min-width: 992px) {
+    padding: 0 1rem;
+  }
+
+  .navbar-brand {
+    font-size: 21px;
+    transition: color .2s linear;
+    letter-spacing: .5px;
+  }
+
+  .dropdown-menu {
+    @media(min-width: 992px) {
+      margin-top: 0;
+      border-color: #{color('white')};
+      border-radius: 0 0 0.25rem 0.25rem;
+      box-shadow: 0 13px 20px rgba(0, 0, 0, 0.07);
+
+      .dropdown-item {
+        padding: 4px 1.5rem;
+        padding-right: 30px;
+        color: #{theme-color-level('dark', -3)};
+
+        &:active {
+          background-color: #{gray('100')};
+        }
+      }
+    }
+  }
+
+  .nav-item {
+    .nav-link {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 13px;
+      font-weight: 500;
+      transition: color .15s linear;
+
+      @media(min-width: 992px) {
+        margin: 0 8px;
+        padding: 32px 10px;
+      }
+
+      &:hover,
+      &:focus {
+        background: none;
+        color: #{theme-color('dark')};
+      }
+
+      &--rounded {
+        @media(min-width: 1200px) {
+          margin-top: 22px;
+          margin-left: 20px;
+          padding: 8px 20px 9px;
+          border: 1px solid #{theme-color('light')};
+          border-radius: 25px;
+          color: #{theme-color-level('dark', -3)};
+          transition: all .15s ease-out;
+          text-transform: capitalize;
+
+          &:hover {
+            border-color: #{theme-color-level('dark', -2)};
+            color: #{theme-color-level('dark', -1)};
+          }
+
+          &:active {
+            transform: scale(0.93);
+          }
+        }
+      }
+
+      i {
+        margin-left: 4px;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+/* navbar dark */
+.navbar-dark {
+  background-color: #{theme-color('brand')} !important;
+  transition: all .4s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  @media(min-width: 992px) {
+    padding: 0 1rem;
+  }
+
+  .navbar-brand {
+    color: #{color('white')};
+    font-size: 21px;
+    transition: color .2s linear;
+    letter-spacing: .5px;
+  }
+
+  .dropdown-menu {
+    @media(min-width: 992px) {
+      margin-top: -1px;
+      border-color: #{color('white')};
+      border-radius: 0 0 0.25rem 0.25rem;
+      box-shadow: 0 13px 20px rgba(0, 0, 0, 0.07);
+
+      .dropdown-item {
+        padding: 4px 1.5rem;
+        padding-right: 30px;
+        color: #{theme-color-level('dark', -3)};
+
+        &:active {
+          background-color: #{gray('100')};
+        }
+      }
+    }
+  }
+
+  .nav-item {
+    .nav-link {
+      color: #{theme-color-level('light', -7)};
+      font-size: 13px;
+      font-weight: 500;
+      transition: color .15s linear;
+
+      @media(min-width: 992px) {
+        margin: 0 9px;
+        padding: 32px 10px;
+      }
+
+      &:hover,
+      &:focus {
+        background: none;
+        color: #{color('white')};
+      }
+
+      &--rounded {
+        @media(min-width: 1200px) {
+          margin-top: 22px;
+          margin-left: 20px;
+          padding: 8px 20px 9px;
+          border: 1px solid #{theme-color-level('secondary', -3)};
+          border-radius: 25px;
+          color: #{gray('300')};
+          transition: all .15s ease-out;
+          text-transform: capitalize;
+
+          &:hover {
+            border-color: #{color('white')};
+          }
+
+          &:active {
+            transform: scale(0.93);
+          }
+        }
+      }
+
+      i {
+        margin-left: 4px;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+/* navbar fixed bottom */
+.navbar-fixed-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+
+  &.navbar-fixed-bottom--stick {
+    position: fixed;
+    top: 0;
+    bottom: inherit;
+  }
+}
+
+/* extra bg-transparent utility for navbar dark and light */
+.navbar.bg-transparent {
+  @media(min-width: 992px) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    z-index: 999;
+  }
+
+  .dropdown-menu {
+    @media(min-width: 992px) {
+
+      margin-top: -7px;
+      border-radius: 0.25rem;
+    }
+  }
+}
+
+.navbar-dark.bg-transparent {
+  .nav-item {
+    .nav-link {
+      color: #{color('white')};
+
+      &--rounded {
+        @media(min-width: 1200px) {
+          border-color: #{color('white')};
+          color: #{color('white')};
+
+          &:hover {
+            background-color: #{color('white')};
+            color: #{theme-color-level('dark', -1)};
+          }
+        }
+      }
+    }
+  }
+}
+
+/* footer */
+.footer {
+  margin-top: 100px;
+
+  padding: 55px 0 35px;
+  background: #{theme-color-level('secondary', 7)};
+
+  &.footer--light {
+    padding: 50px 0 40px;
+    border-top: 1px solid #{theme-color-level('light', -8)};
+    background: #{gray('100')};
+
+    .title {
+      color: #{theme-color-level('dark', -1)};
+      font-size: 14px;
+    }
+
+    .menu {
+      a {
+        color: #{theme-color-level('secondary', 3)};
+
+        &:hover {
+          color: #{theme-color-level('dark', -1)};
+        }
+      }
+
+      i {
+        color: #{theme-color-level('secondary', -3)};
+      }
+    }
+
+    .newsletter {
+      p {
+        color: #{theme-color-level('dark', -5)};
+      }
+
+      form {
+        input[type="email"] {
+          &::placeholder {
+            color: #{theme-color-level('secondary', -4)};
+          }
+        }
+
+        button {
+          background: #{theme-color-level('secondary', -4)};
+        }
+      }
+    }
+
+    .bottom {
+      border-top-color: #{gray('300')};
+    }
+  }
+
+  .col-md-4 {
+    @media(max-width: 767px) {
+      margin-bottom: 20px;
+    }
+  }
+
+  .title {
+    color: #{color('white')};
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .menu {
+    margin-top: 30px;
+    padding: 0;
+    list-style-type: none;
+
+    a {
+      display: inline-block;
+      margin-bottom: 9px;
+      color: #{gray('400')};
+      transition: all .2s linear;
+      text-decoration: none;
+
+      &:hover {
+        color: #{color('white')};
+      }
+    }
+
+    i {
+      position: relative;
+      top: 3px;
+      width: 21px;
+      margin-right: 12px;
+      margin-bottom: 5px;
+      font-size: 23px;
+    }
+  }
+
+  .newsletter {
+    p {
+      margin-top: 25px;
+      color: #{theme-color-level('primary', -9)};
+      line-height: 20px;
+    }
+
+    form {
+      position: relative;
+      margin-top: 27px;
+
+      input[type="email"] {
+        height: 45px;
+        padding-left: 17px;
+
+        &::placeholder {
+          color: #{theme-color-level('secondary', -4)};
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 45px;
+        padding: 0 15px;
+        border: 0;
+        border-radius: 0 4px 4px 0;
+        background: #{theme-color-level('primary', -8)};
+        color: #{color('white')};
+        font-size: 17px;
+      }
+    }
+  }
+
+  .bottom {
+    margin-top: 40px;
+    border-top: 1px solid #{theme-color-level('secondary', 5)};
+
+    ul {
+      margin-top: 15px;
+      padding: 0;
+      text-align: center;
+      list-style-type: none;
+
+      li {
+        display: inline-block;
+        margin: 0 11px;
+
+        &:last-child {
+          a:after {
+            content: '';
+          }
+        }
+      }
+
+      a {
+        position: relative;
+        color: #{theme-color-level('secondary', -5)};
+        font-size: 11px;
+        font-weight: 600;
+        text-decoration: none;
+        text-transform: uppercase;
+
+        &:after {
+          position: absolute;
+          top: -1px;
+          right: -15px;
+          font-weight: bold;
+          content: '|';
+        }
+      }
+    }
+  }
+}
