@@ -35,7 +35,7 @@ waive your personal copyright.
 -->
 
 <!-- Badges -->
-[shield-build]: https://img.shields.io/travis/roelofr/gumbo-corcel.svg
+[shield-build]: https://travis-ci.com/roelofr/gumbo-corcel.svg?token=UqpoopFM6y79UtxAJobN&branch=develop
 [link-build]: https://travis-ci.com/roelofr/gumbo-corcel
 
 [shield-cc]: https://img.shields.io/codeclimate/github/roelofr/gumbo-corcel.svg
