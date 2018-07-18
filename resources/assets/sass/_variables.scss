@@ -5,10 +5,14 @@
 // @license MPL-2.0
 ///
 
-// Override Bootstrap's primary and brand colours
-$brand: #007d00;
-// $primary: $brand;
+// Keep track of FA Pro
+$has-font-awesome-pro: false !default;
+$fa-font-name: if($has-font-awesome-pro, 'Font Awesome 5 Pro', 'Font Awesome 5 Free');
 
+// Add a Brand color
+$brand: #007d00;
+
+// And add our color variations
 $primary: #0275d8;
 $secondary: #6a7177;
 $success: #5cb85c;
@@ -18,6 +22,7 @@ $danger: #d9534f;
 $light: #a9a9a9;
 $dark: #222;
 
+// really register that brand color
 $theme-colors: (
   "brand": $brand
 );

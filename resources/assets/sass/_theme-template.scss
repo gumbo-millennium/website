@@ -5,6 +5,10 @@
 // @license MPL-2.0
 ///
 
+// Load mixins
+@import "theme/mixins/font-smoothing";
+@import "theme/mixins/font-awesome";
+
 // Theme components
 @import "custom/components/animation";
 @import "custom/components/badges";
