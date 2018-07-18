@@ -32,12 +32,6 @@ before_install:
   # Get a database going, add the Travis user as granted user
   - ./library/travis/init-db
 
-  # Set NPM and Yarn token for FontAwesome Pro
-  - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-  - npm config set "//npm.fontawesome.com/:_authToken" "${FA_TOKEN}" > /dev/null
-  - yarn config set "@fortawesome:registry" https://npm.fontawesome.com/
-  - yarn config set "//npm.fontawesome.com/:_authToken" "${FA_TOKEN}" > /dev/null
-
   # Install Submodules
   - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
   - git submodule update --init

@@ -24,9 +24,20 @@ mix
     'zoomerang'
   ])
 
+let themeVersion = 'free'
+try {
+  // Try to find the font-awesome pro theme
+  const FaProPath = require.resolve('@fortawesome/fontawesome-pro')
+
+  // Check if we got a path
+  themeVersion = FaProPath ? 'pro' : themeVersion
+} catch (err) {
+  // Don't do anything if we got an error, that just means FA pro is unavailable.
+}
+
 // Configure SCSS, also with separate vendor (bootstrap)
 mix
-  .sass('resources/assets/sass/theme.scss', 'public/gumbo.css')
+  .sass(`resources/assets/sass/theme-${themeVersion}.scss`, 'public/gumbo.css')
 
 // Browsersync, used with 'yarn run watch'
 mix.browserSync({
