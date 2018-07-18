@@ -16,6 +16,41 @@ const passiveEvent = {
 const template = '<a class="dropdown-item" href="#"></a>'
 
 /**
+ * Validates if the given navbar should have transparency, and removes it if not
+ *
+ * @param {jQuery} navbar
+ */
+const validateTransparentNavbar = navbar => {
+  // Keep track if we've seen the navbar
+  let seenNavbar = false
+
+  // Find the next item, by converting the navbar's parent's children to an array
+  // and removing invisibile elements
+  let nextNodes = Array.from(navbar.get(0).parentNode.children)
+    .filter(node => {
+      // If the navbar was seen, allow if not .sr-only
+      if (seenNavbar) {
+        return !node.classList.contains('sr-only')
+      }
+
+      // Otherwise check if it's the navbar, but remove the node anyway
+      seenNavbar = node.classList.contains('navbar')
+      return false
+    })
+
+  // Get first node
+  let nextNode = nextNodes.shift()
+
+  // If there's no next node, or the next node is NOT a hero, remove navbar transparency
+  if (!nextNode || !nextNode.classList.contains('hero')) {
+    let _nav = navbar.get(0)
+    _nav.style.transition = 'none'
+    _nav.classList.remove('bg-transparent')
+    setTimeout(() => _nav.style.removeProperty('transition'), 100)
+  }
+}
+
+/**
 * Handles the navbar's opacity when scrolling down the page
 *
 * @param {JQuery} navbar
@@ -86,6 +121,9 @@ export default () => {
 
   // Bind hover nav
   bindHoverNavigation(navbar)
+
+  // Check navbar transparency
+  validateTransparentNavbar(navbar)
 
   // Bind transparent nav
   bindTransparantNavbar(navbar)

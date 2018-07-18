@@ -1,19 +1,20 @@
-<!-- Page Header-->
-<section class="module-header full-height parallax bg-dark bg-dark-90" data-background="default/images/module-1.jpg" data-jarallax-video="https://www.youtube.com/watch?v=BgwAeU2Jt7E">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="h6 m-b-20">Dubbel N, Dubbel L, Dubbel genieten</h1>
-                <h1 class="h1 m-b-20">Wij zijn Gumbo Millennium</h1>
-                <p class="m-b-40">En wij zijn er om jóuw studententijd onvergetelijk te maken!</p>
-                <p>
-                    <a class="btn btn-lg btn-circle btn-brand" href="#">Word lid</a>
-                </p>
-            </div>
-        </div>
+{{-- Meet Gumbo --}}
+<div class="central-intro">
+    <div class="central-intro__container">
+        <h3 class="central-intro__title">
+            Maak kennis met Gumbo Millennium
+        </h3>
+        <hr class="central-intro__divider">
+        <p class="central-intro__content">
+            Sinds 1991 staat Gumbo Millennium voor gezelligheid en om een fantastische studententijd te beleven.
+            <br />
+            Met onze eigen plek op Windesheim om te relaxen,
+            soosavonden in Studentencafé Het Vliegende Paard
+            en veel variërende activiteiten,
+            is er voor ieder wat wils binnen Gumbo.
+        </p>
     </div>
-</section>
-<!-- Page Header end-->
+</div>
 
 <!-- Services-->
 <section class="module">

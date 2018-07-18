@@ -1,34 +1,78 @@
 @extends('layout.auth')
 
+{{-- Add notice --}}
+@push('auth.alert')
+<div class="alert alert-info" role="alert">
+    Onderstaand inlogscherm is voor toegang tot besloten systemen.
+    Je hebt het niet nodig voor algemeen gebruik van de website.
+</div>
+@endpush
+
+
 @section('content')
-<section class="module">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 m-auto">
-                {{-- Show logo --}}
-                @include('auth.items.logo')
+{{-- Login text --}}
+<div class="login__text login__text--before">
+    <p>
+        Vul hieronder je e-mail adres en wachtwoord in
+        om in te loggen op de website.
+    </p>
+</div>
 
-                {{-- Login form --}}
-                <form class="up-form" method="post">
-                    @csrf
-                    <div class="form-group">
-                        <input class="form-control form-control-lg" type="text" name="username" placeholder="Gebruikersnaam" value="{{ old('username') }}">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control form-control-lg" type="password" name="password" placeholder="Wachtwoord">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-block btn-lg btn-round btn-brand" type="submit">Inloggen</button>
-                    </div>
-                </form>
+{{-- Login form --}}
+<form class="login__form" method="post" action="{{ route('auth.login') }}" aria-label="{{ __('Login') }}">
+    {{-- CSRF token --}}
+    @csrf
 
-                {{-- Login actions --}}
-                <div class="up-help">
-                    <p><a href="/auth/reset">Forgot your password?</a></p>
-                    <p>Don't have an account yet? <a href="#">Sign up</a></p>
-                </div>
-            </div>
-        </div>
+    {{-- Username field --}}
+    <div class="login__form-group">
+        <input
+        class="login__form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
+        type="email"
+        name="email"
+        placeholder="bestuur@gumbo-millennium.nl"
+        value="{{ old('email') }}"
+        required>
     </div>
-</section>
+
+    {{-- Password field --}}
+    <div class="login__form-group">
+        <input
+        class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
+        type="password"
+        name="password"
+        placeholder="wachtwoord"
+        required>
+
+        @if ($errors->has('password'))
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('password') }}</strong>
+        </span>
+        @endif
+    </div>
+
+    {{-- Remember me --}}
+    <div class="login__form-group login__form-checkbox custom-control custom-checkbox">
+        <input class="custom-control-input login__form-checkbox-input" type="checkbox" id="remember-me" name="remember" {{ old('remember') ? 'checked' : '' }} />
+        <label class="custom-control-label login__form-checkbox-label" for="remember-me">
+            {{ __('Remember Me') }}
+        </label>
+    </div>
+
+    {{-- Submit button --}}
+    <div class="login__form-action">
+        <button class="login__form-submit" type="submit">
+            {{ __('Login') }}
+        </button>
+    </div>
+</form>
+
+{{-- Login actions --}}
+<div class="login__text login__text--after">
+    <p><a href="{{ route('auth.password.request') }}">
+        {{ __('Forgot Your Password?') }}
+    </a></p>
+    <p>
+        Nog geen lid van Gumbo Millennium? <a href="{{ route('join') }}">Meld je aan!</a>
+    </p>
+</div>
 @endsection

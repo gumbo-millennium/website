@@ -1,0 +1,54 @@
+///
+// Central intro, to use on the homepage.
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.central-intro {
+  padding: 5.75rem 0;
+
+  &--dark {
+    background-color: #{theme-color-level('secondary', -9)};
+  }
+
+  &--brand {
+    background-color: #{theme-color-level('brand', -9)};
+  }
+
+  &__container {
+    @include make-container;
+    @include make-container-max-widths;
+  }
+
+  &__title {
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  &__divider {
+    width: 130px;
+    margin: 35px auto;
+    border-top: 2px solid rgba(theme-color('dark'), 0.2);
+  }
+
+  &__content {
+    color: #{theme-color-level('dark', -2)};
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.75rem;
+
+    @include media-breakpoint-up(md) {
+      width: 75%;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    @include media-breakpoint-up(lg) {
+      width: 65%;
+    }
+  }
+}

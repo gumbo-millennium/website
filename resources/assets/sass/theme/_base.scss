@@ -1,0 +1,16 @@
+///
+// Base theme
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+body {
+  @include font-smoothing(true);
+}
+
+.navbar {
+  .navbar-brand {
+    flex: 1 0;
+  }
+}

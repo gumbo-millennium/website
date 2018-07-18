@@ -1,0 +1,31 @@
+///
+// Theme root file, without premium assets
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+// Mark FA Pro available
+$has-font-awesome-pro: true;
+
+// Load theme foundation (variables, bootstrap)
+@import 'theme-foundation';
+
+// Load vendor assets
+@import "~animate.css/animate";
+@import '~magnific-popup/src/css/main.scss';
+@import '~pikaday/scss/pikaday';
+
+// Icons (via Font Awesome Pro)
+@import '~@fortawesome/fontawesome-pro/scss/fontawesome';
+@import '~@fortawesome/fontawesome-pro/scss/mixins';
+@import '~@fortawesome/fontawesome-pro/scss/brands';
+@import '~@fortawesome/fontawesome-pro/scss/solid';
+@import '~@fortawesome/fontawesome-pro/scss/regular';
+@import '~@fortawesome/fontawesome-pro/scss/light';
+
+// Load template files
+@import 'theme-template';
+
+// Load our theme
+@import 'theme-gumbo';

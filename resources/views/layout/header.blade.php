@@ -5,7 +5,7 @@
     <div class="container no-override">
         {{-- Brand logo --}}
         <a class="navbar-brand" href="index.html">
-            <img src="/svg/logo-text-white.svg" class="mr-2 w-100" alt="" aria-labelledby="navbar-brand-text" />
+            <img src="/svg/logo-text-white.svg" class="navbar-brand__logo" alt="" aria-labelledby="navbar-brand-text" />
             <span class="sr-only" id="navbar-brand-text">Gumbo Millennium</span>
         </a>
 
@@ -32,7 +32,7 @@
                     </a>
 
                     {{-- Render child nodes --}}
-                    <div class="dropdown-menu dropdown-menu-dark" role="menu">
+                    <div class="dropdown-menu" role="menu">
                         {{-- Loop through children --}}
                         @foreach ($menuItem['children'] as $subMenu)
                         <a class="dropdown-item" href="{{ $subMenu['url'] }}">{{ $subMenu['title'] }}</a>

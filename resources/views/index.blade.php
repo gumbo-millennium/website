@@ -1,24 +1,23 @@
 @extends('layout.default')
 
 @push('stack.header')
-<div class="hero hero--homepage hero--full-height">
-    <div class="hero__inner">
-        <h2 class="hero__title customFadeInUp">
-            Wij zijn Gumbo Millennium
-        </h2>
-        <p class="hero__subtitle customFadeInUp">
-            Dubbel L, Dubbel N, Dubbel genieten!
+<div class="hero hero--large hero--with-cover hero--sample">
+    <div class="hero__container">
+        <h3 class="hero__header customFadeInUp">
+            Welkom bij Gumbo Millennium
+        </h3>
+        <p class="hero__lead hero__lead--large customFadeInUp ">
+            Dubbel L, dubbel N, dubbel genieten!
         </p>
-        <p class="hero__body">
-            Maak je studententijd onvergetelijk!
+        <p class="hero__lead">
+            Wil jij ook je studententijd onvergetelijk maken?
         </p>
 
-        <div class="actions customFadeInUp">
-            <a href="#" class="btn-pill btn-pill-brand btn-pill-lg">Word lid</a>
+        <div class="actions hero__cta customFadeInUp">
+            <a href="#" class="btn btn-brand btn-large hero__cta-btn">Word lid</a>
         </div>
     </div>
 </div>
-
 @endpush
 
 @section('content')
