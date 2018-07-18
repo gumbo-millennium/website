@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Roumen\Sitemap\Sitemap;
+use Corcel\Model\Post;
+use App\Activity;
+use Corcel\Model\Page;
 
 /**
  * Generates sitemaps for WordPress pages and our pages.
@@ -37,12 +40,10 @@ class SitemapController extends Controller
      */
     public function index(Request $request)
     {
-        // $map = app('sitemap');
-        $map = new Sitemap;
+        $map = app('sitemap');
+        // $map->setCache('sitemap', 60);
 
-        $map->setCache('sitemap', 60);
-
-        if (!$map->isCached()) {
+        if (!$map->isCached() || config('app.debug', false)) {
             $this->buildSitemap($map);
         }
 
@@ -51,19 +52,38 @@ class SitemapController extends Controller
 
     private function buildSitemap(Sitemap &$sitemap)
     {
+        // Get change dates for archive pages
+        $postLast = Post::published()->newest()->first();
+        $activityLast = Activity::published()->newest()->first();
+
         // Most important pages
-        $sitemap->add(secure_url('/'), $oldest, '1.0', 'weekly');
-        $sitemap->add(secure_url('/activiteiten'), null, '1.0', 'daily');
-        $sitemap->add(secure_url('/nieuws'), null, '1.0', 'daily');
+        $sitemap->add(secure_url('/'), null, '1.0', 'weekly');
+        $sitemap->add(secure_url('/activiteiten'), optional($postLast)->post_modified, '1.0', 'daily');
+        $sitemap->add(secure_url('/nieuws'), optional($activityLast)->post_modified, '1.0', 'daily');
 
-        // WordPressPages
-        // TODO
+        // dd([
+        //     'page' => Page::published()->get(),
+        //     'post' => Post::published()->get(),
+        //     'activity' => Activity::published()->get()
+        // ]);
 
-        // WordPress posts
-        // TODO
+        // WordPress Pages
+        foreach (Page::published()->get() as $page) {
+            $sitemap->add(secure_url($page->slug), $page->post_modified, 0.7, 'weekly');
+        }
 
-        // WordPress activities
-        // TODO
+        // WordPress Posts
+        foreach (Post::published()->get() as $post) {
+            $sitemap->add(secure_url($post->slug), $post->post_modified, 0.5, 'monthly');
+        }
+
+        // WordPress Activities
+        foreach (Activity::published()->get() as $activity) {
+            $sitemap->add(secure_url($activity->slug), $activity->post_modified, 0.6, 'weekly');
+        }
+
+        // WordPress documents
+        // Not indexed, due to privacy reasons
 
         // Other pages
         // TODO

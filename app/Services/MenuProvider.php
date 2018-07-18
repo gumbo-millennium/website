@@ -97,5 +97,4 @@ class MenuProvider
         $menu = CorcelMenu::find($id);
         return $menu ? new Menu($menu) : null;
     }
-
 }

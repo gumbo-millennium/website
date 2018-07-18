@@ -1,0 +1,25 @@
+///
+// Epic events
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.btn--event-tickets {
+  @include button-outline-variant(theme-color('brand'));
+
+  // Make it a big one
+  padding: 1rem 1.9rem;
+
+  // Override width and radius, not color
+  border-width: 2px;
+  border-radius: 60px;
+
+  // Make it heavier
+  font-weight: bold;
+  transition: all .2s;
+  letter-spacing: 1px;
+
+  // Always in caps
+  text-transform: uppercase;
+}

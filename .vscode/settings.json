@@ -1,5 +1,10 @@
 {
   "css.validate": false,
   "less.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
+
+  // Travis CI
+  "travis.pro": true,
+  "travis.repository": "gumbo-corcel",
+  "travis.username": "roelofr"
 }
