@@ -73,7 +73,7 @@
 // #region: fixed background heroes (include)
 .hero--with-cover {
   &::after {
-    background: url('../../../svg/mosaic.svg');
+    background: url('#{$svgPath}/mosaic.svg');
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
