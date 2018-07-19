@@ -11,7 +11,7 @@
 <link href="{{ mix('/gumbo.css') }}" rel="stylesheet">
 
 {{-- Web fonts --}}
-@if (optional($page_type) === 'blog')
+@if ($page_type ?? null === 'blog')
     {{-- Blog pages have classier fonts, and Open Sans --}}
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif:400,700|Open+Sans:400,700|Zilla+Slab" rel="stylesheet">
 @else
