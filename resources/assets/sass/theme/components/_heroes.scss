@@ -32,7 +32,7 @@
 
   &__header {
     color: #{color('white')};
-    font-family: $sourceSans;
+    font-family: $font-header;
 
     // Delay the animation
     animation-delay: .1s;
@@ -73,7 +73,7 @@
 // #region: fixed background heroes (include)
 .hero--with-cover {
   &::after {
-    background: url('#{$svgPath}/mosaic.svg');
+    background: url('#{$path-svg}/mosaic.svg');
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
@@ -283,7 +283,7 @@
 
   .hero__header {
     color: #{color('white')};
-    font-family: $franklin;
+    font-family: $font-header-story;
     font-size: 1.75rem;
     line-height: 2rem;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
@@ -313,19 +313,19 @@
 
 .hero--sample {
   &.hero--app {
-    background-image: url('#{$imagesPath}/gumbo/hertog.jpg');
+    background-image: url('#{$path-images}/gumbo/hertog.jpg');
   }
 
   &.hero--large {
-    background-image: url('#{$imagesPath}/gumbo/hertog.jpg');
+    background-image: url('#{$path-images}/gumbo/hertog.jpg');
   }
 
   &.hero--event-epic {
-    background-image: url('#{$imagesPath}/gumbo/hertog.jpg');
+    background-image: url('#{$path-images}/gumbo/hertog.jpg');
   }
 
   &.hero--medium {
-    background-image: url('#{$imagesPath}/gumbo/hertog.jpg');
+    background-image: url('#{$path-images}/gumbo/hertog.jpg');
   }
 }
 

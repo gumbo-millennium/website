@@ -24,8 +24,9 @@
   &__title {
     position: relative;
     text-align: center;
+    font-family: $font-header;
     font-size: 20px;
-    letter-spacing: 2px;
+    font-weight: normal;
     text-transform: uppercase;
   }
 
