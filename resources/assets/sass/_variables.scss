@@ -5,14 +5,14 @@
 // @license MPL-2.0
 ///
 
-// Keep track of FA Pro
-$has-font-awesome-pro: false !default;
-$fa-font-name: if($has-font-awesome-pro, 'Font Awesome 5 Pro', 'Font Awesome 5 Free');
-
-// Add a Brand color
+/*
+    Colors
+*/
+// Add a Brand color and register it with bootstrap
 $brand: #007d00;
+$theme-colors: ("brand": $brand);
 
-// And add our color variations
+// And alter Bootstrap's colors a bit
 $primary: #0275d8;
 $secondary: #6a7177;
 $success: #5cb85c;
@@ -22,7 +22,33 @@ $danger: #d9534f;
 $light: #a9a9a9;
 $dark: #222;
 
-// really register that brand color
-$theme-colors: (
-  "brand": $brand
-);
+/*
+  Fonts
+*/
+
+// From Bootstrap (License MIT)
+// stylelint-disable value-keyword-case
+$font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:            $font-family-sans-serif !default;
+// stylelint-enable value-keyword-case
+
+// Come up with a Serif font
+$font-family-serif:  'Georgia', 'Garamond', 'Times', 'Times New Roman', 'times', serif;
+
+// Default body and headers
+$font-body: 'Open Sans', $font-family-sans-serif;
+$font-header: 'Montserrat', $font-body;
+
+// Story pages (blog) body and header
+$font-body-story: 'Noto Serif', $font-family-sans-serif;
+$font-header-story: 'Zilla Slab', $font-body-story;
+
+/*
+  Paths to files
+*/
+$path-images: '../images';
+$path-svg: '../svg';
+
+// Load overrides
+@import "variables-override";

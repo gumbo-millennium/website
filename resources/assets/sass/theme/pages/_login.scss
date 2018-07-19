@@ -9,7 +9,7 @@
   background-color: gray('100');
 
   @include media-breakpoint-up(lg) {
-    background-image: url('#{$svgPath}/logo-glass-green.svg');
+    background-image: url('#{$path-svg}/logo-glass-green.svg');
     background-repeat: no-repeat;
     background-position: calc(100vw - 27.5vw) calc(100vh - 35vw);
     background-size: 40vw auto;
