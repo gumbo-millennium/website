@@ -22,6 +22,9 @@
     "prod": "yarn run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
+  "optionalDependencies": {
+    "@gumbo/theme-spacial": "file:./library/npm/spacial-theme.tar.gz"
+  },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.1.0",
     "@zeitiger/elevatezoom": "^2.5.4",

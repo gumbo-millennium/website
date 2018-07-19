@@ -25,7 +25,7 @@ $has-font-awesome-pro: true;
 @import '~@fortawesome/fontawesome-pro/scss/light';
 
 // Load template files
-@import 'theme-template';
+@import '~@gumbo/theme-spacial/sass/spacial';
 
 // Load our theme
 @import 'theme-gumbo';

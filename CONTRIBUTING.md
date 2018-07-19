@@ -11,9 +11,19 @@ The following guide quickly describes how to get started with the project.
 - Docker + docker-compose
 - Visual Studio Code (recommended)
 
+## Required files
+
+Some files could not be packaged along with this repository. They've been uploaded
+to Google Drive and are added as a remote dependancy.
+
+- [`library/npm/spacial-theme.tar.gz`](https://drive.google.com/file/d/1-GkTD3XFdLXYKso81JUp021LQDoHKEqA/view?usp=sharing).
+
+Download the files above and put them in the mentioned location, otherwise the application
+*might* not install correctly.
+
 ## Quick start
 
-After installing the above dependencies, make sure the following commands work
+After installing the above dependencies and files, make sure the following commands work
 in your console:
 
 - `composer`
