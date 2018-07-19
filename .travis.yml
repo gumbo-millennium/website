@@ -37,6 +37,9 @@ before_install:
   # Get a database going, add the Travis user as granted user
   - ./library/travis/init-db
 
+  # Download file assets
+  - ./library/travis/download-spacial-theme
+
   # Install Submodules
   - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
   - git submodule update --init
