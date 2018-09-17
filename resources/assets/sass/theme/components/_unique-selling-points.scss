@@ -1,0 +1,103 @@
+///
+// Unique selling points for the homepage
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.unique-selling-points,
+.homepage-unique-points {
+  padding: 70px 0 40px;
+  border-top: 1px solid #{gray('200')};
+  border-bottom: 1px solid #{gray('200')};
+  background: #{gray('100')};
+
+  &__header {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 0;
+      bottom: -50px;
+      left: 0;
+      width: 87%;
+      height: 1px;
+      margin: auto;
+      background-color: #{gray('400')};
+      content: '';
+    }
+
+    &-title {
+      color: #{gray('700')};
+      text-align: center;
+      font-size: 23px;
+      font-weight: normal;
+
+      @include media-breakpoint-up(md) {
+        font-size: 26px;
+      }
+    }
+
+    &-text {
+      width: 75%;
+      margin: 0 auto;
+      margin-top: 30px;
+      color: #{gray('600')};
+      text-align: center;
+      font-size: 15px;
+      line-height: 25px;
+    }
+  }
+
+  &__features {
+    width: 88%;
+    margin: auto;
+    margin-top: 110px;
+  }
+
+  &__feature {
+    width: 100%;
+    margin-bottom: 40px;
+    text-align: center;
+
+    @include media-breakpoint-up(md) {
+      width: auto;
+      margin-bottom: 70px;
+      text-align: inherit;
+    }
+
+    &-icon {
+      max-width: 2rem;
+      max-height: 2rem;
+
+      @include media-breakpoint-up(md) {
+        margin-right: 20px;
+      }
+    }
+
+    &-inner {
+      width: 100%;
+      margin-top: 20px;
+
+      @include media-breakpoint-up(md) {
+        width: 83%;
+        margin-top: 0;
+        float: right;
+      }
+    }
+
+    &-title {
+      margin-top: 0;
+      color: #{theme-color-level('brand', 2)};
+      font-size: 17px;
+    }
+
+    &-desc {
+      width: 95%;
+      margin-top: 18px;
+      color: #{gray('600')};
+      font-size: 15px;
+      line-height: 24px;
+    }
+  }
+}

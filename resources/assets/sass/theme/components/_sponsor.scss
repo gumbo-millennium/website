@@ -1,0 +1,30 @@
+///
+// Base for Sponsor blocks
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+%sponsor {
+  position: relative;
+
+  &::before {
+    display: block;
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+
+    // Some space
+    padding: .25rem .5rem;
+
+    // Surround it with a box
+    border: 1px solid rgba(theme-color-level('brand', -4), 0.9);
+    border-radius: 0.25rem;
+    background-color: rgba(theme-color-level('brand', -4), 0.6);
+
+    // Make it semi-transparent
+    color: rgba(color('white'), 0.7);
+    content: 'Gumbo Millennium sponsor';
+    text-shadow: 1px 1px 2px rgba(gray('800'), 0.5);
+  }
+}

@@ -1,0 +1,147 @@
+///
+// Navbar
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+// Navbar fixes
+.navbar {
+  .navbar-brand {
+    order: 1;
+  }
+
+  .navbar-toggler {
+    order: 2;
+  }
+
+  .navbar-collapse {
+    order: 3;
+  }
+}
+
+// Improve the brand block
+.navbar-brand {
+  &__logo {
+    height: 100%;
+    max-height: 40px;
+    margin-right: map-get($spacers, 2);
+  }
+}
+
+// Brand-coloured navbar
+.navbar-dark {
+  background-color: #{theme-color('brand')};
+  transition: none .4s;
+  transition-property: background-color, box-shadow, padding;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  &--transparent {
+    @include media-breakpoint-up(lg) {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  .navbar-brand {
+    flex: 1 0;
+    color: #{color('white')};
+    font-size: 1.375rem;
+    transition: color .2s linear;
+    letter-spacing: 5px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    // Links
+    .navbar-nav {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+    }
+
+    // Sign up button
+    .nav-item {
+      display: flex;
+      flex-flow: column nowrap;
+      align-content: center;
+      justify-content: center;
+    }
+  }
+
+  .navbar-nav .nav-link {
+    color: #{theme-color-level('light', -8)};
+    font-size: 13px;
+
+    @include media-breakpoint-up(lg) {
+      margin: 0 9px;
+      padding: 2rem 0.25rem;
+    }
+
+    &--rounded {
+      margin-top: 1rem;
+      padding: 10px 2rem 11px;
+
+      // Style as outlined
+      border: 1px solid #{gray('200')};
+      border-radius: 1.5rem;
+      background-color: transparent;
+      color: #{gray('300')};
+
+      // Align center, for mobile devices
+      text-align: center;
+
+      // Animate most items
+      transition: all .15s ease-out;
+      text-transform: capitalize;
+
+      @include media-breakpoint-up(lg) {
+        margin-top: 0;
+        border-color: #{theme-color-level('brand', -1)};
+        background-color: #{theme-color-level('brand', 0)};
+      }
+
+      &:focus,
+      &:hover {
+        border-color: #{color('white')};
+        background-color: #{color('white')};
+        color: #{theme-color('brand')};
+      }
+
+      &:active {
+        transform: scale(0.93);
+      }
+    }
+
+    &--icon {
+      margin-left: 4px;
+      font-size: 10px;
+    }
+  }
+}
+
+// Improve dropdown menus
+@include media-breakpoint-up(lg) {
+  .navbar-darker .dropdown-menu {
+    margin-top: $spacer + 0.25rem;
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: rgba(theme-color-level('brand', 6), 0.8);
+    box-shadow: 0 13px 20px rgba(0, 0, 0, 0.12);
+
+    .dropdown-item {
+      padding: 4px 1.5rem;
+      padding-right: 30px;
+      background-color: transparent;
+      color: #{gray('200')};
+
+      &:hover,
+      &:active,
+      &.active &:hover
+      &.active &:active {
+        background-color: rgba(theme-color-level('brand', 2), 0.6);
+        color: #{gray('200')};
+      }
+    }
+  }
+}

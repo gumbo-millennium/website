@@ -18,3 +18,11 @@ $spacial-font-franklin: $font-header;
 
 // Override bootstrap's default font
 $font-family-base: $font-body;
+
+// assets paths
+$spacial-path-images: '~@gumbo/theme-spacial/images' !default;
+$spacial-path-svg: '~@gumbo/theme-spacial/svg' !default;
+$spacial-path-fonts: '~@gumbo/theme-spacial/fonts' !default;
+
+// Font URL
+$spacial-font-base: 'https://fonts.google.com/' !default;

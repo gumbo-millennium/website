@@ -329,3 +329,7 @@
   }
 }
 
+.hero--test {
+  @include test-image;
+}
+

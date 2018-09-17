@@ -5,7 +5,7 @@
 * @license MPL-2.0
 */
 
-import { jQuery as $ } from 'jquery'
+import jQuery from 'jquery'
 
 let renderPending = false
 const elements = document.querySelectorAll('[data-animate]')
@@ -56,7 +56,7 @@ const update = () => {
 * @returns {Boolean} true if visible
 */
 const isInViewport = (element) => {
-  let elementOffset = $(element).offset()
+  let elementOffset = jQuery(element).offset()
   let elementTop = elementOffset.top
   let elementBottom = elementOffset.top + element.innerHeight
 

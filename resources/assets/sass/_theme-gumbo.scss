@@ -11,14 +11,14 @@
 // Load modules
 @import "theme/modules/basic-effects";
 
+// Load layout
+@import "theme/layout/all";
+
 // Load components
-@import "theme/components/skip-to-content";
-@import "theme/components/alerts";
-@import "theme/components/heroes";
-@import "theme/components/navbar";
-@import "theme/components/central-intro";
+@import "theme/components/all";
 
 // Load pages
 @import "theme/pages/homepage";
 @import "theme/pages/epic-events";
 @import "theme/pages/login";
+@import "theme/pages/files";
