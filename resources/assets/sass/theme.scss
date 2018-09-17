@@ -1,5 +1,5 @@
 ///
-// Theme root file, without premium assets
+// Theme root file
 //
 // @author Roelof Roos <github@roelof.io>
 // @license MPL-2.0
@@ -22,7 +22,7 @@
 @import 'vendor/font-awesome-pro-bindings';
 
 // Load template files
-@import '~@gumbo/theme-spacial/sass/spacial';
+// @import '~@gumbo/theme-spacial/sass/spacial';
 
 // Load our theme
 @import 'theme-gumbo';

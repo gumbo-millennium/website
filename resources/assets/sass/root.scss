@@ -1,0 +1,22 @@
+///
+/// Builds a Bootstrap-based site
+/// @author Roelof Roos <github@roelof.io>
+/// @group non-project
+/// @license MPL-2.0
+///
+
+// Bootstrap
+@import "variables";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+:root {
+  @each $color, $value in $theme-colors {
+    --#{$color}: #{$value};
+  }
+
+  @each $shade, $value in $grays {
+    --gray-#{$shade}: #{$value};
+  }
+}

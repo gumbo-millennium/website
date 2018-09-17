@@ -1,0 +1,134 @@
+///
+// Page footer
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+
+/* footer */
+.footer {
+  padding: 3.5rem 0 2.25rem;
+  background: #{theme-color-level('brand', 7)};
+
+  &__column {
+    margin-bottom: 20px;
+
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    color: #{color('white')};
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  &__menu {
+    margin-top: 30px;
+    padding: 0;
+    list-style-type: none;
+
+    a {
+      display: inline-block;
+      margin-bottom: 9px;
+      color: #{gray('400')};
+      transition: all .2s linear;
+      text-decoration: none;
+
+      &:hover {
+        color: #{color('white')};
+      }
+    }
+
+    &__icon {
+      width: 21px;
+      margin-top: 3px;
+      margin-right: 12px;
+      margin-bottom: 5px;
+      font-size: 23px;
+    }
+  }
+
+  &-newsletter {
+    &__caption {
+      margin-top: 25px;
+      color: #{theme-color-level('brand', -9)};
+      line-height: 20px;
+    }
+
+    &__form {
+      position: relative;
+      margin-top: 27px;
+    }
+
+    &__email {
+      height: 45px;
+      padding-left: 17px;
+
+      &::placeholder {
+        color: #{gray('400')};
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    &__submit {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 45px;
+      padding: 0 15px;
+      border: 0;
+      border-radius: 0 4px 4px 0;
+      background: #{theme-color-level('brand', -2)};
+      color: #{color('white')};
+      font-size: 17px;
+    }
+  }
+
+  &__legal {
+    margin-top: 1.5rem;
+    border-top: 1px solid #{theme-color-level('brand', 5)};
+
+    &-menu {
+      margin-top: 15px;
+      padding: 0;
+      text-align: center;
+      list-style-type: none;
+
+      li {
+        display: inline-block;
+        margin: 0 11px;
+
+        &:last-child {
+          a:after {
+            content: '';
+          }
+        }
+      }
+
+      a {
+        position: relative;
+        color: #{theme-color-level('brand', -5)};
+        font-size: 11px;
+        font-weight: 600;
+        text-decoration: none;
+        text-transform: uppercase;
+
+        &:after {
+          position: absolute;
+          top: -1px;
+          right: -15px;
+          font-weight: bold;
+          content: '|';
+        }
+      }
+    }
+  }
+}

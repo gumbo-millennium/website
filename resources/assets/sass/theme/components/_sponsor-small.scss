@@ -1,0 +1,83 @@
+///
+// Small sponsor block, containing a single, responsive, landscape image
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+$small-donor-max-width: 920px;
+$small-donor-max-height: 90px;
+
+.donor-small,
+.sponsor-small {
+  @extend %sponsor;
+
+  padding: 5.75rem 0;
+  background-color: #{theme-color-level('brand', -8)};
+
+  &::before {
+    color: rgba(theme-color-level('brand', 4), 0.7);
+  }
+
+  &__container {
+    @include make-container;
+    @include make-container-max-widths;
+  }
+
+  &__link {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-items: center;
+
+    // Maximum sizes for ads
+    max-width: $small-donor-max-width;
+    max-height: $small-donor-max-height;
+
+    // Center-align the image, should it get too large
+    margin: 0 auto;
+
+    // Don't get special
+    outline: none;
+    text-decoration: none;
+  }
+
+  &__image {
+    @include img-fluid;
+    position: relative;
+    max-height: $small-donor-max-height;
+    color: #{theme-color('brand')};
+    text-align: center;
+
+    &::after {
+      // Force display
+      display: block;
+
+      // Fix positioning
+      position: absolute;
+      top: ($small-donor-max-height / -2 + 10px);
+      left: 01;
+
+      // Maximum sizes for ads
+      width: 100%;
+      height: $small-donor-max-height;
+
+      // Add nice border
+      border: 1px solid theme-color-level('brand', -6);
+
+      // Style as missing
+      background-color: #{theme-color-level('brand', -7)};
+      background-image: url("#{$path-svg}/logo-text-white.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: auto 80%;
+
+      // Add a space, otherwise it doesn't work
+      content: " ";
+
+      @include media-breakpoint-up(lg) {
+        width: $small-donor-max-width;
+      }
+    }
+  }
+}

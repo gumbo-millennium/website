@@ -45,7 +45,7 @@ const validateTransparentNavbar = navbar => {
   if (!nextNode || !nextNode.classList.contains('hero')) {
     let _nav = navbar.get(0)
     _nav.style.transition = 'none'
-    _nav.classList.remove('bg-transparent')
+    _nav.classList.remove('navbar-dark--transparent')
     setTimeout(() => _nav.style.removeProperty('transition'), 100)
   }
 }
@@ -57,20 +57,21 @@ const validateTransparentNavbar = navbar => {
 */
 const bindTransparantNavbar = navbar => {
   // Don't do anything if the navbar isn't the right kind
-  if (!navbar.hasClass('bg-transparent') || !navbar.hasClass('fixed-top')) {
+  if (!navbar.hasClass('navbar-dark') || !navbar.hasClass('fixed-top')) {
     return
   }
 
   // Get current top
-  const navbarTop = navbar.offset().top + 15
+  const navbarTop = navbar.height() * 0.75
 
   // Handle changes
   const handleFunction = () => {
     let offsetTop = window.scrollY || window.pageYOffset
-    navbar.toggleClass('bg-transparent', offsetTop <= navbarTop)
+    navbar.toggleClass('navbar-dark--transparent', offsetTop <= navbarTop)
   }
 
   window.addEventListener('scroll', throttle(handleFunction, 200), passiveEvent)
+  handleFunction()
 }
 
 /**
