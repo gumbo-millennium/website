@@ -1,8 +1,8 @@
 @extends('layout.default')
 
 @push('stack.header')
-<div class="hero hero--large hero--with-cover hero--sample">
-    <div class="hero__container">
+<div class="hero hero--large hero--with-cover hero--test">
+<div class="hero__container">
         <h3 class="hero__header customFadeInUp">
             Welkom bij Gumbo Millennium
         </h3>

@@ -1,7 +1,7 @@
 @inject('menuHelper', 'App\Services\MenuProvider')
 
 {{-- Header v2 --}}
-<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top" role="navigation">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation">
     <div class="container no-override">
         {{-- Brand logo --}}
         <a class="navbar-brand" href="index.html">
@@ -28,7 +28,7 @@
                     {{-- Render text and arrow down --}}
                     <a href="{{ $menuItem['url'] }}" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         {{ $menuItem['title'] }}
-                        <i class="fal fa-chevron-down"></i>
+                        {{-- <i class="fal fa-chevron-down"></i> --}}
                     </a>
 
                     {{-- Render child nodes --}}

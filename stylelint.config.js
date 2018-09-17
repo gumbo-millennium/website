@@ -119,6 +119,8 @@ module.exports = {
             'align-items',
             'align-self',
             'justify-content',
+            'justify-items',
+            'justify-self',
             'place-content'
           ],
           emptyLineBefore: 'never'
@@ -172,10 +174,10 @@ module.exports = {
             'border-right-style',
             'border-bottom-style',
             'border-left-style',
-            'border-top-radius',
-            'border-right-radius',
-            'border-bottom-radius',
-            'border-left-radius'
+            'border-top-left-radius',
+            'border-top-right-radius',
+            'border-bottom-right-radius',
+            'border-bottom-left-radius'
           ],
           emptyLineBefore: 'never'
         },
