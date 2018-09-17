@@ -1,3 +1,40 @@
+@php
+$searchTopics = [
+['line-graph', 'Statistics'],
+['calendar-alt', 'Calendar Events'],
+['comments', 'Conversations'],
+['envelope-open', 'Messages'],
+['tags', 'Pricing'],
+['pencil-ruler', 'Account Settings'],
+['wallet', 'Payments'],
+['key', 'Security']
+];
+@endphp
+
+{{-- Page header --}}
+<div class="support-hero support-header">
+    <form class="container support-header__container">
+        {{-- Search field --}}
+        <div class="support-header__search">
+            <i class="fas fa-search support-header__search-icon"></i>
+            <input type="search" class="support-header__search-field" placeholder="Search help topics">
+        </div>
+
+        {{-- Common topics (x4) --}}
+        @if (!empty($searchTopics))
+        <div class="support-header__topic-list">
+            @foreach ($searchTopics as list($searchIcon, $searchTopic))
+            <a href="#find-by={{ $searchTopic }}" class="support-header__topic">
+                <i class="support-header__topic-icon fas {{ $searchIcon }}"></i>
+                <span class="support-header__topic-name">{{ $searchTopic}}</span>
+            </a>
+            @endforeach
+        </div>
+        @endif
+    </div>
+</div>
+
+
 <!-- Page Header-->
 <section class="module-header parallax bg-dark bg-gradient" data-background="assets/images/module-30.jpg">
     <div class="container">
