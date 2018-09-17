@@ -19,6 +19,7 @@ class Menu extends Collection
      */
     protected static function convertMenuItem(MenuItem $item) : ? Collection
     {
+        // Get the instance for the menu item, see Corcel docs.
         $instance = $item->instance();
         $parent = $item->parent();
 
