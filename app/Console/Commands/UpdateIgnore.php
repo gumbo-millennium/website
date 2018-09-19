@@ -91,6 +91,9 @@ class UpdateIgnore extends Command
 # Development helper
 storage/debugbar
 
+## PhpStorm
+.idea/
+
 IGNORE;
         // Trim lines and add trailing EOL
         $ignoreContent = trim($ignoreContent) . PHP_EOL;

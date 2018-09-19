@@ -108,3 +108,7 @@ typings/
 
 # Development helper
 storage/debugbar
+
+
+## PhpStorm
+.idea/
