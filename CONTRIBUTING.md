@@ -21,6 +21,26 @@ to Google Drive and are added as a remote dependancy.
 Download the files above and put them in the mentioned location, otherwise the application
 *might* not install correctly.
 
+## Global Git ignore file
+
+We *highly* recommend using a system or user-wide gitignore file, as explained in [this guide][ggi-1]. This
+keeps our repository's `.gitignore` file nice and short and platform agnostic. You can easily create an
+ignore file for your editor and platform using [gitignore.io][ggi-2].
+
+Or, just ignore all platforms and most common editors and run these two lines in a Bash shell:
+
+```
+wget -O ~/.gitignore_global https://www.gitignore.io/api/code,netbeans,intellij,eclipse,linux,windows,macos
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+If you're missing any rules, or want to add your own, just update the `~/.gitignore_global` file.
+
+**Requests containing IDE-specific files that should *not* be added to git, will be closed!**
+
+[ggi-1]: https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+[ggi-2]: https://www.gitignore.io/
+
 ## Quick start
 
 After installing the above dependencies and files, make sure the following commands work
