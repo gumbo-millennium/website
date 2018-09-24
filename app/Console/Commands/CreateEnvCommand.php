@@ -32,8 +32,8 @@ class CreateEnvCommand extends Command
         'DB_DATABASE' => 'laravel',
         'BROADCAST_DRIVER' => 'redis',
         'CACHE_DRIVER' => 'redis',
+        'QUEUE_CONNECTION' => 'redis',
         'SESSION_DRIVER' => 'redis',
-        'QUEUE_DRIVER' => 'redis',
         'WP_DATABASE' => 'wordpress',
     ];
 
