@@ -19,15 +19,6 @@ mix
 mix
   .sass(`resources/assets/sass/theme.scss`, 'public/gumbo.css')
 
-// Browsersync, used with 'yarn run watch'
-mix.browserSync({
-  proxy: 'gumbo.localhost',
-  files: [
-    './resources/assets/js/**/*.js',
-    './resources/assets/sass/**/*.scss'
-  ]
-})
-
 // Always make jQuery and Popper available
 mix.autoload({
   jquery: ['$', 'window.jQuery'],
