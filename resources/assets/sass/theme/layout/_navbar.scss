@@ -18,13 +18,18 @@
   .navbar-collapse {
     order: 3;
   }
+
+  @include media-breakpoint-up(lg) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 // Improve the brand block
 .navbar-brand {
   &__logo {
     height: 100%;
-    max-height: 40px;
+    max-height: 60px;
     margin-right: map-get($spacers, 2);
   }
 }
@@ -38,7 +43,7 @@
 
   &--transparent {
     @include media-breakpoint-up(lg) {
-      background-color: transparent;
+      background-color: rgba(gray('800'), 0.3);
       box-shadow: none;
     }
   }
@@ -69,12 +74,14 @@
   }
 
   .navbar-nav .nav-link {
-    color: #{theme-color-level('light', -8)};
-    font-size: 13px;
+    color: #{color('white')};
+    font-family: $font-nav;
+    font-size: 16px;
 
     @include media-breakpoint-up(lg) {
       margin: 0 9px;
-      padding: 2rem 0.25rem;
+      padding: 1.5rem 0.25rem;
+      font-weight: 500;
     }
 
     &--rounded {
@@ -92,6 +99,7 @@
 
       // Animate most items
       transition: all .15s ease-out;
+      text-shadow: none;
       text-transform: capitalize;
 
       @include media-breakpoint-up(lg) {
