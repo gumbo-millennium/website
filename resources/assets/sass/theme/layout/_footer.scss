@@ -9,7 +9,8 @@
 /* footer */
 .footer {
   padding: 3.5rem 0 2.25rem;
-  background: #{theme-color-level('brand', 7)};
+  border-top: 1px solid #{gray('300')};
+  background: #{gray('200')};
 
   &__column {
     margin-bottom: 20px;
@@ -20,7 +21,7 @@
   }
 
   &__title {
-    color: #{color('white')};
+    color: #{color('800')};
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 1px;
@@ -35,12 +36,12 @@
     a {
       display: inline-block;
       margin-bottom: 9px;
-      color: #{gray('400')};
+      color: #{gray('900')};
       transition: all .2s linear;
       text-decoration: none;
 
       &:hover {
-        color: #{color('white')};
+        color: #{gray('800')};
       }
     }
 
@@ -56,7 +57,7 @@
   &-newsletter {
     &__caption {
       margin-top: 25px;
-      color: #{theme-color-level('brand', -9)};
+      color: #{gray('600')};
       line-height: 20px;
     }
 
@@ -70,7 +71,7 @@
       padding-left: 17px;
 
       &::placeholder {
-        color: #{gray('400')};
+        color: #{gray('500')};
       }
 
       &:focus {
@@ -86,7 +87,7 @@
       padding: 0 15px;
       border: 0;
       border-radius: 0 4px 4px 0;
-      background: #{theme-color-level('brand', -2)};
+      background: #{theme-color-level('brand', 2)};
       color: #{color('white')};
       font-size: 17px;
     }
@@ -94,7 +95,7 @@
 
   &__legal {
     margin-top: 1.5rem;
-    border-top: 1px solid #{theme-color-level('brand', 5)};
+    border-top: 1px solid #{gray('200')};
 
     &-menu {
       margin-top: 15px;
@@ -115,11 +116,16 @@
 
       a {
         position: relative;
-        color: #{theme-color-level('brand', -5)};
+        color: #{gray('200')};
         font-size: 11px;
         font-weight: 600;
         text-decoration: none;
         text-transform: uppercase;
+
+        &:hover,
+        &:focus {
+          color: #{gray('300')};
+        }
 
         &:after {
           position: absolute;
