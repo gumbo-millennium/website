@@ -16,5 +16,5 @@
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif:400,700|Open+Sans:400,700|Zilla+Slab" rel="stylesheet">
 @else
     {{-- Other pages just have the normal fonts --}}
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,500,700" rel="stylesheet">
 @endif
