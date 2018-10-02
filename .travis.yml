@@ -65,7 +65,7 @@ script:
   - find resources/assets -type f -name '*.js' -print | xargs node_modules/.bin/eslint
 
   # Build front-end assets
-  - yarn run production
+  - yarn build
 
   # Run tests
   - vendor/bin/phpunit
