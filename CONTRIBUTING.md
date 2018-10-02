@@ -101,7 +101,7 @@ php artisan key:generate
 Now that the environment is ready, tiem to create some assets.
 
 ```
-yarn build
+yarn run development
 ```
 
 ### Fire up docker envs
@@ -120,17 +120,39 @@ After the database is ready, run the migrations and the seeder.
 php artisan migrate:fresh --seed
 ```
 
-### Install and build WordPress theme
+### Install and build WordPress theme and plugin
 
 The theme uses Yarn to build a nice admin env. Make sure to run the following,
 from the project root.
+
+#### Build theme
 
 ```
 yarn --cwd=library/wordpress/themes/gumbo-millennium/ install
 yarn --cwd=library/wordpress/themes/gumbo-millennium/ build
 ```
 
-### Connect nginx-proxy
+#### Build plugin
+
+```
+composer --working-dir=library/wordpress/plugins/gumbo-millennium/ install
+yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install
+yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build
+```
+
+### Get to coding
+
+You are now ready to start developing. If you're working on assets (Javascript or Sass),
+use the `yarn start` command to compile for development and watch for changes.
+
+The Docker container endpoints are as follows:
+
+- Website: <http://127.13.37.1>
+- PhpMyAdmin: <http://127.13.37.1:8000>
+- MailHog: <http://127.13.37.1:8025>
+- Wordpress: <http://127.13.37.1:8080/wp-admin>
+
+### (Optional) Connect nginx-proxy
 
 Please install the [`nginx-proxy` for Docker](https://github.com/jwilder/nginx-proxy),
 and make sure you add the container to the local network for this project.
@@ -143,10 +165,10 @@ docker network connect \
 
 Now you *should* be able to connect over the following domains:
 
-- Website: [http://gumbo.localhost/](http://gumbo.localhost/)
-- PhpMyAdmin: [http://pma.gumbo.localhost/](http://pma.gumbo.localhost/)
-- MailHog: [http://mail.gumbo.localhost/](http://mail.gumbo.localhost/)
-- Wordpress: [http://wordpress.gumbo.localhost/](http://wordpress.gumbo.localhost/)
+- Website: <http://gumbo.localhost/>
+- PhpMyAdmin: <http://pma.gumbo.localhost/>
+- MailHog: <http://mail.gumbo.localhost/>
+- Wordpress: <http://wordpress.gumbo.localhost/wp-admin>
 
 #### Restart the proxy
 
