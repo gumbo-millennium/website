@@ -18,8 +18,9 @@ to Google Drive and are added as a remote dependancy.
 
 - [`library/npm/spacial-theme.tar.gz`](https://drive.google.com/file/d/1-GkTD3XFdLXYKso81JUp021LQDoHKEqA/view?usp=sharing).
 
-Download the files above and put them in the mentioned location, otherwise the application
-*might* not install correctly.
+Download the files above and put them in the mentioned location (extraction of
+archives is not required), otherwise the application *might* not install
+correctly.
 
 ## Global Git ignore file
 
@@ -88,12 +89,12 @@ composer install
 
 ### Configure env
 
-We need a `.env` file for our development environment. Just copy the `env.dev`
-and generate a key, and you're good to go.
+We need a `.env` file for our development environment. Luckily there's a command
+that auto-generates an `.env` file, using the latest `.env.example` file as
+reference:
 
 ```
-cp .env.dev .env
-php artisan key:generate
+php artisan app:env
 ```
 
 ### Build assets
