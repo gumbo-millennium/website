@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
+use App\Services\WordPressAccessProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
         // Register nav menu as $menu on all requests
         $this->app->singleton(MenuProvider::class, function () {
             return new MenuProvider;
+        });
+
+        // Register nav menu as $menu on all requests
+        $this->app->singleton(WordPressAccessProvider::class, function () {
+            return new WordPressAccessProvider;
         });
     }
 
