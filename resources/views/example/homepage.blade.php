@@ -1,5 +1,5 @@
 {{-- Meet Gumbo --}}
-<div class="central-intro">
+<div class="central-intro central-intro--light">
     <div class="central-intro__container">
         <h3 class="central-intro__title">
             Maak kennis met Gumbo Millennium
@@ -17,7 +17,7 @@
 </div>
 
 {{-- Unique Selling Points --}}
-<div class="unique-selling-points">
+<div class="unique-selling-points unique-selling-points--dark">
     <div class="container">
         <header class="unique-selling-points__header">
             <h3 class="unique-selling-points__header-title">Waarom Gumbo Millennium?</h3>
@@ -52,7 +52,7 @@
 </div>
 
 {{-- Foto's --}}
-<div class="photo-album photo-album--test">
+<div class="photo-album photo-album--light photo-album--test">
     <div class="container">
         <h2 class="photo-album__title">Gelukkig hebben we de foto's nog</h2>
 
@@ -124,7 +124,7 @@
 </div>
 
 {{-- Word Lid --}}
-<div class="cta-banner">
+<div class="cta-banner cta-banner--brand">
     <div class="container cta-banner__container">
         <div class="cta-banner__text-container">
             <strong class="cta-banner__text-primary">
