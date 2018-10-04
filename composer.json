@@ -66,8 +66,9 @@
           "echo \"Waiting for MySQL to get ready\" && sleep 10s",
           "@php artisan migrate:fresh --seed",
           "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
           "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
+          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ --dev",
+          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
           "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build"
         ]
     },
