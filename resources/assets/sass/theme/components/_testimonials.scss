@@ -7,6 +7,7 @@
 
 .testimonials,
 .homepage-testimonials {
+  @include add-base-styles;
   padding: 7.5rem 0 4.5rem 0;
 
   &__quote {

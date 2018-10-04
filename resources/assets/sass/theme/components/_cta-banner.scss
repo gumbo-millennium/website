@@ -5,12 +5,11 @@
 // @license MPL-2.0
 ///
 
-
 .cta-banner {
+  @include add-base-styles;
   padding: 3.75rem 0;
-  border: 0 solid #{theme-color-level('secondary', -8)};
   border-width: 1px 0;
-  background: #{theme-color-level('secondary', -7)};
+  border-style: solid;
   text-align: center;
 
   &__container {
@@ -40,38 +39,32 @@
 
   &__text-primary {
     display: block;
-    color: #{color('white')};
     font-size: 1.125rem;
     font-weight: 600;
-    text-shadow: 1px 1px #{theme-color-level('secondary', 2)};
   }
 
   &__text-secondary {
     margin-top: 6px;
-    color: #{theme-color-level('brand', -3)};
-    font-size: 16px;
+    color: #{gray('600')};
+    font-size: 1rem;
+  }
+
+  &--brand &__text-secondary {
+    color: #{theme-color-level('brand', 5)};
   }
 
   &__btn {
-    @extend .btn;
-    @extend .btn-secondary;
+    @include make-button;
+    @include button-outline-variant(theme-color('brand'));
 
+    // Center align in the flexbox
     align-self: center;
     justify-self: center;
 
     // Alter some Bootstrap rules
     padding: 1.1rem 2rem;
-    border-color: #{theme-color-level('secondary', -8)};
     border-radius: 0.5rem;
     background-color: transparent;
-    color: #{theme-color-level('secondary', -8)};
-    line-height: 20px;
-
-    &:focus,
-    &:hover {
-      border-color: #{color('white')};
-      background-color: #{theme-color-level('secondary', -5)};
-      color: #{color('white')};
-    }
+    line-height: 1.25rem;
   }
 }
