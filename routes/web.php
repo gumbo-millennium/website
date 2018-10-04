@@ -12,9 +12,7 @@
 */
 
 // Home
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'PageController@homepage')->name('homepage');
 
 // Join
 route::get('/word-lid', function () {

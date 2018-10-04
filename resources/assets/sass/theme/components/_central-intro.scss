@@ -6,15 +6,8 @@
 ///
 
 .central-intro {
+  @include add-base-styles;
   padding: 5.75rem 0;
-
-  &--dark {
-    background-color: #{theme-color-level('secondary', -9)};
-  }
-
-  &--brand {
-    background-color: #{theme-color-level('brand', -9)};
-  }
 
   &__container {
     @include make-container;

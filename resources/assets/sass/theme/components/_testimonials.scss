@@ -7,6 +7,7 @@
 
 .testimonials,
 .homepage-testimonials {
+  @include add-base-styles;
   padding: 7.5rem 0 4.5rem 0;
 
   &__quote {
@@ -83,6 +84,10 @@
     margin-left: 15px;
     color: #{theme-color-level('secondary', -3)};
     text-align: left;
+
+    &-name {
+      font-weight: bold;
+    }
 
     &-company {
       display: block;

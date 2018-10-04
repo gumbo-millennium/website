@@ -3,3 +3,7 @@
 *.scss linguist-vendored
 *.js linguist-vendored
 CHANGELOG.md export-ignore
+
+# Ignore lock file diffs
+composer.lock binary export-ignore
+yarn.lock binary export-ignore

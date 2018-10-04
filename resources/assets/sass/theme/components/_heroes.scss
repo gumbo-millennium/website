@@ -69,7 +69,6 @@
 }
 //#endregion
 
-
 // #region: fixed background heroes (include)
 .hero--with-cover {
   &::after {
@@ -332,4 +331,3 @@
 .hero--test {
   @include test-image;
 }
-

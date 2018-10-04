@@ -18,8 +18,9 @@ to Google Drive and are added as a remote dependancy.
 
 - [`library/npm/spacial-theme.tar.gz`](https://drive.google.com/file/d/1-GkTD3XFdLXYKso81JUp021LQDoHKEqA/view?usp=sharing).
 
-Download the files above and put them in the mentioned location, otherwise the application
-*might* not install correctly.
+Download the files above and put them in the mentioned location (extraction of
+archives is not required), otherwise the application *might* not install
+correctly.
 
 ## Global Git ignore file
 
@@ -88,12 +89,12 @@ composer install
 
 ### Configure env
 
-We need a `.env` file for our development environment. Just copy the `env.dev`
-and generate a key, and you're good to go.
+We need a `.env` file for our development environment. Luckily there's a command
+that auto-generates an `.env` file, using the latest `.env.example` file as
+reference:
 
 ```
-cp .env.dev .env
-php artisan key:generate
+php artisan app:env
 ```
 
 ### Build assets
@@ -101,7 +102,7 @@ php artisan key:generate
 Now that the environment is ready, tiem to create some assets.
 
 ```
-yarn build
+yarn run development
 ```
 
 ### Fire up docker envs
@@ -120,17 +121,39 @@ After the database is ready, run the migrations and the seeder.
 php artisan migrate:fresh --seed
 ```
 
-### Install and build WordPress theme
+### Install and build WordPress theme and plugin
 
 The theme uses Yarn to build a nice admin env. Make sure to run the following,
 from the project root.
+
+#### Build theme
 
 ```
 yarn --cwd=library/wordpress/themes/gumbo-millennium/ install
 yarn --cwd=library/wordpress/themes/gumbo-millennium/ build
 ```
 
-### Connect nginx-proxy
+#### Build plugin
+
+```
+composer --working-dir=library/wordpress/plugins/gumbo-millennium/ install
+yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install
+yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build
+```
+
+### Get to coding
+
+You are now ready to start developing. If you're working on assets (Javascript or Sass),
+use the `yarn start` command to compile for development and watch for changes.
+
+The Docker container endpoints are as follows:
+
+- Website: <http://127.13.37.1>
+- PhpMyAdmin: <http://127.13.37.1:8000>
+- MailHog: <http://127.13.37.1:8025>
+- Wordpress: <http://127.13.37.1:8080/wp-admin>
+
+### (Optional) Connect nginx-proxy
 
 Please install the [`nginx-proxy` for Docker](https://github.com/jwilder/nginx-proxy),
 and make sure you add the container to the local network for this project.
@@ -143,10 +166,10 @@ docker network connect \
 
 Now you *should* be able to connect over the following domains:
 
-- Website: [http://gumbo.localhost/](http://gumbo.localhost/)
-- PhpMyAdmin: [http://pma.gumbo.localhost/](http://pma.gumbo.localhost/)
-- MailHog: [http://mail.gumbo.localhost/](http://mail.gumbo.localhost/)
-- Wordpress: [http://wordpress.gumbo.localhost/](http://wordpress.gumbo.localhost/)
+- Website: <http://gumbo.localhost/>
+- PhpMyAdmin: <http://pma.gumbo.localhost/>
+- MailHog: <http://mail.gumbo.localhost/>
+- Wordpress: <http://wordpress.gumbo.localhost/wp-admin>
 
 #### Restart the proxy
 
