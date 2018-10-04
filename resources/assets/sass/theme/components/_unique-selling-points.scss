@@ -7,10 +7,12 @@
 
 .unique-selling-points,
 .homepage-unique-points {
+  @include add-base-styles;
   padding: 70px 0 40px;
-  border-top: 1px solid #{gray('200')};
-  border-bottom: 1px solid #{gray('200')};
-  background: #{gray('100')};
+
+  // Add borders
+  border-width: 1px 0;
+  border-style: solid;
 
   &__header {
     position: relative;

@@ -8,6 +8,7 @@
 
 .photo-album,
 .homepage-album {
+  @include add-base-styles;
   padding-top: 3.75rem;
   padding-bottom: 3.75rem;
 
