@@ -54,5 +54,10 @@ $has-font-awesome-pro: false !default;
 $path-images: '../images';
 $path-svg: '../svg';
 
+/*
+  Navbar dimensions
+*/
+$gumbo-navbar-height: 4.375rem;
+
 // Load overrides
 @import "variables-override";

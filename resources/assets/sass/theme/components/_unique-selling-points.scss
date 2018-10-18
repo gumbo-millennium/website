@@ -58,6 +58,11 @@
   }
 
   &__feature {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+
+    // Size
     width: 100%;
     margin-bottom: 40px;
     text-align: center;
@@ -69,8 +74,18 @@
     }
 
     &-icon {
+      flex: 0 auto;
       max-width: 2rem;
       max-height: 2rem;
+
+      &--placeholder {
+        width: 100%;
+        height: 100%;
+        background: none;
+        background-image: url("#{$path-svg}/logo-glass-only-green.svg");
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
 
       @include media-breakpoint-up(md) {
         margin-right: 20px;
@@ -78,7 +93,7 @@
     }
 
     &-inner {
-      width: 100%;
+      flex: 1 auto;
       margin-top: 20px;
 
       @include media-breakpoint-up(md) {

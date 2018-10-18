@@ -7,4 +7,6 @@
 
 body {
   @include font-smoothing(true);
+
+  margin-top: $gumbo-navbar-height;
 }

@@ -69,6 +69,16 @@
 }
 //#endregion
 
+// #region: sub-navbar heroes (include)
+// Heroes that fall behind the navbar
+%hero--behind-navbar {
+  .sr-start-of-content + &,
+  .navbar + & {
+    margin-top: $gumbo-navbar-height * -1;
+  }
+}
+//#endregion
+
 // #region: fixed background heroes (include)
 .hero--with-cover {
   &::after {
@@ -84,6 +94,8 @@
 // Name in theme: business-hero
 .hero--large {
   @extend %hero--fixed;
+  @extend %hero--behind-navbar;
+
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -208,6 +220,8 @@
 // #region: hero--event-epic
 // Name in theme: event-hero
 .hero--event-epic {
+  @extend %hero--behind-navbar;
+
   min-height: 23rem;
   padding-top: 6.25rem;
 

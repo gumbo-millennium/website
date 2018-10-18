@@ -10,7 +10,7 @@
             Used for detail pages that have an important call to action.
         </p>
 
-        <div class="hero__cta customFadeInUp">
+        <div clasls="hero__cta customFadeInUp">
             <a href="#" class="btn btn-brand hero__cta-btn">Learn more</a>
         </div>
     </div>

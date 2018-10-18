@@ -20,7 +20,7 @@
     @yield('layout.content-before')
 
     {{-- Jump-to-content target --}}
-    <div class="sr-only" id="start-of-content"></div>
+    <div class="sr-only sr-start-of-content" id="start-of-content"></div>
 
     {{-- Content block --}}
     @yield('layout.content')
