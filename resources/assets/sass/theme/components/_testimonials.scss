@@ -69,11 +69,10 @@
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background-color: theme-color-level('brand', -6);
-    background-image: url("#{$path-svg}/logo-glass-only-white.svg");
+    background: transparent none;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 30px auto;
+    background-size: cover;
   }
 
   &__author {

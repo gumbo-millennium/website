@@ -1,10 +1,18 @@
 @inject('menuHelper', 'App\Services\MenuProvider')
 
+@php
+$navbarClassName = 'navbar navbar-expand-lg navbar-dark fixed-top';
+$navbarTransparent = isset($page) ? $page->meta->navbar_transparent : null;
+if (strtolower($navbarTransparent) !== 'yes') {
+    $navbarClassName .= ' navbar--opaque';
+}
+@endphp
+
 {{-- Header v2 --}}
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation">
+<nav class="{{ $navbarClassName }}" role="navigation">
     <div class="container no-override">
         {{-- Brand logo --}}
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="/">
             <img src="/svg/logo-text-white.svg" class="navbar-brand__logo" alt="" aria-labelledby="navbar-brand-text" />
             <span class="sr-only" id="navbar-brand-text">Gumbo Millennium</span>
         </a>

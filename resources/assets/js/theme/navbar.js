@@ -61,6 +61,11 @@ const bindTransparantNavbar = navbar => {
     return
   }
 
+  // Dont't do anything if the navbar is flagged as opaque
+  if (navbar.hasClass('navbar--opaque')) {
+    return
+  }
+
   // Get current top
   const navbarTop = navbar.height() * 0.75
 

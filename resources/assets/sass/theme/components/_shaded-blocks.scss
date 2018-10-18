@@ -1,0 +1,12 @@
+///
+// Shaded blocks, which are every odd block
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.gumbo-shaded-block:nth-of-type(even) {
+  border-top-color: #{gray('100')};
+  border-bottom-color: #{gray('100')};
+  background-color: transparent;
+}

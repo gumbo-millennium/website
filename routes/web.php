@@ -12,41 +12,14 @@
 */
 
 // Home
-Route::get('/', 'PageController@homepage')->name('homepage');
-
-// Join
-route::get('/word-lid', function () {
-    abort(404, "not done yet");
-})->name('join');
+Route::get('/', 'WordPressController@homepage')->name('homepage');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 
-// About
-Route::get('/about', function () {
-    return view('pages.about');
-});
-
-Route::get('/about/history', function () {
-    return view('pages.history');
-});
-
-Route::get('/about/board', function () {
-    return view('pages.board');
-});
-
-Route::get('/about/commission', function () {
-    return view('pages.commission');
-});
-
-// Blog
-Route::get('/blog', function () {
-    return view('blog.index');
-});
-
-Route::get('/blog/single', function () {
-    return view('blog.single');
-});
+// News route
+Route::get('/news', 'NewsController@index');
+Route::get('/news/{slug}', 'NewsController@post');
 
 // Activity
 Route::get('/event', function () {
@@ -66,15 +39,19 @@ Route::get('/files/single', function () {
     return view('files.single');
 });
 
+// Authentication
 Route::prefix('/auth/')->namespace('Auth')->group(function () {
         // Authentication Routes...
         $this->get('login', 'LoginController@showLoginForm')->name('auth.login');
         $this->post('login', 'LoginController@login');
         $this->post('logout', 'LoginController@logout')->name('auth.logout');
 
-            // Password Reset Routes...
+        // Password Reset Routes...
         $this->get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('auth.password.request');
         $this->post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('auth.password.email');
         $this->get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('auth.password.reset');
         $this->post('password/reset', 'ResetPasswordController@reset');
 });
+
+// WordPress fallback
+Route::fallback('WordPressController@fallback');
