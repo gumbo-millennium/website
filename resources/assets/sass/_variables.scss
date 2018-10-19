@@ -57,7 +57,7 @@ $path-svg: '../svg';
 /*
   Navbar dimensions
 */
-$gumbo-navbar-height: 4.375rem;
+$gumbo-navbar-height: (70px + 8px * 2) / 16px * 1rem;
 
 // Load overrides
 @import "variables-override";
