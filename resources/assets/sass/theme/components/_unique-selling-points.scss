@@ -65,18 +65,18 @@
     // Size
     width: 100%;
     margin-bottom: 40px;
-    text-align: center;
 
     @include media-breakpoint-up(md) {
       width: auto;
       margin-bottom: 70px;
-      text-align: inherit;
     }
 
     &-icon {
       flex: 0 auto;
+      height: 100%;
       max-width: 2rem;
       max-height: 2rem;
+      margin-right: 20px;
 
       &--placeholder {
         width: 100%;
@@ -86,35 +86,28 @@
         background-repeat: no-repeat;
         background-size: contain;
       }
-
-      @include media-breakpoint-up(md) {
-        margin-right: 20px;
-      }
     }
 
     &-inner {
       flex: 1 auto;
-      margin-top: 20px;
-
-      @include media-breakpoint-up(md) {
-        width: 83%;
-        margin-top: 0;
-        float: right;
-      }
     }
 
     &-title {
-      margin-top: 0;
       color: #{theme-color-level('brand', 2)};
-      font-size: 17px;
+      font-size: 1.125rem;
+      line-height: 2rem;
     }
 
     &-desc {
-      width: 95%;
-      margin-top: 18px;
+      margin-top: 1rem;
       color: #{gray('600')};
-      font-size: 15px;
-      line-height: 24px;
+      // text-align: center;
+      font-size: 1rem;
+      line-height: 1.5rem;
+
+      @include media-breakpoint-up(md) {
+        text-align: inherit;
+      }
     }
   }
 }
