@@ -5,6 +5,7 @@ namespace App\Shortcodes;
 
 use App\Sponsor;
 use Corcel\Shortcode;
+use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 /**
  * Handles showing a random sponsor using the shortcode
