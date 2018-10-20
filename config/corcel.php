@@ -33,6 +33,7 @@ return [
 
     'post_types' => [
        'gumbo_activity' => App\Activity::class,
+       'gumbo_sponsor' => App\Sponsor::class,
     ],
 
     /*
@@ -48,7 +49,7 @@ return [
     */
 
     'shortcodes' => [
-//        'foo' => App\Shortcodes\FooShortcode::class,
+        'sponsor' => App\Shortcodes\SponsorShortcode::class,
     ],
 
 ];
