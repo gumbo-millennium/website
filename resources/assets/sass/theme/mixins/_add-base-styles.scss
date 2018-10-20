@@ -5,9 +5,16 @@
 // @license MPL-2.0
 ///
 
-@mixin add-base-styles {
-  border-top-color: #{gray('200')};
-  border-bottom-color: #{gray('200')};
+@mixin add-base-styles($add-border-config: true) {
+  @if $add-border-config {
+    border-top: 1px solid #{gray('200')};
+    border-bottom: 1px solid #{gray('200')};
+  }
+  @else {
+    border-top-color: #{gray('200')};
+    border-bottom-color: #{gray('200')};
+  }
+
   background: #{gray('100')};
 
   &--light {
