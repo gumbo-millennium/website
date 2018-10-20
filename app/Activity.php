@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Corcel\Model\Post;
+use App\Post;
 
 /**
  * Activities, organised by commissions authorized to do this.

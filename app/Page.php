@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App;
 
 use Corcel\Model\Page as CorcelPage;
+use App\Concerns\PostContentTrait;
 
 /**
  * WordPress Page with more features
@@ -13,6 +14,8 @@ use Corcel\Model\Page as CorcelPage;
  */
 class Page extends CorcelPage
 {
+    use PostContentTrait;
+
     /**
      * Returns the homepage
      * @return Page
