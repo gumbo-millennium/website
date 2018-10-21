@@ -70,6 +70,13 @@
           "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ --dev",
           "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
           "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build"
+        ],
+        "symlink": [
+          "ln -fs node_modules/bootstrap/scss ./@bootstrap",
+          "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
+          "ln -fs library/wordpress/plugins/gumbo-millennium ./@wp-plugin",
+          "ln -fs library/wordpress/themes/gumbo-millennium ./@wp-theme",
+          "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
         ]
     },
     "config": {
