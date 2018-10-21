@@ -1,15 +1,19 @@
 @inject('menuHelper', 'App\Services\MenuProvider')
 
-@php
-$navbarClassName = 'navbar navbar-expand-lg navbar-dark fixed-top';
-$navbarTransparent = isset($page) ? $page->meta->navbar_transparent : null;
-if (strtolower($navbarTransparent) !== 'yes') {
-    $navbarClassName .= ' navbar--opaque';
-}
-@endphp
+{{-- Class names --}}
+@push('navbar-classes')
+navbar navbar-expand-lg navbar-dark fixed-top
+@endpush
+
+{{-- Make navbar transparent if page requires it --}}
+@if (isset($page) && $page->meta->navbar_transparent !== 'yes')
+@push('navbar-classes')
+navbar--opaque
+@endpush
+@endif
 
 {{-- Header v2 --}}
-<nav class="{{ $navbarClassName }}" role="navigation">
+<nav class="@stack('navbar-classes')" role="navigation">
     <div class="container no-override">
         {{-- Brand logo --}}
         <a class="navbar-brand" href="/">
