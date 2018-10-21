@@ -94,8 +94,8 @@ services:
     networks:
       - laravel
     volumes:
-      - ./library/wordpress/plugins:/var/www/html/wp-content/mu-plugins:ro
-      - ./library/wordpress/themes:/var/www/html/wp-content/themes
+      - ./library/wordpress/plugins/gumbo-millennium:/var/www/html/wp-content/plugins/gumbo-millennium:ro
+      - ./library/wordpress/themes/gumbo-millennium:/var/www/html/wp-content/themes/gumbo-millennium:ro
     ports:
       - 127.13.37.1:8080:80
     env_file:
