@@ -1,13 +1,4 @@
 @php
-$searchTopics = [
-    'ALV notulen',
-    'ALV agenda\'s',
-    'Bestuurspublicaties',
-    'Promotiemateriaal',
-    'Gumbodes',
-    'Overige'
-];
-
 $characters = str_split('ABCDEF');
 $title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
 @endphp

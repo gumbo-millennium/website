@@ -1,0 +1,20 @@
+///
+// Admin page
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.admin-page {
+  background-color: #{gray('200')};
+}
+
+.admin-wrapper {
+  padding-top: 3rem;
+}
+
+.admin-container {
+  padding: 1.5rem 2rem;
+  background-color: #{color('white')};
+  box-shadow: 4px 4px 8px rgba(gray('800'), 0.3);
+}

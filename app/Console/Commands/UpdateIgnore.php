@@ -91,6 +91,10 @@ class UpdateIgnore extends Command
 # Development helper
 storage/debugbar
 
+# Laravel IDE helper
+/_ide_helper_models.php
+/_ide_helper.php
+/.phpstorm.meta.php
 IGNORE;
         // Trim lines and add trailing EOL
         $ignoreContent = trim($ignoreContent) . PHP_EOL;
