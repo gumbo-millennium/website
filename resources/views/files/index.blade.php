@@ -1,5 +1,6 @@
 @extends('layout.default')
 
 @section('content')
-    @include('example.files-index')
+    @include('files.bits.header')
+    @include('files.bits.frequent')
 @endsection
