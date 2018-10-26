@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Option;
-use App\Taxonomy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use App\FileCategory;
 
 /**
  * Handles file index, file viewing and file downloads
@@ -16,40 +15,26 @@ use Illuminate\Http\Request;
 class FileController extends Controller
 {
     /**
-     * Retuns a Taxonmy query builder
-     *
-     * @param Builder
-     * @return Builder
-     */
-    protected function getTaxonomyQuery()
-    {
-        return Taxonomy::query()
-            ->category()
-            ->with('posts');
-    }
-
-    /**
      * Homepage
      *
      * @return Response
      */
     public function index()
     {
-        $defaultCategory = Option::get('default_category');
-        $allCategories = $this->getTaxonomyQuery()->get();
+        $allCategories = FileCategory::has('file')->get();
+        $defaultCategory = FileCategory::findDefault();
 
         $categoryList = collect();
-        $defaultCategory = null;
 
         foreach ($allCategories as $category) {
-            if ($category->ID === $defaultCategory) {
-                $defaultCategory = $category;
-            } else {
-                $categoryList->push($category);
+            if ($defaultCategory && $defaultCategory->is($category)) {
+                continue;
             }
+
+            $categoryList->push($category);
         }
 
-        $categoryList = $categoryList->sortBy('name');
+        $categoryList = $categoryList->sortBy('title');
 
         if ($defaultCategory) {
             $categoryList->push($defaultCategory);
@@ -60,16 +45,14 @@ class FileController extends Controller
         ]);
     }
 
-    public function category(Request $request, string $slug)
+    public function category(Request $request, FileCategory $category)
     {
-        $baseQuery = $this->getTaxonomyQuery()->slug($slug);
-        $category = $baseQuery->first();
-        $posts = $category->posts()->get();
+        $files = $category->files;
 
         // Render view
         return view('files.category')->with([
             'category' => $category,
-            'posts' => $posts
+            'files' => $files
         ]);
     }
 }
