@@ -17,7 +17,7 @@ class CreateFileCategoriesTable extends Migration
             $table->increments('id');
 
             $table->string('title')->nullable();
-            $table->string('slug')->unique();
+            $table->string('slug', 190)->unique();
             $table->boolean('default')->default(false);
         });
     }
