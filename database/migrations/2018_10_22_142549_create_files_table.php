@@ -17,7 +17,7 @@ class CreateFilesTable extends Migration
             $table->increments('id');
             $table->timestamps();
 
-            $table->string('slug')->unique()->comment('User-specified slug');
+            $table->string('slug', 190)->unique()->comment('User-specified slug');
             $table->string('title')->nullable()->default(null)->comment('Title of the file');
 
             // Original filename
@@ -26,7 +26,7 @@ class CreateFilesTable extends Migration
             $table->string('mime')->nullable()->default(null)->comment('File mime type');
 
             // Storage path and publicity
-            $table->string('path')->unique()->comment('Filesystem path');
+            $table->string('path')->comment('Filesystem path');
             $table->boolean('public')->default(false)->comment('Is the file public?');
 
             // Indexing fields
