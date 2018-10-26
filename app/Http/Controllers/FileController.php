@@ -21,7 +21,7 @@ class FileController extends Controller
      */
     public function index()
     {
-        $allCategories = FileCategory::has('file')->get();
+        $allCategories = FileCategory::has('files')->get();
         $defaultCategory = FileCategory::findDefault();
 
         $categoryList = collect();
