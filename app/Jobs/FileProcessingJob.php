@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\File as LaravelFile;
+use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PDFParser;
 
@@ -44,27 +44,60 @@ class FileProcessingJob implements ShouldQueue
             return;
         }
 
-        // Get path to the file
-        $filePath = storage_path($file->path);
+        // Create tempfile
+        $tempPdfFile = tempnam(sys_get_temp_dir(), 'pdf-process');
+        $tempPdfHandle = fopen($tempPdfFile, 'w');
+
+        if (!$tempPdfHandle) {
+            throw new \RuntimeException("Failed to open write handle on {$tempPdfFile}");
+        }
+
+        // Get a stream
+        $pdfStream = Storage::readStream($file->path);
+
+        // Write entire stream to harddrive
+        while (!feof($pdfStream)) {
+            $buffer = fread($pdfStream, 1024);  // Write small bits
+            fwrite($tempPdfHandle, $buffer);
+        }
+
+        // Close both handles
+        fclose($pdfStream);
+        fclose($tempPdfHandle);
+
+        // Move file to end with a .pdf file
+        rename($tempPdfFile, "{$tempPdfFile}.pdf");
+        $tempPdfFile .= '.pdf';
 
         // Load PDF parser
         $parser = new PDFParser;
-        $pdf = $parser->parseFile($file->path);
+        $pdf = $parser->parseFile($tempPdfFile);
 
         // Handle OCR contents
         $file->contents = $pdf->getText();
 
         // Count pages
-        $file->pageCount = count($pdf->getPages());
+        $file->page_count = count($pdf->getPages());
+
+        // Metadata
+        $fileDetails = $pdf->getDetails();
+        $fileMeta = collect();
+        foreach ($fileDetails as $property => $value) {
+            $value = implode(', ', array_wrap($value));
+            $fileMeta->put($property, $value);
+        }
+
+        // TODO add meta
+        // $file->meta = $fileMeta;
 
         // Get screenshot of first page using Imagick
         if (extension_loaded('imagick')) {
             $thumbnailFile = tempnam(sys_get_temp_dir(), 'pdfconf');
 
             // Load imagick to convert the file
-            $im = new Imagick;
+            $im = new \Imagick;
             $im->setResolution(512, 256);
-            $im->readimage("{$filePath}[0]");
+            $im->readimage("{$tempPdfFile}[0]");
             $im->setImageFormat('jpeg');
             $im->writeImage($thumbnailFile);
             $im->clear();
@@ -79,6 +112,11 @@ class FileProcessingJob implements ShouldQueue
             if (file_exists($thumbnailFile) && is_writeable(dirname($thumbnailFile))) {
                 @unlink($thumbnailFile);
             }
+        }
+
+        // Remve temp PDF
+        if (file_exists($tempPdfFile) && is_writeable($tempPdfFile)) {
+            @unlink($tempPdfFile);
         }
 
         // Save the proposed changes
