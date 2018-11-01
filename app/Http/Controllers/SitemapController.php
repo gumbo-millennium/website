@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Roumen\Sitemap\Sitemap;
 use Corcel\Model\Post;
-use App\Activity;
 use Corcel\Model\Page;
+use App\Activity;
 
 /**
  * Generates sitemaps for WordPress pages and our pages.

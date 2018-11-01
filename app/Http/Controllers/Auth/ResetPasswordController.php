@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-use Corcel\Laravel\Auth\ResetsPasswords as CorcelResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
@@ -19,9 +18,7 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords, CorcelResetsPasswords {
-        CorcelResetsPasswords::resetPassword insteadof ResetsPasswords;
-    }
+    use ResetsPasswords;
 
     /**
      * Where to redirect users after resetting their password.

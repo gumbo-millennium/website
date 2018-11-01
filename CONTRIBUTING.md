@@ -105,6 +105,15 @@ Now that the environment is ready, tiem to create some assets.
 yarn run development
 ```
 
+### Copy vendor assets
+
+We use Laravel Horizon for queue management, which also has a bunch of assets that
+need to be published, before the application works.
+
+```
+php artisan vendor:publish --tag=horizon-assets
+```
+
 ### Fire up docker envs
 
 Now it's time to launch the docker environments so we have a database.
