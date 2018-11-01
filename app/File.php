@@ -3,7 +3,7 @@
 namespace App;
 
 use App\FileCategory;
-use Corcel\Model\User;
+use App\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Corcel\Model\User;
+use App\User;
 use App\File;
 
 class HomeController extends Controller
@@ -27,7 +27,7 @@ class HomeController extends Controller
             'user' => $request->user(),
             'files' => [
                 'count' => $allFiles,
-                'change' => $recentFiles / $allFiles * 100
+                'change' => $allFiles === 0 ? 0 : $recentFiles / $allFiles * 100
             ],
             'users' => [
                 'count' => $allUsers

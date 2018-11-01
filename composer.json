@@ -12,12 +12,14 @@
         "guzzlehttp/guzzle": "^6.3",
         "jgrossi/corcel": "^2.6",
         "laravel/framework": "~5.7.0",
+        "laravel/horizon": "^1.4",
         "laravel/tinker": "^1.0",
         "laravelium/sitemap": "^3.0",
         "mischiefcollective/colorjizz": "^1.0",
         "overtrue/laravel-lang": "^3.0",
         "predis/predis": "^1.1",
-        "smalot/pdfparser": "^0.13.2"
+        "smalot/pdfparser": "^0.13.2",
+        "spatie/laravel-permission": "^2.23"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
@@ -66,6 +68,7 @@
           "yarn install --dev",
           "@php artisan app:env",
           "yarn run development",
+          "@php artisan vendor:publish --tag=horizon-assets",
           "docker-compose up -d",
           "echo \"Waiting for MySQL to get ready\" && sleep 10s",
           "@php artisan migrate:fresh --seed",
