@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\FileRequest;
 use App\User;
 
 /**
  * A new file, which also checks the uploaded mime
  */
-class NewFileRequest extends FormRequest
+class NewFileRequest extends FileRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +18,7 @@ class NewFileRequest extends FormRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'file' => 'required|file|mimes:pdf,doc,docx,odt'
+            'file' => 'required|file|mimes:pdf'
         ]);
     }
 }

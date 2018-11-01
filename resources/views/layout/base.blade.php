@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @stack('stack.meta-tags')
+
     {{-- Page title --}}
     <title>Gumbo Millennium</title>
 
@@ -30,5 +32,8 @@
 
     {{-- Scripts --}}
     @include('layout.scripts')
+
+    {{-- Additional scripts --}}
+    @stack('stack.scripts')
 </body>
 </html>

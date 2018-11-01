@@ -23,8 +23,8 @@ Route::get('/news/{slug}', 'NewsController@post');
 
 // Files route
 Route::get('/files', 'FileController@index')->name('files.index');
-Route::get('/files/group/{slug}', 'FileController@category')->name('files.category');
-Route::get('/files/view/{slug}', 'FileController@post')->name('files.single');
+Route::get('/files/group/{category}', 'FileController@category')->name('files.category');
+Route::get('/files/view/{file}', 'FileController@file')->name('files.show');
 
 // Activity (examples)
 Route::view('/event', 'event.index');
@@ -55,15 +55,29 @@ Route::prefix('auth')->name('auth.')->namespace('Auth')->group(function () {
 // Admin panel
 Route::prefix('admin')->name('admin.')->middleware('auth')->namespace('Admin')->group(function () {
     $this->redirect('/', '/admin/home');
-    $this->get('home', 'HomeController@index')->name('admin.home');
-    $this->get('members', 'MemberController@index')->name('admin.members');
-    $this->get('events', 'EventController@index')->name('admin.events');
+    $this->get('home', 'HomeController@index')->name('home');
+    $this->get('members', 'MemberController@index')->name('members');
+    $this->get('events', 'EventController@index')->name('events');
 
+    /**
+     * File / Document system. Handles files *and* categories
+     */
     Route::prefix('files')->name('files.')->group(function () {
+        // Index page, optionally per category
         $this->get('/', 'FileController@index')->name('index');
-        $this->post('/', 'FileController@index')->name('add');
-        $this->put('/', 'FileController@index')->name('edit');
-        $this->delete('/', 'FileController@index')->name('delete');
+
+        // Category overview
+        $this->get('/category/{category}', 'FileController@list')->name('list');
+
+        // Uploads
+        $this->post('/upload/{category?}', 'FileController@upload')->name('upload');
+
+        // View and edit
+        $this->get('/file/{file}', 'FileController@show')->name('show');
+        $this->put('/file/{file}', 'FileController@edit')->name('edit');
+
+        // Deletion request
+        $this->delete('/file/{file}', 'FileController@delete')->name('delete');
     });
 });
 

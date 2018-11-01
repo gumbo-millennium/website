@@ -6,7 +6,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * A file category, containing files
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class FileCategory extends SluggableModel
 {
     /**
@@ -32,14 +39,39 @@ class FileCategory extends SluggableModel
         return static::where(['default' => true])->firstOrFail($columns);
     }
 
+    /**
+     * Categories don't have timestamps.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * Title and default are fillable
+     *
+     * @var array
+     */
     protected $fillable = ['title', 'default'];
 
+    /**
+     * Cast 'default' property to a bool
+     *
+     * @var array
+     */
     protected $casts = [
         'default' => 'bool'
     ];
 
+    // Always auto-load files
+    protected $with = [
+        'files'
+    ];
+
+    /**
+     * Slug on the category title
+     *
+     * @return array
+     */
     public function sluggable() : array
     {
         return [
@@ -52,8 +84,10 @@ class FileCategory extends SluggableModel
 
     /**
      * The files that belong to this category
+     *
+     * @return Relation
      */
-    public function files()
+    public function files() : Relation
     {
         return $this->belongsToMany(File::class, 'file_category_catalog', 'category_id', 'file_id');
     }

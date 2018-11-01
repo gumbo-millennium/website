@@ -33,4 +33,14 @@ abstract class SluggableModel extends Model
      * @return array
      */
     abstract public function sluggable() : array;
+
+    /**
+     * Return 'slug' as key name
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
+use Corcel\Model\User;
+use App\File;
 
 class HomeController extends Controller
 {
@@ -15,6 +16,22 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        return view('admin.home')->with(['user' => $request->user()]);
+        // Get stats for files
+        $allFiles = File::count();
+        $recentFiles = File::where('created_at', '>', now()->subDays(2))->count();
+
+        // Get stats for users
+        $allUsers = User::count();
+
+        return view('admin.home')->with([
+            'user' => $request->user(),
+            'files' => [
+                'count' => $allFiles,
+                'change' => $recentFiles / $allFiles * 100
+            ],
+            'users' => [
+                'count' => $allUsers
+            ]
+        ]);
     }
 }

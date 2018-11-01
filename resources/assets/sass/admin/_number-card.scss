@@ -1,0 +1,79 @@
+///
+// Cards with numbers in them
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+$indicator-size: 0.3333rem;
+
+.number-card {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+
+  &__number {
+    font-size: 1.75rem;
+  }
+
+  &__indicator {
+    display: inline-flex;
+    position: relative;
+    top: -0.5rem;
+    left: 0.25rem;
+
+    // Fix flexyness
+    flex-flow: row nowrap;
+    align-items: center;
+    font-size: 0.85rem;
+
+    &:after {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 0.5rem;
+      border: $indicator-size solid transparent;
+      border-width: 0 $indicator-size;
+      content: '';
+    }
+
+    &--positive:after {
+      // top: $indicator-size * -0.5;
+      border-bottom-width: $indicator-size;
+      border-bottom-color: #{color('green')};
+    }
+
+    &--negative:after {
+      // top: $indicator-size * 0.5;
+      border-top-width: $indicator-size;
+      border-top-color: #{color('red')};
+    }
+
+    &__description {
+      color: #{gray('600')};
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+  }
+
+  @each $color, $value in $theme-colors {
+    &--#{$color} {
+      background-color: theme-color-level($color, 0);
+    }
+
+    &--#{$color} &__number,
+    &--#{$color} &__indicator,
+    &--#{$color} &__description {
+      color: rgba(color-yiq(theme-color-level($color, 0)), 0.8);
+    }
+
+    &--#{$color} &__indicator::after {
+      border-color: color-yiq(theme-color-level($color, 0)) transparent;
+    }
+
+    &--#{$color}-outline {
+      border: 1px solid theme-color-level($color, 3);
+    }
+  }
+}

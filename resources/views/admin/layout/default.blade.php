@@ -1,5 +1,10 @@
 @extends('layout.base')
 
+{{-- Add CSRF token to meta queue --}}
+@push('stack.meta-tags')
+    <meta name="laravel-csrf-token" content="{{ csrf_token() }}" />
+@endpush
+
 {{--
     Include header and navigation
 --}}
@@ -7,7 +12,7 @@
 {{-- Header --}}
 {{-- Body class --}}
 @push('stack.body-class')
-    admin-page
+    body-admin
 @endpush
 
 {{-- Header --}}
@@ -28,3 +33,7 @@
 @stack('stack.footer')
 @include('admin.layout.footer')
 @endsection
+
+@push('stack.scripts')
+<script src="{{ mix('/gumbo-admin.js') }}"></script>
+@endpush

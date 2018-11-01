@@ -3,29 +3,59 @@
 namespace App\Http\Controllers\Admin;
 
 use App\File;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\FileCategory;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\NewFileRequest;
 use App\Jobs\FileProcessingJob;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
 
+/**
+ * Handles uploads, changes and deletes for files uploaded
+ * by the board of Gumbo Millennium
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class FileController extends Controller
 {
-    public function __construct()
-    {
-        $this->var = $var;
-    }
-
     /**
-     * Display a listing of the resource.
+     * Display a listing of the files available. Optionally inside a category
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FileCategory $category = null)
     {
-        $files = File::orderBy('created_at', 'DESC')->paginate(20);
+        $categories = FileCategory::query()
+            ->orderBy('default', 'ASC')
+            ->orderBy('title', 'ASC')
+            ->paginate(20);
 
-        return view('admin.files.index')->with(['files' => $files]);
+        return view('admin.files.index')->with([
+            'categories' => $categories,
+            'defaultCategory' => FileCategory::findDefault()
+        ]);
+    }
+
+    /**
+     * Lists files in the category
+     *
+     * @param FileCategory $category
+     * @return void
+     */
+    public function list(FileCategory $category)
+    {
+        $files = $category->
+            files()->
+            with('owner')
+            ->paginate(20);
+
+        return view('admin.files.list')->with([
+            'files' => $files,
+            'category' => $category
+        ]);
     }
 
     /**
@@ -34,38 +64,52 @@ class FileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(NewFileRequest $request)
+    public function upload(NewFileRequest $request, FileCategory $category = null)
     {
         // We need to get a file
         if (!$request->hasFile('file')) {
             abort(400, 'File is missing from request');
         }
 
+        // Get target category
+        if ($category === null) {
+            $category = FileCategory::findDefaultOrFail();
+        }
+
+        // Move file to uploads
         $upload = $request->file('file');
-        $stored = $upload->store(File::STORAGE_DIR);
+        $stored = Storage::putFile(File::STORAGE_DIR, $upload);
         $filename = $upload->getClientOriginalName();
 
         // Build a file based on this upload
-        dd([
+        $config = [
             'path' => $stored,
             'public' => false,
             'title' => $filename,
             'filename' => $filename,
-            'filesize' => filesize(storage_path($stored)),
-            'owner' => $request->user()
-        ]);
+            'filesize' => Storage::size($stored)
+        ];
+
+        // Get user ID
+        $user = $request->user();
+        $userId = $user->getAuthIdentifier();
 
         // Register and save file
         $file = new File($config);
+        $file->owner = $userId;
         $file->save();
 
-        $defaultCategory = FileCategory::findDefault();
-        if ($defaultCategory) {
-            $file->categories()->assign(FileCategory::findDefault());
-        }
+        // Assign the category to the file
+        $file->categories()->attach($category);
 
         // Trigger processing job
         dispatch(new FileProcessingJob($file));
+
+        // Return file info
+        return response()->json([
+            'ok' => true,
+            'file' => $file
+        ], Response::HTTP_CREATED);
     }
 
     /**

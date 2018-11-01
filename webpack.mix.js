@@ -3,17 +3,21 @@ const glob = require('glob')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
 
-// Configure javascript, with separate vendor
+// Configure javascript
 mix
   .js('resources/assets/js/theme.js', 'public/gumbo.js')
-  .extract([
-    'jquery',
-    'bootstrap',
-    'gmaps',
-    'mobile-detect',
-    'pikaday',
-    'popper.js'
-  ])
+  .js('resources/assets/js/admin.js', 'public/gumbo-admin.js')
+
+// Extract assets
+mix.extract([
+  'bootstrap',
+  'dropzone',
+  'gmaps',
+  'jquery',
+  'mobile-detect',
+  'pikaday',
+  'popper.js'
+])
 
 // Configure SCSS, also with separate vendor (bootstrap)
 mix
