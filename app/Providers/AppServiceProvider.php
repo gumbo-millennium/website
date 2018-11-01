@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use App\Services\WordPressAccessProvider;
+use Laravel\Horizon\Horizon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
         // Register nav menu as $menu on all requests
         $this->app->singleton(WordPressAccessProvider::class, function () {
             return new WordPressAccessProvider;
+        });
+
+        // Handle Horizon auth
+        Horizon::auth(function ($request) {
+            return $request->user() !== null;
         });
     }
 
