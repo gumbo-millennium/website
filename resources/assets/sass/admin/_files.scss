@@ -1,0 +1,43 @@
+///
+// Files admin
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.admin-files {
+  &__dropzone {
+    @extend .alert;
+    @extend .alert-light;
+
+    padding: 2rem 4rem;
+    border: 1px dashed theme-color-level('light', -4);
+    text-align: center;
+
+    // Ease animation
+    transition: none .2s ease-out;
+    transition-property: border-color, background-color, color;
+    cursor: pointer;
+
+    .dz-drag-hover & {
+      border-color: theme-color-level('brand', 2);
+      background-color: theme-color-level('brand', -7);
+      color: theme-color-level('brand', 2);
+    }
+
+    &__title {
+      @extend .h4;
+    }
+
+    &__subtitle {
+      padding: .4rem;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+  }
+
+  &__progress {
+    height: .6rem;
+    margin: 1rem 0;
+  }
+}

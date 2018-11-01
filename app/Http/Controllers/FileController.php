@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\FileCategory;
+use App\File;
 
 /**
  * Handles file index, file viewing and file downloads

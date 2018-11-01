@@ -10,7 +10,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser as PDFParser;
 
+/**
+ * Processes the file, meaning get the text contents, build a thumbnail and count the pages.
+ */
 class FileProcessingJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -20,7 +24,7 @@ class FileProcessingJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param File $file File to process
      */
     public function __construct(File $file)
     {
@@ -32,32 +36,28 @@ class FileProcessingJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle() : void
     {
+        // Make sure file is valid
         $file = $this->file;
         if (!$file) {
             return;
         }
 
+        // Get path to the file
         $filePath = storage_path($file->path);
 
-        // TODO Handle OCR contents
+        // Load PDF parser
+        $parser = new PDFParser;
+        $pdf = $parser->parseFile($file->path);
 
-        // TODO Count pages
-        if (extension_loaded('imagick')) {
-            // Load imagick
-            $im = new Imagick();
-            $im->pingImage("{$filePath}[0]");
-            $pageCount = $im->getNumberImages();
-            $im->clear();
-            $im->destroy();
+        // Handle OCR contents
+        $file->contents = $pdf->getText();
 
-            // Write results
-            $file->pageCount = $pageCount;
-            $file->save();
-        }
+        // Count pages
+        $file->pageCount = count($pdf->getPages());
 
-        // TODO Add thumbnail
+        // Get screenshot of first page using Imagick
         if (extension_loaded('imagick')) {
             $thumbnailFile = tempnam(sys_get_temp_dir(), 'pdfconf');
 
@@ -71,9 +71,17 @@ class FileProcessingJob implements ShouldQueue
             $im->destroy();
 
             // Store file
-            $thumnail = Storage::putFile('thumbnails', new LaravelFile('/path/to/photo'));
+            $thumnail = Storage::putFile('thumbnails', new LaravelFile($thumbnailFile));
             $file->thumbnail = $thumnail;
-            $file->save();
+
+            // Delete generated thumbnail file, if possible.
+            // Ignore if file deletion fails. Unix should auto-clean the temp dir
+            if (file_exists($thumbnailFile) && is_writeable(dirname($thumbnailFile))) {
+                @unlink($thumbnailFile);
+            }
         }
+
+        // Save the proposed changes
+        $file->save();
     }
 }

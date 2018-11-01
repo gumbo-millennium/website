@@ -9,6 +9,9 @@ import animation from './theme/animation'
 import navbar from './theme/navbar'
 import brokenImage from './theme/broken-image'
 
+// Load Bootstrap
+import 'bootstrap'
+
 // Load early handlers
 brokenImage()
 navbar()

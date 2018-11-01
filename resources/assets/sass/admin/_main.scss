@@ -1,0 +1,36 @@
+///
+// Admin page
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.body-admin {
+  margin-top: 1rem;
+  background-color: gray('100');
+}
+
+.navbar-admin {
+  background-color: theme-color-level('brand', -10);
+
+  .navbar-brand {
+    min-width: 200px;
+    text-align: center;
+  }
+
+  .navbar-brand-logo {
+    max-height: 35px;
+  }
+}
+
+.admin-container {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.admin-footer {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  color: #{gray('600')};
+  text-align: center;
+}
