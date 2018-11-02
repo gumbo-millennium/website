@@ -22,9 +22,18 @@ Route::get('/news', 'NewsController@index');
 Route::get('/news/{slug}', 'NewsController@post');
 
 // Files route
-Route::get('/files', 'FileController@index')->name('files.index');
-Route::get('/files/group/{category}', 'FileController@category')->name('files.category');
-Route::get('/files/view/{file}', 'FileController@file')->name('files.show');
+Route::get('/files', 'FileController@index')
+    ->name('files.index')
+    ->middleware('can:browse,App\FileCategory');
+Route::get('/files/group/{category}', 'FileController@category')
+    ->name('files.category')
+    ->middleware('can:browse,category');
+Route::get('/files/view/{file}', 'FileController@file')
+    ->name('files.show')
+    ->middleware('can:view,file');
+Route::get('/files/download/{file}', 'FileController@file')
+    ->name('files.download')
+    ->middleware('can:download,file');
 
 // Activity (examples)
 Route::view('/event', 'event.index');
@@ -53,33 +62,43 @@ Route::prefix('auth')->name('auth.')->namespace('Auth')->group(function () {
 });
 
 // Admin panel
-Route::prefix('admin')->name('admin.')->middleware('auth')->namespace('Admin')->group(function () {
-    $this->redirect('/', '/admin/home');
-    $this->get('home', 'HomeController@index')->name('home');
-    $this->get('members', 'MemberController@index')->name('members');
-    $this->get('events', 'EventController@index')->name('events');
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'permission:admin'])
+    ->namespace('Admin')
+    ->group(function () {
+        $this->redirect('/', '/admin/home');
+        $this->get('home', 'HomeController@index')->name('home');
+        $this->get('members', 'MemberController@index')->name('members');
+        $this->get('events', 'EventController@index')->name('events');
 
-    /**
-     * File / Document system. Handles files *and* categories
-     */
-    Route::prefix('files')->name('files.')->group(function () {
-        // Index page, optionally per category
-        $this->get('/', 'FileController@index')->name('index');
+        /**
+         * File / Document system. Handles files *and* categories
+         */
+        Route::prefix('files')
+            ->name('files.')
+            ->middleware('permission:manage,App\File')
+            ->group(function () {
+                // Index page, optionally per category
+                $this->get('/', 'FileController@index')->name('index');
 
-        // Category overview
-        $this->get('/category/{category}', 'FileController@list')->name('list');
+                // Category overview
+                $this->get('/category/{category}', 'FileController@list')->name('list');
 
-        // Uploads
-        $this->post('/upload/{category?}', 'FileController@upload')->name('upload');
+                // Uploads
+                $this->post('/upload/{category?}', 'FileController@upload')->name('upload');
 
-        // View and edit
-        $this->get('/file/{file}', 'FileController@show')->name('show');
-        $this->put('/file/{file}', 'FileController@edit')->name('edit');
+                // View and edit
+                $this->get('/file/{category?}/{file}', 'FileController@show')->name('show');
+                $this->put('/file/{category?}/{file}', 'FileController@edit')->name('edit');
 
-        // Deletion request
-        $this->delete('/file/{file}', 'FileController@delete')->name('delete');
+                // Publish or un-publish
+                $this->patch('/file/{category?}/{file}/publish', 'FileController@publish')->name('publish');
+
+                // Deletion request
+                $this->delete('/file/{category?}/{file}', 'FileController@delete')->name('delete');
+            });
     });
-});
 
 // WordPress fallback
 Route::fallback('WordPressController@fallback');
