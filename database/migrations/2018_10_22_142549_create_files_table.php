@@ -30,14 +30,14 @@ class CreateFilesTable extends Migration
             $table->boolean('public')->default(false)->comment('Is the file public?');
 
             // Indexing fields
-            $table->text('contents')->nullable()->default(null)->comment('OCR-translated contents');
+            $table->mediumText('contents')->nullable()->default(null)->comment('OCR-translated contents');
 
             // Extra meta
             $table->string('thumbnail')->nullable()->default(null)->comment('Path of the thumbnail');
             $table->integer('page_count')->nullable()->default(null)->comment('Number of pages');
 
             // Owner meta
-            $table->unsignedInteger('owner')->nullable()->comment('User owning the file');
+            $table->integer('owner_id')->unsigned()->nullable()->comment('User owning the file');
         });
     }
 
