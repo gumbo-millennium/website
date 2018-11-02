@@ -40,6 +40,13 @@ class File extends SluggableModel
     ];
 
     /**
+     * {@inheritDoc}
+     */
+    protected $casts = [
+        'file_meta' => 'array'
+    ];
+
+    /**
      * Generate the slug based on the display_title property
      *
      * @return array
