@@ -62,10 +62,12 @@ class FileController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Stores a new file in the database, in the provided category or
+     * the default one
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param NewFileRequest $request
+     * @param FileCategory $category
+     * @return Response
      */
     public function upload(NewFileRequest $request, FileCategory $category = null)
     {
@@ -79,31 +81,36 @@ class FileController extends Controller
             $category = FileCategory::findDefaultOrFail();
         }
 
-        // Move file to uploads
+        // Get requested file
         $upload = $request->file('file');
+
+        // Get metadata from file
+        $uploadMime = $upload->getMimeType();
+        $uploadExtension = str_start($upload->extension(), '.');
+        $uploadFilename = $upload->getClientOriginalName();
+        $uploadFilesize = filesize($upload->path());
+        $uploadName = str_before($uploadFilename, $uploadExtension);
+
+        // Store file
         $stored = Storage::putFile(File::STORAGE_DIR, $upload);
-        $filename = $upload->getClientOriginalName();
+
+        // Get the category
+        $category = $category ?? FileCategory::findDefault();
 
         // Build a file based on this upload
         $config = [
             'path' => $stored,
             'public' => false,
-            'title' => $filename,
-            'filename' => $filename,
-            'filesize' => Storage::size($stored)
+            'title' => $uploadName,
+            'filename' => $uploadFilename,
+            'filesize' => $uploadFilesize,
+            'mime' => $uploadMime
         ];
 
-        // Get user ID
-        $user = $request->user();
-        $userId = $user->getAuthIdentifier();
-
-        // Register and save file
-        $file = new File($config);
-        $file->owner = $userId;
+        // Create new file in the category
+        $file = $category->files()->create($config);
+        $file->owner()->associate($request->user());
         $file->save();
-
-        // Assign the category to the file
-        $file->categories()->attach($category);
 
         // Return file info
         return response()->json([
