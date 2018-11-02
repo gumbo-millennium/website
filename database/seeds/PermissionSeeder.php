@@ -50,7 +50,11 @@ class PermissionSeeder extends Seeder
         ['event-view', 'Evenementen bekijken'],
         ['event-buy', 'Tickets voor evenementen kopen'],
         ['event-view-private', 'Evenementen bekijken (privé)'],
-        ['event-buy-private', 'Tickets voor evenementen kopen (privé)']
+        ['event-buy-private', 'Tickets voor evenementen kopen (privé)'],
+
+        // Generic permissions
+        ['admin', 'Toegang tot admin panel'],
+        ['devops', 'Toegang tot ops administratie']
     ];
 
     /**
@@ -61,20 +65,27 @@ class PermissionSeeder extends Seeder
     protected $roles = [
         // Create guest role
         ['guest', 'Gast (standaard)', [
-            'file-view',
+            // Allow viewing and buying event tickets
+            'event-view',
             'event-buy'
         ]],
 
         // Standard members
         ['member', 'Gumbo Millennium lid', [
-            'file-view',
+            // Allow file browsing
+            'file-browse',
             'file-download',
+
+            // Allow viewing and buying event tickets for private events
             'event-view-private',
             'event-buy-private'
         ]],
 
         // Activiteiten Committee
         ['ac', 'Activiteiten Commissie', [
+            'admin',
+
+            // Allow event management
             'event-add',
             'event-add-paid',
             'event-edit',
@@ -84,6 +95,9 @@ class PermissionSeeder extends Seeder
 
         // Landhuis committee
         ['lhw', 'Landhuis Commissie', [
+            'admin',
+
+            // Allow event management
             'event-add',
             'event-add-paid',
             'event-edit',
@@ -93,6 +107,9 @@ class PermissionSeeder extends Seeder
 
         // Public Relations Project Group
         ['pr', 'PRPG', [
+            'admin',
+
+            // Allow content management
             'content',
             'content-all'
         ]],
@@ -118,7 +135,7 @@ class PermissionSeeder extends Seeder
             'event-publish',
             'event-manage-all',
 
-            // Manage all content
+            // Allow content management
             'content',
             'content-all'
         ]],
