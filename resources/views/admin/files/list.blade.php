@@ -32,9 +32,41 @@
                 <a href="{{ route('admin.files.show', ['file' => $file]) }}">
                     {{ $file->display_title }}
                 </a>
+
+                {{-- Forms --}}
+                <form id="file-public-{{ $file->id }}" class="d-none" action="{{ route('admin.files.publish', [
+                    'file' => $file,
+                    'category' => $category
+                ]) }}" method="POST">
+                    @method('PATCH')
+                    @csrf
+                    <input type="hidden" name="public" value="{{ $file->public ? 'false' : 'true' }}" />
+                </form>
+                <form id="file-delete-{{ $file->id }}" class="d-none" action="{{ route('admin.files.delete', [
+                    'file' => $file,
+                    'category' => $category
+                ]) }}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                </form>
             </td>
             <td>{{ optional($file->owner)->name ?? '–' }}</td>
             <td>
+                @can('publish', $file)
+                @if ($file->public)
+                <button type="submit" form="file-public-{{ $file->id }}" class="btn btn-info btn-sm">publiceren</button>
+                @else
+                <button type="submit" form="file-public-{{ $file->id }}" class="btn btn-warning btn-sm">verbergen</button>
+                @endif
+                @endcan
+                {{-- Update link --}}
+                @can('update', $file)
+                <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-sm">bewerken</a>
+                @endcan
+                {{-- Delete --}}
+                @can('delete', $file)
+                <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-danger btn-sm">verwijderen</a>
+                @endcan
                 <a href="{{ $file->url }}" class="btn btn-primary btn-sm">Bekijk op site</a>
             </td>
         </tr>

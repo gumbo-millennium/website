@@ -56,4 +56,22 @@ class FileController extends Controller
             'files' => $files
         ]);
     }
+
+    public function file(Request $request, File $file)
+    {
+        // TODO
+    }
+
+    public function fileDownload(Request $request, File $file)
+    {
+        $filePath = $file->path;
+        $fileName = $file->filename;
+
+        // Abort if file is missing
+        if (!Storage::exists($filePath)) {
+            abort(404);
+        }
+
+        // TODO
+    }
 }
