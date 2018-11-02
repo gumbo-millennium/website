@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Handle Horizon auth
         Horizon::auth(function ($request) {
-            return $request->user() !== null;
+            return $request->user() !== null && $request->user()->hasPermissionTo('devops');
         });
 
         // Handle File changes
