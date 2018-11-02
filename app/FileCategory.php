@@ -22,9 +22,12 @@ class FileCategory extends SluggableModel
      * @param array $columns
      * @return Model|Collection
      */
-    public static function findDefault(array $columns = ['*'])
+    public static function findDefault()
     {
-        return static::where(['default' => true])->first($columns);
+        // Find first default category, or create one
+        return static::firstOrCreate(['default' => true], [
+            'title' => 'Overig'
+        ]);
     }
 
     /**
@@ -33,10 +36,11 @@ class FileCategory extends SluggableModel
      * @param array $columns
      * @return Model|Collection
      * @throws ModelNotFoundException
+     * @deprecated findDefault creates category on the fly if missing
      */
     public static function findDefaultOrFail(array $columns = ['*'])
     {
-        return static::where(['default' => true])->firstOrFail($columns);
+        return static::findDefault();
     }
 
     /**
