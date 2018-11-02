@@ -1,13 +1,14 @@
 {{-- Upload button --}}
 <div class="text-right">
-    <a
-    role="button"
-    href="#"
-    class="btn btn-success"
-    data-upload-action="open"
-    data-target="upload-form">
-        Document uploaden
-    </a>
+    @can('insert', App\File::class)
+        <button class="btn btn-success" data-upload-action="open" data-target="upload-form">
+            Document uploaden
+        </button>
+    @else
+        <button disabled class="btn btn-success btn-disabled">
+            Document uploaden
+        </button>
+    @endcan
 </div>
 
 @php
