@@ -14,7 +14,7 @@ class ListRolePermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'app:permissions
+    protected $signature = 'perms:role
                                 {permission? : Permission to check}
                                 {--p|pretty : Print titles instead of names}';
 
