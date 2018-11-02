@@ -77,26 +77,38 @@ Route::prefix('admin')
          */
         Route::prefix('files')
             ->name('files.')
-            ->middleware('permission:manage,App\File')
+            ->middleware('can:manage,App\File')
             ->group(function () {
                 // Index page, optionally per category
-                $this->get('/', 'FileController@index')->name('index');
+                $this->get('/', 'FileController@index')
+                    ->name('index');
 
                 // Category overview
-                $this->get('/category/{category}', 'FileController@list')->name('list');
+                $this->get('/category/{category}', 'FileController@list')
+                    ->name('list');
 
                 // Uploads
-                $this->post('/upload/{category?}', 'FileController@upload')->name('upload');
+                $this->post('/upload/{category?}', 'FileController@upload')
+                    ->name('upload')
+                    ->middleware('can:create,App\File');
 
                 // View and edit
-                $this->get('/file/{category?}/{file}', 'FileController@show')->name('show');
-                $this->put('/file/{category?}/{file}', 'FileController@edit')->name('edit');
+                $this->get('/file/{category?}/{file}', 'FileController@show')
+                    ->name('show');
+
+                $this->put('/file/{category?}/{file}', 'FileController@edit')
+                    ->name('edit')
+                    ->middleware('can:update,file');
 
                 // Publish or un-publish
-                $this->patch('/file/{category?}/{file}/publish', 'FileController@publish')->name('publish');
+                $this->patch('/file/{category?}/{file}/publish', 'FileController@publish')
+                    ->name('publish')
+                    ->middleware('can:publish,file');
 
                 // Deletion request
-                $this->delete('/file/{category?}/{file}', 'FileController@delete')->name('delete');
+                $this->delete('/file/{category?}/{file}', 'FileController@delete')
+                    ->name('delete')
+                    ->middleware('can:delete,file');
             });
     });
 
