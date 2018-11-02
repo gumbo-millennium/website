@@ -102,9 +102,6 @@ class FileController extends Controller
         // Assign the category to the file
         $file->categories()->attach($category);
 
-        // Trigger processing job
-        dispatch(new FileProcessingJob($file));
-
         // Return file info
         return response()->json([
             'ok' => true,

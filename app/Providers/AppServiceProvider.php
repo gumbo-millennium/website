@@ -8,6 +8,8 @@ use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use App\Services\WordPressAccessProvider;
 use Laravel\Horizon\Horizon;
+use App\File;
+use App\Observers\FileObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
         Horizon::auth(function ($request) {
             return $request->user() !== null;
         });
+
+        // Handle File changes
+        File::observe(FileObserver::class);
     }
 
     /**
