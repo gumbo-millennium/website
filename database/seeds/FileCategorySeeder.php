@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Hash;
 use App\FileCategory;
 
 /**
- * Generates a default category for the files to be placed in
+ * Generates a default category for the files to be placed in.
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
  */
 class FileCategorySeeder extends Seeder
 {
@@ -16,10 +19,14 @@ class FileCategorySeeder extends Seeder
      */
     public function run()
     {
-        FileCategory::create([
-            'slug' => 'overig',
-            'title' => 'Overige',
-            'default' => true
-        ]);
+        // Ensure default category
+        if (FileCategory::findDefault() === null) {
+            FileCategory::updateOrCreate([
+                'slug' => 'overig'
+            ], [
+                'title' => 'Overige',
+                'default' => true
+            ]);
+        }
     }
 }
