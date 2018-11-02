@@ -7,7 +7,6 @@
 
 // Load jQuery and Dropzone
 import Dropzone from 'dropzone'
-import { getStatusText } from 'http-status-codes'
 
 const queries = {
   uploadButton: '[data-upload-action=upload]',
@@ -66,6 +65,58 @@ const defaultConfig = {
  */
 const validateCsrf = csrf => {
   return typeof csrf === 'string' && csrf.match(/^[a-z0-9]{5,}$/i)
+}
+
+/**
+ * Finds a decent error message, or reports error code
+ *
+ * @param {Object} response
+ * @param {XMLHttpRequest} xhr
+ */
+const getErrorMessage = (response, xhr) => {
+  // Check if the response is a string
+  if (typeof response === 'string') {
+    return response
+  }
+
+  // Handle response if it's an object
+  if (typeof response === 'object') {
+    // Look for Laravel error on the file
+    if (response.errors &&
+        response.errors.file &&
+        response.errors.file[0] &&
+        typeof response.errors.file[0] === 'string'
+    ) {
+      return response.errors.file[0]
+    }
+
+    // Look for generic error message
+    if (response.error && response.error.message && typeof response.error.message === 'string') {
+      return response.error.message
+    }
+
+    // Look for an error string
+    if (response.error && typeof response.error === 'string') {
+      return response.error
+    }
+
+    // Look for a message
+    if (response.message && typeof response.message === 'string') {
+      return response.message
+    }
+  }
+
+  // Derrive response from HTTP code
+  const xhrStatus = xhr.status
+  const xhrStatusLine = xhr.statusText || null
+
+  // If the error is HTTP 419, we have a Laravel error on our hands
+  if (xhrStatus === 419) {
+    return 'Request validation error'
+  }
+
+  // Otherwise get the error from the statustext system
+  return xhrStatusLine || `HTTP error (HTTP ${xhrStatus})`
 }
 
 /**
@@ -301,26 +352,7 @@ class GumboDropzone {
    * @param {String} error error message
    */
   error (file, error, xhr) {
-    let errorMsg
-
-    // Figure out error message
-    if (typeof error === 'object' && error.error) {
-      errorMsg = error.error.message ? error.error.message : error.error
-    } else if (typeof error === 'object' && error.message) {
-      errorMsg = error.message
-    } else if (typeof error === 'string') {
-      errorMsg = error
-    } else {
-      let xhrStatus = xhr.status
-      // Derrive error from HTTP code
-      if (xhrStatus === 419) {
-        errorMsg = 'Request validation error'
-      } else {
-        errorMsg = getStatusText(xhrStatus) || `Error ${xhrStatus}`
-      }
-    }
-
-    this.updateStatus(file.previewElement, errorMsg, true)
+    this.updateStatus(file.previewElement, getErrorMessage(error, xhr), true)
   }
 
   /**
