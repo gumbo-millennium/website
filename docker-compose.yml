@@ -32,6 +32,7 @@ services:
     networks:
       - laravel
     env_file:
+      - ./.env
       - ./library/docker/laravel/docker.env
 
   # mariadb database

@@ -3,6 +3,9 @@
 
 FROM roelofr/php:fpm
 
+# Raise PHP limit
+COPY ./library/docker/laravel/php.ini /usr/local/etc/php/conf.d/upload-size.ini
+
 RUN groupadd \
     --gid 1000 \
     laravel \
@@ -34,6 +37,10 @@ COPY \
     ./library/docker/laravel/php-fpm.conf \
     ./library/docker/laravel/horizon.conf \
     /etc/supervisor/conf.d/
+
+# Install Imagick
+RUN docker-php-ext-install imagick \
+    && docker-php-source delete
 
 WORKDIR /var/www
 
