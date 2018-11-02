@@ -1,6 +1,6 @@
 {{-- Upload button --}}
 <div class="text-right">
-    @can('insert', App\File::class)
+    @can('create', App\File::class)
         <button class="btn btn-success" data-upload-action="open" data-target="upload-form">
             Document uploaden
         </button>
