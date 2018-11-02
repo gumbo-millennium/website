@@ -37,6 +37,21 @@ class FilePolicy
     }
 
     /**
+     * Determine whether the user can manage files
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function manage(User $user)
+    {
+        return $user->hasAnyPermission([
+            'file-add',
+            'file-edit',
+            'file-delete'
+        ]);
+    }
+
+    /**
      * Determine whether the user can view the file.
      *
      * @param  \App\User  $user
@@ -61,21 +76,6 @@ class FilePolicy
     }
 
     /**
-     * Determine whether the user can manage files
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function manage(User $user)
-    {
-        return $user->hasAnyPermission([
-            'file-add',
-            'file-edit',
-            'file-delete'
-        ]);
-    }
-
-    /**
      * Determine whether the user can create files.
      *
      * @param  \App\User  $user
@@ -96,6 +96,17 @@ class FilePolicy
     public function update(User $user, File $file)
     {
         return $this->grantedWithPublic($user, $file, ['file-edit']);
+    }
+
+    /**
+     * Returns if the user can (un)publish this file
+     *
+     * @param User $user
+     * @return mixed
+     */
+    public function publish(User $user)
+    {
+        return $user->hasPermissionTo('file-publish');
     }
 
     /**
