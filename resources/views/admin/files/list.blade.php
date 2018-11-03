@@ -27,6 +27,10 @@
     </thead>
     <tbody>
         @forelse ($files as $file)
+        @php
+            $publishIcon = $file->public ? 'fa-bell-slash' : 'fa-bell';
+            $publishLabel = $file->public ? 'verbergen' : 'publiceren';
+        @endphp
         <tr>
             <td>
                 <a href="{{ route('admin.files.show', ['file' => $file]) }}">
@@ -40,7 +44,7 @@
                 ]) }}" method="POST">
                     @method('PATCH')
                     @csrf
-                    <input type="hidden" name="public" value="{{ $file->public ? 'false' : 'true' }}" />
+                    <input type="hidden" name="public" value="{{ $file->public ? '0' : '1' }}" />
                 </form>
                 <form id="file-delete-{{ $file->id }}" class="d-none" action="{{ route('admin.files.delete', [
                     'file' => $file,
@@ -51,23 +55,38 @@
                 </form>
             </td>
             <td>{{ optional($file->owner)->name ?? '–' }}</td>
-            <td>
-                @can('publish', $file)
+            <td class="text-right">
+                {{-- view file link --}}
                 @if ($file->public)
-                <button type="submit" form="file-public-{{ $file->id }}" class="btn btn-info btn-sm">publiceren</button>
-                @else
-                <button type="submit" form="file-public-{{ $file->id }}" class="btn btn-warning btn-sm">verbergen</button>
+                <a href="{{ $file->url }}" class="btn btn-outline-primary btn-sm" title="bekijk op site">
+                    <i class="fas fa-external-link-alt fa-fw"></i>
+                    <span class="sr-only">bekijk op site</span>
+                </a>
                 @endif
-                @endcan
-                {{-- Update link --}}
-                @can('update', $file)
-                <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-sm">bewerken</a>
-                @endcan
-                {{-- Delete --}}
-                @can('delete', $file)
-                <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-danger btn-sm">verwijderen</a>
-                @endcan
-                <a href="{{ $file->url }}" class="btn btn-primary btn-sm">Bekijk op site</a>
+
+                {{-- file actions --}}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    @can('publish', $file)
+                    <button type="submit" form="file-public-{{ $file->id }}" class="btn btn-outline-secondary btn-sm" title="{{ $publishLabel }}">
+                        <i class="fas {{ $publishIcon }} fa-fw"></i>
+                        <span class="sr-only">{{ $publishLabel }}</span>
+                    </button>
+                    @endcan
+                    {{-- Update link --}}
+                    @can('update', $file)
+                    <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-outline-secondary btn-sm" title="bewerken">
+                        <i class="fas fa-pencil-alt fa-fw"></i>
+                        <span class="sr-only">bewerken</span>
+                    </a>
+                    @endcan
+                    {{-- Delete --}}
+                    @can('delete', $file)
+                    <a href="{{ route('admin.files.edit', ['file' => $file]) }}" class="btn btn-outline-secondary btn-sm" title="verwijderen">
+                        <i class="fas fa-trash-alt fa-fw"></i>
+                        <span class="sr-only">verwijderen</span>
+                    </a>
+                    @endcan
+                </div>
             </td>
         </tr>
         @empty
