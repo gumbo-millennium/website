@@ -25,6 +25,27 @@ use App\Http\Requests\FileRequest;
 class FileController extends Controller
 {
     /**
+     * Redirects the user to the page they came from, and flashes the given message
+     * to the status
+     *
+     * @param FileCategory $category
+     * @param string $message
+     * @return Response
+     */
+    protected function continue(FileCategory $category, string $message)
+    {
+        // Flash data
+        session()->flash('status', $message);
+
+        // Determine route
+        $nextCategory = $category ?? FileCategory::findDefault();
+        $nextRoute = ($nextCategory === null) ? 'admin.files.index' : 'admin.files.list';
+
+        // Forward
+        return redirect()
+            ->route($nextRoute, ['category' => $nextCategory]);
+    }
+    /**
      * Display a listing of the files available. Optionally inside a category
      *
      * @return \Illuminate\Http\Response
@@ -160,14 +181,17 @@ class FileController extends Controller
      */
     public function update(FileRequest $request, File $file, FileCategory $category = null)
     {
+        // Get valid data
+        $validatedData = $request->validated();
+
         // Toggle if public
-        if ($request->has('public')) {
-            $file->public = (bool) $request->validated()->public;
+        if (isset($validatedData['public'])) {
+            $file->public = (bool) $validatedData['public'];
         }
 
         // Change title, and the slug if private
-        if ($request->has('title')) {
-            $file->title = (string) $request->validated()->title;
+        if (isset($validatedData['title'])) {
+            $file->title = (string) $validatedData['title'];
             if (!$file->public) {
                 $file->slug = null;
             }
@@ -182,12 +206,11 @@ class FileController extends Controller
             $file->refresh();
         }
 
-        // Redirect back
-        return redirect()->route('admin.files.list', [
-            'category' =>$category ?? $file->categories->first()
-        ])->with([
-            'status' => sprintf('Het bestand %s is bijgewerkt', $file->display_title)
-        ]);
+        // Redirect
+        return $this->continue(
+            $category ?? $file->categories->first(),
+            sprintf('Het bestand %s is bijgewerkt', $file->display_title)
+        );
     }
 
     /**
@@ -201,12 +224,12 @@ class FileController extends Controller
     public function publish(Request $request, File $file, FileCategory $category = null)
     {
         // Make sure public is passed
-        $request->validate([
+        $validatedData = $request->validate([
             'public' => 'required|boolean'
         ]);
 
         // Get validated data
-        $shouldPublic = $request->validated()->public;
+        $shouldPublic = $validatedData['public'];
 
         // Update public value
         $file->public = $shouldPublic;
@@ -214,17 +237,23 @@ class FileController extends Controller
 
         // Get correct message
         if ($file->public) {
-            $message = 'Het bestand %s is %s gepubliceerd.';
+            $message = 'Het bestand <strong>%s</strong> is %s gepubliceerd.';
         } else {
-            $message = 'Het bestand % is %s verborgen voor bezoekers.';
+            $message = 'Het bestand <strong>%s</strong> is %s verborgen voor bezoekers.';
         }
 
-        // Flash update message
-        return back()->with(['status' => sprintf(
+        // Make message
+        $message = sprintf(
             $message,
             $file->display_title,
             $file->public === $shouldPublic ? 'succesvol' : 'NIET'
-        )]);
+        );
+
+        // Redirect
+        return $this->continue(
+            $category ?? $file->categories->first(),
+            $message
+        );
     }
 
     /**
