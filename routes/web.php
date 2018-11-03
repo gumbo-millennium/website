@@ -93,20 +93,20 @@ Route::prefix('admin')
                     ->middleware('can:create,App\File');
 
                 // View and edit
-                $this->get('/file/{category?}/{file}', 'FileController@show')
+                $this->get('/file/{file}', 'FileController@show')
                     ->name('show');
 
-                $this->put('/file/{category?}/{file}', 'FileController@edit')
+                $this->put('/file/{file}', 'FileController@edit')
                     ->name('edit')
                     ->middleware('can:update,file');
 
                 // Publish or un-publish
-                $this->patch('/file/{category?}/{file}/publish', 'FileController@publish')
+                $this->patch('/file/{file}/publish', 'FileController@publish')
                     ->name('publish')
                     ->middleware('can:publish,file');
 
                 // Deletion request
-                $this->delete('/file/{category?}/{file}', 'FileController@delete')
+                $this->delete('/file/{file}', 'FileController@delete')
                     ->name('delete')
                     ->middleware('can:delete,file');
             });
