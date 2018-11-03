@@ -71,43 +71,89 @@ class FileThumbnailJob implements ShouldQueue
      */
     public function handle() : void
     {
-        // Make sure file is valid, and imagick is available
+        // Make sure file is valid
         $file = $this->file;
-        if (!$file || extension_loaded('imagick')) {
+        if (!$file) {
             return;
         }
 
         // Get a temporary file
         $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
 
-        // Get screenshot of first page using Imagick
-        $thumbnailFile = tempnam(sys_get_temp_dir(), 'pdfconf');
-
-        // Load imagick to convert the file
-        $im = new \Imagick;
-        // $im->setResolution(512, 256);
-        $im->readimage("{$pdfFile}[0]");
-        $im->setImageFormat('jpeg');
-        $im->writeImage($thumbnailFile);
-        $im->clear();
-        $im->destroy();
-
-        // Store file
-        $thumnail = Storage::putFile('thumbnails', new LaravelFile($thumbnailFile));
-        $file->thumbnail = $thumnail;
-
-        // Delete generated thumbnail file, if possible.
-        // Ignore if file deletion fails. Unix should auto-clean the temp dir
-        if (file_exists($thumbnailFile) && is_writeable(dirname($thumbnailFile))) {
-            @unlink($thumbnailFile);
+        // Get a good temporary file name to use
+        $thumbnailTempFile = tempnam(sys_get_temp_dir(), 'pdfconf');
+        if (empty($thumbnailTempFile)) {
+            throw new \RuntimeException('Failed to obtain a temporary file name');
         }
 
-        // Remve temp PDF
-        if (file_exists($pdfFile) && is_writeable($pdfFile)) {
-            @unlink($pdfFile);
-        }
+        // Delete the temp file and make our own
+        $thumbnailFile = "{$thumbnailTempFile}.jpg";
+        @unlink($thumbnailTempFile);
+        file_put_contents($thumbnailFile, '');
 
-        // Save the proposed changes
-        $file->save();
+        // Wait for the system to be ready (about 500ms should do)
+        usleep(500 * 1000);
+
+        // Build the convert command
+        $command = sprintf(
+            'convert -density 600 %s[1] -colorspace RGB -resample 300 %s',
+            escapeshellarg($pdfFile),
+            escapeshellarg($thumbnailFile)
+        );
+
+        // DEEEEBUG
+        printf("Running command [%s]\n", $command);
+
+        try {
+            // Fire up the command
+            exec($command, $result, $code);
+
+            // Print the result
+            printf("Command completed with [%d]\n\n=========\n> %s\n=========\n", $code, implode("\n> ", $result));
+
+            // Abort if code != 0
+            if ($code !== 0) {
+
+                $dumpPdf = Storage::putFile('dumps', new LaravelFile($pdfFile));
+                $dumpJpg = Storage::putFile('dumps', new LaravelFile($thumbnailFile));
+
+                printf(
+                    "Files stored in app, available under [%s] and [%s]\n",
+                    $dumpPdf,
+                    $dumpJpg
+                );
+
+                $errorMessage = sprintf(
+                    "Failed to convert PDF using [%s]. Received %d:\n\n%s",
+                    $command,
+                    $code,
+                    implode(PHP_EOL, $result)
+                );
+                throw new \RuntimeException($errorMessage, $code);
+            }
+
+            // Store file
+            $thumnail = Storage::putFile('thumbnails', new LaravelFile($thumbnailFile));
+
+            // Assign thumbnail
+            $file->thumbnail = $thumnail;
+
+            // Save file
+            $file->save();
+        } catch (\RuntimeException $e) {
+            // Bubble that shit up
+            throw $e;
+        } finally {
+            // Delete generated thumbnail file, if possible.
+            // Ignore if file deletion fails. Unix should auto-clean the temp dir
+            if (file_exists($thumbnailFile) && is_writeable(dirname($thumbnailFile))) {
+                @unlink($thumbnailFile);
+            }
+
+            // Remve temp PDF
+            if (file_exists($pdfFile) && is_writeable($pdfFile)) {
+                @unlink($pdfFile);
+            }
+        }
     }
 }

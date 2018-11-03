@@ -26,9 +26,13 @@ RUN { \
 	echo 'group = laravel'; \
     } | tee /usr/local/etc/php-fpm.d/zz-laravel.conf
 
-# Install supervisord
+# Install two programs
+# - supervisor, which runs the supervisor daemon running BOTH php-fpm (PHP host)
+#   and Horizon (queue worker)
+# - Imagick, which is used to convert PDF files to JPG / PNG files. (it has the
+#   godly 'convert' command, which converts just about anything)
 RUN apt-get update \
-  && apt-get install -y supervisor \
+  && apt-get install -yq supervisor imagemagick \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -37,10 +41,6 @@ COPY \
     ./library/docker/laravel/php-fpm.conf \
     ./library/docker/laravel/horizon.conf \
     /etc/supervisor/conf.d/
-
-# Install Imagick
-RUN docker-php-ext-install imagick \
-    && docker-php-source delete
 
 WORKDIR /var/www
 
