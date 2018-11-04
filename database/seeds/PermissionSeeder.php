@@ -35,8 +35,10 @@ class PermissionSeeder extends Seeder
         ['file-category-delete', 'Bestandscategorieën verwijderen'],
 
         // Manage content
-        ['content', 'Eigen website content beheren'],
-        ['content-all', 'Website content van anderen beheren'],
+        ['content', 'Eigen WordPress content beheren'],
+        ['content-publish', 'Eigen WordPress content publiceren'],
+        ['content-all', 'WordPress content van iedereen beheren'],
+        ['content-admin', 'WordPress instellingen beheren'],
 
         // Create event permissions
         ['event-add', 'Evenementen toevoegen'],

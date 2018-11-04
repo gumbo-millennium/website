@@ -19,12 +19,16 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::updateOrCreate([
+        $user = User::withTrashed()->updateOrCreate([
             'email' => 'gumbo@docker.local'
         ], [
             'name' => 'Gumbo Millennium',
             'password' => Hash::make('Gumbo')
         ]);
         $user->assignRole(['guest', 'member', 'dc']);
+
+        if ($user->trashed()) {
+            $user->restore();
+        }
     }
 }
