@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -44,9 +45,9 @@ class User extends Authenticatable
     /**
      * A user might've uploaded files
      *
-     * @return Relation
+     * @return HasMany
      */
-    public function files() : Relation
+    public function files() : HasMany
     {
         return $this->hasMany(File::class, 'owner_id');
     }

@@ -104,8 +104,12 @@ class FilePolicy
      * @param User $user
      * @return mixed
      */
-    public function publish(User $user)
+    public function publish(User $user, File $file)
     {
+        // Don't allow publishing files that are broken
+        if ($file->hasState(File::STATE_BROKEN) && !$file->public) {
+            return false;
+        }
         return $user->hasPermissionTo('file-publish');
     }
 
@@ -119,29 +123,5 @@ class FilePolicy
     public function delete(User $user, File $file)
     {
         return $this->grantedWithPublic($user, $file, ['file-delete']);
-    }
-
-    /**
-     * Determine whether the user can restore the file.
-     *
-     * @param  \App\User  $user
-     * @param  \App\File  $file
-     * @return mixed
-     */
-    public function restore(User $user, File $file)
-    {
-        return $this->grantedWithPublic($user, $file, ['file-add', 'file-edit']);
-    }
-
-    /**
-     * Determine whether the user can permanently delete the file.
-     *
-     * @param  \App\User  $user
-     * @param  \App\File  $file
-     * @return mixed
-     */
-    public function forceDelete(User $user, File $file)
-    {
-        return $this->grantedWithPublic($user, $file, ['file-force-delete']);
     }
 }

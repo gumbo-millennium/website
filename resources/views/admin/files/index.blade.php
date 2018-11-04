@@ -2,7 +2,7 @@
 
 @section('content')
 <header class="admin__header">
-    <h1 class="admin__title">Documentbeheer</h1>
+    <h1 class="admin__title">@lang('files.titles.name')</h1>
 </header>
 
 @if ($defaultCategory !== null)
@@ -12,7 +12,7 @@
 ])
 @endif
 
-<h2>Categoriëen</h2>
+<h2>@lang('files.titles.index')</h2>
 
 <div class="row">
     @forelse ($categories as $category)
@@ -29,7 +29,7 @@
     </div>
     @empty
     <div class="alert alert-light text-center">
-        <strong>Geen categorieën</strong>
+        <strong>@lang('files.messages.no-categories')</strong>
     </div>
     @endforelse
 </div>
