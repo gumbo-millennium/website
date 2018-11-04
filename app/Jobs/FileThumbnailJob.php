@@ -3,13 +3,14 @@
 namespace App\Jobs;
 
 use App\File;
+use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\File as LaravelFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PDFParser;
 
@@ -21,8 +22,35 @@ use Smalot\PdfParser\Parser as PDFParser;
  */
 class FileThumbnailJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, UsesTemporaryFiles;
+    use
+        Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        RunsCliCommands,
+        SerializesModels,
+        UsesTemporaryFiles;
 
+    /**
+     * Imag size of thumbnails
+     *
+     * @var string
+     */
+    const RESIZE_WIDTH = '300x400';
+
+    const ERROR_MSG = <<<MSG
+Failed to make thumbnail [%s].
+
+Outputs follow
+======== stdout  ========
+
+%s
+
+======== stderr  ========
+
+%s
+
+=========================
+MSG;
     /**
      * Acting file
      *
@@ -31,18 +59,18 @@ class FileThumbnailJob implements ShouldQueue
     protected $file;
 
     /**
-     * Try thumbnailing 3 times
+     * Try job 3 times
      *
      * @var int
      */
     protected $tries = 3;
 
     /**
-     * Allow 5 seconds for thumbnail job
+     * Allow 60 seconds for Ghostscript and Imagick to get a thumbnail.
      *
      * @var int
      */
-    protected $timeout = 5;
+    protected $timeout = 60;
 
     /**
      * Create a new job instance.
@@ -67,76 +95,56 @@ class FileThumbnailJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return void
+     * @return void|boolean
      */
-    public function handle() : void
+    public function handle()
     {
-        // Make sure file is valid
-        $file = $this->file;
-        if (!$file) {
+        // Ignore if Windows
+        if (!in_array(PHP_OS_FAMILY, ['Linux', 'Darwin'])) {
             return;
         }
 
+        // Shorthand
+        $file = $this->file;
+
         // Get a temporary file
         $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
-
-        // Get a good temporary file name to use
-        $thumbnailTempFile = tempnam(sys_get_temp_dir(), 'pdfconf');
-        if (empty($thumbnailTempFile)) {
-            throw new \RuntimeException('Failed to obtain a temporary file name');
-        }
-
-        // Delete the temp file and make our own
-        $thumbnailFile = "{$thumbnailTempFile}.jpg";
-        @unlink($thumbnailTempFile);
-        file_put_contents($thumbnailFile, '');
-
-        // Wait for the system to be ready (about 500ms should do)
-        usleep(500 * 1000);
-
-        // Build the convert command
-        $command = sprintf(
-            'convert -density 600 %s[1] -colorspace RGB -resample 300 %s',
-            escapeshellarg($pdfFile),
-            escapeshellarg($thumbnailFile)
-        );
-
-        // DEEEEBUG
-        printf("Running command [%s]\n", $command);
+        $thumbnailFile = $this->getTempFile('jpeg');
 
         try {
-            // Fire up the command
-            exec($command, $result, $code);
+            echo "Building thumbnail\n";
+            $result = $this->runCliCommand([
+                'convert',
+                '-flatten',
+                '-background', 'white',
+                '-alpha', 'remove',
+                '-density', '100',
+                "{$pdfFile}[0]",
+                '-colorspace', 'RGB',
+                '-scale', self::RESIZE_WIDTH,
+                '-gravity', 'center',
+                '-extent', self::RESIZE_WIDTH,
+                '-resize', '80%',
+                '-flatten',
+                '-resize', '125%',
+                $thumbnailFile,
+            ], $procOut, $procErr);
 
-            // Print the result
-            printf("Command completed with [%d]\n\n=========\n> %s\n=========\n", $code, implode("\n> ", $result));
-
-            // Abort if code != 0
-            if ($code !== 0) {
-
-                $dumpPdf = Storage::putFile('dumps', new LaravelFile($pdfFile));
-                $dumpJpg = Storage::putFile('dumps', new LaravelFile($thumbnailFile));
-
-                printf(
-                    "Files stored in app, available under [%s] and [%s]\n",
-                    $dumpPdf,
-                    $dumpJpg
-                );
-
-                $errorMessage = sprintf(
-                    "Failed to convert PDF using [%s]. Received %d:\n\n%s",
-                    $command,
-                    $code,
-                    implode(PHP_EOL, $result)
-                );
-                throw new \RuntimeException($errorMessage, $code);
+            if ($result !== 0) {
+                throw new \RuntimeException(sprintf(
+                    self::ERROR_MSG,
+                    $file->title,
+                    $procOut,
+                    $procErr
+                ), 1);
             }
 
-            // Store file
-            $thumnail = Storage::putFile('thumbnails', new LaravelFile($thumbnailFile));
-
-            // Assign thumbnail
-            $file->thumbnail = $thumnail;
+            // Store and assign thumbnail
+            $file->thumbnail = Storage::putFile(
+                'thumbnails',
+                new LaravelFile($thumbnailFile)
+            );
+            $file->addState(File::STATE_HAS_THUMBNAIL);
 
             // Save file
             $file->save();
@@ -144,16 +152,8 @@ class FileThumbnailJob implements ShouldQueue
             // Bubble that shit up
             throw $e;
         } finally {
-            // Delete generated thumbnail file, if possible.
-            // Ignore if file deletion fails. Unix should auto-clean the temp dir
-            if (file_exists($thumbnailFile) && is_writeable(dirname($thumbnailFile))) {
-                @unlink($thumbnailFile);
-            }
-
-            // Remve temp PDF
-            if (file_exists($pdfFile) && is_writeable($pdfFile)) {
-                @unlink($pdfFile);
-            }
+            $this->deleteTempFile($thumbnailFile);
+            $this->deleteTempFile($pdfFile);
         }
     }
 }
