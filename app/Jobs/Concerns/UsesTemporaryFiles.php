@@ -31,7 +31,7 @@ trait UsesTemporaryFiles
         }
 
         // Open a file handle to a temporary file
-        $temporaryFile = tempnam(sys_get_temp_dir(), 'filedump');
+        $temporaryFile = $this->getTempFile($ext);
         $temporaryHandle = fopen($temporaryFile, 'w');
 
         // Abort if handle failed to grab
@@ -52,11 +52,55 @@ trait UsesTemporaryFiles
         fclose($fileHandle);
         fclose($temporaryHandle);
 
-        // Move file to end with a the given extension
-        $endFilename = "{$temporaryFile}.{$ext}";
-        rename($temporaryFile, $endFilename);
+        // Wait for FS to be ready
+        passthru(sprintf('sync %s', escapeshellarg($temporaryFile)));
+
+        //Report file
+        passthru(sprintf('ls -lh %s', escapeshellarg($temporaryFile)));
 
         // Return filename
-        return $endFilename;
+        return $temporaryFile;
+    }
+
+    /**
+     * Returns a filename for a temporary file with the given extension
+     *
+     * @param string $ext Extension, without leading period.
+     * @return string File path
+     */
+    protected function getTempFile(string $ext) : string
+    {
+        // Generate a filename
+        $tempFileName = tempnam(sys_get_temp_dir(), 'gumbo');
+
+        // Append our wanted extension
+        $fileName = "{$tempFileName}.{$ext}";
+
+        // Move the temp file, or create a new one if moving fails
+        if (!rename($tempFileName, $fileName)) {
+            file_put_contents($fileName, '');
+            @unlink($tempFileName);
+        }
+
+        //Report file
+        passthru(sprintf('ls -lh %s', escapeshellarg($fileName)));
+
+        // Return file name
+        return $fileName;
+    }
+
+    /**
+     * Attempts to delete the given file, but only if it's a temp file.
+     *
+     * @param string $file
+     * @return void
+     */
+    protected function deleteTempFile(string $file) : void
+    {
+        if (file_exists($file) &&
+            starts_with($file, sys_get_temp_dir() &&
+            is_writeable(dirname($file)))) {
+            @unlink($file);
+        }
     }
 }
