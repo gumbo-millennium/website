@@ -4,7 +4,8 @@ $navLinks = [
     ['admin.home', 'Homepage'],
     // ['admin.members', 'Leden'],
     // ['admin.events', 'Evenementen'],
-    ['admin.files.index', 'Documenten']
+    ['admin.files.index', 'Documenten'],
+    ['admin.wordpress', 'WordPress']
 ];
 @endphp
 

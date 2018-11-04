@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -33,12 +34,29 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
      * A user might've uploaded files
      *
      * @return Relation
      */
     public function files() : Relation
     {
-        return $this->hasMany(File::class);
+        return $this->hasMany(File::class, 'owner_id');
+    }
+
+    /**
+     * The WordPres account associated with this user, if any.
+     *
+     * @return HasOne
+     */
+    public function wordpressAccount() : HasOne
+    {
+        return $this->hasOne(CorcelUser::class, 'ID', 'wordpress_userid');
     }
 }
