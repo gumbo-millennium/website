@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\FileCategory;
 use App\File;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles file index, file viewing and file downloads
@@ -62,16 +63,28 @@ class FileController extends Controller
         // TODO
     }
 
-    public function fileDownload(Request $request, File $file)
+    /**
+     * Provides a download, if the file is public, available on the storage and not broken.
+     *
+     * @param Request $request
+     * @param File $file
+     * @return Response
+     */
+    public function download(Request $request, File $file)
     {
         $filePath = $file->path;
         $fileName = $file->filename;
 
-        // Abort if file is missing
-        if (!Storage::exists($filePath)) {
-            abort(404);
+        // Report 404 if not public
+        if ($file->public || $file->broken) {
+            throw new NotFoundHttpException;
         }
 
-        // TODO
+        // Abort if file is missing
+        if (!Storage::exists($filePath)) {
+            throw new NotFoundHttpException;
+        }
+
+        return Storage::download($filePath, $fileName);
     }
 }

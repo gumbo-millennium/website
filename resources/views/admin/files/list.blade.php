@@ -2,8 +2,8 @@
 
 @section('content')
 <header class="admin__header">
-    <h1 class="admin__title">Documentbeheer – {{ $category->title }}</h1>
-    <a href="{{ route('admin.files.index') }}">« Terug naar overzicht</a>
+    <h1 class="admin__title">@lang('files.titles.index') » {{ $category->title }}</h1>
+    <a href="{{ route('admin.files.index') }}">« @lang('files.actions.back-to-index')</a>
 </header>
 
 @if ($category !== null)
@@ -15,14 +15,15 @@
 </aside>
 @endif
 
-<h2>Documenten in {{ $category->title }}</h2>
+<h2>@lang('files.titles.category', ['category' => $category->title])</h2>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Titel</th>
-            <th>Uploader</th>
-            <th>Acties</th>
+            <th>@lang('files.headers.title')</th>
+            <th>@lang('files.headers.owner')</th>
+            <th>@lang('files.headers.state')</th>
+            <th class="text-center">@lang('files.headers.actions')</th>
         </tr>
     </thead>
     <tbody>
@@ -55,12 +56,21 @@
                 </form>
             </td>
             <td>{{ optional($file->owner)->name ?? '–' }}</td>
-            <td class="text-right">
+            <td>{{ implode(', ', $file->processing_status) }}</td>
+            <td class="text-center" style="width: 12rem;">
                 {{-- view file link --}}
                 @if ($file->public)
                 <a href="{{ $file->url }}" class="btn btn-outline-primary btn-sm" title="bekijk op site">
                     <i class="fas fa-external-link-alt fa-fw"></i>
                     <span class="sr-only">bekijk op site</span>
+                </a>
+                @endif
+
+                {{-- download file link --}}
+                @if (!$file->broken)
+                <a href="{{ route('admin.files.download', ['file' => $file]) }}" class="btn btn-outline-primary btn-sm" title="dowloaden">
+                    <i class="fas fa-download fa-fw"></i>
+                    <span class="sr-only">download</span>
                 </a>
                 @endif
 
@@ -91,8 +101,8 @@
         </tr>
         @empty
         <tr>
-            <td colspan="3">
-                <div class="alert alert-info">Geen bestanden in deze categorie</div>
+            <td colspan="4">
+                <div class="alert alert-info">@lang('files.messages.no-files')</div>
             </td>
         </tr>
         @endforelse
@@ -103,4 +113,13 @@
 <div class="d-flex justify-content-center">
     {{ $files->links() }}
 </div>
+
+<h4 class="h3">@lang('files.headers.state-desc')</h4>
+<dl class="row">
+    @foreach (App\File::STATES as $state => $label)
+    <dt class="col-sm-3">{{ __("files.state.{$label}") }}</dt>
+    <dd class="col-sm-9">{{ __("files.state-desc.{$label}") }}</dd>
+    @endforeach
+</dl>
+
 @endsection

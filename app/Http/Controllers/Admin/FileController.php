@@ -209,7 +209,7 @@ class FileController extends Controller
         // Redirect
         return $this->continue(
             $category ?? $file->categories->first(),
-            sprintf('Het bestand %s is bijgewerkt', $file->display_title)
+            __('files.messages.update', ['file' => $file->display_title])
         );
     }
 
@@ -236,23 +236,12 @@ class FileController extends Controller
         $file->save();
 
         // Get correct message
-        if ($file->public) {
-            $message = 'Het bestand <strong>%s</strong> is %s gepubliceerd.';
-        } else {
-            $message = 'Het bestand <strong>%s</strong> is %s verborgen voor bezoekers.';
-        }
-
-        // Make message
-        $message = sprintf(
-            $message,
-            $file->display_title,
-            $file->public === $shouldPublic ? 'succesvol' : 'NIET'
-        );
+        $messageName =  $file->public ? 'files.messages.publish' : 'files.messages.unpublish';
 
         // Redirect
         return $this->continue(
             $category ?? $file->categories->first(),
-            $message
+            __($messageName, ['file' => $file->display_title])
         );
     }
 
@@ -269,10 +258,29 @@ class FileController extends Controller
         $nextCategory = $category ?? $file->categories->first();
         $file->delete();
 
-        $nextRoute = ($nextCategory === null) ? 'admin.files.index' : 'files.admin.list';
+        return $this->continue(
+            $nextCategory,
+            __('files.messages.destroyed', ['file' => $file->display_title])
+        );
+    }
 
-        return redirect()
-            ->with(['status' => "Het bestand {$file->display_title} is verwijderd"])
-            ->route($nextRoute, ['category' => $nextCategory]);
+    /**
+     * Provides a download, if the file is available on the storage and not broken.
+     *
+     * @param Request $request
+     * @param File $file
+     * @return Response
+     */
+    public function download(Request $request, File $file)
+    {
+        $filePath = $file->path;
+        $fileName = $file->filename;
+
+        // Report 404 if not public
+        if ($file->broken || !Storage::exists($filePath)) {
+            throw new NotFoundHttpException;
+        }
+
+        return Storage::download($filePath, $fileName);
     }
 }

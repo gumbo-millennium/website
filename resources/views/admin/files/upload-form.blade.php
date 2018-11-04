@@ -2,11 +2,11 @@
 <div class="text-right">
     @can('create', App\File::class)
         <button class="btn btn-success" data-upload-action="open" data-target="upload-form">
-            Document uploaden
+            @lang('files.actions.upload')
         </button>
     @else
         <button disabled class="btn btn-success btn-disabled">
-            Document uploaden
+            @lang('files.actions.upload')
         </button>
     @endcan
 </div>
@@ -27,22 +27,18 @@ $categoryName = optional($category)->title ?? 'standaard';
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content admin-files">
             <div class="modal-header">
-                <h5 class="modal-title">Documenten uploaden</h5>
+                <h5 class="modal-title">@lang('files.upload.title')</h5>
             </div>
             <div class="modal-body">
                 <div class="admin-files__dropzone" data-upload-content="dropzone">
-                    <h3 class="admin-files__title">Documenten uploaden</h3>
+                    <h3 class="admin-files__title">@lang('files.upload.title')</h3>
                     <p class="admin-files__subtitle">
-                        Sleep PDF bestanden hier (of klik) om ze te uploaden naar de <strong>{{ $categoryName }}</strong> categorie.
+                        @lang('files.upload.subtitle', ['category' => $categoryName])
                     </p>
                 </div>
 
-                <p>
-                    Documenten die je nu upload worden in de <strong>{{ $categoryName }}</strong> categorie geplaatst. Het kan even duren voordat de bestanden zijn geïndexeerd en voorzien zijn van metadata.
-                </p>
-
                 <div class="alert alert-info">
-                    <strong>Let op:</strong> De bestanden zijn direct zichtbaar voor ingelogde leden.
+                    @lang('files.upload.queue-hint')
                 </div>
 
                 <div class="progress admin-files__progress">
@@ -56,11 +52,11 @@ $categoryName = optional($category)->title ?? 'standaard';
                 </div>
 
                 <table class="table table-bordered">
-                    <thead class="thead-dark">
+                    <thead class="thead-light">
                         <tr>
-                            <th scope="row">Documentsnaam</th>
-                            <th scope="row">Status</th>
-                            <th scope="row">Acties</th>
+                            <th scope="row">@lang('files.upload.rows.filename')</th>
+                            <th scope="row">@lang('files.upload.rows.status')</th>
+                            <th scope="row">@lang('files.upload.rows.actions')</th>
                         </tr>
                     </thead>
                     <tbody data-upload-content="queue"></tbody>
@@ -79,10 +75,10 @@ $categoryName = optional($category)->title ?? 'standaard';
                             <td width="30%" data-file-content="status"></td>
                             <td width="10%">
                                 <a href="#" class="btn btn-danger d-none" data-dz-remove data-file-action="cancel">
-                                    <i class="fas fa-times fa-fw" title="Annuleren"></i>
+                                    <i class="fas fa-times fa-fw" title="{{ __('files.actions.cancel') }}"></i>
                                 </a>
                                 <a href="#" class="btn btn-brand d-none" data-file-action="link">
-                                    <i class="fas fa-external-link-alt fa-fw" title="Bekijk bestand"></i>
+                                    <i class="fas fa-external-link-alt fa-fw" title="{{ __('files.actions.view') }}"></i>
                                 </a>
                             </td>
                         <tr>
@@ -90,8 +86,8 @@ $categoryName = optional($category)->title ?? 'standaard';
                 </template>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-upload-action="modal-close">Sluiten</button>
-                <button type="button" class="btn btn-primary d-none" data-upload-action="modal-reload">Herlaad pagina</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-upload-action="modal-close">{{ __('files.upload.close') }}</button>
+                <button type="button" class="btn btn-primary d-none" data-upload-action="modal-reload">{{ __('files.upload.close-and-reload') }}</button>
             </div>
         </div>
     </div>

@@ -20,6 +20,48 @@ class File extends SluggableModel
     const STORAGE_DIR = 'files';
 
     /**
+     * @var int File is pending processing
+     */
+    const STATE_PENDING = 0;
+
+    /**
+     * @var int File was checked by repair system
+     */
+    const STATE_FILE_CHECKED = 1;
+
+    /**
+     * @var int File is converted to PDF/A format.
+     */
+    const STATE_PDFA = 4;
+
+    /**
+     * @var int File has metadata
+     */
+    const STATE_HAS_META = 8;
+
+    /**
+     * @var int File has thumbnails
+     */
+    const STATE_HAS_THUMBNAIL = 16;
+
+    /**
+     * @var int File is broken and cannot be published
+     */
+    const STATE_BROKEN = 1024;
+
+    /**
+     * @var string[] Names of the states
+     */
+    const STATES = [
+        self::STATE_PENDING => 'pending',
+        self::STATE_FILE_CHECKED => 'checked',
+        self::STATE_BROKEN => 'broken',
+        self::STATE_PDFA => 'pdfa',
+        self::STATE_HAS_META => 'has-meta',
+        self::STATE_HAS_THUMBNAIL => 'has-thumbnail',
+    ];
+
+    /**
      * {@inheritDoc}
      */
     protected $appends = [
@@ -133,5 +175,68 @@ class File extends SluggableModel
         }
 
         return route('files.show', ['file' => $this]);
+    }
+
+    /**
+     * Returns human-readable status
+     *
+     * @return array
+     */
+    public function getProcessingStatusAttribute() : array
+    {
+        if ($this->hasState(self::STATE_BROKEN)) {
+            return [__('files.state.broken')];
+        }
+
+        $result = [];
+        foreach (self::STATES as $value => $label) {
+            if ($this->hasState($value)) {
+                $result[] = __("files.state.$label");
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Adds the given state
+     *
+     * @param int $state
+     * @return void
+     */
+    public function addState(int $state) : void
+    {
+        $this->state |= $state;
+    }
+
+    /**
+     * Removes the given state
+     *
+     * @param int $state
+     * @return void
+     */
+    public function removeState(int $state) : void
+    {
+        $this->state ^= $state;
+    }
+
+    /**
+     * Checks if a given state is present on the file
+     *
+     * @param int $state
+     * @return bool
+     */
+    public function hasState(int $state) : bool
+    {
+        return $state === 0 ? $this->state === 0 : ($this->state & $state) === $state;
+    }
+
+    /**
+     * Returns true if file is broken.
+     *
+     * @return bool
+     */
+    public function getBrokenAttribute() : bool
+    {
+        return $this->hasState(self::STATE_BROKEN);
     }
 }
