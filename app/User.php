@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -48,6 +49,18 @@ class User extends Authenticatable
     public function files() : Relation
     {
         return $this->hasMany(File::class, 'owner_id');
+    }
+
+    /**
+     * A user can download files
+     *
+     * @return BelongsToMany
+     */
+    public function downloads() : BelongsToMany
+    {
+        return $this->belongsToMany(File::class, 'file_downloads')
+            ->as('download')
+            ->using(FileDownload::class);
     }
 
     /**

@@ -83,6 +83,18 @@ class File extends SluggableModel
     }
 
     /**
+     * A file may have downloads
+     *
+     * @return Relation
+     */
+    public function download() : Relation
+    {
+        return $this->belongsToMany(User::class, 'file_downloads')
+            ->as('download')
+            ->using(FileDownload::class);
+    }
+
+    /**
      * Returns the display title of a file, or null if unknown
      *
      * @return string|null
