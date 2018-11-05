@@ -10,6 +10,8 @@ use App\Services\WordPressAccessProvider;
 use Laravel\Horizon\Horizon;
 use App\File;
 use App\Observers\FileObserver;
+use App\User;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,8 +37,9 @@ class AppServiceProvider extends ServiceProvider
             return $request->user() !== null && $request->user()->hasPermissionTo('devops');
         });
 
-        // Handle File changes
+        // Handle File and User changes
         File::observe(FileObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
