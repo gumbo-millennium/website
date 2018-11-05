@@ -36,6 +36,7 @@ RUN apt-get update \
     ghostscript \
     imagemagick \
     supervisor \
+    exiftool \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 

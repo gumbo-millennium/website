@@ -9,6 +9,7 @@
 
 {{-- Main stylesheet --}}
 <link href="{{ mix('/gumbo.css') }}" rel="stylesheet">
+@stack('stack.css')
 
 {{-- Web fonts --}}
 @if ($page_type ?? null === 'blog')

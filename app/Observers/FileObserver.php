@@ -22,7 +22,6 @@ class FileObserver
         // The jobs repair the file, then convert it to a PDF/A-3 if possible
         // and then create metadata and thumbnails.
         FileRepairJob::withChain([
-            new FileArchiveJob($file),
             new FileMetaJob($file),
             new FileThumbnailJob($file)
         ])->dispatch($file);

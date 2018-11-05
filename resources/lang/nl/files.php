@@ -62,7 +62,11 @@ return [
         'file-updated' => 'Het bestand :file is bijgewerkt',
         'file-published' => 'Het bestand :file is gepubliceerd',
         'file-unpublished' => 'Het bestand :file is ingetrokken',
-        'file-destroyed' => 'Het bestand :file is verwijderd'
+        'file-destroyed' => 'Het bestand :file is verwijderd',
+
+        // PDF/A messages
+        'pdfa-started' => 'Het bestand :file zal binnenkort omgezet worden naar PDF/A.',
+        'pdfa-already' => 'Het bestand :file is al in PDF/A format.',
     ],
 
     // Upload dialog

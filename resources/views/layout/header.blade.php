@@ -12,6 +12,13 @@ navbar--opaque
 @endpush
 @endif
 
+@auth
+{{-- Add logout form to header --}}
+<form class="d-none" id="navbar-logout-form" action="{{ route('auth.logout') }}" method="post">
+    @csrf
+</form>
+@endauth
+
 {{-- Header v2 --}}
 <nav class="@stack('navbar-classes')" role="navigation">
     <div class="container no-override">
@@ -29,7 +36,7 @@ navbar--opaque
         {{-- Navigation, retrieved from WordPress --}}
         @if ($menuHelper->hasLocation('header'))
         <div class="collapse navbar-collapse justify-content-end" id="navbar-collapse">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav navbar-nav--flex">
                 @forelse ($menuHelper->location('header') as $menuItem)
                 {{-- Loop throuh menus --}}
 
@@ -67,12 +74,52 @@ navbar--opaque
 
                 @endforelse
 
+                @auth
+                @php
+                $user = auth()->user();
+                @endphp
+                {{-- Render document system --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('files.index') }}">Documenten</a>
+                </li>
+
+                <li class="nav-item nav-separator">&nbsp;</li>
+
+                {{-- Render logout button --}}
+                <li class="nav-item dropdown">
+                    {{-- Render text and arrow down --}}
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-no-append="true">
+                        <i class="fas fa-user"></i>
+                        {{ $user->name }}
+                    </a>
+
+                    {{-- Menu --}}
+                    <div class="dropdown-menu" role="menu">
+                        @if ($user->hasPermissionTo('admin'))
+                        {{-- Add admin link --}}
+                        <a class="dropdown-item" href="{{ route('admin.home') }}">Administratiepaneel</a>
+
+                        {{-- Add separator --}}
+                        <div class="dropdown-divider"></div>
+                        @endif
+                        <a class="dropdown-item" href="{{ route('auth.logout') }}" data-action="submit-form" data-target="navbar-logout-form">Uitloggen</a>
+                    </div>
+                </li>
+                @else
                 <li class="nav-item">
                     <a class="nav-link nav-link--rounded" href="/sign-up">
                         <span>Word lid</span>
                         <span class="far fa-thumbs-up"></span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('auth.login') }}" class="nav-link">
+                        <i class="fas fa-lock fa-fw"></i>
+                        <span class="d-lg-none">Inloggen</span>
+                        <span class="sr-only">Inloggen</span>
+                    </a>
+                </li>
+                @endauth
             </ul>
         </div>
         @endif

@@ -18,10 +18,13 @@
         "mischiefcollective/colorjizz": "^1.0",
         "overtrue/laravel-lang": "^3.0",
         "predis/predis": "^1.1",
+        "ramsey/uuid": "^3.8",
         "smalot/pdfparser": "^0.13.2",
-        "spatie/laravel-permission": "^2.23"
+        "spatie/laravel-permission": "^2.23",
+        "symfony/process": "^4.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.5",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
@@ -89,6 +92,17 @@
           "@php artisan clear-compiled",
           "@php artisan ide-helper:generate",
           "@php artisan ide-helper:models"
+        ],
+        "optimize": [
+          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
+          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
+          "rm -rf library/wordpress/themes/gumbo-millennium/node_modules/",
+
+          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
+          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build",
+          "rm -rf library/wordpress/plugins/gumbo-millennium/node_modules/",
+
+          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ -ao"
         ]
     },
     "config": {
