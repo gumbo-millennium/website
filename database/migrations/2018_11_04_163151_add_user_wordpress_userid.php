@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUserWordpressUser extends Migration
+class AddUserWordpressUserid extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,11 @@ class AddUserWordpressUser extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('wordpress_userid')
-                ->unsigned()
-                ->default(0)
+            $table->string('wordpress_username', 100)
+                ->default(null)
+                ->nullable()
                 ->after('password')
-                ->comment('ID of the WordPress account of this user.');
+                ->comment('Username of the Users\' WordPress account.');
         });
     }
 
@@ -30,7 +30,7 @@ class AddUserWordpressUser extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('state');
+            $table->dropColumn('wordpress_username');
         });
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Corcel\Model\User;
+use Corcel\Model\User as OriginalCorcelUser;
 use Illuminate\Database\Eloquent\Model;
 use Corcel\Services\PasswordService;
 
@@ -12,7 +12,7 @@ use Corcel\Services\PasswordService;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class CorcelUser extends User
+class CorcelUser extends OriginalCorcelUser
 {
     protected $fillable = [
         'user_login',
@@ -24,6 +24,20 @@ class CorcelUser extends User
         'user_status',
         'display_name'
     ];
+
+    /**
+     * Returns a nicely readable name
+     *
+     * @return string
+     */
+    public function getNameAttribute() : string
+    {
+        if (!empty($this->display_name)) {
+            return $this->display_name;
+        } else {
+            return $this->user_login;
+        }
+    }
 
     public function setPassword(?string $password) : self
     {

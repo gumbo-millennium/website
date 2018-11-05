@@ -32,7 +32,10 @@ RUN { \
 # - Imagick, which is used to convert PDF files to JPG / PNG files. (it has the
 #   godly 'convert' command, which converts just about anything)
 RUN apt-get update \
-  && apt-get install -yq supervisor imagemagick \
+  && apt-get install -yq \
+    ghostscript \
+    imagemagick \
+    supervisor \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 

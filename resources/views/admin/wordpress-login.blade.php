@@ -29,13 +29,18 @@ $boxes = [
 <form class="jumbotron" href="{{ route('admin.wordpress') }}" method="post">
     @csrf
     <h1 class="display-4">Inloggen bij WordPress</h1>
-    <p class="lead">Klik op onderstaande knop om in te loggen bij WordPress.</p>
+    <p class="lead">Klik op onderstaande knop om naar de WordPress omgeving te gaan.</p>
     <hr class="my-4">
-    @if ($user->wordpressAccount)
-    <p>Je logt in als <strong>{{ $wordpressAccount->user_login }}</strong>. Je hebt geen wachtwoord nodig</p>
-    @else
-    <p>Er wordt een nieuwe account voor je aangemaakt. Je hebt geen wachtwoord nodig</p>
-    @endif
+    <p>Je moet hier opnieuw inloggen. Hiervoor kan je de volgende credenials gebruiken:</p>
+    <dl class="row">
+        {{-- Username --}}
+        <dt class="col-xs-6 col-sm-4 col-md-3">Gebruikersnaam</dt>
+        <dd class="col-xs-6 col-sm-8 col-md-9">{{ optional($user->wordpress)->login ?? $user->email }}</dd>
+
+        {{-- Password --}}
+        <dt class="col-xs-6 col-sm-4 col-md-3">Wachtwoord</dt>
+        <dd class="col-xs-6 col-sm-8 col-md-9"><em>Je account wachtwoord</em></dd>
+    <dl>
     <button type="submit" name="scope" value="user" class="btn btn-primary btn-lg" role="button">Inloggen</a>
 </form>
 @endsection
