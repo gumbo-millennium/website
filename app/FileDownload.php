@@ -68,18 +68,4 @@ class FileDownload extends Pivot
             $model->downloaded_at = now();
         });
     }
-
-    /**
-     * Removes the IP address of FileDownload objects older than 90 days.
-     *
-     * @return int number of removed IPs
-     */
-    public static function removeIpOnOldEntries() : int
-    {
-        return self::query()
-            ->where('downloaded_at', '<', today()->subDays(90))
-            ->whereNotNull('ip')
-            ->update(['ip' => null])
-            ->count();
-    }
 }

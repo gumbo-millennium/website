@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Page;
 use App\Form;
-use App\Post;
-use App\Activity;
+use Corcel\Model\Page;
+use Corcel\Model\Post;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class WordPressController extends Controller
@@ -14,7 +13,6 @@ class WordPressController extends Controller
     const CLASS_VIEW_MAP = [
         Page::class => 'wordpress.page',
         Form::class => 'wordpress.form',
-        Activity::class => 'wordpress.activity',
         Post::class => 'wordpress.post',
     ];
 
@@ -25,7 +23,9 @@ class WordPressController extends Controller
      */
     public function homepage()
     {
-        return view(self::CLASS_VIEW_MAP[Page::class])->with(['page' => Page::homepage()]);
+        return view(self::CLASS_VIEW_MAP[Page::class])->with([
+            'page' => Page::home()->first()
+        ]);
     }
 
     /**

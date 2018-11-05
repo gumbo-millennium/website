@@ -5,6 +5,7 @@ namespace App;
 use App\FileCategory;
 use App\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 
 /**
  * A user-uploaded file
@@ -167,6 +168,11 @@ class File extends SluggableModel
         return $this->created_at === null  || $this->created_at >= $twoDaysAgo;
     }
 
+    /**
+     * Returns the absolute URL to the file
+     *
+     * @return string|null
+     */
     public function getUrlAttribute() : ?string
     {
         // Ignore if slugless
@@ -195,6 +201,39 @@ class File extends SluggableModel
             }
         }
         return $result;
+    }
+
+    /**
+     * Ensures that the filename has a lowercase extension and
+     * is ASCII-safe.
+     *
+     * @param string $filename
+     * @return void
+     */
+    public function setFilenameAttribute(?string $filename)
+    {
+        if (is_string($filename)) {
+            // Determine extension from mime, or assume PDF
+            if (!empty($this->mime)) {
+                $extguesser = ExtensionGuesser::getInstance();
+                $ext = preg_quote($extguesser->guess($this->mime));
+            } else {
+                $ext = 'pdf';
+            }
+
+            // Trim extension
+            if (preg_match("/^(.+)\.{$ext}$/i", $filename, $matches)) {
+                $filename = $matches[1];
+            }
+
+            // Convert to ASCII, using Dutch locale
+            setlocale(LC_CTYPE, 'nl_NL');
+            $filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $filename);
+            $filename .= ".{$ext}";
+        }
+
+        // Store filename
+        $this->attributes['filename'] = $filename;
     }
 
     /**

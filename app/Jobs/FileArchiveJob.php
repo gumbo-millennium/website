@@ -87,6 +87,11 @@ class FileArchiveJob implements ShouldQueue
         // Shorthand
         $file = $this->file;
 
+        // Skip if the file is already PDF-A
+        if ($file->hasState(File::STATE_PDFA)) {
+            return;
+        }
+
         // Get a temporary file
         $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
         $archiveFile = $this->getTempFile('pdf');

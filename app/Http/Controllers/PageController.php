@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Page;
+use Corcel\Model\Page;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -23,7 +23,7 @@ class PageController extends Controller
      */
     public function homepage()
     {
-        $homepage = Page::homepage();
+        $homepage = Page::home()->first();
         if ($homepage === null) {
             throw new NotFoundHttpException;
         }

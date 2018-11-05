@@ -90,13 +90,15 @@ const bindHoverNavigation = navbar => {
     let link = node.find('[data-toggle="dropdown"]').eq(0)
     let list = node.children('.dropdown-menu').eq(0)
 
-    let linkNode = jQuery(template)
-      .attr('href', link.attr('href'))
-      .text(link.text())
-      .addClass('d-lg-n')
+    if (!link.data('no-append')) {
+      let linkNode = jQuery(template)
+        .attr('href', link.attr('href'))
+        .text(link.text())
+        .addClass('d-lg-n')
 
-    // Insert before first link item
-    linkNode.insertBefore(list.children().eq(0))
+      // Insert before first link item
+      linkNode.insertBefore(list.children().eq(0))
+    }
 
     // Add node
     node.hover(

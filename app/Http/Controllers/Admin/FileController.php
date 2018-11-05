@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Testing\HttpException;
 use App\Http\Requests\FileRequest;
+use App\Jobs\FileArchiveJob;
 
 /**
  * Handles uploads, changes and deletes for files uploaded
@@ -282,5 +283,37 @@ class FileController extends Controller
         }
 
         return Storage::download($filePath, $fileName);
+    }
+
+    /**
+     * Starts a job to convert the file to a PDF/A file.
+     *
+     * @param Request $request
+     * @param File $file
+     * @return Response
+     */
+    public function archive(File $file, FileCategory $category)
+    {
+        if ($file->hasState(File::STATE_PDFA)) {
+            return redirect()->back()->with([
+                'status',
+                __('files.messages.pdfa-already', ['file' => $file->display_title])
+            ]);
+        }
+
+        // Start a job
+        FileArchiveJob::dispatch($file);
+
+        // Store new status
+        session()->flash(
+            'status',
+            __('files.messages.pdfa-started', ['file' => $file->display_title])
+        );
+
+        // Redirect back
+        return redirect()->back()->with([
+            'status',
+            __('files.messages.pdfa-started', ['file' => $file->display_title])
+        ]);
     }
 }

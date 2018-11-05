@@ -67,6 +67,14 @@
                 @endif
 
                 {{-- download file link --}}
+                @if ($file->hasState(\App\File::STATE_PDFA))
+                <a href="{{ route('admin.files.archive', ['file' => $file]) }}" class="btn btn-outline-primary btn-sm" title="omzetten naar PDF/A">
+                    <i class="fas fa-box fa-fw"></i>
+                    <span class="sr-only">omzetten naar PDF/A</span>
+                </a>
+                @endif
+
+                {{-- download file link --}}
                 @if (!$file->broken)
                 <a href="{{ route('admin.files.download', ['file' => $file]) }}" class="btn btn-outline-primary btn-sm" title="dowloaden">
                     <i class="fas fa-download fa-fw"></i>
@@ -114,6 +122,7 @@
     {{ $files->links() }}
 </div>
 
+{{-- Description of states --}}
 <h4 class="h3">@lang('files.headers.state-desc')</h4>
 <dl class="row">
     @foreach (App\File::STATES as $state => $label)

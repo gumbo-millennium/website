@@ -9,6 +9,6 @@ trait RedirectsToAdminHomeTrait
      */
     protected function redirectTo()
     {
-        return route('admin.home');
+        return route('home');
     }
 }

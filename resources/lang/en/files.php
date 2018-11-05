@@ -61,7 +61,11 @@ return [
         'file-updated' => 'The file :file has been updated',
         'file-published' => 'The file :file has been published',
         'file-unpublished' => 'The file :file has been unpublished',
-        'file-destroyed' => 'The file :file has been deleted'
+        'file-destroyed' => 'The file :file has been deleted',
+
+        // PDF/A messages
+        'pdfa-started' => 'The file :file will soon be converted to PDF/A.',
+        'pdfa-already' => 'The file :file is already stored as PDF/A.',
     ],
 
     // Upload dialog

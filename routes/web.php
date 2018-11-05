@@ -12,7 +12,7 @@
 */
 
 // Home
-Route::get('/', 'WordPressController@homepage')->name('homepage');
+Route::get('/', 'WordPressController@homepage')->name('home');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -72,6 +72,10 @@ Route::prefix('admin')
         $this->get('members', 'MemberController@index')->name('members');
         $this->get('events', 'EventController@index')->name('events');
 
+        // WordPress login
+        $this->get('wordpress', 'WordPressController@index')->middleware(['permission:content'])->name('wordpress');
+        $this->post('wordpress', 'WordPressController@login')->middleware(['permission:content']);
+
         /**
          * File / Document system. Handles files *and* categories
          */
@@ -109,6 +113,11 @@ Route::prefix('admin')
                 $this->delete('/file/{file}', 'FileController@delete')
                     ->name('delete')
                     ->middleware('can:delete,file');
+
+                // Download request
+                Route::get('/download/{file}', 'FileController@download')
+                    ->name('download')
+                    ->middleware('can:download,file');
             });
     });
 
