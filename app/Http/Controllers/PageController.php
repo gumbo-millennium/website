@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Corcel\Model\Page;
+use App\Page;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

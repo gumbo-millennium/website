@@ -44,6 +44,6 @@ class SponsorShortcode implements Shortcode
             ->first();
 
         // Return safe content if a sponsor is available
-        return $sponsor ? $sponsor->content : '';
+        return $this->sponsor ? $this->sponsor->content : '';
     }
 }

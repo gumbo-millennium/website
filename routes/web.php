@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,8 +13,9 @@
 |
 */
 
-// Home
+// Home and privacy policy
 Route::get('/', 'WordPressController@homepage')->name('home');
+Route::get('/privacy-policy', 'WordPressController@privacy')->name('privacy');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -45,20 +48,19 @@ Route::get('/join', 'JoinController@index')->name('join');
 Route::post('/join', 'JoinController@submit');
 Route::get('/join/welcome', 'JoinController@after')->name('join.complete');
 
-// Authentication
-Route::prefix('auth')->name('auth.')->namespace('Auth')->group(function () {
-        // Authentication Routes...
-        $this->get('login', 'LoginController@showLoginForm')->name('login');
-        $this->post('login', 'LoginController@login');
-        $this->post('logout', 'LoginController@logout')->name('logout');
+// Authentication and forgotten passwords
+Route::prefix('auth')->group(function () {
+    $this->auth([
+        'verify' => false,
+        'register' => false
+    ]);
+});
 
-        // Password Reset Routes...
-        Route::prefix('password')->name('password.')->group(function () {
-            $this->get('reset', 'ForgotPasswordController@showLinkRequestForm')->name('request');
-            $this->post('email', 'ForgotPasswordController@sendResetLinkEmail')->name('email');
-            $this->get('reset/{token}', 'ResetPasswordController@showResetForm')->name('reset');
-            $this->post('reset', 'ResetPasswordController@reset');
-        });
+// My account
+Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
+    $this->get('/', 'UserController@index')->name('home');
+    $this->get('/info', 'UserController@view')->name('info');
+    $this->patch('/info', 'UserController@update');
 });
 
 // Admin panel
@@ -82,6 +84,50 @@ Route::prefix('admin')
         Route::prefix('files')
             ->name('files.')
             ->middleware('can:manage,App\File')
+            ->group(function () {
+                // Index page, optionally per category
+                $this->get('/', 'FileController@index')
+                    ->name('index');
+
+                // Category overview
+                $this->get('/category/{category}', 'FileController@list')
+                    ->name('list');
+
+                // Uploads
+                $this->post('/upload/{category?}', 'FileController@upload')
+                    ->name('upload')
+                    ->middleware('can:create,App\File');
+
+                // View and edit
+                $this->get('/file/{file}', 'FileController@show')
+                    ->name('show');
+
+                $this->put('/file/{file}', 'FileController@edit')
+                    ->name('edit')
+                    ->middleware('can:update,file');
+
+                // Publish or un-publish
+                $this->patch('/file/{file}/publish', 'FileController@publish')
+                    ->name('publish')
+                    ->middleware('can:publish,file');
+
+                // Deletion request
+                $this->delete('/file/{file}', 'FileController@delete')
+                    ->name('delete')
+                    ->middleware('can:delete,file');
+
+                // Download request
+                Route::get('/download/{file}', 'FileController@download')
+                    ->name('download')
+                    ->middleware('can:download,file');
+            });
+
+        /**
+         * File / Document system. Handles files *and* categories
+         */
+        Route::prefix('join')
+            ->name('join.')
+            ->middleware('permission:join.manage')
             ->group(function () {
                 // Index page, optionally per category
                 $this->get('/', 'FileController@index')

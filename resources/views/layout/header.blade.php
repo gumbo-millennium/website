@@ -14,7 +14,7 @@ navbar--opaque
 
 @auth
 {{-- Add logout form to header --}}
-<form class="d-none" id="navbar-logout-form" action="{{ route('auth.logout') }}" method="post">
+<form class="d-none" id="navbar-logout-form" action="{{ route('logout') }}" method="post">
     @csrf
 </form>
 @endauth
@@ -78,10 +78,23 @@ navbar--opaque
                 @php
                 $user = auth()->user();
                 @endphp
-                {{-- Render document system --}}
+
+                {{-- Render document system, if allowed --}}
+                @can('file-browse')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('files.index') }}">Documenten</a>
                 </li>
+                @endcan
+
+                {{-- Render join button if NOT a member --}}
+                @unlessrole('member')
+                <li class="nav-item">
+                    <a class="nav-link nav-link--rounded" href="{{ route('join') }}">
+                        <span>Word lid</span>
+                        <span class="far fa-thumbs-up"></span>
+                    </a>
+                </li>
+                @endunlessrole
 
                 <li class="nav-item nav-separator">&nbsp;</li>
 
@@ -102,18 +115,18 @@ navbar--opaque
                         {{-- Add separator --}}
                         <div class="dropdown-divider"></div>
                         @endif
-                        <a class="dropdown-item" href="{{ route('auth.logout') }}" data-action="submit-form" data-target="navbar-logout-form">Uitloggen</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}" data-action="submit-form" data-target="navbar-logout-form">Uitloggen</a>
                     </div>
                 </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link nav-link--rounded" href="/sign-up">
+                    <a class="nav-link nav-link--rounded" href="{{ route('join') }}">
                         <span>Word lid</span>
                         <span class="far fa-thumbs-up"></span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('auth.login') }}" class="nav-link">
+                    <a href="{{ route('login') }}" class="nav-link">
                         <i class="fas fa-lock fa-fw"></i>
                         <span class="d-lg-none">Inloggen</span>
                         <span class="sr-only">Inloggen</span>

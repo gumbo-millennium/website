@@ -7,7 +7,7 @@ use App\User;
 use App\CorcelUser;
 use Corcel\Model\Attachment as CorcelMedia;
 use Corcel\Model\Option as CorcelOption;
-use Corcel\Model\Page as CorcelPage;
+use App\Page as CorcelPage;
 use Corcel\Model\Post as CorcelPost;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

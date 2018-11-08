@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Form;
-use Corcel\Model\Page;
+use App\Page;
 use Corcel\Model\Post;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,6 +25,18 @@ class WordPressController extends Controller
     {
         return view(self::CLASS_VIEW_MAP[Page::class])->with([
             'page' => Page::home()->first()
+        ]);
+    }
+
+    /**
+     * Renders the Privacy Policy
+     *
+     * @return Response
+     */
+    public function privacy()
+    {
+        return view(self::CLASS_VIEW_MAP[Page::class])->with([
+            'page' => Page::privacyPolicy()->first()
         ]);
     }
 

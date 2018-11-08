@@ -18,7 +18,7 @@
 </div>
 
 {{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('auth.password.email') }}" aria-label="{{ __('Reset Password') }}">
+<form class="login__form" method="post" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
     {{-- CSRF token --}}
     @csrf
 
@@ -49,6 +49,6 @@
 
 {{-- Login actions --}}
 <div class="login__text login__text--after">
-    <p><a href="{{ route('auth.login') }}">Terug naar inloggen</a></p>
+    <p><a href="{{ route('login') }}">Terug naar inloggen</a></p>
 </div>
 @endsection

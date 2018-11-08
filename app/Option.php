@@ -14,6 +14,13 @@ use Corcel\Model\Option as CorcelOption;
 class Option extends CorcelOption
 {
     /**
+     * Key containing the secret for authentication
+     *
+     * @var string
+     */
+    const OPTION_AUTH_TOKEN = 'wordpress-auth-secret';
+
+    /**
      * Updates or creates the new key
      * @param string $key
      * @param mixed $value

@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+Route::middleware('wordpress')->prefix('wordpress/')->name('wordpress.')->group(function () {
+    $this->get('menu', 'WordPressController@menu')->name('menu');
+});
