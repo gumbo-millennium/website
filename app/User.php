@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
     use Notifiable, HasRoles, SoftDeletes;
 
@@ -82,5 +82,21 @@ class User extends Authenticatable
     public function wordpressWasChanged() : bool
     {
         return in_array('wordpress_userid', $this->getDirty());
+    }
+
+    /**
+     * Returns full name of the user
+     *
+     * @return string|null
+     */
+    public function getNameAttribute() : ?string
+    {
+        $name = implode(' ', array_filter([
+            $this->first_name,
+            $this->insert,
+            $this->last_name
+        ]));
+
+        return $name !== '' ? $name : null;
     }
 }

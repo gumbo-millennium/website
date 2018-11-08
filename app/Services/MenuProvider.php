@@ -21,11 +21,12 @@ class MenuProvider
     /**
      * Returns menu locations for the current WordPress theme.
      *
+     * @param bool|null $forceRefresh Ignore cache
      * @return array
      */
-    protected static function getMenuLocations() : array
+    protected static function getMenuLocations(bool $forceRefresh = null) : array
     {
-        if (Cache::has(self::LOCATION_CACHE)) {
+        if (Cache::has(self::LOCATION_CACHE) && !$forceRefresh) {
             return Cache::get(self::LOCATION_CACHE);
         }
 
@@ -39,7 +40,7 @@ class MenuProvider
 
         $menuLocations = $themeConfig['nav_menu_locations'] ?? [];
 
-        Cache::put(self::LOCATION_CACHE, $menuLocations, now()->addMinutes(15));
+        Cache::put(self::LOCATION_CACHE, $menuLocations, now()->addDays(7));
 
         return $menuLocations;
     }
@@ -58,20 +59,37 @@ class MenuProvider
     }
 
     /**
-     * Gets a theme at the given location
+     * Gets a theme at the given location. Cached
      *
      * @param string $location
-     * @return self|null
+     * @return Menu|null
      */
     public function location(string $location) : ?Menu
     {
+        // Load menu locations
         $locations = static::getMenuLocations();
 
-        if (!empty($locations[$location])) {
-            return $this->id($locations[$location]);
+        // Check if menu location is valid
+        if (empty($locations[$location])) {
+            return null;
         }
 
-        return null;
+        // Get cache key
+        $cacheKey = "menu.{$location}";
+
+        // Load menu from cache
+        if (Cache::tags('menu-locations')->has($cacheKey)) {
+            return Cache::tags('menu-locations')->get($cacheKey);
+        }
+
+        // Get menu
+        $menu = $this->id($locations[$location]);
+
+        // Cache menu
+        Cache::tags(['menu-locations', 'wordpress'])->forever($cacheKey, $menu);
+
+        // Return menu
+        return $menu;
     }
 
     /**

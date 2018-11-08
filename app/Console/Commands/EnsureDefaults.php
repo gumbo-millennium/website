@@ -6,6 +6,7 @@ use App\File;
 use App\FileCategory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\UpdateWordPressTokenJob;
 
 class EnsureDefaults extends Command
 {
@@ -40,11 +41,16 @@ class EnsureDefaults extends Command
      */
     public function handle()
     {
+        // Handle default categories
         DB::beginTransaction();
         $this->handleFileCategories();
         DB::commit();
 
+        // Handle files that started floating
         $this->handleFloatingFiles();
+
+        // Handle WordPress authentication tokens
+        $this->handleWpAuth();
     }
 
     public function handleFileCategories() : void
@@ -104,6 +110,11 @@ class EnsureDefaults extends Command
         ));
     }
 
+    /**
+     * Moves files without a category to the default one
+     *
+     * @return void
+     */
     public function handleFloatingFiles() : void
     {
         // Get all floating files
@@ -121,5 +132,15 @@ class EnsureDefaults extends Command
             $file->categories()->attach($defaultCategory);
         }
         DB::commit();
+    }
+
+    /**
+     * Fires WordPress auth job
+     *
+     * @return void
+     */
+    protected function handleWpAuth() : void
+    {
+        dispatch(new UpdateWordPressTokenJob);
     }
 }

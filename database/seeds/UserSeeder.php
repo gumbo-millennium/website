@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         $user = User::withTrashed()->updateOrCreate([
             'email' => 'gumbo@docker.local'
         ], [
-            'name' => 'Gumbo Millennium',
+            'last_name' => 'Gumbo Millennium',
             'password' => Hash::make('Gumbo')
         ]);
         $user->assignRole(['guest', 'member', 'dc']);

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Roumen\Sitemap\Sitemap;
 use Corcel\Model\Post;
-use Corcel\Model\Page;
+use App\Page;
 use App\Activity;
 
 /**

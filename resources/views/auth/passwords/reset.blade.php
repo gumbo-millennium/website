@@ -18,7 +18,7 @@
 </div>
 
 {{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('auth.password.request') }}" aria-label="{{ __('Reset Password') }}">
+<form class="login__form" method="post" action="{{ route('password.request') }}" aria-label="{{ __('Reset Password') }}">
     {{-- CSRF token --}}
     @csrf
 
