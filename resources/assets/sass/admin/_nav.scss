@@ -1,0 +1,26 @@
+///
+// Admin navigation
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.admin-sidenav {
+  .nav-item,
+  .nav-link {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .nav-header {
+    padding: 1rem 0 0.5rem 0;
+
+    // Make it a bit gray
+    color: #{gray('600')};
+
+    // And downsize it, raise the weight and make it all caps
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}
