@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\File;
+use App\JoinRequest;
 
 class HomeController extends Controller
 {
@@ -19,6 +20,7 @@ class HomeController extends Controller
         // Get stats for files
         $allFiles = File::count();
         $recentFiles = File::where('created_at', '>', now()->subDays(2))->count();
+        $pendingJoins = JoinRequest::pending()->count();
 
         // Get stats for users
         $allUsers = User::count();
@@ -31,6 +33,9 @@ class HomeController extends Controller
             ],
             'users' => [
                 'count' => $allUsers
+            ],
+            'joins' => [
+                'count' => $pendingJoins
             ]
         ]);
     }
