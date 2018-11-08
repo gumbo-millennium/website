@@ -9,7 +9,7 @@ $name = !empty($user->first_name) ? $user->first_name : $user->display_name;
 @section('content')
 
 {{-- Tiny boxes of content --}}
-<aside class="row mb-3">
+<aside class="row mb-3 d-none d-md-flex">
     {{-- File meta --}}
     <div class="col-sm-6 col-md-4 col-lg-3">
         <div class="number-card number-card--brand-outline">
@@ -30,6 +30,16 @@ $name = !empty($user->first_name) ? $user->first_name : $user->display_name;
                 {{ $users['count'] }}
             </div>
             <p class="number-card__description">Gebruiker(s)</p>
+        </div>
+    </div>
+
+    {{-- Join requests --}}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="number-card number-card--primary-outline">
+            <div class="number-card__number">
+                {{ $joins['count'] }}
+            </div>
+            <p class="number-card__description" title="Verzoeken tot lidmaatschap">Verzoeken</p>
         </div>
     </div>
 </aside>
