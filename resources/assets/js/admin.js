@@ -6,5 +6,7 @@
  */
 
 import registerDropzone from './admin/dropzone'
+import registerNavToggle from './admin/nav'
 
 registerDropzone()
+registerNavToggle()

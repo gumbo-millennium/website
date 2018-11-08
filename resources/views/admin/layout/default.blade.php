@@ -1,5 +1,9 @@
 @extends('layout.base')
 
+@php
+$layout_deferStartOfContent = true;
+@endphp
+
 {{-- Add CSRF token to meta queue --}}
 @push('stack.meta-tags')
     <meta name="laravel-csrf-token" content="{{ csrf_token() }}" />
@@ -12,43 +16,41 @@
 {{-- Header --}}
 {{-- Body class --}}
 @push('stack.body-class')
-    body-admin
+    admin
 @endpush
 
 {{-- Header --}}
 @include('admin.layout.header')
+
+{{-- Logout form --}}
+<form class="d-none" action="{{ route('logout') }}" method="POST" id="logout-form">
+    @csrf
+</form>
+
+{{-- Header stack --}}
 @stack('stack.header')
 @endsection
 
 
 {{-- Content section --}}
 @section('layout.content')
-<main role="main" class="container admin-container">
+<div class="container admin-container">
+    <div class="admin-row">
+        <nav class="admin-sidenav" id="admin-navigation">
+            @include('admin.layout.nav')
+        </nav>
+        <main class="admin-content">
+            {{-- Show start-of-content --}}
+            @yield('a10y.start-of-content')
 
-{{-- Banner for messages --}}
-@if (session('status'))
-<div class="alert alert-info">
-    {!! session('status') !!}
+            {{-- Show error messagess --}}
+            @include('admin.layout.before-content')
+
+            {{-- Main content --}}
+            @yield('content')
+        </main>
+    </div>
 </div>
-@endif
-
-{{-- Banner for errors --}}
-@if ($errors->any())
-<div class="alert alert-waring">
-    @section('validation.error')
-    <p>Er ging iets fout bij het laatste verzoek.</p>
-    @show
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
-
-{{-- Main content --}}
-@yield('content')
-</main>
 @endsection
 
 {{-- Footer --}}

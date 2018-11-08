@@ -1,54 +1,30 @@
-{{-- Navigation links --}}
-@php
-$navLinks = [
-    ['admin.home', 'Homepage'],
-    // ['admin.members', 'Leden'],
-    // ['admin.events', 'Evenementen'],
-    ['admin.files.index', 'Documenten'],
-    ['admin.wordpress', 'WordPress']
-];
-@endphp
-
-<div class="container">
-    {{-- Super simple header --}}
-    <nav class="navbar navbar-expand-lg navbar-light navbar-admin rounded">
+{{-- Super simple header --}}
+<nav class="navbar navbar-light admin-nav rounded">
+    {{-- Admin container --}}
+    <div class="container admin-container">
         {{-- Home link --}}
-        <a class="navbar-brand" href="{{ route('admin.home') }}">
-            <img src="/svg/logo-text-green.svg" class="navbar-brand-logo align-top" alt="Gumbo Millennium">
+        <a class="admin-nav-brand" href="{{ route('admin.home') }}">
+            <img src="/svg/logo-text-green.svg" class="admin-nav-brand-logo align-top" alt="Gumbo Millennium">
         </a>
 
+        {{-- User and logout --}}
+        <div class="navbar-text ml-auto d-none d-sm-block">
+            <i class="fas fa-user fa-fw" aria-label="Ingelogd als"></i>
+            <strong class="mx-2">{{ auth()->user()->name }}</strong>
+            <button type="submit" form="logout-form" class="btn btn-outline-brand btn-sm">
+                <i class="d-none d-md-inline-block fas fa-lock mr-1" aria-label="Padlock"></i>
+                <span>Uitloggen</span>
+            </button>
+        </div>
+
         {{-- Navbar toggle --}}
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navigation" aria-controls="admin-navigation" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler d-inline-block d-lg-none" type="button"
+            data-toggle="admin-nav"
+            data-target="#admin-navigation"
+            aria-controls="admin-navigation"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div class="collapse navbar-collapse" id="admin-navigation">
-            <ul class="navbar-nav mr-auto">
-                @foreach ($navLinks as list($route, $title))
-                @php
-                $current = request()->routeIs($route);
-                @endphp
-                <li class="{{ trim('nav-link ' . $current ? 'active' : '') }}">
-                    <a class="nav-link" href="{{ route($route) }}">
-                        {{ $title }}
-                        @if ($current)
-                        <span class="sr-only">(huidig)</span>
-                        @endif
-                    </a>
-                </li>
-                @endforeach
-            </ul>
-            <div class="navbar-text">
-                <strong>{{ auth()->user()->display_name }}</strong>
-                <button type="submit" form="logout-form" class="btn btn-link btn-sm">
-                    <span>Uitloggen</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-</div>
-
-{{-- Logout form --}}
-<form class="d-none" action="{{ route('auth.logout') }}" method="POST" id="logout-form">
-    @csrf
-</form>
+    </div>
+</nav>
