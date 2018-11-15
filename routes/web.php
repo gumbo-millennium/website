@@ -31,10 +31,10 @@ Route::get('/files', 'FileController@index')
 Route::get('/files/group/{category}', 'FileController@category')
     ->name('files.category')
     ->middleware('can:browse,category');
-Route::get('/files/view/{file}', 'FileController@file')
+Route::get('/files/view/{file}', 'FileController@show')
     ->name('files.show')
     ->middleware('can:view,file');
-Route::get('/files/download/{file}', 'FileController@file')
+Route::get('/files/download/{file}', 'FileController@download')
     ->name('files.download')
     ->middleware('can:download,file');
 
