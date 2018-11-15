@@ -11,37 +11,26 @@ $name = !empty($user->first_name) ? $user->first_name : $user->name;
 {{-- Tiny boxes of content --}}
 <aside class="row mb-3 d-none d-md-flex">
     {{-- File meta --}}
-    <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="number-card number-card--brand-outline">
-            <div class="number-card__number">
-                {{ $files['count'] }}
-                @if ($files['change'] > 0)
-                <span class="number-card__indicator number-card__indicator--positive">{{ sprintf('%.0f%%', $files['change']) }}</span>
-                @endif
-            </div>
-            <p class="number-card__description">Bestanden</p>
-        </div>
-    </div>
+    @include('admin.layout.bits.number-card', [
+        'color' => 'brand',
+        'number' => $files['count'],
+        'change' => max(0, $files['change']),
+        'label' => 'Bestanden'
+    ])
 
     {{-- User meta --}}
-    <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="number-card number-card--primary-outline">
-            <div class="number-card__number">
-                {{ $users['count'] }}
-            </div>
-            <p class="number-card__description">Gebruikers</p>
-        </div>
-    </div>
+    @include('admin.layout.bits.number-card', [
+        'color' => 'primary',
+        'number' => $users['count'],
+        'label' => 'Gebruikers'
+    ])
 
     {{-- Join requests --}}
-    <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="number-card number-card--primary-outline">
-            <div class="number-card__number">
-                {{ $joins['count'] }}
-            </div>
-            <p class="number-card__description" title="Verzoeken tot lidmaatschap">Verzoeken</p>
-        </div>
-    </div>
+    @include('admin.layout.bits.number-card', [
+        'color' => 'primary',
+        'number' => $joins['count'],
+        'label' => 'Aanmeldingen'
+    ])
 </aside>
 
 <article>
