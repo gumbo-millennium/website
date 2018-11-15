@@ -34,13 +34,6 @@ class PermissionSeeder extends Seeder
         ['file-category-edit', 'Bestandscategorieën bewerken'],
         ['file-category-delete', 'Bestandscategorieën verwijderen'],
 
-        // Manage requests
-        ['join.create', 'Verenigings aanmeldingen maken (aanmelden)'],
-        ['join.update', 'Verenigings aanmeldingen bijwerken'],
-        ['join.accept', 'Verenigings aanmeldingen goedkeuren'],
-        ['join.decline', 'Verenigings aanmeldingen afkeuren'],
-        ['join.delete', 'Verenigings aanmeldingen verwijderen'],
-
         // Manage content
         ['content', 'Eigen WordPress content beheren'],
         ['content-publish', 'Eigen WordPress content publiceren'],
