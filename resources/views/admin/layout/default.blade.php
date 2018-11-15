@@ -4,6 +4,12 @@
 $layout_deferStartOfContent = true;
 @endphp
 
+{{-- Change title --}}
+@section('title')
+    Administratie – Gumbo Millennium
+@endsection
+
+
 {{-- Add CSRF token to meta queue --}}
 @push('stack.meta-tags')
     <meta name="laravel-csrf-token" content="{{ csrf_token() }}" />
@@ -31,6 +37,9 @@ $layout_deferStartOfContent = true;
 @stack('stack.header')
 @endsection
 
+@section('a10y.start-of-content')
+{{-- No content here --}}
+@endsection
 
 {{-- Content section --}}
 @section('layout.content')
@@ -41,7 +50,7 @@ $layout_deferStartOfContent = true;
         </nav>
         <main class="admin-content">
             {{-- Show start-of-content --}}
-            @yield('a10y.start-of-content')
+            <div class="sr-only sr-start-of-content" id="start-of-content"></div>
 
             {{-- Show error messagess --}}
             @include('admin.layout.before-content')

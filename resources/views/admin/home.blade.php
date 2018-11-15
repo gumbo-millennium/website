@@ -3,7 +3,7 @@
 @php
 $greetings = ['Goedenacht', 'Goedemorgen', 'Goedemiddag', 'Goedenavond'];
 $greeting = $greetings[floor(now()->format('H') / 6)];
-$name = !empty($user->first_name) ? $user->first_name : $user->display_name;
+$name = !empty($user->first_name) ? $user->first_name : $user->name;
 @endphp
 
 @section('content')
@@ -19,7 +19,7 @@ $name = !empty($user->first_name) ? $user->first_name : $user->display_name;
                 <span class="number-card__indicator number-card__indicator--positive">{{ sprintf('%.0f%%', $files['change']) }}</span>
                 @endif
             </div>
-            <p class="number-card__description">Bestand(en)</p>
+            <p class="number-card__description">Bestanden</p>
         </div>
     </div>
 
@@ -29,7 +29,7 @@ $name = !empty($user->first_name) ? $user->first_name : $user->display_name;
             <div class="number-card__number">
                 {{ $users['count'] }}
             </div>
-            <p class="number-card__description">Gebruiker(s)</p>
+            <p class="number-card__description">Gebruikers</p>
         </div>
     </div>
 
@@ -44,11 +44,11 @@ $name = !empty($user->first_name) ? $user->first_name : $user->display_name;
     </div>
 </aside>
 
-<div class="jumbotron">
-    <h1 class="display-4">{{ $greeting }} {{ $name }}!</h1>
+<article>
+    <h1 class="h1">{{ $greeting }}</h1>
     <p class="lead">Welkom in het administratiepaneel van Gumbo Millennium.</p>
     <hr class="my-4">
     <p>Dikke kans dat je documenten wilt uploaden, want meer kan je hier niet.</p>
     <a class="btn btn-primary btn-lg" href="{{ route('admin.files.index') }}" role="button">Documenten</a>
-</div>
+</article>
 @endsection

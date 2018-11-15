@@ -81,7 +81,8 @@ class FileCategory extends SluggableModel
         return [
             'slug' => [
                 'source' => 'title',
-                'unique' => true
+                'unique' => true,
+                'reserved' => ['add', 'edit', 'remove']
             ]
         ];
     }
