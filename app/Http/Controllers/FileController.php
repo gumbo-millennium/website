@@ -47,9 +47,17 @@ class FileController extends Controller
         ]);
     }
 
+    /**
+     * Shows all the files in a given category, ordered by newest
+     *
+     * @param Request $request
+     * @param FileCategory $category
+     * @return Response
+     */
     public function category(Request $request, FileCategory $category)
     {
-        $files = $category->files;
+        // Get most recent files
+        $files = $category->files()->newest()->paginate(20);
 
         // Render view
         return view('files.category')->with([
@@ -58,7 +66,14 @@ class FileController extends Controller
         ]);
     }
 
-    public function file(Request $request, File $file)
+    /**
+     * Returns a single file's detail page
+     *
+     * @param Request $request
+     * @param File $file
+     * @return Response
+     */
+    public function show(Request $request, File $file)
     {
         // TODO
     }
