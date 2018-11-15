@@ -12,7 +12,8 @@ services:
   web:
     build:
       context: ./
-      dockerfile: library/docker/nginx/Dockerfile
+      dockerfile: nginx/Dockerfile
+      context: library/docker
     volumes:
       - ./:/var/www
     ports:
@@ -26,7 +27,8 @@ services:
   app:
     build:
       context: ./
-      dockerfile: library/docker/laravel/Dockerfile
+      dockerfile: laravel/Dockerfile
+      context: library/docker
     volumes:
       - ./:/var/www
     networks:
@@ -63,7 +65,8 @@ services:
   pma:
     build:
       context: ./
-      dockerfile: library/docker/phpmyadmin/Dockerfile
+      dockerfile: phpmyadmin/Dockerfile
+      context: library/docker
     networks:
       laravel:
         aliases:
@@ -91,7 +94,8 @@ services:
   wordpress:
     build:
       context: ./
-      dockerfile: library/docker/wordpress/Dockerfile
+      dockerfile: wordpress/Dockerfile
+      context: library/docker
     networks:
       - laravel
     volumes:

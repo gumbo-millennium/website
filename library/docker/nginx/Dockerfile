@@ -5,7 +5,7 @@
 FROM nginx
 
 # Overwrite default config
-COPY ./library/docker/nginx/vhost.conf /etc/nginx/conf.d/default.conf
+COPY nginx/vhost.conf /etc/nginx/conf.d/default.conf
 
 # Use /var/www as working directory.
 WORKDIR /var/www
