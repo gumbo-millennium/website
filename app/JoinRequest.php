@@ -100,4 +100,35 @@ class JoinRequest extends Model
     {
         return $this->where('user_id', $user->id);
     }
+
+    /**
+     * Returns true if this join request is pending.
+     *
+     * @return bool
+     */
+    public function getIsPendingAttribute() : bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Returns true if this join request is accepted.
+     *
+     * @return bool
+     */
+    public function getIsAcceptedAttribute() : bool
+    {
+        return $this->status === 'accepted';
+    }
+
+    /**
+     * Returns true if this join request is declined.
+     *
+     * @return bool
+     */
+    public function getIsDeclinedAttribute() : bool
+    {
+        return $this->status === 'declined';
+    }
+
 }
