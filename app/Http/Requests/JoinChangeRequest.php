@@ -21,20 +21,13 @@ class JoinChangeRequest extends FormRequest
             return false;
         }
 
-        $permissions = ['join.update'];
-        $status = $request->get('status');
-
-        // Check if setting the action to the given value is allowed.
-        // Permission required for setting AND unsetting the joinRequest.
-        if ($status === 'accepted' || $joinRequest->status === 'accepted') {
-            $permissions[] = 'join.accept';
+        if ($request->status === 'accepted') {
+            return $user->can('accept', $joinRequest);
+        } elseif ($request->status === 'declined') {
+            return $user->can('decline', $joinRequest);
+        } else {
+            return $user->can('update', $joinRequest);
         }
-        if ($status === 'declined' || $joinRequest->status === 'declined') {
-            $permissions[] = 'join.decline';
-        }
-
-        // Check if they're allowed
-        return $user->hasAllPermissions($permissions);
     }
 
     /**

@@ -145,40 +145,23 @@ Route::prefix('admin')
             ->middleware('permission:join.manage')
             ->group(function () {
                 // Index page, optionally per category
-                $this->get('/', 'FileController@index')
+                $this->get('/', 'JoinController@index')
                     ->name('index');
 
-                // Category overview
-                $this->get('/category/{category}', 'FileController@list')
-                    ->name('list');
-
-                // Uploads
-                $this->post('/upload/{category?}', 'FileController@upload')
-                    ->name('upload')
-                    ->middleware('can:create,App\File');
-
-                // View and edit
-                $this->get('/file/{file}', 'FileController@show')
+                // Single item view
+                $this->get('/view/{joinrequest}', 'JoinController@show')
                     ->name('show');
 
-                $this->put('/file/{file}', 'FileController@edit')
-                    ->name('edit')
-                    ->middleware('can:update,file');
+                // Single item edit
+                $this->get('/edit/{joinrequest}', 'JoinController@edit')->name('edit');
+                $this->post('/edit/{joinrequest}', 'JoinController@update');
 
-                // Publish or un-publish
-                $this->patch('/file/{file}/publish', 'FileController@publish')
-                    ->name('publish')
-                    ->middleware('can:publish,file');
+                // Single item remove
+                $this->get('/remove/{joinrequest}', 'JoinController@remove')->name('remove');
+                $this->delete('/remove/{joinrequest}', 'JoinController@destroy');
 
-                // Deletion request
-                $this->delete('/file/{file}', 'FileController@delete')
-                    ->name('delete')
-                    ->middleware('can:delete,file');
-
-                // Download request
-                Route::get('/download/{file}', 'FileController@download')
-                    ->name('download')
-                    ->middleware('can:download,file');
+                // Accept, decline or reset
+                $this->patch('/process/{file}', 'JoinController@process')->name('process');
             });
     });
 
