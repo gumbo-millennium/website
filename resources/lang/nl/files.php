@@ -4,16 +4,22 @@ return [
     // System name. Used by jobs
     'name' => 'Bestandensysteem',
 
+    // Plural forms
+    'plurals' => [
+        'files' => 'bestand|bestanden',
+        'categories' => 'categorie|categorieën'
+    ],
+
     // File system titles
     'titles' => [
         'name' => 'Bestanden',
         'index' => 'Categorie overzicht',
-        'category' => 'Bestanden in :category',
-        'state-desc' => 'Legenda bestandstatus',
+        'category' => 'Bestanden in :category'
     ],
 
     // File actions
     'actions' => [
+        'add-category' => 'Nieuwe categorie',
         'cancel' => 'Annuleren',
         'view' => 'Bekijk bestand',
         'upload' => 'Upload bestanden',
@@ -26,10 +32,13 @@ return [
 
     // Table headers
     'headers' => [
-        'title' => 'Bestandsnaam',
-        'owner' => 'Geüpload door',
-        'state' => 'Status',
-        'actions' => 'Acties'
+        'category-name' => 'Categorienaam',
+        'category-count' => 'Aantal bestanden',
+        'file-name' => 'Bestandsnaam',
+        'file-owner' => 'Geüpload door',
+        'file-state' => 'Status',
+        'actions' => 'Acties',
+        'state-desc' => 'Legenda bestandstatus',
     ],
 
 

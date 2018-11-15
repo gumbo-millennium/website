@@ -101,10 +101,7 @@ class FileMetaJob implements ShouldQueue
 
         if ($this->file_meta) {
             $file->addState(File::STATE_HAS_META);
-
-            if ($this->file_meta['-'])
         }
-
 
         // Update state
         $file->addState(File::STATE_HAS_META);
@@ -141,7 +138,7 @@ class FileMetaJob implements ShouldQueue
     protected function scrubPdfMeta(string $filePath) : void
     {
         // Get name of the owner
-        $ownerName = optional($this->file->owner)->pdf_name : config('app.name');
+        $ownerName = optional($this->file->owner)->pdf_name ?? config('app.name');
 
         // Get the name of the system
         $systemName = sprintf(

@@ -24,15 +24,9 @@
     @yield('layout.content-before')
 
     {{-- Jump-to-content target --}}
-    @if (isset($layout_deferredStartOfContent))
-    @section('a10y.start-of-content')
-    <div class="sr-only sr-start-of-content" id="start-of-content"></div>
-    @endsection
-    @else
     @section('a10y.start-of-content')
     <div class="sr-only sr-start-of-content" id="start-of-content"></div>
     @show
-    @endif
 
     {{-- Content block --}}
     @yield('layout.content')

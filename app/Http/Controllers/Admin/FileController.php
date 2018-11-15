@@ -40,28 +40,11 @@ class FileController extends Controller
 
         // Determine route
         $nextCategory = $category ?? FileCategory::findDefault();
-        $nextRoute = ($nextCategory === null) ? 'admin.files.index' : 'admin.files.list';
+        $nextRoute = ($nextCategory === null) ? 'admin.files.index' : 'admin.files.browse';
 
         // Forward
         return redirect()
             ->route($nextRoute, ['category' => $nextCategory]);
-    }
-    /**
-     * Display a listing of the files available. Optionally inside a category
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(FileCategory $category = null)
-    {
-        $categories = FileCategory::query()
-            ->orderBy('default', 'ASC')
-            ->orderBy('title', 'ASC')
-            ->paginate(20);
-
-        return view('admin.files.index')->with([
-            'categories' => $categories,
-            'defaultCategory' => FileCategory::findDefault()
-        ]);
     }
 
     /**
@@ -70,14 +53,14 @@ class FileController extends Controller
      * @param FileCategory $category
      * @return void
      */
-    public function list(FileCategory $category)
+    public function browse(FileCategory $category)
     {
         $files = $category->
             files()->
             with('owner')
             ->paginate(20);
 
-        return view('admin.files.list')->with([
+        return view('admin.files.browse')->with([
             'files' => $files,
             'category' => $category
         ]);
@@ -237,12 +220,36 @@ class FileController extends Controller
         $file->save();
 
         // Get correct message
-        $messageName =  $file->public ? 'files.messages.publish' : 'files.messages.unpublish';
+        $messageName = $file->public ? 'files.messages.publish' : 'files.messages.unpublish';
 
         // Redirect
         return $this->continue(
             $category ?? $file->categories->first(),
             __($messageName, ['file' => $file->display_title])
+        );
+    }
+
+    /**
+     * Schedules the file to be converted to PDF/A
+     *
+     * @param Request $request
+     * @param File $file
+     * @param FileCategory $category
+     * @return Response
+     */
+    public function pdfa(File $file, FileCategory $category = null)
+    {
+        if (!$file->hasState(File::STATE_PDFA)) {
+            dispatch(new FileArchiveJob($file));
+            $message = 'files.messages.pdfa-started';
+        } else {
+            $message = 'files.messages.pdfa-already';
+        }
+
+        // Redirect
+        return $this->continue(
+            $category ?? $file->categories->first(),
+            __($message, ['file' => $file->display_title])
         );
     }
 

@@ -1,16 +1,3 @@
-{{-- Upload button --}}
-<div class="text-right">
-    @can('create', App\File::class)
-        <button class="btn btn-success" data-upload-action="open" data-target="upload-form">
-            @lang('files.actions.upload')
-        </button>
-    @else
-        <button disabled class="btn btn-success btn-disabled">
-            @lang('files.actions.upload')
-        </button>
-    @endcan
-</div>
-
 @php
 $categoryName = optional($category)->title ?? 'standaard';
 @endphp
