@@ -4,7 +4,7 @@
 FROM roelofr/php:fpm
 
 # Raise PHP limit
-COPY ./library/docker/laravel/php.ini /usr/local/etc/php/conf.d/upload-size.ini
+COPY laravel/php.ini /usr/local/etc/php/conf.d/upload-size.ini
 
 RUN groupadd \
     --gid 1000 \
@@ -42,8 +42,8 @@ RUN apt-get update \
 
 # Add Laravel and Horizon configurations
 COPY \
-    ./library/docker/laravel/php-fpm.conf \
-    ./library/docker/laravel/horizon.conf \
+    laravel/php-fpm.conf \
+    laravel/horizon.conf \
     /etc/supervisor/conf.d/
 
 WORKDIR /var/www
