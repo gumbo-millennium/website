@@ -1,7 +1,7 @@
 @component('mail::message')
 # Welkom bij Gumbo Millennium
 
-Beste {{ $user->first_name }},
+Beste {{ $joinData['first_name'] }},
 
 Bedankt voor je aanmelding bij Gumbo Millennium. Je aanmelding tot
 lidmaatschap is doorgestuurd naar het bestuur en zij nemen

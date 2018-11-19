@@ -1,5 +1,6 @@
 @php
 $characters = str_split('ABCDEF');
+$title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
 @endphp
 
 {{-- FAQ and popular --}}

@@ -28,11 +28,6 @@
     <td>
         {{ optional($file->owner)->name ?? '–' }}
     </td>
-    <td>
-        @foreach ($file->processing_status as $status)
-        <span class="badge badge-pill badge-primary">{{ $status }}</span>
-        @endforeach
-    </td>
     <td class="text-center" style="width: 12rem;">
         <div class="dropdown">
             <a
@@ -63,12 +58,12 @@
                 @endif
 
                 {{-- download file link --}}
-                @if (!$file->hasState(\App\File::STATE_PDFA))
+                {{-- @if (!$file->hasState(\App\File::STATE_PDFA))
                 <a href="{{ route('admin.files.pdfa', ['file' => $file]) }}" class="dropdown-item" title="omzetten naar PDF/A">
                     <i class="fas fa-box fa-fw"></i>
                     omzetten naar PDF/A
                 </a>
-                @endif
+                @endif --}}
 
                 <div class="dropdown-header">Zichtbaarheid</div>
 
@@ -100,4 +95,15 @@
             </div>
         </div>
     </td>
+</tr>
+<tr>
+    <td>
+        @if ($file->public)
+        <span class="badge badge-pill badge-brand">Openbaar</span>
+        @endif
+        @foreach ($file->processing_status as $status)
+        <span class="badge badge-pill badge-primary">{{ $status }}</span>
+        @endforeach
+    </td>
+    <td colspan="2"></td>
 </tr>

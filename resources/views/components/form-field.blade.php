@@ -6,8 +6,15 @@ $field = (object) array_merge([
     'label' => $field[2] ?? 'Field',
     'placeholder' => $field[4] ?? null,
     'help' => $field[3] ?? null,
-    'required' => true,
+    'required' => true
 ], $field);
+
+// Get value
+if (property_exists($field, 'value')) {
+    $field->value = old($field->name) ?? $field->value ?? null;
+} else {
+    $field->value = old($field->name) ?? null;
+}
 
 $statusClass = '';
 if ($errors->has($field->name)) {
@@ -46,7 +53,7 @@ if ($errors->has($field->name)) {
             id="{{ $field->name }}"
             name="{{ $field->name }}"
             placeholder="{{ $field->placeholder ?? null }}"
-            value="{{ old($field->name) }}"
+            value="{{ $field->value }}"
             {{ $field->required ? 'required' : '' }}
             />
         @endif

@@ -8,6 +8,8 @@ use App\Policies\FileCategoryPolicy;
 use App\Policies\FilePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\JoinRequest;
+use App\Policies\JoinRequestPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {

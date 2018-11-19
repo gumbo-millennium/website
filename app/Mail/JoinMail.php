@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\JoinRequest;
+use App\Http\Requests\JoinRequest;
+use Illuminate\Support\Collection;
 
 /**
  * Mail sent to a user confirming his request to join
@@ -23,16 +26,22 @@ class JoinMail extends Mailable
      *
      * @var JoinRequest
      */
-    protected $request;
+    protected $data;
 
     /**
      * Creates an email for the user about their registration
      *
-     * @param JoinRequest $request
+     * @param Collection $data
+     * @param array $userRecepient
+     * @param array $boardRecipient
      */
-    public function __construct(JoinRequest $request)
+    public function __construct(Collection $data, array $userRecepient, array $boardRecipient)
     {
-        $this->request = $request;
+        $this->data = $data;
+
+        // Set to and reply-to headers
+        $this->to($userRecepient);
+        $this->replyTo($boardRecipient);
     }
 
     /**
@@ -42,8 +51,8 @@ class JoinMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.join')->with([
-            'request' => $this->request
+        return $this->markdown('mail.join.new')->with([
+            'joinData' => $this->data
         ]);
     }
 }

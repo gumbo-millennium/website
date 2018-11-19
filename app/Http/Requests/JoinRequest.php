@@ -52,28 +52,30 @@ class JoinRequest extends FormRequest
             'email' => ['required', 'email', $uniqueRule],
 
             // Names
-            'first_name' => "{$requiredNewOnly}|string|min:2",
-            'insertion' => 'optional|string|min:2',
-            'last_name' => "{$requiredNewOnly}|string|min:2",
+            'first_name' => "required|string|min:2",
+            'insertion' => 'nullable|string|min:2',
+            'last_name' => "required|string|min:2",
 
             // Address
-            'street' => ["{$joinOnly}string|regex:/\w+/"],
-            'number' => ["{$joinOnly}string|regex:/^\d+/"],
-            'zipcode' => ["{$joinOnly}string|regex:/^[0-9A-Z \.]+$/"],
-            'city' => ["{$joinOnly}string|min:2"],
+            'street' => 'required|string|regex:/\w+/',
+            'number' => 'required|string|regex:/^\d+/',
+            'zipcode' => 'required|string|regex:/^[0-9A-Z \.]+$/',
+            'city' => 'required|string|min:2',
 
             // Contact info
-            'phone' => ["{$joinOnly}required|string|regex:/^\+?\d{8,}"],
+            'phone' => 'required|string|regex:/^\+?([\s-\.]?\d){8,}/',
             'date-of-birth' => [
-                $joinOnly,
                 'required',
                 'date_format:d-m-Y',
                 "before:{$sixteenYears}"
             ],
 
+            // Member type
+            'windesheim-student' => 'sometimes|accepted',
+
             // Policy acceptance
-            'accept-policy' => "{$requiredNewOnly}|accepted",
-            'newsletter' => [$joinOnly, 'optional', 'boolean'],
+            'accept-policy' => 'required|accepted',
+            'newsletter' => 'sometimes|boolean',
         ];
     }
 

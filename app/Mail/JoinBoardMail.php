@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\JoinRequest;
+use App\Http\Requests\JoinRequest;
+use Illuminate\Support\Collection;
 
 /**
- * Mail sent to the board when a user wants to join
+ * Mail sent to the board about a request to join
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
@@ -21,18 +24,25 @@ class JoinBoardMail extends Mailable
     /**
      * The join request to handle
      *
-     * @var JoinRequest
+     * @var Collection
      */
-    protected $request;
+    protected $data;
 
     /**
-     * Creates an email for the user about their registration
+     * Sends an e-mail to the board about someone having signed up
      *
-     * @param JoinRequest $request
+     * @param Collection $data
+     * @param array $userRecepient
+     * @param array $boardRecipient
      */
-    public function __construct(JoinRequest $request)
+    public function __construct(Collection $data, array $userRecepient, array $boardRecipient)
     {
-        $this->request = $request;
+        // Set the data
+        $this->data = $data;
+
+        // Set to and reply-to headers
+        $this->to($boardRecipient);
+        $this->replyTo($userRecepient);
     }
 
     /**
@@ -42,8 +52,8 @@ class JoinBoardMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.join-board')->with([
-            'request' => $this->request
+        return $this->markdown('mail.join.new-board')->with([
+            'joinData' => $this->data
         ]);
     }
 }

@@ -23,7 +23,7 @@
             <tr>
                 <th>@lang('files.headers.file-name')</th>
                 <th>@lang('files.headers.file-owner')</th>
-                <th>@lang('files.headers.file-state')</th>
+                {{-- <th>@lang('files.headers.file-state')</th> --}}
                 <th class="text-center">@lang('files.headers.actions')</th>
             </tr>
         </thead>

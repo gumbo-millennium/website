@@ -2,15 +2,15 @@
     <tbody>
         <tr>
             <th scope="row">Voornaam</th>
-            <td>{{ $user->first_name }}</td>
+            <td>{{ $joinData['first_name'] }}</td>
         </tr>
         <tr>
             <th scope="row">Tussenvoegsel</th>
-            <td>{{ $user->insert }}</td>
+            <td>{{ $joinData['insert'] }}</td>
         </tr>
         <tr>
             <th scope="row">Achternaam</th>
-            <td>{{ $user->last_name }}</td>
+            <td>{{ $joinData['last_name'] }}</td>
         </tr>
         <tr>
             <td colspan="2">
@@ -19,25 +19,33 @@
         </tr>
         <tr>
             <th scope="row" rowspan="3">Adres</th>
-            <td>{{ $request->street }} {{ $request->number }}</td>
+            <td>{{ $joinData['street'] }} {{ $joinData['number'] }}</td>
         </tr>
         <tr>
-            <td>{{ $request->zipcode }} {{ $request->city }}</td>
+            <td>{{ $joinData['zipcode'] }} {{ $joinData['city'] }}</td>
         </tr>
         <tr>
-            <td>{{ strtoupper($request->country) }}</td>
+            <td>{{ strtoupper($joinData['country']) }}</td>
         </tr>
         <tr>
             <th scope="row">E-mail adres</th>
-            <td>{{ $user->email }}</td>
+            <td>{{ $joinData['email'] }}</td>
         </tr>
         <tr>
             <th scope="row">Telefoonnummer</th>
-            <td>{{ $request->phone }}</td>
+            <td>{{ $joinData['phone'] }}</td>
         </tr>
         <tr>
             <th scope="row">Geboortedatum</th>
-            <td>{{ $request->date_of_birth->format('d-m-Y') }}</td>
+            <td>{{ $joinData['date-of-birth'] }}</td>
+        </tr>
+        <tr>
+            <td scope="row">Lidtype</th>
+            @if ($joinData['windesheim-student'] ?? false)
+            <td><strong>Lid</strong> - Je bent een student aan Hogeschool Windesheim</td>
+            @else
+            <td><strong>Begunstiger</strong> - Je bent geen student aan Hogeschool Windesheim</td>
+            @endif
         </tr>
         <tr>
             <td colspan="2">
@@ -53,8 +61,7 @@
         <tr>
             <th scope="row">Gumbode</th>
             <td>
-                @if ($request->accept_newsletter) Je hebt aangegeven de Gumbode te willen ontvangen. @else Je hebt aangegeven de Gumbode
-                <strong>niet</strong> te willen ontvangen. @endif
+                {{ $joinData['accept-newsletter'] ? 'Ja' : 'Nee' }}
             </td>
         </tr>
     </tbody>

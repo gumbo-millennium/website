@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\JoinRequest as JoinWebRequest;
-use App\JoinRequest;
+use App\Http\Requests\JoinRequest;
 use App\Mail\NewAccountMail;
 use App\Page;
 use App\User;
@@ -11,7 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\JoinMail;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Mail\JoinBoardMail;
 
 /**
  * Handles user registration and enrollment to the student community. Join
@@ -30,17 +33,24 @@ use Illuminate\Support\Facades\Hash;
 class JoinController extends Controller
 {
     /**
-     * Returns if users is allowed to use this form.
-     *
-     * @param Request $request
-     * @return bool
+     * E-mail address and name of the board
      */
-    public function canJoin(Request $request) : bool
+    const TO_BOARD = [
+        'name' => 'Bestuur Gumbo Millennium',
+        'email' => 'bestuur@gumbo-millennium.nl',
+    ];
+    /**
+     * Gets the name of the user from the request
+     *
+     * @param JoinRequest $request
+     * @return string
+     */
+    protected function getName(JoinRequest $request) : string
     {
-        $user = $request->user();
-        return !($user && $user->hasRole('member'));
+        return collect($request->only(['first_name', 'insert', 'last_name']))
+            ->reject('empty')
+            ->implode(' ');
     }
-
     /**
      * Shows the sign-up form
      *
@@ -49,12 +59,6 @@ class JoinController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$this->canJoin()) {
-            return redirect()->route('user.home')->with([
-                'status' => 'Je bent al lid van Gumbo Millennium'
-            ]);
-        }
-
         // Show form
         return view('join')->with([
             'page' => Page::slug('join')->first(),
@@ -68,119 +72,58 @@ class JoinController extends Controller
      * @param SignUpRequest $request
      * @return Response
      */
-    public function submit(JoinWebRequest $request)
+    public function submit(JoinRequest $request)
     {
-        if (!$this->canJoin()) {
-            return redirect()->route('user.home')->with([
-                'status' => 'Je bent al lid van Gumbo Millennium'
-            ]);
-        }
+        // Get name and e-mail address
+        $name = $this->getName($request);
+        $email = $request->get('email');
 
-        // Find the current user
-        $user = auth()->user();
-
-        // If no user was found, create a new one with the given e-mail.
-        // The JoinWebRequest has checks to ensure the e-mail address is not
-        // yet registered.
-        if (!$user) {
-            $user = $this->createUser($request);
-
-            if (!$user) {
-                // Log error
-                logger()->warn('Failed to create user-account for {request}!', [
-                    'request' => $request->safe()
-                ]);
-
-                // Redirect user back
-                return back()->with([
-                    'status' => 'We could not create your account :('
-                ]);
-            }
-
-            // Log in the user
-            $this->login($user);
-        }
-
-        // Redirect to user home if only registering
-        if ($request->has('register_only') && !$user) {
-            return redirect()->route('user.home');
-        }
-
-        // If creation failed, report back
-        if (!$joinRequest) {
-            return redirect()->back()->with([
-                'error' => 'Failed to send request'
-            ]);
-        }
+        // Sends the e-mails
+        $this->sendJoinRequest($request, $name, $email);
 
         // Forward the user
-        return redirect()->route('user.join-requests')->with([
-            'created' => $joinRequest->id
-        ]);
+        return redirect()->route('join.complete')
+            ->with([
+                'join-name' => $name,
+                'join-email' => $email
+            ]);
     }
 
     /**
-     * Logs in the user
+     * Show verification page
      *
-     * @param User $user
-     * @return void
+     * @param Request $request
+     * @return Response
      */
-    protected function login(User $user) : void
+    public function complete(Request $request)
     {
-        // Trigger registered event
-        event(new Registered($user));
+        $thanksPage = Page::slug('join-complete')->first();
+        $viewName = $thanksPage ? 'wordpress.page' : 'join.complete';
 
-        // Auto-login
-        Auth::guard()->login($user);
-    }
-
-    /**
-     * Creates a new user from the request
-     *
-     * @param JoinRequest $request
-     * @return User|null
-     */
-    protected function createUser(JoinRequest $request) : ?User
-    {
-        if ($request->has('password') && !empty($request->get('password'))) {
-            $shouldMail = false;
-            $password = $request->get('password');
-        } else {
-            $shouldMail = true;
-            $password = str_random(random_int(10, 14));
-        }
-
-        // Create user
-        $user = User::create([
-            'email' => $request->email,
-            'first_name' => $request->first_name,
-            'insert' => $request->insert,
-            'last_name' => $request->last_name,
-            'password' => Hash::make($password),
+        return view($viewName, [
+            'page' => $thanksPage,
+            'name' => $request->get('join-name') ?? null,
+            'email' => $request->get('join-email') ?? null
         ]);
-
-        // Give user 'guest' role
-        $user->assignRole('guest');
-
-        // Send e-mail
-        Mail::to($user)->queue(
-            new NewAccountMail($user, $generated ? $password : null)
-        );
-
-        // Return user
-        return $user;
     }
 
     /**
      * Creates the request to join
      *
      * @param JoinRequest $request
-     * @return JoinRequestModel
+     * @return void
      */
-    protected function createJoinRequest(JoinRequest $request, User $user) : JoinRequestModel
+    protected function sendJoinRequest(JoinRequest $request, string $userName, string $userEmail) : void
     {
-        // Create registration request
-        $joinRequest = JoinRequest::makeAndSend($user, [
+        $data = collect([
+            // Personal data
+            'first_name' => $request->get('first_name'),
+            'insert' => $request->get('insert'),
+            'last_name' => $request->get('last_name'),
+
+            // E-mail
+            'email' => $request->get('email'),
+
             // Address
             'street' => $request->get('street'),
             'number' => $request->get('number'),
@@ -191,18 +134,25 @@ class JoinController extends Controller
             // Contact info
             'phone' => $request->get('phone'),
             'date-of-birth' => $request->get('date-of-birth'),
+            'windesheim-student' => $request->get('windesheim-student'),
 
             // Accepts policies
             'accept-policy' => $request->get('accept-policy'),
-            'accept-newsletter' => $request->get('newsletter'),
+            'accept-newsletter' => $request->get('accept-newsletter'),
         ]);
 
-        // Check if created
-        if (!$joinRequest) {
-            logger()->critical('Join membership system failed for {user}, using {request}.', [
-                'user' => $user,
-                'request' => $request->safe()
-            ]);
-        }
+        // Construct a sane board e-mail
+        $recipient = [
+            'name' => $userName,
+            'email' => $userEmail,
+        ];
+
+        // Build e-mail objects
+        $userMail = new JoinMail($data, $recipient, self::TO_BOARD);
+        $boardMail = new JoinBoardMail($data, $recipient, self::TO_BOARD);
+
+        // Send e-mails
+        Mail::queue($userMail);
+        Mail::queue($boardMail);
     }
 }

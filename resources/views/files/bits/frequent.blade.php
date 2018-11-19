@@ -1,6 +1,10 @@
 @php
 $characters = str_split('ABCDEF');
-$title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
+$groups = [
+    'newest' => 'Recent toegevoegd',
+    'popular' => 'Populair',
+    'random' => 'Willekeurig'
+]
 @endphp
 
 {{-- FAQ and popular --}}
@@ -10,20 +14,27 @@ $title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
             Populaire documenten
         </h3>
         <div class="row">
-            @for ($i = 0; $i < 3; $i++)
+            @foreach($groups as $label => $name)
             <div class="col-md-4 files-list__column">
-                <h4 class="files-list__column-title">{{$title[$i]}}</h4>
+                <h4 class="files-list__column-title">{{ $name }}</h4>
                 <ul class="files-list__list">
-                    @for ($j = 0; $j < random_int(3,7); $j++)
+                    @forelse ($files[$label] as $file)
                     <li class="files-list__item">
-                        <a class="files-list__item-link" href="#no-op">
-                            {{str_slug("Notulen ALV {$characters[$i]} {$j}")}}.pdf
+                        <a
+                            class="files-list__item-link"
+                            href="{{ route('files.show', ['file' => $file]) }}"
+                            title="{{ $file->display_title }}">
+                            {{ $file->display_title }}
                         </a>
                     </li>
-                    @endfor
+                    @empty
+                    <li class="files-list__item text-center text-muted">
+                        Geen items in deze categorie
+                    </li>
+                    @endforelse
                 </ul>
             </div>
-            @endfor
+            @endforeach
         </div>
     </div>
 </div>

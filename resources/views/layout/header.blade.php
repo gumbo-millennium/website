@@ -80,7 +80,7 @@ navbar--opaque
                 @endphp
 
                 {{-- Render document system, if allowed --}}
-                @can('file-browse')
+                @can('file-view')
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('files.index') }}">Documenten</a>
                 </li>

@@ -20,7 +20,7 @@ class Page extends CorcelPage
 
     public function scopePrivacyPolicy(Builder $builder)
     {
-        return $query
+        return $builder
             ->where('ID', '=', Option::get('wp_page_for_privacy_policy'))
             ->limit(1);
     }

@@ -1,5 +1,10 @@
 @extends('layout.auth')
 
+{{-- Change page title --}}
+@section('title')
+Wachtwoord herstellen - Gumbo Millennium
+@endsection
+
 {{-- Alert --}}
 @if (session('status'))
 @push('auth.alert')
@@ -31,7 +36,7 @@
         class="login__form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
         type="email"
         name="email"
-        placeholder="{{ __('E-Mail Address') }}"
+        placeholder="{{ __('E-mail adres') }}"
         value="{{ old('email') }}"
         autofocus
         required>
@@ -49,7 +54,7 @@
         class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
         type="password"
         name="password"
-        placeholder="{{ __('Password') }}"
+        placeholder="{{ __('Wachtwoord') }}"
         required>
 
         @if ($errors->has('password'))
@@ -65,14 +70,14 @@
         class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
         type="password"
         name="password_confirmation"
-        placeholder="{{ __('Confirm Password') }}"
+        placeholder="Bevestig wachtwoord"
         required>
     </div>
 
     {{-- Submit button --}}
     <div class="login__form-action">
         <button class="login__form-submit" type="submit">
-            {{ __('Reset Password') }}
+            Wachtwoord opnieuw instellen
         </button>
     </div>
 </form>
