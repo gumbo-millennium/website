@@ -1,5 +1,11 @@
 @extends('layout.auth')
 
+{{-- Change page title --}}
+@section('title')
+Inloggen - Gumbo Millennium
+@endsection
+
+
 {{-- Add notice --}}
 @push('auth.alert')
 <div class="alert alert-info" role="alert">
@@ -68,11 +74,13 @@
 
 {{-- Login actions --}}
 <div class="login__text login__text--after">
-    <p><a href="{{ route('password.request') }}">
-        {{ __('Forgot Your Password?') }}
-    </a></p>
     <p>
-        Nog geen lid van Gumbo Millennium? <a href="{{ route('join') }}">Meld je aan!</a>
+        <a href="{{ route('password.request') }}">
+            Wachtwoord vergeten?
+        </a>
+    </p>
+    <p>
+        Heb je nog geen account? <a href="{{ route('register') }}">Maak er een aan</a>.
     </p>
 </div>
 @endsection

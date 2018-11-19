@@ -89,6 +89,8 @@ services:
     environment:
       VIRTUAL_HOST: mail.gumbo.localhost
       VIRTUAL_PORT: 8025
+    networks:
+      - laravel
 
   # WordPress (CMS)
   wordpress:

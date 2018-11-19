@@ -24,13 +24,6 @@ $name = !empty($user->first_name) ? $user->first_name : $user->name;
         'number' => $users['count'],
         'label' => 'Gebruikers'
     ])
-
-    {{-- Join requests --}}
-    @include('admin.layout.bits.number-card', [
-        'color' => 'primary',
-        'number' => $joins['count'],
-        'label' => 'Aanmeldingen'
-    ])
 </aside>
 
 <article>

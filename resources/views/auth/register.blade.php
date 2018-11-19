@@ -1,5 +1,21 @@
 @extends('layout.auth')
 
+{{-- Change page title --}}
+@section('title')
+Registreren - Gumbo Millennium
+@endsection
+
+@php
+$formFields = [
+    ['text', 'first_name', 'Voornaam', true, null],
+    ['text', 'insert', 'Tussenvoegsel', false, null],
+    ['text', 'last_name', 'Achternaam', true, null],
+    ['email', 'email', 'E-mail adres', true, 'mt-2'],
+    ['password', 'password', 'Wachtwoord', true, 'mt-2'],
+    ['password', 'password_confirmation', 'Wachtwoord herhalen', true, null]
+];
+@endphp
+
 @section('content')
 {{-- Login text --}}
 <div class="login__text login__text--before">
@@ -14,61 +30,38 @@
     {{-- CSRF token --}}
     @csrf
 
-    @foreach ($formFields as list($type, $name, $label, $placeholder, $help, $required))
-
-    @endforeach
-    {{-- Username field --}}
-    <div class="login__form-group">
+    @foreach ($formFields as list($type, $name, $label, $required, $className))
+    <div class="login__form-group {{ $className ?? '' }}">
         <label class="sr-only" for="{{ $name }}">{{ $label }}</label>
         <input
         class="login__form-control{{ $errors->has($name) ? ' is-invalid' : '' }}"
         type="{{ $type }}"
         name="{{ $name }}"
         id="{{ $name }}"
-        placeholder="{{ $placeholder }}"
+        placeholder="{{ $label }}"
         value="{{ old($name) }}"
         {{ $required ? 'required' : '' }}>
-    </div>
 
-    {{-- Password field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-        type="password"
-        name="password"
-        placeholder="wachtwoord"
-        required>
-
-        @if ($errors->has('password'))
+        @if ($errors->has($name))
         <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('password') }}</strong>
+            <strong>{{ $errors->first($name) }}</strong>
         </span>
         @endif
     </div>
-
-    {{-- Remember me --}}
-    <div class="login__form-group login__form-checkbox custom-control custom-checkbox">
-        <input class="custom-control-input login__form-checkbox-input" type="checkbox" id="remember-me" name="remember" {{ old('remember') ? 'checked' : '' }} />
-        <label class="custom-control-label login__form-checkbox-label" for="remember-me">
-            {{ __('Remember Me') }}
-        </label>
-    </div>
+    @endforeach
 
     {{-- Submit button --}}
     <div class="login__form-action">
         <button class="login__form-submit" type="submit">
-            {{ __('Login') }}
+            Registreren
         </button>
     </div>
 </form>
 
 {{-- Login actions --}}
 <div class="login__text login__text--after">
-    <p><a href="{{ route('password.request') }}">
-        {{ __('Forgot Your Password?') }}
-    </a></p>
     <p>
-        Nog geen lid van Gumbo Millennium? <a href="{{ route('join') }}">Meld je aan!</a>
+        <a href="{{ route('login') }}">Terug naar inloggen</a>
     </p>
 </div>
 @endsection

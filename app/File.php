@@ -6,6 +6,7 @@ use App\FileCategory;
 use App\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * A user-uploaded file
@@ -277,5 +278,31 @@ class File extends SluggableModel
     public function getBrokenAttribute() : bool
     {
         return $this->hasState(self::STATE_BROKEN);
+    }
+
+    /**
+     * Scope by publicness of the files
+     *
+     * @param Builder $builder
+     * @param bool $public
+     * @return Builder
+     */
+    public function scopePublic(Builder $builder, boolean $public = null)
+    {
+        return $builder->where('public', '=', $public === false ? '0' : '1');
+    }
+
+    /**
+     * Get only available files
+     *
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeAvailable(Builder $builder)
+    {
+        return $builder->where(function ($query) {
+            $query->where('state', '&', self::STATE_BROKEN)
+                ->orWhere('state', '=', '0');
+        });
     }
 }

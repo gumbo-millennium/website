@@ -56,7 +56,9 @@
   }
 
   &__item {
-    // no config
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__item-link {

@@ -43,13 +43,13 @@ Route::view('/files/single', 'files.single');
 // Join us
 Route::get('/join', 'JoinController@index')->name('join');
 Route::post('/join', 'JoinController@submit');
-Route::get('/join/welcome', 'JoinController@after')->name('join.complete');
+Route::get('/join/welcome', 'JoinController@complete')->name('join.complete');
 
 // Authentication and forgotten passwords
 Route::prefix('auth')->group(function () {
     $this->auth([
-        'verify' => false,
-        'register' => false
+        'verify' => true,
+        'register' => true
     ]);
 });
 

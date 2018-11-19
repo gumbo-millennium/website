@@ -42,8 +42,18 @@ class FileController extends Controller
             $categoryList->push($defaultCategory);
         }
 
+        // Get a base query
+        $baseQuery = File::public()->available();
+        $columns = ['id', 'slug', 'title', 'filename'];
+        $limit = 5;
+
         return view('files.index')->with([
-            'categories' => $categoryList
+            'categories' => $categoryList,
+            'files' => [
+                'newest' => $baseQuery->latest()->take($limit)->get(),
+                'popular' => [],
+                'random' => $baseQuery->inRandomOrder()->take($limit)->get(),
+            ]
         ]);
     }
 
@@ -57,7 +67,7 @@ class FileController extends Controller
     public function category(Request $request, FileCategory $category)
     {
         // Get most recent files
-        $files = $category->files()->newest()->paginate(20);
+        $files = $category->files()->latest()->paginate(20);
 
         // Render view
         return view('files.category')->with([
@@ -75,7 +85,10 @@ class FileController extends Controller
      */
     public function show(Request $request, File $file)
     {
-        // TODO
+        return view('files.single')->with([
+            'file' => $file,
+            'user' => $request->user()
+        ]);
     }
 
     /**

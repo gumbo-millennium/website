@@ -1,5 +1,11 @@
 @extends('layout.auth')
 
+{{-- Change page title --}}
+@section('title')
+Wachtwoord herstellen - Gumbo Millennium
+@endsection
+
+
 {{-- Alert --}}
 @if (session('status'))
 @push('auth.alert')
@@ -42,7 +48,7 @@
     {{-- Submit button --}}
     <div class="login__form-action">
         <button class="login__form-submit" type="submit">
-            {{ __('Send Password Reset Link') }}
+            Stuur wachtwoord herstellink
         </button>
     </div>
 </form>

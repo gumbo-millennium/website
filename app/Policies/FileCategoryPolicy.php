@@ -22,6 +22,17 @@ class FileCategoryPolicy
      * @param  \App\User  $user
      * @return mixed
      */
+    public function browse(User $user)
+    {
+        return $user->hasPermissionTo('file-view');
+    }
+
+    /**
+     * Determine whether the user can create file categories.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
     public function create(User $user)
     {
         return $user->hasPermissionTo('file-category-add');

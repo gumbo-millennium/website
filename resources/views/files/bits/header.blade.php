@@ -24,7 +24,7 @@
                         <div class="files-header-topic__icon files-header-topic__icon--placeholder"></div>
                     </div>
                     --}}
-                    <div class="files-header-topic__name">{{ $category->name }}</div>
+                    <div class="files-header-topic__name">{{ $category->title }}</div>
                 </a>
             </div>
             @endforeach
