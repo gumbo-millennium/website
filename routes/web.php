@@ -21,6 +21,11 @@ Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 Route::get('/news', 'NewsController@index');
 Route::get('/news/{slug}', 'NewsController@post');
 
+// Plazacam
+Route::get('plazacam/{image}', 'PlazaCamController@image')
+    ->middleware(['auth', 'member'])
+    ->name('plazacam');
+
 // Files route
 Route::get('/files', 'FileController@index')
     ->name('files.index')

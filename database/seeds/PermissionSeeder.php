@@ -34,6 +34,10 @@ class PermissionSeeder extends Seeder
         ['file-category-edit', 'Bestandscategorieën bewerken'],
         ['file-category-delete', 'Bestandscategorieën verwijderen'],
 
+        // Plaza cam permissions
+        ['plazacam-view', 'Viewing of the plazacam (and coffee cam)'],
+        ['plazacam-edit', 'Editing the plazacam (and coffee cam)'],
+
         // Manage content
         ['content', 'Eigen WordPress content beheren'],
         ['content-publish', 'Eigen WordPress content publiceren'],
@@ -80,7 +84,10 @@ class PermissionSeeder extends Seeder
 
             // Allow viewing and buying event tickets for private events
             'event-view-private',
-            'event-buy-private'
+            'event-buy-private',
+
+            // Allow watching the plazacam
+            'plazacam-view',
         ]],
 
         // Activiteiten Committee
@@ -139,7 +146,10 @@ class PermissionSeeder extends Seeder
 
             // Allow content management
             'content',
-            'content-all'
+            'content-all',
+
+            // Allow plazacam management
+            'plazacam-edit',
         ]],
 
         // Digital committee
