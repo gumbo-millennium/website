@@ -36,7 +36,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -44,7 +45,19 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'email_verified_at',
+    ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'insert' => null,
+    ];
 
     /**
      * A user might've uploaded files
