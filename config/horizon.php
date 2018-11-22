@@ -87,10 +87,26 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
+            'alpha-centauri' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
+                'queue' => [
+                    'default',
+                    'files',
+                ],
+                'balance' => 'auto',
+                'processes' => 10,
+                'tries' => 3,
+            ],
+        ],
+
+        'staging' => [
+            'alpha-centauri' => [
+                'connection' => 'redis',
+                'queue' => [
+                    'default',
+                    'files',
+                ],
+                'balance' => 'auto',
                 'processes' => 10,
                 'tries' => 3,
             ],
@@ -99,7 +115,10 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
+                'queue' => [
+                    'default',
+                    'files',
+                ],
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 3,

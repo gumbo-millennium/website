@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\File;
@@ -20,24 +22,8 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class FileArchiveJob implements ShouldQueue
+class FileArchiveJob extends FileJob
 {
-    use
-        Dispatchable,
-        InteractsWithQueue,
-        Queueable,
-        ReplacesStoredFiles,
-        RunsCliCommands,
-        SerializesModels,
-        UsesTemporaryFiles;
-
-    /**
-     * Acting file
-     *
-     * @var App\File
-     */
-    protected $file;
-
     /**
      * Try job 3 times
      *
@@ -51,16 +37,6 @@ class FileArchiveJob implements ShouldQueue
      * @var int
      */
     protected $timeout = 180;
-
-    /**
-     * Create a new job instance.
-     *
-     * @param File $file File to process
-     */
-    public function __construct(File $file)
-    {
-        $this->file = $file;
-    }
 
     /**
      * Get the tags that should be assigned to the job.
