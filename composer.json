@@ -105,6 +105,10 @@
           "rm -rf library/wordpress/plugins/gumbo-millennium/node_modules/",
 
           "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ -ao"
+        ],
+        "server": [
+          "@php artisan telescope:publish",
+          "@php artisan horizon:assets"
         ]
     },
     "config": {
