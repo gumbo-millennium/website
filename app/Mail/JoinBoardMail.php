@@ -41,8 +41,11 @@ class JoinBoardMail extends Mailable
         $this->data = $data;
 
         // Set to and reply-to headers
-        $this->to($boardRecipient);
-        $this->replyTo($userRecepient);
+        $this->replyTo($userRecepient['email'], $userRecepient['name']);
+        $this->to($boardRecipient['email'], $boardRecipient['name']);
+
+        // Set subject
+        $this->subject("[site] Nieuw lidmaatschap {$userRecepient['name']}");
     }
 
     /**
@@ -52,6 +55,12 @@ class JoinBoardMail extends Mailable
      */
     public function build()
     {
+        logger()->info('Sending join e-mail copy to [recipient]', [
+            'data' => $data,
+            'to' => $userRecepient,
+            'reply-to' => $boardRecipient,
+        ]);
+
         return $this->markdown('mail.join.new-board')->with([
             'joinData' => $this->data
         ]);

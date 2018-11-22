@@ -60,7 +60,7 @@ class JoinController extends Controller
     public function index(Request $request)
     {
         // Show form
-        return view('join')->with([
+        return view('join.index')->with([
             'page' => Page::slug('join')->first(),
             'user' => $request->user()
         ]);
