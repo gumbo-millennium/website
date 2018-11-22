@@ -45,6 +45,13 @@ class JoinMail extends Mailable
 
         // Subject
         $this->subject('Je aanmelding bij Gumbo Millennium');
+
+        // Log entry
+        logger()->info('Sending join e-mail to [recipient]', [
+            'data' => $data,
+            'to' => $boardRecipient,
+            'reply-to' => $userRecepient,
+        ]);
     }
 
     /**
@@ -54,12 +61,6 @@ class JoinMail extends Mailable
      */
     public function build()
     {
-        logger()->info('Sending join e-mail to [recipient]', [
-            'data' => $data,
-            'to' => $boardRecipient,
-            'reply-to' => $userRecepient,
-        ]);
-
         return $this->markdown('mail.join.new')->with([
             'joinData' => $this->data
         ]);

@@ -21,23 +21,8 @@ use App\Jobs\Concerns\RunsCliCommands;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class FileMetaJob implements ShouldQueue
+class FileMetaJob extends FileJob
 {
-    use
-        Dispatchable,
-        InteractsWithQueue,
-        Queueable,
-        RunsCliCommands,
-        SerializesModels,
-        UsesTemporaryFiles;
-
-    /**
-     * Acting file
-     *
-     * @var App\File
-     */
-    protected $file;
-
     /**
      * Try job 3 times
      *
@@ -51,16 +36,6 @@ class FileMetaJob implements ShouldQueue
      * @var int
      */
     protected $timeout = 60;
-
-    /**
-     * Create a new job instance.
-     *
-     * @param File $file File to process
-     */
-    public function __construct(File $file)
-    {
-        $this->file = $file;
-    }
 
     /**
      * Get the tags that should be assigned to the job.
