@@ -36,4 +36,15 @@ $navLinks = [
         @endif
     </a>
     @endforeach
+
+    @can('devops')
+    <h3 class="nav-header">DevOps</h3>
+
+    <a class="nav-link" href="{{ route('horizon.index') }}">
+        Horizon
+    </a>
+    <a class="nav-link" href="{{ route('telescope') }}">
+        Telescope
+    </a>
+    @endcan
 </nav>
