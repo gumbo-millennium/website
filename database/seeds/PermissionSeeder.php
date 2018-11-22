@@ -56,7 +56,7 @@ class PermissionSeeder extends Seeder
 
         // Generic permissions
         ['admin', 'Toegang tot admin panel'],
-        ['devops', 'Toegang tot ops administratie']
+        ['devops', 'Toegang tot ops administratie'],
     ];
 
     /**

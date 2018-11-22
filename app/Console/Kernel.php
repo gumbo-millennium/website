@@ -29,6 +29,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             FileDownload::removeIpOnOldEntries();
         })->daily();
+
+        // Wipe old Telescope records
+        $schedule->command('telescope:prune')->daily();
     }
 
     /**
