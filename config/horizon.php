@@ -118,7 +118,7 @@ return [
                 'queue' => [
                     'default',
                     'files',
-                ],,
+                ],
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 3,
