@@ -32,24 +32,11 @@ class JoinRequest extends FormRequest
      */
     public function rules()
     {
-        $user = $this->user();
-
-        // Update Ignore rule if user is logged in
-        $uniqueRule = Rule::unique('users', 'email');
-        if ($user) {
-            $uniqueRule = $uniqueRule->ignore($user->id);
-        }
-
-        // Change requiredness of fields depending on who's asking
-        $joinOnly = $user ? 'required' : 'required_without:register_only';
-        $requiredNewOnly = $user ? 'required' : 'optional';
-
         // Get a date sixteen years ago
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
 
         return [
-            // Allow any e-mail, as long as it doesn't exist OR equals the current user's e-mail address
-            'email' => ['required', 'email', $uniqueRule],
+            'email' => 'required|email',
 
             // Names
             'first_name' => "required|string|min:2",
