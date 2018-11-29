@@ -127,7 +127,7 @@ class JoinController extends Controller
             // Address
             'street' => $request->get('street'),
             'number' => $request->get('number'),
-            'zipcode' => $request->get('zipcode'),
+            'zipcode' => mb_strtoupper($request->get('zipcode')),
             'city' => $request->get('city'),
             'country' => $request->get('country'),
 

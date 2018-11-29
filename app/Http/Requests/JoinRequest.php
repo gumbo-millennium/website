@@ -46,7 +46,7 @@ class JoinRequest extends FormRequest
             // Address
             'street' => 'required|string|regex:/\w+/',
             'number' => 'required|string|regex:/^\d+/',
-            'zipcode' => 'required|string|regex:/^[0-9A-Z \.]+$/',
+            'zipcode' => 'required|string|regex:/^[0-9A-Z \.]+$/i',
             'city' => 'required|string|min:2',
 
             // Contact info
