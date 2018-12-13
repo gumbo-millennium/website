@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Jobs\UpdateWordPressUserJob;
 
+/**
+ * Handles WordPress account
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class WordPressController extends Controller
 {
     /**

@@ -7,6 +7,12 @@ use App\FileCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+/**
+ * Handles creating and updating file categories
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class FileCategoryController extends Controller
 {
     /**
