@@ -77,3 +77,25 @@ Route::prefix('files')->name('files.')->middleware('can:manage,App\File')->group
         ->name('download')
         ->middleware('can:download,file');
 });
+
+
+/**
+ * File / Document system. Handles files *and* categories
+ */
+Route::prefix('sponsors')->name('sponsors.')->middleware('permission:sponsor-edit')->group(function () {
+    // Index page
+    $this->get('/', 'SponsorController@index')
+        ->name('index');
+
+    // Insert sponsor
+    $this->get('/add', 'SponsorController@create')->name('insert');
+    $this->post('/add', 'SponsorController@insert');
+
+    // Update sponsor
+    $this->get('/{sponsor}', 'SponsorController@edit')->name('update');
+    $this->put('/{sponsor}', 'SponsorController@store');
+
+    // Delete sponsor
+    $this->get('/{sponsor}/delete', 'SponsorController@delete')->name('delete');
+    $this->delete('/{sponsor}/delete', 'SponsorController@destroy');
+});
