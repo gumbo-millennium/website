@@ -55,6 +55,10 @@ class PermissionSeeder extends Seeder
         // Manage sponsors
         ['sponsor-edit', 'Sponsoren bewerken'],
 
+        // Manage roles
+        ['user-role', 'Gebruikersrollen bewerken'],
+        ['user-role-admin', 'Gebruikersrollen bewerken (admin)'],
+
         // Create event user permissions
         ['event-view', 'Evenementen bekijken'],
         ['event-buy', 'Tickets voor evenementen kopen'],
@@ -141,6 +145,9 @@ class PermissionSeeder extends Seeder
 
             // Allow sponsor manageent
             'sponsor-edit',
+
+            // Allow permission management
+            'user-role',
 
             // Allow event management
             'event-add',
