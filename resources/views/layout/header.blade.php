@@ -74,6 +74,20 @@ navbar--opaque
 
                 @endforelse
 
+                {{-- News and activities --}}
+                <li class="nav-item dropdown">
+                    {{-- Render text and arrow down --}}
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-no-append="true">
+                        Nieuws & activiteiten
+                    </a>
+
+                    {{-- Menu --}}
+                    <div class="dropdown-menu" role="menu">
+                        <a class="dropdown-item" href="{{ route('events.home') }}">Activiteiten</a>
+                        <a class="dropdown-item" href="{{ route('news.home') }}">Nieuws</a>
+                    </div>
+                </li>
+
                 @auth
                 @php
                 $user = auth()->user();
