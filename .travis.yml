@@ -2,7 +2,7 @@ sudo: false
 
 language: php
 
-# Run on PHP 7.2 and newer
+# Run on PHP 7.2 and the nightly
 php:
   - 7.2
   - nightly
