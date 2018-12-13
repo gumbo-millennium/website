@@ -41,9 +41,12 @@ Route::get('/files/download/{file}', 'FileController@download')
     ->middleware('can:download,file');
 
 // Activity (examples)
-Route::view('/event', 'event.index');
-Route::view('/event/single', 'event.single');
-Route::view('/files/single', 'files.single');
+Route::view('/events', 'events.index')->name('events.home');
+Route::view('/events/single', 'events.single')->name('events.show');
+
+// News (examples)
+Route::view('/news', 'news.index')->name('news.home');
+Route::view('/news/single', 'news.single')->name('news.show');
 
 // Join us
 Route::get('/join', 'JoinController@index')->name('join');
