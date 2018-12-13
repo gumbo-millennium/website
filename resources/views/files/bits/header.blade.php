@@ -4,7 +4,7 @@
         <h1 class="files-header__title">Documenten</h1>
 
         {{-- Search field --}}
-        <div class="files-header__search">
+        <div class="files-header__search invisible">
             <label role="presentation" for="files-search" class="files-header__search-icon">
                 <i class="fas fa-search fa-fw" aria-label="Search icon"></i>
             </label>

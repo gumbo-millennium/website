@@ -1,6 +1,6 @@
 @php
 $characters = str_split('ABCDEF');
-$title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
+$categoryTitle = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
 @endphp
 
 {{-- FAQ and popular --}}
@@ -10,7 +10,7 @@ $title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
             {{ $title }}
         </h3>
         <div class="files-search-results__results">
-            @forelse ($results as $item)
+            @forelse (($results ?? []) as $item)
             <div class="files-search-results__result files-search-result row">
                 <img class="files-search-result__image" src="{{ $item->meta->pdf_cover }}" alt="Afbeelding van {{ $item->name }}" />
                 <ul class="files-search-result__meta files-search-result__meta--desktop">
@@ -38,7 +38,7 @@ $title = ['Recent toegevoegd', 'Veel bekeken', 'Veel gedownload']
         <div class="row">
             @for ($i = 0; $i < 3; $i++)
             <div class="col-md-4 files-search-results__column">
-                <h4 class="files-search-results__column-title">{{$title[$i]}}</h4>
+                <h4 class="files-search-results__column-title">{{$categoryTitle[$i]}}</h4>
                 <ul class="files-search-results__list">
                     @for ($j = 0; $j < random_int(3,7); $j++)
                     <li class="files-search-results__item">
