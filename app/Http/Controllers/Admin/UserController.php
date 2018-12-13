@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
 
 /**
  * Controls users and their ranks
@@ -21,28 +22,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $users = User::paginate(20);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('admin.users.index')->with([
+            'users' => $users
+        ]);
     }
 
     /**
@@ -51,8 +35,17 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
+        $changeableRoles = [];
+        $me = $request->user();
+
+        // TODO: Filter roles based on this user's roles
+
+        return view('admin.users.view')->with([
+            'user' => $user,
+            'roles' => $changeableRoles,
+        ]);
         //
     }
 
