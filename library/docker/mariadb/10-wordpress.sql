@@ -431,9 +431,6 @@ INSERT INTO `wp_posts` (`ID`, `post_author`, `post_date`, `post_date_gmt`, `post
 (23, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Bestuur', '', 'publish', 'closed', 'closed', '', 'bestuur', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=23', 4, 'nav_menu_item', '', 0),
 (24, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Commissies', '', 'publish', 'closed', 'closed', '', 'commissies', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=24', 5, 'nav_menu_item', '', 0),
 (25, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Projectgroepen', '', 'publish', 'closed', 'closed', '', 'projectgroepen', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=25', 6, 'nav_menu_item', '', 0),
-(26, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Nieuws', '', 'publish', 'closed', 'closed', '', 'nieuws', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=26', 7, 'nav_menu_item', '', 0),
-(27, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Activiteiten', '', 'publish', 'closed', 'closed', '', 'activiteiten', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=27', 8, 'nav_menu_item', '', 0),
-(28, 1, '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 'Documenten', '', 'publish', 'closed', 'closed', '', 'documenten', '', '', '2018-07-14 22:33:46', '2018-07-14 20:33:46', '', 0, 'http://gumbo.localhost/?p=28', 9, 'nav_menu_item', '', 0),
 (29, 1, '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 'Homepage', '', 'publish', 'closed', 'closed', '', 'homepage-2', '', '', '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 0, 'http://gumbo.localhost/?p=29', 1, 'nav_menu_item', '', 0),
 (30, 1, '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 'Over', '', 'publish', 'closed', 'closed', '', 'over-2', '', '', '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 0, 'http://gumbo.localhost/?p=30', 2, 'nav_menu_item', '', 0),
 (31, 1, '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 'Geschiedenis', '', 'publish', 'closed', 'closed', '', 'geschiedenis-2', '', '', '2018-07-14 22:34:28', '2018-07-14 20:34:28', '', 0, 'http://gumbo.localhost/?p=31', 3, 'nav_menu_item', '', 0),
@@ -506,9 +503,6 @@ INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_orde
 (23, 2, 0),
 (24, 2, 0),
 (25, 2, 0),
-(26, 2, 0),
-(27, 2, 0),
-(28, 2, 0),
 (29, 3, 0),
 (30, 3, 0),
 (31, 3, 0),
@@ -538,7 +532,7 @@ CREATE TABLE `wp_term_taxonomy` (
 INSERT INTO `wp_term_taxonomy` (`term_taxonomy_id`, `term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES
 (1, 1, 'category', '', 0, 2),
 (2, 2, 'nav_menu', '', 0, 9),
-(3, 3, 'nav_menu', '', 0, 4);
+(3, 3, 'nav_menu', '', 0, 1);
 
 -- --------------------------------------------------------
 
