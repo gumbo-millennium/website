@@ -83,7 +83,7 @@ services:
 
   # Mailhog (to test e-mail)
   mail:
-    image: mailhog/mailhog:v1.0.0
+    image: mailhog/mailhog:latest
     ports:
       - 127.13.37.1:8025:8025
     environment:
