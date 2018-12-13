@@ -52,6 +52,9 @@ class PermissionSeeder extends Seeder
         ['event-publish', 'Evenementen publiceren'],
         ['event-manage-all', 'Andermans evenementen bewerken'],
 
+        // Manage sponsors
+        ['sponsor-edit', 'Sponsoren bewerken'],
+
         // Create event user permissions
         ['event-view', 'Evenementen bekijken'],
         ['event-buy', 'Tickets voor evenementen kopen'],
@@ -135,6 +138,9 @@ class PermissionSeeder extends Seeder
             'file-category-add',
             'file-category-edit',
             'file-category-delete',
+
+            // Allow sponsor manageent
+            'sponsor-edit',
 
             // Allow event management
             'event-add',
