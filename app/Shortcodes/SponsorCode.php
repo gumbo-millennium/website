@@ -28,8 +28,9 @@ class SponsorShortcode implements Shortcode
      * @param ShortcodeInterface $shortcode
      * @return string
      */
-    public function render(ShortcodeInterface $shortcode) : string
+    public function render(ShortcodeInterface $shortcode) : ?string
     {
+        // Only render one sponsor per page
         if ($this->rendered) {
             return null;
         }
@@ -39,11 +40,19 @@ class SponsorShortcode implements Shortcode
 
         // Find a random sponsor
         $this->sponsor = Sponsor::query()
-            ->published()
+            ->available()
             ->inRandomOrder()
             ->first();
 
-        // Return safe content if a sponsor is available
-        return $this->sponsor ? $this->sponsor->content : '';
+        // Return empty if no sponsor was found
+        if ($sponsor == null) {
+            return null;
+        }
+
+        // Render the sponsor block
+        return view(
+            $sponsor->classic ? 'sponsor.classic' : 'sponsor.modern',
+            ['sponsor' => $this->sponsor]
+        )->render();
     }
 }
