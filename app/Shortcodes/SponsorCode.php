@@ -39,7 +39,7 @@ class SponsorShortcode implements Shortcode
         $this->rendered = true;
 
         // Find a random sponsor
-        $this->sponsor = Sponsor::query()
+        $sponsor = Sponsor::query()
             ->available()
             ->inRandomOrder()
             ->first();
@@ -49,10 +49,12 @@ class SponsorShortcode implements Shortcode
             return null;
         }
 
+        // TODO Update view count
+
         // Render the sponsor block
         return view(
             $sponsor->classic ? 'sponsor.classic' : 'sponsor.modern',
-            ['sponsor' => $this->sponsor]
+            ['sponsor' => $sponsor]
         )->render();
     }
 }
