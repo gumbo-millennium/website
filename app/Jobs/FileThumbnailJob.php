@@ -73,7 +73,7 @@ MSG;
      *
      * @return void|boolean
      */
-    public function handle()
+    public function handle() : void
     {
         // Ignore if Windows
         if (!in_array(PHP_OS_FAMILY, ['Linux', 'Darwin'])) {
