@@ -56,5 +56,5 @@ abstract class FileJob implements ShouldQueue
      *
      * @return void|boolean
      */
-    abstract public function handle() : ?bool;
+    abstract public function handle() : void;
 }
