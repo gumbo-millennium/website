@@ -3,6 +3,9 @@ const glob = require('glob')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
 
+// Make sure we version stuff
+mix.version()
+
 // Configure javascript
 mix
   .js('resources/assets/js/theme.js', 'public/gumbo.js')
