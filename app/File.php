@@ -47,6 +47,11 @@ class File extends SluggableModel
     const STATE_HAS_THUMBNAIL = 16;
 
     /**
+     * @var int File has fulltext content
+     */
+    const STATE_HAS_CONTENT = 32;
+
+    /**
      * @var int File is broken and cannot be published
      */
     const STATE_BROKEN = 1024;
@@ -58,6 +63,7 @@ class File extends SluggableModel
         self::STATE_PENDING => 'pending',
         self::STATE_FILE_CHECKED => 'checked',
         self::STATE_BROKEN => 'broken',
+        self::STATE_HAS_CONTENT => 'indexed',
         self::STATE_PDFA => 'pdfa',
         self::STATE_HAS_META => 'has-meta',
         self::STATE_HAS_THUMBNAIL => 'has-thumbnail',
