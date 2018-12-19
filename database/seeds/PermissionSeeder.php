@@ -99,6 +99,7 @@ class PermissionSeeder extends Seeder
 
         // Activiteiten Committee
         ['ac', 'Activiteiten Commissie', [
+            // Allow admin access
             'admin',
 
             // Allow event management
@@ -111,6 +112,7 @@ class PermissionSeeder extends Seeder
 
         // Landhuis committee
         ['lhw', 'Landhuis Commissie', [
+            // Allow admin access
             'admin',
 
             // Allow event management
@@ -123,6 +125,7 @@ class PermissionSeeder extends Seeder
 
         // Public Relations Project Group
         ['pr', 'PRPG', [
+            // Allow admin access
             'admin',
 
             // Allow content management
@@ -132,6 +135,9 @@ class PermissionSeeder extends Seeder
 
         // Board
         ['board', 'Bestuur', [
+            // Allow admin access
+            'admin',
+
             // Allow file management
             'file-add',
             'file-edit',
