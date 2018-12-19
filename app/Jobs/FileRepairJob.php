@@ -103,8 +103,8 @@ class FileRepairJob extends FileJob
             $this->file->addState(File::STATE_BROKEN);
             $this->file->save();
 
-            // Bubble error
-            throw $e;
+            // Don't use error
+            return;
         } finally {
             // Delete temp files
             $this->deleteTempFile($pdfFile);
