@@ -30,12 +30,6 @@ abstract class FileJob implements ShouldQueue
         RunsCliCommands,
         SerializesModels,
         UsesTemporaryFiles;
-    /**
-     * The name of the queue the job should be sent to.
-     *
-     * @var string
-     */
-    public $queue = 'files';
 
     /**
      * File being processed
@@ -52,6 +46,9 @@ abstract class FileJob implements ShouldQueue
     public function __construct(File $file)
     {
         $this->file = $file;
+
+        // Always use the files queue
+        $this->queue = 'files';
     }
 
     /**
