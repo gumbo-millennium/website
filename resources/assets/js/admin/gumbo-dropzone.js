@@ -155,7 +155,7 @@ class GumboDropzone {
     const innerClickable = $(queries.uploadZone, node)
     const outerClickable = $(queries.uploadButton)
 
-    const clickables = Array.concat(
+    const clickables = [].concat(
       Array.from(innerClickable),
       Array.from(outerClickable)
     )
