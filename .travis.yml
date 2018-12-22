@@ -44,6 +44,13 @@ before_install:
   - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
   - git submodule update --init
 
+  # Install CodeClimate test coverage
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+  # Report tests are starting
+  - ./cc-test-reporter before-build
+
 install:
   # Download composer assets
   - composer install --no-progress --no-suggest -an
@@ -68,10 +75,15 @@ script:
   - yarn build
 
   # Run tests
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover ./coverage-clover.xml
 
   # Run migrations as a test
   - php artisan migrate:fresh
+
+after_script:
+  # Send CI result code
+  - ./cc-test-reporter format-coverage -t clover ./coverage-clover.xml
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 matrix:
   fast_finish: true
