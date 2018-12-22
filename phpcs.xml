@@ -19,10 +19,9 @@
     <exclude-pattern type="relative">^/storage/</exclude-pattern>
 
     <!-- We just use PSR-2, but need to modify two rules to work with Laravel -->
-    <rule ref="PSR2">
-        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
-        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
-
+    <rule ref="PSR12">
+      <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+      <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
     </rule>
 
     <!-- Database files don't have a namespace. -->
