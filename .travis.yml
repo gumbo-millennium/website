@@ -4,6 +4,7 @@ language: php
 
 # Run on PHP 7.2 and the nightly
 php:
+  - 7.3
   - 7.2
   - nightly
 
