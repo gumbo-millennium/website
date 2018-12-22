@@ -2,7 +2,7 @@ version: '3.5'
 
 networks:
   laravel:
-    name: gumbo-corcel-laravel
+    name: gumbo-website
 
 volumes:
   mariadb-data:

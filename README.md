@@ -1,10 +1,11 @@
 # Gumbo Millennium site on Corcel
 
 [![Build status][shield-build]][link-build]
-[![Code Climate rating][shield-cc]][link-cc]
-[![Javascript code style: Standard][shield-js]][link-js]
-[![PHP code style: PSR-2][shield-php]][link-php]
-[![Mozilla Public License v2][shield-license]][link-mpl] [\*][link-license]
+[![Code Climate maintainability rating][shield-cc-maintainability]][link-cc-maintainability]
+[![Code Climate coverage rating][shield-cc-coverage]][link-cc-coverage]
+[![Javascript code style: standard][shield-js]][link-js]
+[![PHP code style: PSR-12][shield-php]][link-php]
+[![License: Mozilla Public License v2][shield-license]][link-license]
 
 This is the website for the Gumbo Millennium student community
 ("studentenvereniging" in Dutch). The website is powered by [Laravel][laravel]
@@ -16,10 +17,7 @@ The stylesheets and scripts are built using Laravel's Mix.
 
 ## License
 
-The software is mostly licensed under the [Mozilla Public License v2][link-mpl],
-but with [some exceptions][link-license], which should seriously be considered
-when copying work.
-
+The software is mostly licensed under the [Mozilla Public License v2][link-license].
 
 ## Contributing
 
@@ -35,27 +33,24 @@ waive your personal copyright.
 -->
 
 <!-- Badges -->
-[shield-build]: https://travis-ci.com/roelofr/gumbo-corcel.svg?token=UqpoopFM6y79UtxAJobN&branch=develop
-[link-build]: https://travis-ci.com/roelofr/gumbo-corcel
+[shield-build]: https://img.shields.io/travis/com/gumbo-millennium/website.svg?style=for-the-badge
+[shield-cc-maintainability]: https://img.shields.io/codeclimate/maintainability/gumbo-millennium/website.svg?style=for-the-badge
+[shield-cc-coverage]: https://img.shields.io/codeclimate/coverage-letter/gumbo-millennium/website.svg?style=for-the-badge
+[shield-js]: https://img.shields.io/badge/js%20code%20style-standard-brightgreen.svg?style=for-the-badge
+[shield-php]: https://img.shields.io/badge/php%20code%20style-PSR--2-8892be.svg?style=for-the-badge
+[shield-license]: https://img.shields.io/github/license/gumbo-millennium/website.svg?style=for-the-badge
 
-[shield-cc]: https://img.shields.io/codeclimate/github/roelofr/gumbo-corcel.svg
-[link-cc]: https://codeclimate.com/github/roelofr/gumbo-corcel
-
-[shield-js]: https://img.shields.io/badge/js%20code%20style-standard-brightgreen.svg
+[link-build]: https://travis-ci.com/gumbo-millennium/website
+[link-cc-maintainability]: https://codeclimate.com/github/gumbo-millennium/website
+[link-cc-coverage]: https://codeclimate.com/github/gumbo-millennium/website
 [link-js]: https://standardjs.com/
-
-[shield-php]: https://img.shields.io/badge/php%20code%20style-PSR--2-8892be.svg
 [link-php]: https://www.php-fig.org/psr/psr-2/
-
-[shield-license]: https://img.shields.io/badge/license-Mozilla%20Public%20License%20version%202.0-orange.svg
-[link-mpl]: MPL-V2.md
 [link-license]: LICENSE.md
 
 <!-- Introduction -->
 [laravel]: https://laravel.com/
 [corcel]: https://github.com/corcel/corcel
 [spacial]: https://wrapbootstrap.com/theme/spacial-responsive-bootstrap-4-theme-WB0P249P1
-
 
 <!-- Contributing -->
 [contrib]: ./CONTRIBUTING.md
