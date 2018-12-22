@@ -4,12 +4,11 @@ The following guide quickly describes how to get started with the project.
 
 ## Required programs
 
-- PHP 7.2 or nightly
+- PHP 7.2+ or nightly
 - Node
 - Yarn
 - Composer
 - Docker + docker-compose
-- Visual Studio Code (recommended)
 
 ## Required files
 
@@ -169,7 +168,7 @@ and make sure you add the container to the local network for this project.
 
 ```bash
 docker network connect \
-    gumbo-corcel-laravel \
+    gumbo-website \
     "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )"
 ```
 
