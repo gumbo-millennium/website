@@ -25,8 +25,7 @@ Please have a look at the [Contribution Guide][contrib] on how to get started.
 
 **License acceptance**: Contributing code to this project indicates that you
 have read, and agreed to the license terms specified in the [Mozilla Public
-License v2][link-mpl]. You agree that this code will be hosted publicly and
-waive your personal copyright.
+License v2][link-license].
 
 <!--
     All the links
