@@ -17,7 +17,7 @@ The stylesheets and scripts are built using Laravel's Mix.
 
 ## License
 
-The software is mostly licensed under the [Mozilla Public License v2][link-license].
+The software is licensed under the [Mozilla Public License v2][link-license].
 
 ## Contributing
 
