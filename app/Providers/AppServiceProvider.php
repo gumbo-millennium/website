@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register nav menu as $menu on all requests
         $this->app->singleton(MenuProvider::class, function () {
-            return new MenuProvider;
+            return new MenuProvider();
         });
 
         // Handle Horizon auth

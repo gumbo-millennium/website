@@ -25,7 +25,7 @@ class MembersOnlyMiddleware
     public function handle($request, Closure $next)
     {
         if (Auth::guest()) {
-            return new UnauthorizedHttpException;
+            return new UnauthorizedHttpException();
         }
 
         if (!Auth::user()->hasRole('member')) {

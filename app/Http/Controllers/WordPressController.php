@@ -55,7 +55,7 @@ class WordPressController extends Controller
         }
 
         if (!$page) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return view('wordpress.page')->with(['page' => $page]);

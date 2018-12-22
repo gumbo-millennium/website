@@ -98,7 +98,7 @@ class FileRepairJob extends FileJob
                 $this->file->id,
                 $this->file->path
             ));
-        } catch (\RuntimeException|ProcessTimedOutException $e) {
+        } catch (\RuntimeException | ProcessTimedOutException $e) {
             // File repair failed, mark as broken
             $this->file->addState(File::STATE_BROKEN);
             $this->file->save();

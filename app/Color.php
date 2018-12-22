@@ -86,9 +86,9 @@ class Color
         $hex = str_replace("#", "", $hex);
 
         if (strlen($hex) == 3) {
-            $r = hexdec(substr($hex, 0, 1).substr($hex, 0, 1));
-            $g = hexdec(substr($hex, 1, 1).substr($hex, 1, 1));
-            $b = hexdec(substr($hex, 2, 1).substr($hex, 2, 1));
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
         } else {
             $r = hexdec(substr($hex, 0, 2));
             $g = hexdec(substr($hex, 2, 2));
@@ -348,7 +348,7 @@ class Color
         $xyz = array_map(function ($item) {
             if ($item > 0.008856) {
                 //return $item ^ (1/3);
-                return pow($item, 1/3);
+                return pow($item, 1 / 3);
             } else {
                 return (7.787 * $item) + (16 / 116);
             }
@@ -410,7 +410,7 @@ class Color
             $hue_x = $cie_x / ($cie_x + $cie_y + $cie_z);
             $hue_y = $cie_y / ($cie_x + $cie_y + $cie_z);
         }
-        return array('x'=>$hue_x,'y'=>$hue_y,'bri'=>$cie_y);
+        return array('x' => $hue_x,'y' => $hue_y,'bri' => $cie_y);
     }
 
 

@@ -25,7 +25,7 @@ class PageController extends Controller
     {
         $homepage = Page::home()->first();
         if ($homepage === null) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return view('page')->with(['page' => $homepage]);
