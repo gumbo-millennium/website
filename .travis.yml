@@ -13,8 +13,7 @@ git:
 
 # Add environment variables
 env:
-  - DB_HOST=127.0.0.1
-  - DB_PORT=3306
+  - DB_HOST=127.0.0.1 DB_PORT=3306
 
 # We need MySQL, but only so MariaDB can replace it below
 services:
