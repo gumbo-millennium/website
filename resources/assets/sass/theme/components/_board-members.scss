@@ -1,0 +1,86 @@
+///
+// Board members
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+// Start board members sass
+.board-members {
+  @include add-base-styles;
+
+  &__header {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__header-text,
+  &__header-title {
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 90px;
+    color: #1d1d1f;
+    font-size: 1.75rem;
+    font-weight: normal;
+    line-height: 2.5rem;
+
+    &:after {
+      position: absolute;
+      right: 0;
+      bottom: -30px;
+      left: 0;
+      width: 90%;
+      height: 1px;
+      margin: auto;
+      background: #cfd1cd;
+      content: '';
+    }
+  }
+
+  &__member-row {
+    &:nth-child(3n-1) {
+      margin-top: spacer(3) / 2;
+    }
+
+    &:nth-child(3n) {
+      margin-top: spacer(3);
+    }
+  }
+
+  &__member {
+    margin: .5rem 1rem;
+    border-radius: .5rem;
+    background-color: #{color('white')};
+
+    &:nth-child(3n) {
+      margin-top: spacer('3');
+      border: 1px solid #f00;
+    }
+
+    &-photo {
+      background-color: #{gray('200')};
+
+      &--placeholder {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        min-height: 140px;
+      }
+    }
+
+    &-name {
+      padding: .75rem 1rem .5rem;
+      color: theme-color-level('brand', -2);
+      font-size: 1.25rem;
+    }
+
+    &-role {
+      padding: .625rem 1rem;
+      color: #{gray('400')};
+      font-size: 1rem;
+    }
+  }
+}

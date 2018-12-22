@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset>
+
+    <!-- Directories -->
+    <file>app/</file>
+    <file>bootstrap/</file>
+    <file>config/</file>
+    <file>database/</file>
+    <file>routes/</file>
+    <file>tests/</file>
+
+    <!-- Ignore some dependency paths -->
+    <exclude-pattern type="relative">^/vendor/</exclude-pattern>
+    <exclude-pattern type="relative">^/node_modules/</exclude-pattern>
+
+    <!-- Exclude storage and caches -->
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>/library/</exclude-pattern>
+    <exclude-pattern type="relative">^/storage/</exclude-pattern>
+
+    <!-- We just use PSR-2, but need to modify two rules to work with Laravel -->
+    <rule ref="PSR2">
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
+
+    </rule>
+
+    <!-- Database files don't have a namespace. -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern type="relative">^/database/</exclude-pattern>
+    </rule>
+
+    <!-- Database files have classes with side effects, that's normal. -->
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern type="relative">^/database/</exclude-pattern>
+    </rule>
+
+    <!-- Never use "else if". -->
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+      <type>error</type>
+    </rule>
+
+</ruleset>

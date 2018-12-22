@@ -1,0 +1,24 @@
+///
+// Figure objects
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+figure,
+.figure
+.wp-image-block {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  img {
+    max-width: 100%;
+  }
+
+  figcaption {
+    display: block;
+    padding: .4rem .6rem;
+    color: #{gray('700')};
+    text-align: center;
+  }
+}

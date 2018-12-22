@@ -1,0 +1,79 @@
+sudo: false
+
+language: php
+
+# Run on PHP 7.2 and the nightly
+php:
+  - 7.2
+  - nightly
+
+# Don't check out the submodules, we'll do so manually.
+git:
+  submodules: false
+
+# We need MySQL, but only so MariaDB can replace it below
+services:
+  - mysql
+
+# Cache yarn
+cache:
+  yarn: true
+  directories:
+    - $HOME/.composer
+    - vendor/
+
+# We use MariaDB over MySQL, since it's more up-to-date (especially concerning keys and charsets)
+addons:
+  mariadb: '10.3'
+  apt:
+    packages:
+      - nasm
+
+before_install:
+  # Install NodeJS
+  - nvm install node
+  - npm install -g yarn
+
+  # Get a database going, add the Travis user as granted user
+  - ./library/travis/init-db
+
+  # Download file assets
+  - ./library/travis/download-spacial-theme
+
+  # Install Submodules
+  - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
+  - git submodule update --init
+
+install:
+  # Download composer assets
+  - composer install --no-progress --no-suggest -an
+
+  # Configure .env file
+  - php artisan app:env travis --force
+
+  # Download Yarn assets using lockfile
+  - yarn install --frozen-lockfile
+
+script:
+  # Lint PHP code
+  - vendor/bin/phpcs
+
+  # Lint Sass files
+  - find resources/assets -type f -name '*.scss' -print | xargs node_modules/.bin/stylelint
+
+  # Lint Javascript
+  - find resources/assets -type f -name '*.js' -print | xargs node_modules/.bin/eslint
+
+  # Build front-end assets
+  - yarn build
+
+  # Run tests
+  - vendor/bin/phpunit
+
+  # Run migrations as a test
+  - php artisan migrate:fresh
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: nightly

@@ -19,6 +19,7 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+    use RedirectsToAdminHomeTrait;
 
     /**
      * Create a new controller instance.

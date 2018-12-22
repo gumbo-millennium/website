@@ -1,0 +1,70 @@
+///
+// Large call to action box
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.cta-banner {
+  padding: 3.75rem 0;
+  border-width: 1px 0;
+  border-color: #{gray('300')} transparent;
+  border-style: solid;
+  background-color: #{gray('200')};
+  text-align: center;
+
+  &__container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: center;
+    }
+  }
+
+  &__text-container {
+    display: block;
+    padding-bottom: 1.5rem;
+    text-align: center;
+
+    @include media-breakpoint-up(md) {
+      flex-shrink: 1;
+      padding-right: 5em;
+      padding-bottom: 0;
+      text-align: left;
+    }
+  }
+
+  &__text-primary {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  &__text-secondary {
+    margin-top: 6px;
+    color: #{gray('600')};
+    font-size: 1rem;
+  }
+
+  &--brand &__text-secondary {
+    color: #{theme-color-level('brand', 5)};
+  }
+
+  &__btn {
+    @include make-button;
+    @include button-variant(theme-color('brand'), theme-color('brand'));
+
+    // Center align in the flexbox
+    align-self: center;
+    justify-self: center;
+
+    // Alter some Bootstrap rules
+    padding: 1.1rem 2rem;
+    border-radius: 0.5rem;
+    line-height: 1.25rem;
+  }
+}

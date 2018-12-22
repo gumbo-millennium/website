@@ -1,0 +1,112 @@
+version: '3.5'
+
+networks:
+  laravel:
+    name: gumbo-corcel-laravel
+
+volumes:
+  mariadb-data:
+
+services:
+  # Webserver
+  web:
+    build:
+      context: ./
+      dockerfile: nginx/Dockerfile
+      context: library/docker
+    volumes:
+      - ./:/var/www
+    ports:
+      - 127.13.37.1:80:80
+    environment:
+      VIRTUAL_HOST: gumbo.localhost
+    networks:
+      - laravel
+
+  # Application
+  app:
+    build:
+      context: ./
+      dockerfile: laravel/Dockerfile
+      context: library/docker
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel
+    env_file:
+      - ./.env
+      - ./library/docker/laravel/docker.env
+
+  # mariadb database
+  database:
+    image: mariadb:latest
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./library/docker/mariadb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: kiepo9Eeth0hoech5ooLa6ed8oaphaih
+    ports:
+      - 127.13.37.1:3306:3306
+    networks:
+      - laravel
+
+  # Redis
+  redis:
+    image: redis:alpine
+    networks:
+      - laravel
+    ports:
+      - 127.13.37.1:6379:6379
+
+  # PhpMyAdmin
+  pma:
+    build:
+      context: ./
+      dockerfile: phpmyadmin/Dockerfile
+      context: library/docker
+    networks:
+      laravel:
+        aliases:
+          - phpmyadmin.docker
+    environment:
+      PMA_HOST: database
+      PMA_USER: phpmyadmin
+      PMA_PASSWORD: 'etah2raith4Thee5eijeiYei(f3foh8I'
+      VIRTUAL_HOST: pma.gumbo.localhost
+    ports:
+      - 127.13.37.1:8000:80
+    depends_on:
+      - database
+
+  # Mailhog (to test e-mail)
+  mail:
+    image: mailhog/mailhog:latest
+    ports:
+      - 127.13.37.1:8025:8025
+    environment:
+      VIRTUAL_HOST: mail.gumbo.localhost
+      VIRTUAL_PORT: 8025
+    networks:
+      - laravel
+
+  # WordPress (CMS)
+  wordpress:
+    build:
+      context: ./
+      dockerfile: wordpress/Dockerfile
+      context: library/docker
+    networks:
+      - laravel
+    volumes:
+      - ./library/wordpress/plugins/gumbo-millennium:/var/www/html/wp-content/plugins/gumbo-millennium:ro
+      - ./library/wordpress/themes/gumbo-millennium:/var/www/html/wp-content/themes/gumbo-millennium:ro
+    ports:
+      - 127.13.37.1:8080:80
+    env_file:
+      - ./library/docker/wordpress/docker.env
+    environment:
+      VIRTUAL_HOST: wordpress.gumbo.localhost
+      VIRTUAL_PORT: 8080

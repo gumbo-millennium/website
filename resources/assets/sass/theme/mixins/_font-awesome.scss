@@ -1,0 +1,22 @@
+$fontawesome-styles: (
+  'light': if($has-font-awesome-pro, 300, 400),
+  'regular': 400,
+  'solid': 900,
+  'brands': 400
+);
+
+@mixin fontawesome($icon, $style: 'light') {
+  @if not map-has-key($fontawesome-styles, $style) {
+    @warn "Cannot find Font Awesome style '#{$style}' in style map!";
+  }
+
+  &::before {
+    @include fa-icon;
+
+    font-family: if($style == 'brands', '#{$fa-font-name} Brands', '#{$fa-font-name}');
+    font-weight: #{map-get($fontawesome-styles, $style)};
+    content: fa-content($icon);
+
+    @content;
+  }
+}

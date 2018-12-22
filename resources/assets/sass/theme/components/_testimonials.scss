@@ -1,0 +1,98 @@
+///
+// Quotes from members, used to bribe / convince others to join us
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.testimonials,
+.homepage-testimonials {
+  @include add-base-styles;
+  padding: 7.5rem 0 4.5rem 0;
+
+  &__quote {
+    width: 90%;
+    margin: 0 auto;
+    color: #{theme-color-level('brand', -5)};
+    text-align: center;
+
+    font-size: 22px;
+    font-size: 1.25rem;
+    font-weight: 300;
+
+    line-height: 2rem;
+
+    @include media-breakpoint-up(md) {
+      width: 85%;
+      font-size: 1.5rem;
+      line-height: 2.5rem;
+    }
+
+    &::before,
+    &::after {
+      display: inline-block;
+      color: #{theme-color-level('brand', -6)};
+      font-family: $spacial-font-georgia;
+      font-size: 3.75rem;
+    }
+
+    &::before {
+      margin-top: -1rem;
+      margin-left: -1.625rem;
+      content: '“';
+    }
+
+    &::after {
+      display: none;
+      padding-top: .25rem;
+      content: '„';
+
+      @include media-breakpoint-up(sm) {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__quote-mark {
+    display: none;
+  }
+
+  &__meta {
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: space-around;
+    justify-content: center;
+    margin: 1.75rem 0;
+  }
+
+  &__photo {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: transparent none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+
+  &__author {
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: space;
+    justify-content: start;
+    margin-left: 15px;
+    color: #{theme-color-level('secondary', -3)};
+    text-align: left;
+
+    &-name {
+      font-weight: bold;
+    }
+
+    &-company {
+      display: block;
+      margin-top: 3px;
+      color: #{theme-color-level('secondary', -5)};
+      font-size: 13px;
+    }
+  }
+}

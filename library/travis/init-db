@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+GIT_ROOT="$( git rev-parse --show-toplevel 2>/dev/null )"
+
+for file in $( find "$GIT_ROOT/library/docker/mariadb" -type f -name '*.sql' -print );
+do
+    echo "Import ${file}..."
+    mysql < "$file"
+    echo "Done"
+done
+
+mysql -e 'GRANT ALL ON laravel.* TO travis;' || true
+mysql -e 'GRANT SELECT, INSERT, UPDATE, DELETE ON wordpress.* TO travis;' || true
+mysql -e 'FLUSH PRIVILEGES;'
+
+exit 0

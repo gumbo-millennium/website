@@ -1,0 +1,29 @@
+///
+// Loads all components
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+// Load main components
+@import "skip-to-content";
+@import "alerts";
+@import "heroes";
+@import "central-intro";
+@import "cta-banner";
+
+// Homepage components
+@import "photo-album";
+@import "unique-selling-points";
+@import "testimonials";
+
+// Sponsors
+@import "sponsor";
+@import "sponsor-small";
+@import "sponsor-large";
+
+// Detail pages
+@import "board-members";
+
+// Misc components
+@import "shaded-blocks";

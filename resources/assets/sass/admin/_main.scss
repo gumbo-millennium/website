@@ -1,0 +1,104 @@
+///
+// Admin page
+//
+// @author Roelof Roos <github@roelof.io>
+// @license MPL-2.0
+///
+
+.admin {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.admin-nav {
+  border: none;
+  border-bottom: 1px solid #{gray('300')};
+}
+
+.admin-container {
+  @include media-breakpoint-down(md) {
+    max-width: none;
+  }
+}
+
+.admin-row {
+  @include make-row;
+
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
+}
+
+.admin-sidenav,
+.admin-content {
+  @include make-col-ready;
+
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-sidenav {
+  @include media-breakpoint-up(md) {
+    @include make-col(3);
+  }
+
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+
+  @include media-breakpoint-up(md) {
+    border-right-width: 1px;
+    border-bottom-width: 0;
+  }
+}
+
+.admin-content {
+  @include media-breakpoint-up(md) {
+    @include make-col(9);
+  }
+}
+
+.admin-sidenav--visible {
+  display: block;
+
+  & + .admin-content {
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+  }
+}
+
+.body-admin {
+  margin-top: 1rem;
+  background-color: gray('100');
+}
+
+.admin-nav-brand {
+  max-width: 200px;
+  text-align: center;
+}
+
+.admin-nav-brand-logo {
+  max-height: 35px;
+}
+
+.admin-footer {
+  @include make-container;
+  @include make-container-max-widths;
+
+  // Keep some space
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+
+  // Keep space from border
+  padding-top: 1.5rem;
+  border-top: 1px solid #{gray('300')};
+
+  // Format text
+  color: #{gray('600')};
+  text-align: center;
+}

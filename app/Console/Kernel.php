@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\FileDownload;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Wipe IP addresses from FileDownload objects
+        $schedule->call(function () {
+            FileDownload::removeIpOnOldEntries();
+        })->daily();
+
+        // Wipe old Telescope records
+        $schedule->command('telescope:prune')->daily();
     }
 
     /**

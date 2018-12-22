@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::middleware('wordpress')->prefix('wordpress/')->name('wordpress.')->group(function () {
+    $this->get('menu', 'WordPressController@menu')->name('menu');
 });
+
+// Plazacam submission
+Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
+    ->middleware('signed')
+    ->name('plazacam.store');
+
+// Plazacam viewing via API
+Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
+    ->middleware('signed')
+    ->name('plazacam.view');
