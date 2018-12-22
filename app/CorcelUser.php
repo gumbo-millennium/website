@@ -44,7 +44,7 @@ class CorcelUser extends OriginalCorcelUser
         if ($password === null) {
             $this->user_pass = '0';
         } else {
-            $this->user_pass =(new PasswordService())->makeHash($password);
+            $this->user_pass = (new PasswordService())->makeHash($password);
         }
 
         return $this;

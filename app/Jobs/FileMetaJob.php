@@ -97,7 +97,7 @@ class FileMetaJob extends FileJob
     protected function getPdfContent(string $filePath) : void
     {
         // Load PDF parser
-        $parser = new PDFParser;
+        $parser = new PDFParser();
         $pdf = $parser->parseFile($filePath);
 
         // Handle OCR contents

@@ -141,6 +141,6 @@ class EnsureDefaults extends Command
      */
     protected function handleWpAuth() : void
     {
-        dispatch(new UpdateWordPressTokenJob);
+        dispatch(new UpdateWordPressTokenJob());
     }
 }

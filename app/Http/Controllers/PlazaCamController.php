@@ -150,7 +150,7 @@ class PlazaCamController extends Controller
 
         // Throw 404 if the image is unavailable
         if (!Storage::exists($image)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         // Get expiration

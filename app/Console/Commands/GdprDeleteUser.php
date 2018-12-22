@@ -167,7 +167,7 @@ END;
         );
 
         if ($this->confirm($prompt)) {
-
+            // TODO send email
         }
     }
 }

@@ -105,12 +105,12 @@ class FileController extends Controller
 
         // Report 404 if not public
         if ($file->public || $file->broken) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         // Abort if file is missing
         if (!Storage::exists($filePath)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return Storage::download($filePath, $fileName);

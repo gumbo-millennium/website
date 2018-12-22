@@ -274,7 +274,7 @@ class ColorFixCommand extends Command
 
     public function replaceColor(array $matches) : string
     {
-        $color = new Color;
+        $color = new Color();
         $color->fromRgbString(strtolower($matches[1]));
 
         $res = $this->findClosestColor($color);
