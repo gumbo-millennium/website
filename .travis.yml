@@ -78,11 +78,11 @@ script:
   # Build front-end assets
   - yarn build
 
+  # Run migrations
+  - php artisan migrate:fresh
+
   # Run tests
   - vendor/bin/phpunit --coverage-clover ./coverage-clover.xml
-
-  # Run migrations as a test
-  - php artisan migrate:fresh
 
 after_script:
   # Send CI result code
