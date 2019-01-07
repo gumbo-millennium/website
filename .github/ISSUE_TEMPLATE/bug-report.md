@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Help us to squash bugs in the website.
-title: '[BUG] '
+title: '\[BUG\] '
 labels: Needs validation
 assignees: ''
 
@@ -28,15 +28,15 @@ If applicable, add screenshots to help explain your problem.
 ## About your device
 
 **Desktop (please complete the following information):**
- - OS: [e.g. Ubuntu]
- - Browser [e.g. chrome, firefox]
- - Version [e.g. 70]
+- OS: *e.g. Ubuntu*
+- Browser *e.g. chrome, firefox*
+- Version *e.g. 70*
 
 **Smartphone (please complete the following information):**
- - Device: [e.g. OnePlus 6]
- - OS: [e.g. Android 8.1.0]
- - Browser [e.g. stock browser, chrome]
- - Version [e.g. 70]
+- Device: *e.g. OnePlus 6*
+- OS: *e.g. Android 8.1.0*
+- Browser *e.g. stock browser, chrome*
+- Version *e.g. 70*
 
 ## Additional context
 
