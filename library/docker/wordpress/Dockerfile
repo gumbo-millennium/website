@@ -1,7 +1,7 @@
 # vim: set ft=dockerfile :
 # Configuration file for Docker
 
-FROM wordpress:latest
+FROM wordpress:5-apache
 
 RUN curl -o /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/bin/wp \

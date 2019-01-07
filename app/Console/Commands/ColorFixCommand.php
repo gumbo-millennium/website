@@ -251,7 +251,9 @@ class ColorFixCommand extends Command
         // Make backup
         if (!file_exists("{$path}~")) {
             $this->line("File backed up as <info>{$path}~</>");
-            copy($path, "{$path}~") || die('Failed to backup file');
+            if (!copy($path, "{$path}~")) {
+                throw new \RuntimeException("Failed to make a backup of [{$path}] to [{$path}~].");
+            }
         }
 
         $contents = file_get_contents($path);
