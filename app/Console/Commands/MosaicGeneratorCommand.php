@@ -161,9 +161,9 @@ XML;
         $diamondSize = self::DIAMOND_SIZE;
 
         // Determine counts
-        $horizontalDiamondCount = ceil($width / $diamondSize + 1);
-        $verticalDiamondCount = ceil($height / $diamondSize + 1);
-        $diamondCount = $horizontalDiamondCount * $verticalDiamondCount;
+        $diamondCountX = ceil($width / $diamondSize + 1);
+        $diamondCountY = ceil($height / $diamondSize + 1);
+        $diamondCount = $diamondCountX * $diamondCountY;
 
         // Result
         $result = collect();
@@ -171,8 +171,8 @@ XML;
         // Build coords for each diamond
         for ($i = 0; $i < $diamondCount; $i++) {
             $result->push([
-                'x' => $diamondSize * -0.5 + (($i % $horizontalDiamondCount) * $diamondSize),
-                'y' => $diamondSize * -0.5 + (floor($i / $horizontalDiamondCount) * $diamondSize)
+                'x' => $diamondSize * -0.5 + (($i % $diamondCountX) * $diamondSize),
+                'y' => $diamondSize * -0.5 + (floor($i / $diamondCountX) * $diamondSize)
             ]);
         }
 
