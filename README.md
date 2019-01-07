@@ -28,11 +28,8 @@ Please have a look at the [Contribution Guide][contrib] on how to get started.
 have read, and agreed to the license terms specified in the [Mozilla Public
 License v2][link-license].
 
-<!--
-    All the links
--->
+<!-- Links -->
 
-<!-- Badges -->
 [shield-build]: https://img.shields.io/travis/com/gumbo-millennium/website.svg?style=for-the-badge
 [shield-cc-maintainability]: https://img.shields.io/codeclimate/maintainability/gumbo-millennium/website.svg?label=CodeClimate+Maintainability&style=for-the-badge
 [shield-cy-rating]: https://img.shields.io/codacy/grade/744b88fb0b9046309aa0571429e0dd7a.svg?label=Codacy+Rating&style=for-the-badge
@@ -49,10 +46,8 @@ License v2][link-license].
 [link-php]: https://www.php-fig.org/psr/psr-2/
 [link-license]: LICENSE.md
 
-<!-- Introduction -->
 [laravel]: https://laravel.com/
 [corcel]: https://github.com/corcel/corcel
 [spacial]: https://wrapbootstrap.com/theme/spacial-responsive-bootstrap-4-theme-WB0P249P1
 
-<!-- Contributing -->
 [contrib]: ./CONTRIBUTING.md
