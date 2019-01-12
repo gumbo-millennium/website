@@ -64,14 +64,14 @@ class FileRepairJob extends FileJob
         $file = $this->file;
 
         // Get a temporary file
-        $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
+        $pdfFile = $this->getTempFileFromPath($file->path, 'pdf');
         $repairedFile = $this->getTempFile('pdf');
 
         try {
             // Try repairing with Ghostscript
             if ($this->tryRepairWithGhostscript($pdfFile, $repairedFile)) {
                 // Flag file as valid
-                $this->file->addState(File::STATE_FILE_CHECKED);
+                $file->addState(File::STATE_FILE_CHECKED);
 
                 // Save the new file
                 $this->replaceStoredFile($repairedFile);
@@ -83,7 +83,7 @@ class FileRepairJob extends FileJob
             // Try repairing with Ghostscript
             if ($this->tryRepairWithCairo($pdfFile, $repairedFile)) {
                 // Flag file as valid
-                $this->file->addState(File::STATE_FILE_CHECKED);
+                $file->addState(File::STATE_FILE_CHECKED);
 
                 // Save the new file
                 $this->replaceStoredFile($repairedFile);
@@ -95,13 +95,13 @@ class FileRepairJob extends FileJob
             // Throw error
             throw new \RuntimeException(sprintf(
                 'GhostScript and pdftocairo failed to repair / check the file [%d] [%s]',
-                $this->file->id,
-                $this->file->path
+                $file->id,
+                $file->path
             ));
         } catch (\RuntimeException | ProcessTimedOutException $e) {
             // File repair failed, mark as broken
-            $this->file->addState(File::STATE_BROKEN);
-            $this->file->save();
+            $file->addState(File::STATE_BROKEN);
+            $file->save();
 
             // Don't use error
             return;
@@ -130,7 +130,7 @@ class FileRepairJob extends FileJob
                 '-sDEVICE=pdfwrite',
                 '-dPDFSETTINGS=/prepress',
                 $currentFile
-            ], $outGhost, $errGhost, 120);
+            ], null, null, 120);
 
             if ($result === 0) {
                 echo "GhostScript repaired the file.\n";
@@ -163,7 +163,7 @@ class FileRepairJob extends FileJob
                 '-pdf ',
                 $currentFile,
                 $newFile
-            ], $outCairo, $errCairo, 120);
+            ], null null, 120);
 
             if ($result === 0) {
                 echo "pdftocairo repaired the file.\n";

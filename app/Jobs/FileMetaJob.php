@@ -72,14 +72,12 @@ class FileMetaJob extends FileJob
         }
 
         // Get PDF metadata, using pdfinfo
-        $this->getMetadata($pdf);
+        $this->getMetadata($file);
 
+        // Update state
         if ($this->file_meta) {
             $file->addState(File::STATE_HAS_META);
         }
-
-        // Update state
-        $file->addState(File::STATE_HAS_META);
 
         // Remve temp PDF
         $this->deleteTempFile($tempFile);
@@ -136,7 +134,7 @@ class FileMetaJob extends FileJob
             'exiftool',
             '-overwrite_original', // Don't create file_original
             '-preserve', // Don't alter timestamps
-            $file
+            $filePath
         ], collect($removeList)->map(function ($value) {
             return sprintf('-%s=%s', $value[0], escapeshellarg($value[1]));
         }));
@@ -145,13 +143,15 @@ class FileMetaJob extends FileJob
         $ok = $this->runCliCommand($command, $stdout, $stderr);
 
         // Only log if reducing data failed
-        if (!$ok) {
-            logger()->notice('Failed to remove metadata from [{filename}].', [
-                'filename' => $this->file->filename,
-                'file' => $this->file,
-                'output' => $stdout . PHP_EOL . $stderr,
-            ]);
+        if ($ok) {
+            return;
         }
+
+        logger()->notice('Failed to remove metadata from [{filename}].', [
+            'filename' => $this->file->filename,
+            'file' => $this->file,
+            'output' => $stdout . PHP_EOL . $stderr,
+        ]);
     }
 
     /**
@@ -179,7 +179,7 @@ class FileMetaJob extends FileJob
             '-G1',
             '-json'
         ], $requestList, [
-            $file
+            $filePath
         ]);
 
         // Run meta command
@@ -193,6 +193,7 @@ class FileMetaJob extends FileJob
                 'output' => $stdout . PHP_EOL . $stderr,
             ]);
 
+            // Abort
             return;
         }
 
@@ -211,12 +212,12 @@ class FileMetaJob extends FileJob
         }
 
         // Serialize data into one-dimensional array
-        foreach ($fileDetails as $property => $value) {
+        foreach ($metaFields as $property => $value) {
             $value = implode(', ', array_wrap($value));
             $fileMeta->put($property, $value);
         }
 
         // Store meta
-        $file->file_meta = $fileMeta;
+        $this->file->file_meta = $fileMeta;
     }
 }

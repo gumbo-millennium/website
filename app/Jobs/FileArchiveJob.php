@@ -84,7 +84,7 @@ class FileArchiveJob extends FileJob
                 '-sPDFACompatibilityPolicy=1',
                 "-sOutputFile={$archiveFile}",
                 $pdfFile
-            ], $out, $err, $this->timeout * .8);
+            ], null, null, $this->timeout * .8);
 
             // If the exit code is non-zero, log it and exit.
             if ($exitCode !== 0) {
