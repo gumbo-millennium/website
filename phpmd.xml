@@ -8,22 +8,9 @@
     Rules for the Gumbo Millennium website.
   </description>
 
-  <!-- Import the entire unused code rule set -->
-  <rule ref="rulesets/unusedcode.xml" />
-
-  <!-- Allow models to be statically accessed -->
-  <rule ref="rulesets/unusedcode.xml/StaticAccess">
-
-  </rule>
-
   <!-- Clean code -->
   <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag" />
   <rule ref="rulesets/cleancode.xml/ElseExpression" />
-  <rule ref="rulesets/cleancode.xml/StaticAccess">
-    <properties>
-      <property name="exceptions" value="App\\Activity,App\\Color,App\\CorcelUser,App\\FileCategory,App\\FileDownload,App\\File,App\\Menu,App\\Option,App\\Page,App\\Post,App\\SluggableModel,App\\Sponsor,App\\User" />
-    </properties>
-  </rule>
 
   <!-- Code Size -->
   <rule ref="rulesets/codesize.xml/CyclomaticComplexity" />
@@ -55,9 +42,17 @@
   <rule ref="rulesets/design.xml/DevelopmentCodeFragment" />
 
   <!-- Naming Rules -->
-  <rule ref="rulesets/naming.xml/ShortVariable" />
+  <rule ref="rulesets/naming.xml/ShortVariable">
+    <properties>
+      <property name="exceptions" value="ok" />
+    </properties>
+  </rule>
   <rule ref="rulesets/naming.xml/LongVariable" />
-  <rule ref="rulesets/naming.xml/ShortMethodName" />
+  <rule ref="rulesets/naming.xml/ShortMethodName">
+    <properties>
+      <property name="exceptions" value="up" />
+    </properties>
+  </rule>
   <rule ref="rulesets/naming.xml/ConstantNamingConventions" />
   <rule ref="rulesets/naming.xml/BooleanGetMethodName" />
 
