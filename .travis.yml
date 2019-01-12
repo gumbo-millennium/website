@@ -19,6 +19,7 @@ env:
 # We need MySQL, but only so MariaDB can replace it below
 services:
   - mysql
+  - redis-server
 
 # Cache yarn
 cache:
