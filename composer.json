@@ -110,6 +110,10 @@
         "server": [
           "@php artisan telescope:publish",
           "@php artisan horizon:assets"
+        ],
+        "lint": [
+          "phpcs",
+          "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
         ]
     },
     "config": {
