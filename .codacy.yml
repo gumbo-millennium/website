@@ -3,3 +3,4 @@
 #
 exclude_paths:
   - library/docker/mariadb/*.sql
+  - LICENSE.md
