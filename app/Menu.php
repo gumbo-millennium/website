@@ -9,6 +9,12 @@ use Corcel\Model\MenuItem;
 use Corcel\Model\Taxonomy;
 use Illuminate\Support\Collection;
 
+/**
+ * A WordPress-based menu
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class Menu extends Collection
 {
     /**
