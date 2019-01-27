@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
@@ -34,6 +35,15 @@ class AppServiceProvider extends ServiceProvider
         // Handle File and User changes
         File::observe(FileObserver::class);
         User::observe(UserObserver::class);
+
+        // Create method to render SVG icons
+        Blade::directive('icon', function ($icon, $className) {
+            return (
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
+                "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
+                "</svg>"
+            );
+        });
     }
 
     /**
