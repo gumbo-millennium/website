@@ -7,7 +7,7 @@ In de nieuwe site hebben we twee mogelijkheden voor sponsoren.
 
 ## Epic
 
-![Schermontwerp voor epic](./img/ad-large.png)
+![Schermontwerp voor epic](./img/sponsor-large.png)
 
 De beste optie.
 
@@ -21,15 +21,15 @@ De beste optie.
 
 ### Mobiel
 
-![Mobiele weergave van epic](./img/ad-large-mobile.png)
+![Mobiele weergave van epic](./img/sponsor-large-mobile.png)
 
 ### Desktop
 
-![Mobiele weergave van epic](./img/ad-large-desktop.png)
+![Mobiele weergave van epic](./img/sponsor-large-desktop.png)
 
 ## Banner
 
-![Schermontwerp voor banner](./img/ad-small.png)
+![Schermontwerp voor banner](./img/sponsor-small.png)
 
 Een optie voor bedrijven zonder foto materiaal. Niet aanbevolen.
 
@@ -39,8 +39,8 @@ Een optie voor bedrijven zonder foto materiaal. Niet aanbevolen.
 
 ### Mobiel
 
-![Mobiele weergave van banner](./img/ad-small-mobile.png)
+![Mobiele weergave van banner](./img/sponsor-small-mobile.png)
 
 ### Desktop
 
-![Mobiele weergave van banner](./img/ad-small-desktop.png)
+![Mobiele weergave van banner](./img/sponsor-small-desktop.png)
