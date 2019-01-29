@@ -19,13 +19,9 @@ De beste optie.
 
 ## Weergaven
 
-### Mobiel
-
-![Mobiele weergave van epic](./img/sponsor-large-mobile.png)
-
-### Desktop
-
-![Mobiele weergave van epic](./img/sponsor-large-desktop.png)
+|**Mobiel**|**Desktop**|
+|-|-|
+|![Mobiele weergave van epic](./img/sponsor-large-mobile.png)|![Desktop weergave van epic](./img/sponsor-large-desktop.png)|
 
 ## Banner
 
@@ -37,10 +33,6 @@ Een optie voor bedrijven zonder foto materiaal. Niet aanbevolen.
 
 ## Weergaven
 
-### Mobiel
-
-![Mobiele weergave van banner](./img/sponsor-small-mobile.png)
-
-### Desktop
-
-![Mobiele weergave van banner](./img/sponsor-small-desktop.png)
+|**Mobiel**|**Desktop**|
+|-|-|
+|![Mobiele weergave van banner](./img/sponsor-small-mobile.png)|![Desktop weergave van banner](./img/sponsor-small-desktop.png)|

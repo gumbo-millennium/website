@@ -1,4 +1,4 @@
-# `img-icon` folder
+# `assets/icons` folder
 
 This folder contains all SVG files which will be merged into the icon map.
 You can use the `@icon` Blade directive to render them (an `<svg>` object will be returned).
