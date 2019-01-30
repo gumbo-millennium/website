@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 @push('stack.header')
 <div class="hero hero--large hero--with-cover hero--test">
@@ -21,5 +21,5 @@
 @endpush
 
 @section('content')
-@include('example.homepage')
+@include('main.example.homepage')
 @endsection

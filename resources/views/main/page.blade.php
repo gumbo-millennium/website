@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 @section('content')
 {!! $page->content !!}

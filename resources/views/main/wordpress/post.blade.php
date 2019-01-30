@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 @push('layout.content-before')
 <div class="hero hero--blog">

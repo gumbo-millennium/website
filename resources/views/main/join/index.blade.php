@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 {{-- Disable transparent navbar --}}
 @push('navbar-classes')
@@ -31,16 +31,16 @@ navbar--opaque
             @csrf
 
             {{-- Display errors --}}
-            @include('join/errors')
+            @include('main.join.errors')
 
             {{-- Display form --}}
-            @include('join/form')
+            @include('main.join.form')
 
             {{-- Display privacy acceptance --}}
-            @include('join/privacy')
+            @include('main.join.privacy')
 
             {{-- Display newsletter --}}
-            @include('join/newsletter')
+            @include('main.join.newsletter')
 
             {{-- Display submit button --}}
             <div class="row">

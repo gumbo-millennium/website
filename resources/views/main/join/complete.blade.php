@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 {{-- Disable transparent navbar --}}
 @push('navbar-classes')

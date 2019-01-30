@@ -1,8 +1,8 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 @section('content')
-    @include('files.bits.header-small')
-    @include('files.bits.search-results', [
+    @include('main.files.bits.header-small')
+    @include('main.files.bits.search-results', [
         'title' => $category->title,
         'items' => $files,
         'hide' => ['category'],

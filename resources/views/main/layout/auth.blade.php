@@ -1,4 +1,4 @@
-@extends('layout.base')
+@extends('main.layout.base')
 
 @push('stack.body-class')
 page--login

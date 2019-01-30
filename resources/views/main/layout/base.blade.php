@@ -14,7 +14,7 @@
     @show</title>
 
     {{-- Stylesheets, icons and SEO links --}}
-    @include('layout.links')
+    @include('main.layout.links')
 </head>
 <body class="@stack('stack.body-class')">
     {{-- Continue to content link --}}
@@ -35,7 +35,7 @@
     @yield('layout.content-after')
 
     {{-- Scripts --}}
-    @include('layout.scripts')
+    @include('main.layout.scripts')
 
     {{-- Additional scripts --}}
     @stack('stack.scripts')

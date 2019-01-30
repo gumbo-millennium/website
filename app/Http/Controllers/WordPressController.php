@@ -11,9 +11,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class WordPressController extends Controller
 {
     const CLASS_VIEW_MAP = [
-        Page::class => 'wordpress.page',
-        Form::class => 'wordpress.form',
-        Post::class => 'wordpress.post',
+        Page::class => 'main.wordpress.page',
+        Form::class => 'main.wordpress.form',
+        Post::class => 'main.wordpress.post',
+        'default' => 'main.wordpress.page'
     ];
 
     /**
@@ -58,6 +59,6 @@ class WordPressController extends Controller
             throw new NotFoundHttpException();
         }
 
-        return view('wordpress.page')->with(['page' => $page]);
+        return view(self::CLASS_VIEW_MAP['default'])->with(['page' => $page]);
     }
 }

@@ -1,11 +1,11 @@
-@extends('layout.base')
+@extends('main.layout.base')
 
 {{--
     Include header and navigation
 --}}
 @section('layout.content-before')
 {{-- Header --}}
-@include('layout.header')
+@include('main.layout.header')
 
 {{-- Include header stack --}}
 @stack('stack.header')
@@ -33,5 +33,5 @@
 @stack('stack.footer')
 
 {{-- Footer, including image --}}
-@include('layout.footer')
+@include('main.layout.footer')
 @endsection

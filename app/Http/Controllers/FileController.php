@@ -47,7 +47,7 @@ class FileController extends Controller
         $columns = ['id', 'slug', 'title', 'filename'];
         $limit = 5;
 
-        return view('files.index')->with([
+        return view('main.files.index')->with([
             'categories' => $categoryList,
             'files' => [
                 'newest' => $baseQuery->latest()->take($limit)->get(),
@@ -70,7 +70,7 @@ class FileController extends Controller
         $files = $category->files()->latest()->paginate(20);
 
         // Render view
-        return view('files.category')->with([
+        return view('main.files.category')->with([
             'category' => $category,
             'files' => $files
         ]);
@@ -85,7 +85,7 @@ class FileController extends Controller
      */
     public function show(Request $request, File $file)
     {
-        return view('files.single')->with([
+        return view('main.files.single')->with([
             'file' => $file,
             'user' => $request->user()
         ]);
