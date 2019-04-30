@@ -9,6 +9,7 @@
         "cviebrock/eloquent-sluggable": "^4.6",
         "doctrine/dbal": "~2.3",
         "fideloper/proxy": "^4.0",
+        "giggsey/libphonenumber-for-php": "^8.10",
         "guzzlehttp/guzzle": "^6.3",
         "jgrossi/corcel": "^2.6",
         "laravel/framework": "~5.7.0",
