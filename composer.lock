@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2014d33f02a7725d4e182b24af085b94",
+    "content-hash": "f1c53509214c05dba9464c314a7b48bb",
     "packages": [
         {
             "name": "cakephp/chronos",
@@ -988,6 +988,106 @@
             ],
             "description": "Locale functions required by libphonenumber-for-php",
             "time": "2019-04-26T07:28:50+00:00"
+        },
+        {
+            "name": "gumbo-millennium/laravel-database-encryption",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gumbo-millennium/laravel-database-encryption.git",
+                "reference": "acd54c1fe18c53680ea6ad66c3828eb1a4fec2be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gumbo-millennium/laravel-database-encryption/zipball/acd54c1fe18c53680ea6ad66c3828eb1a4fec2be",
+                "reference": "acd54c1fe18c53680ea6ad66c3828eb1a4fec2be",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "5.5 - 5.8",
+                "php": "^7.1"
+            },
+            "conflict": {
+                "delatbabel/elocryptfive": "*",
+                "dtisgodsson/elocrypt": "*"
+            },
+            "replace": {
+                "delatbabel/elocryptfive": "*",
+                "dtisgodsson/elocrypt": "*"
+            },
+            "require-dev": {
+                "barryvdh/laravel-ide-helper": "^2.5",
+                "codeclimate/php-test-reporter": "dev-master",
+                "orchestra/testbench": "^3.5",
+                "phpunit/phpunit": "~6.0|~7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AustinHeap\\Database\\Encryption\\EncryptionServiceProvider"
+                    ],
+                    "aliases": {
+                        "DatabaseEncryption": "AustinHeap\\Database\\Encryption\\EncryptionFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AustinHeap\\Database\\Encryption\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Austin Heap",
+                    "email": "me@austinheap.com",
+                    "homepage": "https://github.com/austinheap",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package for automatically encrypting and decrypting Eloquent attributes in Laravel 5.5+, based on configuration settings.",
+            "homepage": "https://github.com/austinheap/laravel-database-encryption",
+            "keywords": [
+                "aes",
+                "attribute",
+                "attribute encryption",
+                "database",
+                "database encryption",
+                "db",
+                "decrypt",
+                "decryption",
+                "elocrypt",
+                "elocryptfive",
+                "eloquent",
+                "eloquent aes",
+                "eloquent encryption",
+                "encrypt",
+                "encryption",
+                "l5",
+                "laravel",
+                "laravel encryption",
+                "laravel5",
+                "laravel5 aes",
+                "laravel5 encryption",
+                "laravel55",
+                "laravel55 encryption",
+                "laravel56",
+                "laravel56 encryption",
+                "laravel57",
+                "laravel57 encryption",
+                "model",
+                "model encryption"
+            ],
+            "support": {
+                "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/master"
+            },
+            "time": "2019-04-30T10:04:35+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
