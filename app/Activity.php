@@ -1,21 +1,10 @@
 <?php
-declare(strict_types=1);
 
 namespace App;
 
-use App\Post;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Activities, organised by commissions authorized to do this.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
- */
-class Activity extends Post
+class Activity extends Model
 {
-    /**
-     * Only target events
-     * @var string
-     */
-    protected $postType = 'gumbo-activity';
+    //
 }
