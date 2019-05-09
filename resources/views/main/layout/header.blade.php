@@ -83,8 +83,8 @@ navbar--opaque
 
                     {{-- Menu --}}
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="{{ route('events.home') }}">Activiteiten</a>
-                        <a class="dropdown-item" href="{{ route('news.home') }}">Nieuws</a>
+                        <a class="dropdown-item" href="{{ route('activity.index') }}">Activiteiten</a>
+                        <a class="dropdown-item" href="{{ route('news.index') }}">Nieuws</a>
                     </div>
                 </li>
 
@@ -103,7 +103,7 @@ navbar--opaque
                 {{-- Render join button if NOT a member --}}
                 @unlessrole('member')
                 <li class="nav-item">
-                    <a class="nav-link nav-link--rounded" href="{{ route('join') }}">
+                    <a class="nav-link nav-link--rounded" href="{{ route('join.form') }}">
                         <span>Word lid</span>
                         <span class="far fa-thumbs-up"></span>
                     </a>
@@ -134,7 +134,7 @@ navbar--opaque
                 </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link nav-link--rounded" href="{{ route('join') }}">
+                    <a class="nav-link nav-link--rounded" href="{{ route('join.form') }}">
                         <span>Word lid</span>
                         <span class="far fa-thumbs-up"></span>
                     </a>

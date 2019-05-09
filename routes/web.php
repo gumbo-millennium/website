@@ -21,37 +21,118 @@ Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 Route::get('/news', 'NewsController@index');
 Route::get('/news/{slug}', 'NewsController@post');
 
-// Plazacam
+/**
+ * Plazacam routes
+ */
 Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
-// Files route
-Route::get('/files', 'FileController@index')
-    ->name('files.index')
-    ->middleware('can:browse,App\FileCategory');
-Route::get('/files/group/{category}', 'FileController@category')
-    ->name('files.category')
-    ->middleware('can:browse,category');
-Route::get('/files/view/{file}', 'FileController@show')
-    ->name('files.show')
-    ->middleware('can:view,file');
-Route::get('/files/download/{file}', 'FileController@download')
-    ->name('files.download')
-    ->middleware('can:download,file');
+/**
+ * Files route
+ */
+Route::prefix('files')->name('files.')->group(function () {
+    // Main route
+    Route::get('/', 'FileController@index')->name('index');
 
-// Activity (examples)
-Route::view('/events', 'events.index')->name('events.home');
-Route::view('/events/single', 'events.single')->name('events.show');
+    // Subcategory route
+    Route::get('/{category}', 'FileController@category')->name('category');
 
-// News (examples)
-Route::view('/news', 'news.index')->name('news.home');
-Route::view('/news/single', 'news.single')->name('news.show');
+    // Single file view
+    Route::get('/view/{file}', 'FileController@show')->name('show');
 
-// Join us
-Route::get('/join', 'JoinController@index')->name('join');
-Route::post('/join', 'JoinController@submit');
-Route::get('/join/welcome', 'JoinController@complete')->name('join.complete');
+    // Download view
+    Route::get('/download/{file}', 'FileController@download')->name('download');
+});
+
+/**
+ * Activities
+ */
+Route::prefix('activity')->name('activity.')->group(function () {
+    // USER ROUTES
+    // Main route
+    Route::get('/', 'ActivityController@index')->name('index');
+
+    // Single view
+    Route::get('/{activity}', 'ActivityController@show')->name('show');
+
+    // ADMIN ROUTES
+    Route::namespace('Admin\\')->group(function () {
+        // Edit activity
+        Route::get('/{activity}/edit', 'ActivityController@edit')->name('edit');
+        Route::put('/{activity}/edit', 'ActivityController@update');
+
+        // Cancel activity
+        Route::patch('{activity}/cancel', 'ActivityController@cancel')->name('cancel');
+
+        // Delete activity
+        Route::get('/{activity}/delete', 'ActivityController@remove')->name('delete');
+        Route::delete('/{activity}/delete', 'ActivityController@destroy');
+    });
+});
+
+/**
+ * Enrollments
+ */
+Route::prefix('enroll')->name('enroll.')->group(function () {
+    // Default route¸ redirect → my enrollments
+    Route::permanentRedirect('/', '/me');
+
+    // My enrollments
+    Route::get('/me', 'EnrollmentController@index')->name('index');
+
+    // Enroll status view
+    Route::post('/{activity}', 'EnrollmentController@status')->name('show');
+
+    // Enroll start
+    Route::post('/{activity}/create', 'EnrollmentController@create')->name('create');
+
+    // Enroll update
+    Route::get('/{activity}/update', 'EnrollmentController@edit')->name('edit');
+
+    // Enroll update
+    Route::post('/{activity}/update', 'EnrollmentController@update');
+
+    // Enroll payment (configure)
+    Route::get('/{activity}/payment', 'EnrollmentController@payment')->name('pay');
+
+    // Enroll payment (apply or update)
+    Route::post('/{activity}/payment', 'EnrollmentController@paymentStart');
+
+    // Enroll payment (completed)
+    Route::get('/{activity}/payment', 'EnrollmentController@paymentReturn')->name('pay-after');
+
+    // Enroll removal (confirm)
+    Route::get('/{activity}/delete', 'EnrollmentController@unenroll')->name('delete');
+
+    // Enroll removal (perform)
+    Route::delete('/{activity}/delete', 'EnrollmentController@destroy');
+});
+
+/**
+ * News (through WordPress posts)
+ */
+Route::prefix('news')->name('news.')->group(function () {
+    // Main route
+    Route::get('/', 'NewsController@index')->name('index');
+
+    // Single view
+    Route::get('/{news}', 'NewsController@show')->name('show');
+});
+
+/**
+ * Join controller
+ */
+Route::prefix('join')->name('join.')->group(function () {
+    // Join form
+    Route::get('/', 'JoinController@create')->name('form');
+
+    // Submit button
+    Route::post('/send', 'JoinController@submit')->name('submit');
+
+    // Post-join
+    Route::get('/welcome', 'JoinController@complete')->name('complete');
+});
 
 // Authentication and forgotten passwords
 Route::prefix('auth')->group(function () {
