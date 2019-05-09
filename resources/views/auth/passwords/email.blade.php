@@ -1,4 +1,4 @@
-@extends('layout.auth')
+@extends('main.layout.auth')
 
 {{-- Change page title --}}
 @section('title')

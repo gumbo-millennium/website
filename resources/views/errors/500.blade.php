@@ -1,9 +1,7 @@
-@extends('layout.default')
+@extends('main.layout.default')
 
 @section('content')
-<div
-    class="hero hero--large hero--with-cover"
-    >
+<div class="hero hero--large hero--with-cover">
     <div class="hero__container">
         <h3 class="hero__header">Oooeps!</h3>
         <p class="hero__lead">Ai, hier is iets heel erg fout gegaan.</p>
