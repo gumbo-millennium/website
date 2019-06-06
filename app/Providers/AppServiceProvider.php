@@ -3,13 +3,14 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use Laravel\Horizon\Horizon;
-use App\File;
+use App\Models\File;
 use App\Observers\FileObserver;
-use App\User;
+use App\Models\User;
 use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register nav menu as $menu on all requests
         $this->app->singleton(MenuProvider::class, function () {
-            return new MenuProvider;
+            return new MenuProvider();
         });
 
         // Handle Horizon auth
@@ -34,6 +35,15 @@ class AppServiceProvider extends ServiceProvider
         // Handle File and User changes
         File::observe(FileObserver::class);
         User::observe(UserObserver::class);
+
+        // Create method to render SVG icons
+        Blade::directive('icon', function ($icon, $className) {
+            return (
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
+                "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
+                "</svg>"
+            );
+        });
     }
 
     /**

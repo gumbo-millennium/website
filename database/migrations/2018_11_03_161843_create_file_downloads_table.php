@@ -29,10 +29,10 @@ class CreateFileDownloadsTable extends Migration
                 ->nullable()
                 ->comment('IP address of download');
 
+            // Add search index
             $table->index(['user_id', 'file_id']);
-        });
 
-        Schema::table('file_downloads', function (Blueprint $table) {
+            // Add foreign keys
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onDelete('set null');

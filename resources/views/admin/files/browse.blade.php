@@ -44,7 +44,7 @@
         <tfoot>
             <tr>
                 <td colspan="2">
-                    @can('create', App\File::class)
+                    @can('create', App\Models\File::class)
                     <a href="#" data-upload-action="open" data-target="upload-form">
                         <i class="fas fa-fw fa-plus" aria-label="Plus symbol"></i>
                         @lang('files.actions.upload')
@@ -71,7 +71,7 @@
 {{-- Description of states --}}
 <h4 class="h3">@lang('files.headers.state-desc')</h4>
 <dl class="row">
-    @foreach (App\File::STATES as $state => $label)
+    @foreach (App\Models\File::STATES as $state => $label)
     <dt class="col-sm-3">{{ __("files.state.{$label}") }}</dt>
     <dd class="col-sm-9">{{ __("files.state-desc.{$label}") }}</dd>
     @endforeach

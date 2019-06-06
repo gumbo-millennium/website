@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JoinRequest;
 use App\Mail\NewAccountMail;
-use App\Page;
-use App\User;
+use App\Models\Page;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Auth\Events\Registered;
@@ -60,7 +60,7 @@ class JoinController extends Controller
     public function index(Request $request)
     {
         // Show form
-        return view('join.index')->with([
+        return view('main.join.index')->with([
             'page' => Page::slug('join')->first(),
             'user' => $request->user()
         ]);
@@ -98,7 +98,7 @@ class JoinController extends Controller
     public function complete(Request $request)
     {
         $thanksPage = Page::slug('join-complete')->first();
-        $viewName = $thanksPage ? 'wordpress.page' : 'join.complete';
+        $viewName = $thanksPage ? 'main.wordpress.page' : 'main.join.complete';
 
         return view($viewName, [
             'page' => $thanksPage,

@@ -199,27 +199,25 @@ class PermissionSeeder extends Seeder
 
         // Create or update each role and sync permissions
         foreach ($this->roles as list($name, $title, $permissions)) {
+            // Get permissions as an array
+            $permissions = array_wrap($permissions);
+
+            // Get role object
             $roleObject = Role::updateOrCreate(
                 ['name' => $name],
                 ['title' => $title]
             );
 
-            // if permissions is 'all', assign all permissions
-            if (is_string($permissions) && $permissions === 'all') {
-                $rolePermissionObjects = Permission::all();
-            } else {
-                // Find all permissions for this object
-                $rolePermissionObjects = collect();
-                foreach ($permissions as $perm) {
-                    // Only add permissions that actually exist
-                    if ($permissionObjects->has($perm)) {
-                        $rolePermissionObjects->push($permissionObjects->get($perm));
-                    }
-                }
+            // Get allowed permissions
+            $rolePermissions = $permissionObjects->whereIn('name', array_wrap($permissions));
+
+            // Check if permisions are 'all', and add all
+            if ($permissions[0] === 'all') {
+                $rolePermissions = $permissionObjects->all();
             }
 
             // Sync all permissions, removing non-listed
-            $roleObject->syncPermissions($rolePermissionObjects);
+            $roleObject->syncPermissions($rolePermissions);
 
             // Store role object in list
             $roleObjects->put($name, $roleObject);

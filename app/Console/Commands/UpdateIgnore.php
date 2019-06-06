@@ -104,12 +104,12 @@ IGNORE;
 
         file_put_contents($ignoreFile, $ignoreContent);
 
-        if (md5_file($ignoreFile) == md5($ignoreContent)) {
+        if (md5_file($ignoreFile) === md5($ignoreContent)) {
             $this->info('Updated ok!');
             return true;
-        } else {
-            $this->warn('Failed to update, hashes don\'t match');
-            return false;
         }
+
+        $this->warn('Failed to update, hashes don\'t match');
+        return false;
     }
 }

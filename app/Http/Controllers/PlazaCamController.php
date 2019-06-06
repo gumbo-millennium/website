@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -150,7 +150,7 @@ class PlazaCamController extends Controller
 
         // Throw 404 if the image is unavailable
         if (!Storage::exists($image)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         // Get expiration

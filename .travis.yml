@@ -4,6 +4,7 @@ language: php
 
 # Run on PHP 7.2 and the nightly
 php:
+  - 7.3
   - 7.2
   - nightly
 
@@ -11,9 +12,14 @@ php:
 git:
   submodules: false
 
+# Add environment variables
+env:
+  - DB_HOST=127.0.0.1 DB_PORT=3306
+
 # We need MySQL, but only so MariaDB can replace it below
 services:
   - mysql
+  - redis-server
 
 # Cache yarn
 cache:
@@ -44,6 +50,13 @@ before_install:
   - sed -i 's/git@github.com:/git:\/\/github.com\//g' .gitmodules
   - git submodule update --init
 
+  # Install CodeClimate test coverage
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+  # Report tests are starting
+  - ./cc-test-reporter before-build
+
 install:
   # Download composer assets
   - composer install --no-progress --no-suggest -an
@@ -67,11 +80,16 @@ script:
   # Build front-end assets
   - yarn build
 
-  # Run tests
-  - vendor/bin/phpunit
-
-  # Run migrations as a test
+  # Run migrations
   - php artisan migrate:fresh
+
+  # Run tests
+  - vendor/bin/phpunit --coverage-clover ./coverage-clover.xml
+
+after_script:
+  # Send CI result code
+  - ./cc-test-reporter format-coverage -t clover ./coverage-clover.xml
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 matrix:
   fast_finish: true

@@ -17,12 +17,12 @@ trait RunsCliCommands
      * Tries to run the given command
      *
      * @param array $command Command to run
-     * @param string $stdout
-     * @param string $stderr
-     * @param int $timeout
+     * @param string|null $stdout
+     * @param string|null $stderr
+     * @param int|null $timeout
      * @return int|null Exit code, or null if non-runnable
      */
-    protected function runCliCommand(array $command, &$stdout, &$stderr, int $timeout = null) : ? int
+    protected function runCliCommand(array $command, &$stdout = null, &$stderr = null, int $timeout = null) : ? int
     {
         // Make sure the command we want to run exists
         $testProc = new Process(['which' => $command[0]]);
@@ -41,16 +41,16 @@ trait RunsCliCommands
         printf("Starting command [%s]\n", $process->getCommandLine());
 
         $process->run(function ($type, $buffer) {
-            if ($type === Process::ERR) {
-                echo "[ERR] {$buffer}";
-            } else {
-                echo "[OUT] {$buffer}";
-            }
+            printf('[%s] %s', $type === Process::ERR ? 'ERR' : 'OUT', $buffer);
         });
 
-        // Assign outputs
-        $stdout = $process->getOutput();
-        $stderr = $process->getErrorOutput();
+        // Assign outputs, if present
+        if ($stdout) {
+            $stdout = $process->getOutput();
+        }
+        if ($stderr) {
+            $stderr = $process->getErrorOutput();
+        }
 
         // Return exit code
         return $process->getExitCode();

@@ -9,6 +9,8 @@
         "cviebrock/eloquent-sluggable": "^4.6",
         "doctrine/dbal": "~2.3",
         "fideloper/proxy": "^4.0",
+        "giggsey/libphonenumber-for-php": "^8.10",
+        "gumbo-millennium/laravel-database-encryption": "^0.3.0",
         "guzzlehttp/guzzle": "^6.3",
         "jgrossi/corcel": "^2.6",
         "laravel/framework": "~5.7.0",
@@ -31,6 +33,7 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^2.0",
+        "phpmd/phpmd": "^2.6",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "^3.3"
     },
@@ -109,6 +112,13 @@
         "server": [
           "@php artisan telescope:publish",
           "@php artisan horizon:assets"
+        ],
+        "lint": [
+          "phpcs",
+          "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
+        ],
+        "test": [
+          "phpunit"
         ]
     },
     "config": {
@@ -120,5 +130,11 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
+      }
+    ]
 }

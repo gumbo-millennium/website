@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\User;
+use App\Models\User;
 use function Opis\Closure\serialize;
 use App\Jobs\UpdateWordPressUserJob;
 

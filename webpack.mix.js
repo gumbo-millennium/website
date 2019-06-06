@@ -1,7 +1,13 @@
+/**
+ * Webpack config, using Laravel Mix
+ */
+
+// node_modules dependencies
 const mix = require('laravel-mix')
 const glob = require('glob')
-const StyleLintPlugin = require('stylelint-webpack-plugin')
-const PurgecssPlugin = require('purgecss-webpack-plugin')
+
+// Local dependencies
+const { plugins: gumboPlugins, loaders: gumboLoaders } = require('./webpack.plugins')
 
 // Make sure we version stuff
 mix.version()
@@ -18,6 +24,7 @@ mix.extract([
   'gmaps',
   'jquery',
   'mobile-detect',
+  'moment',
   'pikaday',
   'popper.js'
 ])
@@ -35,6 +42,9 @@ mix.autoload({
 // Copy all SVG files
 mix.copyDirectory('resources/assets/svg', 'public/svg')
 
+// Register browsersync
+mix.browserSync('127.13.37.1')
+
 // Add source maps if not in production
 if (!mix.inProduction()) {
   mix.sourceMaps()
@@ -43,32 +53,7 @@ if (!mix.inProduction()) {
 // Linters
 mix.webpackConfig({
   module: {
-    rules: [
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          cache: true
-        }
-      }
-    ]
+    rules: gumboLoaders
   },
-  plugins: [
-    // new webpack.DefinePlugin({
-    //   jquery: ['jQuery']
-    // }),
-    new StyleLintPlugin({
-      files: [
-        'resources/assets/sass/**/*.s?(a|c)ss'
-      ]
-    }),
-    new PurgecssPlugin({
-      paths: () => [].concat(
-        glob.sync(`${__dirname}/resources/views/*.blade.php`),
-        glob.sync(`${__dirname}/resources/views/**/*.blade.php`)
-      )
-    })
-  ]
+  plugins: gumboPlugins
 })

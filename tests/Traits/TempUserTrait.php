@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Traits;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 /**

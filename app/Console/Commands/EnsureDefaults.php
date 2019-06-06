@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\File;
-use App\FileCategory;
+use App\Models\File;
+use App\Models\FileCategory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\UpdateWordPressTokenJob;
@@ -141,6 +141,6 @@ class EnsureDefaults extends Command
      */
     protected function handleWpAuth() : void
     {
-        dispatch(new UpdateWordPressTokenJob);
+        dispatch(new UpdateWordPressTokenJob());
     }
 }

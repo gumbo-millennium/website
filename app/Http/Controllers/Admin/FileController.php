@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\File;
-use App\FileCategory;
+use App\Models\File;
+use App\Models\FileCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NewFileRequest;
 use App\Jobs\FileProcessingJob;
@@ -286,7 +286,7 @@ class FileController extends Controller
 
         // Report 404 if not public
         if ($file->broken || !Storage::exists($filePath)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return Storage::download($filePath, $fileName);

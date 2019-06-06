@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -26,7 +26,7 @@ class NewsController extends Controller
         $allPosts = Post::published()->paginate(15);
 
         // Return the view with all posts
-        return view('news.list')->with([
+        return view('main.news.list')->with([
             'posts' => $allPosts
         ]);
     }
@@ -40,7 +40,7 @@ class NewsController extends Controller
      */
     public function post(Request $request, Post $post)
     {
-        return view('news.single')->with([
+        return view('main.news.single')->with([
             'post' => $post
         ]);
     }

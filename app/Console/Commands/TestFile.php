@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileThumbnailJob;
-use App\Jobs\FileRepairJob;
 use Illuminate\Console\Command;
 
 class TestFile extends Command
@@ -36,9 +35,6 @@ class TestFile extends Command
         $file = File::findOrFail($this->argument('file'));
 
         // Fire job
-        $this->line('File repair job');
-        (new FileRepairJob($file))->handle();
-
         $this->line('File meta job');
         (new FileMetaJob($file))->handle();
 

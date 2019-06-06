@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Corcel\Model\Menu as CorcelMenu;
-use App\Menu;
+use App\Models\Menu;
 use Corcel\Model\Option;
 use Illuminate\Support\Facades\Cache;
 

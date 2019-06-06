@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\DeleteUserJob;
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -167,7 +167,7 @@ END;
         );
 
         if ($this->confirm($prompt)) {
-
+            // TODO send email
         }
     }
 }

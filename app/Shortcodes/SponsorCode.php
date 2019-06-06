@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Shortcodes;
 
-use App\Sponsor;
+use App\Models\Sponsor;
 use Corcel\Shortcode;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 

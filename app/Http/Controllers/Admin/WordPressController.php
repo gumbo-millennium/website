@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use App\CorcelUser;
+use App\Models\User;
+use App\Models\CorcelUser;
 use Corcel\Model\Attachment as CorcelMedia;
 use Corcel\Model\Option as CorcelOption;
-use App\Page as CorcelPage;
+use App\Models\Page as CorcelPage;
 use Corcel\Model\Post as CorcelPost;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

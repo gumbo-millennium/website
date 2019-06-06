@@ -112,7 +112,7 @@ class CreateEnvCommand extends Command
             $content = $this->constructEnv($sourceFile, $config);
             $this->line('<info>Environment constructed</>');
 
-            $ok = $this->writeEnvFile($envFile, $content);
+            $this->writeEnvFile($envFile, $content);
             $this->line('<info>Environment written to .env</>');
         }
 

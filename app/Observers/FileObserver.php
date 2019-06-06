@@ -2,10 +2,8 @@
 
 namespace App\Observers;
 
-use App\File;
-use App\Jobs\FileArchiveJob;
+use App\Models\File;
 use App\Jobs\FileMetaJob;
-use App\Jobs\FileRepairJob;
 use App\Jobs\FileThumbnailJob;
 
 class FileObserver
@@ -19,10 +17,8 @@ class FileObserver
     public function created(File $file)
     {
         // Queue file meta job, since there's a new file available.
-        // The jobs repair the file, then convert it to a PDF/A-3 if possible
-        // and then create metadata and thumbnails.
-        FileRepairJob::withChain([
-            new FileMetaJob($file),
+        // The jobs fetch the file meta and generate a thumbnail.
+        FileMetaJob::withChain([
             new FileThumbnailJob($file)
         ])->dispatch($file);
     }

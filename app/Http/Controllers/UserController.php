@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.index', [
+        return view('main.user.index', [
             'user' => auth()->user()
         ]);
     }
@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
-        return view('user.info', [
+        return view('main.user.info', [
             'user' => $request->user()
         ]);
     }
@@ -83,7 +83,7 @@ class UserController extends Controller
      */
     public function remove(User $user)
     {
-        return view('user.remove', [
+        return view('main.user.remove', [
             'user' => auth()->user()
         ]);
     }

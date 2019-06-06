@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\File;
-use App\FileCategory;
+use App\Models\File;
+use App\Models\FileCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

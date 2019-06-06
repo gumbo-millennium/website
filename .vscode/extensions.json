@@ -1,10 +1,12 @@
 {
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "bmewburn.vscode-intelephense-client",
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
+    "felixfbecker.php-intellisense",
     "ikappas.phpcs",
+    "linyang95.phpmd",
+    "mikestead.dotenv",
     "neilbrayfield.php-docblocker",
     "onecentlin.laravel-blade",
     "shinnn.stylelint",
@@ -13,6 +15,7 @@
   "unwantedRecommendations": [
     "dbaeumer.jshint",
     "eg2.tslint",
-    "ms-mssql.mssql"
+    "ms-mssql.mssql",
+    "bmewburn.vscode-intelephense-client",
   ]
 }

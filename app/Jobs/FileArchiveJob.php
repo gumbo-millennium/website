@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\Concerns\ReplacesStoredFiles;
 use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
@@ -53,7 +53,7 @@ class FileArchiveJob extends FileJob
      *
      * @return void|boolean
      */
-    public function handle()
+    public function handle() : void
     {
         // Ignore if Windows
         if (!in_array(PHP_OS_FAMILY, ['Linux', 'Darwin'])) {
@@ -84,7 +84,7 @@ class FileArchiveJob extends FileJob
                 '-sPDFACompatibilityPolicy=1',
                 "-sOutputFile={$archiveFile}",
                 $pdfFile
-            ], $out, $err, $this->timeout * .8);
+            ], null, null, $this->timeout * .8);
 
             // If the exit code is non-zero, log it and exit.
             if ($exitCode !== 0) {

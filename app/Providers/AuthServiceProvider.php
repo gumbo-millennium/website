@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\File;
-use App\FileCategory;
+use App\Models\File;
+use App\Models\FileCategory;
 use App\Policies\FileCategoryPolicy;
 use App\Policies\FilePolicy;
 use Illuminate\Support\Facades\Gate;

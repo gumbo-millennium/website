@@ -4,18 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use App\FileCategory;
-use App\File;
+use App\Models\FileCategory;
+use App\Models\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Handles file index, file viewing and file downloads
+ * Handles the user aspect of files.
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
 class FileController extends Controller
 {
+    /**
+     * Makes sure the user is allowed to handle files.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // Make sure only users that can view files use these routes.
+        $this->authorize('view', File::class);
+    }
     /**
      * Homepage
      *
@@ -47,7 +57,7 @@ class FileController extends Controller
         $columns = ['id', 'slug', 'title', 'filename'];
         $limit = 5;
 
-        return view('files.index')->with([
+        return view('main.files.index')->with([
             'categories' => $categoryList,
             'files' => [
                 'newest' => $baseQuery->latest()->take($limit)->get(),
@@ -70,7 +80,7 @@ class FileController extends Controller
         $files = $category->files()->latest()->paginate(20);
 
         // Render view
-        return view('files.category')->with([
+        return view('main.files.category')->with([
             'category' => $category,
             'files' => $files
         ]);
@@ -85,7 +95,7 @@ class FileController extends Controller
      */
     public function show(Request $request, File $file)
     {
-        return view('files.single')->with([
+        return view('main.files.single')->with([
             'file' => $file,
             'user' => $request->user()
         ]);
@@ -105,12 +115,12 @@ class FileController extends Controller
 
         // Report 404 if not public
         if ($file->public || $file->broken) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         // Abort if file is missing
         if (!Storage::exists($filePath)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return Storage::download($filePath, $fileName);
