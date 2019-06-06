@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Traits\HasParent;
 
 /**
  * A file category, containing files
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class FileCategory extends SluggableModel
 {
+    use HasParent;
+
     /**
      * Find the default category
      *
@@ -28,19 +31,6 @@ class FileCategory extends SluggableModel
         return static::firstOrCreate(['default' => true], [
             'title' => 'Overig'
         ]);
-    }
-
-    /**
-     * Find the default category or throw an exception.
-     *
-     * @param array $columns
-     * @return Model|Collection
-     * @throws ModelNotFoundException
-     * @deprecated findDefault creates category on the fly if missing
-     */
-    public static function findDefaultOrFail(array $columns = ['*'])
-    {
-        return static::findDefault();
     }
 
     /**

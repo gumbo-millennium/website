@@ -17,6 +17,8 @@ use App\Traits\HasParent;
  */
 class File extends SluggableModel
 {
+    use HasParent;
+
     /**
      * Storage directory of files
      */
@@ -294,7 +296,7 @@ class File extends SluggableModel
      * @param bool $public
      * @return Builder
      */
-    public function scopePublic(Builder $builder, boolean $public = null)
+    public function scopePublic(Builder $builder, bool $public = null)
     {
         return $builder->where('public', '=', $public === false ? '0' : '1');
     }
