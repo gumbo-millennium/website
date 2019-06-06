@@ -6,19 +6,10 @@ $user = auth()->user();
         @auth
         {{-- Show the user's name --}}
         <li class="nav-item userbar__nav-item userbar__nav-item--user">
-            <div class="nav-link">
+            <div class="nav-link userbar__nav-link--user">
                 Hallo {{ $user->name }}
             </div>
         </li>
-
-        {{-- Render join button if NOT a member --}}
-        @unlessrole('member')
-        <li class="nav-item userbar__nav-item">
-            <a class="nav-link userbar__nav-link userbar__list-link--join" href="{{ route('join.form') }}">
-                Word lid
-            </a>
-        </li>
-        @endunlessrole
 
         {{-- Render admin link if allowed --}}
         @can('admin')
@@ -37,11 +28,6 @@ $user = auth()->user();
         </li>
         @else
         <li class="nav-item userbar__nav-item">
-            <a class="nav-link userbar__nav-link userbar__nav-link--join" href="{{ route('join.form') }}">
-                Word lid
-            </a>
-        </li>
-        <li class="nav-item userbar__nav-item">
             <a class="nav-link userbar__nav-link" href="{{ route('login') }}">
                 Registreren
             </a>
@@ -52,5 +38,16 @@ $user = auth()->user();
             </a>
         </li>
         @endauth
+
+        {{-- Render join button if not logged in or not a member --}}
+        @unlessrole('member')
+        <li class="nav-item userbar__nav-item">
+            <a class="nav-link userbar__nav-link userbar__nav-link--join" href="{{ route('join.form') }}">
+                Word lid
+            </a>
+        </li>
+        @endunlessrole
+
+
     </ul>
 </div>

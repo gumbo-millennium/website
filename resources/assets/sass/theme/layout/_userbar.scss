@@ -58,6 +58,14 @@
         background-color: rgba(theme-color-level('brand', -4), 0.2);
       }
     }
+
+    &--user {
+      color: theme-color-level('brand', -8);
+
+      @include hover-focus {
+        color: theme-color-level('brand', -8);
+      }
+    }
   }
 
   &__nav-text {

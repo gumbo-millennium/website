@@ -1,4 +1,6 @@
-
+@php
+$user = auth()->user();
+@endphp
 {{-- Class names --}}
 @push('navbar-classes')
 navbar navbar-expand-lg navbar-dark
