@@ -9,13 +9,23 @@ use App\Models\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Handles file index, file viewing and file downloads
+ * Handles the user aspect of files.
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
 class FileController extends Controller
 {
+    /**
+     * Makes sure the user is allowed to handle files.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // Make sure only users that can view files use these routes.
+        $this->authorize('view', File::class);
+    }
     /**
      * Homepage
      *
