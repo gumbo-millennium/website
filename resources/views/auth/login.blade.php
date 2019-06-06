@@ -14,6 +14,24 @@ Inloggen - Gumbo Millennium
 </div>
 @endpush
 
+@if (file_exists('/.dockerenv'))
+@php
+$possibleUsers = App\Models\User::query()
+    ->where('email', 'like', '%@example.com')
+    ->orderBy('email', 'ASC')
+    ->pluck('email');
+@endphp
+@push('auth.alert')
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-title">Test credentials</h4>
+    Docker supplies the following users with password <code>Gumbo</code>:<br />
+    @foreach ($possibleUsers as $email)
+    - <code>{{ $email }}</code><br />
+    @endforeach
+</Div>
+@endpush
+@endif
+
 
 @section('content')
 {{-- Login text --}}
