@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'last_name',
         'email',
         'password',
+        'alias',
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     protected $attributes = [
         'insert' => null,
+        'alias' => null,
     ];
 
     /**
