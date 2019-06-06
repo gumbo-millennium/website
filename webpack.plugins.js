@@ -3,6 +3,7 @@
  */
 const mix = require('laravel-mix')
 const glob = require('glob')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const imageminMozjpeg = require('imagemin-mozjpeg')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
@@ -16,6 +17,14 @@ const SvgSpritemapPlugin = require('svg-spritemap-webpack-plugin')
 const loaders = []
 const plugins = []
 
+/**
+ * Always use caching plugin
+ */
+plugins.push(new HardSourceWebpackPlugin())
+
+/**
+ * Load ESLint
+ */
 loaders.push({
   enforce: 'pre',
   test: /\.js$/,
