@@ -59,6 +59,9 @@ class PermissionSeeder extends Seeder
         ['user-role', 'Gebruikersrollen bewerken'],
         ['user-role-admin', 'Gebruikersrollen bewerken (admin)'],
 
+        // Manage enrollments
+        ['join-manage', 'Lidmaatschaps aanmeldingen beheren'],
+
         // Create event user permissions
         ['event-view', 'Evenementen bekijken'],
         ['event-buy', 'Tickets voor evenementen kopen'],
