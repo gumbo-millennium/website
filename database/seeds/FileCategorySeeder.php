@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\FileCategory;
+use App\Models\FileCategory;
 
 /**
  * Generates a default category for the files to be placed in.

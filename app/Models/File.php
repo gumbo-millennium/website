@@ -1,12 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\FileCategory;
-use App\User;
+use App\Models\FileCategory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Illuminate\Database\Eloquent\Builder;
+use App\Traits\HasParent;
 
 /**
  * A user-uploaded file

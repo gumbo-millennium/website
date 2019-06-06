@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\FileRequest;
-use App\User;
+use App\Models\User;
 
 /**
  * A new file, which also checks the uploaded mime

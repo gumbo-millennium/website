@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\FileArchiveJob;
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileRepairJob;

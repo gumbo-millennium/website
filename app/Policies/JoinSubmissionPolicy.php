@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\JoinSubmission;
+use App\Models\User;
+use App\Models\JoinSubmission;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class JoinSubmissionPolicy

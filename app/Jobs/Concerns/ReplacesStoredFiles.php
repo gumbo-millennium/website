@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Concerns;
 
-use App\File;
+use App\Models\File;
 use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
 

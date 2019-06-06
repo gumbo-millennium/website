@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App;
+namespace App\Models;
 
 use Corcel\Model\Post as CorcelPost;
 use App\Concerns\PostContentTrait;

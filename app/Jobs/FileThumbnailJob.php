@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
 use Illuminate\Bus\Queueable;

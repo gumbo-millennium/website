@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use App\FileCategory;
-use App\File;
+use App\Models\FileCategory;
+use App\Models\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

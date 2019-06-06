@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Form;
-use App\Page;
+use App\Models\Page;
 use Corcel\Model\Post;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\View;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use Laravel\Horizon\Horizon;
-use App\File;
+use App\Models\File;
 use App\Observers\FileObserver;
-use App\User;
+use App\Models\User;
 use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider

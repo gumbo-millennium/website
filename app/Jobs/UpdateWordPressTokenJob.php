@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Option;
+use App\Models\Option;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

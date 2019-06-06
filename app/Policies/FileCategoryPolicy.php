@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\FileCategory;
+use App\Models\User;
+use App\Models\FileCategory;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**

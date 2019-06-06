@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileThumbnailJob;
 use App\Jobs\FileRepairJob;

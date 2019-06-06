@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Corcel\Model\User as OriginalCorcelUser;
 use Illuminate\Database\Eloquent\Model;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;

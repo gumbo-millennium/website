@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JoinRequest;
 use App\Mail\NewAccountMail;
-use App\Page;
-use App\User;
+use App\Models\Page;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Auth\Events\Registered;

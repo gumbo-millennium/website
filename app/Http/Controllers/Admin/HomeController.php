@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
-use App\File;
+use App\Models\User;
+use App\Models\File;
 use App\JoinRequest;
 
 /**

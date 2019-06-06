@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\FileDownload;
+use App\Models\FileDownload;
 
 /**
  * Removes IP addresses from downloads more than 90 days ago

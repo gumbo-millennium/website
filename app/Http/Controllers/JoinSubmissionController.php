@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\JoinSubmission;
+use App\Models\JoinSubmission;
 use Illuminate\Http\Request;
 use App\Http\Requests\JoinSubmitRequest;
 use libphonenumber\PhoneNumber;

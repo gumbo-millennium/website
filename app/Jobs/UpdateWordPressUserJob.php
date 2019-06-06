@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\CorcelUser;
-use App\User;
+use App\Models\CorcelUser;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

@@ -58,7 +58,7 @@
                 @endif
 
                 {{-- download file link --}}
-                {{-- @if (!$file->hasState(\App\File::STATE_PDFA))
+                {{-- @if (!$file->hasState(\App\Models\File::STATE_PDFA))
                 <a href="{{ route('admin.files.pdfa', ['file' => $file]) }}" class="dropdown-item" title="omzetten naar PDF/A">
                     <i class="fas fa-box fa-fw"></i>
                     omzetten naar PDF/A

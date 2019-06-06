@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use App\FileCategory;
+use App\Models\FileCategory;
 
 /**
  * Element has a parent

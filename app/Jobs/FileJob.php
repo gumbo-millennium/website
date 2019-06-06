@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Jobs;
 
-use App\File;
+use App\Models\File;
 use App\Jobs\Concerns\ReplacesStoredFiles;
 use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
