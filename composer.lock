@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44b51729c332241d9280d564786167c1",
+    "content-hash": "c6b079c7c2f4e9b4725e301f603e090d",
     "packages": [
         {
             "name": "cakephp/chronos",
@@ -1696,6 +1696,76 @@
             "time": "2018-11-01T14:03:51+00:00"
         },
         {
+            "name": "laravel/nova",
+            "version": "v2.0.6",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:laravel/nova.git",
+                "reference": "2803cb3cce6290f65949b96f0ef0503f7af56d79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-2803cb3cce6290f65949b96f0ef0503f7af56d79-zip-c75772.zip",
+                "reference": "2803cb3cce6290f65949b96f0ef0503f7af56d79",
+                "shasum": "6522e4e54e9a2ac4e39e3ad291a1db3697f7ad40"
+            },
+            "require": {
+                "cakephp/chronos": "^1.0",
+                "doctrine/dbal": "^2.9",
+                "illuminate/support": "^5.7.15 | 5.8.*",
+                "moontoast/math": "^1.1",
+                "php": ">=7.1.0",
+                "spatie/once": "^1.1",
+                "symfony/finder": "^4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/database": "3.7.* | 3.8.*",
+                "orchestra/testbench": "3.7.* | 3.8.*",
+                "phpunit/phpunit": "^7.0 | ^8.0",
+                "predis/predis": "^1.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Nova\\NovaCoreServiceProvider"
+                    ],
+                    "aliases": {
+                        "Nova": "Laravel\\Nova\\Nova"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Nova\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Laravel\\Nova\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "A wonderful administration interface for Laravel.",
+            "keywords": [
+                "admin",
+                "laravel"
+            ],
+            "time": "2019-06-10T17:21:49+00:00"
+        },
+        {
             "name": "laravel/telescope",
             "version": "v2.0.5",
             "source": {
@@ -2990,6 +3060,59 @@
                 "spatie"
             ],
             "time": "2019-04-09T12:45:17+00:00"
+        },
+        {
+            "name": "spatie/once",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/once.git",
+                "reference": "26b52e4571882c526d0bc017f354d997d263a98e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/once/zipball/26b52e4571882c526d0bc017f354d997d263a98e",
+                "reference": "26b52e4571882c526d0bc017f354d997d263a98e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "illuminate/support": "~5.3.0",
+                "phpunit/phpunit": "5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Once\\": "src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A magic memoization function",
+            "homepage": "https://github.com/spatie/once",
+            "keywords": [
+                "cache",
+                "callable",
+                "memozation",
+                "once",
+                "spatie"
+            ],
+            "time": "2017-08-24T21:16:25+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
