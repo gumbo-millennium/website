@@ -103,58 +103,6 @@ class FileMetaJob extends FileJob
     }
 
     /**
-     * Uses exiftool to hide sensitive metadata
-     *
-     * @param string $filePath
-     * @return void
-     */
-    protected function scrubPdfMeta(string $filePath) : void
-    {
-        // Get name of the owner
-        $ownerName = optional($this->file->owner)->pdf_name ?? config('app.name');
-
-        // Get the name of the system
-        $systemName = sprintf(
-            '%s - %s',
-            config('app.name'),
-            trans('files.title') !== 'files.title' ? trans('files.title') : 'File System'
-        );
-
-        // Run filter command, which removes some sensitive data from
-        // the file. SEE /PRIVACY.md
-        $removeList = [
-            'PDF:Author' => $ownerName,
-            'PDF:Creator' => $ownerName,
-            'PDF:Producer' => $systemName,
-            ''
-        ];
-
-        // Build command. The structure is [exittool + commands] + [fields] + [filename].
-        $command = array_merge([
-            'exiftool',
-            '-overwrite_original', // Don't create file_original
-            '-preserve', // Don't alter timestamps
-            $filePath
-        ], collect($removeList)->map(function ($value) {
-            return sprintf('-%s=%s', $value[0], escapeshellarg($value[1]));
-        }));
-
-        // Run remove command
-        $ok = $this->runCliCommand($command, $stdout, $stderr);
-
-        // Only log if reducing data failed
-        if ($ok) {
-            return;
-        }
-
-        logger()->notice('Failed to remove metadata from [{filename}].', [
-            'filename' => $this->file->filename,
-            'file' => $this->file,
-            'output' => $stdout . PHP_EOL . $stderr,
-        ]);
-    }
-
-    /**
      * Retrieves metadata from listed file using exiftool and
      * saves it to the file.
      *
@@ -178,7 +126,7 @@ class FileMetaJob extends FileJob
             '-a',
             '-G1',
             '-json'
-        ], $requestList, [
+        ], $requestList->toArray(), [
             $filePath
         ]);
 
