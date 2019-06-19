@@ -69,6 +69,7 @@ class PermissionSeeder extends Seeder
         ['event-buy-private', 'Tickets voor evenementen kopen (privé)'],
 
         // Generic permissions
+        ['payment-admin', 'Inzage in transacties'],
         ['admin', 'Toegang tot admin panel'],
         ['devops', 'Toegang tot ops administratie'],
     ];
@@ -172,6 +173,9 @@ class PermissionSeeder extends Seeder
 
             // Allow plazacam management
             'plazacam-edit',
+
+            // Allow payment monitoring
+            'payment-admin',
         ]],
 
         // Digital committee
