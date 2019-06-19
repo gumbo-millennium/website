@@ -6,11 +6,16 @@
 const mix = require('laravel-mix')
 const glob = require('glob')
 
+// Load versionhash fix (uses filenames instead of ?id=xxx)
+require('laravel-mix-versionhash')
+
 // Local dependencies
 const { plugins: gumboPlugins, loaders: gumboLoaders } = require('./webpack.plugins')
 
-// Make sure we version stuff
-mix.version()
+// Make sure we version stuff using filename-based hashes
+if (mix.inProduction()) {
+  mix.versionHash()
+}
 
 // Configure javascript
 mix

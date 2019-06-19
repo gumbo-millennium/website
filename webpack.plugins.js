@@ -9,6 +9,7 @@ const imageminMozjpeg = require('imagemin-mozjpeg')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const SvgSpritemapPlugin = require('svg-spritemap-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 /**
  * Configuration of plugins for Webpack
@@ -18,9 +19,19 @@ const loaders = []
 const plugins = []
 
 /**
- * Always use caching plugin
+ * Always use caching and cleaning plugins
  */
 plugins.push(new HardSourceWebpackPlugin())
+plugins.push(new CleanWebpackPlugin({
+  cleanOnceBeforeBuildPatterns: [
+    'fonts/',
+    'images/',
+    'svg/',
+    '*.js',
+    '*.css',
+    '*.json'
+  ]
+}))
 
 /**
  * Load ESLint
