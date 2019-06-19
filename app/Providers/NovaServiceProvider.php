@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Cards\Help;
+use App\Nova\Resources\Permission;
+use App\Nova\Resources\Role;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Cards\Help;
+use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Vyuldashev\NovaPermission\NovaPermissionTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -17,6 +20,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        // Ensure timezone is Europe/Amsterdam
+        Nova::userTimezone(function () {
+            return 'Europe/Amsterdam';
+        });
     }
 
     /**
@@ -42,10 +50,18 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
+            return $user->hasPermission('admin');
         });
+    }
+
+    /**
+     * Register the application's Nova resources.
+     *
+     * @return void
+     */
+    protected function resources()
+    {
+        Nova::resourcesIn(app_path('Nova/Resources'));
     }
 
     /**
@@ -56,7 +72,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new Help,
+            new Help(),
         ];
     }
 
@@ -67,7 +83,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools()
     {
-        return [];
+        return [
+            // Permission handler
+            NovaPermissionTool::make()
+                ->roleResource(Role::class)
+                ->permissionResource(Permission::class),
+        ];
     }
 
     /**
