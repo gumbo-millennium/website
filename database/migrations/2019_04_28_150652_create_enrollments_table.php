@@ -14,15 +14,15 @@ class CreateEnrollmentsTable extends Migration
     public function up()
     {
         Schema::create('enrollments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             // Who's enrollment is it anyway?
-            $table->unsignedInteger('user_id')
+            $table->unsignedBigInteger('user_id')
                 ->comment('Owning user');
 
             // Who's enrollment is it anyway?
-            $table->unsignedInteger('activity_id')
+            $table->unsignedBigInteger('activity_id')
                 ->comment('Owning activity');
 
             // Add enrollment data

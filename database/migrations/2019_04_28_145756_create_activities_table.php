@@ -14,7 +14,7 @@ class CreateActivitiesTable extends Migration
     public function up()
     {
         Schema::create('activities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             // Event meta
@@ -63,7 +63,7 @@ class CreateActivitiesTable extends Migration
                 ->default(null);
 
             // Add owning role
-            $table->unsignedInteger('role_id')
+            $table->unsignedBigInteger('role_id')
                 ->comment('ID of the owning role')
                 ->nullable();
 

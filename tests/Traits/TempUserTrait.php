@@ -6,6 +6,7 @@ namespace Tests\Traits;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * Creates a temporary user and deletes it after the tests are done
@@ -29,7 +30,7 @@ trait TempUserTrait
         ], [
             'first_name' => 'Test',
             'last_name' => 'User',
-            'password' => Hash::make(str_random(20)),
+            'password' => Hash::make(Str::random(20)),
         ]);
 
         // Mark e-mail as validated or not, defaults to yes

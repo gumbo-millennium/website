@@ -14,7 +14,7 @@ class CreateJoinSubmissionsTable extends Migration
     public function up()
     {
         Schema::create('join_submissions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             // Names

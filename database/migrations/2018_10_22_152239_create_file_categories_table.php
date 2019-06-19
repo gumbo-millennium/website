@@ -14,7 +14,7 @@ class CreateFileCategoriesTable extends Migration
     public function up()
     {
         Schema::create('file_categories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('title')->nullable();
             $table->string('slug', 190)->unique();

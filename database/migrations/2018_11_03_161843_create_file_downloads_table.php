@@ -18,8 +18,8 @@ class CreateFileDownloadsTable extends Migration
             $table->uuid('id')->primary();
 
             // User and file
-            $table->unsignedInteger('user_id')->nullable();
-            $table->unsignedInteger('file_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('file_id');
 
             // meta
             $table->timestamp('downloaded_at')

@@ -14,8 +14,8 @@ class CreateFileCategoryCatalogTable extends Migration
     public function up()
     {
         Schema::create('file_category_catalog', function (Blueprint $table) {
-            $table->unsignedInteger('category_id');
-            $table->unsignedInteger('file_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('file_id');
 
             $table->primary(['category_id', 'file_id']);
         });

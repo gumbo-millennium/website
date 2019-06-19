@@ -14,7 +14,7 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             $table->string('slug', 190)->unique()->comment('User-specified slug');
@@ -37,7 +37,7 @@ class CreateFilesTable extends Migration
             $table->integer('page_count')->nullable()->default(null)->comment('Number of pages');
 
             // Owner meta
-            $table->integer('owner_id')->unsigned()->nullable()->comment('User owning the file');
+            $table->bigInteger('owner_id')->unsigned()->nullable()->comment('User owning the file');
         });
     }
 
