@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 // });
 
 Route::middleware('wordpress')->prefix('wordpress/')->name('wordpress.')->group(function () {
-    $this->get('menu', 'WordPressController@menu')->name('menu');
+    Route::get('menu', 'WordPressController@menu')->name('menu');
 });
 
 // Plazacam submission

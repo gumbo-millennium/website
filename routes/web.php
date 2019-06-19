@@ -136,7 +136,7 @@ Route::prefix('join')->name('join.')->group(function () {
 
 // Authentication and forgotten passwords
 Route::prefix('auth')->group(function () {
-    $this->auth([
+    Route::auth([
         'verify' => true,
         'register' => true
     ]);
@@ -144,9 +144,9 @@ Route::prefix('auth')->group(function () {
 
 // My account
 Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
-    $this->get('/', 'UserController@index')->name('home');
-    $this->get('/info', 'UserController@view')->name('info');
-    $this->patch('/info', 'UserController@update');
+    Route::get('/', 'UserController@index')->name('home');
+    Route::get('/info', 'UserController@view')->name('info');
+    Route::patch('/info', 'UserController@update');
 });
 
 // WordPress fallback
