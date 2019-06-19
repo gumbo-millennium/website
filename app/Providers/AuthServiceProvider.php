@@ -2,14 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\Activity;
 use App\Models\File;
 use App\Models\FileCategory;
+use App\Models\Payment;
+use App\Policies\ActivityPolicy;
 use App\Policies\FileCategoryPolicy;
 use App\Policies\FilePolicy;
-use Illuminate\Support\Facades\Gate;
+use App\Policies\PaymentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\JoinRequest;
-use App\Policies\JoinRequestPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -19,8 +20,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        Activity::class => ActivityPolicy::class,
         File::class => FilePolicy::class,
         FileCategory::class => FileCategoryPolicy::class,
+        Payment::class => PaymentPolicy::class,
     ];
 
     /**
