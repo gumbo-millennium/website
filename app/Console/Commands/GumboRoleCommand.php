@@ -20,7 +20,7 @@ class GumboRoleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'gumbo:role {user} {role} {--force} {--demote}';
+    protected $signature = 'gumbo:role {user} {role} {--force} {--revoke}';
 
     /**
      * The console command description.
@@ -62,7 +62,7 @@ class GumboRoleCommand extends Command
         }
 
         $force = $this->option('force');
-        $demote = $this->option('demote');
+        $revoke = $this->option('revoke');
 
         $this->line("Name:  <info>{$user->name}</>");
         $this->line("ID:    <comment>{$user->id}</>");
@@ -70,7 +70,7 @@ class GumboRoleCommand extends Command
         $this->line("Alias: <comment>{$user->alias}</>");
         $this->line("");
         $this->line(sprintf(
-            'Current permissions: <info>%s</>',
+            'Current roles: <info>%s</>',
             $user->roles()->pluck('title')->implode('</>, <info>')
         ));
         $this->line("");
@@ -79,7 +79,7 @@ class GumboRoleCommand extends Command
             return false;
         }
 
-        if ($demote) {
+        if ($revoke) {
             $user->removeRole($role);
             $user->save();
 
