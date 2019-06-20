@@ -149,5 +149,8 @@ Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
     Route::patch('/info', 'UserController@update');
 });
 
+// Common mistakes handler
+Route::redirect('/sign-up', '/join');
+
 // WordPress fallback
 Route::fallback('WordPressController@fallback');
