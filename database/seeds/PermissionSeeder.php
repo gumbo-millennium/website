@@ -219,7 +219,7 @@ class PermissionSeeder extends Seeder
         }
 
         // Get all permissions
-        $allPermissions = Permission::all();
+        $allPermissions = $permissionObjects->pluck('name');
 
         // Create or update each role and sync permissions
         foreach ($this->roles as list($name, $title, $permissions)) {
@@ -232,9 +232,9 @@ class PermissionSeeder extends Seeder
                 $permissions = $allPermissions;
 
                 // If the permissions isn't wildcard, look for a role with the same name
-                if ($permissions !== '*') {
+                if ($permissionsQuery !== '*') {
                     try {
-                        $permissions = Role::findByName($permissionsQuery)->permissions;
+                        $permissions = Role::findByName($permissionsQuery)->permissions()->pluck('name');
                     } catch (RoleDoesNotExist $e) {
                         $permissions = [];
                     }
