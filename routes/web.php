@@ -125,7 +125,7 @@ Route::prefix('news')->name('news.')->group(function () {
  */
 Route::prefix('join')->name('join.')->group(function () {
     // Join form
-    Route::get('/', 'JoinController@create')->name('form');
+    Route::get('/', 'JoinController@index')->name('form');
 
     // Submit button
     Route::post('/send', 'JoinController@submit')->name('submit');

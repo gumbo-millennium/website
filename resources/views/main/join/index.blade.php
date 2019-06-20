@@ -27,7 +27,7 @@ navbar--opaque
                 daarna contact met je op.
             </p>
         </div>
-        <form novalidate method="POST" action="{{ route('join') }}" class="unique-selling-points__features">
+        <form novalidate method="POST" action="{{ route('join.submit') }}" class="unique-selling-points__features">
             @csrf
 
             {{-- Display errors --}}
