@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Collection;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -179,7 +180,18 @@ class PermissionSeeder extends Seeder
         ]],
 
         // Digital committee
-        ['dc', 'Digitale Commissie', 'all']
+        ['dc', 'Digitale Commissie', '*'],
+
+        // Copied permissions from different groups
+        ['ib', 'Intro Bestuur', 'ac'],
+        ['bbqpg', 'BBQPG', 'ac'],
+        ['bc', 'Brascommissie', 'ac'],
+        ['intro-accie', 'Intro Accie', 'ac'],
+        ['ib', 'Introbestuur', 'ac'],
+
+        // Empty roles
+        ['kc', 'Kascommissie', []],
+        ['pc', 'Plazacommissie', []]
     ];
 
     /**
@@ -192,7 +204,6 @@ class PermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
-
         $permissionObjects = collect();
         $roleObjects = collect();
 
@@ -204,10 +215,40 @@ class PermissionSeeder extends Seeder
             ));
         }
 
+        // Get all permissions
+        $allPermissions = Permission::all();
+
         // Create or update each role and sync permissions
         foreach ($this->roles as list($name, $title, $permissions)) {
-            // Get permissions as an array
-            $permissions = array_wrap($permissions);
+            // Special string treatmet
+            if (is_string($permissions)) {
+                // Keep string
+                $permissionsQuery = (string) $permissions;
+
+                // Get all permissions
+                $permissions = $allPermissions;
+
+                // If the permissions isn't wildcard, look for a role with the same name
+                if ($permissions !== '*') {
+                    try {
+                        $permissions = Role::findByName($permissionsQuery)->permissions;
+                    } catch (RoleDoesNotExist $e) {
+                        $permissions = [];
+                    }
+                }
+            }
+
+            // Convert collections
+            if ($permissions instanceof Collection) {
+                $permissions = $permissions->toArray();
+            }
+
+            if (!is_array($permissions)) {
+                throw new \RuntimeException(sprintf(
+                    'Permissions is not an array (it\'s a %s), whilst it should be one by now',
+                    is_object($permissions) ? get_class($permissions) : gettype($permissions)
+                ));
+            }
 
             // Get role object
             $roleObject = Role::updateOrCreate(
@@ -217,11 +258,6 @@ class PermissionSeeder extends Seeder
 
             // Get allowed permissions
             $rolePermissions = $permissionObjects->whereIn('name', array_wrap($permissions));
-
-            // Check if permisions are 'all', and add all
-            if ($permissions[0] === 'all') {
-                $rolePermissions = $permissionObjects->all();
-            }
 
             // Sync all permissions, removing non-listed
             $roleObject->syncPermissions($rolePermissions);
