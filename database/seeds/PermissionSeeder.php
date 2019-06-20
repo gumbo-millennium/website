@@ -73,6 +73,9 @@ class PermissionSeeder extends Seeder
         ['payment-admin', 'Inzage in transacties'],
         ['admin', 'Toegang tot admin panel'],
         ['devops', 'Toegang tot ops administratie'],
+
+        // Super Admin (only directly)
+        ['super-admin', 'Super Admin'],
     ];
 
     /**
