@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FileCategorySeeder::class);
 
         // The rest of the seeders are not run in production
-        if (config('app.env') === 'local') {
+        if (App::environment('local')) {
             $this->call(UserSeeder::class);
         }
     }
