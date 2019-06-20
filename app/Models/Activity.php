@@ -60,4 +60,27 @@ class Activity extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function getEnrollmentOpenAttribute() : bool
+    {
+        $now = now();
+
+        // Cannot sell tickets after event end
+        if ($this->event_end > $now) {
+            return false;
+        }
+
+        // Cannot sell tickets after enrollment closure
+        if ($this->enrollment_end !== null && $this->enrollment_end < $now) {
+            return false;
+        }
+
+        // Cannot sell tickets before enrollment start
+        if ($this->enrollment_start !== null && $this->enrollment_start > $now) {
+            return false;
+        }
+
+        // Enrollment start < now < (Enrollment end | Event end)
+        return true;
+    }
 }

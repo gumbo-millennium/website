@@ -14,6 +14,7 @@ use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\Boolean;
 
 /**
  * An activity resource
@@ -67,6 +68,26 @@ class Activity extends Resource
     }
 
     /**
+     * Get the search result subtitle for the resource.
+     *
+     * @return string
+     */
+    public function subtitle()
+    {
+        $startDate = optional($this->event_start)->format('d-m-Y');
+        $endDate = optional($this->event_end)->format('d-m-Y');
+        $startTime = optional($this->event_start)->format('H:i');
+        $endTime = optional($this->event_end)->format('H:i');
+
+        if ($startDate !== $endDate) {
+            return sprintf('%s – %s', $startDate, $endDate);
+        }
+
+        return sprintf('%s (%s tot %s)', $startDate, $startTime, $endTime);
+    }
+
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -101,11 +122,11 @@ class Activity extends Resource
 
             DateTime::make(__('Created At'), 'created_at')
                 ->readonly()
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             DateTime::make(__('Updated At'), 'updated_at')
                 ->readonly()
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             // BelongsTo::make('Role', 'role', Role::class),
         ];
@@ -115,11 +136,13 @@ class Activity extends Resource
     {
         return [
             DateTime::make(__('Event Start'), 'event_start')
+                ->sortable()
                 ->rules('required', 'date')
                 ->firstDayOfWeek(1),
 
             DateTime::make(__('Event End'), 'event_end')
                 ->rules('required', 'date', 'after:event_start')
+                ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
             Number::make(__('Member Price'), 'price_member')
@@ -143,11 +166,16 @@ class Activity extends Resource
         return [
             DateTime::make(__('Enrollment Start'), 'enrollment_start')
                 ->rules('nullable', 'date', 'before:event_end')
+                ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
             DateTime::make(__('Enrollment End'), 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:event_end')
+                ->hideFromIndex()
                 ->firstDayOfWeek(1),
+
+            Boolean::make(__('Enrollment status'), 'enrollment_status')
+                ->onlyOnIndex(),
 
             Number::make(__('Total Seats'), 'seats')
                 ->min(1)
