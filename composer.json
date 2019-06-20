@@ -68,6 +68,9 @@
         "post-create-project-cmd": [
             "@php artisan key:generate"
         ],
+        "post-install-cmd": [
+          "@php artisan vendor:publish --tag=nova-assets"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover",
