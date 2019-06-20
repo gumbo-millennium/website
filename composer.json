@@ -12,6 +12,7 @@
         "doctrine/dbal": "~2.3",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
+        "gregoriohc/laravel-nova-theme-responsive": "^0.6.2",
         "gumbo-millennium/laravel-database-encryption": "^0.3.0",
         "guzzlehttp/guzzle": "^6.3",
         "jgrossi/corcel": "^2.6",
