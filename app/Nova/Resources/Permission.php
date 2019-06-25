@@ -41,6 +41,11 @@ class Permission extends Resource
         'title',
     ];
 
+    /**
+     * Hide the item in the navbar
+     *
+     * @var bool
+     */
     public static $displayInNavigation = false;
 
     /**
@@ -63,6 +68,11 @@ class Permission extends Resource
         return __('Permission');
     }
 
+    /**
+     * Returns the model for the permission
+     *
+     * @return void
+     */
     public static function getModel()
     {
         return app(PermissionRegistrar::class)->getPermissionClass();
@@ -103,7 +113,7 @@ class Permission extends Resource
             BelongsToMany::make('Roles')
                 ->searchable(),
 
-            MorphToMany::make('Users')
+            MorphToMany::make('Users', $userResource)
                 ->searchable(),
         ];
     }

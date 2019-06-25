@@ -40,6 +40,11 @@ class Role extends Resource
         'title',
     ];
 
+    /**
+     * Hide the item in the navbar
+     *
+     * @var bool
+     */
     public static $displayInNavigation = false;
 
     /**
