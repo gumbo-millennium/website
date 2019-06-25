@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Boolean;
+use App\Nova\Fields\Price;
 
 /**
  * An activity resource
@@ -145,7 +146,7 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
-            Number::make(__('Member Price'), 'price_member')
+            Price::make(__('Member Price'), 'price_member')
                 ->min(1)
                 ->max(200)
                 ->step(0.05)
@@ -154,7 +155,7 @@ class Activity extends Resource
                 ->rules('nullable', 'numeric', 'min:2.50')
                 ->help('Excluding transaction fees'),
 
-            Number::make(__('Guest Price'), 'price_guest')
+            Price::make(__('Guest Price'), 'price_guest')
                 ->min(1)
                 ->max(200)
                 ->step(0.05)
