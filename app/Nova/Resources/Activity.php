@@ -149,6 +149,8 @@ class Activity extends Resource
                 ->min(1)
                 ->max(200)
                 ->step(0.05)
+                ->nullable()
+                ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50')
                 ->help('Excluding transaction fees'),
 
@@ -156,6 +158,8 @@ class Activity extends Resource
                 ->min(1)
                 ->max(200)
                 ->step(0.05)
+                ->nullable()
+                ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50', 'gte:price_member')
                 ->help('Excluding transaction fees'),
         ];
@@ -167,11 +171,13 @@ class Activity extends Resource
             DateTime::make(__('Enrollment Start'), 'enrollment_start')
                 ->rules('nullable', 'date', 'before:event_end')
                 ->hideFromIndex()
+                ->nullable()
                 ->firstDayOfWeek(1),
 
             DateTime::make(__('Enrollment End'), 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:event_end')
                 ->hideFromIndex()
+                ->nullable()
                 ->firstDayOfWeek(1),
 
             Boolean::make(__('Enrollment status'), 'enrollment_status')
@@ -180,11 +186,15 @@ class Activity extends Resource
             Number::make(__('Total Seats'), 'seats')
                 ->min(1)
                 ->step(1)
+                ->nullable()
+                ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:1'),
 
             Number::make(__('Guest Seats'), 'public_seats')
                 ->min(1)
                 ->step(1)
+                ->nullable()
+                ->nullValues([''])
                 ->rules('nullable', 'numeric', 'lt:seats')
         ];
     }
