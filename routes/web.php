@@ -55,20 +55,6 @@ Route::prefix('activity')->name('activity.')->group(function () {
 
     // Single view
     Route::get('/{activity}', 'ActivityController@show')->name('show');
-
-    // ADMIN ROUTES
-    Route::namespace('Admin\\')->group(function () {
-        // Edit activity
-        Route::get('/{activity}/edit', 'ActivityController@edit')->name('edit');
-        Route::put('/{activity}/edit', 'ActivityController@update');
-
-        // Cancel activity
-        Route::patch('{activity}/cancel', 'ActivityController@cancel')->name('cancel');
-
-        // Delete activity
-        Route::get('/{activity}/delete', 'ActivityController@remove')->name('delete');
-        Route::delete('/{activity}/delete', 'ActivityController@destroy');
-    });
 });
 
 /**
