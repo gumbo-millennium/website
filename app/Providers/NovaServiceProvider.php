@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Nova\Resources\Permission;
 use App\Nova\Resources\Role;
 use Illuminate\Support\Facades\Gate;
@@ -46,7 +47,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewNova', function ($user) {
+        Gate::define('viewNova', function (User $user) {
             return $user->hasPermissionTo('admin');
         });
     }
