@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use App\Console\Commands\Traits\FindsUserTrait;
 
 /**
  * Adds a role via CLI
@@ -15,6 +16,8 @@ use Spatie\Permission\Exceptions\RoleDoesNotExist;
  */
 class GumboRoleCommand extends Command
 {
+    use FindsUserTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -46,10 +49,10 @@ class GumboRoleCommand extends Command
      */
     public function handle()
     {
-        $userName = $this->argument('user');
-        $user = $this->findUser($userName);
+        $user = $this->getUserArgument();
+
         if (!$user) {
-            $this->error("Cannot find user \"{$userName}\"");
+            $this->error('Cannot find user');
             return false;
         }
 
@@ -104,24 +107,5 @@ class GumboRoleCommand extends Command
         ));
 
         return true;
-    }
-
-    /**
-     * Finds a user by ID, email or alias.
-     *
-     * @param string $query
-     * @return User|null
-     */
-    public function findUser(string $query) : ?User
-    {
-        if (is_numeric($query)) {
-            return User::find($query);
-        }
-
-        if (filter_var($query, FILTER_VALIDATE_EMAIL)) {
-            return User::where('email', $query)->first();
-        }
-
-        return User::whereRaw('LOWER(alias) = LOWER(?)', [$query])->first();
     }
 }

@@ -14,7 +14,7 @@ class ListUserPermissions extends Command
      * @var string
      */
     protected $signature = 'perms:user
-                            {user : User to check, e-mail or ID}
+                            {user : User to check; e-mail, alias or ID}
                             {--p|pretty : Print titles instead of names}';
 
     /**
