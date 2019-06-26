@@ -31,7 +31,10 @@ $userFields = [
     ],
 ];
 $personalFields = [
-    ['text', 'gender', 'Geslacht', null, 'man, vrouw, gevechtshelikopter, …'],
+    ['select', 'gender', 'Geslacht', null, 'man, vrouw, gevechtshelikopter, …', 'options' => [
+        'man' => 'Man',
+        'vrouw' => 'Vrouw'
+    ]],
     ['text', 'date_of_birth', 'Geboortedatum', null, '01-01-1991'],
     ['checkbox', 'windesheim_student', 'Ik studeer op Windesheim', 'Of je op Windesheim studeert bepaald het type lidmaatschap dat je kan krijgen'],
 ];

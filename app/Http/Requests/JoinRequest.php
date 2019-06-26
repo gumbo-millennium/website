@@ -60,7 +60,7 @@ class JoinRequest extends FormRequest
             ],
             'gender' => [
                 'required',
-                'min:2'
+                Rule::in(['man', 'vrouw']),
             ],
 
             // Member type

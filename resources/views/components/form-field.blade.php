@@ -46,6 +46,18 @@ if ($errors->has($field->name)) {
                 {{ $field->label }}
             </label>
         </div>
+        @elseif($field->type === 'select')
+        <select
+            class="form-control {{ $statusClass }}"
+            id="{{ $field->name }}"
+            name="{{ $field->name }}"
+            {{ $field->required ? 'required' : '' }}
+            >
+            <option>- Selecteer -</option>
+            @foreach ($field->options as $option => $value)
+                <option value="{{ $option }}" {{ $field->value === $option ? 'selected' : '' }}>{{ $value }}</option>
+            @endforeach
+            </select>
         @else
         <input
             class="form-control {{ $statusClass }}"
