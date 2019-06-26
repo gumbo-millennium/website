@@ -13,6 +13,7 @@ use App\JoinRequest;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @deprecated will be replaced with Nova
  */
 class HomeController extends Controller
 {

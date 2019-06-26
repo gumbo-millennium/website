@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @deprecated will be replaced with Nova
  */
 class FileCategoryController extends Controller
 {

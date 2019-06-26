@@ -22,6 +22,7 @@ use App\Jobs\FileArchiveJob;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @deprecated will be replaced with Nova
  */
 class FileController extends Controller
 {

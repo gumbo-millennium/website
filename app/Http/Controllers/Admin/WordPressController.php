@@ -19,6 +19,7 @@ use App\Jobs\UpdateWordPressUserJob;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @deprecated 2018-12-13 Will be removed, since we're dropping WordPress
+ * @deprecated will be replaced with Nova
  */
 class WordPressController extends Controller
 {
