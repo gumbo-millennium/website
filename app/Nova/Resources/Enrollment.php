@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\HasMany;
 
 class Enrollment extends Resource
 {
@@ -62,7 +63,7 @@ class Enrollment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->sortable()->link(),
 
             // Add multi selects
             BelongsTo::make('Activities', 'activity'),
@@ -72,6 +73,9 @@ class Enrollment extends Resource
             KeyValue::make(__('Enrollment Data'), 'data')
                 ->rules('json')
                 ->hideFromIndex(),
+
+            // Add payments
+            HasMany::make(__('Payments'), 'payments', Payment::class),
         ];
     }
 

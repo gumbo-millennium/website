@@ -46,22 +46,28 @@ class JoinRequest extends FormRequest
             // Address
             'street' => 'required|string|regex:/\w+/',
             'number' => 'required|string|regex:/^\d+/',
-            'zipcode' => 'required|string|regex:/^[0-9A-Z \.]+$/i',
+            'postal_code' => ['required', 'string', 'regex:/^([0-9A-Z \.]+)$/i'],
             'city' => 'required|string|min:2',
 
             // Contact info
-            'phone' => 'required|string|regex:/^\+?([\s-\.]?\d){8,}/',
-            'date-of-birth' => [
+            'phone' => ['required', 'string', 'regex:/^\+?([\s\-\.]?\d){8,20}$/'],
+
+            // Personal data
+            'date_of_birth' => [
                 'required',
                 'date_format:d-m-Y',
                 "before:{$sixteenYears}"
             ],
+            'gender' => [
+                'required',
+                'min:2'
+            ],
 
             // Member type
-            'windesheim-student' => 'sometimes|accepted',
+            'windesheim_student' => 'sometimes|accepted',
 
             // Policy acceptance
-            'accept-policy' => 'required|accepted',
+            'accept_policy' => 'required|accepted',
             'newsletter' => 'sometimes|boolean',
         ];
     }

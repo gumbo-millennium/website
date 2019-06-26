@@ -23,19 +23,19 @@ class CreateJoinSubmissionsTable extends Migration
             $table->string('last_name', 100);
 
             // Contact info
-            $table->string('phone', 20)->comment('Encrypted phone number');
             $table->string('email', 120)->index();
+            $table->text('phone')->comment('Encrypted phone number');
 
             // User details
-            $table->string('date_of_birth')->comment('Encrypted date of birth, as dd-mm-yyyy');
+            $table->text('date_of_birth')->comment('Encrypted date of birth, as dd-mm-yyyy');
             $table->string('gender', 20)->comment('User supplied gender');
 
             // Contact data
-            $table->string('street')->comment('Encrypted street name');
-            $table->string('number')->comment('Encrypted number');
-            $table->string('city')->comment('Encrypted city');
-            $table->string('postal_code')->comment('Encrypted zipcode');
-            $table->string('country')->comment('Encrypted country');
+            $table->text('street')->comment('Encrypted street name');
+            $table->text('number')->comment('Encrypted number');
+            $table->text('city')->comment('Encrypted city');
+            $table->text('postal_code')->comment('Encrypted zipcode');
+            $table->text('country')->comment('Encrypted country');
 
             // Result
             $table->boolean('granted')

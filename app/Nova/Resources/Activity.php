@@ -153,7 +153,7 @@ class Activity extends Resource
                 ->nullable()
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50')
-                ->help('Excluding transaction fees'),
+                ->help('In <strong>centen</strong>, exclusief administratiekosten'),
 
             Price::make(__('Guest Price'), 'price_guest')
                 ->min(1)

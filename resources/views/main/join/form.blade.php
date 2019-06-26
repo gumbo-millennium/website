@@ -31,13 +31,14 @@ $userFields = [
     ],
 ];
 $personalFields = [
-    ['text', 'date-of-birth', 'Geboortedatum', null, '01-01-1991'],
-    ['checkbox', 'windesheim-student', 'Ik studeer op Windesheim', 'Of je op Windesheim studeert bepaald het type lidmaatschap dat je kan krijgen'],
+    ['text', 'gender', 'Geslacht', null, 'man, vrouw, gevechtshelikopter, …'],
+    ['text', 'date_of_birth', 'Geboortedatum', null, '01-01-1991'],
+    ['checkbox', 'windesheim_student', 'Ik studeer op Windesheim', 'Of je op Windesheim studeert bepaald het type lidmaatschap dat je kan krijgen'],
 ];
 $addressFieds = [
     ['text', 'street', 'Straatnaam', null, 'Campus'],
     ['text', 'number', 'Huisnummer', 'Inclusief toevoegsel, indien van toepassing', '2-6'],
-    ['text', 'zipcode', 'Postcode', null, '8017 CA'],
+    ['text', 'postal_code', 'Postcode', null, '8017 CA'],
     ['text', 'city', 'Plaats', null, 'Zwolle'],
     ['text', 'phone', 'Telefoonnummer', 'Woon je buiten Nederland? Zet je landcode er dan voor!', '038 11 22 333'],
 ];
@@ -48,7 +49,7 @@ $addressFieds = [
     <h3>Persoonsgegevens</h3>
 </div>
 
-@auth
+@if(auth()->user() && !auth()->user()->hasRole('member'))
 {{-- Display current user --}}
 <div class="my-2">
     <div class="card">
@@ -63,7 +64,7 @@ $addressFieds = [
         </div>
     </div>
 </div>
-@endauth
+@endif
 
 {{-- Display user form --}}
 @each('components.form-field', $userFields, 'field')

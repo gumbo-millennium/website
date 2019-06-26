@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Laravel\Nova\Actions\Actionable;
 
 /**
  * Encrypted submission to Gumbo
@@ -14,8 +14,8 @@ use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
  */
 class JoinSubmission extends Model
 {
-    // Use encryption helper
-    use HasEncryptedAttributes;
+    // Use action log and encryption helper
+    use Actionable, HasEncryptedAttributes;
 
     /**
      * @inheritDoc
@@ -47,4 +47,18 @@ class JoinSubmission extends Model
         'postal_code',
         'country',
     ];
+
+    /**
+     * Full name property
+     *
+     * @return string
+     */
+    public function getNameAttribute() : string
+    {
+        return implode(' ', array_filter([
+            $this->first_name,
+            $this->insert,
+            $this->last_name
+        ]));
+    }
 }

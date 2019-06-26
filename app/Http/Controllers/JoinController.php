@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\JoinMail;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Mail\JoinBoardMail;
+use App\Models\JoinSubmission;
 
 /**
  * Handles user registration and enrollment to the student community. Join
@@ -127,18 +128,19 @@ class JoinController extends Controller
             // Address
             'street' => $request->get('street'),
             'number' => $request->get('number'),
-            'zipcode' => mb_strtoupper($request->get('zipcode')),
+            'postal_code' => mb_strtoupper($request->get('zipcode')),
             'city' => $request->get('city'),
             'country' => $request->get('country'),
 
             // Contact info
             'phone' => $request->get('phone'),
-            'date-of-birth' => $request->get('date-of-birth'),
-            'windesheim-student' => $request->get('windesheim-student'),
+            'date_of_birth' => $request->get('date_of_birth'),
+            'gender' => $request->get('gender'),
+            'windesheim_student' => $request->get('windesheim_student'),
 
             // Accepts policies
-            'accept-policy' => $request->get('accept-policy'),
-            'accept-newsletter' => $request->get('accept-newsletter'),
+            'accept_policy' => $request->get('accept_policy'),
+            'newsletter' => $request->get('accept_newsletter'),
         ]);
 
         // Construct a sane board e-mail
@@ -154,5 +156,33 @@ class JoinController extends Controller
         // Send e-mails
         Mail::queue($userMail);
         Mail::queue($boardMail);
+
+        // Add to Laravel Nova
+        $submission = JoinSubmission::make($data->only([
+            'first_name',
+            'insert',
+            'last_name',
+            'phone',
+            'email',
+            'date_of_birth',
+            'gender',
+            'street',
+            'number',
+            'city',
+            'postal_code',
+            'country',
+            'windesheim_student',
+            'newsletter',
+        ])->toArray());
+
+        try {
+            $submission->save();
+        } catch (\Exception $e) {
+            logger()->alert("Failed to store join request!", [
+                'exception' => $e,
+                'submission' => $submission,
+            ]);
+            throw $e;
+        }
     }
 }
