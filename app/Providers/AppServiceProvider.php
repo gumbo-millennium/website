@@ -2,16 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
+use App\Models\Activity;
+use App\Models\File;
+use App\Models\User;
+use App\Observers\ActivityObserver;
+use App\Observers\FileObserver;
+use App\Observers\UserObserver;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 use Laravel\Horizon\Horizon;
-use App\Models\File;
-use App\Observers\FileObserver;
-use App\Models\User;
-use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,7 +34,8 @@ class AppServiceProvider extends ServiceProvider
             return $request->user() !== null && $request->user()->hasPermissionTo('devops');
         });
 
-        // Handle File and User changes
+        // Handle File, User and Activity changes
+        Activity::observe(ActivityObserver::class);
         File::observe(FileObserver::class);
         User::observe(UserObserver::class);
 
