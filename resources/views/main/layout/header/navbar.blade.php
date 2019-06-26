@@ -101,7 +101,7 @@ navbar--opaque
                     {{-- Render admin link if allowed --}}
                     @can('admin')
                     <li class="nav-item userbar__nav-item">
-                        <a class="nav-link userbar__nav-link" href="{{ route('admin.home') }}">
+                        <a class="nav-link userbar__nav-link" href="{{ Nova::path() }}">
                             Admin
                         </a>
                     </li>
