@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Number;
 use Spatie\Permission\PermissionRegistrar;
 use Vyuldashev\NovaPermission\AttachToRole;
 
@@ -105,15 +106,25 @@ class Permission extends Resource
 
             Select::make('Guard Name', 'guard_name')
                 ->options($guardOptions->toArray())
-                ->rules(['required', Rule::in($guardOptions)]),
+                ->rules(['required', Rule::in($guardOptions)])
+                ->hideFromIndex(),
 
-            DateTime::make('Created At')->exceptOnForms(),
-            DateTime::make('Updated At')->exceptOnForms(),
+            DateTime::make('Created At', 'created_at')
+                ->onlyOnDetail(),
+            DateTime::make('Updated At', 'updated_at')
+                ->onlyOnDetail(),
+
+            Number::make('Aantal Rollen', function () {
+                return $this->roles()->count();
+            })->onlyOnIndex(),
+            Number::make('Aantal Gebruikers', function () {
+                return $this->users()->count();
+            })->onlyOnIndex(),
 
             BelongsToMany::make('Roles')
                 ->searchable(),
 
-            MorphToMany::make('Users', $userResource)
+            MorphToMany::make('Users', 'users', $userResource)
                 ->searchable(),
         ];
     }
@@ -160,7 +171,7 @@ class Permission extends Resource
     public function actions(Request $request)
     {
         return [
-            new AttachToRole,
+            new AttachToRole(),
         ];
     }
 }

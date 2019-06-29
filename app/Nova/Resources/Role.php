@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Number;
 use Spatie\Permission\PermissionRegistrar;
 
 class Role extends Resource
@@ -84,6 +85,8 @@ class Role extends Resource
             return [$key => $key];
         });
 
+        $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
+
         return [
             ID::make()->sortable(),
 
@@ -97,15 +100,25 @@ class Role extends Resource
 
             Select::make('Guard Name', 'guard_name')
                 ->options($guardOptions->toArray())
-                ->rules(['required', Rule::in($guardOptions)]),
+                ->rules(['required', Rule::in($guardOptions)])
+                ->hideFromIndex(),
 
-            DateTime::make('Created At', 'created_at')->exceptOnForms(),
-            DateTime::make('Updated At', 'updated_at')->exceptOnForms(),
+            DateTime::make('Created At', 'created_at')
+                ->onlyOnDetail(),
+            DateTime::make('Updated At', 'updated_at')
+                ->onlyOnDetail(),
+
+            Number::make('Aantal Permissies', function () {
+                return $this->permissions()->count();
+            })->onlyOnIndex(),
+            Number::make('Aantal Gebruikers', function () {
+                return $this->users()->count();
+            })->onlyOnIndex(),
 
             BelongsToMany::make('Permissions')
                 ->searchable(),
 
-            MorphToMany::make('Users')
+            MorphToMany::make('Users', 'users', $userResource)
                 ->searchable(),
         ];
     }
