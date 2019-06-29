@@ -25,6 +25,7 @@
     "@gumbo/theme-spacial": "file:./library/npm/spacial-theme.tar.gz"
   },
   "devDependencies": {
+    "@gumbo-millennium/stylelint-config": "^0.1.1",
     "babel-plugin-sass-vars": "^0.2",
     "browser-sync": "^2.24",
     "browser-sync-webpack-plugin": "^2.0",
@@ -52,9 +53,6 @@
     "sass-loader": "7.*",
     "scrolltrigger-classes": "^0.3",
     "stylelint": "^9.6",
-    "stylelint-config-recommended-scss": "^3.2",
-    "stylelint-order": "^1.0",
-    "stylelint-scss": "^3.3",
     "stylelint-webpack-plugin": "^0.10",
     "svg-spritemap-webpack-plugin": "^3.3",
     "vue-template-compiler": "^2.6"
@@ -77,5 +75,7 @@
     "pikaday": "^1.7",
     "popper.js": "^1.12",
     "zoomerang": "^0.1"
-  }
+  },
+  "stylelint": {
+    "extends": "@gumbo-millennium/stylelint-config"
 }
