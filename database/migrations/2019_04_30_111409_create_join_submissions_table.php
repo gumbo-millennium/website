@@ -18,7 +18,7 @@ class CreateJoinSubmissionsTable extends Migration
             $table->timestamps();
 
             // Names
-            $table->string('first_name', 100);
+            $table->string('first_name', 100)->nullable()->default(null);
             $table->string('insert', 100)->nullable()->default(null);
             $table->string('last_name', 100);
 
@@ -28,7 +28,7 @@ class CreateJoinSubmissionsTable extends Migration
 
             // User details
             $table->text('date_of_birth')->comment('Encrypted date of birth, as dd-mm-yyyy');
-            $table->string('gender', 20)->comment('User supplied gender');
+            $table->text('gender')->comment('User supplied gender');
 
             // Contact data
             $table->text('street')->comment('Encrypted street name');

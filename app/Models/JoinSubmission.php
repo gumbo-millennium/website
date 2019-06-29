@@ -49,16 +49,36 @@ class JoinSubmission extends Model
     ];
 
     /**
+     * Default values
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'first_name' => null,
+        'insert' => null,
+        'last_name' => null,
+        'phone' => null,
+        'email' => null,
+        'date_of_birth' => null,
+        'gender' => null,
+        'street' => null,
+        'number' => null,
+        'city' => null,
+        'postal_code' => null,
+        'country' => null,
+    ];
+
+    /**
      * Full name property
      *
      * @return string
      */
     public function getNameAttribute() : string
     {
-        return implode(' ', array_filter([
+        return collect([
             $this->first_name,
             $this->insert,
             $this->last_name
-        ]));
+        ])->reject('empty')->implode(' ');
     }
 }

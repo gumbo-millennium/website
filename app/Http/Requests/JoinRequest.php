@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
+use App\Rules\PhoneNumber;
 
 /**
  * A request with sign up data
@@ -36,21 +37,23 @@ class JoinRequest extends FormRequest
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
 
         return [
+            // We always need an e-mail address and would like a phone number
             'email' => 'required|email',
+            'phone' => ['required', 'string', new PhoneNumber('NL')],
+
+            // Also, we need them to accept our data policy
+            'accept_policy' => 'required|accepted',
 
             // Names
-            'first_name' => "required|string|min:2",
-            'insertion' => 'nullable|string|min:2',
-            'last_name' => "required|string|min:2",
+            'first_name' => "required_without:name|string|min:2",
+            'insertion' => 'sometimes|nullable|string|min:2',
+            'last_name' => "required_without:name|string|min:2",
 
             // Address
             'street' => 'required|string|regex:/\w+/',
             'number' => 'required|string|regex:/^\d+/',
             'postal_code' => ['required', 'string', 'regex:/^([0-9A-Z \.]+)$/i'],
             'city' => 'required|string|min:2',
-
-            // Contact info
-            'phone' => ['required', 'string', 'regex:/^\+?([\s\-\.]?\d){8,20}$/'],
 
             // Personal data
             'date_of_birth' => [
@@ -66,8 +69,7 @@ class JoinRequest extends FormRequest
             // Member type
             'windesheim_student' => 'sometimes|accepted',
 
-            // Policy acceptance
-            'accept_policy' => 'required|accepted',
+            // Sign up for newsletter?
             'newsletter' => 'sometimes|boolean',
         ];
     }
