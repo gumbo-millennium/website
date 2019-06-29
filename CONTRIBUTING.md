@@ -4,11 +4,21 @@ The following guide quickly describes how to get started with the project.
 
 ## Required programs
 
-- PHP 7.2+ or nightly
-- Node
-- Yarn
-- Composer
-- Docker + docker-compose
+- **PHP 7.3 or newer** - [Website][site-php] - We use the new [flexible Heredoc][heredoc] on some occasions, which doesn't work in PHP 7.2.
+- **NodeJS** - [Website][site-nodejs] - We use Webpack for linting, compiling and optimizing the code, which runs in NodeJS
+- **Yarn** - [Website][site-yarn] - Yarn has a significant speed gain on npm, and some more predictiable script handling.
+- **Composer** - [Website][site-composer] - We need a lot of dependencies (Laravel, to begin with) and Composer handles them.
+- **Docker** - [Website][site-docker] - We use Docker to present an environment that matches the production servers.
+- **Docker Compose** - [Website][site-docker-compose] - Docker compose provides sandboxed environments to deploy the Docker containers.
+
+[site-php]: https://php.net/
+[site-nodejs]: https://nodejs.org/
+[site-yarn]: https://yarnpkg.org/
+[site-composer]: https://getcomposer.org/
+[site-docker]: https://www.docker.com/products/docker-desktop
+[site-docker-compose]: https://docs.docker.com/compose/
+
+[heredoc]: https://www.php.net/manual/en/migration73.incompatible.php#migration73.incompatible.core.heredoc-nowdoc
 
 ## Required files
 
