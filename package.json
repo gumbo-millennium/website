@@ -2,14 +2,6 @@
   "name": "@gumbomillennium/site",
   "version": "1.0.0",
   "description": "Gumbo Millennium Website Theme",
-  "repository": "github:roelofr/gumbo-corcel",
-  "contributors": [
-    {
-      "name": "Roelof Roos",
-      "email": "github@roelof.io",
-      "url": "https://github.com/roelofr"
-    }
-  ],
   "license": "SEE LICENSE IN LICENSE.md",
   "private": true,
   "scripts": {
@@ -78,4 +70,16 @@
   },
   "stylelint": {
     "extends": "@gumbo-millennium/stylelint-config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gumbo-millennium/website.git"
+  },
+  "contributors": [
+    {
+      "name": "Roelof Roos",
+      "email": "github@roelof.io",
+      "url": "https://github.com/roelofr"
+    }
+  ]
 }
