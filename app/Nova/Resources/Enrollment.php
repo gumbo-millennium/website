@@ -63,7 +63,7 @@ class Enrollment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable()->link(),
+            ID::make()->sortable(),
 
             // Add multi selects
             BelongsTo::make('Activities', 'activity'),
