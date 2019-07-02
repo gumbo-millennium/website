@@ -70,9 +70,6 @@
     "tailwindcss": "^1.0.4",
     "zoomerang": "^0.1"
   },
-  "stylelint": {
-    "extends": "@gumbo-millennium/stylelint-config"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gumbo-millennium/website.git"
