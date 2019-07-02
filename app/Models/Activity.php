@@ -61,6 +61,21 @@ class Activity extends Model
         return $this->hasMany(Payment::class);
     }
 
+    /**
+     * Returns the number of remaining seats
+     *
+     * @return int
+     */
+    public function getAvailableSeatsAttribute() : ?int
+    {
+        // Only if there are actually places
+        if ($this->seats === null) {
+            return null;
+        }
+
+        return $this->seats - $this->enrollments()->count();
+    }
+
     public function getEnrollmentOpenAttribute() : bool
     {
         $now = now();
