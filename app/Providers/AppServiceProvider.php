@@ -40,7 +40,8 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
 
         // Create method to render SVG icons
-        Blade::directive('icon', function ($icon, $className) {
+        Blade::directive('icon', function ($icon, $className = null) {
+            $className = $className ?? 'icon';
             return (
                 "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
                 "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
