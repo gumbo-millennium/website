@@ -17,6 +17,16 @@ if (mix.inProduction()) {
   mix.versionHash()
 }
 
+// Configure PostCSS plugins
+const postCssPlugins = [
+  require('postcss-import'),
+  require('tailwindcss')
+]
+
+// Configure Tailwind
+mix
+  .postCss('resources/css/app.css', 'public/css/app.css', postCssPlugins)
+
 // Configure javascript
 mix
   .js('resources/assets/js/theme.js', 'public/gumbo.js')

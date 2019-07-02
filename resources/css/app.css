@@ -1,0 +1,15 @@
+/**
+    Heads up, this is plain CSS!
+    We're using tailwind and PostCSS to parse this into a minimal layout, but
+    we're designing with plain CSS
+
+    There's probably no need to modify this file. Update the elements,
+    components and pages to change the layout
+*/
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'elements/all.css';
+@import 'components/all.css';
+@import 'pages/all.css';
+@import 'tailwindcss/utilities';

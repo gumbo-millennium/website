@@ -6,7 +6,6 @@ const glob = require('glob')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const imageminMozjpeg = require('imagemin-mozjpeg')
-const PurgecssPlugin = require('purgecss-webpack-plugin')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const SvgSpritemapPlugin = require('svg-spritemap-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -53,16 +52,6 @@ plugins.push(new StyleLintPlugin({
   files: [
     'resources/assets/sass/**/*.s?(a|c)ss'
   ]
-}))
-
-/**
- * Configure purgecss
- */
-plugins.push(new PurgecssPlugin({
-  paths: () => [].concat(
-    glob.sync(`${__dirname}/resources/views/*.blade.php`),
-    glob.sync(`${__dirname}/resources/views/**/*.blade.php`)
-  )
 }))
 
 /**
