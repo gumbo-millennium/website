@@ -39,7 +39,7 @@ RUN apt-get update \
     libxslt1.1 \
     libzip-dev \
     libzip4 \
-    mysql-client \
+    default-mysql-client \
     supervisor \
     unzip \
     wget \
