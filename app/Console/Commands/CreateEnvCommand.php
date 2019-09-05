@@ -34,7 +34,6 @@ class CreateEnvCommand extends Command
         'CACHE_DRIVER' => 'redis',
         'QUEUE_CONNECTION' => 'redis',
         'SESSION_DRIVER' => 'redis',
-        'WP_DATABASE' => 'wordpress',
     ];
 
     /**
@@ -57,8 +56,6 @@ class CreateEnvCommand extends Command
             // Add user and password
             'DB_USERNAME' => 'laravel',
             'DB_PASSWORD' => 'kiepo9Eeth0hoech5ooLa6ed8oaphaih',
-            'WP_USERNAME' => 'corcel',
-            'WP_PASSWORD' => 'zie2doboveesh2IraiDaim1Daiku6ue9',
         ],
         'travis' => [
             'APP_ENV' => 'testing',
@@ -66,8 +63,6 @@ class CreateEnvCommand extends Command
             // Set DB access to travis user
             'DB_USERNAME' => 'travis',
             'DB_PASSWORD' => null,
-            'WP_USERNAME' => 'travis',
-            'WP_PASSWORD' => null,
 
             // Disable mail, send it to an array
             'MAIL_DRIVER' => 'array'

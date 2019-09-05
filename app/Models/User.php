@@ -84,26 +84,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
     }
 
     /**
-     * Tries to find the WordPress user this user owns.
-     *
-     * @return HasOne
-     */
-    public function wordpress() : HasOne
-    {
-        return $this->hasOne(CorcelUser::class, 'user_login', 'wordpress_username');
-    }
-
-    /**
-     * Returns true if the WordPress user link was modified
-     *
-     * @return bool
-     */
-    public function wordpressWasChanged() : bool
-    {
-        return in_array('wordpress_userid', $this->getDirty());
-    }
-
-    /**
      * Returns full name of the user
      *
      * @return string|null

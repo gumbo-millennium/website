@@ -10,5 +10,5 @@
 $cfg['SendErrorReports'] = 'always';
 
 // Hide some tables
-$cfg['Servers'][1]['hide_db'] = '^(information_schema|mysql|(worpdress|laravel)_test)$';
+$cfg['Servers'][1]['hide_db'] = '^(information_schema|mysql|laravel_test)$';
 

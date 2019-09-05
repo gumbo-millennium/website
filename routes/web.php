@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
  */
 
 // Home and privacy policy
-Route::get('/', 'WordPressController@homepage')->name('home');
-Route::get('/privacy-policy', 'WordPressController@privacy')->name('privacy');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -143,6 +141,3 @@ Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
 
 // Common mistakes handler
 Route::redirect('/sign-up', '/join');
-
-// WordPress fallback
-Route::fallback('WordPressController@fallback');

@@ -15,7 +15,6 @@
         "gregoriohc/laravel-nova-theme-responsive": "^0.6.2",
         "gumbo-millennium/laravel-database-encryption": "^0.3.0",
         "guzzlehttp/guzzle": "^6.3",
-        "jgrossi/corcel": "^2.6",
         "laravel/framework": "~5.8.0",
         "laravel/horizon": "^1.4",
         "laravel/nova": "^2.0",

@@ -17,7 +17,6 @@ services:
       - ./:/var/www
     ports:
       - 127.13.37.1:80:80
-      - 127.13.37.1:8080:8080
     environment:
       VIRTUAL_HOST: gumbo.localhost
     networks:
@@ -26,7 +25,6 @@ services:
       - laravel
       - pma
       - mail
-      - wordpress
 
   # Application
   laravel:
@@ -94,21 +92,3 @@ services:
       VIRTUAL_PORT: 8025
     networks:
       - laravel
-
-  # WordPress (CMS)
-  wordpress:
-    build:
-      dockerfile: dockerfile
-      context: library/docker/wordpress
-    networks:
-      - laravel
-    volumes:
-      - ./library/wordpress/plugins/gumbo-millennium:/var/www/html/wp-content/plugins/gumbo-millennium:ro
-      - ./library/wordpress/themes/gumbo-millennium:/var/www/html/wp-content/themes/gumbo-millennium:ro
-    env_file:
-      - ./library/docker/wordpress/docker.env
-    environment:
-      VIRTUAL_HOST: wordpress.gumbo.localhost
-      VIRTUAL_PORT: 8080
-    depends_on:
-      - database
