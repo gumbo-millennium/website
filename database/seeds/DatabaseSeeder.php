@@ -15,12 +15,10 @@ class DatabaseSeeder extends Seeder
         // Seed roles and permissions
         $this->call(PermissionSeeder::class);
 
-        // Seed a default category
-        $this->call(FileCategorySeeder::class);
-
         // The rest of the seeders are not run in production
         if (App::environment('local')) {
             $this->call(UserSeeder::class);
+            $this->call(ActivitySeeder::class);
         }
     }
 }

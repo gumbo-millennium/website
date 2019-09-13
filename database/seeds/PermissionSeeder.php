@@ -1,5 +1,7 @@
 <?php
 
+use HJSON\HJSONException as HumanJsonException;
+use HJSON\HJSONParser as HumanJsonParser;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
@@ -15,187 +17,31 @@ use Spatie\Permission\Models\Role;
 class PermissionSeeder extends Seeder
 {
     /**
-     * Permissions, in [name, title] format
-     *
-     * @var array
+     * Filename of the permission file, relative from the resources path
+     * @var string
      */
-    protected $permissions = [
-        // Create file permissions
-        ['file-add', 'Bestanden toevoegen'],
-        ['file-edit', 'Bestanden bewerken'],
-        ['file-delete', 'Bestanden verwijderen'],
-        ['file-publish', 'Bestanden publiceren'],
-
-        // Create file user permissions
-        ['file-view', 'Bestanden bekijken (alleen metadata)'],
-        ['file-download', 'Bestanden downloaden'],
-
-        // Create file category permissions
-        ['file-category-add', 'Bestandscategorieën toevoegen'],
-        ['file-category-edit', 'Bestandscategorieën bewerken'],
-        ['file-category-delete', 'Bestandscategorieën verwijderen'],
-
-        // Plaza cam permissions
-        ['plazacam-view', 'Viewing of the plazacam (and coffee cam)'],
-        ['plazacam-edit', 'Editing the plazacam (and coffee cam)'],
-
-        // Manage content
-        ['content', 'Eigen WordPress content beheren'],
-        ['content-publish', 'Eigen WordPress content publiceren'],
-        ['content-all', 'WordPress content van iedereen beheren'],
-        ['content-admin', 'WordPress instellingen beheren'],
-
-        // Create event permissions
-        ['event-add', 'Evenementen toevoegen'],
-        ['event-add-paid', 'Evenementen toevoegen (betaald)'],
-        ['event-edit', 'Evenementen verwijderen'],
-        ['event-delete', 'Evenementen verwijderen'],
-        ['event-publish', 'Evenementen publiceren'],
-        ['event-manage-all', 'Andermans evenementen bewerken'],
-
-        // Manage sponsors
-        ['sponsor-edit', 'Sponsoren bewerken'],
-
-        // Manage roles
-        ['user-role', 'Gebruikersrollen bewerken'],
-        ['user-role-admin', 'Gebruikersrollen bewerken (admin)'],
-
-        // Manage enrollments
-        ['join-manage', 'Lidmaatschaps aanmeldingen beheren'],
-
-        // Create event user permissions
-        ['event-view', 'Evenementen bekijken'],
-        ['event-buy', 'Tickets voor evenementen kopen'],
-        ['event-view-private', 'Evenementen bekijken (privé)'],
-        ['event-buy-private', 'Tickets voor evenementen kopen (privé)'],
-
-        // Generic permissions
-        ['payment-admin', 'Inzage in transacties'],
-        ['admin', 'Toegang tot admin panel'],
-        ['devops', 'Toegang tot ops administratie'],
-
-        // Super Admin (only directly)
-        ['super-admin', 'Super Admin'],
-    ];
+    private const PERMISSION_FILE = 'assets/json/permissions.jsonc';
 
     /**
-     * Roles, in [name, title, permissions[]] format
-     *
-     * @var array
+     * Filename of the roles file, relative from the resources path
+     * @var string
      */
-    protected $roles = [
-        // Create guest role
-        ['guest', 'Gast (standaard)', [
-            // Allow viewing and buying event tickets
-            'event-view',
-            'event-buy'
-        ]],
+    private const ROLES_FILE = 'assets/json/roles.jsonc';
 
-        // Standard members
-        ['member', 'Gumbo Millennium lid', [
-            // Allow file browsing
-            'file-browse',
-            'file-download',
+    /**
+     * A human-friendly json parser
+     *
+     * @var HumanJsonParser
+     */
+    public $jsonParser;
 
-            // Allow viewing and buying event tickets for private events
-            'event-view-private',
-            'event-buy-private',
-
-            // Allow watching the plazacam
-            'plazacam-view',
-        ]],
-
-        // Activiteiten Committee
-        ['ac', 'Activiteiten Commissie', [
-            // Allow admin access
-            'admin',
-
-            // Allow event management
-            'event-add',
-            'event-add-paid',
-            'event-edit',
-            'event-delete',
-            'event-publish'
-        ]],
-
-        // Landhuis committee
-        ['lhw', 'Landhuis Commissie', [
-            // Allow admin access
-            'admin',
-
-            // Allow event management
-            'event-add',
-            'event-add-paid',
-            'event-edit',
-            'event-delete',
-            'event-publish'
-        ]],
-
-        // Public Relations Project Group
-        ['pr', 'PRPG', [
-            // Allow admin access
-            'admin',
-
-            // Allow content management
-            'content',
-            'content-all'
-        ]],
-
-        // Board
-        ['board', 'Bestuur', [
-            // Allow admin access
-            'admin',
-
-            // Allow file management
-            'file-add',
-            'file-edit',
-            'file-delete',
-            'file-publish',
-
-            // Allow category management
-            'file-category-add',
-            'file-category-edit',
-            'file-category-delete',
-
-            // Allow sponsor manageent
-            'sponsor-edit',
-
-            // Allow permission management
-            'user-role',
-
-            // Allow event management
-            'event-add',
-            'event-add-paid',
-            'event-edit',
-            'event-delete',
-            'event-publish',
-            'event-manage-all',
-
-            // Allow content management
-            'content',
-            'content-all',
-
-            // Allow plazacam management
-            'plazacam-edit',
-
-            // Allow payment monitoring
-            'payment-admin',
-        ]],
-
-        // Digital committee
-        ['dc', 'Digitale Commissie', '*'],
-
-        // Copied permissions from different groups
-        ['ib', 'Intro Bestuur', 'ac'],
-        ['bbqpg', 'BBQPG', 'ac'],
-        ['bc', 'Brascommissie', 'ac'],
-        ['intro-accie', 'Intro Accie', 'ac'],
-        ['ib', 'Introbestuur', 'ac'],
-
-        // Empty roles
-        ['kc', 'Kascommissie', []],
-        ['pc', 'Plazacommissie', []]
-    ];
+    /**
+     * Preps a HumanJsonParser
+     */
+    public function __construct()
+    {
+        $this->jsonParser = new HumanJsonParser();
+    }
 
     /**
      * Run the database seeds.
@@ -207,75 +53,190 @@ class PermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
-        $permissionObjects = collect();
-        $roleObjects = collect();
+        // Load json files
+        $permissionMap = $this->loadJson(self::PERMISSION_FILE);
+        $roleMap = $this->loadJson(self::ROLES_FILE);
 
-        // Create or update each permission, storing the resulting object in the permissionsObject collection
-        foreach ($this->permissions as list($name, $title)) {
-            $permissionObjects->put($name, Permission::updateOrCreate(
-                ['name' => $name],
-                ['title' => $title]
-            ));
+        if (!$permissionMap) {
+            printf("Cannot read permission json map, please check %s.\n", self::PERMISSION_FILE);
+            return false;
+        }
+        if (!$roleMap) {
+            printf("Cannot read roles json map, please check %s.\n", self::ROLES_FILE);
+            return false;
         }
 
-        // Get all permissions
-        $allPermissions = $permissionObjects->pluck('name');
+        // Seed permissions
+        $permissions = $this->seedPermissions($permissionMap);
 
-        // Create or update each role and sync permissions
-        foreach ($this->roles as list($name, $title, $permissions)) {
-            // Special string treatmet
-            if (is_string($permissions)) {
-                // Keep string
-                $permissionsQuery = (string) $permissions;
+        // Load roles file
+        $this->seedRoles($permissions, $roleMap);
+    }
 
-                // Get all permissions
-                $permissions = $allPermissions;
+    /**
+     * Creates all permissions in the $permissions collection, and returns a
+     * collection filled with Permission elements, based on name
+     *
+     * @param Collection $permissionMap
+     * @return Collection
+     */
+    public function seedPermissions(Collection $permissionMap) : Collection
+    {
+        // Collection of created permission
+        $collection = collect();
 
-                // If the permissions isn't wildcard, look for a role with the same name
-                if ($permissionsQuery !== '*') {
-                    try {
-                        $permissions = Role::findByName($permissionsQuery)->permissions()->pluck('name');
-                    } catch (RoleDoesNotExist $e) {
-                        $permissions = [];
-                    }
-                }
-            }
-
-            // Convert collections
-            if ($permissions instanceof Collection) {
-                $permissions = $permissions->toArray();
-            }
-
-            if (!is_array($permissions)) {
-                throw new \RuntimeException(sprintf(
-                    'Permissions is not an array (it\'s a %s), whilst it should be one by now',
-                    is_object($permissions) ? get_class($permissions) : gettype($permissions)
-                ));
-            }
-
-            // Get role object
-            $roleObject = Role::updateOrCreate(
-                ['name' => $name],
-                ['title' => $title]
+        // Loop through permission
+        foreach ($permissionMap as $name => $title) {
+            // Creates or updates the given permission
+            $perm = Permission::updateOrCreate(
+                compact('name'),
+                compact('title')
             );
 
-            // Get allowed permissions
-            $rolePermissions = $permissionObjects->whereIn('name', array_wrap($permissions));
-
-            // Sync all permissions, removing non-listed
-            $roleObject->syncPermissions($rolePermissions);
-
-            // Store role object in list
-            $roleObjects->put($name, $roleObject);
+            // Assign item
+            $collection->put($name, $perm);
         }
 
-        // Make 'guest' the default.
-        Role::where('name', 'guest')
-            ->update(['default' => 1]);
+        // Returns collection
+        return $collection;
+    }
 
-        // Remove 'default' role from all other roles, if any.
-        Role::where('default', 1)
-            ->where('name', '!=', 'guest')
-            ->update(['default' => 0]);
+    /**
+     * Creates a map with permissons to assign to roles
+     *
+     * @param Collection $permissions
+     * @param Collection $roles
+     * @param Collection $roleMap
+     * @return Collection
+     */
+    public function mapRolePermissions(Collection $permissions, Collection $roles, Collection $roleMap) : Collection
+    {
+        // Intermediate map
+        $rolePermissionMap = collect();
+
+        // Map first-party permissions to the name
+        foreach ($roleMap as $name => $roleData) {
+            // Get title and permissions
+            $wantedPermissons = Arr::get($roleData, 'permissions', []);
+
+            // Add all permissions, if requested
+            if (count($wantedPermissons) === 1 && Arr::first($wantedPermissons) === '*') {
+                $rolePermissionMap->put($name, $permissions);
+
+                printf(
+                    "Role %s has wildcard, now has %d permissions\n",
+                    optional($roles->get($name))->title ?? $name,
+                    count($rolePermissionMap->get($name))
+                );
+                continue;
+            }
+
+            $rolePermissionMap->put($name, $permissions->only($wantedPermissons));
+
+            printf(
+                "Role %s has %d permissions\n",
+                optional($roles->get($name))->title ?? $name,
+                count($rolePermissionMap->get($name))
+            );
+        }
+
+        // Map extended permissions to the name too
+        foreach ($roleMap as $name => $data) {
+            $extendName = Arr::get($data, 'extends', null);
+            // Skip if there's no extension
+            if (empty($extendName)) {
+                continue;
+            }
+
+            // Update permission for this name
+            $rolePermissionMap->put($name, $updatedPermissions = collect([
+                $rolePermissionMap->get($extendName),
+                $rolePermissionMap->get($name),
+            ])->flatten());
+
+            printf(
+                "Role %s extends %s, now has %d permissions\n",
+                optional($roles->get($name))->title ?? $name,
+                optional($roles->get($extendName))->title ?? $extendName,
+                $updatedPermissions->count()
+            );
+        }
+
+        // Return the permissionmap
+        return $rolePermissionMap;
+    }
+
+    /**
+     * Creats all roles and assings permissions
+     *
+     * @param Collection $permissions
+     * @param Collection $roleMap
+     * @return Collection
+     */
+    public function seedRoles(Collection $permissions, Collection $roleMap) : Collection
+    {
+        // Prep a roles collection
+        $roles = collect();
+
+        // Generate or update all permissions
+        foreach ($roleMap as $name => $roleData) {
+            $title = Arr::get($roleData, 'title');
+            $default = Arr::get($roleData, 'default') ? 1 : 0;
+            $roles->put($name, $role = Role::updateOrCreate(
+                compact('name'),
+                compact('title', 'default')
+            ));
+
+            printf(
+                "%s role %s.\n",
+                $role->wasRecentlyCreated ? 'Created' : 'Updated',
+                $role->title ?? $name,
+            );
+        }
+
+        // Generate role ⋄ permissions
+        $rolePermissionMap = $this->mapRolePermissions($permissions, $roles, $roleMap);
+
+        // Link rolePermissionMap to the Role
+        foreach ($roles as $name => $role) {
+            if ($rolePermissionMap->has($name)) {
+                $role->syncPermissions($rolePermissionMap->get($name));
+                printf(
+                    "Role %s now has %d permissions\n",
+                    $role->title ?? $name,
+                    count($rolePermissionMap->get($name))
+                );
+            }
+        }
+
+        // Return roles
+        return $roles;
+    }
+
+    /**
+     * Returns JSON from file, as Collection
+     *
+     * @param string $path
+     * @return Collection|null
+     */
+    private function loadJson(string $path) : ?Collection
+    {
+        // Get path of the file
+        $fullPath = resource_path($path);
+        if (!file_exists($fullPath)) {
+            return null;
+        }
+
+        // Get contents of the file
+        $contents = file_get_contents($fullPath);
+
+        // Convert contents to collection
+        try {
+            return collect($this->jsonParser->parse($contents, [
+                'assoc' => true
+            ]));
+        } catch (HumanJsonException $e) {
+            return null;
+        }
     }
 }
