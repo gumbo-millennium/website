@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\FileCategory;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,11 +16,17 @@ class CreateFileCategoriesTable extends Migration
     {
         Schema::create('file_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->timestamps();
 
             $table->string('title')->nullable();
             $table->string('slug', 190)->unique();
-            $table->boolean('default')->default(false);
         });
+
+        // Ensure an 'other' category exists
+        FileCategory::firstOrCreate(
+            ['slug' => 'other'],
+            ['title' => 'Overige']
+        );
     }
 
     /**

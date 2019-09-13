@@ -24,24 +24,25 @@ class CreateJoinSubmissionsTable extends Migration
 
             // Contact info
             $table->string('email', 120)->index();
-            $table->text('phone')->comment('Encrypted phone number');
+            $table->text('phone')->comment('Encrypted phone number')->nullable();
 
             // User details
-            $table->text('date_of_birth')->comment('Encrypted date of birth, as dd-mm-yyyy');
-            $table->text('gender')->comment('User supplied gender');
+            $table->text('date_of_birth')->comment('Encrypted date of birth, as dd-mm-yyyy')->nullable();
+            $table->text('gender')->comment('User supplied gender')->nullable();
 
             // Contact data
-            $table->text('street')->comment('Encrypted street name');
-            $table->text('number')->comment('Encrypted number');
-            $table->text('city')->comment('Encrypted city');
-            $table->text('postal_code')->comment('Encrypted zipcode');
-            $table->text('country')->comment('Encrypted country');
+            $table->text('street')->comment('Encrypted street name')->nullable();
+            $table->text('number')->comment('Encrypted number')->nullable();
+            $table->text('city')->comment('Encrypted city')->nullable();
+            $table->text('postal_code')->comment('Encrypted zipcode')->nullable();
+            $table->text('country')->comment('Encrypted country')->nullable();
+
+            // User settings
+            $table->boolean('windesheim_student')->default(0);
+            $table->boolean('newsletter')->default(0);
 
             // Result
-            $table->boolean('granted')
-                ->comment('Result of the reuqest, null if no result yet.')
-                ->nullable()
-                ->default(null);
+            $table->boolean('granted')->nullable()->default(null);
         });
     }
 
