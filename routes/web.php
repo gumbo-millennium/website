@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
  */
 
 // Home and privacy policy
+Route::get('/', 'PageController@homepage')->name('home');
+Route::get('/privacy-policy', 'PageController@privacy')->name('privacy');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -141,3 +143,6 @@ Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
 
 // Common mistakes handler
 Route::redirect('/sign-up', '/join');
+
+// Page fallback
+Route::fallback('PageController@fallback');
