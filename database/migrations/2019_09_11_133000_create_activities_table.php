@@ -20,7 +20,8 @@ class CreateActivitiesTable extends Migration
             // Event meta
             $table->string('name');
             $table->string('slug', 60)->unique();
-            $table->text('description')->nullable()->default(null);
+            $table->string('tagline', 150)->nullable()->default(null);
+            $table->json('description')->nullable()->default(null);
 
             // Event dates
             $table->dateTimeTz('event_start')->comment('Start date and time');
