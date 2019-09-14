@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-class Enrollment extends Model
+class Enrollment extends UuidModel
 {
     // Use encryption helper to protect user details
     use HasEncryptedAttributes;
@@ -24,7 +23,6 @@ class Enrollment extends Model
     protected $casts = [
         'data' => 'collection'
     ];
-
 
     /**
      * An enrollment can have multiple payments (in case one failed, for example)

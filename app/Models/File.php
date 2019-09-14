@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\FileCategory;
 use App\Models\User;
+use App\Traits\HasPaperclip;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,6 +23,7 @@ use Czim\Paperclip\Model\PaperclipTrait;
 class File extends SluggableModel implements AttachableInterface
 {
     use PaperclipTrait;
+    use HasPaperclip;
 
     /**
      * {@inheritDoc}
@@ -51,11 +53,11 @@ class File extends SluggableModel implements AttachableInterface
     ];
 
     /**
-     * Binds the files with paperclip
+     * Binds paperclip files
      *
-     * @param array $attributes
+     * @return void
      */
-    public function __construct(array $attributes = [])
+    protected function bindPaperclip() : void
     {
         // The file itself
         $this->hasAttachedFile('file');
@@ -83,9 +85,6 @@ class File extends SluggableModel implements AttachableInterface
                 Variant::make('square@2x')->steps(ResizeStep::make()->square($squareSize * 2)->crop()),
             ]
         ]);
-
-        // Forward call
-        parent::__construct($attributes);
     }
 
     /**
@@ -129,11 +128,9 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function download() : Relation
+    public function downloads() : Relation
     {
-        return $this->belongsToMany(User::class, 'file_downloads')
-            ->as('download')
-            ->using(FileDownload::class);
+        return $this->hasMany(FileDownload::class);
     }
 
     /**

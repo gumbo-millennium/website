@@ -84,6 +84,23 @@ class FileCategory extends SluggableModel
      */
     public function files() : Relation
     {
-        return $this->belongsToMany(File::class, 'file_category_catalog', 'category_id', 'file_id');
+        return $this->hasMany(File::class, 'category_id', 'id');
+    }
+
+    /**
+     * The files that belong to this category
+     *
+     * @return Relation
+     */
+    public function downloads() : Relation
+    {
+        return $this->hasManyThrough(
+            FileDownload::class,
+            File::class,
+            'category_id', // Foreign key on files table
+            'file_id', // Foreign key on downloads table
+            'id', // Local key on file_categories table
+            'id' // Local key on files table
+        );
     }
 }

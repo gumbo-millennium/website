@@ -70,10 +70,7 @@ class Price extends Number
         // Get value from parent
         $value = parent::resolveAttribute($resource, $attribute);
 
-        // Value
-        return $value;
-
-        // Multiply by 100
+        // Divide by 100
         return ($value !== null) ? $value / 100 : null;
     }
 
@@ -92,7 +89,7 @@ class Price extends Number
 
         // Format value
         if ($this->value !== null) {
-            $this->value = sprintf($this->displayFormat, number_format($this->value / 100, 2, ',', '.'));
+            $this->value = sprintf($this->displayFormat, number_format($this->value, 2, ',', '.'));
             return;
         }
 

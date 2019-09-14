@@ -2,17 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class Payment extends Model
+class Payment extends UuidModel
 {
+    /**
+     * @inheritDoc
+     */
+    protected $dates = [
+        'completed_at',
+        'refunded_at',
+    ];
+
+    /**
+     * @inheritDoc
+     */
     protected $casts = [
-        'confirmed_at' => 'date',
-        'refunded_at' => 'date',
         'amount' => 'int',
+        'refunded_amount' => 'int',
         'data' => 'collection',
-        'refund_amount' => 'int',
     ];
 
     /**
@@ -44,34 +52,6 @@ class Payment extends Model
     {
         return $this->amount === $this->refund_amount
             && $this->amount > 0;
-    }
-
-    /**
-     * Returns the transaction with the given ID and provider
-     *
-     * @param Builder $query
-     * @param string $provider
-     * @param string $transactionId
-     * @return Builder
-     */
-    public function scopeTransactionId(Builder $query, string $provider, string $transactionId) : Builder
-    {
-        return $query->where([
-            'provider' => $provider,
-            'provider_id' => $transactionId,
-        ]);
-    }
-
-    /**
-     * Scoped by provider
-     *
-     * @param Builder $query
-     * @param string $provider
-     * @return Builder
-     */
-    public function scopeProvider(Builder $query, string $provider) : Builder
-    {
-        return $query->where('provider', '=', $provider);
     }
 
     /**

@@ -29,13 +29,19 @@ class Payment extends Resource
     public static $title = 'id';
 
     /**
+     * Name of the group
+     *
+     * @var string
+     */
+    public static $group = 'Activities';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'id',
-        'provider_id',
+        'transaction_id',
     ];
     /**
      * Get the displayable label of the resource.
@@ -66,7 +72,9 @@ class Payment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Text::make('ID', 'id')
+                ->sortable()
+                ->exceptOnForms(),
 
             // Dates
             DateTime::make(__('Created At'), 'created_at')

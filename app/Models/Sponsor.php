@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasPaperclip;
 use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sponsor extends Model implements AttachableInterface
 {
     use PaperclipTrait;
+    use HasPaperclip;
 
     /**
      * The Sponsors default attributes.
@@ -65,11 +67,11 @@ class Sponsor extends Model implements AttachableInterface
     ];
 
     /**
-     * Binds the files with paperclip
+     * Binds paperclip files
      *
-     * @param array $attributes
+     * @return void
      */
-    public function __construct(array $attributes = [])
+    protected function bindPaperclip() : void
     {
         // Max sizes
         $bannerWidth = 1280 / 12 * 8;
@@ -89,9 +91,6 @@ class Sponsor extends Model implements AttachableInterface
                 ])->extension('png'),
             ]
         ]);
-
-        // Forward call
-        parent::__construct($attributes);
     }
 
     /**

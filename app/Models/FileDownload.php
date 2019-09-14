@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Ramsey\Uuid\Uuid;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * An individual file download, logs the file downloaded,
@@ -37,6 +36,13 @@ class FileDownload extends Pivot
     public $keyType = 'string';
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'file_downloads';
+
+    /**
      * The IP is fillable, others aren't
      *
      * @var array
@@ -51,7 +57,7 @@ class FileDownload extends Pivot
      * @var array
      */
     public $dates = [
-        'downloaded_at'
+        'created_at'
     ];
 
     /**

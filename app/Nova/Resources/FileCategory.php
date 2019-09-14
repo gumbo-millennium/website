@@ -2,23 +2,30 @@
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJs;
-use App\Models\Page as PageModel;
+use App\Models\FileCategory as FileCategoryModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use DanielDeWit\NovaPaperclip\PaperclipFile;
+use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Panel;
 
-class Page extends Resource
+class FileCategory extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = PageModel::class;
+    public static $model = FileCategoryModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -32,7 +39,7 @@ class Page extends Resource
      *
      * @var string
      */
-    public static $group = 'Content';
+    public static $group = 'File storage';
 
     /**
      * The columns that should be searched.
@@ -55,23 +62,40 @@ class Page extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make('Title', 'title')->slug('slug'),
+            // Title and slug
+            TextWithSlug::make('Title', 'title')
+                ->slug('slug')
+                ->rules('required', 'min:4')
+                ->help('File title, does not need to be a filename'),
             Slug::make('Slug', 'slug')
                 ->nullable(false)
-                ->readonly(function () {
-                    return array_key_exists($this->slug, PageModel::REQUIRED_PAGES);
-                }),
-
-            // Add multi selects
-            BelongsTo::make('Last modified by', 'author', User::class)
-                ->onlyOnDetail(),
+                ->creationRules('unique:activities,slug')
+                ->updateRules('unique:activities,slug,{{resourceId}}'),
 
             // Show timestamps
             DateTime::make('Created at', 'created_at')->onlyOnDetail(),
             DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
 
-            // Add data
-            NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),
+            // Paired files
+            HasMany::make('Files', 'files', File::class),
+
+            new Panel('Statistics', [
+                // Make extra data
+                Number::make('File count', function () {
+                    return $this->files()->count();
+                })->exceptOnForms(),
+
+                // List downloads, in time frames
+                Number::make('File downloads (48hrs)', function () {
+                    return $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count();
+                })->exceptOnForms(),
+                Number::make('File downloads (1 week)', function () {
+                    return $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count();
+                })->onlyOnDetail(),
+                Number::make('File downloads (all time)', function () {
+                    return $this->downloads()->count();
+                })->onlyOnDetail(),
+            ])
         ];
     }
 

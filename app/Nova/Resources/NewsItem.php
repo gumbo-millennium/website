@@ -28,6 +28,13 @@ class NewsItem extends Resource
     public static $title = 'title';
 
     /**
+     * Name of the group
+     *
+     * @var string
+     */
+    public static $group = 'Content';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -64,7 +71,7 @@ class NewsItem extends Resource
             DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
 
             // Add data
-            NovaEditorJs::make('Contents', 'contents')->hideFromIndex(),
+            NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),
         ];
     }
 

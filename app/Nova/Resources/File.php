@@ -34,6 +34,13 @@ class File extends Resource
     public static $title = 'title';
 
     /**
+     * Name of the group
+     *
+     * @var string
+     */
+    public static $group = 'File storage';
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -60,10 +67,17 @@ class File extends Resource
                 ->rules('required', 'min:4')
                 ->help('File title, does not need to be a filename'),
             Slug::make('Slug', 'slug')
-                ->nullable(false),
+                ->nullable(false)
+                ->creationRules('unique:activities,slug')
+                ->updateRules('unique:activities,slug,{{resourceId}}'),
+
+            // Owning category
+            BelongsTo::make('Category', 'category', FileCategory::class)
+                ->help('Category the file belongs to')
+                ->rules('required'),
 
             // Add multi selects
-            BelongsTo::make('Uploaded by', 'owner_id', User::class)
+            BelongsTo::make('Uploaded by', 'owner', User::class)
                 ->onlyOnDetail(),
 
             // Show timestamps
@@ -75,6 +89,7 @@ class File extends Resource
                 PaperclipFile::make('File', 'file')
                     ->mimes(['pdf'])
                     ->rules('required', 'mimes:pdf')
+                    ->disableDownload()
                     ->deletable(false)
                     ->readonly(function () {
                         return $this->exists && $this->file;
@@ -83,10 +98,7 @@ class File extends Resource
 
                 // Thumbnail
                 PaperclipImage::make('Thumbnail', 'thumbnail')
-                    ->mimes(['png', 'jpg'])
-                    ->rules('mimes:png,jpg')
-                    ->deletable(true)
-                    ->help('Screenshot, will be auto-generated if missing'),
+                    ->onlyOnDetail(),
             ]),
 
             new Panel('File Settings', [

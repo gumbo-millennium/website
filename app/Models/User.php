@@ -94,8 +94,18 @@ class User extends Authenticatable implements MustVerifyEmailContract
             $this->first_name,
             $this->insert,
             $this->last_name
-        ])->filer()->implode(' ');
+        ])->filter()->implode(' ');
 
         return $name !== '' ? $name : null;
+    }
+
+    /**
+     * Returns the public name of the user
+     *
+     * @return string|null
+     */
+    public function getPublicNameAttribute() : ?string
+    {
+        return $this->alias ?? $this->name;
     }
 }

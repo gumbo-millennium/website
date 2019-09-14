@@ -7,7 +7,9 @@ use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -34,9 +36,16 @@ class Activity extends Resource
     public static $title = 'name';
 
     /**
+     * Name of the group
+     *
+     * @var string
+     */
+    public static $group = 'Activities';
+
+    /**
      * @inheritDoc
      */
-    public static $defaultSort = 'event_start';
+    public static $defaultSort = 'start_date';
 
 
     /**
@@ -77,10 +86,10 @@ class Activity extends Resource
      */
     public function subtitle()
     {
-        $startDate = optional($this->event_start)->format('d-m-Y');
-        $endDate = optional($this->event_end)->format('d-m-Y');
-        $startTime = optional($this->event_start)->format('H:i');
-        $endTime = optional($this->event_end)->format('H:i');
+        $startDate = optional($this->start_date)->format('d-m-Y');
+        $endDate = optional($this->end_date)->format('d-m-Y');
+        $startTime = optional($this->start_date)->format('H:i');
+        $endTime = optional($this->end_date)->format('H:i');
 
         if ($startDate !== $endDate) {
             return sprintf('%s – %s', $startDate, $endDate);
@@ -98,13 +107,12 @@ class Activity extends Resource
      */
     public function fields(Request $request)
     {
-        return [
-            new Panel(__('activities.panels.base'), $this->mainFields()),
-            new Panel(__('activities.panels.date-price'), $this->pricingFields()),
-            new Panel(__('activities.panels.enrollments'), $this->enrollmentFields()),
+        return array_merge($this->mainFields(), [
+            new Panel('Date and price settings', $this->pricingFields()),
+            new Panel('Enrollment settings', $this->enrollmentFields()),
 
-            HasMany::make(__('Enrollments'), 'enrollments', Enrollment::class),
-        ];
+            HasMany::make('Enrollments', 'enrollments', Enrollment::class),
+        ]);
     }
 
     public function mainFields() : array
@@ -112,26 +120,42 @@ class Activity extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make(__('Title'), 'name')
+            TextWithSlug::make('Title', 'name')
                 ->sortable()
                 ->slug('slug')
                 ->rules('required', 'between:4,255'),
 
-            Slug::make(__('Slug'), 'slug')
-                ->help('URL, moet uniek zijn'),
+            Slug::make('Slug', 'slug')
+                ->creationRules('unique:activities,slug')
+                ->updateRules('unique:activities,slug,{{resourceId}}'),
 
-            Text::make(__('Tagline'), 'tagline')
+
+            Text::make('Tagline', 'tagline')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:4,255'),
 
-            NovaEditorJs::make(__('Description'), 'description')
-                ->rules('required'),
+            NovaEditorJs::make('Description', 'description')
+                ->nullable()
+                ->hideFromIndex(),
 
-            DateTime::make(__('Created At'), 'created_at')
+            PaperclipImage::make('Afbeelding', 'image')
+                ->deletable()
+                ->nullable()
+                ->mimes(['png', 'jpg'])
+                ->help('Image shown on the overview and detail page and on social media')
+                ->minWidth(1920)
+                ->minHeight(960)
+                ->rules(
+                    'nullable',
+                    'dimensions:min_width=1920,min_height=960',
+                    'image'
+                ),
+
+            DateTime::make('Created At', 'created_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Updated At'), 'updated_at')
+            DateTime::make('Updated At', 'updated_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
@@ -142,64 +166,70 @@ class Activity extends Resource
     public function pricingFields() : array
     {
         return [
-            DateTime::make(__('Event Start'), 'event_start')
+            DateTime::make('Event Start', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
                 ->firstDayOfWeek(1),
 
-            DateTime::make(__('Event End'), 'event_end')
-                ->rules('required', 'date', 'after:event_start')
+            DateTime::make('Event End', 'end_date')
+                ->rules('required', 'date', 'after:start_date')
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
-            Price::make(__('Member Price'), 'price_member')
-                ->min(1)
+            Price::make('Member Price', 'price_member')
+                ->min(2.50)
                 ->max(200)
-                ->step(0.05)
+                ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50')
-                ->help('In <strong>centen</strong>, exclusief administratiekosten'),
+                ->help('In Euro, not including service fees'),
 
-            Price::make(__('Guest Price'), 'price_guest')
-                ->min(1)
+            Price::make('Guest Price', 'price_guest')
+                ->min(2.50)
                 ->max(200)
-                ->step(0.05)
+                ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50', 'gte:price_member')
-                ->help('Excluding transaction fees'),
+                ->help('In Euro, not including service fees'),
         ];
     }
 
     public function enrollmentFields() : array
     {
         return [
-            DateTime::make(__('Enrollment Start'), 'enrollment_start')
-                ->rules('nullable', 'date', 'before:event_end')
+            DateTime::make('Enrollment Start', 'enrollment_start')
+                ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            DateTime::make(__('Enrollment End'), 'enrollment_end')
-                ->rules('nullable', 'date', 'before_or_equal:event_end')
+            DateTime::make('Enrollment End', 'enrollment_end')
+                ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
             Text::make(__('Enrollment status'), function () {
+                // Edge case for no-enrollment events
+                if ($this->enrollment_start === null && $this->enrollment_end === null) {
+                    return 'n/a';
+                }
+
+                // Label
                 $label = $this->enrollment_status ? 'open' : 'closed';
                 return ucfirst(__("activities.enrollment.{$label}"));
             })->onlyOnIndex(),
 
-            Seats::make(__('Total Seats'), 'seats')
+            Seats::make('Total Seats', 'seats')
                 ->min(1)
                 ->step(1)
                 ->nullable()
                 ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:1'),
 
-            Seats::make(__('Guest Seats'), 'public_seats')
+            Seats::make('Guest Seats', 'public_seats')
                 ->min(1)
                 ->step(1)
                 ->nullable()
