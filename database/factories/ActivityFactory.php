@@ -36,13 +36,16 @@ $factory->define(App\Activity::class, function (Faker $faker) {
     }
 
     return [
+        // Optionally cancel it
+        'cancelled_at' => $faker->optional(0.05)->dateTimeBetween('-2 years', '-6 hours'),
+
         // Labels
         'name' => $faker->words(4, true),
         'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
 
         // Dates
-        'event_start' => $eventStartCarbon,
-        'event_end' => $eventEndCarbon,
+        'start_date' => $eventStartCarbon,
+        'end_date' => $eventEndCarbon,
         'enrollment_start' => $enrollStartCarbon,
         'enrollment_end' => $enrollEndCarbon,
 

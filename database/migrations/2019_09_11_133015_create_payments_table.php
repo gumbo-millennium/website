@@ -15,10 +15,10 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             // IDs
-            $table->bigIncrements('id');
+            $table->uuid('id')->primary();
             $table->string('transaction_id', 180)->unique();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('enrollment_id');
+            $table->uuid('enrollment_id');
 
             // Timestamps, for creation, update and completion
             $table->timestamps();

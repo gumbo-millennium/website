@@ -69,8 +69,10 @@ class ActivitySeeder extends Seeder
         ], [
             'name' => 'Bruisweken',
             'tagline' => 'De Bruisweken zijn de algemene introductieweken voor nieuwe studenten in Zwolle.',
-            'event_start' => $startDate->setTime(10, 0, 0, 0),
-            'event_end' => $startDate->addDays(2)->setTime(15, 0, 0, 0)
+            'start_date' => $startDate->setTime(10, 0, 0, 0),
+            'end_date' => $startDate->addDays(2)->setTime(15, 0, 0, 0),
+            'enrollment_start' => null,
+            'enrollment_end' => null,
         ]);
     }
 
@@ -98,8 +100,8 @@ class ActivitySeeder extends Seeder
             'name' => 'Introductieweek',
             'tagline' =>
             'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
-            'event_start' => $date->setTime(10, 0, 0, 0),
-            'event_end' => $date->addDays(5)->setTime(10, 0, 0, 0),
+            'start_date' => $date->setTime(10, 0, 0, 0),
+            'end_date' => $date->addDays(5)->setTime(10, 0, 0, 0),
             'seats' => null,
             'price_member' => $eventPrice * 100, // Price in cents
             'price_guest' => $eventPrice * 100, // Price in cents
@@ -150,9 +152,13 @@ class ActivitySeeder extends Seeder
         ], [
             'name' => "Kerstborrel {$shortYear}",
             'tagline' => 'Haha, Glühwein',
-            'event_start' => $mondayBefore->setTime(15, 0, 0, 0),
-            'event_end' => $mondayBefore->setTime(22, 0, 0, 0),
+            'start_date' => $mondayBefore->setTime(15, 0, 0, 0),
+            'end_date' => $mondayBefore->setTime(22, 0, 0, 0),
         ]);
+
+        // Determine estimate activity price, raised € 0.50 each year since '17
+        $memberPrice = (12 + ($fridayBefore->year - 2017) / 2.0);
+        $guestPrice = ceil($memberPrice * 1.15);
 
         // Find or create Activity 2
         Activity::firstOrCreate([
@@ -160,8 +166,10 @@ class ActivitySeeder extends Seeder
         ], [
             'name' => "Kerstdiner {$shortYear}",
             'tagline' => 'Haha, voer',
-            'event_start' => $fridayBefore->setTime(17, 30, 0, 0),
-            'event_end' => $fridayBefore->setTime(21, 0, 0, 0),
+            'start_date' => $fridayBefore->setTime(17, 30, 0, 0),
+            'end_date' => $fridayBefore->setTime(21, 0, 0, 0),
+            'price_member' => $memberPrice * 100,
+            'price_guest' => $guestPrice * 100
         ]);
     }
 }
