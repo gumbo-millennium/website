@@ -2,28 +2,30 @@
 
 namespace App\Nova\Resources;
 
-use App\Models\Enrollment as EnrollmentModel;
+use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Models\NewsItem as NewsItemModel;
+use Benjaminhirsch\NovaSlugField\Slug;
+use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\KeyValue;
 
-class Enrollment extends Resource
+class NewsItem extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = EnrollmentModel::class;
+    public static $model = NewsItemModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -31,28 +33,9 @@ class Enrollment extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'title',
+        'slug',
     ];
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
-    public static function label()
-    {
-        return __('Enrollments');
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     *
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return __('Enrollment');
-    }
 
     /**
      * Get the fields displayed by the resource.
@@ -65,17 +48,23 @@ class Enrollment extends Resource
         return [
             ID::make()->sortable(),
 
+            TextWithSlug::make('Title', 'title')->slug('slug'),
+            Slug::make('Slug', 'slug')
+                ->nullable(false)
+                ->readonly(function () {
+                    return array_key_exists($this->slug, NewsItemModel::REQUIRED_PAGES);
+                }),
+
             // Add multi selects
-            BelongsTo::make('Activities', 'activity'),
-            BelongsTo::make('Users', 'user'),
+            BelongsTo::make('Last modified by', 'author', User::class)
+                ->onlyOnDetail(),
+
+            // Show timestamps
+            DateTime::make('Created at', 'created_at')->onlyOnDetail(),
+            DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
 
             // Add data
-            KeyValue::make(__('Enrollment Data'), 'data')
-                ->rules('json')
-                ->hideFromIndex(),
-
-            // Add payments
-            HasMany::make(__('Payments'), 'payments', Payment::class),
+            NovaEditorJs::make('Contents', 'contents')->hideFromIndex(),
         ];
     }
 

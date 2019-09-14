@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJs;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
 
-class Activity extends Model
+class Activity extends SluggableModel
 {
     /**
      * @inheritDoc
@@ -18,7 +19,13 @@ class Activity extends Model
         'enrollment_end'
     ];
 
+    /**
+     * @inheritDoc
+     */
     protected $casts = [
+        // Description
+        'description' => 'json',
+
         // Number of seats
         'seats' => 'int',
         'public_seats' => 'int',
@@ -30,6 +37,22 @@ class Activity extends Model
         // Extra information
         'enrollment_questions' => 'collection',
     ];
+
+    /**
+     * Generate the slug based on the title property
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+                'unique' => true,
+            ]
+        ];
+    }
+
 
     /**
      * Returns the associated role
@@ -97,5 +120,15 @@ class Activity extends Model
 
         // Enrollment start < now < (Enrollment end | Event end)
         return true;
+    }
+
+    /**
+     * Returns description HTML
+     *
+     * @return string|null
+     */
+    public function getDescriptionHtmlAttribute() : ?string
+    {
+        return $this->description ? NovaEditorJs::generateHtmlOutput($this->description) : null;
     }
 }

@@ -90,11 +90,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     public function getNameAttribute() : ?string
     {
-        $name = implode(' ', array_filter([
+        $name = collect([
             $this->first_name,
             $this->insert,
             $this->last_name
-        ]));
+        ])->filer()->implode(' ');
 
         return $name !== '' ? $name : null;
     }

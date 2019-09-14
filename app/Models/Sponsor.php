@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Czim\Paperclip\Config\Steps\ResizeStep;
+use Czim\Paperclip\Config\Variant;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Gumbo Millennium sponsors
@@ -13,8 +17,10 @@ use Illuminate\Database\Eloquent\Builder;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class Sponsor extends SluggableModel
+class Sponsor extends Model implements AttachableInterface
 {
+    use PaperclipTrait;
+
     /**
      * The Sponsors default attributes.
      *
@@ -50,32 +56,42 @@ class Sponsor extends SluggableModel
      */
     protected $casts = [
         'classic' => 'bool',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
+        'view_count' => 'int',
+        'click_count' => 'int'
     ];
 
     /**
-     * The attributes that should be mutated to dates.
+     * Binds the files with paperclip
      *
-     * @var array
+     * @param array $attributes
      */
-    protected $dates = [
-        'deleted_at'
-    ];
-
-    /**
-     * Generate the slug based on the display_title property
-     *
-     * @return array
-     */
-    public function sluggable() : array
+    public function __construct(array $attributes = [])
     {
-        return [
-            'slug' => [
-                'source' => 'display_title',
-                'unique' => true,
-                'onUpdate' => true,
-                'reserved' => ['add']
+        // Max sizes
+        $bannerWidth = 1280 / 12 * 8;
+        $bannerHeight = 120;
+
+        // The actual screenshots
+        $this->hasAttachedFile('image', [
+            'variants' => [
+                // Make banner-sized image
+                Variant::make('banner')->steps([
+                    ResizeStep::make()->width($bannerWidth)->height($bannerHeight)
+                ])->extension('png'),
+
+                // Make banner-sized image at hdpi scale
+                Variant::make('banner@2x')->steps([
+                    ResizeStep::make()->width($bannerWidth * 2)->height($bannerHeight * 2)
+                ])->extension('png'),
             ]
-        ];
+        ]);
+
+        // Forward call
+        parent::__construct($attributes);
     }
 
     /**
@@ -87,7 +103,7 @@ class Sponsor extends SluggableModel
     public function scopeAvailable(Builder $builder) : Builder
     {
         return $builder
-            ->whereNotNull('image_url')
+            ->whereNotNull('image_file_name')
             ->where(function ($query) {
                 $query->where('starts_at', '>=', now())
                     ->orWhereNull('starts_at');

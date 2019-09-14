@@ -3,14 +3,14 @@
 namespace App\Nova\Resources;
 
 use App\Models\JoinSubmission as JoinSubmissionModel;
+use App\Nova\Actions\HandleJoinSubmission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\Heading;
-use App\Nova\Actions\HandleJoinSubmission;
 
 /**
  * Returns join requests

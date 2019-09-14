@@ -2,17 +2,18 @@
 
 namespace App\Nova\Resources;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
-use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Number;
+use Spatie\Permission\Models\Role as RoleModel;
 use Spatie\Permission\PermissionRegistrar;
 
 class Role extends Resource
@@ -22,7 +23,7 @@ class Role extends Resource
      *
      * @var string
      */
-    public static $model = \Spatie\Permission\Models\Role::class;
+    public static $model = RoleModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasParent;
+use Czim\Paperclip\Config\Steps\ResizeStep;
+use Czim\Paperclip\Config\Variant;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Model\PaperclipTrait;
 
 /**
  * A user-uploaded file
@@ -15,69 +19,15 @@ use App\Traits\HasParent;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class File extends SluggableModel
+class File extends SluggableModel implements AttachableInterface
 {
-    use HasParent;
-
-    /**
-     * Storage directory of files
-     */
-    const STORAGE_DIR = 'files';
-
-    /**
-     * @var int File is pending processing
-     */
-    const STATE_PENDING = 0;
-
-    /**
-     * @var int File was checked by repair system
-     */
-    const STATE_FILE_CHECKED = 1;
-
-    /**
-     * @var int File is converted to PDF/A format.
-     */
-    const STATE_PDFA = 4;
-
-    /**
-     * @var int File has metadata
-     */
-    const STATE_HAS_META = 8;
-
-    /**
-     * @var int File has thumbnails
-     */
-    const STATE_HAS_THUMBNAIL = 16;
-
-    /**
-     * @var int File has fulltext content
-     */
-    const STATE_HAS_CONTENT = 32;
-
-    /**
-     * @var int File is broken and cannot be published
-     */
-    const STATE_BROKEN = 1024;
-
-    /**
-     * @var string[] Names of the states
-     */
-    const STATES = [
-        self::STATE_PENDING => 'pending',
-        self::STATE_FILE_CHECKED => 'checked',
-        self::STATE_BROKEN => 'broken',
-        self::STATE_HAS_CONTENT => 'indexed',
-        self::STATE_PDFA => 'pdfa',
-        self::STATE_HAS_META => 'has-meta',
-        self::STATE_HAS_THUMBNAIL => 'has-thumbnail',
-    ];
+    use PaperclipTrait;
 
     /**
      * {@inheritDoc}
      */
     protected $appends = [
-        'url',
-        'display_title'
+        'url'
     ];
 
     /**
@@ -85,19 +35,58 @@ class File extends SluggableModel
      */
     protected $fillable = [
         'title',
-        'filename',
-        'filesize',
-        'mime',
-        'path',
-        'public'
+        'file_contents',
+        'file_pages',
+        'file_meta',
+        'pulled',
     ];
 
     /**
      * {@inheritDoc}
      */
     protected $casts = [
-        'file_meta' => 'array'
+        'pulled' => 'bool',
+        'file_meta' => 'json',
+        'file_pages' => 'int',
     ];
+
+    /**
+     * Binds the files with paperclip
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        // The file itself
+        $this->hasAttachedFile('file');
+
+        // The screenshot sizes
+        $containerWidth = 1280;
+        $tileWidth = $containerWidth / 12 * 4;
+        $mediumWidth = $containerWidth / 12 * 3;
+        $squareSize = 192;
+
+        // The actual screenshots
+        $this->hasAttachedFile('thumbail', [
+            'variants' => [
+                // The tile variant is a 4/12 width image, which is wider than it is tall.
+                Variant::make('medium')->steps(ResizeStep::make()->width($tileWidth)),
+                Variant::make('medium@2x')->steps(ResizeStep::make()->width($tileWidth * 2)),
+
+                // The medium variant is a sidebar element which, at best, takes up 3/12 of the container
+                // On mobile it's full-width, but eh ¯\_(ツ)_/¯
+                Variant::make('medium')->steps(ResizeStep::make()->width($mediumWidth)),
+                Variant::make('medium@2x')->steps(ResizeStep::make()->width($mediumWidth * 2)),
+
+                // Square picture, used in collection view or something
+                Variant::make('square')->steps(ResizeStep::make()->square($squareSize)->crop()),
+                Variant::make('square@2x')->steps(ResizeStep::make()->square($squareSize * 2)->crop()),
+            ]
+        ]);
+
+        // Forward call
+        parent::__construct($attributes);
+    }
 
     /**
      * Generate the slug based on the display_title property
@@ -108,9 +97,9 @@ class File extends SluggableModel
     {
         return [
             'slug' => [
-                'source' => 'display_title',
+                'source' => 'title',
                 'unique' => true,
-                'onUpdate' => true
+                'onUpdate' => false
             ]
         ];
     }
@@ -120,9 +109,9 @@ class File extends SluggableModel
      *
      * @return Relation
      */
-    public function categories() : Relation
+    public function category() : Relation
     {
-        return $this->belongsToMany(FileCategory::class, 'file_category_catalog', 'file_id', 'category_id');
+        return $this->belongsTo(FileCategory::class, 'category_id', 'id');
     }
 
     /**
@@ -132,7 +121,7 @@ class File extends SluggableModel
      */
     public function owner() : Relation
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     /**
@@ -145,37 +134,6 @@ class File extends SluggableModel
         return $this->belongsToMany(User::class, 'file_downloads')
             ->as('download')
             ->using(FileDownload::class);
-    }
-
-    /**
-     * Returns the display title of a file, or null if unknown
-     *
-     * @return string|null
-     */
-    public function getDisplayTitleAttribute() : ?string
-    {
-        return !empty($this->title) ? $this->title : $this->filename;
-    }
-
-    /**
-     * Prevents deletion after 48hrs of uploading.
-     *
-     * @return bool
-     */
-    public function getCanDeleteAttribute() : bool
-    {
-        // Always allow deletion of non-created files
-        if ($this->created_at === null) {
-            return true;
-        }
-
-        // Check category for
-
-        // Get a timestamp 2 days back
-        $twoDaysAgo = today()->subDays(2);
-
-        // Allow deletion if not yet saved OR if created less than 2 days ago
-        return $this->created_at === null  || $this->created_at >= $twoDaysAgo;
     }
 
     /**
@@ -194,124 +152,12 @@ class File extends SluggableModel
     }
 
     /**
-     * Returns human-readable status
+     * A file may have a replacement
      *
-     * @return array
+     * @return Relation
      */
-    public function getProcessingStatusAttribute() : array
+    public function replacement() : Relation
     {
-        if ($this->hasState(self::STATE_BROKEN)) {
-            return [__('files.state.broken')];
-        }
-
-        $result = [];
-        foreach (self::STATES as $value => $label) {
-            if ($this->hasState($value)) {
-                $result[] = __("files.state.$label");
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Ensures that the filename has a lowercase extension and
-     * is ASCII-safe.
-     *
-     * @param string $filename
-     * @return void
-     */
-    public function setFilenameAttribute(?string $filename)
-    {
-        if (is_string($filename)) {
-            // Determine extension from mime, or assume PDF
-            if (!empty($this->mime)) {
-                $extguesser = ExtensionGuesser::getInstance();
-                $ext = preg_quote($extguesser->guess($this->mime));
-            } else {
-                $ext = 'pdf';
-            }
-
-            // Trim extension
-            if (preg_match("/^(.+)\.{$ext}$/i", $filename, $matches)) {
-                $filename = $matches[1];
-            }
-
-            // Convert to ASCII, using Dutch locale
-            setlocale(LC_CTYPE, 'nl_NL');
-            $filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $filename);
-            $filename .= ".{$ext}";
-        }
-
-        // Store filename
-        $this->attributes['filename'] = $filename;
-    }
-
-    /**
-     * Adds the given state
-     *
-     * @param int $state
-     * @return void
-     */
-    public function addState(int $state) : void
-    {
-        $this->state |= $state;
-    }
-
-    /**
-     * Removes the given state
-     *
-     * @param int $state
-     * @return void
-     */
-    public function removeState(int $state) : void
-    {
-        $this->state ^= $state;
-    }
-
-    /**
-     * Checks if a given state is present on the file
-     *
-     * @param int $state
-     * @return bool
-     */
-    public function hasState(int $state) : bool
-    {
-        return $state === 0 ? $this->state === 0 : ($this->state & $state) === $state;
-    }
-
-    /**
-     * Returns true if file is broken.
-     *
-     * @return bool
-     */
-    public function getBrokenAttribute() : bool
-    {
-        return $this->hasState(self::STATE_BROKEN);
-    }
-
-    /**
-     * Scope by publicness of the files
-     *
-     * @param Builder $builder
-     * @param bool $public
-     * @return Builder
-     */
-    public function scopePublic(Builder $builder, bool $public = null)
-    {
-        return $builder->where('public', '=', $public === false ? '0' : '1');
-    }
-
-    /**
-     * Get only available files
-     *
-     * @param Builder $builder
-     * @return void
-     */
-    public function scopeAvailable(Builder $builder)
-    {
-        return $builder->where(function ($query) {
-            $query->where('state', '&', self::STATE_BROKEN)
-                ->orWhere('state', '=', '0');
-        });
+        return $this->belongsTo(File::class, 'replacement_id');
     }
 }

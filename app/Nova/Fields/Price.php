@@ -20,7 +20,7 @@ class Price extends Number
      *
      * @var string
      */
-    protected $displayFormat = '€ %.2f';
+    protected $displayFormat = '€ %s';
 
     /**
      * Sets the string used to format the price, should be a printf-compatible format.
@@ -70,6 +70,9 @@ class Price extends Number
         // Get value from parent
         $value = parent::resolveAttribute($resource, $attribute);
 
+        // Value
+        return $value;
+
         // Multiply by 100
         return ($value !== null) ? $value / 100 : null;
     }
@@ -84,8 +87,16 @@ class Price extends Number
      */
     public function resolveForDisplay($resource, $attribute = null)
     {
+        // Get value via parent
+        parent::resolveForDisplay($resource, $attribute);
+
+        // Format value
         if ($this->value !== null) {
-            $this->value = sprintf($this->displayFormat, $this->value);
+            $this->value = sprintf($this->displayFormat, number_format($this->value / 100, 2, ',', '.'));
+            return;
         }
+
+        // Return empty value
+        $this->value = '–';
     }
 }

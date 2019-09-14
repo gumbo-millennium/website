@@ -2,11 +2,18 @@
 
 namespace App\Nova\Resources;
 
-use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Resource as NovaResource;
 
 abstract class Resource extends NovaResource
 {
+    /**
+     * Column to sort by
+     *
+     * @var null|string
+     */
+    public static $defaultSort = null;
+
     /**
      * Build an "index" query for the given resource.
      *
@@ -16,6 +23,11 @@ abstract class Resource extends NovaResource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
+        if (static::$defaultSort && empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+            return $query->orderBy(static::$defaultSort);
+        }
+
         return $query;
     }
 

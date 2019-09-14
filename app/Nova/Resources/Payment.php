@@ -2,9 +2,9 @@
 
 namespace App\Nova\Resources;
 
+use App\Models\Payment as PaymentModel;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\Text;
@@ -19,7 +19,7 @@ class Payment extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Payment::class;
+    public static $model = PaymentModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

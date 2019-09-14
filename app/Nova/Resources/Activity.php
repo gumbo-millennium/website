@@ -2,20 +2,17 @@
 
 namespace App\Nova\Resources;
 
+use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Nova\Fields\Price;
+use App\Nova\Fields\Seats;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\HasOne;
-use Laravel\Nova\Fields\Boolean;
-use App\Nova\Fields\Price;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Panel;
 
 /**
  * An activity resource
@@ -35,6 +32,11 @@ class Activity extends Resource
      * @var string
      */
     public static $title = 'name';
+
+    /**
+     * @inheritDoc
+     */
+    public static $defaultSort = 'event_start';
 
 
     /**
@@ -97,11 +99,11 @@ class Activity extends Resource
     public function fields(Request $request)
     {
         return [
-            new Panel(__('Base information'), $this->mainFields()),
-            new Panel(__('Date and Cost'), $this->pricingFields()),
-            new Panel(__('Enrollments'), $this->enrollmentFields()),
+            new Panel(__('activities.panels.base'), $this->mainFields()),
+            new Panel(__('activities.panels.date-price'), $this->pricingFields()),
+            new Panel(__('activities.panels.enrollments'), $this->enrollmentFields()),
 
-            HasMany::make('Enrollments'),
+            HasMany::make(__('Enrollments'), 'enrollments', Enrollment::class),
         ];
     }
 
@@ -118,8 +120,12 @@ class Activity extends Resource
             Slug::make(__('Slug'), 'slug')
                 ->help('URL, moet uniek zijn'),
 
-            Textarea::make(__('Description'), 'description')
-                ->rules('required', 'min:10'),
+            Text::make(__('Tagline'), 'tagline')
+                ->hideFromIndex()
+                ->rules('nullable', 'string', 'between:4,255'),
+
+            NovaEditorJs::make(__('Description'), 'description')
+                ->rules('required'),
 
             DateTime::make(__('Created At'), 'created_at')
                 ->readonly()
@@ -181,17 +187,19 @@ class Activity extends Resource
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            Boolean::make(__('Enrollment status'), 'enrollment_status')
-                ->onlyOnIndex(),
+            Text::make(__('Enrollment status'), function () {
+                $label = $this->enrollment_status ? 'open' : 'closed';
+                return ucfirst(__("activities.enrollment.{$label}"));
+            })->onlyOnIndex(),
 
-            Number::make(__('Total Seats'), 'seats')
+            Seats::make(__('Total Seats'), 'seats')
                 ->min(1)
                 ->step(1)
                 ->nullable()
                 ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:1'),
 
-            Number::make(__('Guest Seats'), 'public_seats')
+            Seats::make(__('Guest Seats'), 'public_seats')
                 ->min(1)
                 ->step(1)
                 ->nullable()
