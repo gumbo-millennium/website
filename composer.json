@@ -35,7 +35,6 @@
         "vyuldashev/nova-permission": "^1.8"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.5",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
