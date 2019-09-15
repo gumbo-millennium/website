@@ -1,0 +1,65 @@
+{
+    // Create file permissions
+    "file-create": "Bestanden toevoegen",
+    "file-update": "Bestanden bewerken",
+    "file-delete": "Bestanden verwijderen",
+    "file-purge": "Bestanden permanent verwijderen",
+
+    // Create file user permissions
+    "file-view": "Bestanden bekijken (alleen metadata)",
+    "file-download": "Bestanden downloaden",
+
+    // Create file category permissions
+    "file-category-create": "Bestandscategorieën toevoegen",
+    "file-category-update": "Bestandscategorieën bewerken",
+    "file-category-delete": "Bestandscategorieën verwijderen",
+
+    // Plaza cam permissions
+    "plazacam-create": "Viewing of the plazacam (and coffee cam)",
+    "plazacam-update": "Editing the plazacam (and coffee cam)",
+
+    // Manage content
+    "page-create": "Pagina's toevoegen",
+    "page-update": "Pagina's bewerken",
+    "page-delete": "Pagina's verwijderen",
+    "page-purge": "Pagina's permanent verwijderen",
+
+    // Create event permissions
+    "activity-create": "Evenementen toevoegen",
+    "activity-create-paid": "Evenementen toevoegen (betaald)",
+    "activity-update": "Evenementen bijwerken",
+    "activity-cancel": "Evenementen annuleren",
+    "activity-delete": "Evenementen verwijderen",
+    "activity-purge": "Evenementen permanent verwijderen",
+    "activity-publish": "Evenementen publiceren",
+
+    // Manage enrollments
+    "enrollment-create": "Evenement inschrijvingen aanmaken",
+    "enrollment-update": "Evenement inschrijvingen bewerken",
+    "enrollment-delete": "Evenement inschrijvingen verwijderen",
+    "enrollment-refund": "Evenement inschrijvingen terugbetalen",
+
+    // Manage sponsors
+    "sponsor-manage": "Sponsoren bewerken",
+
+    // Manage roles
+    "user-role": "Gebruikersrollen bewerken",
+    "user-role-admin": "Gebruikersrollen bewerken (admin)",
+
+    // Manage enrollments
+    "join-manage": "Lidmaatschaps aanmeldingen beheren",
+
+    // Create event user permissions
+    "activity-view": "Evenementen bekijken",
+    "activity-buy": "Tickets voor evenementen kopen",
+    "activity-view-private": "Evenementen bekijken (privé)",
+    "activity-buy-private": "Tickets voor evenementen kopen (privé)",
+
+    // Generic permissions
+    "payment-admin": "Inzage in transacties",
+    "admin": "Toegang tot admin panel",
+    "devops": "Toegang tot ops administratie",
+
+    // Super Admin (only directly)
+    "super-admin": "Super Admin",
+}

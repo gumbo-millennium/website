@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Nova;
 
 class RedirectIfAuthenticated
 {
@@ -18,7 +19,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect(route('admin.home'));
+            return redirect(Nova::path());
         }
 
         return $next($request);

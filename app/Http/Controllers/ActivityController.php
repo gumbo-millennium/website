@@ -23,11 +23,11 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         // Get all future events by default
-        $query = Activity::where('event_end', '>', now());
+        $query = Activity::where('end_date', '>', now());
 
         // Get all past events instead
         if ($request->has('past')) {
-            $query = Activity::where('event_end', '<=', now());
+            $query = Activity::where('end_date', '<=', now());
         }
 
         $activities = $query->paginate();
@@ -42,11 +42,6 @@ class ActivityController extends Controller
             ])->orderBy('created_at', 'asc')->get()->keyBy('activity_id');
         }
 
-        // Duplicate activities
-        for ($i = 0; $i < 5; $i++) {
-            $activities = $activities->concat($activities);
-        }
-
         // Render the view with the events and their enrollments
         return view('activities.index', compact('activities', 'enrollments'));
     }
@@ -59,6 +54,6 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
-        //
+        return response()->json($activity);
     }
 }

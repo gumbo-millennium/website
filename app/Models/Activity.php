@@ -125,7 +125,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function role() : Relation
     {
-        return $this->belongsTo(Role::class, 'id', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 
     /**
@@ -135,7 +135,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function user() : Relation
     {
-        return $this->belongsTo(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**

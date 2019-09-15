@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Activity;
@@ -10,6 +12,7 @@ use App\Observers\FileObserver;
 use App\Observers\UserObserver;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -54,27 +57,31 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      *
      * @return void
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function register()
     {
-        // Register Guzzle client (singleton)
-        $this->app->singleton(Client::class, function () {
+        // Add Paperclip macro to the database helper
+        Blueprint::macro('paperclip', function (string $name, bool $variants = null) {
+            $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
+            $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
+            $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
+            $this->timestamp("{$name}_updated_at")->comment("{$name} update timestamp")->nullable();
 
-            // Publish our name, some version info and how to contact us.
-            $userAgent = sprintf(
-                'gumbo-millennium.nl/1.0 (incompatible; curl/%s; php/%s; https://www.gumbo-millennium.nl);',
-                curl_version()['version'],
-                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION
-            );
+            if ($variants !== false) {
+                $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
+            }
+        });
 
-            // The client should send a user agent that allows sysadmins to contact us,
-            // aside from that we should be snappy with declining the connection and not
-            // throw exceptions on response codes ≥ 400.
-            return new Client([
-                'http_errors' => false,
-                'connect_timeout' => 0.50,
-                'headers' => ["User-Agent: {$userAgent}"]
-            ]);
+        // Add Paperclip drop macro to database
+        Blueprint::macro('dropPaperclip', function (string $name, bool $variants = null) {
+            $this->dropColumn(array_filter([
+                "{$name}_file_name",
+                "{$name}_file_size",
+                "{$name}_content_type",
+                "{$name}_updated_at",
+                $variants !== false ? "{$name}_variants" : null
+            ]));
         });
     }
 }

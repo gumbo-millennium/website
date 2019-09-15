@@ -1,0 +1,152 @@
+{
+    // Create guest role
+    "guest": {
+        "title": "Gast (standaard)",
+        "permissions": [
+            // Allow viewing and buying activity tickets
+            "activity-view",
+            "activity-buy"
+        ]
+    },
+
+    // Standard members
+    "member": {
+        "title": "Gumbo Millennium lid",
+        "permissions": [
+            // Allow file browsing
+            "file-view",
+            "file-download",
+            // Allow viewing and buying activity tickets for private activitys
+            "activity-view-private",
+            "activity-buy-private",
+            // Allow watching the plazacam
+            "plazacam-view",
+        ]
+    },
+
+    // Activiteiten Committee
+    "ac": {
+        "title": "Activiteiten Commissie",
+        "permissions": [
+            // Allow admin access
+            "admin",
+
+            // Allow activity management
+            "activity-create",
+            "activity-create-paid",
+            "activity-update",
+            "activity-cancel",
+        ]
+    },
+
+    // Landhuis committee
+    "lhw": {
+        "title": "Landhuis Commissie",
+        "permissions": [
+            // Allow admin access
+            "admin",
+        ]
+    },
+    // Public Relations Project Group
+    "pr": {
+        "title": "PRPG",
+        "permissions": [
+            // Allow admin access
+            "admin",
+
+            // Allow content management
+            "page-create",
+            "page-update",
+            "page-delete",
+            "page-purge",
+        ]
+    },
+    // Board
+    "board": {
+        "title": "Bestuur",
+        "permissions": [
+            // Allow admin access
+            "admin",
+
+            // Allow file management
+            "file-create",
+            "file-update",
+            "file-delete",
+            "file-purge",
+
+            // Allow category management
+            "file-category-create",
+            "file-category-update",
+            "file-category-delete",
+
+            // Allow sponsor manageent
+            "sponsor-manage",
+
+            // Allow permission management
+            "user-role",
+
+            // Allow activity management
+            "activity-create",
+            "activity-create-paid",
+            "activity-update",
+            "activity-delete",
+            "activity-publish",
+            "activity-manage-all",
+
+            // Allow content management
+            "page-create",
+            "page-update",
+            "page-delete",
+            "page-purge",
+
+            // Allow plazacam management
+            "plazacam-update",
+
+            // Allow payment monitoring
+            "payment-admin",
+
+            // Allow enrollment management
+            "join-manage",
+        ]
+    },
+
+    // Digital committee
+    "dc": {
+        "title": "Digitale Commissie",
+        "permissions": [
+            "*"
+        ]
+    },
+
+    // Copied permissions from different groups
+    "ib": {
+        "title": "Introbestuur",
+        "extends": "lhw",
+        "permissions": []
+    },
+    "bbqpg": {
+        "title": "BBQPG",
+        "extends": "lhw",
+        "permissions": []
+    },
+    "bc": {
+        "title": "Brascommissie",
+        "extends": "lhw",
+        "permissions": []
+    },
+    "intro-accie": {
+        "title": "Intro Accie",
+        "extends": "lhw",
+        "permissions": []
+    },
+
+    // Empty roles
+    "kc": {
+        "title": "Kascommissie",
+        "permissions": []
+    },
+    "pc": {
+        "title": "Plazacommissie",
+        "permissions": []
+    }
+}

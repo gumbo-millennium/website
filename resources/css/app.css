@@ -7,9 +7,14 @@
     components and pages to change the layout
 */
 
+/* Load base tailwind */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
+
+/* Load our elements, components and pages */
 @import 'elements/all.css';
 @import 'components/all.css';
 @import 'pages/all.css';
+
+/* Load remaining tailwind stuff */
 @import 'tailwindcss/utilities';

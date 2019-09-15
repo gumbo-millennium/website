@@ -6,13 +6,6 @@ $user = auth()->user();
 navbar navbar-expand-lg navbar-dark
 @endpush
 
-{{-- Make navbar transparent if page requires it --}}
-@if (isset($page) && $page->meta->navbar_transparent !== 'yes')
-@push('navbar-classes')
-navbar--opaque
-@endpush
-@endif
-
 <nav class="@stack('navbar-classes')" role="navigation">
     <div class="container no-override">
         {{-- Brand logo --}}
@@ -28,7 +21,7 @@ navbar--opaque
 
         {{-- Navigation, retrieved from WordPress --}}
         <div class="collapse navbar-collapse justify-content-end" id="navbar-collapse">
-            @if ($menuHelper->hasLocation('header'))
+            @if (false && $menuHelper->hasLocation('header'))
             <ul class="navbar-nav navbar-nav--flex">
                 @forelse ($menuHelper->location('header') as $menuItem)
                 {{-- Loop throuh menus --}}

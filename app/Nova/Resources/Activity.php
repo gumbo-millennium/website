@@ -3,17 +3,20 @@
 namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Models\Activity as ActivityModel;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
+use App\Policies\ActivityPolicy;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 
 /**
@@ -26,7 +29,7 @@ class Activity extends Resource
      *
      * @var string
      */
-    public static $model = 'App\\Models\\Activity';
+    public static $model = ActivityModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -56,6 +59,7 @@ class Activity extends Resource
     public static $search = [
         'id',
         'name',
+        'tagline',
         'description',
     ];
 
@@ -86,16 +90,19 @@ class Activity extends Resource
      */
     public function subtitle()
     {
+        // Format some dates
         $startDate = optional($this->start_date)->format('d-m-Y');
         $endDate = optional($this->end_date)->format('d-m-Y');
         $startTime = optional($this->start_date)->format('H:i');
         $endTime = optional($this->end_date)->format('H:i');
 
+        // If the start date isn't the end date, show both
         if ($startDate !== $endDate) {
             return sprintf('%s – %s', $startDate, $endDate);
         }
 
-        return sprintf('%s (%s tot %s)', $startDate, $startTime, $endTime);
+        // Otherwise, show date and time
+        return sprintf('%s (%s - %s)', $startDate, $startTime, $endTime);
     }
 
 
@@ -136,7 +143,8 @@ class Activity extends Resource
 
             NovaEditorJs::make('Description', 'description')
                 ->nullable()
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->stacked(),
 
             PaperclipImage::make('Afbeelding', 'image')
                 ->deletable()
@@ -159,7 +167,17 @@ class Activity extends Resource
                 ->readonly()
                 ->onlyOnDetail(),
 
-            // BelongsTo::make('Role', 'role', Role::class),
+            BelongsTo::make('Groep', 'role', Role::class)
+                ->help('Groep of commissie die deze activiteit beheert')
+                ->hideFromIndex()
+                ->searchable()
+                ->nullable(),
+
+            BelongsTo::make('Gebruiker', 'user', User::class)
+                ->help('Gebruiker deze activiteit beheert')
+                ->hideFromIndex()
+                ->searchable()
+                ->nullable(),
         ];
     }
 
@@ -280,5 +298,30 @@ class Activity extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Make sure the user can only see enrollments he/she is allowed to see
+     *
+     * @param NovaRequest $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        // Get user shorthand
+        $user = $request->user();
+
+        // Return all enrollments if the user can manage them
+        if ($user->can('manage', ActivityModel::class)) {
+            return parent::indexQuery($request, $query);
+        }
+
+        // Only return enrollments of the user's events if the user is not
+        // allowed to globally manage events.
+        return parent::indexQuery(
+            $request,
+            $query->whereIn('id', ActivityPolicy::getAllActivityIds($user))
+        );
     }
 }

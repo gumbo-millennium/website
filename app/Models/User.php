@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     ];
 
     /**
-     * A user might've uploaded files
+     * Returns files the user has uploaded
      *
      * @return HasMany
      */
@@ -72,15 +72,45 @@ class User extends Authenticatable implements MustVerifyEmailContract
     }
 
     /**
-     * A user can download files
+     * Returns downloads the user has performed
      *
      * @return BelongsToMany
      */
-    public function downloads() : BelongsToMany
+    public function downloads() : Relation
     {
         return $this->belongsToMany(File::class, 'file_downloads')
             ->as('download')
             ->using(FileDownload::class);
+    }
+
+    /**
+     * Returns enrollments the user has performed
+     *
+     * @return HasMany
+     */
+    public function enrollments() : HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * Returns the activities the user is enrolled in
+     *
+     * @return Relation
+     */
+    public function activities() : Relation
+    {
+        return $this->hasManyThrough(Activity::class, Enrollment::class);
+    }
+
+    /**
+     * Returns activities the user can manage
+     *
+     * @return Relation
+     */
+    public function hostedActivities() : Relation
+    {
+        return $this->hasMany(Activity::class);
     }
 
     /**
@@ -107,5 +137,26 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function getPublicNameAttribute() : ?string
     {
         return $this->alias ?? $this->name;
+    }
+
+    /**
+     * Returns a list of IDs that the user hosts
+     *
+     * @return Collection
+     */
+    public function getHostedActivityIdsAttribute(array $attributes = null) : iterable
+    {
+        // Bind the user to something different, for child node
+        $user = $this;
+
+        // Run query
+        $query = Activity::query()
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhereIn('role_id', $user->roles()->pluck('id'));
+            });
+
+        // Handle query
+        return $attributes ? $query->only($attributes) : $query->get();
     }
 }

@@ -56,6 +56,8 @@ Route::prefix('activity')->name('activity.')->group(function () {
     // Single view
     Route::get('/{activity}', 'ActivityController@show')->name('show');
 });
+// Fix sometimes linking to /activities
+Route::permanentRedirect('/activities', '/activity');
 
 /**
  * Enrollments

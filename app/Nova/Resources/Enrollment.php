@@ -3,13 +3,15 @@
 namespace App\Nova\Resources;
 
 use App\Models\Enrollment as EnrollmentModel;
+use App\Policies\ActivityPolicy;
+use App\Policies\EnrollmentPolicy;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Enrollment extends Resource
 {
@@ -137,5 +139,30 @@ class Enrollment extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Make sure the user can only see enrollments he/she is allowed to see
+     *
+     * @param NovaRequest $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        // Get user shorthand
+        $user = $request->user();
+
+        // Return all enrollments if the user can manage them
+        if (EnrollmentPolicy::hasEnrollmentPermissions($user)) {
+            return parent::indexQuery($request, $query);
+        }
+
+        // Only return enrollments of the user's events if the user is not
+        // allowed to globally manage events.
+        return parent::indexQuery(
+            $request,
+            $query->whereIn('id', ActivityPolicy::getAllActivityIds($user))
+        );
     }
 }

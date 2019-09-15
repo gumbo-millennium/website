@@ -22,16 +22,9 @@ class ActivityObserver
      */
     public function saving(Activity $activity)
     {
-        // Make sure there's an enrollment start date
-        if ($activity->enrollment_start === null) {
-            $activity->enrollment_start = today('Europe/Amsterdam')->subDays(7);
-        }
-
-        // Make sure there's an enrollment end date which is not after the event end date
-        if ($activity->enrollment_end === null || $activity->enrollment_end > $activity->event_end) {
-            $activity->enrollment_end = $activity->event_end;
-        }
-
+        /*
+            Normalize seats
+        */
         // Make sure the seats aren't below or equal to zero, it should be null
         if ($activity->seats !== null && $activity->seats <= 0) {
             $activity->seats = null;
@@ -47,6 +40,9 @@ class ActivityObserver
             $activity->guest_seats = $activity->seats;
         }
 
+        /*
+            Normalize prices
+        */
         // Ensure ticket prices are null or positive
         if ($activity->price_member !== null && $activity->price_member <= 0) {
             $activity->price_member = null;
@@ -62,6 +58,31 @@ class ActivityObserver
             if ($activity->price_guest !== null && $activity->price_guest < $activity->price) {
                 $activity->price_guest = $activity->price;
             }
+        }
+
+        /*
+            Normalize enrollment dates
+        */
+        $notOpenFree = (
+            $activity->seats !== null ||
+            $activity->public_seats !== null ||
+            $activity->price_member !== null ||
+            $activity->price_guest !== null
+        );
+
+        // Cap enrollment end on the end date of the activity end
+        if ($activity->enrollment_end > $activity->end_date) {
+            $activity->enrollment_end = $activity->end_date;
+        }
+
+        // Ensure a start date exists if the event is not open and free
+        if ($notOpenFree && $activity->enrollment_start === null) {
+            $activity->enrollment_start = today('Europe/Amsterdam')->subDays(7);
+        }
+
+        // Ensure an end date is set if a start date is too
+        if ($activity->enrollment_start !== null && $activity->enrollment_end === null) {
+            $activity->enrollment_end = $activity->start_date;
         }
     }
 }

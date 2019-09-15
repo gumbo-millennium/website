@@ -65,30 +65,6 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        return $this->view($user, $payment);
-    }
-
-    /**
-     * Determine whether the user can restore the payment.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\App\Model\Payment  $payment
-     * @return mixed
-     */
-    public function restore(User $user, Payment $payment)
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the payment.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\App\Model\Payment  $payment
-     * @return mixed
-     */
-    public function forceDelete(User $user, Payment $payment)
-    {
         return false;
     }
 }

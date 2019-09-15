@@ -16,13 +16,18 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100 body">
+    <a href="#start-of-content" tabindex="1" class="skip-to-content">Skip to content</a>
+
+    @include('layout.userbar')
+    @include('layout.navbar')
+
     <div id="app" class="app">
-        <main class="container mx-auto">
+        <main class="container mx-auto" id="start-of-content">
             @yield('content')
         </main>
         <footer class="max-w-sm mx-auto text-center mt-6">
-            <a href="https://esetup.nl" rel="friend" target="_blank" class="text-center text-gray-500 text-xs">
-                © eSetup B.V. {{ today()->year }}, alle rechten voorbehouden.
+            <a href="{{ route('home') }}" rel="home" class="text-center text-gray-500 text-xs">
+                © Gumbo Millennium {{ today()->year }}, alle rechten voorbehouden.
             </a>
         </footer>
     </div>
