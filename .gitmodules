@@ -1,6 +1,1 @@
-[submodule "library/wordpress/plugins"]
-	path = library/wordpress/plugins
-	url = git@github.com:gumbo-millennium/wordpress-plugins.git
-[submodule "library/wordpress/themes"]
-	path = library/wordpress/themes/gumbo-millennium
-	url = git@github.com:gumbo-millennium/wordpress-theme.git
+

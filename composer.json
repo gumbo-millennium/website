@@ -76,8 +76,7 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover",
-            "@composer dump-autoload -d library/wordpress/plugins/gumbo-millennium"
+            "@php artisan package:discover"
         ],
         "contribute": [
           "docker-compose build",
@@ -89,35 +88,17 @@
           "@php artisan telescope:publish",
           "docker-compose up -d",
           "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-          "@php artisan migrate:fresh --seed --force",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
-          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ --dev",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build"
+          "@php artisan migrate:fresh --seed --force"
         ],
         "symlink": [
           "ln -fs node_modules/bootstrap/scss ./@bootstrap",
           "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-          "ln -fs library/wordpress/plugins/gumbo-millennium ./@wp-plugin",
-          "ln -fs library/wordpress/themes/gumbo-millennium ./@wp-theme",
           "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
         ],
         "ide": [
           "@php artisan clear-compiled",
           "@php artisan ide-helper:generate",
           "@php artisan ide-helper:models"
-        ],
-        "optimize": [
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
-          "rm -rf library/wordpress/themes/gumbo-millennium/node_modules/",
-
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build",
-          "rm -rf library/wordpress/plugins/gumbo-millennium/node_modules/",
-
-          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ -ao"
         ],
         "server": [
           "@php artisan telescope:publish",
