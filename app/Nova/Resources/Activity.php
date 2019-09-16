@@ -136,10 +136,14 @@ class Activity extends Resource
                 ->creationRules('unique:activities,slug')
                 ->updateRules('unique:activities,slug,{{resourceId}}'),
 
-
             Text::make('Tagline', 'tagline')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:4,255'),
+
+            Text::make('Statement label', 'statement')
+                ->hideFromIndex()
+                ->rules('nullable', 'string', 'between:2,16')
+                ->help('2-16 character summary of the event. Shown on iDEAL transaction'),
 
             NovaEditorJs::make('Description', 'description')
                 ->nullable()
