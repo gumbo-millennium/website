@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\JoinSubmission;
 use Faker\Generator as Faker;
 
 $inserts = [
@@ -19,7 +20,7 @@ $genders = array_merge(
     array_fill(0, 4, 'Waluigi')
 );
 
-$factory->define(App\JoinSubmission::class, function (Faker $faker) use ($inserts, $genders) {
+$factory->define(JoinSubmission::class, function (Faker $faker) use ($inserts, $genders) {
     return [
         // Names
         'first_name' => $faker->firstName,

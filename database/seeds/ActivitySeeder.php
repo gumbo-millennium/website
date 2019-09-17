@@ -2,9 +2,11 @@
 declare(strict_types=1);
 
 use App\Models\Activity;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Spatie\Permission\Models\Role;
 
 class ActivitySeeder extends Seeder
 {
@@ -47,6 +49,9 @@ class ActivitySeeder extends Seeder
 
         // Create Christmas events
         $this->seedChristmasEvents();
+
+        // Create permission test events
+        $this->seedBasicAccessEvent();
     }
 
     /**
@@ -170,6 +175,37 @@ class ActivitySeeder extends Seeder
             'end_date' => $fridayBefore->setTime(21, 0, 0, 0),
             'price_member' => $memberPrice * 100,
             'price_guest' => $guestPrice * 100
+        ]);
+    }
+
+    /**
+     * Creates two events, one for the 'lhw' committee to test
+     * access per group, and one for the `event-owner@example.com`
+     * user to test user-level access
+     *
+     * @return void
+     */
+    private function seedBasicAccessEvent() : void
+    {
+        // User event
+        factory(Activity::class, 1)->create([
+            'name' => 'Example User\'s event',
+            'start_date' => today()->addYear()->setTime(20, 00),
+            'end_date' => today()->addYear()->setTime(23, 00),
+            'user_id' => User::whereEmail('event-owner@example.com')->first()->id
+        ]);
+
+        // 3rd week of april
+        $aprilWeek = (Carbon::parse('First Monday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
+        $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear(1) : $aprilWeek;
+        $endDate = $startDate->addDays(2)->setTime(12, 00);
+
+        // LHW event
+        factory(Activity::class, 1)->create([
+            'name' => 'Landhuisweekend',
+            'start_date' => $aprilWeek,
+            'end_date' => $endDate,
+            'role_id' => Role::findByName('lhw')->id
         ]);
     }
 }

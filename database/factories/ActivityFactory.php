@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Activity;
 use Faker\Generator as Faker;
+use Illuminate\Support\Carbon;
 
-$factory->define(App\Activity::class, function (Faker $faker) {
+$factory->define(Activity::class, function (Faker $faker) {
     $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
     $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
 
@@ -12,7 +14,7 @@ $factory->define(App\Activity::class, function (Faker $faker) {
     $enrollStart = $faker->dateTimeBetween($eventStartCarbon->subWeeks(4), $eventStartCarbon);
     $enrollStartCarbon = Carbon::instance($enrollStart)->toImmutable();
 
-    $enrollEnd = $faker->dateTimeBetween($enrollStart->addHours(1), $eventStartCarbon);
+    $enrollEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
     $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
 
     // Determine price

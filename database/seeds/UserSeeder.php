@@ -41,9 +41,12 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $this->makeUser('board@example.com', 'Bestuur', ['guest', 'member', 'board']);
-        $this->makeUser('dc@example.com', 'DC', ['guest', 'member', 'dc']);
-        $this->makeUser('gumbo@example.com', 'Lid', ['guest', 'member']);
+        $this->makeUser('board@example.com', 'Bestuur', ['member', 'board']);
+        $this->makeUser('ac@example.com', 'AC', ['member', 'ac']);
+        $this->makeUser('dc@example.com', 'DC', ['member', 'dc']);
+        $this->makeUser('lhw@example.com', 'LHW', ['member', 'lhw']);
+        $this->makeUser('gumbo@example.com', 'Lid', ['member']);
         $this->makeUser('guest@example.com', 'Gast', ['guest']);
+        $this->makeUser('event-owner@example.com', 'Event Owner', ['member']);
     }
 }

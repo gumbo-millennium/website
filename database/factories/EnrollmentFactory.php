@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Enrollment;
 use Faker\Generator as Faker;
 
-$factory->define(App\Enrollment::class, function (Faker $faker) {
+$factory->define(Enrollment::class, function (Faker $faker) {
     return [
         //
     ];
