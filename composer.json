@@ -17,12 +17,13 @@
         "gregoriohc/laravel-nova-theme-responsive": "^0.6.2",
         "gumbo-millennium/laravel-database-encryption": "^0.3.0",
         "guzzlehttp/guzzle": "^6.3",
+        "kabbouchi/nova-impersonate": "^1.1",
         "kozz/laravel-guzzle-provider": "^6.1",
         "laktak/hjson": "^2.1",
         "laravel/framework": "~5.8.0",
-        "laravel/horizon": "^1.4",
+        "laravel/horizon": "^3.3",
         "laravel/nova": "^2.0",
-        "laravel/telescope": "^2.0",
+        "laravel/telescope": "^2.1",
         "laravel/tinker": "^1.0",
         "laravelium/sitemap": "^3.0",
         "mischiefcollective/colorjizz": "^1.0",
@@ -72,7 +73,9 @@
             "@php artisan key:generate"
         ],
         "post-install-cmd": [
-          "@php artisan vendor:publish --tag=nova-assets"
+          "@php artisan vendor:publish --tag=nova-assets",
+          "@php artisan horizon:assets",
+          "@php artisan telescope:publish"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

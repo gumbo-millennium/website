@@ -7,6 +7,16 @@ networks:
 volumes:
   mysql-data:
 
+# Laravel foundation config
+x-laravel: &laravel-base
+  volumes:
+    - ./:/var/www
+  env_file:
+    - .env
+    - library/docker/laravel/docker.env
+  networks:
+    - laravel
+
 services:
   # Webserver
   web:
@@ -28,16 +38,17 @@ services:
 
   # Application
   laravel:
+    << : *laravel-base
     build:
-      dockerfile: dockerfile
       context: library/docker/laravel
-    volumes:
-      - ./:/var/www
-    networks:
-      - laravel
-    env_file:
-      - ./.env
-      - ./library/docker/laravel/docker.env
+      target: laravel
+
+  # Application
+  horizon:
+    << : *laravel-base
+    build:
+      context: library/docker/laravel
+      target: horizon
 
   # mysql database
   database:

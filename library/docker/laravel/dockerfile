@@ -1,128 +1,46 @@
 # vim: set ft=dockerfile :
 # Configuration file for Docker
 
-FROM php:7.3-fpm
+# Source from Roelof's PHP image
+FROM roelofr/php:7.3-fpm AS laravel
 
-# Install PHP extension requirements for:
-# - bcmath
-# - curl
-# - gd
-# - json
-# - PDO with MySQL
-# - XML
-# - zip files
-# Als install Gumbo requirements:
-# - Ghostscript, which reads and processes PDF files
-# - Imagick, which is used to convert PDF files to JPG / PNG files. (it has the godly 'convert' command, which converts just about anything)
-# - supervisor, which runs the supervisor daemon running BOTH php-fpm (PHP host) and Horizon (queue worker)
-RUN apt-get update \
-    && apt-get install -qq \
-    bzip2 \
-    curl \
-    exiftool \
-    ghostscript \
-    git \
-    imagemagick \
-    libbz2-dev \
-    libc6-dev \
-    libcurl4-gnutls-dev \
-    libfreetype6-dev \
-    libgd-dev \
-    libjpeg-dev \
-    libmcrypt-dev \
-    libmcrypt4 \
-    libpng-dev \
-    libwebp-dev \
-    libxml2 \
-    libxml2-dev \
-    libxslt1-dev \
-    libxslt1.1 \
-    libzip-dev \
-    libzip4 \
-    default-mysql-client \
-    supervisor \
-    unzip \
-    wget \
-    zip \
-    zlib1g-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-
-# Install needed extensions and remove the extracted source afterwards
-RUN docker-php-ext-install \
-    bcmath \
-    curl \
-    dom \
-    gd \
-    json \
-    mbstring \
-    pcntl \
-    pdo \
-    pdo_mysql \
-    simplexml \
-    xml \
-    zip \
-    && docker-php-source delete \
-    && touch /tmp/SAVE_ME
-
-# Install Composer
-RUN curl --output /tmp/composer-installer.php --silent --show-error https://getcomposer.org/installer \
-    && php -f /tmp/composer-installer.php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm /tmp/composer-installer.php \
-    && rm -r ~/.composer
-
-# Install Node and Yarn
-RUN apt-get update \
-    && apt-get install -qq apt-transport-https lsb-release gpg \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && curl -sL https://deb.nodesource.com/setup_11.x | bash - \
-    && apt-get update \
-    && apt-get install -qq nodejs yarn \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install Redis as native extension
+RUN pecl install redis \
+    && docker-php-ext-enable redis \
+    && rm -rf /tmp/pear
 
 # Raise PHP limit
 COPY php.ini /usr/local/etc/php/conf.d/laravel.ini
 
-# Install and enable PHP XDebug
-RUN pecl update-channels \
-    && pecl install xdebug-beta \
-    && pecl clear-cache \
-    && rm -rf \
-        /tmp/pear \
-        /usr/local/lib/php/doc/xdebug \
-    && docker-php-ext-enable xdebug
-
 # Add Laravel group and user
 RUN groupadd \
-    --gid 1000 \
-    laravel \
-  && useradd \
-    --home-dir /var/www \
-    --comment "Laravel User" \
-    --no-create-home \
-    --uid 1000 \
-    --gid 1000 \
-    --groups www-data \
-    --password "" \
-    laravel
+        --gid 1000 \
+        laravel \
+    && useradd \
+        --home-dir /var/www \
+        --comment "Laravel User" \
+        --no-create-home \
+        --uid 1000 \
+        --gid 1000 \
+        --groups www-data \
+        --password "" \
+        laravel
 
-# Make it really certain
+# Make it really certain we're using the right user
 RUN { \
-	echo '[www]'; \
-	echo 'user = laravel'; \
-	echo 'group = laravel'; \
+    echo '[www]'; \
+    echo 'user = laravel'; \
+    echo 'group = laravel'; \
     } | tee /usr/local/etc/php-fpm.d/zz-laravel.conf
 
-# Add Laravel and Horizon configurations
-COPY \
-    php-fpm.conf \
-    horizon.conf \
-    /etc/supervisor/conf.d/
+# Configure Laravel branch
+FROM laravel AS horizon
 
+# Run as Laravel
+USER laravel
+
+# Make sure we're working from /var/www
 WORKDIR /var/www
 
-# Override the php-fpm process to run supervisord instead
-CMD ["supervisord", "--nodaemon", "--directory=/var/www", "--user=root", "--configuration=/etc/supervisor/supervisord.conf"]
+# Run horizon when this container starts
+CMD [ "php", "/var/www/artisan", "horizon" ]
