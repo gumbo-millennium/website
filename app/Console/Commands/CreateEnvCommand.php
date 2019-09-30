@@ -17,17 +17,22 @@ class CreateEnvCommand extends Command
     /**
      * Environment template file's name
      */
-    const SOURCE_FILE_NAME = '.env.example';
+    private const SOURCE_FILENAME = '.env.example';
 
     /**
-     * IP Address of Docker container
+     * Environment template file's name
      */
-    const DOCKER_HOST = "127.13.37.1";
+    private const DEST_FILENAME = '.env';
+
+    /**
+     * The host the Docker image runs on
+     */
+    private const DOCKER_HOST = '127.0.0.1';
 
     /**
      * Default (dev) config
      */
-    const DEFAULT_CONFIGS = [
+    private const DEFAULT_CONFIGS = [
         'APP_KEY' => null,
         'DB_DATABASE' => 'laravel',
         'BROADCAST_DRIVER' => 'redis',
@@ -41,21 +46,22 @@ class CreateEnvCommand extends Command
      *
      * @var string
      */
-    const EXTRA_CONFIGS = [
+    private const EXTRA_CONFIGS = [
         'local' => [
             // Set app location
-            'APP_URL' => 'http://{HOST}:8080',
+            'APP_URL' => 'http://{HOST}:13370',
 
             // Set hosts to Docker
             'DB_HOST' => '{HOST}',
-            'WP_HOST' => '{HOST}',
+            'DB_PORT' => '13376',
             'REDIS_HOST' => '{HOST}',
+            'REDIS_PORT' => '13379',
             'MAIL_HOST' => '{HOST}',
             'MAIL_PORT' => '1025',
 
             // Add user and password
             'DB_USERNAME' => 'laravel',
-            'DB_PASSWORD' => 'kiepo9Eeth0hoech5ooLa6ed8oaphaih',
+            'DB_PASSWORD' => 'laravel',
         ],
         'travis' => [
             'APP_ENV' => 'testing',
@@ -93,8 +99,8 @@ class CreateEnvCommand extends Command
     public function handle()
     {
         // Find app root dir
-        $envFile = base_path('.env');
-        $sourceFile = base_path('.env.example');
+        $envFile = base_path(self::DEST_FILENAME);
+        $sourceFile = base_path(self::SOURCE_FILENAME);
         $forced = $this->option('force');
 
         // Create file if it does not exist.

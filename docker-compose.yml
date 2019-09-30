@@ -2,7 +2,6 @@ version: '3.5'
 
 networks:
   laravel:
-    name: gumbo-website
 
 volumes:
   mysql-data:
@@ -13,22 +12,20 @@ x-laravel: &laravel-base
     - ./:/var/www
   env_file:
     - .env
-    - library/docker/laravel/docker.env
+    - .docker/laravel/docker.env
   networks:
     - laravel
 
 services:
   # Webserver
   web:
+    image: docker.pkg.github.com/gumbo-millennium/website/web
     build:
-      dockerfile: dockerfile
-      context: library/docker/nginx
+      context: .docker/nginx
     volumes:
       - ./:/var/www
     ports:
-      - 127.13.37.1:80:80
-    environment:
-      VIRTUAL_HOST: gumbo.localhost
+      - 127.0.0.1:13370:80
     networks:
       - laravel
     depends_on:
@@ -39,32 +36,33 @@ services:
   # Application
   laravel:
     << : *laravel-base
+    image: docker.pkg.github.com/gumbo-millennium/website/laravel
     build:
-      context: library/docker/laravel
+      context: .docker/laravel
       target: laravel
 
   # Application
   horizon:
     << : *laravel-base
+    image: docker.pkg.github.com/gumbo-millennium/website/horizon
     build:
-      context: library/docker/laravel
+      context: .docker/laravel
       target: horizon
 
   # mysql database
   database:
+    image: docker.pkg.github.com/gumbo-millennium/website/database
     build:
-      dockerfile: dockerfile
-      context: library/docker/mysql
+      context: .docker/database
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./library/docker/mysql/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_DATABASE: laravel
       MYSQL_USER: laravel
-      MYSQL_PASSWORD: kiepo9Eeth0hoech5ooLa6ed8oaphaih
+      MYSQL_PASSWORD: laravel
     ports:
-      - 127.13.37.1:3306:3306
+      - 127.0.0.1:13376:3306
     networks:
       - laravel
 
@@ -74,32 +72,24 @@ services:
     networks:
       - laravel
     ports:
-      - 127.13.37.1:6379:6379
+      - 127.0.0.1:13379:6379
 
   # PhpMyAdmin
   pma:
+    image: docker.pkg.github.com/gumbo-millennium/website/phpmyadmin
     build:
-      dockerfile: dockerfile
-      context: library/docker/phpmyadmin
+      context: .docker/phpmyadmin
     networks:
-      laravel:
-        aliases:
-          - phpmyadmin.docker
+      - laravel
     environment:
       PMA_HOST: database
       PMA_USER: phpmyadmin
-      PMA_PASSWORD: 'etah2raith4Thee5eijeiYei(f3foh8I'
-      VIRTUAL_HOST: pma.gumbo.localhost
+      PMA_PASSWORD: phpmyadmin
     depends_on:
       - database
 
   # Mailhog (to test e-mail)
   mail:
     image: mailhog/mailhog:latest
-    ports:
-      - 127.13.37.1:8025:8025
-    environment:
-      VIRTUAL_HOST: mail.gumbo.localhost
-      VIRTUAL_PORT: 8025
     networks:
       - laravel
