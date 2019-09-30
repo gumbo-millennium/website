@@ -1,15 +1,16 @@
 {
-    "extends": "@gumbo-millennium/stylelint-config",
-    "rules": {
-      "comment-empty-line-before": "always",
-        "scss/at-rule-no-unknown": [
-            true,
-            {
-                "ignoreAtRules": [
-                    "apply",
-                    "variants"
-                ]
-            }
+  "extends": "@gumbo-millennium/stylelint-config",
+  "rules": {
+    "comment-empty-line-before": "always",
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "apply",
+          "variants",
+          "screen"
         ]
-    }
+      }
+    ]
+  }
 }

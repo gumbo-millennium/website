@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v0.6.1",
+            "version": "v0.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "b6f25e2c5005da062cbd73ebef147326e01f4718"
+                "reference": "78a2b7f81e78ad7eaeca21bb0eeb3d9530830f62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/b6f25e2c5005da062cbd73ebef147326e01f4718",
-                "reference": "b6f25e2c5005da062cbd73ebef147326e01f4718",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/78a2b7f81e78ad7eaeca21bb0eeb3d9530830f62",
+                "reference": "78a2b7f81e78ad7eaeca21bb0eeb3d9530830f62",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "nova",
                 "wysiwyg"
             ],
-            "time": "2019-06-15T18:34:48+00:00"
+            "time": "2019-09-16T19:28:21+00:00"
         },
         {
             "name": "benjaminhirsch/nova-slug-field",
@@ -162,16 +162,16 @@
         },
         {
             "name": "caouecs/laravel-lang",
-            "version": "4.0.2",
+            "version": "4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/caouecs/Laravel-lang.git",
-                "reference": "884265ed667ddf826d8df495ea6b2bb3330be79c"
+                "reference": "7bd95b415831ad0cce443a70546c50f8f5c733df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/884265ed667ddf826d8df495ea6b2bb3330be79c",
-                "reference": "884265ed667ddf826d8df495ea6b2bb3330be79c",
+                "url": "https://api.github.com/repos/caouecs/Laravel-lang/zipball/7bd95b415831ad0cce443a70546c50f8f5c733df",
+                "reference": "7bd95b415831ad0cce443a70546c50f8f5c733df",
                 "shasum": ""
             },
             "require-dev": {
@@ -201,7 +201,7 @@
                 "laravel",
                 "lpm"
             ],
-            "time": "2019-08-22T19:36:14+00:00"
+            "time": "2019-09-29T15:53:22+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -270,16 +270,16 @@
         },
         {
             "name": "coderello/laravel-nova-lang",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coderello/laravel-nova-lang.git",
-                "reference": "47d54415602194f2f77862025f18eb7d0ca4b2bb"
+                "reference": "937d6dcf3610ebaccf0e430d3a1153fd005a4fc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coderello/laravel-nova-lang/zipball/47d54415602194f2f77862025f18eb7d0ca4b2bb",
-                "reference": "47d54415602194f2f77862025f18eb7d0ca4b2bb",
+                "url": "https://api.github.com/repos/coderello/laravel-nova-lang/zipball/937d6dcf3610ebaccf0e430d3a1153fd005a4fc3",
+                "reference": "937d6dcf3610ebaccf0e430d3a1153fd005a4fc3",
                 "shasum": ""
             },
             "require": {
@@ -311,7 +311,7 @@
                 "nova",
                 "support"
             ],
-            "time": "2019-09-05T02:46:43+00:00"
+            "time": "2019-09-05T14:29:36+00:00"
         },
         {
             "name": "codex-team/editor.js",
@@ -419,16 +419,16 @@
         },
         {
             "name": "czim/file-handling",
-            "version": "1.1.3",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/czim/file-handling.git",
-                "reference": "83b049a18c9e3010067b3c6170577736cf5f5506"
+                "reference": "8e8a323e75a82fa4b5a23703df594c5062b0c025"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/czim/file-handling/zipball/83b049a18c9e3010067b3c6170577736cf5f5506",
-                "reference": "83b049a18c9e3010067b3c6170577736cf5f5506",
+                "url": "https://api.github.com/repos/czim/file-handling/zipball/8e8a323e75a82fa4b5a23703df594c5062b0c025",
+                "reference": "8e8a323e75a82fa4b5a23703df594c5062b0c025",
                 "shasum": ""
             },
             "require": {
@@ -440,16 +440,17 @@
                 "symfony/http-foundation": "^3.0|^4.0"
             },
             "require-dev": {
-                "illuminate/contracts": "^5.3",
+                "illuminate/contracts": "^5.3|^6.0",
                 "mikey179/vfsstream": "^1.6",
                 "mockery/mockery": "0.9.*",
+                "php-coveralls/php-coveralls": "^2.1",
                 "php-ffmpeg/php-ffmpeg": "^0.9.5",
-                "phpunit/phpunit": "~5.7",
-                "satooshi/php-coveralls": "^1.0"
+                "phpunit/phpunit": "^7.0|^8.0"
             },
             "suggest": {
                 "league/flysystem-aws-s3-v3": "Required for AWS S3 file storage",
-                "php-ffmpeg/php-ffmpeg": "Required for video conversion and thumbnail generation"
+                "php-ffmpeg/php-ffmpeg": "Required for video conversion and thumbnail generation",
+                "spatie/image-optimizer": "Required to use the image optimizer variant strategy"
             },
             "type": "library",
             "autoload": {
@@ -466,7 +467,7 @@
                 "storage",
                 "uploads"
             ],
-            "time": "2019-07-21T20:17:39+00:00"
+            "time": "2019-09-27T08:39:04+00:00"
         },
         {
             "name": "czim/laravel-paperclip",
@@ -1208,16 +1209,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.10.18",
+            "version": "8.10.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "348bac99347a005263f9ec2ed9daf1a511fc5a5f"
+                "reference": "b8f2341692df067028445fee35ca7144d009e251"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/348bac99347a005263f9ec2ed9daf1a511fc5a5f",
-                "reference": "348bac99347a005263f9ec2ed9daf1a511fc5a5f",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/b8f2341692df067028445fee35ca7144d009e251",
+                "reference": "b8f2341692df067028445fee35ca7144d009e251",
                 "shasum": ""
             },
             "require": {
@@ -1272,7 +1273,7 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2019-09-06T10:36:55+00:00"
+            "time": "2019-09-18T15:37:43+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -2312,17 +2313,17 @@
         },
         {
             "name": "laravel/nova",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:laravel/nova.git",
-                "reference": "54ca98c880e740520bb66340d24f94dd5d64bb0d"
+                "reference": "5a52550f8062557f4cbdd1d5f16caf583af2a2c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-54ca98c880e740520bb66340d24f94dd5d64bb0d-zip-c89159.zip",
-                "reference": "54ca98c880e740520bb66340d24f94dd5d64bb0d",
-                "shasum": "b63fd7fb1e81c021417af0a9009bbbbbfc4b1663"
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-5a52550f8062557f4cbdd1d5f16caf583af2a2c8-zip-1b0bea.zip",
+                "reference": "5a52550f8062557f4cbdd1d5f16caf583af2a2c8",
+                "shasum": "967264b26ebd83dff90450fefc7b618ef33e6652"
             },
             "require": {
                 "cakephp/chronos": "^1.0",
@@ -2378,7 +2379,7 @@
                 "admin",
                 "laravel"
             ],
-            "time": "2019-09-10T16:40:45+00:00"
+            "time": "2019-09-17T16:03:48+00:00"
         },
         {
             "name": "laravel/telescope",
@@ -5368,16 +5369,16 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.26",
+            "version": "6.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15"
+                "reference": "9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b",
+                "reference": "9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b",
                 "shasum": ""
             },
             "require": {
@@ -5426,7 +5427,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2018-10-16T17:24:05+00:00"
+            "time": "2019-09-20T09:35:01+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -6285,16 +6286,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031"
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/4eff936d83eb809bde2c57a3cea0ee9643769031",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/b3453f75fd23d9fd41685f2148f4abeacabc6405",
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405",
                 "shasum": ""
             },
             "require": {
@@ -6308,7 +6309,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -6346,7 +6347,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2019-08-07T15:01:07+00:00"
+            "time": "2019-09-30T08:30:27+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -6885,16 +6886,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "7.0.7",
+            "version": "7.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "7743bbcfff2a907e9ee4a25be13d0f8ec5e73800"
+                "reference": "aa0d179a13284c7420fc281fc32750e6cc7c9e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/7743bbcfff2a907e9ee4a25be13d0f8ec5e73800",
-                "reference": "7743bbcfff2a907e9ee4a25be13d0f8ec5e73800",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/aa0d179a13284c7420fc281fc32750e6cc7c9e2f",
+                "reference": "aa0d179a13284c7420fc281fc32750e6cc7c9e2f",
                 "shasum": ""
             },
             "require": {
@@ -6903,7 +6904,7 @@
                 "php": "^7.2",
                 "phpunit/php-file-iterator": "^2.0.2",
                 "phpunit/php-text-template": "^1.2.1",
-                "phpunit/php-token-stream": "^3.1.0",
+                "phpunit/php-token-stream": "^3.1.1",
                 "sebastian/code-unit-reverse-lookup": "^1.0.1",
                 "sebastian/environment": "^4.2.2",
                 "sebastian/version": "^2.0.1",
@@ -6944,7 +6945,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-07-25T05:31:54+00:00"
+            "time": "2019-09-17T06:24:36+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -7088,16 +7089,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a"
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/e899757bb3df5ff6e95089132f32cd59aac2220a",
-                "reference": "e899757bb3df5ff6e95089132f32cd59aac2220a",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/995192df77f63a59e47f025390d2d1fdf8f425ff",
+                "reference": "995192df77f63a59e47f025390d2d1fdf8f425ff",
                 "shasum": ""
             },
             "require": {
@@ -7133,7 +7134,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2019-07-25T05:29:42+00:00"
+            "time": "2019-09-17T06:23:10+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -7928,16 +7929,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.4.2",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8"
+                "reference": "0afebf16a2e7f1e434920fa976253576151effe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
-                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/0afebf16a2e7f1e434920fa976253576151effe9",
+                "reference": "0afebf16a2e7f1e434920fa976253576151effe9",
                 "shasum": ""
             },
             "require": {
@@ -7975,7 +7976,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-04-10T23:49:02+00:00"
+            "time": "2019-09-26T23:12:26+00:00"
         },
         {
             "name": "symfony/config",
