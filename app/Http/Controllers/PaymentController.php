@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
+/**
+ * Payment viewer, WIP
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class PaymentController extends Controller
 {
     /**

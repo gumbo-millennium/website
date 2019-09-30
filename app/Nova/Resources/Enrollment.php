@@ -76,7 +76,10 @@ class Enrollment extends Resource
             ID::make()->sortable(),
 
             // Add multi selects
-            BelongsTo::make('Activity', 'activity'),
+            BelongsTo::make('Activity', 'activity')
+                ->rules('required', function ($activity) use ($request) {
+                    $request->can('manage', $activity);
+                }),
             BelongsTo::make('User', 'user'),
 
             // Add data
@@ -95,50 +98,6 @@ class Enrollment extends Resource
             // Add payments
             HasMany::make(__('Payments'), 'payments', Payment::class),
         ];
-    }
-
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function cards(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function filters(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function lenses(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
-    {
-        return [];
     }
 
     /**

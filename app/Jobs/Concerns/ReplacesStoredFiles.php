@@ -21,7 +21,7 @@ trait ReplacesStoredFiles
      * @param string $newFile
      * @return void
      */
-    protected function replaceStoredFile(string $newFile) : void
+    protected function replaceStoredFile(string $newFile): void
     {
         // Get paths
         $oldPath = $this->file->path;

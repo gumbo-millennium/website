@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -143,7 +144,7 @@ XML;
      *
      * @return int
      */
-    protected function buildSeed() : int
+    protected function buildSeed(): int
     {
         list($usec, $sec) = explode(' ', microtime());
         return (int) round($sec / 3949 + $usec * 30000);
@@ -154,7 +155,7 @@ XML;
      *
      * @return Collection
      */
-    protected function buildDiamonds() : Collection
+    protected function buildDiamonds(): Collection
     {
         // Get dimensions
         list($width, $height) = self::IMAGE_SIZE;
@@ -186,7 +187,7 @@ XML;
      * @param Collection $diamonds
      * @return Collection
      */
-    public function addDiamondProperties(Collection $diamonds) : Collection
+    public function addDiamondProperties(Collection $diamonds): Collection
     {
         // Get colour
         $baseColor = Hex::fromString(self::DIAMOND_COLOUR);
@@ -231,7 +232,7 @@ XML;
      * @param Collection $diamonds
      * @return DOMDocument
      */
-    protected function buildXmlDocument(Collection $diamonds) : DOMDocument
+    protected function buildXmlDocument(Collection $diamonds): DOMDocument
     {
         // Get dimensions
         list($width, $height) = self::IMAGE_SIZE;
@@ -254,7 +255,7 @@ XML;
         $target = $doc->getElementsByTagName('svg')->item(0);
 
         // Append diamonds
-        foreach ($diamonds as $diamondId => $diamond) {
+        foreach ($diamonds as $diamond) {
             // Parameters
             $atts = [
                 'x' => (string)$diamond['x'],
@@ -291,7 +292,7 @@ XML;
      * @param string $pngTemplate
      * @return void
      */
-    protected function exportPngImages(string $svgPath, string $pngTemplate) : void
+    protected function exportPngImages(string $svgPath, string $pngTemplate): void
     {
         $regularDpiPath = resource_path($pngTemplate);
         $highDpiPath = resource_path(preg_replace('/\.png$/', '@2x.png', $pngTemplate));

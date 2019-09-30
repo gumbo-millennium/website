@@ -19,6 +19,10 @@ Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 Route::get('/news', 'NewsController@index');
 Route::get('/news/{slug}', 'NewsController@post');
 
+// Add search route
+Route::get('/search', 'SearchController@index')->name('search-form');
+Route::get('/search/{query}', 'SearchController@search')->name('search');
+
 /**
  * Plazacam routes
  */

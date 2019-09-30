@@ -29,7 +29,7 @@ class Enrollment extends UuidModel
      *
      * @return Relation
      */
-    public function payments() : Relation
+    public function payments(): Relation
     {
         return $this->hasMany(Payment::class);
     }
@@ -39,7 +39,7 @@ class Enrollment extends UuidModel
      *
      * @return Relation
      */
-    public function user() : Relation
+    public function user(): Relation
     {
         return $this->belongsTo(User::class);
     }
@@ -49,7 +49,7 @@ class Enrollment extends UuidModel
      *
      * @return Relation
      */
-    public function activity() : Relation
+    public function activity(): Relation
     {
         return $this->belongsTo(Activity::class);
     }

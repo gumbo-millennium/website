@@ -6,28 +6,28 @@ use Illuminate\Console\Command;
 use App\Models\FileDownload;
 
 /**
- * Removes IP addresses from downloads more than 90 days ago
+ * Deletes data we're not supposed to keep for extended periods of time
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class GdprCleanDownloadIps extends Command
+class AvgFlush extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'gdpr:clean-download-ips
-                            {--m|more-recent : Remove IPs older than 30 days}
-                            {--all : Removes ALL ips}';
+    protected $signature = 'avg:flush
+                            {--m|more-recent : Remove more recent data (-30 days)}
+                            {--all : Removes all non-critical data}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Deletes IPs associated with downloads older than 90 days';
+    protected $description = 'Deletes non-critical data older than 90 days';
 
     /**
      * Execute the console command.
@@ -49,6 +49,6 @@ class GdprCleanDownloadIps extends Command
         $ipCount = $query->update(['ip' => null])->count();
 
         // Report result
-        $this->line(sprintf('Removed <info>%d</> IP address(es).', $ipCount));
+        $this->line(sprintf('Cleansed <info>%d</> download logs.', $ipCount));
     }
 }

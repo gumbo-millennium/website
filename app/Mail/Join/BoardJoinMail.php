@@ -35,7 +35,7 @@ class BoardJoinMail extends BaseJoinMail
     /**
      * @inheritDoc
      */
-    protected function createSubject(JoinSubmission $submission) : string
+    protected function createSubject(JoinSubmission $submission): string
     {
         return sprintf('[site] Nieuwe aanmelding van %s.', $submission->name);
     }

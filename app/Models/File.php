@@ -57,7 +57,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return void
      */
-    protected function bindPaperclip() : void
+    protected function bindPaperclip(): void
     {
         // The file itself
         $this->hasAttachedFile('file');
@@ -92,7 +92,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -108,7 +108,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function category() : Relation
+    public function category(): Relation
     {
         return $this->belongsTo(FileCategory::class, 'category_id', 'id');
     }
@@ -118,7 +118,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function owner() : Relation
+    public function owner(): Relation
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
@@ -128,7 +128,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function downloads() : Relation
+    public function downloads(): Relation
     {
         return $this->hasMany(FileDownload::class);
     }
@@ -138,7 +138,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return string|null
      */
-    public function getUrlAttribute() : ?string
+    public function getUrlAttribute(): ?string
     {
         // Ignore if slugless
         if ($this->slug === null) {
@@ -153,7 +153,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function replacement() : Relation
+    public function replacement(): Relation
     {
         return $this->belongsTo(File::class, 'replacement_id');
     }

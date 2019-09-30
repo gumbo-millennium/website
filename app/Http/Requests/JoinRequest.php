@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Requests;
@@ -79,7 +80,7 @@ class JoinRequest extends FormRequest
      *
      * @return array
      */
-    public function safe() : array
+    public function safe(): array
     {
         return $this->except(['password', 'password_confirm']);
     }

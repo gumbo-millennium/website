@@ -13,6 +13,7 @@ class MemberRatio extends Partition
      *
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function calculate(Request $request)
     {

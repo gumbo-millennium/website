@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -32,7 +33,7 @@ abstract class SluggableModel extends Model
      *
      * @return array
      */
-    abstract public function sluggable() : array;
+    abstract public function sluggable(): array;
 
     /**
      * Return 'slug' as key name

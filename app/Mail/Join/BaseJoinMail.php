@@ -10,7 +10,8 @@ use Illuminate\Queue\SerializesModels;
 
 abstract class BaseJoinMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The "reply to" recipients of the message.
@@ -56,5 +57,5 @@ abstract class BaseJoinMail extends Mailable
      * @param JoinSubmission $submission
      * @return string
      */
-    abstract protected function createSubject(JoinSubmission $submission) : string;
+    abstract protected function createSubject(JoinSubmission $submission): string;
 }

@@ -25,10 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Wipe IP addresses from FileDownload objects
-        $schedule->call(function () {
-            FileDownload::removeIpOnOldEntries();
-        })->daily();
+        // Expunge outdated non-critical data daily
+        $schedule->command('avg:flush')->daily();
 
         // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();

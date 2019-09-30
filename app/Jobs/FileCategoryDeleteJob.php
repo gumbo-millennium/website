@@ -16,7 +16,10 @@ use App\Models\FileCategory;
  */
 class FileCategoryDeleteJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * File category to be deleted

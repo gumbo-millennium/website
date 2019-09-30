@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Jobs;
 
@@ -22,14 +22,13 @@ use Illuminate\Queue\SerializesModels;
  */
 abstract class FileJob implements ShouldQueue
 {
-    use
-        Dispatchable,
-        InteractsWithQueue,
-        Queueable,
-        ReplacesStoredFiles,
-        RunsCliCommands,
-        SerializesModels,
-        UsesTemporaryFiles;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use ReplacesStoredFiles;
+    use RunsCliCommands;
+    use SerializesModels;
+    use UsesTemporaryFiles;
 
     /**
      * File being processed
@@ -56,5 +55,5 @@ abstract class FileJob implements ShouldQueue
      *
      * @return void|boolean
      */
-    abstract public function handle() : void;
+    abstract public function handle(): void;
 }

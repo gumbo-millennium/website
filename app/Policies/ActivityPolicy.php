@@ -6,35 +6,46 @@ use App\Models\User;
 use App\Models\Activity;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Permission policy of the Activity model
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ActivityPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Returns if the user can alter the given activity
+     * @var string
+     */
+    public const ADMIN_PERMISSION = 'activity-admin';
+    public const PURGE_PERMISSION = 'activity-purge';
+
+    /**
+     * Returns if the user is the owner of the given activity.
      *
      * @param User $user
      * @param Activity $activity
      * @return bool
      */
-    public static function isOwningUser(User $user, Activity $activity) : bool
+    private static function isOwner(User $user, Activity $activity): bool
     {
         return ($activity->user && $user->is($activity->user))
             || ($activity->role && $user->hasRole($activity->role));
     }
 
     /**
-     * Returns if the user has the given permission or is able to manage
-     * the activity via ownership
+     * Returns if the user is the owner of any activity.
      *
-     * @param string $permission
      * @param User $user
-     * @param Activity $activity
      * @return bool
      */
-    private function permissionOrAccess(string $permission, User $user, Activity $activity) : bool
+    private static function isAnyOwner(User $user): bool
     {
-        return $user->hasPermissionTo($permission) || self::isOwningUser($user, $activity);
+        return Activity::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->orWhereIn('role_id', $user->roles()->pluck('id'));
+        })->count() > 0;
     }
 
     /**
@@ -46,10 +57,7 @@ class ActivityPolicy
     public function viewAny(User $user)
     {
         // Anyone can view activities
-        return $this->manage($user)
-            && Activity::whereIn('role_id', $user->roles()->pluck('id'))
-                ->orWhere('user_id', $user->id)
-                ->count() > 0;
+        return $user->can('manage', Activity::class);
     }
 
     /**
@@ -58,6 +66,7 @@ class ActivityPolicy
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, Activity $activity)
     {
@@ -74,7 +83,7 @@ class ActivityPolicy
     public function create(User $user)
     {
         // Check creation
-        return $user->hasPermissionTo('activity-create');
+        return $user->can('admin', Activity::class);
     }
 
     /**
@@ -92,7 +101,7 @@ class ActivityPolicy
         }
 
         // Check update
-        return $this->permissionOrAccess('activity-update', $user, $activity);
+        return $user->can('manage', $activity);
     }
 
     /**
@@ -110,7 +119,7 @@ class ActivityPolicy
         }
 
         // Identical to update
-        return $this->permissionOrAccess('activity-cancel', $user, $activity);
+        return $user->can('manage', $activity);
     }
 
     /**
@@ -127,14 +136,13 @@ class ActivityPolicy
             return false;
         }
 
-        // Delete is only allowed if there are no enrollments
-        // yet.
+        // Delete is only allowed if there are no enrollments yet.
         if ($activity->enrollments()->whereNull('deleted_at')->count() == 0) {
-            return $this->permissionOrAccess('activity-delete', $user, $activity);
+            return $user->can('manage', $activity);
         }
 
         // Allow delete only if the permission is granted
-        return $user->hasPermissionTo('activity-delete');
+        return $user->can('admin', $activity);
     }
 
     /**
@@ -152,7 +160,7 @@ class ActivityPolicy
         }
 
         // Check if restoration is possible
-        return $this->permissionOrAccess('activity-delete', $user, $activity);
+        return $user->can('manage', $activity);
     }
 
     /**
@@ -164,28 +172,50 @@ class ActivityPolicy
      */
     public function forceDelete(User $user, Activity $activity)
     {
-        // Don't allow deletion of activities that have payments within the last year
-        if ($activity->payments()->where('updated_at', '>', today()->subYears(7))) {
+        // Disallow deletion if the user can't manage
+        if ($user->can('manage', $activity)) {
             return false;
         }
 
-        // Allow only if the permission is present
-        return $user->hasPermissionTo('activity-purge');
+        // Don't allow deletion of activities that have payments within the
+        // last 7 years, unless the user can purge
+        return $activity->payments()->where('updated_at', '>', today()->subYears(7))
+            || $user->hasPermissionTo(self::PURGE_PERMISSION);
     }
 
     /**
-     * Determines whether the user can manage all activities, desipite the owner
+     * Allow linking an enrollment if the user is a manager of the event
+     *
+     * @param User $user
+     * @param Activity $activity
+     * @return bool
+     */
+    public function addEnrollment(User $user, Activity $activity)
+    {
+        return $user->can('manage', $activity);
+    }
+
+    /**
+     * Can the given user manage the given activities or activities in general
+     *
+     * @param User $user
+     * @param Activity|null $activity
+     * @return bool
+     */
+    public function manage(User $user, Activity $activity = null): bool
+    {
+        return $user->can('admin', $activity ?? Activity::class)
+            || ($activity ? self::isOwner($user, $activity) : self::isAnyOwner($user));
+    }
+
+    /**
+     * Can the user perform admin actions on this object
      *
      * @param User $user
      * @return bool
      */
-    public function manage(User $user)
+    public function admin(User $user): bool
     {
-        return $user->hasAnyPermission([
-            'activity-create',
-            'activity-update',
-            'activity-cancel',
-            'activity-delete'
-        ]);
+        return $user->hasPermissionTo(self::ADMIN_PERMISSION);
     }
 }

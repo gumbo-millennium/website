@@ -23,7 +23,7 @@ trait UsesTemporaryFiles
      * @return string Path to the temporary file
      * @throws \RuntimeException in case any IO action fails
      */
-    protected function getTempFileFromPath(string $path, string $ext, string $disk = 'local') : string
+    protected function getTempFileFromPath(string $path, string $ext, string $disk = 'local'): string
     {
         // Abort if file is missing
         if (!Storage::disk($disk)->exists($path)) {
@@ -68,7 +68,7 @@ trait UsesTemporaryFiles
      * @param string $ext Extension, without leading period.
      * @return string File path
      */
-    protected function getTempFile(string $ext) : string
+    protected function getTempFile(string $ext): string
     {
         // Generate a filename
         $tempFileName = tempnam(sys_get_temp_dir(), 'gumbo');
@@ -95,12 +95,13 @@ trait UsesTemporaryFiles
      * @param string $file
      * @return void
      */
-    protected function deleteTempFile(string $file) : void
+    protected function deleteTempFile(string $file): void
     {
         if (
             file_exists($file) &&
             starts_with($file, sys_get_temp_dir() &&
-            is_writeable(dirname($file)))) {
+            is_writeable(dirname($file)))
+        ) {
             @unlink($file);
         }
     }

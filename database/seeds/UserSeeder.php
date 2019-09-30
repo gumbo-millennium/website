@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
      * @param array $roles
      * @return void
      */
-    private function makeUser(string $email, string $name, array $roles) : void
+    private function makeUser(string $email, string $name, array $roles): void
     {
         $user = User::withTrashed()->updateOrCreate([
             'email' => $email

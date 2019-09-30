@@ -42,7 +42,7 @@ class FileMetaJob extends FileJob
      *
      * @return array
      */
-    public function tags() : array
+    public function tags(): array
     {
         return ['pdf-process', 'pdf-meta', 'file:' . $this->file->id];
     }
@@ -52,7 +52,7 @@ class FileMetaJob extends FileJob
      *
      * @return void
      */
-    public function handle() : void
+    public function handle(): void
     {
         // Make sure file is valid
         $file = $this->file;
@@ -92,7 +92,7 @@ class FileMetaJob extends FileJob
      * @param string $filePath
      * @return void
      */
-    protected function getPdfContent(string $filePath) : void
+    protected function getPdfContent(string $filePath): void
     {
         // Load PDF parser
         $parser = new PDFParser();
@@ -109,7 +109,7 @@ class FileMetaJob extends FileJob
      * @param string $filePath
      * @return void
      */
-    protected function getMetadata(string $filePath) : void
+    protected function getMetadata(string $filePath): void
     {
         // Build request list
         $requestList = collect([

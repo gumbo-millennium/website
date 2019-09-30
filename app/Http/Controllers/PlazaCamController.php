@@ -36,7 +36,7 @@ class PlazaCamController extends Controller
      *
      * @return bool
      */
-    protected static function isAvailable() : bool
+    protected static function isAvailable(): bool
     {
         $time = now();
         $hour = $time->hour;

@@ -28,7 +28,7 @@ class Payment extends UuidModel
      *
      * @return bool
      */
-    public function isCompleted() : bool
+    public function isCompleted(): bool
     {
         return $this->completed_at !== null;
     }
@@ -38,7 +38,7 @@ class Payment extends UuidModel
      *
      * @return bool
      */
-    public function isRefunded() : bool
+    public function isRefunded(): bool
     {
         return $this->refunded_at !== null;
     }
@@ -48,7 +48,7 @@ class Payment extends UuidModel
      *
      * @return bool
      */
-    public function isFullyRefunded() : bool
+    public function isFullyRefunded(): bool
     {
         return $this->amount === $this->refund_amount
             && $this->amount > 0;
@@ -60,7 +60,7 @@ class Payment extends UuidModel
      * @param Builder $query
      * @return Builder
      */
-    public function scopeCompleted(Builder $query) : Builder
+    public function scopeCompleted(Builder $query): Builder
     {
         return $query->whereNotNull('completed_at');
     }
@@ -71,7 +71,7 @@ class Payment extends UuidModel
      * @param Builder $query
      * @return Builder
      */
-    public function scopeRefunded(Builder $query) : Builder
+    public function scopeRefunded(Builder $query): Builder
     {
         return $query->whereNotNull('refunded_at');
     }

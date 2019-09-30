@@ -21,7 +21,9 @@ use App\Models\User;
  */
 class HandleJoinSubmission extends Action
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Perform the action on the given models.
@@ -29,6 +31,8 @@ class HandleJoinSubmission extends Action
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function handle(ActionFields $fields, Collection $models)
     {
@@ -41,51 +45,26 @@ class HandleJoinSubmission extends Action
         $accepted = $fields->result === 'yes';
 
         // Counts
-        $failCount = 0;
         $updatedCount = 0;
         $totalCount = $models->count();
 
+        // Iterate through each model
         foreach ($models as $model) {
-            // Skip if the request wasn't handled yet.
-            if ($model->granted !== null) {
-                $this->markAsFailed($model, 'Request was already handled');
-                continue;
-            }
-
-            // Add granted flag
-            $model->granted = $accepted;
-            $model->save(['granted']);
-
-            // Mark as completed
-            $this->markAsFinished($model);
-
-            // Find user with the same email address
-            $user = User::where(['email' => $model->email])->first();
-
-            // Continue if none are present, or assign member role if one is present.
-            if (!$user) {
-                continue;
-            } elseif ($accepted) {
-                $user->assignRole('member');
+            if ($this->handleSubmission($model, $accepted)) {
+                $updatedCount++;
             }
         }
 
-        if ($totalCount === 1) {
-            if ($failCount) {
-                return Action::danger('Aanvraag afwerken mislukt.');
-            }
+        $failCount = $totalCount - $updatedCount;
 
-            return Action::message('Aanvraag afgewerkt.');
-        }
-
-        if ($failCount == $totalCount) {
-            return Action::danger(sprintf('Alle %d aanvragen konden niet worden afgewerkt', $failCount));
-        } elseif ($failCount === 0) {
+        // Total success
+        if ($failCount === 0) {
             return Action::message(sprintf('Alle %d aanvragen zijn afgewerkt', $totalCount));
         }
 
-        $labelType = $failCount > $totalCount / 2 ? 'danger' : 'message';
-        return Action::$labelType(sprintf('%d van de %d aanvragen afgewerkt', $totalCount - $failCount, $failCount));
+        // Partial failure
+        $labelType = $failCount > $updatedCount / 2 ? 'danger' : 'message';
+        return Action::$labelType(sprintf('%d van de %d aanvragen afgewerkt', $updatedCount, $failCount));
     }
 
     /**
@@ -102,5 +81,44 @@ class HandleJoinSubmission extends Action
                     'no' => 'Afgewezen',
                 ]),
         ];
+    }
+
+    /**
+     * Handles a single submission
+     *
+     * @param JoinSubmission $submission
+     * @param bool $accepted
+     * @return bool
+     */
+    private function handleSubmission(JoinSubmission $submission, bool $accepted): bool
+    {
+        // Skip if the request wasn't handled yet.
+        if ($submission->granted !== null) {
+            $this->markAsFailed($submission, 'Request was already handled');
+            return true;
+        }
+
+        // Add granted flag
+        $submission->granted = $accepted;
+        $submission->save(['granted']);
+
+        // Mark as completed
+        $this->markAsFinished($submission);
+
+        // Find user with the same email address
+        $user = User::where(['email' => $submission->email])->first();
+
+        // Report as failed when no user could be found
+        if (!$user) {
+            return false;
+        }
+
+        // Flag as accepted
+        if ($accepted) {
+            $user->assignRole('member');
+        }
+
+        // Return ok
+        return true;
     }
 }

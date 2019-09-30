@@ -2,46 +2,31 @@
 
 namespace App\Policies;
 
+use App\Models\Activity;
 use App\Models\User;
 use App\Models\Enrollment;
+use App\Models\Payment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Handles allowing mutations on enrollments
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class EnrollmentPolicy
 {
     use HandlesAuthorization;
-
-    public static function hasEnrollmentPermissions(User $user) : bool
-    {
-        return $user->hasAnyPermission([
-            'enrollment-create',
-            'enrollment-update',
-            'enrollment-refund'
-        ]);
-    }
 
     /**
      * Determine whether the user can view any enrollments.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function viewAny(User $user)
     {
-        // User is allowed by system
-        if ($user->hasAnyPermission([
-            'enrollment-create',
-            'enrollment-update',
-            'enrollment-refund'
-        ])) {
-            return true;
-        }
-
-        // User has one or more activities he/she manages
-        return Activity::query()
-            ->where('user_id', $user->id)
-            ->whereIn('role_id', $user->roles->pluck('id'))
-            ->count() > 0;
+        return $user->can('manage', Activity::class);
     }
 
     /**
@@ -49,24 +34,22 @@ class EnrollmentPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
-     * @return mixed
+     * @return bool
      */
     public function view(User $user, Enrollment $enrollment)
     {
-        return $user->hasAnyPermission(['enrollment-update', 'enrollment-refund'])
-            || ActivityPolicy::isOwningUser($user, $enrollment->activity);
+        return $user->can('manage', $enrollment->activity);
     }
 
     /**
      * Determine whether the user can create enrollments.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('enrollment-create')
-            || ActivityPolicy::hasAnyActivity($user);
+        return $user->can('manage', Activity::class);
     }
 
     /**
@@ -74,12 +57,11 @@ class EnrollmentPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Enrollment $enrollment)
     {
-        return $user->hasPermissionTo('enrollment-update')
-            || ActivityPolicy::isOwningUser($user, $enrollment->activity);
+        return $user->can('manage', $enrollment->activity);
     }
 
     /**
@@ -87,12 +69,11 @@ class EnrollmentPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
-     * @return mixed
+     * @return bool
      */
     public function refund(User $user, Enrollment $enrollment)
     {
-        return $user->hasPermissionTo('enrollment-refund')
-            || ActivityPolicy::isOwningUser($user, $enrollment->activity);
+        return $user->can('manage', $enrollment->activity);
     }
 
     /**
@@ -100,11 +81,47 @@ class EnrollmentPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, Enrollment $enrollment)
     {
-        return $user->hasPermissionTo('enrollment-delete')
-            || ActivityPolicy::isOwningUser($user, $enrollment->activity);
+        // Allow deletion if purging is allowed, or if the enrollment is aged
+        // enough.
+        return $user->hasPermissionTo(ActivityPolicy::PURGE_PERMISSION)
+            || $enrollment->payment()->count() === 0
+            || $enrollment->payment()->latest()->pluck('created_at')->first() < today()->subYears(7);
+    }
+
+    /**
+     * Never allow attaching payments
+     *
+     * @param User $user
+     * @param Enrollment $enrollment
+     * @return bool
+     */
+    public function addPayment(User $user, Enrollment $enrollment)
+    {
+        return $user->can('admin', Payment::class);
+    }
+
+    /**
+     * Can the given user manage the given enrollment or enrollments in general
+     *
+     * @param User $user
+     * @param Enrollment $enrollment
+     * @return bool
+     */
+    public function manage(User $user, Enrollment $enrollment = null): bool
+    {
+        // Get activity safely
+        $activity = optional($enrollment)->activity;
+
+        // Weird edge-case of an unlinked enrollment requires an admin
+        if ($enrollment && !$activity) {
+            return $user->can('admin', File::class);
+        }
+
+        // Forward to ActivityPolicy
+        return $user->can('manage', $activity ?? Activity::class);
     }
 }

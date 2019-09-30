@@ -20,7 +20,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 
 /**
- * An activity resource
+ * An activity resource, highly linked
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Activity extends Resource
 {
@@ -111,6 +113,7 @@ class Activity extends Resource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function fields(Request $request)
     {
@@ -122,7 +125,7 @@ class Activity extends Resource
         ]);
     }
 
-    public function mainFields() : array
+    public function mainFields(): array
     {
         return [
             ID::make()->sortable(),
@@ -185,7 +188,7 @@ class Activity extends Resource
         ];
     }
 
-    public function pricingFields() : array
+    public function pricingFields(): array
     {
         return [
             DateTime::make('Event Start', 'start_date')
@@ -218,7 +221,7 @@ class Activity extends Resource
         ];
     }
 
-    public function enrollmentFields() : array
+    public function enrollmentFields(): array
     {
         return [
             DateTime::make('Enrollment Start', 'enrollment_start')
@@ -261,71 +264,59 @@ class Activity extends Resource
     }
 
     /**
-     * Get the cards available for the request.
+     * Return query that is filtered on allowed activities, IF the user is
+     * not allowed to view them all
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function cards(Request $request)
+    private static function queryAllOrManaged(NovaRequest $request, $query)
     {
-        return [];
-    }
+        // User is admin, don't filter
+        if ($request->user()->can('admin', ActivityModel::class)) {
+            return $query;
+        }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function filters(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function lenses(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
-    {
-        return [];
+        // User only has a subset of queries, filter it
+        return $request->user()->getHostedActivityQuery($query);
     }
 
     /**
      * Make sure the user can only see enrollments he/she is allowed to see
      *
-     * @param NovaRequest $request
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        // Get user shorthand
-        $user = $request->user();
+        return self::queryAllOrManaged($request, parent::indexQuery($request, $query));
+    }
 
-        // Return all enrollments if the user can manage them
-        if ($user->can('manage', ActivityModel::class)) {
-            return parent::indexQuery($request, $query);
-        }
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        return self::queryAllOrManaged($request, parent::relatableQuery($request, $query));
+    }
 
-        // Only return enrollments of the user's events if the user is not
-        // allowed to globally manage events.
-        return parent::indexQuery(
-            $request,
-            $query->whereIn('id', ActivityPolicy::getAllActivityIds($user))
-        );
+    /**
+     * Build a Scout search query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Scout\Builder  $query
+     * @return \Laravel\Scout\Builder
+     */
+    public static function scoutQuery(NovaRequest $request, $query)
+    {
+        return self::queryAllOrManaged($request, parent::scoutQuery($request, $query));
     }
 }

@@ -22,26 +22,4 @@ class FileObserver
             new FileThumbnailJob($file)
         ])->dispatch($file);
     }
-
-    /**
-     * Handle the file "updated" event.
-     *
-     * @param  \App\File  $file
-     * @return void
-     */
-    public function updated(File $file)
-    {
-        // no-op
-    }
-
-    /**
-     * Handle the file "deleted" event.
-     *
-     * @param  \App\File  $file
-     * @return void
-     */
-    public function deleted(File $file)
-    {
-        // no-op
-    }
 }

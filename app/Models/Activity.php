@@ -8,7 +8,6 @@ use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
 
@@ -60,7 +59,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return void
      */
-    protected function bindPaperclip() : void
+    protected function bindPaperclip(): void
     {
         // Max sizes
         $bannerWidth = max(
@@ -112,7 +111,7 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         return [
             'slug' => [
-                'source' => 'title',
+                'source' => 'name',
                 'unique' => true,
             ]
         ];
@@ -123,7 +122,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function role() : Relation
+    public function role(): Relation
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
@@ -133,7 +132,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function user() : Relation
+    public function user(): Relation
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
@@ -143,7 +142,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function enrollments() : Relation
+    public function enrollments(): Relation
     {
         return $this->hasMany(Enrollment::class);
     }
@@ -153,7 +152,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function payments() : Relation
+    public function payments(): Relation
     {
         return $this->hasMany(Payment::class);
     }
@@ -164,7 +163,7 @@ class Activity extends SluggableModel implements AttachableInterface
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getCancelledAttribute() : bool
+    public function getCancelledAttribute(): bool
     {
         return $this->cancelled_at !== null;
     }
@@ -174,7 +173,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return string|null
      */
-    public function getOrganiserAttribute() : ?string
+    public function getOrganiserAttribute(): ?string
     {
         return optional($this->role)->title ?? optional($this->user)->public_name;
     }
@@ -184,7 +183,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return int
      */
-    public function getAvailableSeatsAttribute() : ?int
+    public function getAvailableSeatsAttribute(): ?int
     {
         // Only if there are actually places
         if ($this->seats === null) {
@@ -200,7 +199,7 @@ class Activity extends SluggableModel implements AttachableInterface
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getEnrollmentOpenAttribute() : ?bool
+    public function getEnrollmentOpenAttribute(): ?bool
     {
         $now = now();
 
@@ -228,7 +227,7 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return string|null
      */
-    public function getDescriptionHtmlAttribute() : ?string
+    public function getDescriptionHtmlAttribute(): ?string
     {
         return $this->description ? NovaEditorJs::generateHtmlOutput($this->description) : null;
     }

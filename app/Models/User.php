@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,7 +16,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use Notifiable, HasRoles, SoftDeletes, MustVerifyEmail;
+    use Notifiable;
+    use HasRoles;
+    use SoftDeletes;
+    use MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -66,7 +70,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return HasMany
      */
-    public function files() : HasMany
+    public function files(): HasMany
     {
         return $this->hasMany(File::class, 'owner_id');
     }
@@ -76,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return BelongsToMany
      */
-    public function downloads() : Relation
+    public function downloads(): Relation
     {
         return $this->belongsToMany(File::class, 'file_downloads')
             ->as('download')
@@ -88,7 +92,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return HasMany
      */
-    public function enrollments() : HasMany
+    public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
     }
@@ -98,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return Relation
      */
-    public function activities() : Relation
+    public function activities(): Relation
     {
         return $this->hasManyThrough(Activity::class, Enrollment::class);
     }
@@ -108,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return Relation
      */
-    public function hostedActivities() : Relation
+    public function hostedActivities(): Relation
     {
         return $this->hasMany(Activity::class);
     }
@@ -118,7 +122,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return string|null
      */
-    public function getNameAttribute() : ?string
+    public function getNameAttribute(): ?string
     {
         $name = collect([
             $this->first_name,
@@ -134,7 +138,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return string|null
      */
-    public function getPublicNameAttribute() : ?string
+    public function getPublicNameAttribute(): ?string
     {
         return $this->alias ?? $this->name;
     }
@@ -144,19 +148,31 @@ class User extends Authenticatable implements MustVerifyEmailContract
      *
      * @return Collection
      */
-    public function getHostedActivityIdsAttribute(array $attributes = null) : iterable
+    public function getHostedActivityIdsAttribute(array $attributes = null): iterable
     {
-        // Bind the user to something different, for child node
-        $user = $this;
-
         // Run query
-        $query = Activity::query()
-            ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->id)
-                    ->orWhereIn('role_id', $user->roles()->pluck('id'));
-            });
+        $query = $this->getHostedActivityQuery(Activity::query());
 
         // Handle query
         return $attributes ? $query->only($attributes) : $query->get();
+    }
+
+    /**
+     * Returns (sub)query that only returns the Activities this user
+     * is a manager of
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getHostedActivityQuery(Builder $query): Builder
+    {
+        // Save $this as $user for child
+        $user = $this;
+
+        // Return data as a subquery
+        return $query->where(function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->orWhereIn('role_id', $user->roles()->pluck('id'));
+        });
     }
 }

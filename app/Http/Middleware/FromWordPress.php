@@ -42,7 +42,7 @@ class FromWordPress
      * @param Request $request
      * @return bool
      */
-    protected function isAuthorized(Request $request) : bool
+    protected function isAuthorized(Request $request): bool
     {
         // Get authentication header
         $authHeader = $request->headers->get('Authenticate');
@@ -82,7 +82,7 @@ class FromWordPress
      *
      * @return void
      */
-    protected function makeNewSecret() : void
+    protected function makeNewSecret(): void
     {
         Option::set(Option::OPTION_AUTH_TOKEN, str_random(40));
     }

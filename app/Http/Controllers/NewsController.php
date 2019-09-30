@@ -17,10 +17,9 @@ class NewsController extends Controller
     /**
      * Renders all news articles on the website.
      *
-     * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index()
     {
         // Get 15 posts at a time
         $allPosts = Post::published()->paginate(15);
@@ -34,11 +33,10 @@ class NewsController extends Controller
     /**
      * Renders a single post
      *
-     * @param Request $request
      * @param Post $post
      * @return Response
      */
-    public function post(Request $request, Post $post)
+    public function post(Post $post)
     {
         return view('main.news.single')->with([
             'post' => $post

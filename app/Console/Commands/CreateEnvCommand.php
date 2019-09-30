@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -105,8 +106,6 @@ class CreateEnvCommand extends Command
 
         // Create file if it does not exist.
         if ((!file_exists($envFile) || $forced) && is_writeable(dirname($envFile))) {
-            $sourceFileName = $this->argument('env', 'staging');
-
             $config = $this->buildEnvironmentConstructionConfig();
             $this->line('<info>Environment configuration ready</>');
 
@@ -129,7 +128,7 @@ class CreateEnvCommand extends Command
      *
      * @return Collection
      */
-    protected function buildEnvironmentConstructionConfig() : Collection
+    protected function buildEnvironmentConstructionConfig(): Collection
     {
         $env = $this->argument('env') ?? 'local';
 
@@ -151,7 +150,7 @@ class CreateEnvCommand extends Command
      * @param string $source
      * @return string .env file content
      */
-    protected function constructEnv(string $source, Collection $config) : string
+    protected function constructEnv(string $source, Collection $config): string
     {
         $this->line(sprintf(
             'Building new .env file from <comment>%s</>',
@@ -202,7 +201,7 @@ class CreateEnvCommand extends Command
      * @param string $content Contents to write
      * @return bool True if write was performed OK
      */
-    protected function writeEnvFile(string $file, string $content) : bool
+    protected function writeEnvFile(string $file, string $content): bool
     {
         $this->line(sprintf(
             'Creating .env file of <comment>%.1f</> KB in "<info>%s</>".',

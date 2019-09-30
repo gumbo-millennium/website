@@ -66,7 +66,7 @@ class FileCategory extends SluggableModel
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -82,7 +82,7 @@ class FileCategory extends SluggableModel
      *
      * @return Relation
      */
-    public function files() : Relation
+    public function files(): Relation
     {
         return $this->hasMany(File::class, 'category_id', 'id');
     }
@@ -92,7 +92,7 @@ class FileCategory extends SluggableModel
      *
      * @return Relation
      */
-    public function downloads() : Relation
+    public function downloads(): Relation
     {
         return $this->hasManyThrough(
             FileDownload::class,

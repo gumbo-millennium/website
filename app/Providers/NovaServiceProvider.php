@@ -48,9 +48,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewNova', function (User $user) {
-            return $user->hasPermissionTo('admin');
-        });
+        Gate::define('viewNova', 'App\\Gate\\AdminGate@nova');
     }
 
     /**

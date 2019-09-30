@@ -80,7 +80,7 @@ class PermissionSeeder extends Seeder
      * @param Collection $permissionMap
      * @return Collection
      */
-    public function seedPermissions(Collection $permissionMap) : Collection
+    public function seedPermissions(Collection $permissionMap): Collection
     {
         // Collection of created permission
         $collection = collect();
@@ -109,7 +109,7 @@ class PermissionSeeder extends Seeder
      * @param Collection $roleMap
      * @return Collection
      */
-    public function mapRolePermissions(Collection $permissions, Collection $roles, Collection $roleMap) : Collection
+    public function mapRolePermissions(Collection $permissions, Collection $roles, Collection $roleMap): Collection
     {
         // Intermediate map
         $rolePermissionMap = collect();
@@ -173,7 +173,7 @@ class PermissionSeeder extends Seeder
      * @param Collection $roleMap
      * @return Collection
      */
-    public function seedRoles(Collection $permissions, Collection $roleMap) : Collection
+    public function seedRoles(Collection $permissions, Collection $roleMap): Collection
     {
         // Prep a roles collection
         $roles = collect();
@@ -219,7 +219,7 @@ class PermissionSeeder extends Seeder
      * @param string $path
      * @return Collection|null
      */
-    private function loadJson(string $path) : ?Collection
+    private function loadJson(string $path): ?Collection
     {
         // Get path of the file
         $fullPath = resource_path($path);

@@ -28,7 +28,7 @@ class Price extends Number
      * @param string $format
      * @return self
      */
-    public function displayFormat(string $format) : self
+    public function displayFormat(string $format): self
     {
         // Validate format
         if (!preg_match('/%(?!%)/', $format)) {

@@ -19,7 +19,7 @@ trait FindsUserTrait
      *
      * @return User|null
      */
-    protected function getUserArgument() : ?User
+    protected function getUserArgument(): ?User
     {
         $query = $this->argument('user');
         if (empty($query)) {

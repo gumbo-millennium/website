@@ -43,7 +43,7 @@ class Page extends SluggableModel
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -53,7 +53,7 @@ class Page extends SluggableModel
         ];
     }
 
-    public function scopeHome(Builder $query) : Builder
+    public function scopeHome(Builder $query): Builder
     {
         return $query->where('slug', 'homepage');
     }
@@ -63,7 +63,7 @@ class Page extends SluggableModel
      *
      * @return Relation
      */
-    public function author() : Relation
+    public function author(): Relation
     {
         return $this->belongsTo(User::class, 'author_id', 'id');
     }

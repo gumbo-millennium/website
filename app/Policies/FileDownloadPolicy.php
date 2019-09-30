@@ -2,14 +2,20 @@
 
 namespace App\Policies;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\FileDownload;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Disallow most modifications to file download models (they're for logging and should not be modified).
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class FileDownloadPolicy
 {
     use HandlesAuthorization;
-    
+
     /**
      * Determine whether the user can view any file downloads.
      *
@@ -18,7 +24,7 @@ class FileDownloadPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('viewAny', File::class);
     }
 
     /**
@@ -30,7 +36,7 @@ class FileDownloadPolicy
      */
     public function view(User $user, FileDownload $fileDownload)
     {
-        //
+        return $user->can('viewAny', File::class);
     }
 
     /**
@@ -41,7 +47,7 @@ class FileDownloadPolicy
      */
     public function create(User $user)
     {
-        //
+        return false;
     }
 
     /**
@@ -53,7 +59,7 @@ class FileDownloadPolicy
      */
     public function update(User $user, FileDownload $fileDownload)
     {
-        //
+        return false;
     }
 
     /**
@@ -65,7 +71,7 @@ class FileDownloadPolicy
      */
     public function delete(User $user, FileDownload $fileDownload)
     {
-        //
+        return false;
     }
 
     /**
@@ -77,7 +83,7 @@ class FileDownloadPolicy
      */
     public function restore(User $user, FileDownload $fileDownload)
     {
-        //
+        return false;
     }
 
     /**
@@ -89,6 +95,6 @@ class FileDownloadPolicy
      */
     public function forceDelete(User $user, FileDownload $fileDownload)
     {
-        //
+        return false;
     }
 }

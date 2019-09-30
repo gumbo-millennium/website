@@ -15,7 +15,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
  */
 class FileDeleteJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The file being deleted

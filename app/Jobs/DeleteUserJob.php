@@ -20,7 +20,10 @@ use App\Models\CorcelUser;
  */
 class DeleteUserJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * User to remove
@@ -65,7 +68,7 @@ class DeleteUserJob implements ShouldQueue
      * @param User $user
      * @return void
      */
-    protected function deleteFileAssociations(User $user) : void
+    protected function deleteFileAssociations(User $user): void
     {
         // Unlink all files from this user
         DB::transaction(function () use ($user) {
@@ -93,7 +96,7 @@ class DeleteUserJob implements ShouldQueue
      * @param User $user
      * @return void
      */
-    protected function deleteWordpress(User $user) : void
+    protected function deleteWordpress(User $user): void
     {
         // Get WordPress account, if any
         $wpUser = $user->wordpress;
@@ -133,7 +136,7 @@ class DeleteUserJob implements ShouldQueue
      *
      * @return CorcelUser
      */
-    protected function getDefaultWordpressUser() : CorcelUser
+    protected function getDefaultWordpressUser(): CorcelUser
     {
         // Get default user
         $defaultUser = CorcelUser::where(function ($query) {
