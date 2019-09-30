@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" sizes="114x114" href="assets/images/apple-touch-icon-114x114.png">
 
 {{-- Main stylesheet --}}
-<link href="{{ mix('/gumbo.css') }}" rel="stylesheet">
+<link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 @stack('stack.css')
 
 {{-- Web fonts --}}

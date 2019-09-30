@@ -1,5 +1,3 @@
-@inject('menuHelper', 'App\Services\MenuProvider')
-
 @auth
 {{-- Add logout form to header --}}
 <form class="d-none" id="navbar-logout-form" action="{{ route('logout') }}" method="post">
