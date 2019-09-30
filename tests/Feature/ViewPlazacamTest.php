@@ -66,7 +66,7 @@ class ViewPlazacamTest extends TestCase
     public function testReadMember() : void
     {
         // Gets the user
-        $user = $this->getUser(['guest', 'member']);
+        $user = $this->getUser(['member']);
 
         // Get URL
         $url = route('plazacam', [
