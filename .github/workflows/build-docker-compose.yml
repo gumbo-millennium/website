@@ -1,0 +1,15 @@
+name: "Build Docker Compose images"
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  laravel-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build images
+        run: docker-compose build
+      - name: Upload images
+        run: docker-compose push
