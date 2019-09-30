@@ -15,7 +15,7 @@ use Illuminate\Console\Command;
  */
 class GdprDeleteUser extends Command
 {
-    const FOUND_PRINT = <<<END
+    private const FOUND_PRINT = <<<END
 ===============================
 Found user <info>%s</>.
 
@@ -29,7 +29,7 @@ END;
      *
      * @var string
      */
-    const FORCE_WARNING = <<<END
+    private const FORCE_WARNING = <<<END
 ======================= WARNING =======================
 
     You are forcing a delete on a user that
@@ -111,10 +111,12 @@ END;
         }
 
         // Confirm deletion
-        if (!$this->confirm(sprintf(
-            'Are you sure you want to delete <comment>%s</> from the system?',
-            $user->name
-        ))) {
+        if (
+            !$this->confirm(sprintf(
+                'Are you sure you want to delete <comment>%s</> from the system?',
+                $user->name
+            ))
+        ) {
             $this->line('Command canceled');
             return false;
         };
@@ -147,10 +149,12 @@ END;
             $user->deleted_at->addDays(90)->toRfc7231String()
         ));
 
-        if (!$this->confirm(sprintf(
-            'Confirm immediate removal of <comment>%s</>?',
-            $user->name
-        ))) {
+        if (
+            !$this->confirm(sprintf(
+                'Confirm immediate removal of <comment>%s</>?',
+                $user->name
+            ))
+        ) {
             $this->line('Command canceled');
             return false;
         }

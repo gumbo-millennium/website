@@ -97,7 +97,8 @@ trait UsesTemporaryFiles
      */
     protected function deleteTempFile(string $file) : void
     {
-        if (file_exists($file) &&
+        if (
+            file_exists($file) &&
             starts_with($file, sys_get_temp_dir() &&
             is_writeable(dirname($file)))) {
             @unlink($file);

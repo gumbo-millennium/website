@@ -1,0 +1,63 @@
+name: "Build Laravel"
+
+on: [push]
+
+jobs:
+  laravel-frontend:
+    name: "front-end build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Copy environment config
+        run: cp .github/actions.env .env
+      - name: Install Yarn dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build Front-end
+        run: yarn run production
+      - name: Publish front-end
+        uses: actions/upload-artifact@master
+        with:
+          name: front-end
+          path: public/
+  laravel-backend:
+    name: "back-end build"
+    needs: [laravel-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login for Laravel Nova
+        run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_PASSWORD}
+        env:
+          NOVA_USERNAME: ${{ secrets.NovaUsername }}
+          NOVA_PASSWORD: ${{ secrets.NovaPassword }}
+      - name: Copy environment config
+        run: cp .github/actions.env .env
+      - name: Install composer dependencies
+        run: |
+          composer install --no-suggest --no-progress --no-scripts --no-interaction
+          php artisan key:generate
+          composer install --no-suggest --no-progress --no-interaction
+      - name: Prepare database
+        run: |
+          touch database/database.sqlite
+          chmod +w database/database.sqlite
+          php artisan migrate --seed
+      - name: Download front-end
+        uses: actions/download-artifact@master
+        with:
+          name: front-end
+          path: public/
+      - name: Run linters
+        run: composer run lint
+      - name: Run unit tests
+        run: |
+          test -d dist || mkdir dist
+          vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
+      - name: Report test results to CodeClimate
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter format-coverage -t clover ./coverage-clover.xml || true
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CodeClimateId }}
+        continue-on-error: true

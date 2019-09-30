@@ -25,7 +25,7 @@ class FullController extends Controller
     /**
      * E-mail address and name of the board
      */
-    const TO_BOARD = [[
+    private const TO_BOARD = [[
         'name' => 'Bestuur Gumbo Millennium',
         'email' => 'bestuur@gumbo-millennium.nl',
     ]];

@@ -17,27 +17,27 @@ class PrivacyProvider
     /**
      * Key containing the properties for this request
      */
-    const SESSION_KEY = 'gdpr_privacy';
+    private const SESSION_KEY = 'gdpr_privacy';
 
     /**
      * Key containing the ID of this kind of request
      */
-    const SESSION_ID_KEY = 'gdpr_key';
+    private const SESSION_ID_KEY = 'gdpr_key';
 
     /**
      * Indicates the system has no clue if the user wants to be tracked or not
      */
-    const TRACK_NONE = 0;
+    private const TRACK_NONE = 0;
 
     /**
      * User allowed Stripe fraud prevention
      */
-    const TRACK_STRIPE = 2;
+    private const TRACK_STRIPE = 2;
 
     /**
      * User granted all tracking.
      */
-    const TRACK_ALL = self::TRACK_STRIPE;
+    private const TRACK_ALL = self::TRACK_STRIPE;
 
     /**
      * Build the session

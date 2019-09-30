@@ -27,9 +27,9 @@ class FileThumbnailJob extends FileJob
      *
      * @var string
      */
-    const RESIZE_WIDTH = '300x400';
+    private const RESIZE_WIDTH = '300x400';
 
-    const ERROR_MSG = <<<MSG
+    private const ERROR_MSG = <<<MSG
 Failed to make thumbnail [%s].
 
 Outputs follow

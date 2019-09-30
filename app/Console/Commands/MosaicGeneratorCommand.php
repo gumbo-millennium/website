@@ -15,42 +15,42 @@ class MosaicGeneratorCommand extends Command
     /**
      * @var string xlink:href DTD. Don't change.
      */
-    const DTD_XLINK = 'http://www.w3.org/1999/xlink';
+    private const DTD_XLINK = 'http://www.w3.org/1999/xlink';
 
     /**
      * @var int[] Lightness deviation from the base color. 100 = 1%
      */
-    const LIGHTNESS_DEVIATION = [-500, 500];
+    private const LIGHTNESS_DEVIATION = [-500, 500];
 
     /**
      * @var int[] Lightness deviation from the base color. 100 = 1%
      */
-    const CONTRAST_DEVIATION = [-500, 500];
+    private const CONTRAST_DEVIATION = [-500, 500];
 
     /**
      * @var int[] Opacity range, in percentage. Used in mt_rand.
      */
-    const OPACITY_RANGE = [40, 80];
+    private const OPACITY_RANGE = [40, 80];
 
     /**
      * @var int[] Image dimensions. Will be fileld completely
      */
-    const IMAGE_SIZE = [1024, 512];
+    private const IMAGE_SIZE = [1024, 512];
 
     /**
      * @var int Size of the diamonds
      */
-    const DIAMOND_SIZE = 32;
+    private const DIAMOND_SIZE = 32;
 
     /**
      * @var string Base color
      */
-    const DIAMOND_COLOUR = '#007d00';
+    private const DIAMOND_COLOUR = '#007d00';
 
     /**
      * @var string XML template
      */
-    const XML_BASE = <<<'XML'
+    private const XML_BASE = <<<'XML'
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg
