@@ -5,30 +5,27 @@
 Inloggen - Gumbo Millennium
 @endsection
 
-
-{{-- Add notice --}}
-@push('auth.alert')
-<div class="alert alert-info" role="alert">
-    Onderstaand inlogscherm is voor toegang tot besloten systemen.
-    Je hebt het niet nodig voor algemeen gebruik van de website.
-</div>
-@endpush
-
-@if (file_exists('/.dockerenv'))
+@if (file_exists('/.dockerenv') && app()->environment('local'))
 @php
 $possibleUsers = App\Models\User::query()
     ->where('email', 'like', '%@example.com')
     ->orderBy('email', 'ASC')
-    ->pluck('email');
+    ->get();
 @endphp
 @push('auth.alert')
-<div class="alert alert-info" role="alert">
+<form method="post" class="alert alert-light" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
     <h4 class="alert-title">Test credentials</h4>
-    Docker supplies the following users with password <code>Gumbo</code>:<br />
-    @foreach ($possibleUsers as $email)
-    - <code>{{ $email }}</code><br />
-    @endforeach
-</Div>
+    Docker supplied some test users. Use the dropdown to pick an account
+    @csrf
+    <input type="hidden" name="password" value="Gumbo" />
+
+    <select name="email" class="custom-select my-2">
+        @foreach ($possibleUsers as $user)
+        <option value="{{ $user->email }}">{{ $user->first_name }}</option>
+        @endforeach
+    </select>
+    <button class="btn btn-outline-secondary btn-block" type="submit">Login</button>
+</form>
 @endpush
 @endif
 

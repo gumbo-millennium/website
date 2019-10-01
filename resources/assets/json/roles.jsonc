@@ -1,26 +1,32 @@
 {
+    // Create restricted role
+    "restricted": {
+        "title": "Restricted user",
+        "permissions": []
+    },
+
     // Create guest role
     "guest": {
-        "title": "Gast (standaard)",
+        "title": "Gast",
+        "default": true,
         "permissions": [
-            // Allow viewing and buying activity tickets
-            "activity-view",
-            "activity-buy"
+            "activity-enroll"
         ]
     },
 
     // Standard members
     "member": {
         "title": "Gumbo Millennium lid",
+        "extends": "guest",
         "permissions": [
             // Allow file browsing
             "file-view",
-            "file-download",
-            // Allow viewing and buying activity tickets for private activitys
-            "activity-view-private",
-            "activity-buy-private",
-            // Allow watching the plazacam
+
+            // Allow viewing plazacam
             "plazacam-view",
+
+            // Allow enrolling on private events
+            "activity-private"
         ]
     },
 
@@ -28,85 +34,53 @@
     "ac": {
         "title": "Activiteiten Commissie",
         "permissions": [
-            // Allow admin access
-            "admin",
-
             // Allow activity management
-            "activity-create",
-            "activity-create-paid",
-            "activity-update",
-            "activity-cancel",
+            "activity-admin"
         ]
     },
 
     // Landhuis committee
     "lhw": {
         "title": "Landhuis Commissie",
-        "permissions": [
-            // Allow admin access
-            "admin",
-        ]
+        "permissions": []
     },
+
     // Public Relations Project Group
     "pr": {
         "title": "PRPG",
         "permissions": [
-            // Allow admin access
-            "admin",
-
             // Allow content management
-            "page-create",
-            "page-update",
-            "page-delete",
-            "page-purge",
+            "content-admin"
         ]
     },
     // Board
     "board": {
         "title": "Bestuur",
         "permissions": [
-            // Allow admin access
-            "admin",
-
             // Allow file management
-            "file-create",
-            "file-update",
-            "file-delete",
-            "file-purge",
+            "file-admin",
 
-            // Allow category management
-            "file-category-create",
-            "file-category-update",
-            "file-category-delete",
-
-            // Allow sponsor manageent
-            "sponsor-manage",
-
-            // Allow permission management
-            "user-role",
-
-            // Allow activity management
-            "activity-create",
-            "activity-create-paid",
-            "activity-update",
-            "activity-delete",
-            "activity-publish",
-            "activity-manage-all",
-
-            // Allow content management
-            "page-create",
-            "page-update",
-            "page-delete",
-            "page-purge",
-
-            // Allow plazacam management
+            // Allow manually updating plazacam
             "plazacam-update",
 
-            // Allow payment monitoring
-            "payment-admin",
+            // Allow editing content
+            "content-admin",
 
-            // Allow enrollment management
-            "join-manage",
+            // Allow administrating events
+            "activity-admin",
+            "activity-purge",
+
+            // Allow changing sponsors
+            "sponsor-admin",
+
+            // Allow changing roles
+            "role-admin",
+
+            // Allow looking into /join submits
+            "join-admin",
+
+            // Allow payment admin
+            "payment-admin"
         ]
     },
 
@@ -114,36 +88,38 @@
     "dc": {
         "title": "Digitale Commissie",
         "permissions": [
-            "*"
+            // Allow monitoring platforms
+            "devops",
+
+            // Allow becoming other users
+            "impersonate"
         ]
     },
 
     // Copied permissions from different groups
     "ib": {
         "title": "Introbestuur",
-        "extends": "lhw",
         "permissions": []
     },
     "bbqpg": {
         "title": "BBQPG",
-        "extends": "lhw",
         "permissions": []
     },
     "bc": {
         "title": "Brascommissie",
-        "extends": "lhw",
         "permissions": []
     },
     "intro-accie": {
         "title": "Intro Accie",
-        "extends": "lhw",
         "permissions": []
     },
 
     // Empty roles
     "kc": {
         "title": "Kascommissie",
-        "permissions": []
+        "permissions": [
+            "payments-monitor"
+        ]
     },
     "pc": {
         "title": "Plazacommissie",

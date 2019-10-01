@@ -1,0 +1,26 @@
+/*
+  Screen reader-only
+  Sourced from Bootstrap
+  @source https://github.com/twbs/bootstrap/blob/v4.3.1/scss/mixins/_screen-reader.scss
+*/
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+  overflow: visible;
+  white-space: normal;
+}

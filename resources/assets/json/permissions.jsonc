@@ -1,65 +1,42 @@
 {
     // Create file permissions
-    "file-create": "Bestanden toevoegen",
-    "file-update": "Bestanden bewerken",
-    "file-delete": "Bestanden verwijderen",
-    "file-purge": "Bestanden permanent verwijderen",
-
-    // Create file user permissions
-    "file-view": "Bestanden bekijken (alleen metadata)",
-    "file-download": "Bestanden downloaden",
-
-    // Create file category permissions
-    "file-category-create": "Bestandscategorieën toevoegen",
-    "file-category-update": "Bestandscategorieën bewerken",
-    "file-category-delete": "Bestandscategorieën verwijderen",
+    "file-view": "Bestandsysteem bekijken",
+    "file-admin": "Bestandsysteem beheren",
 
     // Plaza cam permissions
-    "plazacam-create": "Viewing of the plazacam (and coffee cam)",
+    "plazacam-view": "Viewing of the plazacam (and coffee cam)",
     "plazacam-update": "Editing the plazacam (and coffee cam)",
 
     // Manage content
-    "page-create": "Pagina's toevoegen",
-    "page-update": "Pagina's bewerken",
-    "page-delete": "Pagina's verwijderen",
-    "page-purge": "Pagina's permanent verwijderen",
+    "content-admin": "Pagina's en nieuws beheren",
 
     // Create event permissions
-    "activity-create": "Evenementen toevoegen",
-    "activity-create-paid": "Evenementen toevoegen (betaald)",
-    "activity-update": "Evenementen bijwerken",
-    "activity-cancel": "Evenementen annuleren",
-    "activity-delete": "Evenementen verwijderen",
-    "activity-purge": "Evenementen permanent verwijderen",
-    "activity-publish": "Evenementen publiceren",
-
-    // Manage enrollments
-    "enrollment-create": "Evenement inschrijvingen aanmaken",
-    "enrollment-update": "Evenement inschrijvingen bewerken",
-    "enrollment-delete": "Evenement inschrijvingen verwijderen",
-    "enrollment-refund": "Evenement inschrijvingen terugbetalen",
+    "activity-enroll": "Inschrijven op evenementen",
+    "activity-private": "Privé-evenementen bekijken",
+    "activity-admin": "Evenementen en inschrijvingen beheren",
+    "activity-purge": "Evenementen en inschrijvingen verwijderen",
 
     // Manage sponsors
-    "sponsor-manage": "Sponsoren bewerken",
+    "sponsor-admin": "Sponsoren bewerken",
 
     // Manage roles
-    "user-role": "Gebruikersrollen bewerken",
-    "user-role-admin": "Gebruikersrollen bewerken (admin)",
+    "role": "Beheren leden van eigen groepen",
+    "role-admin": "Beheren leden van alle groepen (admin)",
 
     // Manage enrollments
-    "join-manage": "Lidmaatschaps aanmeldingen beheren",
+    "join-admin": "Lidmaatschaps aanmeldingen beheren",
 
-    // Create event user permissions
-    "activity-view": "Evenementen bekijken",
-    "activity-buy": "Tickets voor evenementen kopen",
-    "activity-view-private": "Evenementen bekijken (privé)",
-    "activity-buy-private": "Tickets voor evenementen kopen (privé)",
+    // Manage users
+    "user-admin": "Gebruikers beheren",
 
-    // Generic permissions
-    "payment-admin": "Inzage in transacties",
-    "admin": "Toegang tot admin panel",
-    "devops": "Toegang tot ops administratie",
+    // Payments permissions
+    "payments-monitor": "Inzage in transacties",
+    "payment-admin": "Beheer van transacties",
+
+    // System admin permissions
+    "devops": "Toegang tot status dashboards",
+    "impersonate": "Inloggen als andere gebruikers",
 
     // Super Admin (only directly)
-    "super-admin": "Super Admin",
+    "super-admin": "Super Admin"
 }
