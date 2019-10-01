@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\FileCategory;
 use App\Models\File;
+use App\Models\FileDownload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,7 +55,6 @@ class FileController extends Controller
 
         // Get a base query
         $baseQuery = File::public()->available();
-        $columns = ['id', 'slug', 'title', 'filename'];
         $limit = 5;
 
         return view('main.files.index')->with([
@@ -70,11 +70,10 @@ class FileController extends Controller
     /**
      * Shows all the files in a given category, ordered by newest
      *
-     * @param Request $request
      * @param FileCategory $category
      * @return Response
      */
-    public function category(Request $request, FileCategory $category)
+    public function category(FileCategory $category)
     {
         // Get most recent files
         $files = $category->files()->latest()->paginate(20);
@@ -123,6 +122,14 @@ class FileController extends Controller
             throw new NotFoundHttpException();
         }
 
+        // Log download
+        FileDownload::create([
+            'user_id' => $request->user()->id,
+            'file_id' => $file->id,
+            'ip' => $request->ip()
+        ]);
+
+        // Send file
         return Storage::download($filePath, $fileName);
     }
 }

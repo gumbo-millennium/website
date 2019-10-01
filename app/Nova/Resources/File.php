@@ -17,6 +17,11 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 
+/**
+ * File resource, highly linked.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class File extends Resource
 {
     /**
@@ -55,6 +60,8 @@ class File extends Resource
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function fields(Request $request)
     {
@@ -121,49 +128,5 @@ class File extends Resource
                     ->onlyOnDetail(),
             ])
         ];
-    }
-
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function cards(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function filters(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function lenses(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
-    {
-        return [];
     }
 }

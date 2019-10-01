@@ -23,7 +23,7 @@ trait TempUserTrait
      * @param bool|null $emailValidated Set to false to mark user as non-validated
      * @return User
      */
-    public static function getUser(array $roles, bool $emailValidated = null) : User
+    public static function getUser(array $roles, bool $emailValidated = null): User
     {
         $user = User::firstOrCreate([
             'email' => 'test@example.com',

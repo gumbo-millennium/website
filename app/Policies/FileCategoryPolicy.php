@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\FileCategory;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class FileCategoryPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('file-view');
+        return $user->can('viewAny', File::class);
     }
 
     /**
@@ -27,10 +28,11 @@ class FileCategoryPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\FileCategory  $fileCategory
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, FileCategory $fileCategory)
     {
-        return $user->hasPermissionTo('file-view');
+        return $user->can('viewAny', File::class);
     }
 
     /**
@@ -41,7 +43,7 @@ class FileCategoryPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('file-create');
+        return $user->can('manage', File::class);
     }
 
     /**
@@ -50,10 +52,11 @@ class FileCategoryPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\FileCategory  $fileCategory
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, FileCategory $fileCategory)
     {
-        return $user->hasPermissionTo('file-update');
+        return $user->can('manage', File::class);
     }
 
     /**
@@ -62,10 +65,11 @@ class FileCategoryPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\FileCategory  $fileCategory
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, FileCategory $fileCategory)
     {
-        return $user->hasPermissionTo('file-delete');
+        return $user->can('manage', File::class);
     }
 
     /**
@@ -74,10 +78,11 @@ class FileCategoryPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\FileCategory  $fileCategory
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, FileCategory $fileCategory)
     {
-        return $user->hasAnyPermission('file-update', 'file-create');
+        return $user->can('manage', File::class);
     }
 
     /**
@@ -86,9 +91,10 @@ class FileCategoryPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\FileCategory  $fileCategory
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, FileCategory $fileCategory)
     {
-        return $user->hasPermissionTo('file-delete');
+        return $user->can('manage', File::class);
     }
 }

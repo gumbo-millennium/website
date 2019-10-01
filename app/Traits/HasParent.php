@@ -20,7 +20,7 @@ trait HasParent
      *
      * @return Relation
      */
-    public function parent() : Relation
+    public function parent(): Relation
     {
         return $this->belongsTo(FileCategory::class, 'id', 'parent_id');
     }

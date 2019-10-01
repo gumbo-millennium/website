@@ -1,0 +1,48 @@
+/*
+  Javascript-free dropdown
+*/
+
+.has-dropdown {
+  position: relative;
+}
+
+.dropdown__checkbox {
+  display: none;
+}
+
+@variants {
+  .dropdown__checkbox {
+    display: none;
+  }
+
+  .dropdown__checkbox:not(:checked) + .dropdown:not(:focus-within), {
+    display: none;
+  }
+
+  .dropdown--auto {
+    @apply border rounded border-gray-200;
+    @apply text-gray-900 bg-white;
+
+    /* Auto-align to the bottom of the containing element */
+    position: absolute;
+    top: 100%;
+  }
+
+  .dropdown--auto > li:hover,
+  .dropdown--auto > li:active {
+    @apply bg-gray-100;
+  }
+
+  .dropdown--auto > li:not(:last-child) {
+    @apply border-b border-gray-300;
+  }
+
+  .dropdown__toggle {
+    cursor: pointer;
+  }
+
+  .dropdown__toggle::after {
+    @apply pl-1;
+    content: '▼';
+  }
+}

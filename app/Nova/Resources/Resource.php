@@ -37,6 +37,7 @@ abstract class Resource extends NovaResource
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Scout\Builder  $query
      * @return \Laravel\Scout\Builder
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function scoutQuery(NovaRequest $request, $query)
     {

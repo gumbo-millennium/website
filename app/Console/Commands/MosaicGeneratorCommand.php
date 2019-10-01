@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -15,42 +16,42 @@ class MosaicGeneratorCommand extends Command
     /**
      * @var string xlink:href DTD. Don't change.
      */
-    const DTD_XLINK = 'http://www.w3.org/1999/xlink';
+    private const DTD_XLINK = 'http://www.w3.org/1999/xlink';
 
     /**
      * @var int[] Lightness deviation from the base color. 100 = 1%
      */
-    const LIGHTNESS_DEVIATION = [-500, 500];
+    private const LIGHTNESS_DEVIATION = [-500, 500];
 
     /**
      * @var int[] Lightness deviation from the base color. 100 = 1%
      */
-    const CONTRAST_DEVIATION = [-500, 500];
+    private const CONTRAST_DEVIATION = [-500, 500];
 
     /**
      * @var int[] Opacity range, in percentage. Used in mt_rand.
      */
-    const OPACITY_RANGE = [40, 80];
+    private const OPACITY_RANGE = [40, 80];
 
     /**
      * @var int[] Image dimensions. Will be fileld completely
      */
-    const IMAGE_SIZE = [1024, 512];
+    private const IMAGE_SIZE = [1024, 512];
 
     /**
      * @var int Size of the diamonds
      */
-    const DIAMOND_SIZE = 32;
+    private const DIAMOND_SIZE = 32;
 
     /**
      * @var string Base color
      */
-    const DIAMOND_COLOUR = '#007d00';
+    private const DIAMOND_COLOUR = '#007d00';
 
     /**
      * @var string XML template
      */
-    const XML_BASE = <<<'XML'
+    private const XML_BASE = <<<'XML'
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg
@@ -143,7 +144,7 @@ XML;
      *
      * @return int
      */
-    protected function buildSeed() : int
+    protected function buildSeed(): int
     {
         list($usec, $sec) = explode(' ', microtime());
         return (int) round($sec / 3949 + $usec * 30000);
@@ -154,7 +155,7 @@ XML;
      *
      * @return Collection
      */
-    protected function buildDiamonds() : Collection
+    protected function buildDiamonds(): Collection
     {
         // Get dimensions
         list($width, $height) = self::IMAGE_SIZE;
@@ -186,7 +187,7 @@ XML;
      * @param Collection $diamonds
      * @return Collection
      */
-    public function addDiamondProperties(Collection $diamonds) : Collection
+    public function addDiamondProperties(Collection $diamonds): Collection
     {
         // Get colour
         $baseColor = Hex::fromString(self::DIAMOND_COLOUR);
@@ -231,7 +232,7 @@ XML;
      * @param Collection $diamonds
      * @return DOMDocument
      */
-    protected function buildXmlDocument(Collection $diamonds) : DOMDocument
+    protected function buildXmlDocument(Collection $diamonds): DOMDocument
     {
         // Get dimensions
         list($width, $height) = self::IMAGE_SIZE;
@@ -254,7 +255,7 @@ XML;
         $target = $doc->getElementsByTagName('svg')->item(0);
 
         // Append diamonds
-        foreach ($diamonds as $diamondId => $diamond) {
+        foreach ($diamonds as $diamond) {
             // Parameters
             $atts = [
                 'x' => (string)$diamond['x'],
@@ -291,7 +292,7 @@ XML;
      * @param string $pngTemplate
      * @return void
      */
-    protected function exportPngImages(string $svgPath, string $pngTemplate) : void
+    protected function exportPngImages(string $svgPath, string $pngTemplate): void
     {
         $regularDpiPath = resource_path($pngTemplate);
         $highDpiPath = resource_path(preg_replace('/\.png$/', '@2x.png', $pngTemplate));

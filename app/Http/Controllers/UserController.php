@@ -9,12 +9,15 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AccountDeletedMail;
 
+/**
+ * My account view
+ */
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Displays user dashboard
      *
-     * @return Response
+     * @return void
      */
     public function index()
     {
@@ -24,9 +27,9 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Displays the user's account
      *
-     * @param  \App\User  $user
+     * @param Request $request
      * @return Response
      */
     public function show(Request $request)
@@ -37,11 +40,10 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Updates the user's own profile
      *
-     * @param  \Request  $request
-     * @param  \App\User  $user
-     * @return \Response
+     * @param Request $request
+     * @return Response
      */
     public function update(Request $request)
     {
@@ -76,23 +78,23 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes the user's own profile, if accepted
      *
-     * @param  \App\User  $user
-     * @return \Response
+     * @param  Request $request
+     * @return Response
      */
-    public function remove(User $user)
+    public function remove(Request $request)
     {
         return view('main.user.remove', [
-            'user' => auth()->user()
+            'user' => $request->user()
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Request  $request
-     * @return \Response
+     * @param  Request  $request
+     * @return Response
      */
     public function destroy(Request $request)
     {

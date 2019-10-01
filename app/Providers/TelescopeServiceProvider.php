@@ -16,6 +16,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register()
     {
+        // Disable night mode
+        if ($this->app->environment('testing')) {
+            return;
+        }
+
         // Telescope::night();
 
         $this->hideSensitiveRequestDetails();
@@ -39,7 +44,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function hideSensitiveRequestDetails()
     {
-        if ($this->app->isLocal()) {
+        if ($this->app->isLocal() || $this->app->environment('testing')) {
             return;
         }
 

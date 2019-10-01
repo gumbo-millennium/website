@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -29,7 +30,7 @@ class TestFile extends Command
      *
      * @return mixed
      */
-    public function handle() : void
+    public function handle(): void
     {
         // Find file
         $file = File::findOrFail($this->argument('file'));

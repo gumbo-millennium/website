@@ -23,20 +23,20 @@ class PlazaCamController extends Controller
      * Path of the plaza cam
      * @var string
      */
-    const IMAGE_PLAZA = 'plazacam/image-plaza.jpg';
+    private const IMAGE_PLAZA = 'plazacam/image-plaza.jpg';
 
     /**
      * Path of the coffee cam
      * @var string
      */
-    const IMAGE_COFFEE = 'plazacam/image-coffee.jpg';
+    private const IMAGE_COFFEE = 'plazacam/image-coffee.jpg';
 
     /**
      * Prevent the images from being updated on weekends and between 22.00 - 07.00.
      *
      * @return bool
      */
-    protected static function isAvailable() : bool
+    protected static function isAvailable(): bool
     {
         $time = now();
         $hour = $time->hour;
@@ -140,11 +140,14 @@ class PlazaCamController extends Controller
      */
     protected function getImage(string $name)
     {
+        $image = null;
         if ($name === 'plaza') {
             $image = self::IMAGE_PLAZA;
         } elseif ($name === 'coffee') {
             $image = self::IMAGE_COFFEE;
-        } else {
+        }
+
+        if (!$image) {
             throw new NotFoundHttpException('Unknown cam');
         }
 

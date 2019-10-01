@@ -44,10 +44,6 @@ mix.extract([
   'popper.js'
 ])
 
-// Configure SCSS, also with separate vendor (bootstrap)
-mix
-  .sass(`resources/assets/sass/theme.scss`, 'public/gumbo.css')
-
 // Always make jQuery and Popper available
 mix.autoload({
   jquery: ['$', 'window.jQuery'],

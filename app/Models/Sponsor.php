@@ -71,7 +71,7 @@ class Sponsor extends Model implements AttachableInterface
      *
      * @return void
      */
-    protected function bindPaperclip() : void
+    protected function bindPaperclip(): void
     {
         // Max sizes
         $bannerWidth = 1280 / 12 * 8;
@@ -99,7 +99,7 @@ class Sponsor extends Model implements AttachableInterface
      * @param Builder $builder
      * @return Builder
      */
-    public function scopeAvailable(Builder $builder) : Builder
+    public function scopeAvailable(Builder $builder): Builder
     {
         return $builder
             ->whereNotNull('image_file_name')

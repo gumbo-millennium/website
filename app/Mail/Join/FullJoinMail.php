@@ -17,7 +17,7 @@ class FullJoinMail extends BaseJoinMail
     /**
      * @inheritDoc
      */
-    protected function createSubject(JoinSubmission $submission) : string
+    protected function createSubject(JoinSubmission $submission): string
     {
         return '🎉 Welkom bij Gumbo Millennium 🎉';
     }

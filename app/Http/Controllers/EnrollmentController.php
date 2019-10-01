@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 
+/**
+ * Enrollment handler, WIP
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class EnrollmentController extends Controller
 {
     /**

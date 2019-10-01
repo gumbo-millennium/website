@@ -15,7 +15,8 @@ use Laravel\Nova\Actions\Actionable;
 class JoinSubmission extends Model
 {
     // Use action log and encryption helper
-    use Actionable, HasEncryptedAttributes;
+    use Actionable;
+    use HasEncryptedAttributes;
 
     /**
      * @inheritDoc
@@ -73,7 +74,7 @@ class JoinSubmission extends Model
      *
      * @return string
      */
-    public function getNameAttribute() : string
+    public function getNameAttribute(): string
     {
         return collect([
             $this->first_name,

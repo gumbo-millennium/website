@@ -76,7 +76,7 @@ class PageController extends Controller
      * @param Page $page
      * @return string|null
      */
-    protected function getHtmlContents(Page $page) : ?string
+    protected function getHtmlContents(Page $page): ?string
     {
         if (!$page->contents) {
             return null;

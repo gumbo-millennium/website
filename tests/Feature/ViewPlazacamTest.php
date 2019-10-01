@@ -22,7 +22,7 @@ class ViewPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadAnonymous() : void
+    public function testReadAnonymous(): void
     {
         // Get URL
         $url = route('plazacam', [
@@ -41,7 +41,7 @@ class ViewPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadUser() : void
+    public function testReadUser(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -63,10 +63,10 @@ class ViewPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadMember() : void
+    public function testReadMember(): void
     {
         // Gets the user
-        $user = $this->getUser(['guest', 'member']);
+        $user = $this->getUser(['member']);
 
         // Get URL
         $url = route('plazacam', [

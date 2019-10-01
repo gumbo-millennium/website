@@ -82,10 +82,11 @@
             "@php artisan package:discover"
         ],
         "contribute": [
-          "docker-compose build",
+          "docker-compose pull",
+          "docker-compose up -d",
           "@composer install --dev",
-          "yarn install --dev",
           "@php artisan app:env",
+          "yarn install --dev",
           "yarn run build",
           "@php artisan vendor:publish --tag=horizon-assets",
           "@php artisan telescope:publish",

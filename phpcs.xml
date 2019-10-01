@@ -22,6 +22,9 @@
     <rule ref="PSR12">
       <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
       <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
+
+      <!-- Use After Brace is currently bugged when using comments in class start -->
+      <exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace" />
     </rule>
 
     <!-- Database files don't have a namespace. -->

@@ -17,7 +17,7 @@ class SimpleJoinMail extends BaseJoinMail
     /**
      * @inheritDoc
      */
-    protected function createSubject(JoinSubmission $submission) : string
+    protected function createSubject(JoinSubmission $submission): string
     {
         return '🎉 Bedankt voor je aanmelding bij Gumbo Millennium 🎉';
     }

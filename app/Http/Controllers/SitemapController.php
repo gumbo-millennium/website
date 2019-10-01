@@ -8,6 +8,7 @@ use Roumen\Sitemap\Sitemap;
 use Corcel\Model\Post;
 use App\Models\Page;
 use App\Activity;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Generates sitemaps for WordPress pages and our pages.
@@ -40,6 +41,13 @@ class SitemapController extends Controller
      */
     public function index(Request $request)
     {
+        // Reject if the user can't handle XML
+        if (!$request->accepts('text/xml')) {
+            return new NotAcceptableHttpException(
+                'Sitemap is only available as XML, but you don\'t seem to want that.'
+            );
+        }
+
         $map = app('sitemap');
         // $map->setCache('sitemap', 60);
 

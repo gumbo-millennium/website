@@ -27,9 +27,9 @@ class FileThumbnailJob extends FileJob
      *
      * @var string
      */
-    const RESIZE_WIDTH = '300x400';
+    private const RESIZE_WIDTH = '300x400';
 
-    const ERROR_MSG = <<<MSG
+    private const ERROR_MSG = <<<MSG
 Failed to make thumbnail [%s].
 
 Outputs follow
@@ -63,7 +63,7 @@ MSG;
      *
      * @return array
      */
-    public function tags() : array
+    public function tags(): array
     {
         return ['pdf-process', 'pdf-thumbnail', 'file:' . $this->file->id];
     }
@@ -73,7 +73,7 @@ MSG;
      *
      * @return void|boolean
      */
-    public function handle() : void
+    public function handle(): void
     {
         // Ignore if Windows
         if (!in_array(PHP_OS_FAMILY, ['Linux', 'Darwin'])) {

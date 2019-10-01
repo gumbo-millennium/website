@@ -29,7 +29,7 @@ class NewsItem extends SluggableModel
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -44,7 +44,7 @@ class NewsItem extends SluggableModel
      *
      * @return Relation
      */
-    public function author() : Relation
+    public function author(): Relation
     {
         return $this->belongsTo(User::class, 'author_id', 'id');
     }

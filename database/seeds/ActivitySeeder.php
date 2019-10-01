@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Models\Activity;
@@ -15,7 +16,7 @@ class ActivitySeeder extends Seeder
      *
      * @return \DateTimeImmutable
      */
-    protected static function getStartOfYear() : CarbonImmutable
+    protected static function getStartOfYear(): CarbonImmutable
     {
         static $start;
 
@@ -141,7 +142,7 @@ class ActivitySeeder extends Seeder
     /**
      * Creates all christmas events for this given date
      */
-    private function createChristmasEvents(DateTimeImmutable $date) : void
+    private function createChristmasEvents(DateTimeImmutable $date): void
     {
         // Get friday and monday
         $fridayBefore = new Carbon(strtotime('Last Friday', $date->getTimestamp()));
@@ -185,7 +186,7 @@ class ActivitySeeder extends Seeder
      *
      * @return void
      */
-    private function seedBasicAccessEvent() : void
+    private function seedBasicAccessEvent(): void
     {
         // User event
         factory(Activity::class, 1)->create([

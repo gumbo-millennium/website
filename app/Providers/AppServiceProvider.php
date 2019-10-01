@@ -6,10 +6,8 @@ namespace App\Providers;
 
 use App\Models\Activity;
 use App\Models\File;
-use App\Models\User;
 use App\Observers\ActivityObserver;
 use App\Observers\FileObserver;
-use App\Observers\UserObserver;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use Illuminate\Database\Schema\Blueprint;
@@ -40,12 +38,12 @@ class AppServiceProvider extends ServiceProvider
         // Handle File, User and Activity changes
         Activity::observe(ActivityObserver::class);
         File::observe(FileObserver::class);
-        User::observe(UserObserver::class);
 
         // Create method to render SVG icons
         Blade::directive('icon', function ($icon, $className = null) {
             $className = $className ?? 'icon';
             return (
+                // phpcs:ignore Generic.Files.LineLength.TooLong
                 "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
                 "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
                 "</svg>"

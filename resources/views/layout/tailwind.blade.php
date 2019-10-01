@@ -16,8 +16,9 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100 body">
-    <a href="#start-of-content" tabindex="1" class="skip-to-content">Skip to content</a>
+    <a href="#start-of-content" tabindex="1" class="sr-only sr-only-focusable jump-to-content">Jump to content</a>
 
+    @include('layout.searchbar')
     @include('layout.userbar')
     @include('layout.navbar')
 

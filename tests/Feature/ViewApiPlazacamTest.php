@@ -25,7 +25,7 @@ class ViewApiPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadAnonymous() : void
+    public function testReadAnonymous(): void
     {
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
@@ -45,7 +45,7 @@ class ViewApiPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadUser() : void
+    public function testReadUser(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -68,7 +68,7 @@ class ViewApiPlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadMember() : void
+    public function testReadMember(): void
     {
         // Gets the user
         $user = $this->getUser(['guest', 'member']);

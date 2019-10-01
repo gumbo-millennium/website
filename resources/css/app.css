@@ -11,7 +11,8 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 
-/* Load our elements, components and pages */
+/* Load our tweaks, elements, components and pages */
+@import 'tweaks/all.css';
 @import 'elements/all.css';
 @import 'components/all.css';
 @import 'pages/all.css';

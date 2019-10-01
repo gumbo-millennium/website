@@ -29,7 +29,7 @@ trait BuildsJoinSubmissions
      * @param JoinRequest $request
      * @return void
      */
-    protected function buildJoinSubmission(Request $request) : ?JoinSubmission
+    protected function buildJoinSubmission(Request $request): ?JoinSubmission
     {
         $data = collect([
             // Personal data

@@ -25,7 +25,7 @@ class UpdatePlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadUser() : void
+    public function testReadUser(): void
     {
         // Gets the user
         $user = $this->getUser(['guest', 'member']);
@@ -54,7 +54,7 @@ class UpdatePlazacamTest extends TestCase
      *
      * @return void
      */
-    public function testReadMember() : void
+    public function testReadMember(): void
     {
         // Gets the all-knowning user
         $user = $this->getUser(['guest', 'dc']);
