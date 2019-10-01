@@ -25,7 +25,7 @@ services:
     volumes:
       - ./:/var/www
     ports:
-      - 127.0.0.1:13370:80
+      - 127.0.0.1:13370:13370
     networks:
       - laravel
     depends_on:
