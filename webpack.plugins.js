@@ -2,7 +2,6 @@
  * Registers a bunch of plugins in an array, which is appended to Laravel Mix
  */
 const mix = require('laravel-mix')
-const glob = require('glob')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const imageminMozjpeg = require('imagemin-mozjpeg')
@@ -27,7 +26,7 @@ plugins.push(new CleanWebpackPlugin({
     'images/',
     'svg/',
     '*.js',
-    '*.css',
+    'css/*.css',
     '*.json'
   ]
 }))
