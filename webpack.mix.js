@@ -54,7 +54,7 @@ mix.autoload({
 mix.copyDirectory('resources/assets/svg', 'public/svg')
 
 // Register browsersync
-mix.browserSync('127.13.37.1')
+mix.browserSync('127.0.0.1:13370')
 
 // Add source maps if not in production
 if (!mix.inProduction()) {
