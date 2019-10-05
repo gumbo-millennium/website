@@ -171,8 +171,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
         // Return data as a subquery
         return $query->where(function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                ->orWhereIn('role_id', $user->roles()->pluck('id'));
+            $query->whereIn('role_id', $user->roles()->pluck('id'));
         });
     }
 }

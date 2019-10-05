@@ -128,16 +128,6 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the associated user, if any
-     *
-     * @return Relation
-     */
-    public function user(): Relation
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    /**
      * Returns all enrollments (both pending and active)
      *
      * @return Relation

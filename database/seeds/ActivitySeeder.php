@@ -188,14 +188,6 @@ class ActivitySeeder extends Seeder
      */
     private function seedBasicAccessEvent(): void
     {
-        // User event
-        factory(Activity::class, 1)->create([
-            'name' => 'Example User\'s event',
-            'start_date' => today()->addYear()->setTime(20, 00),
-            'end_date' => today()->addYear()->setTime(23, 00),
-            'user_id' => User::whereEmail('event-owner@example.com')->first()->id
-        ]);
-
         // 3rd week of april
         $aprilWeek = (Carbon::parse('First Monday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
         $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear(1) : $aprilWeek;

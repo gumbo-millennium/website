@@ -30,8 +30,7 @@ class ActivityPolicy
      */
     private static function isOwner(User $user, Activity $activity): bool
     {
-        return ($activity->user && $user->is($activity->user))
-            || ($activity->role && $user->hasRole($activity->role));
+        return $activity->role && $user->hasRole($activity->role);
     }
 
     /**
@@ -42,10 +41,7 @@ class ActivityPolicy
      */
     private static function isAnyOwner(User $user): bool
     {
-        return Activity::where(function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                ->orWhereIn('role_id', $user->roles()->pluck('id'));
-        })->count() > 0;
+        return $user->getHostedActivityQuery(Activity::query())->exists();
     }
 
     /**
