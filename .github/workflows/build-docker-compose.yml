@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Create empty env
+        run: cp .env.example .env
       - name: Build images
         run: docker-compose build
       - name: Upload images
