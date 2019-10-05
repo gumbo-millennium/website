@@ -12,6 +12,11 @@ jobs:
       - uses: actions/checkout@v1
       - name: Create empty env
         run: cp .env.example .env
+      - name: Log in to GitHub Packages
+        run: docker login docker.pkg.github.com -u ${{ GITHUB_PACKAGES_USER }} -p ${{ GITHUB_PACKAGES_TOKEN }}
+        env:
+          GITHUB_PACKAGES_USER: ${{ secrets.PackagesUser }}
+          GITHUB_PACKAGES_TOKEN: ${{ secrets.PackagesToken }}
       - name: Build images
         run: docker-compose build
       - name: Upload images
