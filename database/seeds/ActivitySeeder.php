@@ -12,6 +12,25 @@ use Spatie\Permission\Models\Role;
 class ActivitySeeder extends Seeder
 {
     /**
+     * Creates an activity if it's not already there yet
+     *
+     * @param string $slug
+     * @param array $args
+     * @return Activity|null
+     */
+    private function safeCreate(string $slug, array $args) : ?Activity
+    {
+        // Lookup slug
+        if (Activity::whereSlug($slug)->exists()) {
+            return null;
+        }
+
+        return factory(Activity::class, 1)->create(array_merge(
+            ['slug' => $slug],
+            $args
+        ))->first();
+    }
+    /**
      * Returns start of semester, as immutable element
      *
      * @return \DateTimeImmutable
@@ -70,9 +89,7 @@ class ActivitySeeder extends Seeder
         $slug = "bruisweken-{$year}";
 
         // Find or create Activity
-        Activity::firstOrCreate([
-            'slug' => $slug
-        ], [
+        $this->safeCreate($slug, [
             'name' => 'Bruisweken',
             'tagline' => 'De Bruisweken zijn de algemene introductieweken voor nieuwe studenten in Zwolle.',
             'start_date' => $startDate->setTime(10, 0, 0, 0),
@@ -100,9 +117,7 @@ class ActivitySeeder extends Seeder
         $eventPrice = 50;
 
         // Find or create Activity
-        Activity::firstOrCreate([
-            'slug' => $slug
-        ], [
+        $this->safeCreate($slug, [
             'name' => 'Introductieweek',
             'tagline' =>
             'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
@@ -152,10 +167,10 @@ class ActivitySeeder extends Seeder
         $year = $fridayBefore->year;
         $shortYear = $fridayBefore->format('\'y');
 
-        // Find or create Activity 1
-        Activity::firstOrCreate([
-            'slug' => "kerstborrel-{$year}"
-        ], [
+        // create Activity 1
+        $slug = "kerstborrel-{$year}";
+        $this->safeCreate($slug, [
+            'slug' => "kerstborrel-{$year}",
             'name' => "Kerstborrel {$shortYear}",
             'tagline' => 'Haha, Glühwein',
             'start_date' => $mondayBefore->setTime(15, 0, 0, 0),
@@ -166,10 +181,9 @@ class ActivitySeeder extends Seeder
         $memberPrice = (12 + ($fridayBefore->year - 2017) / 2.0);
         $guestPrice = ceil($memberPrice * 1.15);
 
-        // Find or create Activity 2
-        Activity::firstOrCreate([
-            'slug' => "kerstdiner-{$year}"
-        ], [
+        // Create Activity 2
+        $slug ="kerstdiner-{$year}";
+        $this->safeCreate($slug, [
             'name' => "Kerstdiner {$shortYear}",
             'tagline' => 'Haha, voer',
             'start_date' => $fridayBefore->setTime(17, 30, 0, 0),
@@ -189,12 +203,12 @@ class ActivitySeeder extends Seeder
     private function seedBasicAccessEvent(): void
     {
         // 3rd week of april
-        $aprilWeek = (Carbon::parse('First Monday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
+        $aprilWeek = (Carbon::parse('First Friday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
         $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear(1) : $aprilWeek;
         $endDate = $startDate->addDays(2)->setTime(12, 00);
 
         // LHW event
-        factory(Activity::class, 1)->create([
+        $this->safeCreate("lhw-{$startDate->year}", [
             'name' => 'Landhuisweekend',
             'start_date' => $aprilWeek,
             'end_date' => $endDate,

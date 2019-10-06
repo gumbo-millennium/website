@@ -11,6 +11,14 @@ use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
 
+/**
+ * A hosted activity
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ *
+ * @property-read AttachmentInterface $image
+ */
 class Activity extends SluggableModel implements AttachableInterface
 {
     use PaperclipTrait;
@@ -165,7 +173,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getOrganiserAttribute(): ?string
     {
-        return optional($this->role)->title ?? optional($this->user)->public_name;
+        return optional($this->role)->title;
     }
 
     /**

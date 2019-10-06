@@ -27,7 +27,9 @@ $buildFakeEditorJsMessage = function (Faker $faker) {
         for ($i = $faker->numberBetween(1, 10); $i > 0; $i--) {
             $blocks[] = [
                 'type' => 'paragraph',
-                'data' => $faker->sentences($faker->randomDigitNotNull, true)
+                'data' => [
+                    'text' => $faker->sentences($faker->randomDigitNotNull, true)
+                ]
             ];
         }
     }
@@ -75,7 +77,7 @@ $factory->define(Activity::class, function (Faker $faker) use ($buildFakeEditorJ
         // Labels
         'name' => $faker->words(4, true),
         'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
-        'description' => $faker->passthrough($buildFakeEditorJsMessage($faker)),
+        'description' => $buildFakeEditorJsMessage($faker),
 
         // Dates
         'start_date' => $eventStartCarbon,
