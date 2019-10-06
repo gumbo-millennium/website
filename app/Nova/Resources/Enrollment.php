@@ -7,10 +7,12 @@ use App\Policies\ActivityPolicy;
 use App\Policies\EnrollmentPolicy;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Enrollment extends Resource
@@ -79,8 +81,14 @@ class Enrollment extends Resource
             BelongsTo::make('Activity', 'activity')
                 ->rules('required', function ($activity) use ($request) {
                     $request->can('manage', $activity);
-                }),
-            BelongsTo::make('User', 'user'),
+                })
+                ->hideWhenUpdating(),
+
+            // Add user
+            BelongsTo::make('User', 'user')
+                ->rules('required')
+                ->searchable()
+                ->hideWhenUpdating(),
 
             // Add data
             KeyValue::make(__('Enrollment Data'), 'data')
@@ -94,6 +102,12 @@ class Enrollment extends Resource
                 ->onlyOnDetail(),
             DateTime::make('Trashed at', 'deleted_at')
                 ->onlyOnDetail(),
+            Text::make('Trashed reason', 'deleted_reason')
+                ->onlyOnDetail(),
+
+            Boolean::make('Paid', 'paid')
+                ->hideWhenUpdating()
+                ->help('Indicates if the user has paid the fee for this activity.'),
 
             // Add payments
             HasMany::make(__('Payments'), 'payments', Payment::class),

@@ -5,6 +5,9 @@ namespace App\Models;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * A user enrollment for an activity. Optionally has payments.
+ */
 class Enrollment extends UuidModel
 {
     // Use encryption helper to protect user details
@@ -21,7 +24,8 @@ class Enrollment extends UuidModel
      * @inheritDoc
      */
     protected $casts = [
-        'data' => 'collection'
+        'data' => 'collection',
+        'paid' => 'bool'
     ];
 
     /**
