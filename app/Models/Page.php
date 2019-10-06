@@ -2,11 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * A user-generated page
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class Page extends SluggableModel
 {
+    use HasEditorJsContent;
+
     /**
      * Pages required to exist, cannot be deleted or renamed
      */
@@ -66,5 +75,15 @@ class Page extends SluggableModel
     public function author(): Relation
     {
         return $this->belongsTo(User::class, 'author_id', 'id');
+    }
+
+    /**
+     * Converts contents to HTML
+     *
+     * @return string|null
+     */
+    public function getHtmlAttribute(): ?string
+    {
+        return $this->convertToHtml($this->contents);
     }
 }

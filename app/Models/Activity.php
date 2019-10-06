@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Models\Traits\HasEditorJsContent;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
@@ -23,6 +24,7 @@ class Activity extends SluggableModel implements AttachableInterface
 {
     use PaperclipTrait;
     use HasPaperclip;
+    use HasEditorJsContent;
 
     /**
      * @inheritDoc
@@ -221,12 +223,12 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns description HTML
+     * Converts contents to HTML
      *
      * @return string|null
      */
     public function getDescriptionHtmlAttribute(): ?string
     {
-        return $this->description ? NovaEditorJs::generateHtmlOutput($this->description) : null;
+        return $this->convertToHtml($this->description);
     }
 }
