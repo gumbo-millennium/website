@@ -49,7 +49,7 @@
 
 .searchbar__input-search,
 .searchbar__input-submit {
-  @apply appearance-none block py-3 px-4 m-0 text-lg;
+  @apply appearance-none block py-2 px-4 m-0 text-lg;
 }
 
 .searchbar__input-search {

@@ -145,8 +145,8 @@ class ActivitySeeder extends Seeder
     private function createChristmasEvents(DateTimeImmutable $date): void
     {
         // Get friday and monday
-        $fridayBefore = new Carbon(strtotime('Last Friday', $date->getTimestamp()));
-        $mondayBefore = new Carbon(strtotime('Last Monday', $fridayBefore->getTimestamp()));
+        $fridayBefore = Carbon::parse(strtotime('Last Friday', $date->getTimestamp()))->toImmutable();
+        $mondayBefore = Carbon::parse(strtotime('Last Monday', $fridayBefore->getTimestamp()))->toImmutable();
 
         // Bruisweken are one week before start of semester
         $year = $fridayBefore->year;

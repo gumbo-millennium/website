@@ -10,7 +10,7 @@
 
 @screen md {
   .activity-wrapper {
-    @apply w-4/12;
+    @apply w-1/3;
   }
 }
 

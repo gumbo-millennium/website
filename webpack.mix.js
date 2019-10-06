@@ -1,70 +1,55 @@
-/**
- * Webpack config, using Laravel Mix
- */
-
-// node_modules dependencies
+// Base frame
 const mix = require('laravel-mix')
-const glob = require('glob')
 
-// Load versionhash fix (uses filenames instead of ?id=xxx)
+// Debug remover
+const WebpackStrip = require('strip-loader')
+
+// Inline Plugins
 require('laravel-mix-versionhash')
+require('./resources/js-build/plugins')
 
-// Local dependencies
-const { plugins: gumboPlugins, loaders: gumboLoaders } = require('./webpack.plugins')
-
-// Make sure we version stuff using filename-based hashes
-if (mix.inProduction()) {
-  mix.versionHash()
-}
-
-// Configure PostCSS plugins
 const postCssPlugins = [
   require('postcss-import'),
   require('tailwindcss')
 ]
 
-// Configure Tailwind
+// Compile Stylesheets
 mix
   .postCss('resources/css/app.css', 'public/css/app.css', postCssPlugins)
 
-// Configure javascript
-mix
-  .js('resources/assets/js/theme.js', 'public/gumbo.js')
-  .js('resources/assets/js/admin.js', 'public/gumbo-admin.js')
+// Copy files
+mix.copy([
+  'resources/assets/images/**/*.{jpg,png,jpeg,svg}'
+], 'public/images')
 
-// Extract assets
-mix.extract([
-  'bootstrap',
-  'dropzone',
-  'gmaps',
-  'jquery',
-  'mobile-detect',
-  'moment',
-  'pikaday',
-  'popper.js'
-])
-
-// Always make jQuery and Popper available
-mix.autoload({
-  jquery: ['$', 'window.jQuery'],
-  'popper.js': ['Popper']
+// Add Siero plugins
+mix.gumbo({
+  eslint: {
+    standard: true
+  },
+  spritemap: true,
+  purgecss: false
 })
 
-// Copy all SVG files
-mix.copyDirectory('resources/assets/svg', 'public/svg')
+// Production code
+if (mix.inProduction()) {
+  // Add custom hash
+  mix.versionHash({
+    length: 8
+  })
 
-// Register browsersync
-mix.browserSync('127.0.0.1:13370')
-
-// Add source maps if not in production
-if (!mix.inProduction()) {
-  mix.sourceMaps()
+  // Strip console debug messages
+  mix.webpackConfig({
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          loader: WebpackStrip.loader('console.log', 'console.debug', 'console.info')
+        }
+      ]
+    }
+  })
 }
 
-// Linters
-mix.webpackConfig({
-  module: {
-    rules: gumboLoaders
-  },
-  plugins: gumboPlugins
-})
+// Add BrowserSync
+mix.browserSync('127.0.0.1:13370')

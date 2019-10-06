@@ -1,24 +1,143 @@
+/**
+ * Tailwind Configuration
+ */
+
+//  Load our settings
+const gumboSettings = require('./tailwind.gumbo')
+
+// Build configs
 module.exports = {
+  plugins: gumboSettings.plugins,
   theme: {
     extend: {
-      colors: {
-        brand: {
-          '50': '#cce5cc',
-          '100': '#a3d0a3',
-          '200': '#7abb7a',
-          '300': '#52a752',
-          '400': '#299229',
-          '500': '#007d00',
-          '600': '#006900',
-          '700': '#005f00',
-          '800': '#004b00',
-          '900': '#003700'
-        }
-      }
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px'
+      },
+      spacing: {
+        '0': '0',
+        '1': '0.25rem',
+        '2': '0.5rem',
+        '4': '1rem',
+        '6': '1.5rem',
+        '8': '2rem',
+        '10': '2.5rem',
+        '12': '3rem',
+        '14': '3.5rem',
+        '16': '4rem',
+      },
+      colors: gumboSettings.colors,
+      backgroundPosition: {
+        center: 'center',
+      },
+      cursor: {
+        default: 'default',
+        pointer: 'pointer',
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        bold: '700'
+      },
+      letterSpacing: null,
+      objectPosition: {
+        center: 'center',
+        top: 'top',
+      },
+      stroke: null,
+      width: theme => ({
+        auto: 'auto',
+        ...theme('spacing'),
+        '1/2': '50%',
+        '1/3': '33.333333%',
+        '2/3': '66.666667%',
+        '1/4': '25%',
+        '2/4': '50%',
+        '3/4': '75%',
+        '1/12': '8.333333%',
+        '2/12': '16.666667%',
+        '3/12': '25%',
+        '4/12': '33.333333%',
+        '5/12': '41.666667%',
+        '6/12': '50%',
+        '7/12': '58.333333%',
+        '8/12': '66.666667%',
+        '9/12': '75%',
+        '10/12': '83.333333%',
+        '11/12': '91.666667%',
+        full: '100%',
+        screen: '100vw',
+      }),
+      zIndex: null
     }
   },
-  variants: {},
-  plugins: [
-    require('@tailwindcss/custom-forms')
-  ]
+  variants: {
+    accessibility: ['focus'],
+    alignContent: ['responsive'],
+    alignItems: ['responsive'],
+    alignSelf: ['responsive'],
+    appearance: [],
+    backgroundAttachment: [],
+    backgroundColor: ['hover', 'focus'],
+    backgroundPosition: [],
+    backgroundRepeat: [],
+    backgroundSize: ['responsive'],
+    borderCollapse: [],
+    borderColor: ['hover', 'focus'],
+    borderRadius: [],
+    borderStyle: ['responsive'],
+    borderWidth: ['responsive'],
+    boxShadow: ['responsive', 'hover', 'focus'],
+    cursor: [],
+    display: ['responsive'],
+    fill: [],
+    flex: ['responsive'],
+    flexDirection: ['responsive'],
+    flexGrow: ['responsive'],
+    flexShrink: ['responsive'],
+    flexWrap: ['responsive'],
+    float: [],
+    fontFamily: ['responsive'],
+    fontSize: ['responsive'],
+    fontSmoothing: [],
+    fontStyle: ['responsive'],
+    fontWeight: ['responsive', 'hover', 'focus'],
+    height: ['responsive'],
+    inset: [],
+    justifyContent: ['responsive'],
+    letterSpacing: [],
+    lineHeight: ['responsive'],
+    listStylePosition: [],
+    listStyleType: [],
+    margin: ['responsive'],
+    maxHeight: ['responsive'],
+    maxWidth: ['responsive'],
+    minHeight: ['responsive'],
+    minWidth: ['responsive'],
+    objectFit: [],
+    objectPosition: [],
+    opacity: [],
+    order: [],
+    outline: ['focus'],
+    overflow: ['responsive'],
+    padding: ['responsive'],
+    placeholderColor: ['responsive', 'focus'],
+    pointerEvents: [],
+    position: ['responsive'],
+    resize: [],
+    stroke: [],
+    tableLayout: ['responsive'],
+    textAlign: ['responsive'],
+    textColor: ['responsive', 'hover', 'focus'],
+    textDecoration: ['responsive', 'hover', 'focus'],
+    textTransform: ['responsive'],
+    userSelect: ['responsive'],
+    verticalAlign: ['responsive'],
+    visibility: ['responsive'],
+    whitespace: ['responsive'],
+    width: ['responsive'],
+    wordBreak: [],
+    zIndex: []
+  }
 }
