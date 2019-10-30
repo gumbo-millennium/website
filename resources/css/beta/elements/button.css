@@ -1,0 +1,16 @@
+/**
+  Button
+*/
+
+.btn {
+  @apply py-2 px-4 rounded shadow bg-gray-200 font-bold text-gray-800;
+}
+
+.btn--brand {
+  @apply bg-brand-500 text-white;
+}
+
+.btn--brand:hover,
+.btn--brand:active {
+  @apply bg-brand-600 text-white shadow-lg;
+}

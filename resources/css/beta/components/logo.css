@@ -1,0 +1,13 @@
+/*
+  Logo
+*/
+
+.logo-wrapper {
+  @apply inline-block my-4 no-underline;
+}
+
+.logo {
+  @apply border-0;
+  width: 12rem;
+  height: 4rem;
+}

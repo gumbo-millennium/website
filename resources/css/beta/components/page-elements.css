@@ -1,0 +1,11 @@
+/*
+  Page elements
+*/
+
+.header, .main, .footer {
+  @apply my-8 mx-4;
+}
+
+.footer {
+  @apply mt-0 text-gray text-sm;
+}

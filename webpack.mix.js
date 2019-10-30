@@ -1,7 +1,7 @@
 // Base frame
 const mix = require('laravel-mix')
 
-// Debug remover
+// Plugins and loaders
 const WebpackStrip = require('strip-loader')
 
 // Inline Plugins
@@ -13,13 +13,14 @@ const postCssPlugins = [
   require('tailwindcss')
 ]
 
-// Compile Stylesheets
-mix
-  .postCss('resources/css/app.css', 'public/css/app.css', postCssPlugins)
+// Compile stylesheets
+mix.postCss('resources/css/app.css', 'public/css/app.css', postCssPlugins)
+mix.postCss('resources/css/beta.css', 'public/css/beta.css', postCssPlugins)
 
 // Copy files
 mix.copy([
-  'resources/assets/images/**/*.{jpg,png,jpeg,svg}'
+  'resources/assets/images/**/*.{jpg,png,jpeg,svg}',
+  'resources/assets/svg/**/*.svg'
 ], 'public/images')
 
 // Add Siero plugins

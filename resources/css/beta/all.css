@@ -1,0 +1,7 @@
+/*
+  Loads beta styling
+*/
+
+@import 'base/all.css';
+@import 'elements/all.css';
+@import 'components/all.css';

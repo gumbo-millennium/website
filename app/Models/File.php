@@ -12,6 +12,7 @@ use App\Traits\HasParent;
 use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Contracts\AttachmentInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 
 /**
@@ -19,6 +20,9 @@ use Czim\Paperclip\Model\PaperclipTrait;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ *
+ * @property-read AttachmentInterface $file
+ * @property-read AttachmentInterface $thumbail
  */
 class File extends SluggableModel implements AttachableInterface
 {

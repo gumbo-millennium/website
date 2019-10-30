@@ -45,16 +45,7 @@ class FileCategory extends SluggableModel
      *
      * @var array
      */
-    protected $fillable = ['title', 'default'];
-
-    /**
-     * Cast 'default' property to a bool
-     *
-     * @var array
-     */
-    protected $casts = [
-        'default' => 'bool'
-    ];
+    protected $fillable = ['title'];
 
     // Always auto-load files
     protected $with = [

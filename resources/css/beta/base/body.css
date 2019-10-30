@@ -1,0 +1,8 @@
+/*
+  Make the background gray-ish
+*/
+
+html, body {
+  @apply bg-gray-300;
+  @apply text-gray-900;
+}

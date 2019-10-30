@@ -18,15 +18,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FileController extends Controller
 {
     /**
+     * Files shown as summary
+     */
+    private const TOP_FILE_LIMIT = 5;
+    /**
      * Makes sure the user is allowed to handle files.
      *
      * @return void
      */
     public function __construct()
     {
-        // Make sure only users that can view files use these routes.
-        $this->authorize('view', File::class);
+        // Ensure users are logged in
+        $this->middleware(['auth', 'permission:file-view']);
     }
+
     /**
      * Homepage
      *
@@ -34,36 +39,32 @@ class FileController extends Controller
      */
     public function index()
     {
-        $allCategories = FileCategory::has('files')->get();
-        $defaultCategory = FileCategory::findDefault();
+        // Try to only get non-empty categories
+        $categoryQuery = FileCategory::has('files');
 
-        $categoryList = collect();
-
-        foreach ($allCategories as $category) {
-            if ($defaultCategory && $defaultCategory->is($category)) {
-                continue;
-            }
-
-            $categoryList->push($category);
+        // Ignore if that's impossible
+        if (!(clone $categoryQuery)->exists()) {
+            $categoryQuery = FileCategory::query();
         }
 
-        $categoryList = $categoryList->sortBy('title');
-
-        if ($defaultCategory) {
-            $categoryList->push($defaultCategory);
-        }
+        // Get items
+        $categoryList = $categoryQuery->withCount('files')->orderBy('title')->get();
 
         // Get a base query
-        $baseQuery = File::public()->available();
-        $limit = 5;
+        $baseQuery = File::query();
 
-        return view('main.files.index')->with([
+        // Get queries for new, popular and random files
+        $baseQuery = File::query()->take(self::TOP_FILE_LIMIT);
+        $queries = collect([
+            'newest' => $baseQuery->latest(),
+            'popular' => $baseQuery->withCount('downloads')->orderBy('downloads_count', 'DESC')->latest(),
+            'random' => $baseQuery->inRandomOrder(),
+        ])->each->get();
+
+        // Show view
+        return view('files.index')->with([
             'categories' => $categoryList,
-            'files' => [
-                'newest' => $baseQuery->latest()->take($limit)->get(),
-                'popular' => [],
-                'random' => $baseQuery->inRandomOrder()->take($limit)->get(),
-            ]
+            'files' => $queries
         ]);
     }
 
@@ -79,7 +80,7 @@ class FileController extends Controller
         $files = $category->files()->latest()->paginate(20);
 
         // Render view
-        return view('main.files.category')->with([
+        return view('files.category')->with([
             'category' => $category,
             'files' => $files
         ]);
@@ -94,7 +95,7 @@ class FileController extends Controller
      */
     public function show(Request $request, File $file)
     {
-        return view('main.files.single')->with([
+        return view('files.show')->with([
             'file' => $file,
             'user' => $request->user()
         ]);

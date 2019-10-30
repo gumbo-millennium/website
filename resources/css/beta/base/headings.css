@@ -1,0 +1,26 @@
+/*
+  Make the background gray-ish
+*/
+
+h1, h2, h3 {
+  @apply font-bold;
+  @apply text-black;
+}
+
+h1 {
+  @apply text-3xl mt-8 mb-4;
+}
+
+h2 {
+  @apply text-2xl mt-6 mb-4;
+}
+
+h3 {
+  @apply text-xl mt-4 mb-2;
+}
+
+h4 {
+  @apply my-2;
+  @apply text-brand-800;
+  @apply font-bold uppercase;
+}
