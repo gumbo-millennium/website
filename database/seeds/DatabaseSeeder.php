@@ -17,8 +17,14 @@ class DatabaseSeeder extends Seeder
 
         // The rest of the seeders are not run in production
         if (App::environment('local')) {
+            // Add users
             $this->call(UserSeeder::class);
+
+            // Add activities
             $this->call(ActivitySeeder::class);
+
+            // Add a bunch of files
+            $this->call(FileSeeder::class);
         }
     }
 }

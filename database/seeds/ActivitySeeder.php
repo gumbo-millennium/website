@@ -18,7 +18,7 @@ class ActivitySeeder extends Seeder
      * @param array $args
      * @return Activity|null
      */
-    private function safeCreate(string $slug, array $args) : ?Activity
+    private function safeCreate(string $slug, array $args): ?Activity
     {
         // Lookup slug
         if (Activity::whereSlug($slug)->exists()) {
@@ -182,7 +182,7 @@ class ActivitySeeder extends Seeder
         $guestPrice = ceil($memberPrice * 1.15);
 
         // Create Activity 2
-        $slug ="kerstdiner-{$year}";
+        $slug = "kerstdiner-{$year}";
         $this->safeCreate($slug, [
             'name' => "Kerstdiner {$shortYear}",
             'tagline' => 'Haha, voer',
