@@ -23,6 +23,16 @@ jobs:
     name: "back-end build"
     needs: [laravel-frontend]
     runs-on: ubuntu-latest
+    services:
+      database:
+        image: mysql:5
+        ports:
+          - 13306:3306
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+          MYSQL_DATABASE: laravel
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: laravel
     steps:
       - uses: actions/checkout@v1
       - name: Login for Laravel Nova
@@ -38,10 +48,7 @@ jobs:
           php artisan key:generate
           composer install --no-suggest --no-progress --no-interaction
       - name: Prepare database
-        run: |
-          touch database/database.sqlite
-          chmod +w database/database.sqlite
-          php artisan migrate --seed
+        run: php artisan migrate --seed
       - name: Download front-end
         uses: actions/download-artifact@master
         with:
@@ -57,7 +64,7 @@ jobs:
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
-          ./cc-test-reporter format-coverage -t clover ./coverage-clover.xml || true
+          ./cc-test-reporter format-coverage -t clover ./dist/coverage-clover.xml || true
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CodeClimateId }}
         continue-on-error: true
