@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Join;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JoinRequest;
 use App\Mail\Join\BoardJoinMail;
-use App\Mail\Join\FullJoinMail;
+use App\Mail\Join\UserJoinMail;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
+use PDOException;
 
 /**
  * Handles sign ups to the student community. Presents a whole form and
@@ -18,10 +20,8 @@ use Illuminate\Support\Facades\Mail;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class FullController extends Controller
+class JoinController extends Controller
 {
-    use BuildsJoinSubmissions;
-
     /**
      * E-mail address and name of the board
      */
@@ -39,7 +39,7 @@ class FullController extends Controller
     public function index(Request $request)
     {
         // Show form
-        return view('main.join.full')->with([
+        return view('static.join')->with([
             'page' => Page::slug('join')->first(),
             'user' => $request->user()
         ]);
@@ -59,10 +59,22 @@ class FullController extends Controller
             ->reject('empty')
             ->implode(' ');
 
-        // Sends the e-mails
-        $submission = $this->buildJoinSubmission($request);
+        // Get the submission
+        $submission = $request->submission();
 
-        if (!$submission) {
+        try {
+            // Try to create it
+            $submission->save();
+        } catch (PDOException $e) {
+            // Log the error, but don't act on it
+            logger()->warn('Failed to create join submission [submission].', [
+                'exception' => $e,
+                'submission' => $submission
+            ]);
+        }
+
+        // Validate the submission was created
+        if (!$submission->exists()) {
             return redirect()
                 ->back()
                 ->withInput()
@@ -71,7 +83,7 @@ class FullController extends Controller
 
         // Send mail to user
         Mail::to([compact('name', 'email')])
-            ->send(new FullJoinMail($submission));
+            ->send(new UserJoinMail($submission));
 
         // Send mail to board
         Mail::to(self::TO_BOARD)
@@ -81,5 +93,25 @@ class FullController extends Controller
         return redirect()
             ->route('join.complete')
             ->with('submission', $submission);
+    }
+
+    /**
+     * Request completed
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function complete(Request $request)
+    {
+        // Redirect to form if they're reloading the page
+        // and the submission was removed
+        if (!$request->has('submission')) {
+            return redirect()->route('join.index');
+        }
+
+        // Return join-complete view
+        return view('static.join-complete', [
+            'submission' => $request->submission
+        ]);
     }
 }

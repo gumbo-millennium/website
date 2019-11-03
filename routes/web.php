@@ -118,19 +118,13 @@ Route::prefix('news')->name('news.')->group(function () {
  */
 Route::prefix('join')->name('join.')->group(function () {
     // Join form
-    Route::get('/', 'Join\\ShortController@index')->name('form');
+    Route::get('/', 'JoinController@index')->name('form');
 
     // Submit button
-    Route::post('/send', 'Join\\ShortController@submit')->name('submit');
-
-    // Join form
-    Route::get('/full', 'Join\\FullController@index')->name('form-full');
-
-    // Submit button
-    Route::post('/full', 'Join\\FullController@submit')->name('submit-full');
+    Route::post('/send', 'JoinController@submit')->name('submit');
 
     // Post-join
-    Route::get('/welcome', 'Join\\ShortController@complete')->name('complete');
+    Route::get('/welcome', 'JoinController@complete')->name('complete');
 });
 
 // Authentication and forgotten passwords

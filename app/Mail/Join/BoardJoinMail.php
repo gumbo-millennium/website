@@ -6,7 +6,13 @@ use Laravel\Nova\Nova;
 use App\Models\JoinSubmission;
 use App\Nova\Resources\JoinSubmission as NovaJoinSubmission;
 
-class BoardJoinMail extends BaseJoinMail
+/**
+ * Email sent to the board concerning the new member
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
+class BoardJoinMail extends BaseMail
 {
     /**
      * Board should not reply to these mails.
@@ -29,7 +35,7 @@ class BoardJoinMail extends BaseJoinMail
         ]);
 
         // Render view
-        return $this->markdown('emails.join.board')->with(['adminRoute' => $adminRoute]);
+        return $this->markdown('mail.join.board')->with(['adminRoute' => $adminRoute]);
     }
 
     /**

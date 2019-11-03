@@ -8,7 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-abstract class BaseJoinMail extends Mailable
+/**
+ * Shared elements for the join mail
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
+abstract class BaseMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

@@ -4,14 +4,20 @@ namespace App\Mail\Join;
 
 use App\Models\JoinSubmission;
 
-class FullJoinMail extends BaseJoinMail
+/**
+ * Email sent to the new member concerning his enrollment
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
+class UserJoinMail extends BaseMail
 {
     /**
      * @inheritDoc
      */
     public function build()
     {
-        return $this->markdown('emails.join.full');
+        return $this->markdown('mail.join.user');
     }
 
     /**

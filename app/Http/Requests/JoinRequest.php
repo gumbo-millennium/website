@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\JoinSubmission;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
 use App\Rules\PhoneNumber;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * A request with sign up data
@@ -17,6 +20,23 @@ use App\Rules\PhoneNumber;
  */
 class JoinRequest extends FormRequest
 {
+    /**
+     * Phone rule
+     *
+     * @var PhoneNumber
+     */
+    private $phoneNumberRule;
+
+    /**
+     * Returns the phone rule
+     *
+     * @return PhoneNumber
+     */
+    private function phoneRule(): PhoneNumber
+    {
+        return $this->phoneNumberRule ?? ($this->phoneNumberRule = new PhoneNumber('NL'));
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -38,40 +58,29 @@ class JoinRequest extends FormRequest
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
 
         return [
-            // We always need an e-mail address and would like a phone number
-            'email' => 'required|email',
-            'phone' => ['required', 'string', new PhoneNumber('NL')],
-
-            // Also, we need them to accept our data policy
-            'accept_policy' => 'required|accepted',
-
             // Names
-            'first_name' => "required_without:name|string|min:2",
+            'first_name' => "required|string|min:2",
             'insertion' => 'sometimes|nullable|string|min:2',
-            'last_name' => "required_without:name|string|min:2",
+            'last_name' => "required|string|min:2",
+
+            // Contact info
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string', $this->phoneRule()],
 
             // Address
-            'street' => 'required|string|regex:/\w+/',
-            'number' => 'required|string|regex:/^\d+/',
+            'street' => ['required', 'string', 'regex:/\w+/'],
+            'number' => ['required', 'string', 'regex:/^\d+/'],
             'postal_code' => ['required', 'string', 'regex:/^([0-9A-Z \.]+)$/i'],
-            'city' => 'required|string|min:2',
+            'city' => ['required', 'string', 'min:2'],
 
             // Personal data
-            'date_of_birth' => [
-                'required',
-                'date_format:d-m-Y',
-                "before:{$sixteenYears}"
-            ],
-            'gender' => [
-                'required',
-                Rule::in(['man', 'vrouw']),
-            ],
+            'date_of_birth' => "required|date_format:d-m-Y|before:{$sixteenYears}",
+            'gender' => 'required|in:man,vrouw',
 
-            // Member type
-            'windesheim_student' => 'sometimes|accepted',
-
-            // Sign up for newsletter?
+            // Boolean values
+            'windesheim_student' => 'sometimes|boolean',
             'newsletter' => 'sometimes|boolean',
+            'accept_policy' => 'required|accepted',
         ];
     }
 
@@ -83,5 +92,40 @@ class JoinRequest extends FormRequest
     public function safe(): array
     {
         return $this->except(['password', 'password_confirm']);
+    }
+
+    /**
+     * Returns the submission for this data
+     *
+     * @return JoinSubmission
+     */
+    public function submission(): JoinSubmission
+    {
+        // get required data
+        $submissionData = $this->only([
+            'first_name',
+            'insert',
+            'last_name',
+            'phone',
+            'email',
+            'date_of_birth',
+            'gender',
+            'street',
+            'number',
+            'city',
+            'postal_code',
+            'country',
+            'windesheim_student',
+            'newsletter'
+        ])->toArray();
+
+        // Format phone number, if possible
+        $submissionData['phone'] = $this->phoneRule()->format($this->phone) ?? $this->phone;
+
+        // Format email
+        $submissionData['email'] = Str::lower($submissionData['email']);
+
+        // Make submission
+        return new JoinSubmission($submissionData);
     }
 }
