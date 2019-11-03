@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
@@ -51,7 +51,7 @@ class NewsItem extends SluggableModel
     /**
      * Returns the owning user, if present
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function author(): Relation
     {

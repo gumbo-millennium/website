@@ -16,8 +16,8 @@ Route::get('/privacy-policy', 'PageController@privacy')->name('privacy');
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 
 // News route
-Route::get('/news', 'NewsController@index');
-Route::get('/news/{slug}', 'NewsController@post');
+Route::get('/news', 'NewsController@index')->name('news.index');
+Route::get('/news/{item}', 'NewsController@show')->name('news.show');
 
 // Add search route
 Route::get('/search', 'SearchController@index')->name('search-form');

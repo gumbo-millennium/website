@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsItem;
-use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * Renders WordPress posts, which are news items in our vocbulary
+ * Renders user-generated news articles 
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
@@ -16,31 +15,31 @@ use Illuminate\Http\Response;
 class NewsController extends Controller
 {
     /**
-     * Renders all news articles on the website.
+     * Renders a news index, per 15 pages
      *
      * @return Response
      */
     public function index()
     {
-        // Get 15 posts at a time
-        $allPosts = NewsItem::orderBy('created_at', 'DESC')->paginate(15);
+        // Get 15 items at a time, newest first
+        $allNewsItems = NewsItem::orderByDesc('created_at')->paginate(15);
 
-        // Return the view with all posts
-        return view('main.news.index')->with([
-            'posts' => $allPosts
+        // Return the view with all items
+        return view('news.index')->with([
+            'items' => $allNewsItems
         ]);
     }
 
     /**
-     * Renders a single post
+     * Renders a single item
      *
-     * @param Post $post
+     * @param NewsItem $item
      * @return Response
      */
-    public function post(Post $post)
+    public function show(NewsItem $item)
     {
         return view('news.show')->with([
-            'post' => $post
+            'item' => $item
         ]);
     }
 }

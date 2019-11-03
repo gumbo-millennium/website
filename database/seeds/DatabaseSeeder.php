@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
 
             // Add a bunch of files
             $this->call(FileSeeder::class);
+
+            // Create some news articles
+            $this->call(NewsSeeder::class);
         }
     }
 }
