@@ -12,6 +12,11 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Number;
 
+/**
+ * Enrollment payments
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Payment extends Resource
 {
     /**

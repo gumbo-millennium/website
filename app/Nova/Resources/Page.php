@@ -11,6 +11,11 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 
+/**
+ * Add page
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Page extends Resource
 {
     /**

@@ -9,6 +9,11 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 
+/**
+ * Users of our system
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class User extends Resource
 {
     /**

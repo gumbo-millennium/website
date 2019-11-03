@@ -16,6 +16,11 @@ use Laravel\Nova\Resource;
 use Spatie\Permission\Models\Role as RoleModel;
 use Spatie\Permission\PermissionRegistrar;
 
+/**
+ * Roles, for the Permission Framework
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Role extends Resource
 {
     /**

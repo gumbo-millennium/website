@@ -15,6 +15,11 @@ use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
+/**
+ * User enrollment
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Enrollment extends Resource
 {
     /**

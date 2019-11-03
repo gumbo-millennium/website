@@ -11,6 +11,11 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 
+/**
+ * News Items
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class NewsItem extends Resource
 {
     /**

@@ -17,6 +17,7 @@ use Laravel\Nova\Panel;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class JoinSubmission extends Resource
 {
