@@ -250,7 +250,13 @@ class FileDisplayTest extends TestCase
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
-        // Return most recent category
+        // Return first auto-sorted category with files
+        $withFiles = FileCategory::has('files')->first();
+        if ($withFiles) {
+            return $withFiles;
+        }
+
+        // Return first auto-sorted category
         return FileCategory::first();
     }
 
