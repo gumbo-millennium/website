@@ -5,6 +5,14 @@
         "permissions": []
     },
 
+    // Create 'verified' role
+    "verified": {
+        "title": "Geverifiëerde gebruikers",
+        "permissions": [
+            "verfied"
+        ]
+    },
+
     // Create guest role
     "guest": {
         "title": "Gast",

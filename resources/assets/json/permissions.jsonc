@@ -38,5 +38,8 @@
     "impersonate": "Inloggen als andere gebruikers",
 
     // Super Admin (only directly)
-    "super-admin": "Super Admin"
+    "super-admin": "Super Admin",
+
+    // Verified e-mails (for UI purposes, not for actual validaton)
+    "verfied": "E-mail geverifiëerd (alleen UI)"
 }
