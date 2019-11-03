@@ -14,6 +14,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Horizon\Horizon;
 
 class AppServiceProvider extends ServiceProvider
@@ -80,6 +81,48 @@ class AppServiceProvider extends ServiceProvider
                 "{$name}_updated_at",
                 $variants !== false ? "{$name}_variants" : null
             ]));
+        });
+
+        $this->bootStrMacros();
+    }
+
+    /**
+     * Adds macros for number formatting to the Str helper
+     *
+     * @return void
+     */
+    private function bootStrMacros(): void
+    {
+        // Add Str macros
+        $validNumber = function ($value): ?float {
+            // Validate number value
+            $number = filter_var($value, FILTER_VALIDATE_FLOAT);
+
+            // Skip if empty
+            return ($number === false) ? null : $number;
+        };
+
+        Str::macro('number', function ($value, int $decimals = 0) use ($validNumber) {
+            // Validate number and return null if empty
+            $value = $validNumber($value);
+
+            // Return formatted number, if set
+            return ($value === null) ? null :  number_format($value, $decimals, ',', '.');
+        });
+        Str::macro('price', function ($value) use ($validNumber) {
+            // Validate number and return null if empty
+            $value = $validNumber($value);
+            if ($value === null) {
+                return null;
+            }
+
+            // Handle round value value
+            if (($value * 100) % 100 === 0) {
+                return sprintf('€ %s,-', number_format($value, 0, ',', '.'));
+            }
+
+            // Handle decimal value
+            return sprintf('€ %s', number_format($value, 2, ',', '.'));
         });
     }
 }
