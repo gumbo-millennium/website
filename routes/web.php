@@ -147,3 +147,6 @@ Route::redirect('/sign-up', '/join');
 
 // Page fallback
 Route::fallback('PageController@fallback');
+
+// LEGACY REDIRECTS
+Route::get('/nova', 'LegacyController@gone');
