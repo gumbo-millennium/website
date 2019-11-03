@@ -33,7 +33,7 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
 /**
  * Files route
  */
-Route::prefix('files')->name('files.')->group(function () {
+Route::middleware('auth')->prefix('files')->name('files.')->group(function () {
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
@@ -57,6 +57,9 @@ Route::prefix('activity')->name('activity.')->group(function () {
 
     // Single view
     Route::get('/{activity}', 'ActivityController@show')->name('show');
+
+    // Single view
+    Route::get('/{activity}/login', 'ActivityController@login')->name('login');
 });
 // Fix sometimes linking to /activities
 Route::permanentRedirect('/activities', '/activity');

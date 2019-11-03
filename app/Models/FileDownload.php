@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -48,7 +49,9 @@ class FileDownload extends Pivot
      * @var array
      */
     public $fillable = [
-        'ip'
+        'user_id',
+        'file_id',
+        'ip',
     ];
 
     /**
@@ -70,8 +73,28 @@ class FileDownload extends Pivot
 
         // Generate UUID on create and add downloaded_at
         self::creating(function ($model) {
-            $model->uuid = (string) Uuid::uuid4();
-            $model->downloaded_at = now();
+            $model->id = (string) Uuid::uuid4();
+            $model->created_at = now();
         });
+    }
+
+    /**
+     * User that downloaded this file
+     *
+     * @return Relation
+     */
+    public function user(): Relation
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * File the user downloaded
+     *
+     * @return Relation
+     */
+    public function file(): Relation
+    {
+        return $this->belongsTo(File::class);
     }
 }

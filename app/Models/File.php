@@ -14,6 +14,7 @@ use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * A user-uploaded file
@@ -112,7 +113,7 @@ class File extends SluggableModel implements AttachableInterface
      *
      * @return Relation
      */
-    public function category(): Relation
+    public function category(): BelongsTo
     {
         return $this->belongsTo(FileCategory::class, 'category_id', 'id');
     }

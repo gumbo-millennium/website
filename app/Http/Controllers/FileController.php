@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\FileCategory;
 use App\Models\File;
 use App\Models\FileDownload;
+use Czim\Paperclip\Contracts\AttachmentInterface;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -110,16 +113,11 @@ class FileController extends Controller
      */
     public function download(Request $request, File $file)
     {
-        $filePath = $file->path;
-        $fileName = $file->filename;
-
-        // Report 404 if not public
-        if ($file->public || $file->broken) {
-            throw new NotFoundHttpException();
-        }
+        /** @var AttachmentInterface $attachment */
+        $attachment = $file->file;
 
         // Abort if file is missing
-        if (!Storage::exists($filePath)) {
+        if (!$attachment || !$attachment->exists()) {
             throw new NotFoundHttpException();
         }
 
@@ -130,7 +128,12 @@ class FileController extends Controller
             'ip' => $request->ip()
         ]);
 
-        // Send file
-        return Storage::download($filePath, $fileName);
+
+        // Get some calculation properties
+        $disk = $attachment->getStorage();
+        $path = $attachment->path();
+
+        // Get download
+        return Storage::disk($disk)->download($path, $attachment->originalFilename());
     }
 }

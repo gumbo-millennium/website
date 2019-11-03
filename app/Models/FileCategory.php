@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Scopes\DefaultOrderScope;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Traits\HasParent;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * A file category, containing files
@@ -18,6 +20,18 @@ use App\Traits\HasParent;
 class FileCategory extends SluggableModel
 {
     use HasParent;
+
+    /**
+     * Add a check to automatically sort by title if none is set
+     */
+    public static function boot()
+    {
+        // Forward to parent
+        parent::boot();
+
+        // Order by title by default
+        static::addGlobalScope(new DefaultOrderScope('title'));
+    }
 
     /**
      * Find the default category

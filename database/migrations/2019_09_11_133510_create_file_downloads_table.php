@@ -14,7 +14,7 @@ class CreateFileDownloadsTable extends Migration
     public function up()
     {
         Schema::create('file_downloads', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id');
             $table->timestamp('created_at')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('file_id');

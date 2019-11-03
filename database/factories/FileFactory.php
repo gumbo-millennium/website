@@ -13,6 +13,6 @@ $factory->define(File::class, function (Faker $faker) {
 });
 
 // Attach chicken
-$factory->afterCreating(File::class, function (File $file, Faker $faker) {
+$factory->afterMaking(File::class, function (File $file) {
     $file->file = new \SplFileInfo(resource_path('assets/pdf/chicken.pdf'));
 });
