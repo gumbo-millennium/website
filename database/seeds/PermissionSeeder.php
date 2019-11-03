@@ -2,9 +2,7 @@
 
 use HJSON\HJSONException as HumanJsonException;
 use HJSON\HJSONParser as HumanJsonParser;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
-use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -14,7 +12,7 @@ use Spatie\Permission\Models\Role;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class PermissionSeeder extends Seeder
+class PermissionSeeder extends VerboseSeeder
 {
     /**
      * Filename of the permission file, relative from the resources path
@@ -58,11 +56,13 @@ class PermissionSeeder extends Seeder
         $roleMap = $this->loadJson(self::ROLES_FILE);
 
         if (!$permissionMap) {
-            printf("Cannot read permission json map, please check %s.\n", self::PERMISSION_FILE);
+            logger()->error("Cannot read permission json map, please check [file].", ['file' => self::PERMISSION_FILE]);
+            $this->error('Cannot read permission json map, please check %s.', self::PERMISSION_FILE);
             return false;
         }
         if (!$roleMap) {
-            printf("Cannot read roles json map, please check %s.\n", self::ROLES_FILE);
+            logger()->error("Cannot read roles json map, please check [file].", ['file' => self::PERMISSION_FILE]);
+            $this->error('Cannot read roles json map, please check %s.', self::ROLES_FILE);
             return false;
         }
 
@@ -123,20 +123,24 @@ class PermissionSeeder extends Seeder
             if (count($wantedPermissons) === 1 && Arr::first($wantedPermissons) === '*') {
                 $rolePermissionMap->put($name, $permissions);
 
-                printf(
-                    "Role %s has wildcard, now has %d permissions\n",
-                    optional($roles->get($name))->title ?? $name,
-                    count($rolePermissionMap->get($name))
+                logger()->info(
+                    "Updated [role] with wildcard, it now has [count] permissions.",
+                    [
+                    'role' => $roles->get($name) ?? $name,
+                    'count' => count($rolePermissionMap->get($name))
+                    ]
                 );
                 continue;
             }
 
             $rolePermissionMap->put($name, $permissions->only($wantedPermissons));
 
-            printf(
-                "Role %s has %d permissions\n",
-                optional($roles->get($name))->title ?? $name,
-                count($rolePermissionMap->get($name))
+            logger()->info(
+                "Updated [role], it now has [count] permissions.",
+                [
+                    'role' => $roles->get($name) ?? $name,
+                    'count' => count($rolePermissionMap->get($name))
+                ]
             );
         }
 
@@ -154,11 +158,13 @@ class PermissionSeeder extends Seeder
                 $rolePermissionMap->get($name),
             ])->flatten());
 
-            printf(
-                "Role %s extends %s, now has %d permissions\n",
-                optional($roles->get($name))->title ?? $name,
-                optional($roles->get($extendName))->title ?? $extendName,
-                $updatedPermissions->count()
+            logger()->info(
+                "Role [role] extends [source-role], now has [count] permissions",
+                [
+                'role' => $roles->get($name) ?? $name,
+                'source-role' => $roles->get($extendName) ?? $extendName,
+                'count' => $updatedPermissions->count()
+                ]
             );
         }
 
@@ -180,18 +186,25 @@ class PermissionSeeder extends Seeder
 
         // Generate or update all permissions
         foreach ($roleMap as $name => $roleData) {
+            // Get role title
             $title = Arr::get($roleData, 'title');
+
+            // Get default flag (0 by default)
             $default = Arr::get($roleData, 'default') ? 1 : 0;
+
+            // Add to the role queue, by either updating or creating the role
             $roles->put($name, $role = Role::updateOrCreate(
                 compact('name'),
                 compact('title', 'default')
             ));
 
-            printf(
-                "%s role %s.\n",
+            // Log result
+            logger()->info(sprintf(
+                "%s role [role].",
                 $role->wasRecentlyCreated ? 'Created' : 'Updated',
-                $role->title ?? $name,
-            );
+            ), [
+                'role' => $role ?? $name,
+            ]);
         }
 
         // Generate role ⋄ permissions
@@ -200,11 +213,19 @@ class PermissionSeeder extends Seeder
         // Link rolePermissionMap to the Role
         foreach ($roles as $name => $role) {
             if ($rolePermissionMap->has($name)) {
+                // Update permissions
                 $role->syncPermissions($rolePermissionMap->get($name));
-                printf(
-                    "Role %s now has %d permissions\n",
-                    $role->title ?? $name,
-                    count($rolePermissionMap->get($name))
+
+                // Refresh model (for updated counts)
+                $role->refresh();
+
+                // Log result
+                logger()->info(
+                    "Role [role] was updated, now has [count] permissions",
+                    [
+                    'role' => $roles->get($name) ?? $name,
+                    'count' => $role->permissions()->count()
+                    ]
                 );
             }
         }
