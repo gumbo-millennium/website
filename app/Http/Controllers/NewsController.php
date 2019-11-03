@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * Renders user-generated news articles 
+ * Renders user-generated news articles
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
