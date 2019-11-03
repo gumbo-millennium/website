@@ -3,10 +3,10 @@
  */
 module.exports = {
   colors: {
-    red: null,
-    orange: null,
+    // red: null,
+    // orange: null,
     yellow: null,
-    green: null,
+    // green: null,
     teal: null,
     blue: null,
     indigo: null,
