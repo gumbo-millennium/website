@@ -28,7 +28,7 @@ trait UsesTemporaryFiles
     {
         // Abort if file is missing
         if (!Storage::disk($disk)->exists($path)) {
-            throw new \RuntimeException("Cannot find file [{$path}] on drive.");
+            throw new \RuntimeException("Cannot find file [{$path}] on drive [{$disk}].");
         }
 
         // Open a file handle to a temporary file
