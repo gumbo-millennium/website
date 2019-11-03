@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect(Nova::path());
+            return redirect()->intended(Nova::path());
         }
 
         return $next($request);
