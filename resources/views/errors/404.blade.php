@@ -1,13 +1,8 @@
-@extends('main.layout.default')
+@extends('layout')
 
 @section('content')
-<div class="hero hero--large hero--with-cover">
-    <div class="hero__container">
-        <h3 class="hero__header">Pagina niet gevonden</h3>
-        <p class="hero__lead">Sorry! De aangevraagde pagina konden we niet vinden.</p>
-        <div class="hero__cta">
-            <a class="btn btn-brand hero__cta-btn" href="/">Naar homepage</a>
-        </div>
-    </div>
-</div>
+<h1><span class="text-gray-600">404</span> Not Found</h1>
+
+<p>The resource at the requested URL could not be found.</p>
+<p>Would you like to <a href="/">go to the homepage</a> instead?</p>
 @endsection

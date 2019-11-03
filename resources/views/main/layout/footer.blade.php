@@ -1,3 +1,0 @@
-{{-- Footer --}}
-<!-- Eh -->
-<!-- Footer end-->

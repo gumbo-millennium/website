@@ -26,7 +26,7 @@ if ($errors->has($field->name)) {
 <div class="form-group row">
     @if ($field->type !== 'checkbox')
     <label for="{{ $field->name }}" class="col-sm-2 col-form-label">
-        {{ $field->label }}
+        @slot('label')
     </label>
     @else
     <div class="col-sm-2"></div>
@@ -43,7 +43,7 @@ if ($errors->has($field->name)) {
                 {{ $field->required ? 'required' : '' }}
                 />
             <label class="custom-control-label" for="{{ $field->name }}">
-                {{ $field->label }}
+                @slot('label')
             </label>
         </div>
         @elseif($field->type === 'select')

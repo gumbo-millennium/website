@@ -1,67 +1,77 @@
-@extends('main.layout.auth')
-
-{{-- Change page title --}}
-@section('title')
-Registreren - Gumbo Millennium
-@endsection
-
-@php
-$formFields = [
-    ['text', 'first_name', 'Voornaam', true, null],
-    ['text', 'insert', 'Tussenvoegsel', false, null],
-    ['text', 'last_name', 'Achternaam', true, null],
-    ['email', 'email', 'E-mail adres', true, 'mt-2'],
-    ['password', 'password', 'Wachtwoord', true, 'mt-2'],
-    ['password', 'password_confirmation', 'Wachtwoord herhalen', true, null]
-];
-@endphp
+@extends('layout')
 
 @section('content')
-{{-- Login text --}}
-<div class="login__text login__text--before">
-    <p>
-        Vul onderstaande velden in om een account aan te maken
-        op de Gumbo Millennium website.
-    </p>
-</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Register') }}</div>
 
-{{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('register') }}" aria-label="{{ __('Registreren') }}">
-    {{-- CSRF token --}}
-    @csrf
+                <div class="card-body">
+                    <form method="POST" action="{{ route('register') }}">
+                        @csrf
 
-    @foreach ($formFields as list($type, $name, $label, $required, $className))
-    <div class="login__form-group {{ $className ?? '' }}">
-        <label class="sr-only" for="{{ $name }}">{{ $label }}</label>
-        <input
-        class="login__form-control{{ $errors->has($name) ? ' is-invalid' : '' }}"
-        type="{{ $type }}"
-        name="{{ $name }}"
-        id="{{ $name }}"
-        placeholder="{{ $label }}"
-        value="{{ old($name) }}"
-        {{ $required ? 'required' : '' }}>
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
-        @if ($errors->has($name))
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first($name) }}</strong>
-        </span>
-        @endif
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Register') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    @endforeach
-
-    {{-- Submit button --}}
-    <div class="login__form-action">
-        <button class="login__form-submit" type="submit">
-            Registreren
-        </button>
-    </div>
-</form>
-
-{{-- Login actions --}}
-<div class="login__text login__text--after">
-    <p>
-        <a href="{{ route('login') }}">Terug naar inloggen</a>
-    </p>
 </div>
 @endsection

@@ -1,14 +1,7 @@
-@extends('main.layout.default')
+@extends('layout')
 
 @section('content')
-<div class="hero hero--large hero--with-cover">
-    <div class="hero__container">
-        <h3 class="hero__header">Oooeps!</h3>
-        <p class="hero__lead">Ai, hier is iets heel erg fout gegaan.</p>
-        <p>We hebben de fout gemeld en de DC gaat binenkort op onderzoek uit.</p>
-        <div class="hero__cta">
-            <a class="btn btn-brand hero__cta-btn" href="/">Naar homepage</a>
-        </div>
-    </div>
-</div>
+<h1><span class="text-gray-600">500</span> Internal Server Error</h1>
+
+<p>Sorry, the server fucked up. Please try again later.</p>
 @endsection
