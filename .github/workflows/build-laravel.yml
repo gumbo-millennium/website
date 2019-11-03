@@ -59,6 +59,7 @@ jobs:
       - name: Run unit tests
         run: |
           test -d dist || mkdir dist
+          php artisan db:seed
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
       - name: Report test results to CodeClimate
         run: |
