@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
 
         // The rest of the seeders are not run in production
-        if (App::environment('local')) {
+        if (App::environment(['local', 'testing'])) {
             // Add users
             $this->call(UserSeeder::class);
 
