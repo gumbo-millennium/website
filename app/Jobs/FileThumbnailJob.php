@@ -84,7 +84,7 @@ MSG;
         $file = $this->file;
 
         // Get a temporary file
-        $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
+        $pdfFile = $this->getTempFileFromAttachment($this->file->file);
         $thumbnailFile = $this->getTempFile('jpeg');
 
         try {

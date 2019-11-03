@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Concerns;
 
+use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -60,6 +61,34 @@ trait UsesTemporaryFiles
 
         // Return filename
         return $temporaryFile;
+    }
+
+    /**
+     * Converts attachment to file
+     *
+     * @param AttachmentInterface $attachment
+     * @return string
+     */
+    protected function getTempFileFromAttachment(AttachmentInterface $attachment): string
+    {
+        // Throw error if not found
+        if (!$attachment->exists()) {
+            $model = $attachment->getModel();
+            throw new \RuntimeException(sprintf(
+                'The file attached on [%s] to the [%s #%s] model, does not exist',
+                $attachment->name(),
+                $model ? get_class($model) : 'n/a',
+                optional($model)->id ?? 'n/a'
+            ));
+        }
+
+        // get props
+        $path = $attachment->path();
+        $ext = last(explode('.', $attachment->originalFilename() ?? 'text.pdf'));
+        $storage = $attachment->getStorage();
+
+        // Make test file
+        return $this->getTempFileFromPath($path, $ext, $storage);
     }
 
     /**

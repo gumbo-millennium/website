@@ -61,7 +61,7 @@ class FileMetaJob extends FileJob
         }
 
         // Get a temporary file
-        $tempFile = $this->getTempFileFromPath($this->file->path, 'pdf');
+        $tempFile = $this->getTempFileFromAttachment($this->file->file);
 
         // Extract meta
         $this->getPdfContent($tempFile);
@@ -72,7 +72,7 @@ class FileMetaJob extends FileJob
         }
 
         // Get PDF metadata, using pdfinfo
-        $this->getMetadata($file);
+        $this->getMetadata($tempFile);
 
         // Update state
         if ($this->file_meta) {

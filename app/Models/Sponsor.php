@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ *
+ * @property-read AttachmentInterface $logo
+ * @property-read AttachmentInterface $image
  */
 class Sponsor extends Model implements AttachableInterface
 {
