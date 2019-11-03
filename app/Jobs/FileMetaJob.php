@@ -13,6 +13,7 @@ use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PDFParser;
 use App\Jobs\Concerns\RunsCliCommands;
+use RuntimeException;
 
 /**
  * Processes the metadata of the file, which retrieves document contents,
@@ -61,7 +62,11 @@ class FileMetaJob extends FileJob
         }
 
         // Get a temporary file
-        $tempFile = $this->getTempFileFromAttachment($this->file->file);
+        try {
+            $tempFile = $this->getTempFileFromAttachment($this->file->file);
+        } catch (RuntimeException $e) {
+            return;
+        }
 
         // Extract meta
         $this->getPdfContent($tempFile);

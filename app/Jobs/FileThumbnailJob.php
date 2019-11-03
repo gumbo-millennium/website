@@ -12,6 +12,7 @@ use Illuminate\Http\File as LaravelFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Smalot\PdfParser\Parser as PDFParser;
 
 /**
@@ -84,8 +85,12 @@ MSG;
         $file = $this->file;
 
         // Get a temporary file
-        $pdfFile = $this->getTempFileFromAttachment($this->file->file);
-        $thumbnailFile = $this->getTempFile('jpeg');
+        try {
+            $pdfFile = $this->getTempFileFromAttachment($this->file->file);
+            $thumbnailFile = $this->getTempFile('jpeg');
+        } catch (RuntimeException $e) {
+            return;
+        }
 
         try {
             echo "Building thumbnail\n";

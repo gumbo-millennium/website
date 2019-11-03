@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
 /**
@@ -69,8 +70,12 @@ class FileArchiveJob extends FileJob
         }
 
         // Get a temporary file
-        $pdfFile = $this->getTempFileFromPath($this->file->path, 'pdf');
-        $archiveFile = $this->getTempFile('pdf');
+        try {
+            $pdfFile = $this->getTempFileFromAttachment($this->file->file);
+            $archiveFile = $this->getTempFile('pdf');
+        } catch (RuntimeException $e) {
+            return;
+        }
 
         try {
             // Try archiving the file
