@@ -50,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
                 "</svg>"
             );
         });
+
+        // Always make user available on templates
+        View::share('user', request()->user());
     }
 
     /**
