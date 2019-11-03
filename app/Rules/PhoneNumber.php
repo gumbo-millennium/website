@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
 /**
@@ -50,22 +51,22 @@ class PhoneNumber implements Rule
     public function passes($attribute, $value)
     {
         // Get phonenumber
-        $phoneNumber = null;
+        $number = null;
 
         // Try to parse the phone number
         try {
-            $phoneNumber = $this->util->parse($value, $this->region);
+            $number = $this->util->parse($value, $this->region);
         } catch (NumberParseException $e) {
             return false;
         }
 
         // Validate using region, if it's set
         if ($this->region !== null) {
-            return $this->util->isValidNumberForRegion($phoneNumber, $this->region);
+            return $this->util->isValidNumberForRegion($number, $this->region);
         }
 
         // Just validate the number otherwise
-        return $this->util->isValidNumber($phoneNumber);
+        return $this->util->isValidNumber($number);
     }
 
     /**
@@ -75,6 +76,28 @@ class PhoneNumber implements Rule
      */
     public function message()
     {
-        return 'The :attribute phone number is not valid.';
+        return 'The phone number is not valid.';
+    }
+
+    /**
+     * Formats phone numbers to a standardised form
+     *
+     * @param string $value Phone number to parse
+     * @return string|null Returns null if parsing failed
+     */
+    public function format(string $value): ?string
+    {
+        // Get phone util
+        $util = PhoneNumberUtil::getInstance();
+
+        // Try to get the number
+        try {
+            $number = $util->parse($value, $this->region);
+
+            // Format for international use
+            return $util->format($number, PhoneNumberFormat::INTERNATIONAL);
+        } catch (NumberParseException $e) {
+            return false;
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
@@ -12,6 +13,7 @@ class Enrollment extends UuidModel
 {
     // Use encryption helper to protect user details
     use HasEncryptedAttributes;
+    use SoftDeletes;
 
     /**
      * @inheritDoc
@@ -27,6 +29,35 @@ class Enrollment extends UuidModel
         'data' => 'collection',
         'paid' => 'bool'
     ];
+
+    /**
+     * @inheritDoc
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    /**
+     * Create unsaved enrollment
+     *
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment
+     */
+    public static function enroll(User $user, Activity $activity): Enrollment
+    {
+        // Make empty enrollment
+        $enroll = new self();
+
+        // Assign user and activity
+        $enroll->user()->associate($user);
+        $enroll->activity()->associate($activity);
+
+        // Return it
+        return $enroll;
+    }
 
     /**
      * An enrollment can have multiple payments (in case one failed, for example)

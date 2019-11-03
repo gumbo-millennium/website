@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * Enrollment payments
@@ -97,15 +98,21 @@ class Payment extends Resource
                     ->readonly(),
 
                 Text::make(__('Provider ID'), 'provider_id')
-                    ->readonly(),
+                    ->readonly()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('admin', $this);
+                    }),
 
                 Number::make(__('Amount Paid'), 'amount')
                     ->readonly()
-                    ->help('Refund amount, in Eurocents'),
+                    ->help('Paid amount, in Eurocents'),
 
                 KeyValue::make(__('Data'), 'data')
                     ->readonly()
-                    ->onlyOnDetail(),
+                    ->onlyOnDetail()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('admin', $this);
+                    }),
             ]),
 
             new Panel(__('Refund Information'), [
@@ -119,8 +126,34 @@ class Payment extends Resource
                 Boolean::make(__('Fully refunded'), 'fully_refunded')
                     ->readonly()
                     ->onlyOnDetail()
-                    ->help('Refund amount, in Eurocents'),
+                    ->help('True if the entire paid amount was returned to the user'),
             ])
         ];
+    }
+
+    /**
+     * Make sure the user can only see enrollments he/she is allowed to see
+     *
+     * @param NovaRequest $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @var App\Models\User $user
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        // Get user shorthand
+        $user = $request->user();
+
+        // Return all enrollments if the user can manage them
+        if ($user->can('admin', PaymentModel::class)) {
+            return parent::indexQuery($request, $query);
+        }
+
+        // Only return enrollments of the user's events if the user is not
+        // allowed to globally manage events.
+        return parent::indexQuery(
+            $request,
+            $query->whereIn('enrollment.activity_id', $user->hosted_activity_ids)
+        );
     }
 }

@@ -125,6 +125,7 @@ class Enrollment extends Resource
      * @param NovaRequest $request
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
+     * @var App\Models\User $user
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -132,7 +133,7 @@ class Enrollment extends Resource
         $user = $request->user();
 
         // Return all enrollments if the user can manage them
-        if (EnrollmentPolicy::hasEnrollmentPermissions($user)) {
+        if ($user->can('admin', EnrollmentModel::class)) {
             return parent::indexQuery($request, $query);
         }
 
@@ -140,7 +141,7 @@ class Enrollment extends Resource
         // allowed to globally manage events.
         return parent::indexQuery(
             $request,
-            $query->whereIn('id', ActivityPolicy::getAllActivityIds($user))
+            $query->whereIn('activity_id', $user->hosted_activity_ids)
         );
     }
 }

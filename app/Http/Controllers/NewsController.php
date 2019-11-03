@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsItem;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,10 +23,10 @@ class NewsController extends Controller
     public function index()
     {
         // Get 15 posts at a time
-        $allPosts = Post::published()->paginate(15);
+        $allPosts = NewsItem::orderBy('created_at', 'DESC')->paginate(15);
 
         // Return the view with all posts
-        return view('main.news.list')->with([
+        return view('main.news.index')->with([
             'posts' => $allPosts
         ]);
     }
@@ -38,7 +39,7 @@ class NewsController extends Controller
      */
     public function post(Post $post)
     {
-        return view('main.news.single')->with([
+        return view('news.show')->with([
             'post' => $post
         ]);
     }

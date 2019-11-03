@@ -162,7 +162,6 @@ class Activity extends Resource
                 ->minHeight(960)
                 ->rules(
                     'nullable',
-                    'dimensions:min_width=1920,min_height=960',
                     'image'
                 ),
 

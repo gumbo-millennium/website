@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * A payment transaction
+ *
+ * @author Roelof Roos <github@roelof.io>
+ * @license MPL-2.0
+ */
 class Payment extends UuidModel
 {
     /**
@@ -27,8 +33,9 @@ class Payment extends UuidModel
      * Returns if the payment was refunded
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function isCompleted(): bool
+    public function getIsCompletedAttribute(): bool
     {
         return $this->completed_at !== null;
     }
@@ -37,8 +44,9 @@ class Payment extends UuidModel
      * Returns if the payment was refunded
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function isRefunded(): bool
+    public function getIsRefundedAttribute(): bool
     {
         return $this->refunded_at !== null;
     }

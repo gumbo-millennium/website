@@ -3,23 +3,12 @@
 namespace App\Http\Controllers;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
-use App\Form;
 use App\Models\Page;
-use Corcel\Model\Post;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PageController extends Controller
 {
-    /**
-     * Views to use for types of contents
-     */
-    private const CLASS_VIEW_MAP = [
-        Page::class => 'static.page',
-        Form::class => 'static.form',
-        Post::class => 'static.post',
-    ];
-
     /**
      * Renders the homepage
      *
@@ -27,7 +16,8 @@ class PageController extends Controller
      */
     public function homepage()
     {
-        return $this->renderPage(Page::SLUG_HOMEPAGE);
+        return view('content.home');
+        // return $this->render(Page::SLUG_HOMEPAGE);
     }
 
     /**
@@ -37,7 +27,7 @@ class PageController extends Controller
      */
     public function privacy()
     {
-        return $this->renderPage(Page::SLUG_PRIVACY);
+        return $this->render(Page::SLUG_PRIVACY);
     }
 
     /**
@@ -47,7 +37,7 @@ class PageController extends Controller
      */
     public function fallback(Request $request)
     {
-        return $this->renderPage(trim($request->path(), '/\\'));
+        return $this->render(trim($request->path(), '/\\'));
     }
 
     /**
@@ -56,7 +46,7 @@ class PageController extends Controller
      * @param string $slug
      * @return Response
      */
-    protected function renderPage(string $slug)
+    protected function render(string $slug)
     {
         $page = Page::whereSlug($slug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
 
@@ -64,24 +54,8 @@ class PageController extends Controller
             throw new NotFoundHttpException();
         }
 
-        return view(self::CLASS_VIEW_MAP[Page::class])->with([
-            'page' => $page,
-            'pageContents' => $this->getHtmlContents($page)
+        return view('content.page')->with([
+            'page' => $page
         ]);
-    }
-
-    /**
-     * Returns the HTML contents of the page, or null if empty
-     *
-     * @param Page $page
-     * @return string|null
-     */
-    protected function getHtmlContents(Page $page): ?string
-    {
-        if (!$page->contents) {
-            return null;
-        }
-
-        return NovaEditorJs::generateHtmlOutput($page->contents);
     }
 }

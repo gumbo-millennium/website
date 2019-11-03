@@ -118,7 +118,7 @@ class EnrollmentPolicy
 
         // Weird edge-case of an unlinked enrollment requires an admin
         if ($enrollment && !$activity) {
-            return $user->can('admin', Enrollment::class);
+            return $user->can('admin', Activity::class);
         }
 
         // Forward to ActivityPolicy

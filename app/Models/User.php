@@ -144,6 +144,17 @@ class User extends Authenticatable implements MustVerifyEmailContract
     }
 
     /**
+     * Returns if this user is a member
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsMemberAttribute(): bool
+    {
+        return $this->hasPermissionTo('member');
+    }
+
+    /**
      * Returns a list of IDs that the user hosts
      *
      * @return Collection
