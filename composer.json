@@ -33,6 +33,7 @@
         "smalot/pdfparser": "^0.13.2",
         "spatie/laravel-csp": "^2.4",
         "spatie/laravel-permission": "^2.23",
+        "spatie/laravel-stripe-webhooks": "^2.2",
         "symfony/process": "^4.1",
         "vyuldashev/nova-permission": "^1.8"
     },

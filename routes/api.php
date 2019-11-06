@@ -30,3 +30,6 @@ Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
 Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
     ->middleware('signed')
     ->name('plazacam.view');
+
+// Register API for Stripe endpoints
+Route::stripeWebhooks('payments/stripe/handle');
