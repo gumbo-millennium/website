@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Ramsey\Uuid\Uuid;
@@ -81,7 +82,7 @@ class FileDownload extends Pivot
     /**
      * User that downloaded this file
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function user(): Relation
     {
@@ -91,7 +92,7 @@ class FileDownload extends Pivot
     /**
      * File the user downloaded
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function file(): Relation
     {

@@ -9,6 +9,8 @@ use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
 
@@ -130,7 +132,7 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * Returns the associated role, if any
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function role(): Relation
     {
@@ -140,7 +142,7 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * Returns all enrollments (both pending and active)
      *
-     * @return Relation
+     * @return HasMany
      */
     public function enrollments(): Relation
     {
@@ -150,7 +152,7 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * Returns all made payments for this event
      *
-     * @return Relation
+     * @return HasMany
      */
     public function payments(): Relation
     {

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -13,6 +15,8 @@ class Enrollment extends UuidModel
 {
     // Use encryption helper to protect user details
     use HasEncryptedAttributes;
+
+    // Allow soft-deletion (prevents re-enrollment on paid activities)
     use SoftDeletes;
 
     /**
@@ -62,7 +66,7 @@ class Enrollment extends UuidModel
     /**
      * An enrollment can have multiple payments (in case one failed, for example)
      *
-     * @return Relation
+     * @return HasMany
      */
     public function payments(): Relation
     {
@@ -72,7 +76,7 @@ class Enrollment extends UuidModel
     /**
      * The user this enrollment belongs to
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function user(): Relation
     {
@@ -82,7 +86,7 @@ class Enrollment extends UuidModel
     /**
      * The activity this enrollment belongs to
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function activity(): Relation
     {

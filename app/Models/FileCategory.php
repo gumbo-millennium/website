@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Traits\HasParent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * A file category, containing files
@@ -85,7 +87,7 @@ class FileCategory extends SluggableModel
     /**
      * The files that belong to this category
      *
-     * @return Relation
+     * @return HasMany
      */
     public function files(): Relation
     {
@@ -95,7 +97,7 @@ class FileCategory extends SluggableModel
     /**
      * The files that belong to this category
      *
-     * @return Relation
+     * @return HasManyThrough
      */
     public function downloads(): Relation
     {

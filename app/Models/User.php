@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -100,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     /**
      * Returns the activities the user is enrolled in
      *
-     * @return Relation
+     * @return HasManyThrough
      */
     public function activities(): Relation
     {
@@ -110,7 +111,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     /**
      * Returns activities the user can manage
      *
-     * @return Relation
+     * @return HasMany
      */
     public function hostedActivities(): Relation
     {

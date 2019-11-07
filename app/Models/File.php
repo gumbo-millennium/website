@@ -15,6 +15,7 @@ use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * A user-uploaded file
@@ -111,7 +112,7 @@ class File extends SluggableModel implements AttachableInterface
     /**
      * The roles that belong to the user.
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function category(): BelongsTo
     {
@@ -121,7 +122,7 @@ class File extends SluggableModel implements AttachableInterface
     /**
      * A file has an owner
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function owner(): Relation
     {
@@ -131,7 +132,7 @@ class File extends SluggableModel implements AttachableInterface
     /**
      * A file may have downloads
      *
-     * @return Relation
+     * @return HasMany
      */
     public function downloads(): Relation
     {
@@ -156,7 +157,7 @@ class File extends SluggableModel implements AttachableInterface
     /**
      * A file may have a replacement
      *
-     * @return Relation
+     * @return BelongsTo
      */
     public function replacement(): Relation
     {
