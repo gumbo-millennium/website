@@ -12,6 +12,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -246,19 +247,14 @@ class Activity extends Resource
                 return ucfirst(__("activities.enrollment.{$label}"));
             })->onlyOnIndex(),
 
-            Seats::make('Total Seats', 'seats')
-                ->min(1)
+            Seats::make('Seats', 'seats')
+                ->min(0)
                 ->step(1)
                 ->nullable()
                 ->nullValues(['', '0'])
-                ->rules('nullable', 'numeric', 'min:1'),
+                ->rules('nullable', 'numeric', 'min:0'),
 
-            Seats::make('Guest Seats', 'public_seats')
-                ->min(1)
-                ->step(1)
-                ->nullable()
-                ->nullValues([''])
-                ->rules('nullable', 'numeric', 'lt:seats')
+            Boolean::make('Public activity', 'is_public'),
         ];
     }
 

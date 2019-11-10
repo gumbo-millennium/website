@@ -56,7 +56,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Number of seats
         'seats' => 'int',
-        'public_seats' => 'int',
+        'is_public' => 'bool',
 
         // Pricing
         'price_member' => 'int',
@@ -185,14 +185,19 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return int
      */
-    public function getAvailableSeatsAttribute(): ?int
+    public function getAvailableSeatsAttribute(): int
     {
         // Only if there are actually places
         if ($this->seats === null) {
-            return null;
+            return INF;
         }
 
-        return $this->seats - $this->enrollments()->count();
+        // Get enrollment count
+        $occupied = $this->enrollments()
+            ->count();
+
+        // Subtract active enrollments from active seats
+        return max(0, $this->seats - $occupied);
     }
 
     /**
