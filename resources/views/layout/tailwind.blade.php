@@ -24,6 +24,11 @@
 
     <div id="app" class="app">
         <main class="container mx-auto" id="start-of-content">
+            @if (flash()->message)
+                <div class="{{ flash()->class }}">
+                    {{ flash()->message }}
+                </div>
+            @endif
             @yield('content')
         </main>
         <footer class="max-w-sm mx-auto text-center mt-6">
