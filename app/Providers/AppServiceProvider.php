@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Horizon\Horizon;
+use Stripe\Stripe as StripeClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -63,6 +64,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure Stripe service
+        if ($apiKey = config('stripe.private_key')) {
+            // Set key
+            StripeClient::setApiKey($apiKey);
+
+            // Retry API calls, a bunch of times
+            StripeClient::setMaxNetworkRetries(5);
+
+            // Allow Telemetry (only includes response times)
+            StripeClient::setEnableTelemetry(true);
+        }
+
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, bool $variants = null) {
             $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
