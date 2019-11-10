@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Activities;
 
+use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\Payment;
-use App\Models\User;
+use App\ViewModels\ActivityViewModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
- * User routes for the activities
+ * Handles showing activity lists, activities and the schedule route
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class ActivityController extends Controller
+class DisplayController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,6 +34,7 @@ class ActivityController extends Controller
             $query = Activity::where('end_date', '<=', now());
         }
 
+        // Paginate the response
         $activities = $query->paginate();
 
         // Collect an empty list of enrollments
@@ -41,9 +42,12 @@ class ActivityController extends Controller
 
         if ($request->user) {
             // Get all user enrollments, indexed by the activity_id
-            $enrollments = Enrollment::where([
-                'user_id' => $request->user->id
-            ])->orderBy('created_at', 'asc')->get()->keyBy('activity_id');
+            $enrollments = Enrollment::query()
+                ->whereUserId($request->user()->id)
+                ->whereIn('activity_id', $activities->pluck('id'))
+                ->orderBy('created_at', 'asc')
+                ->get()
+                ->keyBy('activity_id');
         }
 
         // Render the view with the events and their enrollments
@@ -65,28 +69,11 @@ class ActivityController extends Controller
         // Load enrollments
         $activity->load(['enrollments']);
 
-
-        // Get request user
-        $user = $request->user();
-
-        // Get enrollment status
-        $status = (object) EnrollmentController::enrollmentStatus($activity, $user);
-
-        // Get user enrollments, if any
-        $userEnrollments = [];
-        if ($user) {
-            // Get enrollment for this user
-            $userEnrollments = $activity->enrollments()->where([
-                'user_id' => $request->user()->id
-            ])->withTrashed()->with('payments')->get();
-        }
-
         // Show view
-        return view('activities.show', [
-            'activity' => $activity,
-            'enrollments' => $userEnrollments,
-            'status' => $status
-        ]);
+        return view('activities.show', new ActivityViewModel(
+            $request->user(),
+            $activity
+        ));
     }
 
     /**

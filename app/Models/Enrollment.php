@@ -89,26 +89,6 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * Create unsaved enrollment
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment
-     */
-    public static function enroll(User $user, Activity $activity): Enrollment
-    {
-        // Make empty enrollment
-        $enroll = new self();
-
-        // Assign user and activity
-        $enroll->user()->associate($user);
-        $enroll->activity()->associate($activity);
-
-        // Return it
-        return $enroll;
-    }
-
-    /**
      * Register the states an enrollment can have
      *
      * @return void

@@ -71,6 +71,38 @@ class ActivityPolicy
     }
 
     /**
+     * Can this user enroll
+     *
+     * @param User $user
+     * @param Activity $activity
+     * @return bool
+     */
+    public function enroll(User $user, Activity $activity)
+    {
+        // Non-public activities cannot be enrolled by guests
+        if (!$user->is_member && !$activity->is_public) {
+            return false;
+        }
+
+        // Cannot enroll when there is no more room
+        if ($activity->available_seats <= 0) {
+            return false;
+        }
+
+        // Get the price
+        $price = $user->is_member ? $activity->price_member : $activity->price_guest;
+
+        // Free events don't have any more requirements
+        if (!$price) {
+            return true;
+        }
+
+        // Check for refunds
+        // TODO
+        return true;
+    }
+
+    /**
      * Determine whether the user can create activities.
      *
      * @param  User  $user

@@ -34,6 +34,7 @@ class UserSeeder extends Seeder
             $user->restore();
         }
     }
+
     /**
      * Run the database seeds.
      *
@@ -41,6 +42,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        // Add test users
         $this->makeUser('board@example.com', 'Bestuur', ['member', 'board']);
         $this->makeUser('ac@example.com', 'AC', ['member', 'ac']);
         $this->makeUser('dc@example.com', 'DC', ['member', 'dc']);
@@ -48,5 +50,8 @@ class UserSeeder extends Seeder
         $this->makeUser('gumbo@example.com', 'Lid', ['member']);
         $this->makeUser('guest@example.com', 'Gast', ['guest']);
         $this->makeUser('event-owner@example.com', 'Event Owner', ['member']);
+
+        // Add more users
+        factory(User::class, 25)->create();
     }
 }

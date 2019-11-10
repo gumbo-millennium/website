@@ -53,13 +53,13 @@ Route::middleware('auth')->prefix('files')->name('files.')->group(function () {
 Route::prefix('activity')->name('activity.')->group(function () {
     // USER ROUTES
     // Main route
-    Route::get('/', 'ActivityController@index')->name('index');
+    Route::get('/', 'Activities\\DisplayController@index')->name('index');
 
     // Single view
-    Route::get('/{activity}', 'ActivityController@show')->name('show');
+    Route::get('/{activity}', 'Activities\\DisplayController@show')->name('show');
 
     // Single view
-    Route::get('/{activity}/login', 'ActivityController@login')->name('login');
+    Route::get('/{activity}/login', 'Activities\\DisplayController@login')->name('login');
 });
 // Fix sometimes linking to /activities
 Route::permanentRedirect('/activities', '/activity');
@@ -72,34 +72,41 @@ Route::prefix('enroll')->name('enroll.')->group(function () {
     Route::permanentRedirect('/', '/me');
 
     // My enrollments
-    Route::get('/me', 'EnrollmentController@index')->name('index');
+    Route::get('/me', 'Activities\\EnrollmentController@index')->name('index');
 
     // Enroll status view
-    Route::post('/{activity}', 'EnrollmentController@status')->name('show');
+    Route::post('/{activity}', 'Activities\\EnrollmentController@show')->name('show');
 
     // Enroll start
-    Route::post('/{activity}/create', 'EnrollmentController@create')->name('create');
+    Route::post('/{activity}/create', 'Activities\\EnrollmentController@create')->name('create');
 
     // Enroll update
-    Route::get('/{activity}/update', 'EnrollmentController@edit')->name('edit');
+    Route::get('/{activity}/update', 'Activities\\EnrollmentController@edit')->name('edit');
 
     // Enroll update
-    Route::post('/{activity}/update', 'EnrollmentController@update');
-
-    // Enroll payment (configure)
-    Route::get('/{activity}/payment', 'EnrollmentController@payment')->name('pay');
-
-    // Enroll payment (apply or update)
-    Route::post('/{activity}/payment', 'EnrollmentController@paymentStart');
-
-    // Enroll payment (completed)
-    Route::get('/{activity}/payment', 'EnrollmentController@paymentReturn')->name('pay-after');
+    Route::post('/{activity}/update', 'Activities\\EnrollmentController@update');
 
     // Enroll removal (confirm)
-    Route::get('/{activity}/delete', 'EnrollmentController@unenroll')->name('delete');
+    Route::get('/{activity}/delete', 'Activities\\EnrollmentController@delete')->name('delete');
 
     // Enroll removal (perform)
-    Route::delete('/{activity}/delete', 'EnrollmentController@destroy');
+    Route::delete('/{activity}/delete', 'Activities\\EnrollmentController@destroy');
+});
+/**
+ * Enrollment payments
+ */
+Route::prefix('enrollments/pay')->name('payments.')->group(function () {
+    // Default route¸ redirect → my enrollments
+    Route::permanentRedirect('/', '/me');
+
+    // Enroll start
+    Route::post('/{activity}/start', 'Activities\\PaymentController@create')->name('start');
+
+    // Enroll start
+    Route::post('/{activity}/start', 'Activities\\PaymentController@store');
+
+    // Enroll update
+    Route::get('/{activity}/complete', 'Activities\\PaymentController@complete')->name('complete');
 });
 
 /**

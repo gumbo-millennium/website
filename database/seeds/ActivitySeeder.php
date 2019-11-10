@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use App\Models\Activity;
+use App\Models\Enrollment;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
+use Faker\Generator as Faker;
 
 class ActivitySeeder extends Seeder
 {
@@ -25,10 +27,24 @@ class ActivitySeeder extends Seeder
             return null;
         }
 
-        return factory(Activity::class, 1)->create(array_merge(
+        $activity = factory(Activity::class, 1)->create(array_merge(
             ['slug' => $slug],
             $args
         ))->first();
+
+        // Get a random number of users in a random order
+        $count = app(Faker::class)->numberBetween(2, User::count());
+        $users = User::inRandomOrder()->take($count)->get();
+
+        // Pair each user with the activity
+        foreach ($users as $user) {
+            factory(Enrollment::class, 1)->create([
+                'activity_id' => $activity->id,
+                'user_id' => $user->id
+            ]);
+        }
+
+        return $activity;
     }
     /**
      * Returns start of semester, as immutable element
