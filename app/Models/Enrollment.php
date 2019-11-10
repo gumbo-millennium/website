@@ -167,4 +167,14 @@ class Enrollment extends UuidModel
     {
         return $this->belongsTo(Activity::class);
     }
+
+    /**
+     * Returns the form, but for testing purposes now returns null
+     *
+     * @return null
+     */
+    public function getFormAttribute(): ?string
+    {
+        return null;
+    }
 }
