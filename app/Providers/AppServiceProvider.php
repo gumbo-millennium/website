@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Activity;
-use App\Models\File;
-use App\Observers\ActivityObserver;
-use App\Observers\FileObserver;
+use App\Service\StripeErrorService;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
+use Spatie\Flash\Flash;
 use Stripe\Stripe as StripeClient;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Add Stripe error handler service
+        $this->app->bind(StripeErrorService::class);
+
         // Register nav menu as $menu on all requests
         $this->app->singleton(MenuProvider::class, function () {
             return new MenuProvider();
@@ -36,10 +37,6 @@ class AppServiceProvider extends ServiceProvider
         Horizon::auth(function ($request) {
             return $request->user() !== null && $request->user()->hasPermissionTo('devops');
         });
-
-        // Handle File, User and Activity changes
-        Activity::observe(ActivityObserver::class);
-        File::observe(FileObserver::class);
 
         // Create method to render SVG icons
         Blade::directive('icon', function ($icon, $className = null) {
@@ -51,9 +48,6 @@ class AppServiceProvider extends ServiceProvider
                 "</svg>"
             );
         });
-
-        // Always make user available on templates
-        View::share('user', request()->user());
     }
 
     /**
@@ -99,7 +93,24 @@ class AppServiceProvider extends ServiceProvider
             ]));
         });
 
+        // Boot string macros
         $this->bootStrMacros();
+
+        // Provide User for all views
+        view()->composer('*', function (View $view) {
+            $view->with([
+                'user' => request()->user()
+            ]);
+        });
+
+        // Boot flash settings
+        $baseStyling = 'border rounded px-6 py-4 my-2';
+        Flash::levels([
+            'info' => "{$baseStyling} bg-blue-200 text-blue-800 border-blue-800",
+            'error' => "{$baseStyling} bg-red-200 text-red-800 border-red-800",
+            'warning' => "{$baseStyling} bg-orange-200 text-orange-800 border-orange-800",
+            'success' => "{$baseStyling} bg-green-200 text-green-800 border-green-800",
+        ]);
     }
 
     /**

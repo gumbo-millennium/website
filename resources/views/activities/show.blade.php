@@ -15,17 +15,8 @@ $duration = $activity->start_date->diffAsCarbonInterval($activity->end_date);
 $durationIso = $duration->spec();
 $durationTime = $duration->locale(...$locale)->forHumans(['parts' => 1]);
 
-// Cost
-$euro = function ($value) {
-    $decs = [',', '.'];
-    $value /= 100;
-    if (ceil($value) === floor($value)) {
-        return sprintf('€ %s,-', number_format($value, 0, ...$decs));
-    }
-    return sprintf('€ %s', number_format($value, 2, ...$decs));
-};
-$memberPrice = $activity->price_member ? $euro($activity->price_member) : 'gratis';
-$guestPrice = $activity->price_guest ? $euro($activity->price_guest) : 'gratis';
+$memberPrice = $activity->price_member ? Str::price($activity->price_member) : 'gratis';
+$guestPrice = $activity->price_guest ? Str::price($activity->price_guest) : 'gratis';
 @endphp
 
 @section('title', "{{ $activity->name }} - Activity - Gumbo Millennium")
@@ -58,7 +49,7 @@ $guestPrice = $activity->price_guest ? $euro($activity->price_guest) : 'gratis';
     2. Not verified (the user needs a valid email adress to sign up)
     3. Not enrolled, but able to enroll (enrollment_start < time < enrollment_end)
     4. Not enrolled, and enrollments are closed (time < enrollment_start || time > enrollment_end)
-    5. Not enrolled, but locked out of enrollment (status->locked === true)
+    5. Not enrolled, but locked out of enrollment (status->locked === true) [TODO]
     6. Enrolled, and able to unenroll (before enrollment_end date)
     7. Enrolled, unable to unenroll (after enrollment_end date)
 --}}
@@ -66,29 +57,26 @@ $guestPrice = $activity->price_guest ? $euro($activity->price_guest) : 'gratis';
 $viewBase = "activities.bits";
 // Scenario (1)
 $viewName = "{$viewBase}.guest";
-if ($user !== null) {
+if ($user) {
     // Scenario (2)
     $viewName = "{$viewBase}.verify";
-    if ($user->hasPermissionTo('verified')) {
+    if ($user->hasVerifiedEmail()) {
         // Scnenario (3)
         $viewName = "{$viewBase}.enroll-open";
-        if ($status->enrolled && $activity->enrollment_end < now()) {
+        if ($is_enrolled && $activity->enrollment_end < now()) {
             // Scenario (7)
             $viewName = "{$viewBase}.unenroll-closed";
-        } elseif ($status->enrolled) {
+        } elseif ($is_enrolled) {
             // Scenario (6)
             $viewName = "{$viewBase}.unenroll-open";
         } elseif ($activity->enrollment_end < now() || $activity->enrollment_start > now()) {
             // Scenario (4)
             $viewName = "{$viewBase}.enroll-closed";
-        } elseif ($status->locked) {
-            // Scenario (5)
-            $viewName = "{$viewBase}.enroll-locked";
         }
     }
 }
 
-$viewData = ['activity' => $activity, 'status' => $status];
+$viewData = ['activity' => $activity];
 @endphp
 
 @include($viewName, $viewData)

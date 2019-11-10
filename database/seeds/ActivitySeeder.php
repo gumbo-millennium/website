@@ -10,6 +10,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 class ActivitySeeder extends Seeder
 {
@@ -18,9 +19,10 @@ class ActivitySeeder extends Seeder
      *
      * @param string $slug
      * @param array $args
+     * @param bool $withEnrollments Automatically register some users?
      * @return Activity|null
      */
-    private function safeCreate(string $slug, array $args): ?Activity
+    private function safeCreate(string $slug, array $args, bool $withEnrollments = true): ?Activity
     {
         // Lookup slug
         if (Activity::whereSlug($slug)->exists()) {
@@ -34,7 +36,18 @@ class ActivitySeeder extends Seeder
 
         // Get a random number of users in a random order
         $count = app(Faker::class)->numberBetween(2, User::count());
-        $users = User::inRandomOrder()->take($count)->get();
+
+        // make sure we don't overpopulate the event
+        if ($activity->seats && ($activity->seats * 0.8) < $count) {
+            $count = (int) $activity->seats * 0.8;
+        }
+
+        // Find the $count numebr of users
+        $users = User::query()
+            ->where('email', 'NOT LIKE', '%@example.gumbo-millennium.nl')
+            ->inRandomOrder()
+            ->take($count)
+            ->get();
 
         // Pair each user with the activity
         foreach ($users as $user) {
@@ -88,6 +101,9 @@ class ActivitySeeder extends Seeder
 
         // Create permission test events
         $this->seedBasicAccessEvent();
+
+        // Create payments events
+        $this->seedPaymentTest();
     }
 
     /**
@@ -210,9 +226,8 @@ class ActivitySeeder extends Seeder
     }
 
     /**
-     * Creates two events, one for the 'lhw' committee to test
-     * access per group, and one for the `event-owner@example.com`
-     * user to test user-level access
+     * Creates an event on the lhw role, to test role-level
+     * access
      *
      * @return void
      */
@@ -226,9 +241,53 @@ class ActivitySeeder extends Seeder
         // LHW event
         $this->safeCreate("lhw-{$startDate->year}", [
             'name' => 'Landhuisweekend',
-            'start_date' => $aprilWeek,
+            'start_date' => $startDate,
             'end_date' => $endDate,
             'role_id' => Role::findByName('lhw')->id
         ]);
+    }
+
+    /**
+     * Seeds a bunch of events that start soon
+     *
+     * @return void
+     */
+    private function seedPaymentTest(): void
+    {
+        // [     slug     ] => [public, price-member, price-guest]
+        $sets = [
+            'private-free' => [false, null, null],
+            'private-paid' => [false, 1500, null],
+            'public-free' => [true, null, null],
+            'public-member' => [true, null, 1500],
+            'public-paid' => [true, 1500, 1500],
+            'public-discount' => [true, 1500, 3000]
+        ];
+
+        // Date
+        $startDate = today()->addWeek(1)->setTime(20, 0, 0);
+        $endDate = (clone $startDate)->addHour(3);
+
+        // Iterate
+        foreach ($sets as $slug => list($paid, $price, $priceGuest)) {
+            $name = Str::studly($slug);
+            $this->safeCreate($slug, [
+                'name' => "[test] {$name}",
+                'tagline' => 'Ik ben een test',
+                'statement' => Str::limit($name, 16, ''),
+                'start_date' => $startDate,
+                'enrollment_start' => today(),
+                'enrollment_end' => $startDate,
+                'end_date' => $endDate,
+                'is_public' => $paid,
+                'price_member' => $price,
+                'price_guest' => $priceGuest,
+                'seats' => 15
+            ]);
+
+            // Increase both
+            $startDate = $startDate->addDay();
+            $endDate = $endDate->addDay();
+        }
     }
 }

@@ -6,7 +6,7 @@
 <form action="{{ route('enroll.create', ['activity' => $activity]) }}" method="post">
     @csrf
     <button class="btn btn-brand" style="submit">Inschrijven</button>
-    @if ($status->paid)
+    @if ($is_paid)
     <p class="text-gray-600">Voor deze inschrijving is betaling vereist.</p>
     @endif
 </form>

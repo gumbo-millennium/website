@@ -47,6 +47,12 @@ class CustomerUpdateJob implements ShouldQueue
         $this->create($this->user);
     }
 
+    /**
+     * Update the existing user
+     *
+     * @param User $user
+     * @return bool
+     */
     public function update(User $user): bool
     {
         try {
@@ -85,5 +91,6 @@ class CustomerUpdateJob implements ShouldQueue
 
         // Assign user
         $user->stripe_customer_id = $customer->id;
+        $user->save();
     }
 }

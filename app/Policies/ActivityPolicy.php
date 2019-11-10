@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Activity;
+use App\Models\States\Enrollment\Cancelled;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -50,7 +51,7 @@ class ActivityPolicy
      * @param  User  $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         // Anyone can view activities
         return $user->can('manage', Activity::class);
@@ -64,10 +65,10 @@ class ActivityPolicy
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function view(User $user, Activity $activity)
+    public function view(?User $user, Activity $activity): bool
     {
         // Anyone can see activities
-        return true;
+        return $activity->is_public || ($user && $user->is_member);
     }
 
     /**
@@ -77,7 +78,7 @@ class ActivityPolicy
      * @param Activity $activity
      * @return bool
      */
-    public function enroll(User $user, Activity $activity)
+    public function enroll(User $user, Activity $activity): bool
     {
         // Non-public activities cannot be enrolled by guests
         if (!$user->is_member && !$activity->is_public) {
@@ -108,7 +109,7 @@ class ActivityPolicy
      * @param  User  $user
      * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         // Check creation
         return $user->can('admin', Activity::class);
@@ -121,7 +122,7 @@ class ActivityPolicy
      * @param  Activity  $activity
      * @return bool
      */
-    public function update(User $user, Activity $activity)
+    public function update(User $user, Activity $activity): bool
     {
         // Can't edit activities that have ended
         if ($activity->end_date < now()) {
@@ -139,7 +140,7 @@ class ActivityPolicy
      * @param  Activity  $activity
      * @return bool
      */
-    public function cancel(User $user, Activity $activity)
+    public function cancel(User $user, Activity $activity): bool
     {
         // Can't cancel activities that have already started
         if ($activity->start_date < now()) {
@@ -157,7 +158,7 @@ class ActivityPolicy
      * @param  Activity  $activity
      * @return bool
      */
-    public function delete(User $user, Activity $activity)
+    public function delete(User $user, Activity $activity): bool
     {
         // Can't delete activities that have already started
         if ($activity->start_date < now()) {
@@ -180,7 +181,7 @@ class ActivityPolicy
      * @param  Activity  $activity
      * @return bool
      */
-    public function restore(User $user, Activity $activity)
+    public function restore(User $user, Activity $activity): bool
     {
         // Can't restore activities that happened in the past
         if ($activity->start_date < now()) {
@@ -198,7 +199,7 @@ class ActivityPolicy
      * @param  Activity  $activity
      * @return bool
      */
-    public function forceDelete(User $user, Activity $activity)
+    public function forceDelete(User $user, Activity $activity): bool
     {
         // Disallow deletion if the user can't manage
         if ($user->can('manage', $activity)) {
@@ -218,7 +219,7 @@ class ActivityPolicy
      * @param Activity $activity
      * @return bool
      */
-    public function addEnrollment(User $user, Activity $activity)
+    public function addEnrollment(User $user, Activity $activity): bool
     {
         return $user->can('manage', $activity);
     }

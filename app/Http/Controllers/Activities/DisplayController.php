@@ -26,12 +26,22 @@ class DisplayController extends Controller
      */
     public function index(Request $request)
     {
+        $user = $request->user();
         // Get all future events by default
-        $query = Activity::where('end_date', '>', now());
+        $query = Activity::query()
+            ->where('end_date', '>', now())
+            ->orderBy('start_date');
 
         // Get all past events instead
         if ($request->has('past')) {
-            $query = Activity::where('end_date', '<=', now());
+            $query = Activity::query()
+                ->where('end_date', '<=', now())
+                ->orderByDesc('end_date');
+        }
+
+        // Restrict to public for logged out users
+        if (!$user || !$user->is_member) {
+            $query = $query->whereIsPublic('1');
         }
 
         // Paginate the response
@@ -40,7 +50,7 @@ class DisplayController extends Controller
         // Collect an empty list of enrollments
         $enrollments = collect();
 
-        if ($request->user) {
+        if ($user) {
             // Get all user enrollments, indexed by the activity_id
             $enrollments = Enrollment::query()
                 ->whereUserId($request->user()->id)
@@ -66,6 +76,9 @@ class DisplayController extends Controller
      */
     public function show(Request $request, Activity $activity)
     {
+        // Ensure the user can see this
+        $this->authorize('view', $activity);
+
         // Load enrollments
         $activity->load(['enrollments']);
 

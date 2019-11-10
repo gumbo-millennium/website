@@ -1,11 +1,10 @@
 @php
-$user = auth()->user();
 $menuItems = [
     '/' => 'Homepage',
     '/news' => 'Nieuws',
     '/activities' => 'Activiteiten'
 ];
-if ($user = request()->user() && $user->can('viewPublic', App\Models\File::class)) {
+if ($user && $user->can('viewPublic', App\Models\File::class)) {
     $menuItems['/files'] = 'Documenten';
 }
 @endphp

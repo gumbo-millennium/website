@@ -87,7 +87,7 @@ $factory->define(Activity::class, function (Faker $faker) use ($buildFakeEditorJ
 
         // Seats
         'seats' => $memberSeats,
-        'public_seats' => $guestSeats,
+        'is_public' => $faker->boolean(0.1),
 
         // Pricing
         'price_member' => $memberPrice,

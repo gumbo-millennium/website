@@ -10,6 +10,13 @@ namespace App\Models\States\Enrollment;
 class Paid extends Confirmed
 {
     /**
+     * Name of the state, as human-readable version
+     *
+     * @var string
+     */
+    public static $name = 'paid';
+
+    /**
      * @inheritDoc
      */
     public function getTitleAttribute(): string

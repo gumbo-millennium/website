@@ -18,6 +18,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
+ *
+ * @property \App\Models\States\Enrollment\State $state
  */
 class Enrollment extends UuidModel
 {
@@ -51,7 +53,8 @@ class Enrollment extends UuidModel
     protected $dates = [
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'expire',
     ];
 
     /**

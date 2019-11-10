@@ -19,14 +19,15 @@ class UserSeeder extends Seeder
      * @param array $roles
      * @return void
      */
-    private function makeUser(string $email, string $name, array $roles): void
+    private function makeUser(string $slug, string $name, array $roles): void
     {
         $user = User::withTrashed()->updateOrCreate([
-            'email' => $email
+            'email' => "{$slug}@example.gumbo-millennium.nl"
         ], [
             'first_name' => $name,
             'last_name' => 'Gumbo (test)',
-            'password' => Hash::make('Gumbo')
+            'password' => Hash::make('Gumbo'),
+            'email_verified_at' => now(),
         ]);
         $user->assignRole($roles);
 
@@ -43,13 +44,13 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Add test users
-        $this->makeUser('board@example.com', 'Bestuur', ['member', 'board']);
-        $this->makeUser('ac@example.com', 'AC', ['member', 'ac']);
-        $this->makeUser('dc@example.com', 'DC', ['member', 'dc']);
-        $this->makeUser('lhw@example.com', 'LHW', ['member', 'lhw']);
-        $this->makeUser('gumbo@example.com', 'Lid', ['member']);
-        $this->makeUser('guest@example.com', 'Gast', ['guest']);
-        $this->makeUser('event-owner@example.com', 'Event Owner', ['member']);
+        $this->makeUser('board', 'Bestuur', ['member', 'board']);
+        $this->makeUser('ac', 'AC', ['member', 'ac']);
+        $this->makeUser('dc', 'DC', ['member', 'dc']);
+        $this->makeUser('lhw', 'LHW', ['member', 'lhw']);
+        $this->makeUser('gumbo', 'Lid', ['member']);
+        $this->makeUser('guest', 'Gast', ['guest']);
+        $this->makeUser('event-owner', 'Event Owner', ['member']);
 
         // Add more users
         factory(User::class, 25)->create();

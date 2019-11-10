@@ -17,10 +17,6 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::middleware('wordpress')->prefix('wordpress/')->name('wordpress.')->group(function () {
-    Route::get('menu', 'WordPressController@menu')->name('menu');
-});
-
 // Plazacam submission
 Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
     ->middleware('signed')

@@ -179,12 +179,6 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->searchable()
                 ->nullable(),
-
-            BelongsTo::make('Gebruiker', 'user', User::class)
-                ->help('Gebruiker deze activiteit beheert')
-                ->hideFromIndex()
-                ->searchable()
-                ->nullable(),
         ];
     }
 

@@ -3,29 +3,21 @@
 @section('title', 'Activity overview - Gumbo Millennium')
 
 @section('content')
-<h1>My enrollments</h1>
+<h1>{{ $activity->name }} - Enrollment</h1>
 
-<p>You've been enrolled into {{ $count }} enrollments.</p>
+<p>Your enrollment is currently <em>{{ $enrollment->state->title }}</em>.</p>
 
-<ul style="list-style: '- ' outside;" class="pl-2">
-    @foreach ($enrollments as $enrollment)
-    @php
-    // Get activity and URL
-    $activity = $enrollment->activity;
-    $url = route('enrollments.show', compact('activity'));
+@if (!$enrollment->state->isStable())
+<div class="my-2 px-4 py-2 bg-red-100 text-red-800 border rounded border-red-600 inline-block">
+    <strong>Let op</strong>: Je inschrijving verloopt over {{ $enrollment->expire->diffForHumans(now(), \Carbon\CarbonInterface::DIFF_ABSOLUTE) }}.
+</div>
+@endif
 
-    // Get dates for the activity and the enrollment
-    $enrollDate = $enrollment->created_at->isoFormat('D MMM Y, HH:mm');
-    $enrollDateIso = $enrollment->created_at->toIso8601String();
-    $activityDate = $activity->created_at->isoFormat('D MMM Y, HH:mm');
-    $activityDateIso = $activity->created_at->toIso8601String();
-    @endphp
-    <li class="pl-2 pb-4">
-        <a href="{{ $url }}">{{ $activity->name }}</a><br />
-        Datum: <time datetime="{{ $activityDateIso }}">{{ $activityDate }}</time><br />
-        Ingeschreven op: <time datetime="{{ $enrollDateIso }}">{{ $enrollDate }}</time><br />
-        Status: {{ $enrollment->state->name }}
-    </li>
-    @endforeach
-</ul>
+@if ($enrollment->state == 'created' && $activity->form !== null)
+<p><a href="{{ route('enroll.edit', compact('activity')) }}">Supply enrollment details</a></p>
+@elseif ($enrollment->state == 'seeded' && $enrollment->price > 0)
+<p><a href="{{ route('payment.start', compact('activity')) }}">Pay {{ Str::price($enrollment->price/100) }} via iDEAL</a></p>
+@elsecan('unenroll', $enrollment)
+</p><p><a href="{{ route('enroll.delete', compact('activity')) }}">Unenroll</a></p>
+@endif
 @endsection

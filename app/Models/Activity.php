@@ -190,7 +190,7 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         // Only if there are actually places
         if ($this->seats === null) {
-            return INF;
+            return PHP_INT_MAX;
         }
 
         // Get enrollment count
@@ -199,7 +199,7 @@ class Activity extends SluggableModel implements AttachableInterface
             ->count();
 
         // Subtract active enrollments from active seats
-        return max(0, $this->seats - $occupied);
+        return (int) max(0, $this->seats - $occupied);
     }
 
     /**

@@ -41,6 +41,14 @@ class PaymentController extends Controller
     use ProvidesBankList;
 
     /**
+     * Require verified, logged-in users
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
+
+    /**
      * Show the form to choose a bank for the iDEAL payment
      *
      * @return \Illuminate\Http\Response
@@ -54,10 +62,13 @@ class PaymentController extends Controller
         }
 
         // Redirect to the display view if the user is already enrolled
-        if ($activity->status->is(Paid::class)) {
+        if ($enrollment->state->is(Paid::class)) {
             flash('Je hebt al betaald. Je inschrijving is bevestigd.', 'info');
             return redirect()->route('enroll.edit', compact('activity'));
         }
+
+        $banks = $this->getBankList();
+        return view('payment.form', compact('enrollment', 'activity', 'banks'));
     }
 
     /**
@@ -66,7 +77,7 @@ class PaymentController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store(Request $request, Activity $activity)
+    public function start(Request $request, Activity $activity)
     {
         // Get enrollment, or a fully supplied redirect.
         $enrollment = $this->findValidEnrollmentOrRedirect($request, $activity);
@@ -76,12 +87,20 @@ class PaymentController extends Controller
 
         // Get bank list
         $bankList = $this->getBankList();
+        $bankKeys = array_keys($bankList);
+        $rules = [
+
+            'bank' => ['required', 'string', Rule::in($bankKeys)],
+            'accept' => 'required|accepted'
+        ];
+
+        logger()->debug("Got rules", array_merge(compact('bankList', 'rules', 'request', 'bankKeys')));
 
         // Validate the request
-        $valid = Validator::make($request->all(), [
-            'bank' => ['required', 'string', Rule::in($bankList)],
-            'terms' => 'required|accepted'
-        ])->validate();
+        $valid = $this->validate($request, $rules, [], [
+            'bank' => 'bank naam',
+            'accept' => 'voorwaarden'
+        ]);
 
         // Fetch or create payment intent
         $intent = $this->getPaymentIntent($enrollment);
@@ -128,28 +147,54 @@ class PaymentController extends Controller
      */
     public function complete(Request $request, Activity $activity)
     {
+        // Get user
+        $user = $request->user();
+
         // Get enrollment, or a fully supplied redirect.
         $enrollment = $this->findValidEnrollmentOrRedirect($request, $activity);
         if ($enrollment instanceof RedirectResponse) {
+            logger()->info('Recieved redirect', ['redirect' => $enrollment]);
             return $enrollment;
         }
 
         // Check if the enrollment is marked completed (via webhooks)
         if ($enrollment->state->is(Paid::class)) {
+            logger()->notice('iDEAL payment for {enrollment} with ID {code} successful', [
+                'enrollment' => $enrollment,
+                'activity' => $activity,
+                'user' => $enrollment->user,
+                'code' => $enrollment->payment_intent,
+            ]);
             flash("Je bent succesvol ingeschreven voor {$activity->title}.", 'success');
             return redirect()->route('activity.show', compact('activity'));
         }
 
         // Check if the enrollment is cancelled
         if ($enrollment->state->is(Cancelled::class)) {
+            logger()->notice('iDEAL payment for {enrollment} with ID {code} was cancelled!', [
+                'enrollment' => $enrollment,
+                'activity' => $activity,
+                'user' => $enrollment->user,
+                'code' => $enrollment->payment_intent,
+            ]);
             return redirect()->route('activity.show', compact('activity'));
         }
 
+        // Log the API call
+        logger()->info('Starting validate of {code} via Stripe.', [
+            'enrollment' => $enrollment,
+            'activity' => $activity,
+            'user' => $enrollment->user,
+            'code' => $enrollment->payment_intent,
+        ]);
+
         // No information yet about the status. Check the Payment Intent
         $intent = $this->getPaymentIntent($enrollment);
+        logger()->notice('Received intent {intent} for {enrollment}.', compact('intent', 'enrollment'));
 
         // Payment is processing, stand by.
         if ($intent->status === PaymentIntent::STATUS_PROCESSING) {
+            logger()->info('iDEAL transaction still pending.', compact('intent'));
             return response()
                 ->view('activities.payment-wait')
                 ->header('Refresh', '10');
@@ -157,16 +202,30 @@ class PaymentController extends Controller
 
         // Payment complete
         if ($intent->status === PaymentIntent::STATUS_SUCCEEDED) {
+            logger()->info('iDEAL transaction completed.', compact('intent'));
+
+            // Mark as paid
             $enrollment->state->transitionTo(Paid::class);
+            $enrollment->save();
+
+            // Flash message and continue
             flash("Je bent succesvol ingeschreven voor {$activity->title}.", 'success');
             return redirect()->route('activity.show', compact('activity'));
         }
 
         // The intent was cancelled (by user or system)
         if ($intent->status === PaymentIntent::STATUS_CANCELED) {
+            logger()->info('iDEAL transaction cancelled.', compact('intent'));
+
+            // Flash cancelled message
             flash('De betaling is geannuleerd. Probeer het opnieuw', 'warning');
             return redirect()->route('enroll.show', compact('activity'));
         }
+
+        logger()->warning(
+            'Received unknown response from Stripe for iDEAL request',
+            compact('intent', 'enrollment', 'user', 'activity')
+        );
 
         // Redirect to payment form
         flash('Er is iets fout gegaan, probeer het later opnieuw', 'error');

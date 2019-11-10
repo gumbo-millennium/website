@@ -152,7 +152,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     public function getIsMemberAttribute(): bool
     {
-        return $this->hasPermissionTo('member');
+        return $this->hasRole('member');
     }
 
     /**

@@ -4,7 +4,6 @@ $suggestions = [
     'nieuwsartikelen',
     'pagina\'s'
 ];
-$user = auth()->user();
 if ($user && $user->can('viewPublic', App\Models\File::class)) {
     array_unshift($suggestions, 'bestanden');
 }

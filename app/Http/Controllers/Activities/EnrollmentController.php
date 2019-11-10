@@ -6,11 +6,14 @@ namespace App\Http\Controllers\Activities;
 
 use App\Http\Controllers\Activities\Traits\ConsistentRedirects;
 use App\Http\Controllers\Activities\Traits\CreatePaymentIntents;
+use App\Http\Controllers\Activities\Traits\HandlesPaymentIntents;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
+use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
+use App\Models\States\Enrollment\Seeded;
 use App\Models\User;
 use App\Service\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
@@ -29,6 +32,15 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class EnrollmentController extends Controller
 {
     use ConsistentRedirects;
+    use HandlesPaymentIntents;
+
+    /**
+     * Require verified, logged-in users
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
 
     /**
      * Lists all enrollments
@@ -51,52 +63,9 @@ class EnrollmentController extends Controller
             ->with(['activity']);
 
         // Return view
-        return view('enrollment.show', [
+        return view('enrollment.index', [
             'enrollments' => $query->paginate(20)
         ]);
-    }
-
-    /**
-     * Creates the new enrollment for the activity
-     *
-     * @param Request $request
-     * @param Activity $activity
-     * @return Response
-     */
-    public function store(Request $request, Activity $activity)
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        // Redirect to the display view if the user is already enrolled
-        if (Enrollment::findActive($user, $activity)) {
-            return redirect()->route('enroll.edit', compact('activity'));
-        }
-
-        if (!$user->can('enroll', $activity)) {
-            return redirect()->route('activity.show', compact('activity'));
-        }
-
-        // Create new enrollment
-        $enrollment = new Enrollment();
-
-        // Assign activity and user
-        $enrollment->activity()->associate($activity);
-        $enrollment->user()->associate($user);
-
-        // Determine price, converting a "0" value to null.
-        $enrollment->price = $user->is_member ? $activity->price_member : $activity->price_guest;
-        if (!is_int($enrollment->price) || $enrollment->price <= 0) {
-            $enrollment->price = null;
-        }
-
-        // Redirect to form page
-        if ($activity->form !== null) {
-            return redirect()->route('enroll.edit', compact('activity'));
-        }
-
-        // Redirect to next page
-        $this->redirectCreate($enrollment);
     }
 
     /**
@@ -115,10 +84,125 @@ class EnrollmentController extends Controller
         }
 
         // Return JSON response
-        return response()->json([
+        return view('enrollments.show', [
             'activity' => $activity,
             'enrollment' => $enrollment
         ]);
+    }
+
+    /**
+     * Creates the new enrollment for the activity
+     *
+     * @param Request $request
+     * @param Activity $activity
+     * @return Response
+     */
+    public function store(Request $request, Activity $activity)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        // Redirect to the display view if the user is already enrolled
+        if (Enrollment::findActive($user, $activity)) {
+            logger()->info(
+                'User {user} tried to enroll on {activity}, but is already enrolled.',
+                compact('user', 'activity')
+            );
+            return redirect()->route('enroll.edit', compact('activity'));
+        }
+
+        // Check policy
+        if (!$user->can('enroll', $activity)) {
+            logger()->info(
+                'User {user} tried to enroll on {activity}, but is not allowed to.',
+                compact('user', 'activity')
+            );
+            return redirect()->route('activity.show', compact('activity'));
+        }
+
+        // Create new enrollment
+        $enrollment = new Enrollment();
+
+        // Assign activity and user
+        $enrollment->activity()->associate($activity);
+        $enrollment->user()->associate($user);
+
+        // Determine price, converting a "0" value to null.
+        $enrollment->price = $user->is_member ? $activity->price_member : $activity->price_guest;
+        if (!is_int($enrollment->price) || $enrollment->price <= 0) {
+            $enrollment->price = null;
+        }
+
+        // Debug
+        $price = $enrollment->price;
+        logger()->debug(
+            'Assigned enrollment price of {price}.',
+            compact('user', 'activity', 'price')
+        );
+
+        // Save the enrollment
+        $enrollment->save();
+
+        // Debug
+        logger()->info(
+            'Enrolled user {user} on {activity}. ID is {enrollment-id}.',
+            [
+                'user' => $user,
+                'activity' => $activity,
+                'enrollment' => $enrollment,
+                'enrollment-id' => $enrollment->id,
+            ]
+        );
+
+        // Check for a payment requirement and pre-create Payment Intent
+        if ($enrollment->price) {
+            try {
+                // Create intent
+                $intent = $this->getPaymentIntent($enrollment);
+
+                // Log result
+                logger()->info('Created Stripe payment intent {intent}.', [
+                    'intent' => $intent
+                ]);
+
+                // Assign and save
+                $enrollment->payment_intent = $intent->id;
+                $enrollment->save();
+            } catch (ApiErrorException $e) {
+                // Log error
+                logger()->error("Recieved API error whilst creating intent for {enrollment}", [
+                    'exception' => $e,
+                    'enrollment' => $enrollment
+                ]);
+                // Don't push error
+            }
+        }
+
+        // Redirect to form page if one is present
+        if ($activity->form !== null) {
+            logger()->debug('Form present, redirecting to edit');
+            return redirect()->route('enroll.edit', compact('activity'));
+        }
+
+        // No form present, mutate the state
+        $enrollment->data = [];
+        $enrollment->state->transitionTo(Seeded::class);
+        $enrollment->save();
+
+        // Forward to payment
+        if ($enrollment->price > 0) {
+            logger()->debug('Price present, redirecting to edit');
+
+            flash('Je plek is gereserveerd. Rond de betaling binnen 72 uur af om de inschrijving te bevestigen.', 'info');
+            return redirect()->route('payment.start', compact('activity'));
+        }
+
+        // Mark as confirmed
+        $enrollment->state->transitionTo(Confirmed::class);
+        $enrollment->save();
+
+        // Redirect back to activity
+        return $this->redirect($enrollment);
     }
 
     /**
@@ -141,7 +225,7 @@ class EnrollmentController extends Controller
             return $this->redirect($enrollment);
         }
 
-        // Redirect to payment provider or details if the event is in the past.
+        // Ask for a redirect if the event is in the past.
         if ($activity->end_date < now()) {
             return $this->redirect($enrollment);
         }
@@ -199,11 +283,81 @@ class EnrollmentController extends Controller
 
         // Redirect to the payment provider if the enrollment is not confirmed yet and
         // has a price > 0. This allows users to pay after the activity has taken place.
-        if (!($enrollment->state instanceof Confirmed) && $enrollment->price) {
-            return redirect()->route('payments.start', compact('activity'));
+        if ($enrollment->price > 0 && $enrollment->state->isOneOf(Paid::class, Cancelled::class)) {
+            if ($enrollment->activity->end_date < now()) {
+                flash(
+                    'Het evenement is afgelopen, maar je moet nog betalen. Gelieve dat meteen even te doen.',
+                    'warning'
+                );
+            }
+            return redirect()->route('payment.start', compact('activity'));
         }
 
         // In all other cases (including past-events), redirect the user to the enrollment details
         return redirect()->route('enroll.show', compact('activity'));
+    }
+
+    /**
+     * Unenroll form
+     *
+     * @param Request $request
+     * @param Activity $activity
+     * @return Response
+     */
+    public function delete(Request $request, Activity $activity)
+    {
+        // Get enrollment, or a fully supplied redirect.
+        $enrollment = $this->findActiveEnrollmentOrRedirect($request, $activity);
+        if ($enrollment instanceof RedirectResponse) {
+            return $enrollment;
+        }
+
+        // Ask policy
+        if (!$request->user()->can('unenroll', $enrollment)) {
+            flash('Je kan je niet meer uitschrijven voor dit evenement', 'info');
+            return redirect()->route('enroll.show', compact('activity'));
+        }
+
+        // Show form
+        return view('enrollments.cancel', compact('activity', 'enrollment'));
+    }
+
+    /**
+     * Confirmed unenroll requst
+     *
+     * @param Request $request
+     * @param Activity $activity
+     * @return Response
+     */
+    public function destroy(Request $request, Activity $activity)
+    {
+        $user = $request->user();
+        // Get enrollment, or a fully supplied redirect.
+        $enrollment = $this->findActiveEnrollmentOrRedirect($request, $activity);
+        if ($enrollment instanceof RedirectResponse) {
+            return $enrollment;
+        }
+
+        // Ask policy
+        if (!$user->can('unenroll', $enrollment)) {
+            flash('Je kan je niet meer uitschrijven voor dit evenement', 'info');
+            return redirect()->route('enroll.show', compact('activity'));
+        }
+
+        // Check for an "agree" thing
+        $this->validate($request, [
+            'accept' => 'required|accepted'
+        ]);
+
+        // Log
+        logger()->info('Unenrolling {user} from {activity}', compact('user', 'activity', 'enrollment'));
+
+        // Transition to cancelled
+        $enrollment->state->transitionTo(Cancelled::class);
+        $enrollment->save();
+
+        // Done :)
+        flash("Je bent uitgeschreven voor {$activity->title}.", 'sucess');
+        return redirect()->route('activity.show', compact('activity'));
     }
 }

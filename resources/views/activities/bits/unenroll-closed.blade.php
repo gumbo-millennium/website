@@ -4,4 +4,4 @@
 --}}
 
 <p>Je bent <strong>ingeschreven</strong> voor {{ $activity->name }}.</p>
-<p class="text-red-700">Uitschrijven niet meer mogelijk</p>
+<p><a href="{{ route('enroll.show', compact('activity')) }}">Inschrijving beheren</a></p>

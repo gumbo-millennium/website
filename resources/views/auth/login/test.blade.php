@@ -1,7 +1,7 @@
 @if (file_exists('/.dockerenv') && app()->environment('local'))
 @php
 $possibleUsers = App\Models\User::query()
-->where('email', 'like', '%@example.com')
+->where('email', 'like', '%@example.gumbo-millennium.nl')
 ->orderBy('email', 'ASC')
 ->get();
 @endphp

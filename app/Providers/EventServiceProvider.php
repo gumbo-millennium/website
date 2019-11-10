@@ -2,7 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Activity;
+use App\Models\Enrollment;
+use App\Models\File;
 use App\Models\User;
+use App\Observers\ActivityObserver;
+use App\Observers\EnrollmentObserver;
+use App\Observers\FileObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered as RegisteredEvent;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -35,6 +41,9 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         // Register observers
+        Activity::observe(ActivityObserver::class);
+        Enrollment::observe(EnrollmentObserver::class);
+        File::observe(FileObserver::class);
         User::observe(UserObserver::class);
     }
 

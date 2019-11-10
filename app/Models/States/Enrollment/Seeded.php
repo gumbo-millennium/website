@@ -10,6 +10,13 @@ namespace App\Models\States\Enrollment;
 class Seeded extends State
 {
     /**
+     * Name of the state, as human-readable version
+     *
+     * @var string
+     */
+    public static $name = 'seeded';
+
+    /**
      * @inheritDoc
      */
     public function getTitleAttribute(): string

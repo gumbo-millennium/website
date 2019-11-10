@@ -20,8 +20,8 @@ Route::get('/news', 'NewsController@index')->name('news.index');
 Route::get('/news/{item}', 'NewsController@show')->name('news.show');
 
 // Add search route
-Route::get('/search', 'SearchController@index')->name('search-form');
-Route::get('/search/{query}', 'SearchController@search')->name('search');
+// Route::get('/search', 'SearchController@index')->name('search-form');
+// Route::get('/search/{query}', 'SearchController@search')->name('search');
 
 /**
  * Plazacam routes
@@ -75,10 +75,10 @@ Route::prefix('enroll')->name('enroll.')->group(function () {
     Route::get('/me', 'Activities\\EnrollmentController@index')->name('index');
 
     // Enroll status view
-    Route::post('/{activity}', 'Activities\\EnrollmentController@show')->name('show');
+    Route::get('/{activity}', 'Activities\\EnrollmentController@show')->name('show');
 
     // Enroll start
-    Route::post('/{activity}/create', 'Activities\\EnrollmentController@create')->name('create');
+    Route::post('/{activity}/create', 'Activities\\EnrollmentController@store')->name('create');
 
     // Enroll update
     Route::get('/{activity}/update', 'Activities\\EnrollmentController@edit')->name('edit');
@@ -95,22 +95,22 @@ Route::prefix('enroll')->name('enroll.')->group(function () {
 /**
  * Enrollment payments
  */
-Route::prefix('enrollments/pay')->name('payments.')->group(function () {
+Route::prefix('enrollments/pay')->name('payment.')->group(function () {
     // Default route¸ redirect → my enrollments
-    Route::permanentRedirect('/', '/me');
+    Route::permanentRedirect('/', '/enroll/me');
 
     // Enroll start
-    Route::post('/{activity}/start', 'Activities\\PaymentController@create')->name('start');
+    Route::get('/{activity}/start', 'Activities\\PaymentController@form')->name('start');
 
     // Enroll start
-    Route::post('/{activity}/start', 'Activities\\PaymentController@store');
+    Route::post('/{activity}/start', 'Activities\\PaymentController@start');
 
     // Enroll update
     Route::get('/{activity}/complete', 'Activities\\PaymentController@complete')->name('complete');
 });
 
 /**
- * News (through WordPress posts)
+ * News
  */
 Route::prefix('news')->name('news.')->group(function () {
     // Main route

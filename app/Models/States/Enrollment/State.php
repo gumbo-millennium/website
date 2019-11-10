@@ -15,6 +15,15 @@ abstract class State extends BaseState
     use HasAttributes;
 
     /**
+     * States that are not eligible for automatic deletion
+     */
+    private const STABLE_STATES = [
+        Cancelled::class,
+        Confirmed::class,
+        Paid::class,
+    ];
+
+    /**
      * Returns a nice name for this object
      *
      * @return string
@@ -30,4 +39,14 @@ abstract class State extends BaseState
      * @return string
      */
     abstract public function getTitleAttribute(): string;
+
+    /**
+     * Returns if the enrollment is able to expire in this state
+     *
+     * @return bool
+     */
+    public function isStable(): bool
+    {
+        return $this->isOneOf(self::STABLE_STATES);
+    }
 }

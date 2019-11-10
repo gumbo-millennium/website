@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities\Traits;
 
 use App\Models\Enrollment;
-use App\Service\StripeErrorService;
-use Stripe\Exception\ApiErrorException;
+use Illuminate\Support\Str;
 
 /**
  * Handles preparing data for Stripe

@@ -10,6 +10,13 @@ namespace App\Models\States\Enrollment;
 class Cancelled extends State
 {
     /**
+     * Name of the state, as human-readable version
+     *
+     * @var string
+     */
+    public static $name = 'cancelled';
+
+    /**
      * @inheritDoc
      */
     public function getTitleAttribute(): string

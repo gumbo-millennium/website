@@ -15,6 +15,7 @@ class UserObserver
      */
     public function created(User $user)
     {
+        // Create a customer on Stripe 
         dispatch(new CustomerUpdateJob($user));
     }
 
@@ -28,6 +29,7 @@ class UserObserver
     {
         // Trigger update if any name was changed, or the email address
         if ($user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
+            // Create a customer on Stripe 
             dispatch(new CustomerUpdateJob($user));
         }
     }

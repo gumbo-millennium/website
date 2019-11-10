@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\Payment;
+use App\Models\States\Enrollment\Cancelled;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -77,31 +78,57 @@ class EnrollmentPolicy
     }
 
     /**
-     * Determine whether the user can delete the enrollment.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return bool
-     */
-    public function delete(User $user, Enrollment $enrollment)
-    {
-        // Allow deletion if purging is allowed, or if the enrollment is aged
-        // enough.
-        return $user->hasPermissionTo(ActivityPolicy::PURGE_PERMISSION)
-            || $enrollment->payment()->count() === 0
-            || $enrollment->payment()->latest()->pluck('created_at')->first() < today()->subYears(7);
-    }
-
-    /**
-     * Never allow attaching payments
+     * Returns if the user can unenroll
      *
      * @param User $user
      * @param Enrollment $enrollment
      * @return bool
      */
-    public function addPayment(User $user, Enrollment $enrollment)
+    public function unenroll(User $user, Enrollment $enrollment): bool
     {
-        return $user->can('admin', Payment::class);
+        // Cancelling an already cancelled enrollment?
+        if ($enrollment->state->is(Cancelled::class)) {
+            logger()->info('Unenroll {enrollment} rejected. Already unenrolled.', compact('enrollment'));
+            return false;
+        }
+
+        // Get activity
+        $activity = $enrollment->activity;
+
+        // If the enrollment has not closed, unenrolling is fine.
+        if ($activity->enrollment_end > now()) {
+            logger()->info('Unenroll {enrollment} accepted. Within window.', compact('enrollment'));
+            return true;
+        }
+
+        // We're after the enrollment window. The only possible way to unenroll now
+        // is to have an expiring enrollment that's not stable (confirmed, paid or cancelled)
+        // yet.
+        $hasExpiration = $enrollment->expire !== null;
+        $isStable = $enrollment->state->isStable();
+        $judgement = $hasExpiration && !$isStable;
+
+        // Log as notice. We'll probably look for this.
+        logger()->notice('User {user} wanted to unenroll after window. Result {judgement}', [
+            'enrollment' => $enrollment,
+            'judgement' => $judgement,
+            'has-expiration' => $hasExpiration,
+            'is-stable' => $isStable
+        ]);
+
+        // Return judgement
+        return $judgement;
+    }
+
+    /**
+     * Determine whether the user can delete the enrollment.
+     *
+     * @return false
+     */
+    public function delete()
+    {
+        // Deleting permissions is not allowed
+        return false;
     }
 
     /**

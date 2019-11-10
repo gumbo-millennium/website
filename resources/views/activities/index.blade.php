@@ -13,12 +13,19 @@
     $startDate = $startTimestamp->isoFormat('D MMM Y');
     $startTime = $startTimestamp->isoFormat('HH:mm');
     $url = route('activity.show', ['activity' => $activity]);
+    $enrolled = 'Nee';
+    if (isset($enrollments[$activity->id])) {
+        $enrolled = 'Ja';
+        if (!$enrollments[$activity->id]->state->isStable()) {
+            $enrolled .= ", actie vereist!";
+        }
+    }
     @endphp
     <li class="pl-2 pb-4">
         <a href="{{ $url }}">{{ $activity->name }}</a><br />
         Datum: {{ $startDate }}<br />
         Tijd: {{ $startTime }}<br />
-        Ingeschreven: {{ $enrollments->has($activity->slug) ? 'Ja' : 'Nee' }}
+        Ingeschreven: {{ $enrolled }}
     </li>
     @endforeach
 </ul>

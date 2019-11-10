@@ -45,6 +45,10 @@ trait HandlesPaymentIntents
             'payment_method_types' => ['ideal'],
         ];
 
+        if ($enrollment->user->stripe_customer_id) {
+            $intentInfo['customer'] = $enrollment->user->stripe_customer_id;
+        }
+
         // Create Intent on the Stripe servers
         try {
             $intent = PaymentIntent::create(array_merge($sharedInfo, $intentInfo));
@@ -116,7 +120,7 @@ trait HandlesPaymentIntents
             // Confirm the intent on Stripe's end
             return $intent->confirm([
                 'payment_method' => $method->id,
-                'return_url' => route('payments.complete', ['activity' => $enrollment->activity]),
+                'return_url' => route('payment.complete', ['activity' => $enrollment->activity]),
             ]);
         } catch (ApiErrorException $error) {
             // Handle errors
