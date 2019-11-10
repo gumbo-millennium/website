@@ -14,7 +14,10 @@ use Stripe\Refund;
 
 class RefundEnrollment implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Undocumented variable

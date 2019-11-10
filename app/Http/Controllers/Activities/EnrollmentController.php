@@ -193,7 +193,10 @@ class EnrollmentController extends Controller
         if ($enrollment->price > 0) {
             logger()->debug('Price present, redirecting to edit');
 
-            flash('Je plek is gereserveerd. Rond de betaling binnen 72 uur af om de inschrijving te bevestigen.', 'info');
+            flash(
+                'Je plek is gereserveerd. Rond de betaling binnen 72 uur af om de inschrijving te bevestigen.',
+                'info'
+            );
             return redirect()->route('payment.start', compact('activity'));
         }
 

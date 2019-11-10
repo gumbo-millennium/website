@@ -23,14 +23,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Enrollment extends UuidModel
 {
-    // Use encryption helper to protect user details
     use HasEncryptedAttributes;
-
-    // Allow soft-deletion (prevents re-enrollment on paid activities)
-    use SoftDeletes;
-
-    // Assign states
     use HasStates;
+    use SoftDeletes;
 
     /**
      * @inheritDoc
