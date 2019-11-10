@@ -60,7 +60,6 @@ class Plugins {
         clean: true,
         imagemin: true,
         hardsource: true,
-        purgecss: true,
         stylelint: true,
         spritemap: false,
         eslint: true
@@ -89,24 +88,10 @@ class Plugins {
       )
     }
 
-    if (this.options.purgecss) {
-      this.libraryNames.push('purgecss')
-      this.libraries.push(
-        this.getPurgecss(buildOptions(this.options.purgecss))
-      )
-    }
-
     if (this.options.stylelint) {
       this.libraryNames.push('stylelint')
       this.libraries.push(
         this.getStylelint(buildOptions(this.options.stylelint))
-      )
-    }
-
-    if (this.options.spritemap) {
-      this.libraryNames.push('spritemap')
-      this.libraries.push(
-        this.getSpritemap(buildOptions(this.options.spritemap))
       )
     }
 
@@ -176,12 +161,12 @@ class Plugins {
         // Set default options
         const defaultOptions = {
           cleanOnceBeforeBuildPatterns: [
-            'fonts/',
-            'images/',
-            'svg/',
-            '*.js',
-            'css/*.css',
-            '*.json'
+            'public/fonts/',
+            'public/images/',
+            'public/svg/',
+            'public/**/*.js',
+            'public/**/*.css',
+            'public/**/*.json'
           ]
         }
 
@@ -232,31 +217,6 @@ class Plugins {
     })
   }
 
-  getPurgecss (options) {
-    // Function that creates the actual plugin
-    const pluginFunction = () => {
-      // Load dependencies
-      const PurgecssPlugin = require('purgecss-webpack-plugin')
-
-      // Set default options
-      const defaultOptions = {
-        paths: glob.sync(`${codeRoot}/resources/views/***/*.blade.php`)
-      }
-
-      // Create plugin
-      return new PurgecssPlugin(Object.assign(defaultOptions, options))
-    }
-
-    // Library object
-    const library = new Library({
-      dependencies: ['purgecss-webpack-plugin'],
-      plugins: pluginFunction
-    })
-
-    // Add library
-    return library
-  }
-
   getStylelint (options) {
     // Function that creates the actual plugin
     const pluginFunction = () => {
@@ -277,56 +237,6 @@ class Plugins {
     // Library object
     const library = new Library({
       dependencies: ['stylelint', 'stylelint-webpack-plugin'],
-      plugins: pluginFunction
-    })
-
-    // Add library
-    return library
-  }
-
-  getSpritemap (options) {
-    // Function that creates the actual plugin
-    const pluginFunction = () => {
-      // Load dependencies
-      const SvgSpritemapPlugin = require('svg-spritemap-webpack-plugin')
-
-      // Set default options
-      const defaultOptions = {
-        input: {
-          files: [
-            'resources/assets/icons/*.svg',
-            'resources/assets/icons/**/*.svg'
-          ]
-        },
-        output: {
-          filename: 'images/iconmap.svg',
-          svgo: true
-        },
-        sprite: {
-          prefix: 'icon-',
-          generate: {
-            title: true,
-            symbol: '-sym',
-            use: true,
-            view: true
-          }
-        }
-      }
-
-      // Build options
-      const builtOptions = Object.assign(defaultOptions, options)
-
-      // Extract input files and delete them from the options
-      const inputFiles = builtOptions.input.files
-      delete builtOptions.input.files
-
-      // Create plugin
-      return new SvgSpritemapPlugin(inputFiles, builtOptions)
-    }
-
-    // Library object
-    const library = new Library({
-      dependencies: ['svg-spritemap-webpack-plugin'],
       plugins: pluginFunction
     })
 

@@ -6,8 +6,10 @@ const WebpackStrip = require('strip-loader')
 
 // Inline Plugins
 require('laravel-mix-versionhash')
+require('laravel-mix-purgecss')
 require('./resources/js-build/plugins')
 
+// Plugins for PostCSS
 const postCssPlugins = [
   require('postcss-import'),
   require('tailwindcss')
@@ -23,17 +25,18 @@ mix.copy([
   'resources/assets/svg/**/*.svg'
 ], 'public/images')
 
-// Add Siero plugins
+// Add plugins
 mix.gumbo({
   eslint: {
     standard: true
-  },
-  spritemap: true,
-  purgecss: false
+  }
 })
 
 // Production code
 if (mix.inProduction()) {
+  // Enable purgecss
+  mix.purgeCss()
+
   // Add custom hash
   mix.versionHash({
     length: 8
