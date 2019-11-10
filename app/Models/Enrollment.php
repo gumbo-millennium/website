@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\States\Enrollment\Cancelled as CancelledState;
+use App\Models\States\Enrollment\Confirmed as ConfirmedState;
+use App\Models\States\Enrollment\Created as CreatedState;
+use App\Models\States\Enrollment\Paid as PaidState;
+use App\Models\States\Enrollment\Seeded as SeededState;
+use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\ModelStates\HasStates;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
@@ -18,6 +25,9 @@ class Enrollment extends UuidModel
 
     // Allow soft-deletion (prevents re-enrollment on paid activities)
     use SoftDeletes;
+
+    // Assign states
+    use HasStates;
 
     /**
      * @inheritDoc
@@ -61,6 +71,36 @@ class Enrollment extends UuidModel
 
         // Return it
         return $enroll;
+    }
+
+    /**
+     * Register the states an enrollment can have
+     *
+     * @return void
+     */
+    protected function registerStates(): void
+    {
+        // Register enrollment state
+        $this
+            ->addState('state', EnrollmentState::class)
+
+            // Default to Created
+            ->default(CreatedState::class)
+
+            // Create → Seeded
+            ->allowTransition(CreatedState::class, SeededState::class)
+
+            // Seeded → Confirmed
+            ->allowTransition(SeededState::class, ConfirmedState::class)
+
+            // Seeded, Confirmed → Paid
+            ->allowTransition([SeededState::class, ConfirmedState::class], PaidState::class)
+
+            // Created, Seeded, Confirmed, Paid → Cancelled
+            ->allowTransition(
+                [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
+                CancelledState::class
+            );
     }
 
     /**
