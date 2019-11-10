@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
@@ -52,6 +53,40 @@ class Enrollment extends UuidModel
         'updated_at',
         'deleted_at'
     ];
+
+    /**
+     * Finds the active enrollment for this activity
+     *
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment|null
+     */
+    public static function findActive(User $user, Activity $activity): ?Enrollment
+    {
+        return self::query()
+            ->withoutTrashed()
+            ->whereUserId($user->id)
+            ->whereActivityId($activity->id)
+            ->with(['activity'])
+            ->first();
+    }
+
+    /**
+     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
+     *
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment
+     * @throws NotFoundHttpException if there is no enrollment present
+     */
+    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
+    {
+        $result = self::findActive($user, $activity);
+        if ($result) {
+            return $result;
+        }
+        throw new NotFoundHttpException();
+    }
 
     /**
      * Create unsaved enrollment
