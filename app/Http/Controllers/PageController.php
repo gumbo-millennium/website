@@ -50,8 +50,8 @@ class PageController extends Controller
     {
         $page = Page::whereSlug($slug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
 
-        if (!$page) {
-            throw new NotFoundHttpException();
+        if (!$page || empty($page->html)) {
+            abort(404);
         }
 
         return view('content.page')->with([

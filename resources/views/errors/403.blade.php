@@ -1,8 +1,11 @@
-@extends('layout')
+@extends('errors::minimal')
 
-@section('content')
-<h1><span class="text-gray-600">403</span> Forbidden</h1>
+@section('title', __('Forbidden'))
+@section('code', '403')
+@section('message', __($exception->getMessage() ?: 'Forbidden'))
 
-<p>The resource at the requested URL is not accessible for you.</p>
-<p>Would you like to <a href="/">go to the homepage</a> instead?</p>
+@section('image')
+<div style="background-image: url({{ asset('/images/403.svg') }});"
+    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
+</div>
 @endsection

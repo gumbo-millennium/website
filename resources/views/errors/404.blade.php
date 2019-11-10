@@ -1,8 +1,11 @@
-@extends('layout')
+@extends('errors::illustrated-layout')
 
-@section('content')
-<h1><span class="text-gray-600">404</span> Not Found</h1>
+@section('title', __('Not Found'))
+@section('code', '404')
+@section('message', __('Not Found'))
 
-<p>The resource at the requested URL could not be found.</p>
-<p>Would you like to <a href="/">go to the homepage</a> instead?</p>
+@section('image')
+<div style="background-image: url({{ asset('/images/404.svg') }});"
+    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
+</div>
 @endsection

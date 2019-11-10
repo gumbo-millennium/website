@@ -1,7 +1,11 @@
-@extends('layout')
+@extends('errors::minimal')
 
-@section('content')
-<h1><span class="text-gray-600">500</span> Internal Server Error</h1>
+@section('title', __('Server Error'))
+@section('code', '500')
+@section('message', __('Server Error'))
 
-<p>Sorry, the server fucked up. Please try again later.</p>
+@section('image')
+<div style="background-image: url({{ asset('/images/500.svg') }});"
+    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
+</div>
 @endsection
