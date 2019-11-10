@@ -15,8 +15,6 @@ use Stripe\PaymentMethod;
  */
 trait HandlesPaymentMethods
 {
-    use FormatsStripeData;
-
     /**
      * Returns the payment method for this intent, which matches the
      * bank requested.
