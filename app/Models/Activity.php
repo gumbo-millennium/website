@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Models\States\Enrollment\Cancelled;
 use App\Models\Traits\HasEditorJsContent;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Config\Steps\ResizeStep;
@@ -194,6 +195,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Get enrollment count
         $occupied = $this->enrollments()
+            ->whereNotState('state', Cancelled::class)
             ->count();
 
         // Subtract active enrollments from active seats
