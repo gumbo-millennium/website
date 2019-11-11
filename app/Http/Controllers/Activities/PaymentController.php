@@ -9,7 +9,7 @@ use App\Http\Controllers\Activities\Traits\HandlesPaymentIntents;
 use App\Http\Controllers\Activities\Traits\HandlesPaymentMethods;
 use App\Http\Controllers\Activities\Traits\ProvidesBankList;
 use App\Http\Controllers\Controller;
-use App\Jobs\PaymentValidationJob;
+use App\Jobs\Stripe\PaymentValidationJob;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;

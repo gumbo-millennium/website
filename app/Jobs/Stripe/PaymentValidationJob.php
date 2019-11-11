@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Stripe;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Stripe\Exception\UnknownApiErrorException;
 use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class PaymentValidationJob implements ShouldQueue
 {
@@ -45,6 +46,11 @@ class PaymentValidationJob implements ShouldQueue
      */
     public function handle()
     {
+        // Abort if Stripe key isn't set
+        if (empty(Stripe::getApiKey())) {
+            return;
+        }
+
         // Shorthand
         $enrollment = $this->enrollment;
 

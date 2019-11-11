@@ -8,7 +8,7 @@ use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
 use Stripe\Charge;
-use Stripe\Event as StripeEvent;
+use Stripe\Event;
 
 /**
  * Handles completed charges.
@@ -22,9 +22,10 @@ class HandleChargeSucceeded extends StripeJob
     /**
      * Execute the job.
      *
+     * @param Event $event
      * @return void
      */
-    public function process(StripeEvent $event): void
+    public function process(Event $event): void
     {
         // Get object
         $charge = Charge::constructFrom($event->object);

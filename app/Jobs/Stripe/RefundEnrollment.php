@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Stripe\Exception\UnknownApiErrorException;
 use Stripe\PaymentIntent;
 use Stripe\Refund;
+use Stripe\Stripe;
 
 class RefundEnrollment implements ShouldQueue
 {
@@ -43,6 +44,11 @@ class RefundEnrollment implements ShouldQueue
      */
     public function handle()
     {
+        // Abort if Stripe key isn't set
+        if (empty(Stripe::getApiKey())) {
+            return;
+        }
+
         // Get enrollment and skip if it's not paid
         $enrollment = $this->enrollment;
         if (!$enrollment->price || empty($enrollment->payment_intent)) {

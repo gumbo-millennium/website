@@ -5,7 +5,7 @@ namespace App\Jobs\Stripe;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use Stripe\Charge;
-use Stripe\Event as StripeEvent;
+use Stripe\Event;
 
 /**
  * Handles refunds. Usually they're already handled, but
@@ -21,9 +21,10 @@ class HandleChargeRefunded extends StripeJob
     /**
      * Execute the job.
      *
+     * @param Event $event
      * @return void
      */
-    public function process(StripeEvent $event): void
+    public function process(Event $event): void
     {
         // Get object
         $charge = Charge::constructFrom($event->object);

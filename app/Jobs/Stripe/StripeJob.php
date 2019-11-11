@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Spatie\WebhookClient\Models\WebhookCall;
-use Stripe\Event as StripeEvent;
+use Stripe\Event;
 
 /**
  * Basic Stripe job, with a webhook
@@ -46,7 +46,7 @@ abstract class StripeJob implements ShouldQueue
     final public function handle(): void
     {
         // Get event
-        $event = StripeEvent::constructFrom($this->webhook->payload);
+        $event = Event::constructFrom($this->webhook->payload);
 
         // Ensure that the application is in the same mode as the source of the event.
         // This ensures that test data is never read by systems in production
@@ -64,8 +64,8 @@ abstract class StripeJob implements ShouldQueue
     /**
      * Actually execute the job
      *
-     * @param StripeEvent $event
+     * @param Event $event
      * @return void
      */
-    abstract public function process(StripeEvent $event): void;
+    abstract public function process(Event $event): void;
 }

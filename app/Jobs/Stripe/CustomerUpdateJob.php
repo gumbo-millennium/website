@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Stripe\Customer;
 use Stripe\Exception\UnknownApiErrorException;
+use Stripe\Stripe;
 
 class CustomerUpdateJob implements ShouldQueue
 {
@@ -24,6 +25,7 @@ class CustomerUpdateJob implements ShouldQueue
      * @var User
      */
     protected $user;
+
     /**
      * Create a new job instance.
      *
@@ -41,6 +43,11 @@ class CustomerUpdateJob implements ShouldQueue
      */
     public function handle()
     {
+        // Abort if Stripe key isn't set
+        if (empty(Stripe::getApiKey())) {
+            return;
+        }
+
         // Update user if an ID is present and the update worked out okay
         if ($this->user->stripe_customer_id !== null && $this->update($this->user)) {
             return;
