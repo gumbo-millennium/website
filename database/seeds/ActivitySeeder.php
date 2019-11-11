@@ -23,7 +23,7 @@ class ActivitySeeder extends Seeder
      * @return Activity|null
      *
      * Seeder is allowed to use boolean flag.
-     * @SuppressWarning(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function safeCreate(string $slug, array $args, bool $withEnrollments = true): ?Activity
     {
