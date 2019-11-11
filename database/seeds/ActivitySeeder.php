@@ -21,6 +21,9 @@ class ActivitySeeder extends Seeder
      * @param array $args
      * @param bool $withEnrollments Automatically register some users?
      * @return Activity|null
+     *
+     * Seeder is allowed to use boolean flag.
+     * @SuppressWarning(PHPMD.BooleanArgumentFlag)
      */
     private function safeCreate(string $slug, array $args, bool $withEnrollments = true): ?Activity
     {
@@ -33,6 +36,11 @@ class ActivitySeeder extends Seeder
             ['slug' => $slug],
             $args
         ))->first();
+
+        // Don't register users if we don't want to
+        if (!$withEnrollments) {
+            return $activity;
+        }
 
         // Get a random number of users in a random order
         $count = app(Faker::class)->numberBetween(2, User::count());

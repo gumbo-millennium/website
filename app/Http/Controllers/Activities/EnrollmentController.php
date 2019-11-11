@@ -96,6 +96,12 @@ class EnrollmentController extends Controller
      * @param Request $request
      * @param Activity $activity
      * @return Response
+     *
+     * Does not need refactoring. All log statements are raising the
+     * error thresholds.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(Request $request, Activity $activity)
     {
