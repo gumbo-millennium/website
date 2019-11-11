@@ -1,6 +1,11 @@
 <?php
 
 return [
+    /**
+     * If we should handle live or testing webhooks
+     */
+    'test_mode' => env('STRIPE_TEST_MODE', true),
+
     /*
      * Stripe publishable key
      */
