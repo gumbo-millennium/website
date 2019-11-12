@@ -23,12 +23,12 @@ jobs:
         run: |
           eval $(ssh-agent -s)
           ssh-add <(echo "$SSH_PRIVATE_KEY")
-          mkdir -p ~/.ssh
-          echo "Host deploy.test" > ~/.ssh/config
-          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
-          echo "    HostName ${SSH_HOST}" >> ~/.ssh/config
-          echo "    Port ${SSH_PORT}" >> ~/.ssh/config
-          echo "    User ${SSH_USER}" >> ~/.ssh/config
+          mkdir -p ${HOME}/.ssh
+          echo "Host deploy.test" > ${HOME}/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
+          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
