@@ -33,12 +33,12 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
       - name: Run Envoy
         run: |
-        export PATH="$PATH:$HOME/.composer/vendor/bin/"
-        export GUMBO_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-        export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
-        export GUMBO_GIT_SHA="${GITHUB_SHA}"
-        envoy run deploy \
-          --branch="$GUMBO_GIT_BRANCH" \
-          --env=production \
-          --remote=${GUMBOGIT_REMOTE} \
-          --hash=${GUMBO_GIT_SHA}
+          export PATH="$PATH:$HOME/.composer/vendor/bin/"
+          export GUMBO_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+          export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
+          export GUMBO_GIT_SHA="${GITHUB_SHA}"
+          envoy run deploy \
+            --branch="$GUMBO_GIT_BRANCH" \
+            --env=production \
+            --remote=${GUMBOGIT_REMOTE} \
+            --hash=${GUMBO_GIT_SHA}
