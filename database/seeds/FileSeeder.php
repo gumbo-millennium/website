@@ -19,9 +19,8 @@ class FileSeeder extends Seeder
 
         // Create a bunch of files for each category
         foreach ($categories as $category) {
-            // Create a bunch of files
-            /** @var File[] $files */
-            $files = factory(File::class, random_int(5, 30))->create([
+            // Create a bunch of files in this category
+            factory(File::class, random_int(5, 30))->create([
                 'category_id' => $category->id
             ]);
         }
