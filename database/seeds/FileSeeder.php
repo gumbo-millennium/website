@@ -17,14 +17,13 @@ class FileSeeder extends Seeder
         /** @var FileCategory[] $files */
         $categories = factory(FileCategory::class, random_int(3, 10))->create();
 
-        // Create a bunch of files
-        /** @var File[] $files */
-        $files = factory(File::class, random_int(5, 30))->make();
-
-        // Attach files to categories
-        foreach ($files as $file) {
-            $file->category()->associate($categories->random());
-            $file->save();
+        // Create a bunch of files for each category
+        foreach ($categories as $category) {
+            // Create a bunch of files
+            /** @var File[] $files */
+            $files = factory(File::class, random_int(5, 30))->create([
+                'category_id' => $category->id
+            ]);
         }
     }
 }
