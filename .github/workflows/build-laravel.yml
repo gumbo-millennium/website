@@ -1,10 +1,10 @@
-name: "Build Laravel"
+name: "Build, test and deploy Laravel"
 
 on: [push]
 
 jobs:
   laravel-frontend:
-    name: "front-end build"
+    name: "Front-end build and test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -33,7 +33,7 @@ jobs:
           name: front-end
           path: public/
   laravel-backend:
-    name: "back-end build"
+    name: "Back-end build and test"
     needs: [laravel-frontend]
     runs-on: ubuntu-latest
     services:
@@ -98,3 +98,47 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CodeClimateId }}
         continue-on-error: true
+  laravel-deploy:
+    name: "Deploy Laravel"
+    needs: [laravel-frontend, laravel-backend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "7.3"
+          extension-csv: exif,json,mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Install Laravel Envoy
+        run: composer global require laravel/envoy
+
+      - name: Load SSH deploy key
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          mkdir -p ${HOME}/.ssh
+          echo "Host deploy.test" > ${HOME}/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
+          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+
+      - name: Run Envoy
+        run: |
+          export PATH="$PATH:$HOME/.composer/vendor/bin/"
+          export GUMBO_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+          export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
+          export GUMBO_GIT_SHA="${GITHUB_SHA}"
+          envoy run deploy \
+            --branch="$GUMBO_GIT_BRANCH" \
+            --env=production \
+            --remote=${GUMBO_GIT_REMOTE} \
+            --hash=${GUMBO_GIT_SHA}
