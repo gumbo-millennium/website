@@ -12,10 +12,13 @@ jobs:
         with:
           php-version: "7.3"
           extension-csv: exif,json,mbstring
+
       - name: Checkout code
         uses: actions/checkout@v1
+
       - name: Install Laravel Envoy
         run: composer global require laravel/envoy
+
       - name: Load SSH deploy key
         run: |
           eval $(ssh-agent -s)
@@ -31,6 +34,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USER: ${{ secrets.SSH_USER }}
+
       - name: Run Envoy
         run: |
           export PATH="$PATH:$HOME/.composer/vendor/bin/"
@@ -40,5 +44,5 @@ jobs:
           envoy run deploy \
             --branch="$GUMBO_GIT_BRANCH" \
             --env=production \
-            --remote=${GUMBOGIT_REMOTE} \
+            --remote=${GUMBO_GIT_REMOTE} \
             --hash=${GUMBO_GIT_SHA}
