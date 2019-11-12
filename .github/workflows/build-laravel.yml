@@ -8,12 +8,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-build-${{ env.cache-name }}-
+            node-build-
+
+      - name: Cache Composer
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: composer-build-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-build-${{ env.cache-name }}-
+            composer-build-
+
       - name: Copy environment config
         run: cp .github/actions.env .env
+
       - name: Install Yarn dependencies
         run: yarn install --frozen-lockfile
+
       - name: Build Front-end
         run: yarn run production
+
       - name: Publish front-end
         uses: actions/upload-artifact@master
         with:

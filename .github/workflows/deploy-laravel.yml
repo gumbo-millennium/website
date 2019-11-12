@@ -1,4 +1,4 @@
-name: "Build Laravel"
+name: "Deploy Laravel"
 
 on: [push]
 
