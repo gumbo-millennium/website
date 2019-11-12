@@ -115,16 +115,18 @@ jobs:
       - name: Install Laravel Envoy
         run: composer global require laravel/envoy
 
-      - name: Load SSH deploy key
+      - name: Configure SSH connection
         run: |
-          eval $(ssh-agent -s)
-          ssh-add <(echo "$SSH_PRIVATE_KEY")
           mkdir -p ${HOME}/.ssh
-          echo "Host deploy.local" > ${HOME}/.ssh/config
+          echo "$SSH_PRIVATE_KEY" > ${HOME}/.ssh/id_deploy
+          chmod 0600 ${HOME}/.ssh/id_deploy
+          echo "Host *" > ${HOME}/.ssh/config
           echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "Host deploy.local" > ${HOME}/.ssh/config
           echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
           echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
           echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
+          echo "    IdentityFile ${HOME}/.ssh/id_deploy" >> ${HOME}/.ssh/config
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
