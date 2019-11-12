@@ -32,6 +32,14 @@
     $backupOldPath = "$root/deployments/actions/$env/backup-{$deployName}";
     $branchSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($branch)), '-');
 
+    // Paths that must exist
+    $paths = [
+        $root,
+        dirname($livePath),
+        dirname($envPath),
+        $storagePath,
+        dirname($backupOldPath),
+    ];
 @endsetup
 
 @servers(['web' => 'deploy.local'])
@@ -52,7 +60,13 @@
 @endstory
 
 @task('deployment_init')
-    {{-- Make directory and optional parents --}}
+    {{-- Pre-deploy validation --}}
+    echo -e "\nEnsuring working directories exist"
+    @foreach ($paths as $path)
+    test -d "{{ $path }}" || mkdir -p "{{ $path }}"
+    @endforeach
+
+    {{-- Make deployment directory --}}
     echo -e "\nCreating clone path"
     mkdir -p "{{ $deployPath }}"
 
@@ -112,9 +126,8 @@
 
 @task('deployment_link')
     {{-- Ensure data is available --}}
-    DATA_DIR="{{ $root }}/data/{{ $env }}"
-    if [ ! -d "$DATA_DIR" ]; then
-        cp -r "{{ $deployPath }}/storage" "$DATA_DIR"
+    if [ ! -d "{{ $storagePath }}" ]; then
+        cp -r "{{ $deployPath }}/storage" "{{ $storagePath }}"
     fi
 
     {{-- Make directories and files --}}
@@ -144,6 +157,7 @@
         --classmap-authoritative \
         --no-dev \
         --no-interaction \
+        --no-progress \
         --no-suggest \
         install
 @endtask
