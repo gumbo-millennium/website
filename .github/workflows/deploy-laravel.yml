@@ -6,6 +6,7 @@ jobs:
   deploy:
     name: "deploy application"
     runs-on: ubuntu-latest
+    steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
         with:
