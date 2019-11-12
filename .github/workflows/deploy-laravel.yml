@@ -26,7 +26,7 @@ jobs:
           echo "    HostName ${SSH_HOST}" >> ~/.ssh/config
           echo "    Port ${SSH_PORT}" >> ~/.ssh/config
           echo "    User ${SSH_USER}" >> ~/.ssh/config
-         env:
+        env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
