@@ -1,0 +1,43 @@
+name: "Build Laravel"
+
+on: [push]
+
+jobs:
+  deploy:
+    name: "deploy application"
+    runs-on: ubuntu-latest
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "7.3"
+          extension-csv: exif,json,mbstring
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Install Laravel Envoy
+        run: composer global require laravel/envoy
+      - name: Load SSH deploy key
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          mkdir -p ~/.ssh
+          echo "Host deploy.test" > ~/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ~/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ~/.ssh/config
+          echo "    User ${SSH_USER}" >> ~/.ssh/config
+         env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+      - name: Run Envoy
+        run: |
+        export PATH="$PATH:$HOME/.composer/vendor/bin/"
+        export GUMBO_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+        export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
+        export GUMBO_GIT_SHA="${GITHUB_SHA}"
+        envoy run deploy \
+          --branch="$GUMBO_GIT_BRANCH" \
+          --env=production \
+          --remote=${GUMBOGIT_REMOTE} \
+          --hash=${GUMBO_GIT_SHA}

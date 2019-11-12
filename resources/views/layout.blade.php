@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('Title', 'Gumbo Millennium')</title>
 
+    @if (config('gumbo.beta'))
+    <meta name="robots" value="noindex,nofollow" />
+    @endif
+
     <link rel="stylesheet" href="{{ mix('/css/beta.css') }}">
 </head>
 
