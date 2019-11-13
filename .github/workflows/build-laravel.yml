@@ -61,8 +61,8 @@ jobs:
       - name: Login for Laravel Nova
         run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_PASSWORD}
         env:
-          NOVA_USERNAME: ${{ secrets.NovaUsername }}
-          NOVA_PASSWORD: ${{ secrets.NovaPassword }}
+          NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
+          NOVA_PASSWORD: ${{ secrets.NOVA_PASSWORD }}
 
       - name: Copy environment config
         run: cp .github/actions.env .env
@@ -96,7 +96,7 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter format-coverage -t clover ./dist/coverage-clover.xml || true
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CodeClimateId }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
   laravel-deploy:
     name: "Deploy Laravel"
