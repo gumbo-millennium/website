@@ -90,7 +90,7 @@
     cd "{{ $deployPath }}"
 
     {{-- Clone repo, but don't checkout yet --}}
-    echo -e "\nCloning Git repository"
+    echo -e "\nCloning {{ $remote }} and checking out {{ $branch }}."
     git clone \
         --no-checkout \
         --branch "{{ $branch }}" \
