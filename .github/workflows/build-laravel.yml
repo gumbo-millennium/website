@@ -1,6 +1,10 @@
 name: "Build, test and deploy Laravel"
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
+    - develop
 
 jobs:
   laravel-frontend:
@@ -136,11 +140,9 @@ jobs:
       - name: Run Envoy
         run: |
           export PATH="$PATH:$HOME/.composer/vendor/bin/"
-          export GUMBO_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
           export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
           export GUMBO_GIT_SHA="$(git log -1 --format='%H')"
           envoy run deploy \
-            --branch="$GUMBO_GIT_BRANCH" \
             --env=production \
             --remote=${GUMBO_GIT_REMOTE} \
             --hash=${GUMBO_GIT_SHA}

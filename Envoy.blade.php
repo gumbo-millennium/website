@@ -3,7 +3,6 @@
     $required = [
         'remote' => 'clone URL',
         'env' => 'environment',
-        'branch' => 'branch',
         'hash' => 'hash'
     ];
 
@@ -93,7 +92,6 @@
     echo -e "\nCloning {{ $remote }} and checking out {{ $branch }}."
     git clone \
         --no-checkout \
-        --branch "{{ $branch }}" \
         --reference "{{ $livePath }}" \
         "{{ $remote }}" \
         "{{ $deployPath }}"
