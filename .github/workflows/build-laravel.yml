@@ -122,7 +122,7 @@ jobs:
           chmod 0600 ${HOME}/.ssh/id_deploy
           echo "Host *" > ${HOME}/.ssh/config
           echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
-          echo "Host deploy.local" > ${HOME}/.ssh/config
+          echo "Host deploy.local" >> ${HOME}/.ssh/config
           echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
           echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
           echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
