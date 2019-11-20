@@ -2,13 +2,16 @@
 const mix = require('laravel-mix')
 
 // Plugins and loaders
-const WebpackStrip = require('strip-loader')
+const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const ImageminPlugin = require('imagemin-webpack-plugin')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 const WebpackBrotli = require('brotli-webpack-plugin')
+const WebpackStrip = require('strip-loader')
 
 // Inline Plugins
 require('laravel-mix-versionhash')
 require('laravel-mix-purgecss')
-require('./resources/js-build/plugins')
 
 // Plugins for PostCSS
 const postCssPlugins = [
@@ -28,10 +31,52 @@ mix.copy([
   'resources/assets/svg/**/*.svg'
 ], 'public/images')
 
-// Add plugins
-mix.gumbo({
-  eslint: {
-    standard: true
+// Add HardSource
+mix.webpackConfig({
+  plugins: [
+    new HardSourceWebpackPlugin()
+  ]
+})
+
+// Add cleaning
+mix.webpackConfig({
+  plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        'public/fonts/',
+        'public/images/',
+        'public/svg/',
+        'public/**/*.js',
+        'public/**/*.css',
+        'public/**/*.json'
+      ]
+    })
+  ]
+})
+
+// Add Stylelint
+mix.webpackConfig({
+  plugins: [
+    new StyleLintPlugin({
+      files: [
+        'resources/css/**/*.css'
+      ]
+    })
+  ]
+})
+
+// Add ESLint
+mix.webpackConfig({
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.(js|vue)$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: { cache: true }
+      }
+    ]
   }
 })
 
@@ -64,6 +109,15 @@ if (mix.inProduction()) {
         }
       ]
     }
+  })
+
+  // Compress images
+  mix.webpackConfig({
+    plugins: [
+      new ImageminPlugin({
+        disable: !mix.inProduction()
+      })
+    ]
   })
 }
 

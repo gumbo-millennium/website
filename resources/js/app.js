@@ -13,5 +13,14 @@ bindComponents()
 
 // Wait for DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-  // TODO
+  // Find Vue-enabled container
+  const container = document.querySelector('[data-content=vue]')
+
+  // Handle content
+  if (container) {
+    return new Vue({
+      el: container,
+      render: createElement => createElement('gumbo', { props: {} }, [])
+    })
+  }
 })
