@@ -19,6 +19,11 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 
+    # Handle files with a hash
+    <FilesMatch "\w+\.([a-f0-9]{4,8})\.(js|css|svg)$">
+        Header set Cache-Control public, no-transform, immutable, max-age=7776000"
+    </FilesMatch>
+
     # Handle Brotli files, if possible
     <IfModule mod_brotli.c>
         # Serve brotli compressed CSS, JS and SVG files if they exist and the
