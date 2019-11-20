@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.main')
 
 @section('title', "Inschrijving betalen - {{ $activity->name }} - Gumbo Millennium")
 

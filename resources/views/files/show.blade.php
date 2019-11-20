@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.main')
 
 @section('content')
 <h1>Bestandensysteem - {{ $file->title }}</h1>

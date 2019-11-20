@@ -1,24 +1,16 @@
 /**
-  Button styling
+  Button
 */
 
-/* Basic button */
 .btn {
-  @apply text-white font-bold py-2 px-4 rounded;
+  @apply py-2 px-4 rounded shadow bg-gray-200 font-bold text-gray-800;
 }
 
-@variants focus, hover {
-  .btn {
-    @apply outline-none shadow-outline;
-  }
+.btn--brand {
+  @apply bg-brand-500 text-white;
 }
 
-/* Gumbo styling */
-.btn-brand {
-  @apply bg-brand-500;
-}
-
-.btn-brand:focus,
-.btn-brand:hover {
-  @apply bg-brand-700;
+.btn--brand:hover,
+.btn--brand:active {
+  @apply bg-brand-600 text-white shadow-lg;
 }

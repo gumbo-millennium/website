@@ -1,31 +1,15 @@
 /*
- Userbar, top of the page
+  Navbar
 */
 
 .navbar {
-  @apply block bg-brand-500 border-b border-brand-700 text-white;
+  @apply flex flex-row flex-wrap list-none;
 }
 
-.navbar__container {
-  @apply mx-auto flex flex-col justify-end items-center;
+.navbar a {
+  @apply px-4 py-2 text-sm uppercase;
 }
 
-.navbar__user {
-  @apply py-1 my-1 px-2;
-  @apply rounded-lg border border-brand-200;
-  @apply bg-brand-200 text-brand-900;
-}
-
-.navbar__action-list {
-  @apply flex flex-col;
-}
-
-.navbar__action-action {
-  @apply block px-6 py-2;
-}
-
-@screen md {
-  .navbar__container {
-    @apply flex-row;
-  }
+.navbar li:first-child a {
+  @apply pl-0;
 }

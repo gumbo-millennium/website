@@ -17,8 +17,10 @@ const postCssPlugins = [
 ]
 
 // Compile stylesheets
-mix.postCss('resources/css/app.css', 'public/css/app.css', postCssPlugins)
-mix.postCss('resources/css/beta.css', 'public/css/beta.css', postCssPlugins)
+mix.postCss('resources/css/app.css', 'public/css/gumbo-millennium.css', postCssPlugins)
+
+// Compile Javascript
+mix.js('resources/js/app.js', 'public/js/gumbo-millennium.js')
 
 // Copy files
 mix.copy([

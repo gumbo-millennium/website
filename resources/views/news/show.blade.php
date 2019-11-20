@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.main')
 
 @section('content')
 <h1>Nieuws - {{ $item->title }}</h1>

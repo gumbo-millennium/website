@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.main')
 
 @section('title', 'Activity overview - Gumbo Millennium')
 

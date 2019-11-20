@@ -2,42 +2,17 @@
  * Loads Font Awesome icons and a subset of used icons
  */
 
+// Load library
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {
-  faArrowLeft,
-  faCheck,
-  faChevronRight,
-  faCircleNotch,
-  faExclamation,
-  faInfo,
-  faSpinner,
-  faStar,
-  faSync,
-  faTimesCircle,
-  faUser,
-  faUserFriends,
-  faUsers
-} from '@fortawesome/free-solid-svg-icons'
-import {
-  faSadTear
-} from '@fortawesome/free-regular-svg-icons'
+
+// Load icons
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faSadTear } from '@fortawesome/free-regular-svg-icons'
 
 // Register solid icons
 library.add(
-  faArrowLeft,
-  faCheck,
-  faChevronRight,
-  faCircleNotch,
-  faExclamation,
-  faInfo,
-  faSpinner,
-  faStar,
-  faSync,
-  faTimesCircle,
-  faUser,
-  faUserFriends,
-  faUsers
+  faCheck
 )
 
 // Register regular icons

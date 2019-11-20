@@ -8,16 +8,9 @@ import Vue from 'vue'
  * Available vue components
  */
 export const Components = new Set({
-  // Register vendor components
+  // Register icon stuff
   'fa-icon': require('./fontawesome').default,
-
-  // Register shared components
-  'gumbo-button': require('./components/shared/button').default,
-  'gumbo-icon': require('./components/shared/icon').default,
-  'gumbo-alert': require('./components/shared/alert').default,
-
-  // Enroll button
-  'enroll-button': require('./components/enroll-button.vue').default
+  'gumbo-icon': require('./components/shared/icon').default
 })
 
 /**

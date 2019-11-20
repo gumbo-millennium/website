@@ -1,9 +1,7 @@
-/**
-  Components, like whole activity mentions
+/*
+  Component styling
 */
 
-@import "./activity-card.css";
-@import "./jump-to-content.css";
-@import "./searchbar.css";
-@import "./userbar.css";
-@import "./navbar.css";
+@import 'page-elements.css';
+@import 'logo.css';
+@import 'navbar.css';

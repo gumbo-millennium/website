@@ -38,10 +38,15 @@
     "strip-loader": "^0.1.2",
     "stylelint": "^9.6",
     "stylelint-webpack-plugin": "^0.10",
-    "svg-spritemap-webpack-plugin": "^3.5.0"
+    "svg-spritemap-webpack-plugin": "^3.5.0",
+    "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-regular-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/vue-fontawesome": "^0.1.8",
     "@tailwindcss/custom-forms": "^0.2.1",
     "tailwindcss": "^1.1.2",
     "vue": "^2.6.10"

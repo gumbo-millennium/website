@@ -1,10 +1,7 @@
 /**
-    Heads up, this is plain CSS!
-    We're using tailwind and PostCSS to parse this into a minimal layout, but
-    we're designing with plain CSS
+    Beta stylesheet. Looks a bit brutalist and isn't responsive.
 
-    There's probably no need to modify this file. Update the elements,
-    components and pages to change the layout
+    Will be removed eventually, but it's perfect for feature testing.
 */
 
 /* Load base tailwind */
@@ -12,10 +9,9 @@
 @import 'tailwindcss/components';
 
 /* Load our tweaks, elements, components and pages */
-@import 'tweaks/all.css';
+@import 'base/all.css';
 @import 'elements/all.css';
 @import 'components/all.css';
-@import 'pages/all.css';
 
 /* Load remaining tailwind stuff */
 @import 'tailwindcss/utilities';

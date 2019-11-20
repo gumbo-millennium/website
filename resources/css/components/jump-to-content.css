@@ -1,9 +1,0 @@
-/*
-  Hide skip to content unless focussed
-*/
-
-.jump-to-content:focus,
-.jump-to-content:active {
-  @apply bg-brand-700 block;
-  @apply text-xl py-4 text-white text-center;
-}
