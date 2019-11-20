@@ -18,4 +18,26 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # Handle Brotli files, if possible
+    <IfModule mod_brotli.c>
+        # Serve brotli compressed CSS, JS and SVG files if they exist and the
+        # client accepts brotli.
+        RewriteCond "%{HTTP:Accept-encoding}" "br"
+        RewriteCond "%{REQUEST_FILENAME}\.br" "-s"
+        RewriteRule "^(.*)\.(js|css|svg)"     "$1\.$2\.br" [QSA]
+
+        # Serve correct content types, and prevent double compression.
+        SetEnvIf Request_URI \.(?:js|css|svg)\.br$ no-brotli
+        SetEnvIf Request_URI \.(?:js|css|svg)\.br$ no-gzip
+
+        <FilesMatch "\.(js|css|svg)\.br$">
+        # Serve correct encoding type.
+        Header append Content-Encoding br
+
+        # Force proxies to cache brotli &
+        # non-brotli css/js files separately.
+        Header append Vary Accept-Encoding
+        </FilesMatch>
+    </IfModule>
 </IfModule>

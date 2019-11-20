@@ -3,6 +3,7 @@ const mix = require('laravel-mix')
 
 // Plugins and loaders
 const WebpackStrip = require('strip-loader')
+const WebpackBrotli = require('brotli-webpack-plugin')
 
 // Inline Plugins
 require('laravel-mix-versionhash')
@@ -40,6 +41,15 @@ if (mix.inProduction()) {
   // Add custom hash
   mix.versionHash({
     length: 8
+  })
+
+  // Compress content using Brotli
+  mix.webpackConfig({
+    plugins: [
+      new WebpackBrotli({
+        test: /\.(js|css|svg)$/
+      })
+    ]
   })
 
   // Strip console debug messages
