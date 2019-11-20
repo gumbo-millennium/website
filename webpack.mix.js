@@ -57,3 +57,15 @@ if (mix.inProduction()) {
 
 // Add BrowserSync
 mix.browserSync('127.0.0.1:13370')
+
+// Let Vue use the production runtime in production.
+// Allows us to use a very, very strict CSP
+if (mix.inProduction()) {
+  mix.webpackConfig({
+    resolve: {
+      alias: {
+        vue$: 'vue/dist/vue.runtime.js'
+      }
+    }
+  })
+}

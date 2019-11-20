@@ -8,6 +8,11 @@
  * contains the "web" middleware group. Now create something great!
  */
 
+$loginCsp = vsprintf('%s:%s', [
+    Spatie\Csp\AddCspHeaders::class,
+    App\Http\Policy\LoginPolicy::class
+]);
+
 // Home and privacy policy
 Route::get('/', 'PageController@homepage')->name('home');
 Route::get('/privacy-policy', 'PageController@privacy')->name('privacy');
@@ -135,7 +140,7 @@ Route::prefix('join')->name('join.')->group(function () {
 });
 
 // Authentication and forgotten passwords
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->middleware($loginCsp)->group(function () {
     Route::auth([
         'verify' => true,
         'register' => true
