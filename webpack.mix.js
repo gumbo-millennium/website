@@ -4,13 +4,12 @@ const mix = require('laravel-mix')
 // Plugins and loaders
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const ImageminPlugin = require('imagemin-webpack-plugin')
+const ImageminPlugin = require('imagemin-webpack-plugin').default
 const StyleLintPlugin = require('stylelint-webpack-plugin')
 const WebpackBrotli = require('brotli-webpack-plugin')
 const WebpackStrip = require('strip-loader')
 
 // Inline Plugins
-require('laravel-mix-versionhash')
 require('laravel-mix-purgecss')
 
 // Plugins for PostCSS
@@ -85,9 +84,12 @@ if (mix.inProduction()) {
   // Enable purgecss
   mix.purgeCss()
 
-  // Add custom hash
+  // Add custom hash. There's currently a bug that's why the require is late.
+  // See https://github.com/ctf0/laravel-mix-versionhash/issues/29
+  require('laravel-mix-versionhash')
   mix.versionHash({
-    length: 8
+    length: 8,
+    copy: true
   })
 
   // Compress content using Brotli
@@ -124,14 +126,20 @@ if (mix.inProduction()) {
 // Add BrowserSync
 mix.browserSync('127.0.0.1:13370')
 
-// Let Vue use the production runtime in production.
-// Allows us to use a very, very strict CSP
+// Allow our very strict CSP ruleset with Vue.
 if (mix.inProduction()) {
+  // Ensure Vue uses the runtime version, since the version bundled with Mix
+  // doesn't work.
   mix.webpackConfig({
     resolve: {
       alias: {
         vue$: 'vue/dist/vue.runtime.js'
       }
     }
+  })
+
+  // Extract CSS from Vue templates, since we cannot append custom css.
+  mix.options({
+    extractVueStyles: true
   })
 }
