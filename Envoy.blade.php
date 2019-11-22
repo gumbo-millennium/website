@@ -116,10 +116,10 @@
 
     {{-- Show diff --}}
     echo -e "\n"
-    echo "Currently live: $OLD_VERSION"
-    echo "Currently deploying: $NEW_VERSION"
+    echo "Currently live: ${OLD_VERSION}"
+    echo "Currently deploying: ${NEW_VERSION}"
     echo -e "\nChanges since last version:\n"
-    git log --decorate --graph --format="{{ $logFormat }}" "$OLD_HASH..$_NEW_HASH"
+    git log --decorate --graph --format="{{ $logFormat }}" "${OLD_HASH}..${NEW_HASH}"
 @endtask
 
 @task('deployment_link')
@@ -204,10 +204,10 @@
 
     {{-- Make backlink to current version --}}
     OLD_PATH="$( realpath "{{ $livePath }}/" )"
-    ln -s "$OLD_PATH" "{{ $deployPath }}/_previous"
+    ln -s "${OLD_PATH}" "{{ $deployPath }}/_previous"
 
     {{-- Switch active version --}}
-    echo "Switching from $( basename "$OLD_PATH" ) to $( basename "{{ $deployPath }}" )"
+    echo "Switching from $( basename "${OLD_PATH}" ) to $( basename "{{ $deployPath }}" )"
     rm "{{ $livePath }}"
     ln -s "{{ $deployPath }}" "{{ $livePath }}"
 
@@ -239,7 +239,7 @@
     fi
 
     OLD_VERSION="$( realpath "{{ $livePath }}/_previous" )"
-    if [ "$( realpath "$OLD_PATH" )" = "$( realpath "${{ $livePath }}" )" ]; then
+    if [ "$( realpath "${OLD_PATH}" )" = "$( realpath "${{ $livePath }}" )" ]; then
         echo "Already at latest version"
         exit 1
     fi
@@ -247,9 +247,9 @@
     echo -e "\nGoing dark"
     php artisan down --retry=5
 
-    echo -e "\nRolling back to $( basename "$OLD_VERSION" )"
+    echo -e "\nRolling back to $( basename "${OLD_VERSION}" )"
     rm "{{ $livePath }}"
-    ln -s "$OLD_VERSION" "{{ $livePath }}"
+    ln -s "${OLD_VERSION}" "{{ $livePath }}"
 
     echo "Re-running caching"
     php artisan optimize:clear
@@ -259,7 +259,7 @@
     echo -e "\nGoing back online"
     php artisan up
 
-    echo -e "\nRolled back to $( basename "$OLD_VERSION" )"
+    echo -e "\nRolled back to $( basename "${OLD_VERSION}" )"
 @endtask
 
 @task('restart_horizon')
