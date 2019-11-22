@@ -1,9 +1,8 @@
-name: "Build and test Laravel"
+name: "Build, test and deploy Laravel"
 
 on:
-  pull_request:
   push:
-    branches-ignore:
+    branches:
     - master
     - develop
 
@@ -103,3 +102,47 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
+  laravel-deploy:
+    name: "Deploy Laravel"
+    needs: [laravel-frontend, laravel-backend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "7.3"
+          extension-csv: exif,json,mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Install Laravel Envoy
+        run: composer global require laravel/envoy
+
+      - name: Configure SSH connection
+        run: |
+          mkdir -p ${HOME}/.ssh
+          echo "$SSH_PRIVATE_KEY" > ${HOME}/.ssh/id_deploy
+          chmod 0600 ${HOME}/.ssh/id_deploy
+          echo "Host *" > ${HOME}/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "Host deploy.local" >> ${HOME}/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
+          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
+          echo "    IdentityFile ${HOME}/.ssh/id_deploy" >> ${HOME}/.ssh/config
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+
+      - name: Run Envoy
+        run: |
+          export PATH="$PATH:$HOME/.composer/vendor/bin/"
+          export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
+          export GUMBO_GIT_SHA="$(git log -1 --format='%H')"
+          envoy run deploy \
+            --env=staging \
+            --remote=${GUMBO_GIT_REMOTE} \
+            --hash=${GUMBO_GIT_SHA}
