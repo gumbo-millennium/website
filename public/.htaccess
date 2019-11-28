@@ -21,7 +21,7 @@
 
     # Handle files with a hash
     <FilesMatch "\w+\.([a-f0-9]{4,8})\.(js|css|svg)$">
-        Header set Cache-Control public, no-transform, immutable, max-age=7776000"
+        Header set Cache-Control "public, no-transform, immutable, max-age=7776000"
     </FilesMatch>
 
     # Handle Brotli files, if possible
