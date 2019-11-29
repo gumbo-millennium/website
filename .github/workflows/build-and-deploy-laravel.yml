@@ -39,11 +39,10 @@ jobs:
   laravel-backend:
     name: "Back-end build and test"
     needs: [laravel-frontend]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
     strategy:
       matrix:
         php: ['7.3', '7.4']
-        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
     services:
       database:
         image: mysql:5
