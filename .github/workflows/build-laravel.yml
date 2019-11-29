@@ -41,6 +41,9 @@ jobs:
     name: "Back-end build and test"
     needs: [laravel-frontend]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.3', '7.4']
     services:
       database:
         image: mysql:5
@@ -52,6 +55,12 @@ jobs:
           MYSQL_USER: laravel
           MYSQL_PASSWORD: laravel
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+          extension-csv: exif,json,mbstring,bcmath
+
       - uses: actions/checkout@v1
 
       - name: Cache Composer
