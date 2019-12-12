@@ -5,7 +5,7 @@
 @section('message', __('Server Error'))
 
 @section('image')
-<div style="background-image: url({{ asset('/images/500.svg') }});"
+<div style="background-image: url({{ mix('/images/500.svg') }});"
     class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
 </div>
 @endsection

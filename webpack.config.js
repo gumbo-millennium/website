@@ -116,7 +116,7 @@ module.exports = {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendor.bundle',
+          name: 'vendor',
           chunks: 'all'
         }
       }
@@ -257,7 +257,7 @@ module.exports = {
     new ManifestPlugin({
       fileName: 'mix-manifest.json',
       basePath: '/',
-      filter: (file) => !file.name.match(/\.(gz|br)$/),
+      filter: (file) => !(file.name.match(/\.(gz|br)$/) || file.isModuleAsset),
       map: (file) => {
         // Remove hash in manifest key, if present
         if (inProduction) {

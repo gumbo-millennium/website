@@ -5,7 +5,7 @@
 @section('message', __('Not Found'))
 
 @section('image')
-<div style="background-image: url({{ asset('/images/404.svg') }});"
+<div style="background-image: url({{ mix('/images/404.svg') }});"
     class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
 </div>
 @endsection
