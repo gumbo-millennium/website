@@ -10,7 +10,7 @@ import Vue from 'vue'
 export const Components = new Set({
   // Register icon stuff
   'fa-icon': require('./fontawesome').default,
-  'gumbo-icon': require('./components/shared/icon').default
+  'gumbo-icon': require('./components/shared/icon.vue').default
 })
 
 /**
