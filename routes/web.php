@@ -141,10 +141,7 @@ Route::prefix('join')->name('join.')->group(function () {
 
 // Authentication and forgotten passwords
 Route::prefix('auth')->middleware($loginCsp)->group(function () {
-    Route::auth([
-        'verify' => true,
-        'register' => true
-    ]);
+    Route::auth(['verify' => true]);
 });
 
 // My account
