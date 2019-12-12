@@ -2,15 +2,18 @@
 # Configuration file for Docker
 
 # Source from Roelof's PHP image
-FROM docker.pkg.github.com/roelofr/docker-php/php:fpm-7.4 AS laravel
+FROM roelofr/php:7.4-apache AS laravel
 
 # Install Redis as native extension
 RUN pecl install redis \
     && docker-php-ext-enable redis \
     && rm -rf /tmp/pear
 
-# Raise PHP limit
-COPY php.ini /usr/local/etc/php/conf.d/laravel.ini
+# Use production PHP
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Change mail and file limits
+COPY ./php/*.ini $PHP_INI_DIR/conf.d/
 
 # Add Laravel group and user
 RUN groupadd \
@@ -26,12 +29,25 @@ RUN groupadd \
         --password "" \
         laravel
 
-# Make it really certain we're using the right user
-RUN { \
-    echo '[www]'; \
-    echo 'user = laravel'; \
-    echo 'group = laravel'; \
-    } | tee /usr/local/etc/php-fpm.d/zz-laravel.conf
+# Change root to public
+ENV APACHE_DOCUMENT_ROOT=/var/www/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
+    sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Add apache config
+ENV APACHE_RUN_USER=#1000 APACHE_RUN_GROUP=#1000
+COPY ./apache/conf/*.conf /etc/apache2/conf-available/
+COPY ./apache/mods/*.conf /etc/apache2/mods-available/
+RUN a2enmod \
+        authz_core \
+        brotli \
+        expires \
+        headers \
+        proxy_http \
+        rewrite \
+    && a2enconf \
+        mailhog \
+        phpmyadmin
 
 # Configure Laravel branch
 FROM laravel AS horizon

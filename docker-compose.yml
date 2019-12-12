@@ -17,29 +17,15 @@ x-laravel: &laravel-base
     - laravel
 
 services:
-  # Webserver
-  web:
-    image: docker.pkg.github.com/gumbo-millennium/website/web
-    build:
-      context: .docker/nginx
-    volumes:
-      - ./:/var/www
-    ports:
-      - 127.0.0.1:13370:13370
-    networks:
-      - laravel
-    depends_on:
-      - laravel
-      - pma
-      - mail
-
-  # Application
+  # Application and webserver
   laravel:
     << : *laravel-base
     image: docker.pkg.github.com/gumbo-millennium/website/laravel
     build:
       context: .docker/laravel
       target: laravel
+    ports:
+      - 127.0.0.1:13370:80
 
   # Application
   horizon:
