@@ -69,7 +69,7 @@ class NewsItemTest extends TestCase
     public function testViewItem(NewsItem $item): void
     {
         // Get news index
-        $response = $this->get(route('news.show', ['item' => $item]));
+        $response = $this->get(route('news.show', ['news' => $item]));
 
         // Ensure it loads
         $response->assertOk();
@@ -92,7 +92,7 @@ class NewsItemTest extends TestCase
         $item->delete();
 
         // Get news index
-        $response = $this->get(route('news.show', ['item' => $item]));
+        $response = $this->get(route('news.show', ['news' => $item]));
 
         // Ensure it loads
         $response->assertNotFound();

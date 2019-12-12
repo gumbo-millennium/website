@@ -4,7 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <form class="card" method="POST" action="{{ route('verification.resend') }}">
+                @csrf
                 <div class="card-header">{{ __('Verify Your Email Address') }}</div>
 
                 <div class="card-body">
@@ -14,10 +15,15 @@
                         </div>
                     @endif
 
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>.
+                    <p>
+                        {{ __('Before proceeding, please check your email for a verification link.') }}
+                    </p>
+                    <p>
+                        {{ __('If you did not receive the email') }},<br />
+                        <button class="btn btn-brand" type="submit">{{ __('click here to request another') }}.</button>
+                    </p>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

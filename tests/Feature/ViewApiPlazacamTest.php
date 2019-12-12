@@ -30,7 +30,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => 29839,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam
@@ -53,7 +53,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam
@@ -76,7 +76,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam

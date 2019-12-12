@@ -33,7 +33,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         // Get a dummy file
@@ -62,7 +62,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         // Get a dummy file

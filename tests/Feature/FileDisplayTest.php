@@ -265,12 +265,12 @@ class FileDisplayTest extends TestCase
      *
      * @return File|null
      */
-    private function getFileModel(): ?File
+    private function getFileModel(): File
     {
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
         // Return most recent file
-        return File::latest()->first();
+        return File::latest()->firstOrFail();
     }
 }
