@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Service\StripeErrorService;
+use App\Services\StripeErrorService;
 use App\Services\MenuProvider;
 use GuzzleHttp\Client;
 use Illuminate\Database\Schema\Blueprint;

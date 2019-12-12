@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities\Traits;
 
 use App\Models\Enrollment;
-use App\Service\StripeErrorService;
+use App\Services\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use InvalidArgumentException;

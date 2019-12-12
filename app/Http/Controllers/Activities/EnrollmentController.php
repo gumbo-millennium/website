@@ -15,7 +15,7 @@ use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
 use App\Models\User;
-use App\Service\StripeErrorService;
+use App\Services\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
