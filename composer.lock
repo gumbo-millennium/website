@@ -1446,12 +1446,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/gumbo-millennium/laravel-database-encryption.git",
-                "reference": "e80f4f0e62e89e9e862d0b0e8553c9e70ca2c2fd"
+                "reference": "8a3dcc2a222c660b1c28800026a663f28f32d56b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gumbo-millennium/laravel-database-encryption/zipball/e80f4f0e62e89e9e862d0b0e8553c9e70ca2c2fd",
-                "reference": "e80f4f0e62e89e9e862d0b0e8553c9e70ca2c2fd",
+                "url": "https://api.github.com/repos/gumbo-millennium/laravel-database-encryption/zipball/8a3dcc2a222c660b1c28800026a663f28f32d56b",
+                "reference": "8a3dcc2a222c660b1c28800026a663f28f32d56b",
                 "shasum": ""
             },
             "require": {
@@ -1468,8 +1468,8 @@
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "orchestra/testbench": "^3.5",
-                "phpunit/phpunit": "~6.0|~7.0"
+                "orchestra/testbench": "^3.5|^4.0",
+                "phpunit/phpunit": "^6.0|^7.0|^8.0"
             },
             "type": "library",
             "extra": {
@@ -1539,7 +1539,7 @@
             "support": {
                 "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/master"
             },
-            "time": "2019-12-12T19:34:17+00:00"
+            "time": "2019-12-12T20:17:44+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
