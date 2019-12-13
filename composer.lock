@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a02cde239d9b56ec61ffb59a1176d76a",
+    "content-hash": "3f76b5705268f3f70beb91c145b5b632",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -57,6 +57,113 @@
                 "wysiwyg"
             ],
             "time": "2019-10-26T15:50:54+00:00"
+        },
+        {
+            "name": "austinheap/laravel-database-encryption",
+            "version": "v0.3.0-rc1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gumbo-millennium/laravel-database-encryption.git",
+                "reference": "e6484b1a6bc950ec01198634053e8c699d5e0bc3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gumbo-millennium/laravel-database-encryption/zipball/e6484b1a6bc950ec01198634053e8c699d5e0bc3",
+                "reference": "e6484b1a6bc950ec01198634053e8c699d5e0bc3",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
+                "php": ">=7.1.0"
+            },
+            "conflict": {
+                "delatbabel/elocryptfive": "*",
+                "dtisgodsson/elocrypt": "*"
+            },
+            "replace": {
+                "delatbabel/elocryptfive": "*",
+                "dtisgodsson/elocrypt": "*"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "orchestra/testbench": "^3.5|^4.0",
+                "phpunit/phpunit": "^6.0|^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "AustinHeap\\Database\\Encryption\\EncryptionServiceProvider"
+                    ],
+                    "aliases": {
+                        "DatabaseEncryption": "AustinHeap\\Database\\Encryption\\EncryptionFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AustinHeap\\Database\\Encryption\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Austin Heap",
+                    "email": "me@austinheap.com",
+                    "homepage": "https://github.com/austinheap",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package for automatically encrypting and decrypting Eloquent attributes in Laravel 5.5+, based on configuration settings.",
+            "homepage": "https://github.com/austinheap/laravel-database-encryption",
+            "keywords": [
+                "aes",
+                "attribute",
+                "attribute encryption",
+                "database",
+                "database encryption",
+                "db",
+                "decrypt",
+                "decryption",
+                "elocrypt",
+                "elocryptfive",
+                "eloquent",
+                "eloquent aes",
+                "eloquent encryption",
+                "encrypt",
+                "encryption",
+                "l5",
+                "laravel",
+                "laravel encryption",
+                "laravel5",
+                "laravel5 aes",
+                "laravel5 encryption",
+                "laravel55",
+                "laravel55 encryption",
+                "laravel56",
+                "laravel56 encryption",
+                "laravel57",
+                "laravel57 encryption",
+                "laravel58",
+                "laravel58 encryption",
+                "laravel6 encryption",
+                "model",
+                "model encryption"
+            ],
+            "support": {
+                "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/master"
+            },
+            "time": "2019-12-13T14:03:58+00:00"
         },
         {
             "name": "benjaminhirsch/nova-slug-field",
@@ -1441,107 +1548,6 @@
             "time": "2019-11-18T11:46:58+00:00"
         },
         {
-            "name": "gumbo-millennium/laravel-database-encryption",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gumbo-millennium/laravel-database-encryption.git",
-                "reference": "8a3dcc2a222c660b1c28800026a663f28f32d56b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gumbo-millennium/laravel-database-encryption/zipball/8a3dcc2a222c660b1c28800026a663f28f32d56b",
-                "reference": "8a3dcc2a222c660b1c28800026a663f28f32d56b",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0",
-                "php": "^7.1"
-            },
-            "conflict": {
-                "delatbabel/elocryptfive": "*",
-                "dtisgodsson/elocrypt": "*"
-            },
-            "replace": {
-                "delatbabel/elocryptfive": "*",
-                "dtisgodsson/elocrypt": "*"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "orchestra/testbench": "^3.5|^4.0",
-                "phpunit/phpunit": "^6.0|^7.0|^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "AustinHeap\\Database\\Encryption\\EncryptionServiceProvider"
-                    ],
-                    "aliases": {
-                        "DatabaseEncryption": "AustinHeap\\Database\\Encryption\\EncryptionFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "AustinHeap\\Database\\Encryption\\": "src"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Austin Heap",
-                    "email": "me@austinheap.com",
-                    "homepage": "https://github.com/austinheap",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A package for automatically encrypting and decrypting Eloquent attributes in Laravel 5.5+, based on configuration settings.",
-            "homepage": "https://github.com/austinheap/laravel-database-encryption",
-            "keywords": [
-                "aes",
-                "attribute",
-                "attribute encryption",
-                "database",
-                "database encryption",
-                "db",
-                "decrypt",
-                "decryption",
-                "elocrypt",
-                "elocryptfive",
-                "eloquent",
-                "eloquent aes",
-                "eloquent encryption",
-                "encrypt",
-                "encryption",
-                "l5",
-                "laravel",
-                "laravel encryption",
-                "laravel5",
-                "laravel5 aes",
-                "laravel5 encryption",
-                "laravel55",
-                "laravel55 encryption",
-                "laravel56",
-                "laravel56 encryption",
-                "laravel57",
-                "laravel57 encryption",
-                "laravel58",
-                "laravel58 encryption",
-                "model",
-                "model encryption"
-            ],
-            "support": {
-                "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/master"
-            },
-            "time": "2019-12-12T20:17:44+00:00"
-        },
-        {
             "name": "guzzlehttp/guzzle",
             "version": "6.5.0",
             "source": {
@@ -1987,69 +1993,6 @@
                 "nova"
             ],
             "time": "2019-11-22T10:20:44+00:00"
-        },
-        {
-            "name": "kozz/laravel-guzzle-provider",
-            "version": "6.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/urakozz/laravel-guzzle.git",
-                "reference": "3c471fb7c75a23195250c42b9ca162f44765e562"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/urakozz/laravel-guzzle/zipball/3c471fb7c75a23195250c42b9ca162f44765e562",
-                "reference": "3c471fb7c75a23195250c42b9ca162f44765e562",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.0",
-                "illuminate/support": "^5.0 | ^6.0",
-                "php": "^7.2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Kozz\\Laravel\\Providers\\Guzzle"
-                    ],
-                    "aliases": {
-                        "Guzzle": "Kozz\\Laravel\\Facades\\Guzzle"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kozz\\Laravel\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hongbo Tang",
-                    "email": "thbourlove@gmail.com"
-                },
-                {
-                    "name": "Yury Kozyrev",
-                    "email": "urakozz@gmail.com"
-                }
-            ],
-            "description": "Guzzle 5/6 Service Provider for Laravel",
-            "keywords": [
-                "Guzzle",
-                "http",
-                "laravel"
-            ],
-            "time": "2019-09-06T14:01:24+00:00"
         },
         {
             "name": "lab404/laravel-impersonate",
@@ -3264,28 +3207,29 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "a8593bf5176bf3d3f2966942c530be19b44ec87c"
+                "reference": "318ad673ba36e53e10ca510aec1c54b4f2a5f2ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/a8593bf5176bf3d3f2966942c530be19b44ec87c",
-                "reference": "a8593bf5176bf3d3f2966942c530be19b44ec87c",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/318ad673ba36e53e10ca510aec1c54b4f2a5f2ae",
+                "reference": "318ad673ba36e53e10ca510aec1c54b4f2a5f2ae",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.5.9 || ^7.0"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.3",
                 "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -3314,7 +3258,7 @@
                 "php",
                 "type"
             ],
-            "time": "2019-12-11T13:45:14+00:00"
+            "time": "2019-12-13T00:10:22+00:00"
         },
         {
             "name": "predis/predis",
@@ -4037,16 +3981,16 @@
         },
         {
             "name": "spatie/laravel-model-states",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-model-states.git",
-                "reference": "0fe65b884da3d172b6bc28387180fa1662059a9a"
+                "reference": "7e4ec8981316c8c938dcc2aab1a0e7dcaf0c0a59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-model-states/zipball/0fe65b884da3d172b6bc28387180fa1662059a9a",
-                "reference": "0fe65b884da3d172b6bc28387180fa1662059a9a",
+                "url": "https://api.github.com/repos/spatie/laravel-model-states/zipball/7e4ec8981316c8c938dcc2aab1a0e7dcaf0c0a59",
+                "reference": "7e4ec8981316c8c938dcc2aab1a0e7dcaf0c0a59",
                 "shasum": ""
             },
             "require": {
@@ -4084,7 +4028,7 @@
                 "spatie",
                 "state"
             ],
-            "time": "2019-11-28T15:35:10+00:00"
+            "time": "2019-12-13T09:09:30+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -8800,9 +8744,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "gumbo-millennium/laravel-database-encryption": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

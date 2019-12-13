@@ -15,7 +15,7 @@
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
         "gregoriohc/laravel-nova-theme-responsive": "^0.8",
-        "gumbo-millennium/laravel-database-encryption": "dev-master",
+        "austinheap/laravel-database-encryption": "^0.3.0-rc1",
         "guzzlehttp/guzzle": "^6.3",
         "kabbouchi/nova-impersonate": "^1.1",
         "laktak/hjson": "^2.1",
