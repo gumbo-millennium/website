@@ -271,6 +271,6 @@ class FileDisplayTest extends TestCase
         $this->ensureApplicationExists();
 
         // Return most recent file
-        return File::latest()->firstOrFail();
+        return $this->getCategoryModel()->files()->latest()->firstOrFail();
     }
 }
