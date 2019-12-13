@@ -18,7 +18,6 @@
         "gumbo-millennium/laravel-database-encryption": "dev-master",
         "guzzlehttp/guzzle": "^6.3",
         "kabbouchi/nova-impersonate": "^1.1",
-        "kozz/laravel-guzzle-provider": "^6.1",
         "laktak/hjson": "^2.1",
         "laravel/framework": "^6.7",
         "laravel/horizon": "^3.3",

@@ -6,7 +6,7 @@ namespace App\Providers;
 
 use App\Services\StripeErrorService;
 use App\Services\MenuProvider;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
         // Register nav menu as $menu on all requests
         $this->app->singleton(MenuProvider::class, function () {
             return new MenuProvider();
+        });
+
+        // Bind Guzzle client
+        $this->app->bind(GuzzleClient::class, function () {
+            return new GuzzleClient(config('gumbo.guzzle-config', []));
         });
 
         // Handle Horizon auth
