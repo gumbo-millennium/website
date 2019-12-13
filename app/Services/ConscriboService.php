@@ -229,23 +229,23 @@ final class ConscriboService implements ConscriboContract
         // Only get new token if no token is cached or we're trying with a fresh token
         if (!Cache::has(self::CACHE_KEY) || $this->retry) {
             // Get session id
-            $id = $this->getSessionId();
+            $sessionId = $this->getSessionId();
 
             // We cache for 20 minutes. The official expiration is 30 mins, but lets err on the safe side.
-            Cache::put(self::CACHE_KEY, $id, now()->addMinutes(20));
+            Cache::put(self::CACHE_KEY, $sessionId, now()->addMinutes(20));
         }
 
         // Shorthand to not re-request from the cache
-        $id = $id ?? Cache::get(self::CACHE_KEY);
+        $sessionId = $sessionId ?? Cache::get(self::CACHE_KEY);
 
         // Throw error if ID is missing
-        if (!$id) {
+        if (!$sessionId) {
             throw new RuntimeException('Cannot determine client ID', self::ERR_NO_SESSION);
         }
 
         try {
             // Attempt request
-            $request = $this->buildRequest($command, $args, $id);
+            $request = $this->buildRequest($command, $args, $sessionId);
             return $this->sendRequest($request);
         } catch (HttpException $e) {
             // Retry request if client token has expired
