@@ -31,6 +31,63 @@ use Illuminate\Support\Str;
 class FileDisplayTest extends TestCase
 {
     /**
+     * @var \App\Models\FileCategory
+     */
+    protected static $category;
+
+    /**
+     * @var \App\Models\File
+     */
+    protected static $file;
+
+    /**
+     * Create a file in a new category before the item starts
+     *
+     * @return void
+     * @before
+     */
+    public function createFileAndCategoryBefore(): void
+    {
+        // Make sure we have a router
+        $this->ensureApplicationExists();
+
+        // Create test category
+        $name = sprintf('AA test %s', now()->toIso8601String());
+        static::$category = factory(FileCategory::class, 1)
+            ->create(['title' => $name])
+            ->first();
+
+        // Create test files in our test category
+        static::$file = factory(File::class, 5)
+            ->create(['category_id' => static::$category->id])
+            ->first();
+
+        // Reload items, just to be sure
+        static::$category->refresh();
+        static::$file->refresh();
+    }
+
+    /**
+     * Delete the test items after testing
+     *
+     * @return void
+     * @after
+     */
+    public function deleteFileAndCategoryAfter(): void
+    {
+        // Skip if missing
+        if (!static::$category || !static::$category->exists) {
+            return;
+        }
+
+        // Delete files in category
+        static::$category->files()->delete();
+
+        // Delete category too
+        static::$category->delete();
+    }
+
+    /**
      * Ensures there are some files and categories to work with
      *
      * @return void
@@ -247,6 +304,11 @@ class FileDisplayTest extends TestCase
      */
     private function getCategoryModel(): ?FileCategory
     {
+        // Return local category if set
+        if (static::$category && static::$category->exists) {
+            return static::$category;
+        }
+
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
@@ -267,6 +329,11 @@ class FileDisplayTest extends TestCase
      */
     private function getFileModel(): File
     {
+        // Return local file if set
+        if (static::$file && static::$file->exists) {
+            return static::$file;
+        }
+
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
