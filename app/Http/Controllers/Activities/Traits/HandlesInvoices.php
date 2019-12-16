@@ -4,35 +4,39 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities\Traits;
 
+use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Enrollment;
 use App\Services\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 use Stripe\Exception\ApiErrorException;
+use Stripe\Invoice;
+use Stripe\InvoiceItem;
 use Stripe\Mandate;
 use Stripe\PaymentIntent;
 use Stripe\PaymentMethod;
 use Stripe\Source;
 
 /**
- * Creates Payment Intents on Stripe
+ * Creates Billing Invoices in Stripe
  */
-trait HandlesPaymentIntents
+trait HandlesInvoices
 {
     use FormatsStripeData;
     use HandlesCustomers;
 
     /**
-     * Creates a Payment Intent at Stripe and returns it
+     * Creates a Billing Invoice at Stripe and returns it.
      * Returns null if $enrollment is a free activity (for this user)
      *
      * @param Enrollment $enrollment
-     * @return PaymentIntent|null
+     * @return Invoice|null
      */
-    protected function createPaymentIntent(Enrollment $enrollment): ?PaymentIntent
+    protected function createPaymentInvoice(Enrollment $enrollment): ?Invoice
     {
         // Return null if price is empty
         if (empty($enrollment->price)) {
@@ -42,20 +46,66 @@ trait HandlesPaymentIntents
         // Make sure we have a user
         $this->ensureCustomerExists($enrollment);
 
-        // Build info
-        $sharedInfo = $this->getEnrollmentInformation($enrollment);
-        $intentInfo = [
-            'payment_method_types' => ['ideal'],
-        ];
+        // Due in 7 days by default
+        $dueDate = today()->addWeek();
 
-        if ($enrollment->user->stripe_customer_id) {
-            $intentInfo['customer'] = $enrollment->user->stripe_customer_id;
+        if ($enrollment->activity->start_date < now()) {
+            // Due immediately when activity has started
+            $dueDate = today();
+        } elseif ($enrollment->activity->start_date < $dueDate) {
+            // Due when event starts otherwise
+            $dueDate = $enrollment->activity->start_date;
         }
 
-        // Create Intent on the Stripe servers
+        // Build info
+        $sharedInfo = $this->getEnrollmentInformation($enrollment);
+        $invoiceInfo = array_merge(
+            Arr::only($sharedInfo, ['receipt_email', 'statement_descriptor', 'metadata']),
+            [
+                'customer' => $enrollment->user->stripe_customer_id,
+                'payment_method_types' => ['ideal'],
+                'collection_method' => 'send_invoice',
+                'due_date' => $dueDate,
+            ]
+        );
+
+        // Build invoice products
+        $invoiceItems = [
+            [
+                'amount' => $enrollment->price,
+                'description' => Arr::get($sharedInfo, 'description', $enrollment->title),
+            ],
+            [
+                'amount' => $enrollment->total_price - $enrollment->price,
+                'description' => 'Transactiekosten',
+                'discountable' => false
+            ]
+        ];
+
         try {
-            $intent = PaymentIntent::create(array_merge($sharedInfo, $intentInfo));
-            return $intent;
+            // Create Invoice
+            $invoice = Invoice::create($invoiceInfo);
+
+            // Create products
+            $createdLines = [];
+            foreach ($invoiceItems as $item) {
+                $createdLines[] = InvoiceItem::create(array_merge([
+                    'currency' => 'EUR',
+                    'customer' => $invoice->customer,
+                    'invoice' => $invoice->id
+                ], $item))->id;
+            }
+
+            // Delete lines not supposed to be on this invoice
+            $invoiceLines = $invoice->lines->all(['limit' => 20]);
+            foreach ($invoiceLines as $line) {
+                if (!in_array($line->id, $createdLines)) {
+                    $line->delete();
+                }
+            }
+
+            // Return invoice
+            return $invoice;
         } catch (ApiErrorException $error) {
             app(StripeErrorService::class)->handleCreate($error);
         }

@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -194,6 +195,17 @@ class Activity extends Resource
                 ->rules('required', 'date', 'after:start_date')
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
+
+            Select::make('Payment method', 'payment_type')
+                ->readOnly($this->exists)
+                ->required(function ($request) {
+                    return $request->price_member || $request->price_guest;
+                })
+                ->displayUsingLabels()
+                ->options([
+                    'intent' => 'Via website',
+                    'billing' => 'Via mailed invoices'
+                ]),
 
             Price::make('Member Price', 'price_member')
                 ->min(2.50)

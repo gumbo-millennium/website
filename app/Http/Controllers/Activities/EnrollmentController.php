@@ -133,17 +133,23 @@ class EnrollmentController extends Controller
         $enrollment->activity()->associate($activity);
         $enrollment->user()->associate($user);
 
-        // Determine price, converting a "0" value to null.
-        $enrollment->price = $user->is_member ? $activity->price_member : $activity->price_guest;
+        // Determine price
+        $enrollment->price = $activity->price_guest;
+        if ($user->is_member) {
+            $enrollment->price = $activity->price_member;
+        }
+
+        // Set to null if the price is empty
         if (!is_int($enrollment->price) || $enrollment->price <= 0) {
             $enrollment->price = null;
         }
 
         // Debug
-        $price = $enrollment->price;
+        $rawPrice = $enrollment->price;
+        $price = $enrollment->total_price;
         logger()->debug(
-            'Assigned enrollment price of {price}.',
-            compact('user', 'activity', 'price')
+            'Assigned enrollment price of {price} ({rawPrice}).',
+            compact('user', 'activity', 'rawPrice', 'price')
         );
 
         // Save the enrollment
@@ -160,29 +166,8 @@ class EnrollmentController extends Controller
             ]
         );
 
-        // Check for a payment requirement and pre-create Payment Intent
-        if ($enrollment->price) {
-            try {
-                // Create intent
-                $intent = $this->getPaymentIntent($enrollment);
-
-                // Log result
-                logger()->info('Created Stripe payment intent {intent}.', [
-                    'intent' => $intent
-                ]);
-
-                // Assign and save
-                $enrollment->payment_intent = $intent->id;
-                $enrollment->save();
-            } catch (ApiErrorException $e) {
-                // Log error
-                logger()->error("Recieved API error whilst creating intent for {enrollment}", [
-                    'exception' => $e,
-                    'enrollment' => $enrollment
-                ]);
-                // Don't push error
-            }
-        }
+        // Adds a payment object (intent or draft invoice) to the enrollment
+        $this->addPaymentObject($enrollment);
 
         // Redirect to form page if one is present
         if ($activity->form !== null) {
@@ -197,13 +182,21 @@ class EnrollmentController extends Controller
 
         // Forward to payment
         if ($enrollment->price > 0) {
-            logger()->debug('Price present, redirecting to edit');
+            logger()->debug('Price present, redirecting to payment');
+
+            if ($activity->payment_type === Activity::PAYMENT_TYPE_INTENT) {
+                flash(
+                    'Je plek is gereserveerd. Rond de betaling binnen 72 uur af om de inschrijving te bevestigen.',
+                    'info'
+                );
+                return redirect()->route('payment.start', compact('activity'));
+            }
 
             flash(
-                'Je plek is gereserveerd. Rond de betaling binnen 72 uur af om de inschrijving te bevestigen.',
+                'Je plek is gereserveerd. Bevestig je inschrijving binnen 72 uur om je plek te behouden.',
                 'info'
             );
-            return redirect()->route('payment.start', compact('activity'));
+            return redirect()->route('payment.confirm', compact('activity'));
         }
 
         // Mark as confirmed
@@ -368,5 +361,62 @@ class EnrollmentController extends Controller
         // Done :)
         flash("Je bent uitgeschreven voor {$activity->title}.", 'sucess');
         return redirect()->route('activity.show', compact('activity'));
+    }
+
+    /**
+     * Adds a Stripe Payment Intent or Stripe Invoice to the enrollment, if required.
+     *
+     * @param Enrollment $enrollment
+     * @return void
+     */
+    protected function addPaymentObject(Enrollment $enrollment): void
+    {
+        // Free enrollments don't need a payment object.
+        if (!$enrollment->price) {
+            return;
+        }
+
+        // Get activity
+        $activity = $enrollment->activity;
+
+        try {
+            // First case: Check for intent-based payments (iDeal on-site)
+            if ($activity->payment_type === Activity::PAYMENT_TYPE_INTENT) {
+                // Create intent
+                $intent = $this->getPaymentIntent($enrollment);
+
+                // Log result
+                logger()->info('Created Stripe payment intent {intent}.', [
+                    'intent' => $intent
+                ]);
+
+                // Assign
+                $enrollment->payment_intent = $intent->id;
+            }
+
+            // Second case: Check for invoice-based payments (iDeal via e-mail)
+            if ($activity->payment_type === Activity::PAYMENT_TYPE_BILLING) {
+                // Create invoice
+                $invoice = $this->getPaymentInvoice($enrollment);
+
+                // Log result
+                logger()->info('Created Stripe invoice {invoice}.', [
+                    'invoice' => $invoice
+                ]);
+
+                // Assign
+                $enrollment->payment_invoice = $invoice->id;
+            }
+
+            // Save changes
+            $enrollment->save();
+        } catch (ApiErrorException $e) {
+            // Log error
+            logger()->error("Recieved API error whilst creating intent for {enrollment}", [
+                'exception' => $e,
+                'enrollment' => $enrollment
+            ]);
+            // Don't push error
+        }
     }
 }

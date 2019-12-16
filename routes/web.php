@@ -97,8 +97,9 @@ Route::prefix('enroll')->name('enroll.')->group(function () {
     // Enroll removal (perform)
     Route::delete('/{activity}/delete', 'Activities\\EnrollmentController@destroy');
 });
+
 /**
- * Enrollment payments
+ * Enrollment payments with Payment Intents
  */
 Route::prefix('enrollments/pay')->name('payment.')->group(function () {
     // Default route¸ redirect → my enrollments
@@ -112,6 +113,23 @@ Route::prefix('enrollments/pay')->name('payment.')->group(function () {
 
     // Enroll update
     Route::get('/{activity}/complete', 'Activities\\PaymentController@complete')->name('complete');
+});
+
+/**
+ * Enrollment payments with Invoices
+ */
+Route::prefix('enrollments/confirm')->name('enroll-confirm.')->group(function () {
+    // Default route¸ redirect → my enrollments
+    Route::permanentRedirect('/', '/enroll/me');
+
+    // Enroll start
+    Route::get('/{activity}/start', 'Activities\\ConfirmationController@form')->name('start');
+
+    // Enroll start
+    Route::post('/{activity}/start', 'Activities\\ConfirmationController@start');
+
+    // Enroll update
+    Route::get('/{activity}/complete', 'Activities\\ConfirmationController@complete')->name('complete');
 });
 
 /**

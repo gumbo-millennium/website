@@ -29,6 +29,9 @@ class Activity extends SluggableModel implements AttachableInterface
     use HasPaperclip;
     use HasEditorJsContent;
 
+    public const PAYMENT_TYPE_INTENT = 'intent';
+    public const PAYMENT_TYPE_BILLING = 'billing';
+
     /**
      * @inheritDoc
      */
