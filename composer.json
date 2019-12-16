@@ -38,7 +38,8 @@
         "spatie/laravel-view-models": "^1.2",
         "stripe/stripe-php": "^7.10",
         "symfony/process": "^4.1",
-        "vyuldashev/nova-permission": "^2.4"
+        "vyuldashev/nova-permission": "^2.4",
+        "whitecube/nova-flexible-content": "^0.1.12"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",

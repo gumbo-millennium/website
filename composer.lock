@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f76b5705268f3f70beb91c145b5b632",
+    "content-hash": "8dc84f26a9608ce457dcbcd5b81ac34b",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -6065,6 +6065,58 @@
                 "spatie-permission"
             ],
             "time": "2019-12-11T09:31:57+00:00"
+        },
+        {
+            "name": "whitecube/nova-flexible-content",
+            "version": "v0.1.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whitecube/nova-flexible-content.git",
+                "reference": "cfd8719e15aa9add68d89427a7aab73beee6c955"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whitecube/nova-flexible-content/zipball/cfd8719e15aa9add68d89427a7aab73beee6c955",
+                "reference": "cfd8719e15aa9add68d89427a7aab73beee6c955",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Whitecube\\NovaFlexibleContent\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Whitecube\\NovaFlexibleContent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toon Van den Bos",
+                    "email": "toon@whitecube.be"
+                }
+            ],
+            "description": "Flexible Content & Repeater Fields for Laravel Nova.",
+            "keywords": [
+                "Flexible",
+                "field",
+                "group",
+                "laravel",
+                "layout",
+                "nova",
+                "repeat"
+            ],
+            "time": "2019-08-29T12:05:20+00:00"
         }
     ],
     "packages-dev": [

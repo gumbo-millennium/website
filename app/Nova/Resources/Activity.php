@@ -6,6 +6,7 @@ use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
+use App\Nova\Flexible\Presets\ActivityForm;
 use App\Policies\ActivityPolicy;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
@@ -20,6 +21,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked
@@ -232,6 +234,10 @@ class Activity extends Resource
             Price::make('Total guest price', 'total_price_guest')
                 ->help('Guest price with service fees')
                 ->onlyOnDetail(),
+
+            Flexible::make('Form', 'enrollment_form')
+                ->confirmRemove('Removing a field does not remove submitted data')
+                ->preset(ActivityForm::class)
         ];
     }
 

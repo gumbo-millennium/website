@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
+use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
  * A hosted activity
@@ -28,6 +29,7 @@ class Activity extends SluggableModel implements AttachableInterface
     use PaperclipTrait;
     use HasPaperclip;
     use HasEditorJsContent;
+    use HasFlexible;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
@@ -242,6 +244,16 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getDescriptionHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->description);
+    }
+
+    /**
+     * Enrollment form
+     *
+     * @return Whitecube\NovaFlexibleContent\Layouts\Collection
+     */
+    public function getFlexibleContentAttribute()
+    {
+        return $this->flexible('enrollment_questions');
     }
 
     /**
