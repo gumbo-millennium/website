@@ -133,15 +133,18 @@ class EnrollmentController extends Controller
         $enrollment->activity()->associate($activity);
         $enrollment->user()->associate($user);
 
-        // Determine price
+        // Determine price with and without transfer cost
         $enrollment->price = $activity->price_guest;
+        $enrollment->total_price = $activity->total_price_guest;
         if ($user->is_member) {
             $enrollment->price = $activity->price_member;
+            $enrollment->total_price = $activity->total_price_member;
         }
 
         // Set to null if the price is empty
         if (!is_int($enrollment->price) || $enrollment->price <= 0) {
             $enrollment->price = null;
+            $enrollment->total_price = null;
         }
 
         // Debug

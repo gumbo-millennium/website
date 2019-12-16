@@ -41,7 +41,7 @@ trait FormatsStripeData
         // Return data
         return [
             'currency' => 'eur',
-            'amount' => $enrollment->price,
+            'amount' => $enrollment->total_price,
             'description' => $description,
             'receipt_email' => $user->email,
             'statement_descriptor' => $statement,
@@ -49,7 +49,8 @@ trait FormatsStripeData
                 'user-name' => $user->name,
                 'user-id' => $user->id,
                 'activity-id' => $activity->id,
-                'enrollment-id' => $enrollment->id
+                'enrollment-id' => $enrollment->id,
+                'transfer-fee' => $enrollment->total_price - $enrollment->price
             ]
         ];
     }

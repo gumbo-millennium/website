@@ -243,4 +243,24 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         return $this->convertToHtml($this->description);
     }
+
+    /**
+     * Returns member price with transfer costs
+     *
+     * @return int|null
+     */
+    public function getTotalPriceMemberAttribute(): ?int
+    {
+        return $this->price_member ? $this->price_member + config('gumbo.transfer-fee', 0) : $this->price_member;
+    }
+
+    /**
+     * Returns guest price with transfer cost
+     *
+     * @return int|null
+     */
+    public function getTotalPriceGuestAttribute(): ?int
+    {
+        return $this->price_guest ? $this->price_guest + config('gumbo.transfer-fee', 0) : $this->price_guest;
+    }
 }

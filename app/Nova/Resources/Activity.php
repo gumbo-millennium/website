@@ -224,6 +224,14 @@ class Activity extends Resource
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50', 'gte:price_member')
                 ->help('In Euro, not including service fees'),
+
+            Price::make('Total member price', 'total_price_member')
+                ->help('Member price with service fees')
+                ->onlyOnDetail(),
+
+            Price::make('Total guest price', 'total_price_guest')
+                ->help('Guest price with service fees')
+                ->onlyOnDetail(),
         ];
     }
 
