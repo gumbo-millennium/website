@@ -48,7 +48,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewNova', 'App\\Gate\\AdminGate@nova');
+        Gate::define('viewNova', 'App\\Gates\\AdminGate@nova');
     }
 
     /**
