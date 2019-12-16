@@ -4,6 +4,7 @@ namespace App\Jobs\Concerns;
 
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Handles creation of temporrary files by streaming from any disk.
@@ -43,11 +44,8 @@ trait UsesTemporaryFiles
         // Get a stream of the destination file
         $fileHandle = Storage::disk($disk)->readStream($path);
 
-        // Read the entire file
-        while (!feof($fileHandle)) {
-            // Read from file handle and instantly write to temp handle
-            fwrite($temporaryHandle, fread($fileHandle, 512));
-        }
+        // Copy stream to other stream
+        stream_copy_to_stream($fileHandle, $temporaryHandle);
 
         // Close both handles
         fclose($fileHandle);
@@ -55,9 +53,6 @@ trait UsesTemporaryFiles
 
         // Wait for FS to be ready
         passthru(sprintf('sync %s', escapeshellarg($temporaryFile)));
-
-        //Report file
-        passthru(sprintf('ls -lh %s', escapeshellarg($temporaryFile)));
 
         // Return filename
         return $temporaryFile;
@@ -128,8 +123,8 @@ trait UsesTemporaryFiles
     {
         if (
             file_exists($file) &&
-            starts_with($file, sys_get_temp_dir() &&
-            is_writeable(dirname($file)))
+            Str::startsWith($file, sys_get_temp_dir()) &&
+            is_writeable(dirname($file))
         ) {
             @unlink($file);
         }

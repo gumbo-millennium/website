@@ -2,18 +2,19 @@
 
 namespace App\Jobs;
 
-use App\Models\File;
+use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
+use App\Models\File;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\File as LaravelFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
-use Smalot\PdfParser\Parser as PDFParser;
-use App\Jobs\Concerns\RunsCliCommands;
+use Illuminate\Support\Str;
 use RuntimeException;
+use Smalot\PdfParser\Parser as PDFParser;
 
 /**
  * Processes the metadata of the file, which retrieves document contents,
@@ -71,18 +72,8 @@ class FileMetaJob extends FileJob
         // Extract meta
         $this->getPdfContent($tempFile);
 
-        // Update state, if present
-        if ($this->file->contents) {
-            $file->addState(File::STATE_HAS_CONTENT);
-        }
-
         // Get PDF metadata, using pdfinfo
         $this->getMetadata($tempFile);
-
-        // Update state
-        if ($this->file_meta) {
-            $file->addState(File::STATE_HAS_META);
-        }
 
         // Remve temp PDF
         $this->deleteTempFile($tempFile);
@@ -104,7 +95,7 @@ class FileMetaJob extends FileJob
         $pdf = $parser->parseFile($filePath);
 
         // Handle OCR contents
-        $this->file->contents = $pdf->getText();
+        $this->file->file_contents = $pdf->getText();
     }
 
     /**
@@ -122,18 +113,16 @@ class FileMetaJob extends FileJob
             'XMP-pdfaid:all',
             'XMP-pdf:all'
         ])->map(function ($value) {
-            return str_start($value, '-');
+            return Str::start($value, '-');
         });
 
         // Build command. The structure is [exittool + commands] + [fields] + [filename].
-        $command = array_merge([
-            'exiftool',
-            '-a',
-            '-G1',
-            '-json'
-        ], $requestList->toArray(), [
-            $filePath
-        ]);
+        $command = array_merge(
+            ['exiftool'],
+            ['-a', '-G1', '-json'],
+            $requestList->toArray(),
+            [$filePath]
+        );
 
         // Run meta command
         $ok = $this->runCliCommand($command, $stdout, $stderr);

@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\File;
 use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
+use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,6 +33,8 @@ class FileThumbnailJob extends FileJob
 
     private const ERROR_MSG = <<<MSG
 Failed to make thumbnail [%s].
+
+Command: %s
 
 Outputs follow
 ======== stdout  ========
@@ -81,8 +84,24 @@ MSG;
             return;
         }
 
+        // Abort if the `convert` command is missing
+        $convertExists = $this->runCliCommand(['which', 'convert']);
+        if ($convertExists !== 0) {
+            logger()->warning('Convert command missing from system! Please install ImageMagick');
+            return;
+        }
+
         // Shorthand
         $file = $this->file;
+
+        // Check for sanity
+        if (!$file->thumbnail instanceof AttachmentInterface) {
+            logger()->error('Somehow, {file} is missing an attachment on {thumbnail}', [
+                'file' => $file,
+                'thumbnail' => $file->thumbail
+            ]);
+            return;
+        }
 
         // Get a temporary file
         try {
@@ -94,7 +113,7 @@ MSG;
 
         try {
             echo "Building thumbnail\n";
-            $result = $this->runCliCommand([
+            $command = [
                 'convert',
                 '-flatten',
                 '-background', 'white',
@@ -109,27 +128,35 @@ MSG;
                 '-flatten',
                 '-resize', '125%',
                 $thumbnailFile,
-            ], $procOut, $procErr);
+            ];
+
+            $result = $this->runCliCommand($command, $procOut, $procErr);
 
             if ($result !== 0) {
-                throw new \RuntimeException(sprintf(
-                    self::ERROR_MSG,
-                    $file->title,
-                    $procOut,
-                    $procErr
-                ), 1);
+                logger()->warning('Failed to create a screenshot of the PNG for {file}.', [
+                    'file' => $file,
+                    'command' => $command,
+                    'output' => [
+                        'normal' => $procOut,
+                        'error' => $procErr
+                    ],
+                    'exit-code' => $result
+                ]);
+                return;
             }
 
             // Store and assign thumbnail
-            $file->thumbnail = Storage::putFile(
-                'thumbnails',
-                new LaravelFile($thumbnailFile)
-            );
-            $file->addState(File::STATE_HAS_THUMBNAIL);
+            $file->thumbail = new \SplFileInfo($thumbnailFile);
 
             // Save file
             $file->save();
         } catch (\RuntimeException $e) {
+            // Make a warning
+            logger()->warning('Recieved exception whilst thumbnailing {file}.', [
+                'file' => $file,
+                'exception' => $e
+            ]);
+
             // Bubble that shit up
             throw $e;
         } finally {

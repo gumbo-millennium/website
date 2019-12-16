@@ -97,9 +97,6 @@ class FileArchiveJob extends FileJob
                 return;
             }
 
-            // Flag file as having a PDF/A compliant file
-            $this->file->addState(File::STATE_PDFA);
-
             // Again, save the new file
             $this->replaceStoredFile($archiveFile);
         } catch (ProcessTimedOutException $e) {

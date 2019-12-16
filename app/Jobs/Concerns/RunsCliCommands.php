@@ -25,12 +25,21 @@ trait RunsCliCommands
     protected function runCliCommand(array $command, &$stdout = null, &$stderr = null, int $timeout = null): ?int
     {
         // Make sure the command we want to run exists
-        $testProc = new Process(['which' => $command[0]]);
+        $testProc = new Process(['which', $command[0]]);
         $testProc->run();
 
         // Report a warning if it doesn't
         if (!$testProc->isSuccessful()) {
-            echo "WARNING: Failed to locate {$command[0]} command!\n";
+            $stdout = $testProc->getOutput();
+            $stderr = $testProc->getErrorOutput();
+
+            logger()->info("Failed to locate executable {executable}!", [
+                'executable' => $command[0],
+                'command' => $command,
+                'stdout' => $stdout,
+                'stderr' => $stderr
+            ]);
+            return 255;
         }
 
         // Create process, which times out after 15 seconds
@@ -38,10 +47,11 @@ trait RunsCliCommands
         $process->setTimeout($timeout ?? 15);
 
         // Debug start
-        printf("Starting command [%s]\n", $process->getCommandLine());
+        printf("RUN> %s\n", $process->getCommandLine());
 
+        // Print each line with a prefix
         $process->run(function ($type, $buffer) {
-            printf('[%s] %s', $type === Process::ERR ? 'ERR' : 'OUT', $buffer);
+            printf('%s> %s', $type === Process::ERR ? 'ERR' : 'OUT', trim($buffer));
         });
 
         // Assign outputs, if present
