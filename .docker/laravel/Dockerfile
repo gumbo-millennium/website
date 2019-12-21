@@ -2,7 +2,7 @@
 # Configuration file for Docker
 
 # Source from Roelof's PHP image
-FROM roelofr/php:7.3-apache AS laravel
+FROM roelofr/php:7.4-apache AS laravel
 
 # Install Redis as native extension
 RUN pecl install redis \
