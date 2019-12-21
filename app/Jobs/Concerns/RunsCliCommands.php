@@ -46,13 +46,16 @@ trait RunsCliCommands
         $process = new Process($command, sys_get_temp_dir());
         $process->setTimeout($timeout ?? 15);
 
-        // Debug start
-        printf("RUN> %s\n", $process->getCommandLine());
+        // Only debug on local
+        if (app()->isLocal()) {
+            // Debug start
+            logger()->debug(sprintf("RUN> %s\n", $process->getCommandLine()));
 
-        // Print each line with a prefix
-        $process->run(function ($type, $buffer) {
-            printf('%s> %s', $type === Process::ERR ? 'ERR' : 'OUT', trim($buffer));
-        });
+            // Print each line with a prefix
+            $process->run(function ($type, $buffer) {
+                logger()->debug(printf('%s> %s', $type === Process::ERR ? 'ERR' : 'OUT', trim($buffer)));
+            });
+        }
 
         // Assign outputs, if present
         if ($stdout) {

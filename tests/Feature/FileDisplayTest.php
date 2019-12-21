@@ -80,6 +80,9 @@ class FileDisplayTest extends TestCase
             return;
         }
 
+        // Ensure an app is available
+        $this->ensureApplicationExists();
+
         // Delete files in category
         static::$category->files()->delete();
 

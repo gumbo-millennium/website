@@ -79,3 +79,5 @@ services:
     image: mailhog/mailhog:latest
     networks:
       - laravel
+    ports:
+      - 127.0.0.1:13377:1025
