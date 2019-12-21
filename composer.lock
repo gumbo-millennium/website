@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8dc84f26a9608ce457dcbcd5b81ac34b",
+    "content-hash": "77ab914319bcded62d186db32c56406b",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -202,9 +202,9 @@
             "authors": [
                 {
                     "name": "Benjamin Hirsch",
-                    "role": "Developer",
                     "email": "mail@benjaminhirsch.net",
-                    "homepage": "https://wwwbenjaminhirsch.net"
+                    "homepage": "https://wwwbenjaminhirsch.net",
+                    "role": "Developer"
                 }
             ],
             "description": "A Laravel Nova field to generate a slugs.",
@@ -2097,8 +2097,8 @@
             "authors": [
                 {
                     "name": "Issam Zoli",
-                    "role": "Developer",
-                    "email": "jawbfl@gmail.com"
+                    "email": "jawbfl@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
@@ -3746,7 +3746,7 @@
             ],
             "authors": [
                 {
-                    "name": "Sebastien MALOT",
+                    "name": "Sebastien Malot",
                     "email": "sebastien@malot.fr"
                 }
             ],
@@ -6945,16 +6945,16 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v2.1.1",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "b5feb0c0d92978ec7169232ce5d70d6da6b29f63"
+                "reference": "af42d339fe2742295a54f6fdd42aaa6f8c4aca68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/b5feb0c0d92978ec7169232ce5d70d6da6b29f63",
-                "reference": "b5feb0c0d92978ec7169232ce5d70d6da6b29f63",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/af42d339fe2742295a54f6fdd42aaa6f8c4aca68",
+                "reference": "af42d339fe2742295a54f6fdd42aaa6f8c4aca68",
                 "shasum": ""
             },
             "require": {
@@ -6964,10 +6964,10 @@
                 "symfony/console": "~2.8|~3.3|~4.0"
             },
             "require-dev": {
-                "laravel/framework": "5.7.*",
+                "laravel/framework": "5.8.*",
                 "nunomaduro/larastan": "^0.3.0",
-                "phpstan/phpstan": "^0.10",
-                "phpunit/phpunit": "~7.3"
+                "phpstan/phpstan": "^0.11",
+                "phpunit/phpunit": "~8.0"
             },
             "type": "library",
             "extra": {
@@ -7005,7 +7005,7 @@
                 "php",
                 "symfony"
             ],
-            "time": "2018-11-21T21:40:54+00:00"
+            "time": "2019-03-07T21:35:13+00:00"
         },
         {
             "name": "pdepend/pdepend",

@@ -18,12 +18,13 @@ DROP USER IF EXISTS phpmyadmin;
 -- Create users with old-skool auth form
 CREATE USER laravel
     IDENTIFIED
-        WITH MYSQL_NATIVE_PASSWORD
         BY 'laravel';
 CREATE USER phpmyadmin
     IDENTIFIED
-        WITH MYSQL_NATIVE_PASSWORD
         BY 'phpmyadmin';
+
+-- Flush roles
+FLUSH PRIVILEGES;
 
 -- Grant Laravel all access to their own databases
 GRANT ALL
