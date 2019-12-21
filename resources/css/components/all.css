@@ -2,6 +2,6 @@
   Component styling
 */
 
-@import 'page-elements.css';
 @import 'logo.css';
 @import 'navbar.css';
+@import 'page-elements.css';

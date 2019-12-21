@@ -1,14 +1,80 @@
-/*
-  Grid system
-*/
+/* Basic grid stuff */
+
+.container {
+  @apply px-4;
+}
 
 .row {
   display: flex;
-  flex-flow: row wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-right: calc(0 - theme('spacing.4'));
+  margin-left: calc(0 - theme('spacing.4'));
 }
 
 .col {
-  min-height: 1px;
+  @apply px-4;
+  position: relative;
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: 100%;
+}
+
+.col-1 {
+  flex: 0 0 calc(100% / 12);
+  max-width: calc(100% / 12);
+}
+
+.col-2 {
+  flex: 0 0 calc(100% / 12 * 2);
+  max-width: calc(100% / 12 * 2);
+}
+
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.col-4 {
+  flex: 0 0 calc(100% / 12 * 4);
+  max-width: calc(100% / 12 * 4);
+}
+
+.col-5 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-6 {
+  flex: 0 0 calc(100% / 12 * 6);
+  max-width: calc(100% / 12 * 6);
+}
+
+.col-7 {
+  flex: 0 0 calc(100% / 12 * 7);
+  max-width: calc(100% / 12 * 7);
+}
+
+.col-8 {
+  flex: 0 0 calc(100% / 12 * 8);
+  max-width: calc(100% / 12 * 8);
+}
+
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+.col-10 {
+  flex: 0 0 calc(100% / 12 * 10);
+  max-width: calc(100% / 12 * 10);
+}
+
+.col-11 {
+  flex: 0 0 calc(100% / 12 * 11);
+  max-width: calc(100% / 12 * 11);
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
 }
