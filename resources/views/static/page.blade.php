@@ -1,4 +1,4 @@
-@extends('layout.tailwind')
+@extends('layout.main')
 
 @section('content')
 {!! $pageContents !!}

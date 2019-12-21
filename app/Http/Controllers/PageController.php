@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Models\Activity;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -16,8 +17,11 @@ class PageController extends Controller
      */
     public function homepage()
     {
-        return view('content.home');
-        // return $this->render(Page::SLUG_HOMEPAGE);
+        $nextEvent = Activity::where('start_date', '>', now())->orderBy('start_date')->first();
+
+        return view('content.home', [
+            'nextEvent' => $nextEvent
+        ]);
     }
 
     /**
