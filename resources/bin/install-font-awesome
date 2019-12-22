@@ -8,6 +8,10 @@ ROOT_PATH="$( git -C "${ROOT_PATH}" rev-parse --show-toplevel 2>/dev/null )"
 FA_DIR="${ROOT_PATH}/storage/app/font-awesome"
 NODE_DIR="${ROOT_PATH}/node_modules"
 
+if [ ! -d "$FA_DIR" ]; then
+    mkdir -p "$FA_DIR"
+fi
+
 function copy_node() {
     # Allocate variables
     PACK="$1"
