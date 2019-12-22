@@ -63,7 +63,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
-          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql
+          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd
           coverage: xdebug
 
       - name: Cache Composer
