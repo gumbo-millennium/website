@@ -91,7 +91,8 @@ class FileCategory extends SluggableModel
      */
     public function files(): Relation
     {
-        return $this->hasMany(File::class, 'category_id', 'id');
+        return $this->hasMany(File::class, 'category_id', 'id')
+            ->latest();
     }
 
     /**

@@ -80,7 +80,7 @@ class FileController extends Controller
     public function category(FileCategory $category)
     {
         // Get most recent files
-        $files = $category->files()->latest()->paginate(20);
+        $files = $category->files()->paginate(20);
 
         // Render view
         return view('files.category')->with([
