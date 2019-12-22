@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities;
 
 use App\Http\Controllers\Activities\Traits\ConsistentRedirects;
-use App\Http\Controllers\Activities\Traits\CreatePaymentIntents;
-use App\Http\Controllers\Activities\Traits\HandlesPaymentIntents;
+use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
@@ -32,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class EnrollmentController extends Controller
 {
     use ConsistentRedirects;
-    use HandlesPaymentIntents;
+    use HandlesStripeItems;
 
     /**
      * Require verified, logged-in users

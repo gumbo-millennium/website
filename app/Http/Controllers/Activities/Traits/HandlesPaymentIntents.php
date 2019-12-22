@@ -22,9 +22,6 @@ use Stripe\Source;
  */
 trait HandlesPaymentIntents
 {
-    use FormatsStripeData;
-    use HandlesCustomers;
-
     /**
      * Creates a Payment Intent at Stripe and returns it
      * Returns null if $enrollment is a free activity (for this user)

@@ -24,8 +24,6 @@ use Stripe\Source;
  */
 trait HandlesCustomers
 {
-    use FormatsStripeData;
-
     /**
      * Makes sure a Stripe customer is present for this user. Reloads the $enrollment if required
      *

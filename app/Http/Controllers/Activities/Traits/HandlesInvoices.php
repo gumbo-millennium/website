@@ -26,9 +26,6 @@ use Stripe\Source;
  */
 trait HandlesInvoices
 {
-    use FormatsStripeData;
-    use HandlesCustomers;
-
     /**
      * Creates a Billing Invoice at Stripe and returns it.
      * Returns null if $enrollment is a free activity (for this user)
@@ -111,13 +108,15 @@ trait HandlesInvoices
         }
     }
     /**
-     * Creates a Payment Intent at Stripe, returns the ID.
-     * Returns null if $enrollment is a free activity (for this user)
+     * Retrieves or creates invoice for the given enrollment.
+     * Returns null if this user need not pay.
      *
      * @param Enrollment $enrollment
-     * @return string|null
+     * @return null|Stripe\Invoice
+     * @throws BindingResolutionException
+     * @throws ExceptionInvalidArgumentException
      */
-    protected function getPaymentIntent(Enrollment $enrollment): ?PaymentIntent
+    protected function getPaymentInvoice(Enrollment $enrollment): ?Invoice
     {
         // Return null if price is empty
         if (empty($enrollment->price)) {
@@ -146,70 +145,5 @@ trait HandlesInvoices
 
         // Intent is ok
         return $intent;
-    }
-
-    /**
-     * Confirms the intent, returnin the user to the corresponding Enrollment
-     *
-     * @param Enrollment $enrollment The enrollment, required for return URL
-     * @param PaymentIntent $intent The intent to verify
-     * @param PaymentMethod $method Method to pay
-     * @return PaymentIntent Updated intent
-     */
-    protected function confirmPaymentIntent(
-        Enrollment $enrollment,
-        PaymentIntent $intent,
-        PaymentMethod $method
-    ): ?PaymentIntent {
-        // Make sure it's still confirm-able
-        if (
-            $intent->status !== PaymentIntent::STATUS_REQUIRES_PAYMENT_METHOD &&
-            $intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION
-        ) {
-            throw new InvalidArgumentException("Intent cannot be confirmed right now", 1);
-        }
-
-        try {
-            // Confirm the intent on Stripe's end
-            return $intent->confirm([
-                'payment_method' => $method->id,
-                'return_url' => route('payment.complete', ['activity' => $enrollment->activity]),
-            ]);
-        } catch (ApiErrorException $error) {
-            // Handle errors
-            app(StripeErrorService::class)->handleCreate($error);
-
-            // Return null if the error wasn't worthy of a throw (unlikely)
-            return null;
-        }
-    }
-
-    /**
-     * Builds a redirect to Stripe, if applicable. Returns null otherwise.
-     *
-     * @param PaymentIntent $intent
-     * @return RedirectResponse|null
-     */
-    public function redirectPaymentIntent(PaymentIntent $intent): ?RedirectResponse
-    {
-        // Check the status
-        if ($intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION) {
-            return null;
-        }
-
-        // Check the action
-        if (!$intent->next_action) {
-            return null;
-        }
-
-        // Check action type and url
-        $actionType = data_get($intent->next_action, 'type');
-        $actionUrl = data_get($intent->next_action, 'redirect_to_url.url');
-        if ($actionType !== 'redirect_to_url' || empty($actionUrl)) {
-            return null;
-        }
-
-        // Redirect to Stripe
-        return redirect()->away($actionUrl);
     }
 }
