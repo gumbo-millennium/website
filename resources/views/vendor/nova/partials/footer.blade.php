@@ -3,9 +3,9 @@
     </p>
 
 <p class="text-center text-xs text-80">
-    <a href="https://gumbo-millennium.nl/" class="text-primary dim no-underline">Homepage</a>
+    <a href="https://www.gumbo-millennium.nl/" class="text-primary dim no-underline">Homepage</a>
     <span class="px-1">&middot;</span>
-    <a href="https://gumbo-millennium.nl/privacy-policy" class="text-primary dim no-underline">Privacy Policy</a>
+    <a href="https://www.gumbo-millennium.nl/privacy-policy" class="text-primary dim no-underline">Privacy Policy</a>
     <span class="px-1">&middot;</span>
     Admin Panel v{{ Laravel\Nova\Nova::version() }}
 </p>

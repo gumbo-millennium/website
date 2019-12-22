@@ -1,3 +1,5 @@
 <footer class="footer">
-    © Gumbo Millennium {{ today()->year }}. Alle rechten voorbehouden.
+    <div class="container text-center">
+        <p>© Gumbo Millennium {{ today()->year }}. Alle rechten voorbehouden.</p>
+    </div>
 </footer>

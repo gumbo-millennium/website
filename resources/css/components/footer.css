@@ -1,0 +1,7 @@
+/*
+  Footer
+*/
+
+.footer {
+  @apply py-8 text-gray text-sm;
+}

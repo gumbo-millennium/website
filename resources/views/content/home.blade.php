@@ -2,8 +2,8 @@
 
 @section('content')
 {{-- Welcome --}}
-<div class="bg-brand-700">
-    <div class="container my-16">
+<div class="bg-brand-700 py-16">
+    <div class="container">
         <h1 class="text-4xl text-center mb-8">Welkom bij Gumbo Millennium</h1>
         <p class="text-xl text-white text-center">
             Dubbel L, dubbel N, <strong class="font-bold">dubbel genieten</strong>!
