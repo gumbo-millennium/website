@@ -2,7 +2,12 @@
 
 # Computed directories
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_PATH="$( git -C "${ROOT_PATH}" rev-parse --show-toplevel 2>/dev/null )"
+ROOT_PATH="$( git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null )"
+
+# Determine backup path
+if [ -z "$ROOT_PATH" ]; then
+    $ROOT_PATH="$( realpath "${SCRIPT_DIR}/../../" )"
+fi
 
 # Directories
 FA_DIR="${ROOT_PATH}/storage/app/font-awesome"
