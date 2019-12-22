@@ -6,7 +6,7 @@ ROOT_PATH="$( git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null )"
 
 # Determine backup path
 if [ -z "$ROOT_PATH" ]; then
-    $ROOT_PATH="$( realpath -s "${SCRIPT_DIR}/../../" )"
+    ROOT_PATH="$( realpath -s "${SCRIPT_DIR}/../../" )"
 fi
 
 # Directories
