@@ -21,6 +21,10 @@ jobs:
         env:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Pull images
+        run: docker-compose pull
+        continue-on-error: true
+
       - name: Build images
         run: docker-compose build
 
