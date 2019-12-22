@@ -1,0 +1,26 @@
+/* Icon styling */
+
+.icon {
+  @apply fill-current inline-block;
+  height: 1em; /* stylelint-disable-line unit-whitelist */
+}
+
+.icon-before {
+  @apply mr-2;
+}
+
+.icon-after {
+  @apply ml-2;
+}
+
+.icon-md {
+  @apply h-4;
+}
+
+.icon-lg {
+  @apply h-6;
+}
+
+.icon-xl {
+  @apply h-8;
+}

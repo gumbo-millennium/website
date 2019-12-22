@@ -1,15 +1,32 @@
-/*
-  Navbar
-*/
+/* Navbar */
 
 .navbar {
-  @apply flex flex-row flex-wrap list-none;
+  @apply bg-white py-4;
 }
 
-.navbar a {
+.navbar__container {
+  @apply flex flex-col items-center;
+}
+
+@screen md {
+  .navbar__container {
+    @apply flex-row justify-between;
+  }
+
+  .navbar__filler {
+    @apply flex-grow;
+  }
+}
+
+.navbar__nav {
+  @apply flex flex-row flex-wrap list-none;
+  @apply justify-center;
+}
+
+.navbar__nav-link {
   @apply px-4 py-2 text-sm uppercase;
 }
 
-.navbar li:first-child a {
+.navbar__nav-item:first-child .navbar__nav-link {
   @apply pl-0;
 }

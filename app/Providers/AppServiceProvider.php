@@ -42,17 +42,6 @@ class AppServiceProvider extends ServiceProvider
         Horizon::auth(function ($request) {
             return $request->user() !== null && $request->user()->hasPermissionTo('devops');
         });
-
-        // Create method to render SVG icons
-        Blade::directive('icon', function ($icon, $className = null) {
-            $className = $className ?? 'icon';
-            return (
-                // phpcs:ignore Generic.Files.LineLength.TooLong
-                "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
-                "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
-                "</svg>"
-            );
-        });
     }
 
     /**

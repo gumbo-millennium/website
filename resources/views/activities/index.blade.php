@@ -1,32 +1,49 @@
 @extends('layout.main')
 
-@section('title', 'Activity overview - Gumbo Millennium')
+@php
+$title = 'Aankomende activiteiten';
+$subtitle = 'Binnenkort op de agenda bij Gumbo Millennium';
+if ($past) {
+    $title = 'Afgelopen activiteiten';
+    $subtitle = 'Overzicht van afgelopen activiteiten, tot 1 jaar terug.';
+}
+@endphp
+
+@section('title', "{$title} - Gumbo Millennium")
 
 @section('content')
-<h1>Activity overview</h1>
+<div class="header">
+    <div class="container header__container">
+        <h1 class="header__title">{{ $title }}</h1>
+        <p clas="header__lead">{{ $subtitle }}</p>
+    </div>
+</div>
 
-<p>This is what we're going to do soon</p>
+<div class="content-block">
+    <div class="container content-block__container">
+        <p>
+            Bij Gumbo houden wij van leuke activiteiten.
+            Van een gezellige soosavond tot een spektaculair weekend weg in een prachtig landhuis.
+        </p>
+        <p>
+            In onderstaand overzicht zie je de {{ Str::lower($title) }}.
+        </p>
+        @guest
+        <div class="alert alert-info">
+            Je bent niet ingelogd. Activiteiten die alleen toegankelijk zijn voor leden worden niet getoond.
+        </div>
+        @endguest
+    </div>
+</div>
+
+<div class="activity-list">
+    <div class="container activity-list__container">
+        @each('activities.bits.list-item', $activities, 'activity', 'activities.bits.list-empty')
+    </div>
+</div>
 <ul style="list-style: '- ' outside;" class="pl-2">
     @foreach ($activities as $activity)
-    @php
-    $startTimestamp = ($activity->start_date ?? today())->locale('nl', 'nl_NL', 'dutch');
-    $startDate = $startTimestamp->isoFormat('D MMM Y');
-    $startTime = $startTimestamp->isoFormat('HH:mm');
-    $url = route('activity.show', ['activity' => $activity]);
-    $enrolled = 'Nee';
-    if (isset($enrollments[$activity->id])) {
-        $enrolled = 'Ja';
-        if (!$enrollments[$activity->id]->state->isStable()) {
-            $enrolled .= ", actie vereist!";
-        }
-    }
-    @endphp
-    <li class="pl-2 pb-4">
-        <a href="{{ $url }}">{{ $activity->name }}</a><br />
-        Datum: {{ $startDate }}<br />
-        Tijd: {{ $startTime }}<br />
-        Ingeschreven: {{ $enrolled }}
-    </li>
+
     @endforeach
 </ul>
 

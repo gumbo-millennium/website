@@ -9,6 +9,9 @@ const gumboSettings = require('./tailwind.gumbo')
 module.exports = {
   plugins: gumboSettings.plugins,
   theme: {
+    container: {
+      center: true
+    },
     extend: {
       screens: {
         sm: '640px',
