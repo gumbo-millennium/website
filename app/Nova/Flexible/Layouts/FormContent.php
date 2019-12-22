@@ -35,5 +35,4 @@ class FormContent extends Layout
             Trix::make('Conent', 'content')->stacked()
         ];
     }
-
 }

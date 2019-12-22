@@ -36,5 +36,4 @@ class FormCheckbox extends Layout
             Boolean::make('Must be checked', 'required')
         ];
     }
-
 }

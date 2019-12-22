@@ -38,5 +38,4 @@ class FormPhone extends Layout
             Boolean::make('Required', 'required')
         ];
     }
-
 }

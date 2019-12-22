@@ -35,5 +35,4 @@ class FormTextArea extends Layout
             Boolean::make('Required', 'required')
         ];
     }
-
 }

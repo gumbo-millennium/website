@@ -38,5 +38,4 @@ class ActivityForm extends Preset
         $field->addLayout(FormCheckbox::class);
         $field->addLayout(FormContent::class);
     }
-
 }

@@ -35,5 +35,4 @@ class FormTextField extends Layout
             Boolean::make('Required', 'required')
         ];
     }
-
 }

@@ -35,5 +35,4 @@ class FormEmail extends Layout
             Boolean::make('Required', 'required')
         ];
     }
-
 }

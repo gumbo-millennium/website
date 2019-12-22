@@ -42,5 +42,4 @@ class FormSelect extends Layout
                 ->actionText('Add option'),
         ];
     }
-
 }
