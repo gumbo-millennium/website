@@ -108,6 +108,13 @@ jobs:
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
 
+      - name: Upload logs for error digging
+        uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: front-end
+          path: storage/logs/
+
       - name: Report test results to CodeClimate
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
