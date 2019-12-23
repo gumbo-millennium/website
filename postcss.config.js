@@ -1,4 +1,7 @@
 /* eslint-disable quote-props */
+// OS-level
+const path = require('path')
+
 // Plugins
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
@@ -6,20 +9,31 @@ const postcssCalc = require('postcss-calc')
 const postcssImport = require('postcss-import')
 const postcssRem = require('postcss-rem')
 const purgecss = require('@fullhuman/postcss-purgecss')
+const responsiveImages = require('./resources/postcss/responsive-image')
 const tailwindcss = require('tailwindcss')
 
-// Configs
-const purgeExtensions = ['html', 'js', 'jsx', 'ts', 'tsx', 'php', 'vue']
-
-module.exports = ({ file, options, env }) => ({
-  parser: false,
-  plugins: [
+module.exports = ({ file, options, env }) => {
+  const plugins = [
     postcssImport(),
     tailwindcss(),
-    purgecss({
-      content: [`app/**/*.php`].concat(
-        purgeExtensions.map(ext => `resources/**/*.${ext}`)
-      ),
+    // purgecss
+    responsiveImages(),
+    postcssCalc({}),
+    postcssRem({ convert: 'rem' }),
+    autoprefixer()
+    // cssnano
+  ]
+
+  if (env === 'production') {
+    // Add purgecss as 3rd
+    plugins.splice(2, 0, purgecss({
+      content: [
+        'app/**/*.php',
+        'resources/**/*.blade.php',
+        'resources/**/*.html',
+        'resources/**/*.js',
+        'resources/**/*.vue'
+      ],
       extractors: [
         {
           extractor: class {
@@ -27,13 +41,17 @@ module.exports = ({ file, options, env }) => ({
               return content.match(/[a-zA-Z0-9-:_/]+/g) || []
             }
           },
-          extensions: purgeExtensions
+          extensions: ['php', 'html', 'js', 'vue']
         }
       ]
-    }),
-    postcssCalc({}),
-    postcssRem({ convert: (file.basename === 'pdf.css' ? 'px' : 'rem') }),
-    autoprefixer(),
-    cssnano(env === 'production' ? options.cssnano : false)
-  ]
-})
+    }))
+
+    // Add cssnano as last
+    plugins.push(cssnano(options.cssnano))
+  }
+
+  return {
+    parser: false,
+    plugins: plugins
+  }
+}
