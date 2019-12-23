@@ -21,6 +21,7 @@ CREATE USER laravel
         BY 'laravel';
 CREATE USER phpmyadmin
     IDENTIFIED
+        WITH MYSQL_NATIVE_PASSWORD
         BY 'phpmyadmin';
 
 -- Flush roles
