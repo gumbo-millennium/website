@@ -127,7 +127,7 @@ class RegisterForm extends Form
             ])
             ->add('accept_terms', 'checkbox', [
                 'label' => 'Ik ga akkoord met de uitgebreide privacy policy van Gumbo Millennium',
-                'rules' => 'required|accept'
+                'rules' => 'required|accepted'
             ])
             ->add('submit', 'submit', [
                 'label' => 'Registreren'
