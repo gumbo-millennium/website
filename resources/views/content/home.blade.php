@@ -2,10 +2,10 @@
 
 @section('content')
 {{-- Welcome --}}
-<div class="bg-brand-700 py-32">
-    <div class="container text-white">
-        <h1 class="text-4xl text-center mb-8">Welkom bij Gumbo Millennium</h1>
-        <p class="text-xl text-center">
+<div class="header">
+    <div class="container header__container">
+        <h1 class="header__title">Welkom bij Gumbo Millennium</h1>
+        <p class="header__subtitle">
             Dubbel L, dubbel N, <strong class="font-bold">dubbel genieten</strong>!
         </p>
     </div>
@@ -13,7 +13,7 @@
 
 {{-- Upcoming --}}
 @if ($nextEvent)
-<div class="bg-brand-100 activity-block">
+<div class="bg-brand-100 activity-block after-header">
     <div class="container activity-block__container">
         <div class="row">
             <div class="col activity-block__date-col">

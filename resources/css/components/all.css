@@ -2,7 +2,8 @@
   Component styling
 */
 
-@import 'logo.css';
-@import 'navbar.css';
 @import 'footer.css';
 @import 'form.css';
+@import 'header.css';
+@import 'logo.css';
+@import 'navbar.css';

@@ -1,0 +1,40 @@
+/* Header element */
+
+.header {
+  @apply bg-brand-700;
+  padding-bottom: theme('spacing.8');
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - theme('spacing.8')), 0 100%);
+}
+
+.header__container {
+  @apply py-32;
+}
+
+.header__title, .header__subtitle {
+  @apply text-white text-center;
+}
+
+.header__title {
+  @apply text-4xl mb-8;
+}
+
+.header__subtitle {
+  @apply text-xl;
+}
+
+.after-header {
+  @apply pt-8;
+  margin-top: calc(0 - theme('spacing.8'));
+}
+
+@screen md {
+  .header {
+    padding-bottom: theme('spacing.16');
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - theme('spacing.16')), 0 100%);
+  }
+
+  .after-header {
+    @apply pt-16;
+    margin-top: calc(0 - theme('spacing.16'));
+  }
+}
