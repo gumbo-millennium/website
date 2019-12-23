@@ -29,6 +29,7 @@ module.exports = ({ file, options, env }) => {
     plugins.splice(2, 0, purgecss({
       content: [
         'app/**/*.php',
+        'config/**/*.php',
         'resources/**/*.blade.php',
         'resources/**/*.html',
         'resources/**/*.js',

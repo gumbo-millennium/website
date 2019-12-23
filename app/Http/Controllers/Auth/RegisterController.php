@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
+use App\Forms\RegisterForm;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Kris\LaravelFormBuilder\FormBuilder;
 
+/**
+ * Registation controller
+ */
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
-    use RegistersUsers;
+    use RedirectsUsers;
     use RedirectsToAdminHomeTrait;
 
     /**
@@ -36,42 +32,57 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+
     /**
-     * Get a validator for an incoming registration request.
+     * Show the application registration form.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return \Illuminate\Http\Response
      */
-    protected function validator(array $data)
+    public function showRegistrationForm(FormBuilder $formBuilder)
     {
-        return Validator::make($data, [
-            // Names
-            'first_name' => 'required|string|max:255',
-            'insert' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-
-            // Email address
-            'email' => 'required|string|email|max:255|unique:users',
-
-            // Password
-            'password' => 'required|string|min:8|confirmed',
+        // Create form
+        $form = $formBuilder->create(RegisterForm::class, [
+            'method' => 'POST',
+            'url' => route('register')
         ]);
+
+        // Make form
+        return view('auth.register', compact('form'));
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Registers a new user in the system
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param FormBuilder $formBuilder
+     * @return Illuminate\Routing\Redirector|Illuminate\Http\RedirectResponse
+     * @throws BindingResolutionException
      */
-    protected function create(array $data)
+    public function register(FormBuilder $formBuilder)
     {
-        return User::create([
-            'first_name' => $data['first_name'],
-            'insert' => $data['insert'] ?? null,
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        // Get form
+        $form = $formBuilder->create(RegisterForm::class);
+
+        // Or automatically redirect on error. This will throw an HttpResponseException with redirect
+        $form->redirectIfNotValid();
+
+        // Get values
+        $userValues = $form->getFieldValues();
+
+        // Format some values
+        $userValues['alias'] = empty($userValues['alias']) ? null : Str::lower($userValues['alias']);
+        $userValues['email'] = Str::lower($userValues['email']);
+        $userValues['password'] = Hash::make($userValues['password']);
+
+        // Create a user with the values
+        $user = User::create($userValues);
+
+        // Dispatch event
+        event(new Registered($user));
+
+        // Log in user
+        Auth::guard()->login($user);
+
+        // Forward client
+        return redirect($this->redirectPath());
     }
 }

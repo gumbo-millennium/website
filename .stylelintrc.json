@@ -11,6 +11,20 @@
           "screen"
         ]
       }
+    ],
+    "unit-whitelist": [
+      "%",
+      "deg",
+      "fr",
+      "ms",
+      "px",
+      "rem",
+      "s",
+      "vh",
+      "vmax",
+      "vmin",
+      "vw"
     ]
+
   }
 }
