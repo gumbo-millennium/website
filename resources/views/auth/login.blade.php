@@ -60,7 +60,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     {{-- Login password --}}
     <div class="login__field mb-4">
         {{-- Label --}}
-        <label for="password" class="login__field-label block text-sm mb-2">{{ __('E-Mail Address') }}</label>
+        <label for="password" class="login__field-label block text-sm mb-2">{{ __('Password') }}</label>
 
         {{-- Input --}}
         <input id="password" type="password" class="login__field-input form-input block" name="password"
