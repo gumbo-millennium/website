@@ -111,7 +111,7 @@ jobs:
         uses: actions/upload-artifact@master
         if: failure()
         with:
-          name: front-end
+          name: test-logs
           path: storage/logs/
 
       - name: Report test results to CodeClimate
