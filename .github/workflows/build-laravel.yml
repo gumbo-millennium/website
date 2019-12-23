@@ -76,6 +76,15 @@ jobs:
             composer-build-${{ env.cache-name }}-
             composer-build-
 
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-build-${{ env.cache-name }}-
+            node-build-
+
       - name: Login for Laravel Nova
         run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_PASSWORD}
         env:
@@ -100,6 +109,9 @@ jobs:
           name: front-end
           path: public/
 
+      - name: Install Font Awesome icons
+        run: yarn run postinstall
+
       - name: Run linters
         run: composer run lint
 
@@ -107,13 +119,6 @@ jobs:
         run: |
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
-
-      - name: Upload logs for error digging
-        uses: actions/upload-artifact@master
-        if: failure()
-        with:
-          name: test-logs
-          path: storage/logs/
 
       - name: Report test results to CodeClimate
         run: |
