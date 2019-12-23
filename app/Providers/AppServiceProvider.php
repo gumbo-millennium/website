@@ -137,6 +137,8 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
 
+            $value /= 100;
+
             // Handle round value value
             if (($value * 100) % 100 === 0) {
                 return sprintf('€ %s,-', number_format($value, 0, ',', '.'));
