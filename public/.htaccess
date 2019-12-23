@@ -20,7 +20,7 @@
     RewriteRule ^ index.php [L]
 
     # Handle files with a hash
-    <FilesMatch "\w+\.([a-f0-9]{4,8})\.(js|css|svg)$">
+    <FilesMatch "\w+\.([a-f0-9]{16})\.(js|css|svg|jpe?g|png|gif)(\.(br|gz))?$">
         Header set Cache-Control "public, no-transform, immutable, max-age=7776000"
     </FilesMatch>
 
