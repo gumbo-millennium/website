@@ -10,36 +10,47 @@ if (isset($enrollments[$activity->id])) {
     }
 }
 
+// Determine duration
+$duration = $endTimestamp->diffForHumans($startTimestamp, [
+    'syntax' => Carbon\Carbon::DIFF_ABSOLUTE,
+    'parts' => 1,
+    'options' => Carbon\Carbon::ROUND
+]);
+
 // Determine price label
-$price = sprintf('vanaf %s', Str::price(min(
-    $activity->total_price_member ?? 0,
-    $activity->total_price_guest ?? 0,
-)));
+$price = Str::price($activity->total_price_member ?? 0);
+
 if ($activity->total_price_member === null && $activity->total_price_guest === null) {
+    // If it's free, mention it
     $price = 'gratis';
-} elseif ($activity->total_price_member === null) {
+} elseif (!$activity->total_price_member && $activity->is_public) {
+    // Free for members when public
     $price = 'gratis voor leden';
 } elseif ($activity->total_price_member === $activity->total_price_guest) {
+    // Same price for both parties
     $price = Str::price($activity->total_price_member);
+} elseif ($activity->is_public) {
+    // Starting bid
+    $price = sprintf('vanaf %s', Str::price($activity->total_price_member ?? 0));
 }
 @endphp
-<article class="mb-8 p-4 rounded bg-white shadow">
-    <div class="flex flex-row">
-        <div class="flex flex-col text-center items-center justify-center p-4 uppercase leadin1g-none">
-            <div class="mb-2 font-bold text-xs text-brand-900">{{ $startTimestamp->isoFormat('dd') }}</div>
-            <div class="mb-2 font-normal text-4xl text-brand-700">{{ $startTimestamp->isoFormat('DD') }}</div>
-            <div class="mb-0 font-bold text-md text-brand-900">{{ $startTimestamp->isoFormat('MMM') }}</div>
+<article class="activity-block {{ $activityClass ?? null }}">
+    <div class="container activity-block__container">
+        <div class="activity-block__date">
+            <div class="activity-block__date-day">{{ $startTimestamp->isoFormat('dd') }}</div>
+            <div class="activity-block__date-date">{{ $startTimestamp->isoFormat('DD') }}</div>
+            <div class="activity-block__date-month">{{ $startTimestamp->isoFormat('MMM') }}</div>
         </div>
-        <div class="flex-grow flex flex-col justify-between p-4">
+        <div class="activity-block__content">
             {{-- Title --}}
-            <h3 class="text-2xl font-bold my-0 mb-4">
+            <h3 class="activity-block__title">
                 <a href="{{ route('activity.show', compact('activity')) }}">{{ $activity->name }}</a>
             </h3>
 
             <div class="flex-grow"></div>
 
-            {{-- Date and time --}}
-            <div class="leading-none mb-4 flex flex-row text-gray-500">
+            <div class="activity-block__details">
+                {{-- Date and time --}}
                 <div class="mr-4">
                     @icon('solid/calendar', 'icon-md icon-before')
                     {{ $startTimestamp->isoFormat('dddd D MMMM, YYYY') }}
@@ -48,20 +59,38 @@ if ($activity->total_price_member === null && $activity->total_price_guest === n
                     @icon('solid/clock', 'icon-md icon-before')
                     {{ $startTimestamp->isoFormat('HH:mm') }}
                 </div>
+
+                {{-- Duration --}}
                 <div class="mr-4">
                     @icon('solid/hourglass-half', 'icon-md icon-before')
-                    {{ $endTimestamp->diffForHumans($startTimestamp, Carbon\CarbonInterface::DIFF_ABSOLUTE, false, 1) }}
+                    {{ $duration }}
                 </div>
-            </div>
 
-            {{-- Cost --}}
-            <div class="leading-none flex flex-row text-gray-500">
+                {{-- Break --}}
+                <div class="w-full mb-4"></div>
+
+                {{-- Cost --}}
                 <div class="mr-4">
                     @icon('solid/ticket-alt', 'icon-md icon-before')
+                    @if ($activity->available_seats)
                     {{ $price }}
+                    @else
+                    <span class="text-danger-light">Uitverkocht</span>
+                    @endif
                 </div>
+
+                {{-- Places --}}
+                @if ($activity->seats)
+                {{-- Cost --}}
+                <div class="mr-4">
+                    @icon('solid/user-friends', 'icon-md icon-before')
+                    {{ $activity->seats }} plekken
+                </div>
+                @endif
+
+                {{-- User status --}}
                 <div>
-                    @icon('solid/user', 'icon-md icon-before')
+                    @icon('solid/user-check', 'icon-md icon-before')
                     {{ $enrolled }}
             </div>
         </div>

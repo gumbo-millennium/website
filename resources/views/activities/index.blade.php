@@ -7,15 +7,28 @@ if ($past) {
     $title = 'Afgelopen activiteiten';
     $subtitle = 'Overzicht van afgelopen activiteiten, tot 1 jaar terug.';
 }
+
+// Get first activity
+$firstActivity = $past ? null : $activities->first();
 @endphp
 
 @section('title', "{$title} - Gumbo Millennium")
 
+@if ($firstActivity && $firstActivity->image->exists())
+@push('css')
+<style nonce="@nonce">
+.header--activity {
+    background-image: url("{{ $firstActivity->image->url('banner') }}");
+}
+</style>
+@endpush
+@endif
+
 @section('content')
-<div class="header">
+<div class="header header--activity">
     <div class="container header__container">
         <h1 class="header__title">{{ $title }}</h1>
-        <p clas="header__lead">{{ $subtitle }}</p>
+        <p class="header__subtitle">{{ $subtitle }}</p>
     </div>
 </div>
 
@@ -36,10 +49,8 @@ if ($past) {
     </div>
 </div>
 
-<div class="activity-list">
-    <div class="container activity-list__container">
-        @each('activities.bits.list-item', $activities, 'activity', 'activities.bits.list-empty')
-    </div>
+<div class="activity-blocks">
+    @each('activities.bits.list-item', $activities, 'activity', 'activities.bits.list-empty')
 </div>
 <ul style="list-style: '- ' outside;" class="pl-2">
     @foreach ($activities as $activity)

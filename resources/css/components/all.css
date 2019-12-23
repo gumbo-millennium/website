@@ -2,6 +2,7 @@
   Component styling
 */
 
+@import 'activity-block.css';
 @import 'footer.css';
 @import 'form.css';
 @import 'header.css';
