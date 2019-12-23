@@ -19,24 +19,24 @@ module.exports = {
         lg: '1024px'
       },
       spacing: {
-        '0': '0',
-        '1': '0.25rem',
-        '2': '0.5rem',
-        '4': '1rem',
-        '6': '1.5rem',
-        '8': '2rem',
-        '10': '2.5rem',
-        '12': '3rem',
-        '14': '3.5rem',
-        '16': '4rem',
+        0: '0',
+        1: '0.25rem',
+        2: '0.5rem',
+        4: '1rem',
+        6: '1.5rem',
+        8: '2rem',
+        10: '2.5rem',
+        12: '3rem',
+        14: '3.5rem',
+        16: '4rem'
       },
       colors: gumboSettings.colors,
       backgroundPosition: {
-        center: 'center',
+        center: 'center'
       },
       cursor: {
         default: 'default',
-        pointer: 'pointer',
+        pointer: 'pointer'
       },
       fontWeight: {
         light: '300',
@@ -46,7 +46,7 @@ module.exports = {
       letterSpacing: null,
       objectPosition: {
         center: 'center',
-        top: 'top',
+        top: 'top'
       },
       stroke: null,
       width: theme => ({
@@ -70,7 +70,7 @@ module.exports = {
         '10/12': '83.333333%',
         '11/12': '91.666667%',
         full: '100%',
-        screen: '100vw',
+        screen: '100vw'
       }),
       zIndex: null
     }
