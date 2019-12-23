@@ -10,13 +10,16 @@
                 <a class="navbar__nav-link" href="/">Home</a>
             </li>
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/activities">Activities</a>
+                <a class="navbar__nav-link" href="/about">Over</a>
             </li>
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/files">Files</a>
+                <a class="navbar__nav-link" href="/activities">Activiteiten</a>
             </li>
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/news">News</a>
+                <a class="navbar__nav-link" href="/files">Bestanden</a>
+            </li>
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="/news">Nieuws</a>
             </li>
         </ul>
     </div>
