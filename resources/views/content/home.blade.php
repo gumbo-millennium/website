@@ -2,10 +2,10 @@
 
 @section('content')
 {{-- Welcome --}}
-<div class="bg-brand-700 py-16">
-    <div class="container">
+<div class="bg-brand-700 py-32">
+    <div class="container text-white">
         <h1 class="text-4xl text-center mb-8">Welkom bij Gumbo Millennium</h1>
-        <p class="text-xl text-white text-center">
+        <p class="text-xl text-center">
             Dubbel L, dubbel N, <strong class="font-bold">dubbel genieten</strong>!
         </p>
     </div>

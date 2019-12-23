@@ -24,7 +24,7 @@
 }
 
 .navbar__nav-link {
-  @apply px-4 py-2 text-sm uppercase;
+  @apply px-4 py-2 text-sm uppercase no-underline;
 }
 
 .navbar__nav-item:first-child .navbar__nav-link {
