@@ -171,6 +171,11 @@ Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
     Route::patch('/info', 'UserController@update');
 });
 
+// Onboarding URLs
+Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(function () {
+    Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-user');
+});
+
 // Common mistakes handler
 Route::redirect('/sign-up', '/join');
 

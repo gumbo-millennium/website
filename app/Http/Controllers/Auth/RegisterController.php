@@ -9,16 +9,20 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\FormBuilder;
+use RuntimeException;
 
 /**
  * Registation controller
  */
 class RegisterController extends Controller
 {
+    private const SESSION_ACCESS = 'onboarding.after-registration';
+
     use RedirectsUsers;
     use RedirectsToAdminHomeTrait;
 
@@ -83,6 +87,29 @@ class RegisterController extends Controller
         Auth::guard()->login($user);
 
         // Forward client
-        return redirect($this->redirectPath());
+        return redirect()->route('onboarding.new-user')->with(self::SESSION_ACCESS, true);
+    }
+
+    /**
+     * Show welcome response
+     *
+     * @param Request $request
+     * @return Response
+     * @throws RuntimeException
+     */
+    public function afterRegister(Request $request)
+    {
+        // Remove session flag if continuing
+        if ($request->has('continue')) {
+            $request->session()->forget(self::SESSION_ACCESS);
+        }
+
+        // Show onboarding if allowed
+        if ($request->session()->has(self::SESSION_ACCESS)) {
+            return view('onboarding.new-account');
+        }
+
+        // Redirect to next page otherwise
+        return redirect()->intended();
     }
 }
