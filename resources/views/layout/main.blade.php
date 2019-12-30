@@ -27,6 +27,7 @@
     </main>
 
     @include('layout.footer')
+    @includeWhen($user !== null, 'layout.logout')
 </body>
 
 </html>
