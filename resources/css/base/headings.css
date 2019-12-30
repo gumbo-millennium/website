@@ -2,24 +2,24 @@
   Make the background gray-ish
 */
 
-.content h1, .content h2, .content h3 {
+.content h1, .content h2, .content h3, .h1, .h2, .h3 {
   @apply font-bold;
   @apply text-black;
 }
 
-.content h1 {
+.content h1, .h1 {
   @apply text-3xl mt-8 mb-4;
 }
 
-.content h2 {
+.content h2, .h2 {
   @apply text-2xl mt-6 mb-4;
 }
 
-.content h3 {
+.content h3, .h3 {
   @apply text-xl mt-4 mb-2;
 }
 
-.content h4 {
+.content h4, .h4 {
   @apply my-2;
   @apply text-brand-800;
   @apply font-bold uppercase;

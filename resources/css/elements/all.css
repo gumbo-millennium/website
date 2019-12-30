@@ -2,5 +2,6 @@
   Single elements
 */
 
-@import 'button.css';
 @import 'activity-facts.css';
+@import 'button.css';
+@import 'card.css';

@@ -43,12 +43,12 @@ module.exports = {
         normal: '400',
         bold: '700'
       },
-      letterSpacing: null,
+      letterSpacing: {},
       objectPosition: {
         center: 'center',
         top: 'top'
       },
-      stroke: null,
+      stroke: {},
       width: theme => ({
         auto: 'auto',
         ...theme('spacing'),
@@ -72,7 +72,7 @@ module.exports = {
         full: '100%',
         screen: '100vw'
       }),
-      zIndex: null
+      zIndex: {}
     }
   },
   variants: {

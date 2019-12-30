@@ -2,7 +2,7 @@
   Link formatting
 */
 
-a, a:link, a:visited {
+a {
   @apply text-gray-800 underline;
 }
 

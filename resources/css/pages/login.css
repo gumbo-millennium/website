@@ -1,0 +1,20 @@
+/* Login page and form */
+
+.login {
+  @apply py-8;
+}
+
+.login__title {
+  @apply text-3xl mb-8;
+}
+
+.login__inner-small {
+  @apply w-full;
+}
+
+@screen sm {
+  .login__inner-small {
+    @apply mx-auto;
+    max-width: calc(theme('screens.sm') / 12 * 9);
+  }
+}
