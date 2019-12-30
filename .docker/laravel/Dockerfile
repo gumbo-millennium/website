@@ -35,7 +35,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
     sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Add apache config
-ENV APACHE_RUN_USER=#1000 APACHE_RUN_GROUP=#1000
+ENV APACHE_RUN_USER=laravel APACHE_RUN_GROUP=laravel
 COPY ./apache/conf/*.conf /etc/apache2/conf-available/
 COPY ./apache/mods/*.conf /etc/apache2/mods-available/
 RUN a2enmod \
