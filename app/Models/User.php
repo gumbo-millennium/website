@@ -119,22 +119,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
     }
 
     /**
-     * Returns full name of the user
-     *
-     * @return string|null
-     */
-    public function getNameAttribute(): ?string
-    {
-        $name = collect([
-            $this->first_name,
-            $this->insert,
-            $this->last_name
-        ])->filter()->implode(' ');
-
-        return $name !== '' ? $name : null;
-    }
-
-    /**
      * Returns the public name of the user
      *
      * @return string|null
