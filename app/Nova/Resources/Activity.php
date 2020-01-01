@@ -12,6 +12,7 @@ use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\MergeValue;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -121,17 +122,18 @@ class Activity extends Resource
      */
     public function fields(Request $request)
     {
-        return array_merge($this->mainFields(), [
+        return [
+            $this->mainFields(),
             new Panel('Date and price settings', $this->pricingFields()),
             new Panel('Enrollment settings', $this->enrollmentFields()),
 
             HasMany::make('Enrollments', 'enrollments', Enrollment::class),
-        ]);
+        ];
     }
 
-    public function mainFields(): array
+    public function mainFields(): MergeValue
     {
-        return [
+        return $this->merge([
             ID::make()->sortable(),
 
             TextWithSlug::make('Title', 'name')
@@ -182,11 +184,60 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->searchable()
                 ->nullable(),
-        ];
+        ]);
     }
 
+    /**
+     * Pricing fields
+     *
+     * @return array
+     */
     public function pricingFields(): array
     {
+        /**
+         * Validates the guest price against the member price, but only if
+         * it's set (guest price >= member price)
+         *
+         * @param string $attr
+         * @param mixed $value
+         * @param \Closure $fail
+         * @return void
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        $guestPriceRule = function ($attr, $value, $fail): void {
+            // Parse to floats
+            $memberPrice = filter_input(
+                INPUT_POST,
+                'price_member',
+                \FILTER_VALIDATE_FLOAT,
+                ['options' => ['min_range' => 0.00]]
+            );
+            $guestPrice = filter_var(
+                $value,
+                \FILTER_VALIDATE_FLOAT,
+                ['options' => ['min_range' => 0.00]]
+            );
+            $isPublic = filter_input(
+                INPUT_POST,
+                'is_public',
+                \FILTER_VALIDATE_BOOLEAN,
+                \FILTER_NULL_ON_FAILURE
+            );
+
+            // Debug
+            logger()->debug('Testing {attr} value {guest-value} against {member-value}', [
+                'attr' => $attr,
+                'guest-value' => $guestPrice,
+                'member-value' => $memberPrice,
+                'public-value' => $isPublic
+            ]);
+
+            // Validate (null ≈ 0)
+            if ($isPublic && $memberPrice > $guestPrice) {
+                $fail("The guest price has to be larger than the member price.");
+            }
+        };
+
         return [
             DateTime::make('Event Start', 'start_date')
                 ->sortable()
@@ -224,7 +275,7 @@ class Activity extends Resource
                 ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
-                ->rules('nullable', 'numeric', 'min:2.50', 'gte:price_member')
+                ->rules('nullable', 'numeric', 'min:2.50', $guestPriceRule)
                 ->help('In Euro, not including service fees'),
 
             Price::make('Total member price', 'total_price_member')
