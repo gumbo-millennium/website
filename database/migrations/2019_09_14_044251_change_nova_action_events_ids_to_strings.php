@@ -27,10 +27,6 @@ class ChangeNovaActionEventsIdsToStrings extends Migration
      */
     public function down()
     {
-        Schema::table('action_events', function ($table) {
-            $table->integer('actionable_id')->unsigned()->change();
-            $table->integer('model_id')->unsigned()->change();
-            $table->integer('target_id')->unsigned()->change();
-        });
+        // Don't roll back, string → integer conversion is incompatible
     }
 }
