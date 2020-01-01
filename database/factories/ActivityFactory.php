@@ -6,38 +6,7 @@ use App\Models\Activity;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
 
-$buildFakeEditorJsMessage = function (Faker $faker) {
-    $blocks = [];
-
-    $result = [
-        'time' => time() * 1000,
-        'blocks' => &$blocks,
-        'version' => '2.15.0'
-    ];
-
-    for ($i = $faker->numberBetween(1, 4); $i > 0; $i--) {
-        $blocks[] = [
-            'type' => 'header',
-            'data' => [
-                'text' => $faker->sentence(5, true),
-                'level' => $faker->numberBetween(2, 4)
-            ]
-        ];
-
-        for ($i = $faker->numberBetween(1, 10); $i > 0; $i--) {
-            $blocks[] = [
-                'type' => 'paragraph',
-                'data' => [
-                    'text' => $faker->sentences($faker->randomDigitNotNull, true)
-                ]
-            ];
-        }
-    }
-
-    return $result;
-};
-
-$factory->define(Activity::class, function (Faker $faker) use ($buildFakeEditorJsMessage) {
+$factory->define(Activity::class, function (Faker $faker) {
     $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
     $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
 
@@ -77,7 +46,6 @@ $factory->define(Activity::class, function (Faker $faker) use ($buildFakeEditorJ
         // Labels
         'name' => $faker->words(4, true),
         'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
-        'description' => $buildFakeEditorJsMessage($faker),
 
         // Dates
         'start_date' => $eventStartCarbon,
