@@ -15,7 +15,7 @@ class AddEnrollmentState extends Migration
     public function up()
     {
         Schema::table('enrollments', function (Blueprint $table) {
-            $table->string('state', 64)->default(Created::class)->after('deleted_at');
+            $table->string('state', 64)->default(str_replace('\\', '\\\\', Created::class))->after('deleted_at');
         });
     }
 
