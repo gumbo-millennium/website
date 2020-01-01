@@ -5,12 +5,12 @@
 }
 
 .userbar__container {
-  @apply flex flex-col items-center;
+  @apply flex flex-col items-end;
 }
 
 @screen md {
   .userbar__container {
-    @apply flex-row justify-between;
+    @apply flex-row justify-between items-center;
   }
 }
 
@@ -18,6 +18,24 @@
   @apply flex flex-row flex-wrap list-none;
   @apply justify-center;
   @apply items-center;
+}
+
+.userbar__links--contact {
+  @apply hidden order-1;
+}
+
+.userbar__links--user {
+  @apply order-2;
+}
+
+@screen md {
+  .userbar__links--contact {
+    @apply flex;
+  }
+
+  .userbar__links--user {
+    @apply ml-0 flex-grow-0;
+  }
 }
 
 .userbar__links-link {

@@ -2,6 +2,7 @@
 
 .navbar {
   @apply bg-white py-4;
+  @apply shadow;
 }
 
 .navbar__container {

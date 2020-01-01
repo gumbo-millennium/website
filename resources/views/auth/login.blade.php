@@ -6,7 +6,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 
 @section('login-content-small')
 {{-- Header --}}
-<h1 class="login__header text-4xl">{{ __('Login') }}</h1>
+<h1 class="login__header font-base text-4xl">Welkom <strong class="font-bold">terug</strong></h1>
 
 {{-- Auto login form --}}
 @includeWhen($testUsers, 'auth.test.login', ['users' => $testUsers])

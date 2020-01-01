@@ -1,7 +1,7 @@
 <section class="userbar">
     <div class="container userbar__container">
         {{-- Contact details --}}
-        <ul class="userbar__links">
+        <ul class="userbar__links userbar__links--contact">
             <li class="userbar__links-link">
                 <a href="mailto:bestuur@gumbo-millennium.nl" class="userbar__links-item userbar__links-item--flex">
                     @icon('regular/envelope')
@@ -11,7 +11,7 @@
         </ul>
 
         {{-- User info --}}
-        <ul class="userbar__links">
+        <ul class="userbar__links userbar__links--user">
             @auth
             {{-- User name --}}
             <li class="userbar__links-link">

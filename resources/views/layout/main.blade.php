@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('Title', 'Gumbo Millennium')</title>
+    <title>@yield('title', 'Gumbo Millennium')</title>
 
     {{-- Tell robots to fuck off when we're testing --}}
     @if (config('gumbo.beta'))
