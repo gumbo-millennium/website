@@ -9,8 +9,10 @@ use Faker\Generator as Faker;
 
 $factory->define(Enrollment::class, function (Faker $faker) {
     $activity = Activity::inRandomOrder()->first();
+    $user = User::inRandomOrder()->first();
     return [
-        'user_id' => User::inRandomOrder()->first()->id,
+        'user_id' => $user->id,
+        'user_type' => $user->hasRole('member') ? 'member' : 'guest',
         'activity_id' => $activity->id,
         'price' => $faker->boolean ? $activity->price_member : $activity->price_guest,
     ];

@@ -27,6 +27,9 @@ class Enrollment extends UuidModel
     use HasStates;
     use SoftDeletes;
 
+    public const USER_TYPE_MEMBER = 'member';
+    public const USER_TYPE_GUEST = 'guest';
+
     /**
      * @inheritDoc
      */
