@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\FileDownload;
@@ -30,6 +31,9 @@ class Kernel extends ConsoleKernel
 
         // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();
+
+        // Update enrollments' user_type every hour
+        $schedule->job(UpdateEnrollmentUserTypes::class)->dailyAt('04:00');
     }
 
     /**
