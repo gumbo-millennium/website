@@ -105,7 +105,7 @@ class ActivityViewModel extends GumboViewModel
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getIsStableAttribute(): bool
+    protected function getIsStableAttribute(): bool
     {
         return $this->enrollment && $this->enrollment->is_stable;
     }
