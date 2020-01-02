@@ -18,10 +18,11 @@ DROP USER IF EXISTS phpmyadmin;
 -- Create users with old-skool auth form
 CREATE USER laravel
     IDENTIFIED
+        WITH caching_sha2_password
         BY 'laravel';
 CREATE USER phpmyadmin
     IDENTIFIED
-        WITH MYSQL_NATIVE_PASSWORD
+        WITH caching_sha2_password
         BY 'phpmyadmin';
 
 -- Flush roles
