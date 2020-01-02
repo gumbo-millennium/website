@@ -29,6 +29,7 @@ use App\Policies\UserPolicy;
 use Closure;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -62,7 +63,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(GateContract $gate)
     {
+        // Bind policies
         $this->registerPolicies();
+
+        // Bind admin
+        Gate::define('enter-admin', 'App\Gates\AdminGate@nova');
 
         // Super Admin mode
         $gate->before([$this, 'hasDirectAdminPermission']);

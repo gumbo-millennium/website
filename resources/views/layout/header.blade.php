@@ -14,12 +14,20 @@
         <ul class="userbar__links userbar__links--user">
             @auth
             {{-- User name --}}
-            <li class="userbar__links-link">
+            <li class="userbar__links-link cursor-default">
                 <span class="userbar__links-item userbar__links-item--text userbar__links-item--flex">
-                    @icon('regular/id-badge')
+                    @icon('regular/user')
                     <span>{{ $user->name }}</span>
                 </span>
             </li>
+            @can('enter-admin')
+            {{-- Admin link --}}
+            <li class="userbar__links-link">
+                <a href="{{ secure_url(Nova::path()) }}" class="userbar__links-item">
+                    Administratie
+                </a>
+            </li>
+            @endcan
             {{-- Log out button --}}
             <li class="userbar__links-link">
                 <button class="userbar__links-item appearance-none" type="submit" form="logout-form">Uitloggen</button>
