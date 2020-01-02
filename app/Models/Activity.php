@@ -257,16 +257,28 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Cannot sell tickets after activity end
         if ($this->end_date < $now) {
+            logger()->info(
+                'Enrollments on {activity} closed:  Cannot sell tickets after activity end',
+                ['activity' => $this]
+            );
             return false;
         }
 
         // Cannot sell tickets after enrollment closure
         if ($this->enrollment_end !== null && $this->enrollment_end < $now) {
+            logger()->info(
+                'Enrollments on {activity} closed:  Cannot sell tickets after enrollment closure',
+                ['activity' => $this]
+            );
             return false;
         }
 
         // Cannot sell tickets before enrollment start
         if ($this->enrollment_start !== null && $this->enrollment_start > $now) {
+            logger()->info(
+                'Enrollments on {activity} closed:  Cannot sell tickets before enrollment start',
+                ['activity' => $this]
+            );
             return false;
         }
 
