@@ -10,10 +10,12 @@ use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use InvalidArgumentException;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
@@ -314,5 +316,21 @@ class Activity extends SluggableModel implements AttachableInterface
             ($this->total_price_member === null && $this->total_price_guest === null) ||
             ($this->total_price_member === null && !$this->is_public)
         );
+    }
+
+    /**
+     * Only return activities available to this user
+     *
+     * @param Builder $query
+     * @param User $user
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailable(Builder $query, User $user = null): Builder
+    {
+        /** @var User $user */
+        $user = $user ?? request()->user();
+
+        // Add public-only when not a member
+        return $user && $user->is_member ? $query : $query->whereIsPublic(true);
     }
 }

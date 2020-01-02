@@ -17,7 +17,11 @@ class PageController extends Controller
      */
     public function homepage()
     {
-        $nextEvent = Activity::where('start_date', '>', now())->orderBy('start_date')->first();
+        $nextEvent = Activity::query()
+            ->available()
+            ->where('start_date', '>', now())
+            ->orderBy('start_date')
+            ->first();
 
         return view('content.home', [
             'nextEvent' => $nextEvent

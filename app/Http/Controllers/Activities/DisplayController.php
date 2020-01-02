@@ -39,10 +39,8 @@ class DisplayController extends Controller
                 ->orderByDesc('end_date');
         }
 
-        // Restrict to public for logged out users
-        if (!$user || !$user->is_member) {
-            $query = $query->whereIsPublic('1');
-        }
+        // Only show activities availabe to this user.
+        $query = $query->available();
 
         // Paginate the response
         $activities = $query->paginate();
