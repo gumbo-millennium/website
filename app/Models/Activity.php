@@ -252,6 +252,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getEnrollmentOpenAttribute(): ?bool
     {
+        // Don't re-create a timestamp every time
         $now = now();
 
         // Cannot sell tickets after activity end
