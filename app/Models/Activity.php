@@ -212,6 +212,39 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
+     * Returns the number of remaining guest seats
+     *
+     * @return int
+     */
+    public function getAvailableGuestSeatsAttribute(): int
+    {
+        // No seats are available on private seats
+        if (!$this->is_public) {
+            return 0;
+        }
+
+        // Only if there are actually places
+        if ($this->seats === null && $this->guest_seats === null) {
+            return PHP_INT_MAX;
+        }
+
+        // Return total number of seats if guests don't have reserved seating
+        if ($this->guest_seats === null) {
+            return $this->available_seats;
+        }
+
+        // Count guest enrollments
+        $guestOccupied = $this->enrollments()
+            ->whereNotState('state', Cancelled::class)
+            ->where('user_type', 'guest')
+            ->count();
+        $freeGuestSeats = (int) max(0, $this->guest_seats - $guestOccupied);
+
+        // Prevent overselling by restricting the available count to the lowest option
+        return (int) min($freeGuestSeats, $this->available_seats);
+    }
+
+    /**
      * Returns if the enrollment is still open
      *
      * @return bool
@@ -222,7 +255,7 @@ class Activity extends SluggableModel implements AttachableInterface
         $now = now();
 
         // Cannot sell tickets after activity end
-        if ($this->end_date > $now) {
+        if ($this->end_date < $now) {
             return false;
         }
 

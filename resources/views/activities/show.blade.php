@@ -20,6 +20,12 @@ $memberPrice = $activity->price_member ? Str::price($activity->total_price_membe
 $guestPrice = $activity->price_guest ? Str::price($activity->total_price_guest) : 'gratis';
 $priceLabel = $activity->is_free ? 'Gratis toegang' : Str::ucfirst($activity->price_label);
 $tagline = $activity->tagline ?? "{$startDateFull}, {$priceLabel}.";
+
+// Enrollment open
+$isOpen = $activity->enrollment_open;
+$places = $user && $user->is_member ? $activity->available_seats : $activity->available_guest_seats;
+$hasRoom = $places > 0;
+$hasRoomMember = $activity->available_seats > 0;
 @endphp
 
 @section('title', "{$activity->name} - Activity - Gumbo Millennium")
@@ -37,7 +43,7 @@ $tagline = $activity->tagline ?? "{$startDateFull}, {$priceLabel}.";
 <div class="container">
     <div class="flex flex-col md:flex-row">
         <div class="px-8 w-64 border-gray-800 border-r flex flex-col items-center">
-            <time datetime="{{ $startIso }}" class="text-xl">{{ $startLocale->isoFormat('MM DDD \'YY') }}</time>
+            <time datetime="{{ $startIso }}" class="text-xl">{{ $startLocale->isoFormat('DD MMM \'YY') }}</time>
 
             <dl class="activity-facts">
                 <dt class="activity-facts__fact">Datum</dt>
@@ -70,52 +76,27 @@ $tagline = $activity->tagline ?? "{$startDateFull}, {$priceLabel}.";
             <h1 class="text-4xl font-bold">{{ $activity->name }}</h1>
 
             {!! $activity->description_html !!}
+
+            @if ($user && $is_enrolled)
+            <a href="{{ route('enroll.show', compact('activity')) }}" class="btn btn--brand">Beheer inschrijving</a>
+            @elseif (!$hasRoom)
+            <button class="btn btn--brand btn--disabled" disabled>Uitverkocht</button>
+            @if ($hasRoomMember)
+            <p class="text-gray-700">
+                Er is nog wel plek voor leden.
+                @guest
+                Ben je lid? <a href="{{ route('login') }}">Log dan in</a> om je aan te melden.
+                @else
+                <a href="{{ route('join') }}">Word lid</a> om je aan te melden.
+                @endguest
+            </p>
+            @endif
+            @elseif (!$isOpen)
+            <button class="btn btn--brand btn--disabled" disabled>Inschrijvingen gesloten</button>
+            @else
+            <a href="{{ route('enroll.create', ['activity' => $activity]) }}" class="btn btn--brand">Inschrijven</a>
+            @endif
         </div>
     </div>
-</div>
-<div class="container">
-    <h2>In het kort</h2>
-    <h2>Details</h2>
-
-    {!! $activity->description_html !!}
-
-    <h2>Jouw inschrijving</h2>
-    {{--
-        There are a couple of states the user can be in:
-        1. Not logged in (show login button)
-        2. Not verified (the user needs a valid email adress to sign up)
-        3. Not enrolled, but able to enroll (enrollment_start < time < enrollment_end)
-        4. Not enrolled, and enrollments are closed (time < enrollment_start || time > enrollment_end)
-        5. Not enrolled, but locked out of enrollment (status->locked === true) [TODO]
-        6. Enrolled, and able to unenroll (before enrollment_end date)
-        7. Enrolled, unable to unenroll (after enrollment_end date)
-    --}}
-    @php
-    $viewBase = "activities.bits";
-    // Scenario (1)
-    $viewName = "{$viewBase}.guest";
-    if ($user) {
-        // Scenario (2)
-        $viewName = "{$viewBase}.verify";
-        if ($user->hasVerifiedEmail()) {
-            // Scnenario (3)
-            $viewName = "{$viewBase}.enroll-open";
-            if ($is_enrolled && $activity->enrollment_end < now()) {
-                // Scenario (7)
-                $viewName = "{$viewBase}.unenroll-closed";
-            } elseif ($is_enrolled) {
-                // Scenario (6)
-                $viewName = "{$viewBase}.unenroll-open";
-            } elseif ($activity->enrollment_end < now() || $activity->enrollment_start > now()) {
-                // Scenario (4)
-                $viewName = "{$viewBase}.enroll-closed";
-            }
-        }
-    }
-
-    $viewData = ['activity' => $activity];
-    @endphp
-
-    @include($viewName, $viewData)
 </div>
 @endsection

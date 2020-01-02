@@ -1,9 +1,14 @@
 /* Header element */
 
 .header {
-  @apply bg-brand-700;
+  @apply bg-brand-700 relative;
   padding-bottom: theme('spacing.8');
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - theme('spacing.8')), 0 100%);
+}
+
+.header__floating {
+  @apply hidden leading-none font-bold mx-4;
+  font-size: theme('spacing.48');
 }
 
 .header__container {
@@ -36,5 +41,18 @@
   .after-header {
     @apply pt-16;
     margin-top: calc(0 - theme('spacing.16'));
+  }
+}
+
+@screen lg {
+  .header__floating {
+    @apply absolute flex flex-row items-end;
+    opacity: 0.2;
+    right: 0;
+    bottom: theme('spacing.4');
+  }
+
+  .header__floating--stacked {
+    @apply flex-col items-start;
   }
 }
