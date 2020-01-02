@@ -61,6 +61,11 @@ $hasRoomMember = $activity->available_seats > 0;
                     <time datetime="{{ $durationIso }}">{{ $durationTime }}</time>
                 </dd>
 
+                <dt class="activity-facts__fact">Host</dt>
+                <dd class="activity-facts__detail">
+                    {{ optional($activity->role)->title ?? 'n/a' }}
+                </dd>
+
                 <dt class="activity-facts__fact">Prijs leden</dt>
                 <dd class="activity-facts__detail">
                     <data value="{{ ($activity->price_member ?? 0) / 100 }}">{{ $memberPrice }}</data>
