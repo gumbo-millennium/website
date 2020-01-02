@@ -198,7 +198,7 @@ class EnrollmentController extends Controller
                 'Je plek is gereserveerd. Bevestig je inschrijving binnen 72 uur om je plek te behouden.',
                 'info'
             );
-            return redirect()->route('payment.confirm', compact('activity'));
+            return redirect()->route('payment.start', compact('activity'));
         }
 
         // Mark as confirmed

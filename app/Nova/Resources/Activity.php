@@ -154,6 +154,16 @@ class Activity extends Resource
                 ->rules('nullable', 'string', 'between:2,16')
                 ->help('2-16 character summary of the event. Shown on iDEAL transaction'),
 
+            Text::make('Location name', 'location')
+                ->hideFromIndex()
+                ->rules('nullable', 'string', 'between:2,64')
+                ->help('Simple name of the location, shown in list view, detail view and e-mails'),
+
+            Text::make('Location address', 'location_address')
+                ->hideFromIndex()
+                ->rules('nullable', 'string', 'between:5,255')
+                ->help('Full address of the location, including country if required'),
+
             NovaEditorJs::make('Description', 'description')
                 ->nullable()
                 ->hideFromIndex()

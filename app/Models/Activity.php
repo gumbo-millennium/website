@@ -379,4 +379,23 @@ class Activity extends SluggableModel implements AttachableInterface
         // Add public-only when not a member
         return $user && $user->is_member ? $query : $query->whereIsPublic(true);
     }
+
+    /**
+     * Returns url to map provider for the given address
+     *
+     * @return null|string
+     */
+    public function getLocationUrlAttribute(): ?string
+    {
+        // Skip if empty
+        if (empty($this->location_address)) {
+            return null;
+        }
+
+        // Build HERE maps link
+        return sprintf(
+            'https://wego.here.com/search/%s',
+            htmlentities(urlencode($this->location_address))
+        );
+    }
 }

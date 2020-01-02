@@ -66,6 +66,17 @@ $hasRoomMember = $activity->available_seats > 0;
                     {{ optional($activity->role)->title ?? 'n/a' }}
                 </dd>
 
+                @if ($activity->location)
+                <dt class="activity-facts__fact">Locatie</dt>
+                <dd class="activity-facts__detail">
+                    @if ($activity->location_url)
+                    <a href="{{ $activity->location_url }}" target="_blank" rel="noopener">{{ $activity->location }}</a>
+                    @else
+                    {{ $activity->location }}
+                    @endif
+                </dd>
+                @endif
+
                 <dt class="activity-facts__fact">Prijs leden</dt>
                 <dd class="activity-facts__detail">
                     <data value="{{ ($activity->price_member ?? 0) / 100 }}">{{ $memberPrice }}</data>
