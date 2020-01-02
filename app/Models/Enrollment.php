@@ -158,4 +158,15 @@ class Enrollment extends UuidModel
     {
         return null;
     }
+
+    /**
+     * Returns true if the state is stable and will not auto-delete
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsStableAttribute(): bool
+    {
+        return $this->state instanceof ConfirmedState;
+    }
 }

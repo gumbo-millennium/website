@@ -4,15 +4,22 @@
 
 .btn {
   @apply inline-block mx-0 my-4 py-4 px-10;
-  @apply rounded shadow-outline bg-gray-200 font-bold text-gray-800;
+  @apply rounded border-2 border-gray-300;
+  @apply bg-gray-200;
+  @apply font-bold text-gray-800 no-underline;
+}
+
+.btn:hover, .btn:active {
+  @apply bg-gray-300 border-gray-400;
+  @apply text-gray-900;
 }
 
 .btn--brand {
-  @apply bg-brand-500 text-white;
+  @apply bg-brand-600 border-brand-700 text-white;
 }
 
 .btn--brand:hover, .btn--brand:active {
-  @apply bg-brand-600 text-white shadow-lg;
+  @apply bg-brand-700 border-brand-800 text-white shadow-lg;
 }
 
 .btn--disabled, .btn:disabled {

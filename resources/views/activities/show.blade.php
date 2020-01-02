@@ -66,10 +66,12 @@ $hasRoomMember = $activity->available_seats > 0;
                     <data value="{{ ($activity->price_member ?? 0) / 100 }}">{{ $memberPrice }}</data>
                 </dd>
 
+                @if ($activity->is_public)
                 <dt class="activity-facts__fact">Prijs niet-leden</dt>
                 <dd class="activity-facts__detail">
                     <data value="{{ ($activity->price_guest ?? 0) / 100 }}">{{ $guestPrice }}</data>
                 </dd>
+                @endif
             </dl>
         </div>
         <div class="p-8 md:mr-8 flex-grow">
@@ -78,7 +80,7 @@ $hasRoomMember = $activity->available_seats > 0;
             {!! $activity->description_html !!}
 
             @if ($user && $is_enrolled)
-            <a href="{{ route('enroll.show', compact('activity')) }}" class="btn btn--brand">Beheer inschrijving</a>
+            <a href="{{ route('enroll.show', compact('activity')) }}" class="btn btn--brand">{{ $is_stable ? 'Beheer inschrijving' : 'Inschrijving afronden' }}</a>
             @elseif (!$hasRoom)
             <button class="btn btn--brand btn--disabled" disabled>Uitverkocht</button>
             @if ($hasRoomMember)
@@ -94,7 +96,10 @@ $hasRoomMember = $activity->available_seats > 0;
             @elseif (!$isOpen)
             <button class="btn btn--brand btn--disabled" disabled>Inschrijvingen gesloten</button>
             @else
-            <a href="{{ route('enroll.create', ['activity' => $activity]) }}" class="btn btn--brand">Inschrijven</a>
+            <form action="{{ route('enroll.create', compact('activity')) }}" method="post">
+                @csrf
+                <button type="submit" class="btn btn--brand">Inschrijven</button>
+            </form>
             @endif
         </div>
     </div>

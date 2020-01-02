@@ -98,4 +98,15 @@ class ActivityViewModel extends GumboViewModel
         // Check if true-ish (non-zero and not null)
         return ($member ? $this->activity->price_member : $this->activity->price_guest) == true;
     }
+
+    /**
+     * Returns if the user is enrolled and the enrollment is in a non-volatile state.
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsStableAttribute(): bool
+    {
+        return $this->enrollment && $this->enrollment->is_stable;
+    }
 }
