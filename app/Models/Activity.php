@@ -10,6 +10,7 @@ use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -275,5 +276,43 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getTotalPriceGuestAttribute(): ?int
     {
         return $this->price_guest ? $this->price_guest + config('gumbo.transfer-fee', 0) : $this->price_guest;
+    }
+
+    /**
+     * Returns human-readable summary of the ticket price.
+     *
+     * @return string
+     */
+    public function getPriceLabelAttribute(): string
+    {
+        if ($this->is_free) {
+            // If it's free, mention it
+            return 'gratis';
+        } elseif (!$this->total_price_member && $this->is_public) {
+            // Free for members when public
+            return 'gratis voor leden';
+        } elseif ($this->total_price_member === $this->total_price_guest) {
+            // Same price for both parties
+            return Str::price($this->total_price_member);
+        } elseif ($this->is_public) {
+            // Starting bid
+            return sprintf('vanaf %s', Str::price($this->total_price_member ?? 0));
+        }
+
+        // Return total price as single price point
+        return Str::price($this->total_price_member ?? 0);
+    }
+
+    /**
+     * Returns true if the activity is free
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsFreeAttribute(): bool
+    {
+        return (
+            ($this->total_price_member === null && $this->total_price_guest === null) ||
+            ($this->total_price_member === null && !$this->is_public)
+        );
     }
 }

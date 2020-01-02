@@ -18,21 +18,7 @@ $duration = $endTimestamp->diffForHumans($startTimestamp, [
 ]);
 
 // Determine price label
-$price = Str::price($activity->total_price_member ?? 0);
-
-if ($activity->total_price_member === null && $activity->total_price_guest === null) {
-    // If it's free, mention it
-    $price = 'gratis';
-} elseif (!$activity->total_price_member && $activity->is_public) {
-    // Free for members when public
-    $price = 'gratis voor leden';
-} elseif ($activity->total_price_member === $activity->total_price_guest) {
-    // Same price for both parties
-    $price = Str::price($activity->total_price_member);
-} elseif ($activity->is_public) {
-    // Starting bid
-    $price = sprintf('vanaf %s', Str::price($activity->total_price_member ?? 0));
-}
+$price = $activity->price_label;
 @endphp
 <article class="activity-block {{ $activityClass ?? null }}">
     <div class="container activity-block__container">
