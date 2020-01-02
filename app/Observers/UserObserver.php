@@ -8,28 +8,20 @@ use App\Models\User;
 class UserObserver
 {
     /**
-     * Handle the user "created" event.
-     *
-     * @param  User  $user
+     * Handle any kind of changes to the user
+     * @param User $user
      * @return void
      */
-    public function created(User $user)
+    public function saved(User $user): void
     {
-        // Create a customer on Stripe
-        dispatch(new CustomerUpdateJob($user));
-    }
+        // Don't act on console commands (speed up CLI commands)
+        if (\app()->runningInConsole()) {
+            return;
+        }
 
-    /**
-     * Handle the user "updated" event.
-     *
-     * @param  User  $user
-     * @return void
-     */
-    public function updated(User $user)
-    {
-        // Trigger update if any name was changed, or the email address
-        if ($user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
-            // Create a customer on Stripe
+        // Trigger update if the user was created, or if the name or email address was changed
+        if ($user->wasRecentlyCreated || $user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
+            // Create or update the customer on Stripe
             dispatch(new CustomerUpdateJob($user));
         }
     }
