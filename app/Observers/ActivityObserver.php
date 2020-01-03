@@ -30,16 +30,6 @@ class ActivityObserver
             $activity->seats = null;
         }
 
-        // Ensure the same for guest seats
-        if ($activity->guest_seats !== null && $activity->guest_seats <= 0) {
-            $activity->guest_seats = null;
-        }
-
-        // Make sure the number of guest seats does not exceed the number of total seats
-        if ($activity->guest_seats && $activity->seats && $activity->guest_seats > $activity->seats) {
-            $activity->guest_seats = $activity->seats;
-        }
-
         /*
             Normalize prices
         */
