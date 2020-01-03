@@ -361,8 +361,8 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Build HERE maps link
         return sprintf(
-            'https://wego.here.com/search/%s',
-            htmlentities(urlencode($this->location_address))
+            'https://www.qwant.com/maps/?%s',
+            \http_build_query(['q' => $this->location_address])
         );
     }
 }
