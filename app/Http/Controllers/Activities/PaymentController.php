@@ -7,6 +7,7 @@ use App\Http\Controllers\Activities\Traits\CreatePaymentIntents;
 use App\Http\Controllers\Activities\Traits\CreatePaymentMethods;
 use App\Http\Controllers\Activities\Traits\HandlesPaymentIntents;
 use App\Http\Controllers\Activities\Traits\HandlesPaymentMethods;
+use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
 use App\Http\Controllers\Activities\Traits\ProvidesBankList;
 use App\Http\Controllers\Controller;
 use App\Jobs\Stripe\PaymentValidationJob;
@@ -36,8 +37,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class PaymentController extends Controller
 {
     use ConsistentRedirects;
-    use HandlesPaymentIntents;
-    use HandlesPaymentMethods;
+    use HandlesStripeItems;
     use ProvidesBankList;
 
     /**
