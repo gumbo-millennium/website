@@ -23,7 +23,7 @@ class ActivityViewModel extends GumboViewModel
     /**
      * @var Enrollment|false
      */
-    protected $enrollment;
+    public $enrollment;
 
     /**
      * Creates a new Activity Model for the given user
@@ -34,6 +34,7 @@ class ActivityViewModel extends GumboViewModel
     {
         $this->user = $user;
         $this->activity = $activity;
+        $this->enrollment = $this->getEnrollment();
     }
 
     /**

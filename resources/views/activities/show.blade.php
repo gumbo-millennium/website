@@ -19,105 +19,73 @@ $durationTime = $duration->locale(...$locale)->forHumans(['parts' => 1]);
 $memberPrice = $activity->price_member ? Str::price($activity->total_price_member) : 'gratis';
 $guestPrice = $activity->price_guest ? Str::price($activity->total_price_guest) : 'gratis';
 $priceLabel = $activity->is_free ? 'Gratis toegang' : Str::ucfirst($activity->price_label);
-$tagline = $activity->tagline ?? "{$startDateFull}, {$priceLabel}.";
-
-// Enrollment open
-$isOpen = $activity->enrollment_open;
-$places = $user && $user->is_member ? $activity->available_seats : $activity->available_guest_seats;
-$hasRoom = $places > 0;
-$hasRoomMember = $activity->available_seats > 0;
+$seats = 'Onbeperkt plaats';
+if ($activity->available_seats === 0) {
+    $seats = 'Uitverkocht';
+} elseif ($activity->seats) {
+    $seats = sprintf('%d van %d plekken beschikbaar', $activity->available_seats, $activity->seats);
+}
 @endphp
 
 @section('title', "{$activity->name} - Activity - Gumbo Millennium")
 
 @section('content')
 <div class="header">
+    <div class="activity-header">&nbsp;</div>
     <div class="header__floating" role="presentation">
         {{ trim($startLocale->isoFormat('D MMM'), '. ') }}
     </div>
-    <div class="container header__container">
-        <h1 class="header__title">{{ $activity->name }}</h1>
-        <h3 class="header__subtitle">{{ $tagline }}</h3>
-    </div>
 </div>
 <div class="container">
-    <div class="flex flex-col md:flex-row">
-        <div class="px-8 w-64 border-gray-800 border-r flex flex-col items-center">
-            <time datetime="{{ $startIso }}" class="text-xl">{{ $startLocale->isoFormat('DD MMM \'YY') }}</time>
-
-            <dl class="activity-facts">
-                <dt class="activity-facts__fact">Datum</dt>
-                <dd class="activity-facts__detail">
-                    <time datetime="{{ $startIso }}">{{ $startDate }}</time>
-                </dd>
-
-                <dt class="activity-facts__fact">Aanvang</dt>
-                <dd class="activity-facts__detail">
-                    {{ $startTime }}
-                </dd>
-
-                <dt class="activity-facts__fact">Duur</dt>
-                <dd class="activity-facts__detail">
-                    <time datetime="{{ $durationIso }}">{{ $durationTime }}</time>
-                </dd>
-
-                <dt class="activity-facts__fact">Host</dt>
-                <dd class="activity-facts__detail">
-                    {{ optional($activity->role)->title ?? 'n/a' }}
-                </dd>
-
-                @if ($activity->location)
-                <dt class="activity-facts__fact">Locatie</dt>
-                <dd class="activity-facts__detail">
-                    @if ($activity->location_url)
-                    <a href="{{ $activity->location_url }}" target="_blank" rel="noopener">{{ $activity->location }}</a>
-                    @else
-                    {{ $activity->location }}
-                    @endif
-                </dd>
-                @endif
-
-                <dt class="activity-facts__fact">Prijs leden</dt>
-                <dd class="activity-facts__detail">
-                    <data value="{{ ($activity->price_member ?? 0) / 100 }}">{{ $memberPrice }}</data>
-                </dd>
-
-                @if ($activity->is_public)
-                <dt class="activity-facts__fact">Prijs niet-leden</dt>
-                <dd class="activity-facts__detail">
-                    <data value="{{ ($activity->price_guest ?? 0) / 100 }}">{{ $guestPrice }}</data>
-                </dd>
-                @endif
-            </dl>
-        </div>
-        <div class="p-8 md:mr-8 flex-grow">
-            <h1 class="text-4xl font-bold">{{ $activity->name }}</h1>
-
-            {!! $activity->description_html !!}
-
-            @if ($user && $is_enrolled)
-            <a href="{{ route('enroll.show', compact('activity')) }}" class="btn btn--brand">{{ $is_stable ? 'Beheer inschrijving' : 'Inschrijving afronden' }}</a>
-            @elseif (!$hasRoom)
-            <button class="btn btn--brand btn--disabled" disabled>Uitverkocht</button>
-            @if ($hasRoomMember)
-            <p class="text-gray-700">
-                Er is nog wel plek voor leden.
-                @guest
-                Ben je lid? <a href="{{ route('login') }}">Log dan in</a> om je aan te melden.
-                @else
-                <a href="{{ route('join') }}">Word lid</a> om je aan te melden.
-                @endguest
-            </p>
+    <div class="activity-summary">
+        <div class="activity-summary__main">
+            {{-- Title --}}
+            <h1 class="text-2xl font-bold text-black">{{ $activity->name }}</h1>
+            @if (!empty($activity->tagline))
+            <h3 class="text-lg text-gray-700">{{ $activity->tagline }}</h3>
             @endif
-            @elseif (!$isOpen)
-            <button class="btn btn--brand btn--disabled" disabled>Inschrijvingen gesloten</button>
-            @else
-            <form action="{{ route('enroll.create', compact('activity')) }}" method="post">
-                @csrf
-                <button type="submit" class="btn btn--brand">Inschrijven</button>
-            </form>
-            @endif
+
+            <div class="activity-summary__action-inline">
+            @include('activities.bits.join-button')
+            </div>
+
+            {{-- Details --}}
+            <div class="activity-summary__stats">
+                <div class="activity-summary__stat-group">
+                    <div class="activity-summary__stat">
+                        @icon('solid/clock', 'mr-4')
+                        <time datetime="{{ $startIso }}">{{ $startDate }}</time>
+                    </div>
+                    <div class="activity-summary__stat">
+                        @icon('solid/map-marker-alt', 'mr-4')
+                        @empty($activity->location)
+                        <span class="text-gray-600">Onbekend</span>
+                        @elseif ($activity->location_url)
+                        <a href="{{ $activity->location_url }}" target="_blank" rel="noopener">{{ $activity->location }}</a>
+                        @else
+                        {{ $activity->location }}
+                        @endif
+                    </div>
+                </div>
+                <div class="activity-summary__stat-group">
+                    <div class="activity-summary__stat">
+                        @icon('solid/user-friends', 'mr-4')
+                        {{ $seats }}
+                    </div>
+                    <div class="activity-summary__stat">
+                        @icon('solid/ticket-alt', 'mr-4')
+                        {{ $priceLabel }}
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="activity-summary__action">
+            @include('activities.bits.join-button')
+        </div>
+    </div>
+
+    {!! $activity->description_html !!}
+
     </div>
 </div>
 @endsection

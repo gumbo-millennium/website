@@ -20,7 +20,7 @@ class ActivitySeeder extends Seeder
      * @param string $slug
      * @param array $args
      * @param bool $withEnrollments Automatically register some users?
-     * @return Activity|null
+     * @return Activity|null Created activity, or null if it already exists
      *
      * Seeder is allowed to use boolean flag.
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
@@ -112,6 +112,9 @@ class ActivitySeeder extends Seeder
 
         // Create payments events
         $this->seedPaymentTest();
+
+        // Create seat tests
+        $this->seedSeatTest();
     }
 
     /**
@@ -296,6 +299,66 @@ class ActivitySeeder extends Seeder
             // Increase both
             $startDate = $startDate->addDay();
             $endDate = $endDate->addDay();
+        }
+    }
+
+    private function seedSeatTest(): void
+    {
+        // [     slug     ] => [seats, taken-member, taken-guest]
+        $sets = [
+            'popstar-event' => [100, 60, 40],
+            'private-popstar-event' => [100, 75, 0],
+            'limited-popstar-event' => [100, 60, 10],
+        ];
+
+        // Date
+        $date = today()->addWeek(3)->setTime(20, 0, 0)->toImmutable();
+
+        // Iterate
+        foreach ($sets as $slug => list($seats, $memberEnroll, $guestEnroll)) {
+            $name = Str::studly($slug);
+            $activity = $this->safeCreate($slug, [
+                'name' => "[test] {$name}",
+                'tagline' => 'Testing seat occupancy',
+                'location' => 'Het Vliegende Paard',
+                'location_address' => 'Voorstraat 17, 8011 MK Zwolle, Netherlands',
+                'statement' => Str::limit($name, 16, ''),
+                'start_date' => $date,
+                'enrollment_start' => today(),
+                'enrollment_end' => $date->subHour(3),
+                'end_date' => $date->addHour(2),
+                'is_public' => true,
+                'price_member' => null,
+                'price_guest' => null,
+                'seats' => $seats
+            ], false);
+
+            // Add member enrollments
+            if ($memberEnroll) {
+                $enrollments = factory(Enrollment::class, $memberEnroll)->create([
+                    'activity_id' => $activity->id
+                ]);
+
+                // Make all users member
+                foreach ($enrollments as $enrollment) {
+                    $enrollment->user->assignRole('member');
+                }
+            }
+
+            // Add guest enrollments
+            if ($guestEnroll) {
+                $enrollments = factory(Enrollment::class, $guestEnroll)->create([
+                    'activity_id' => $activity->id
+                ]);
+
+                // Make all users member
+                foreach ($enrollments as $enrollment) {
+                    $enrollment->user->removeRole('member');
+                }
+            }
+
+            // Increase date
+            $date = $date->addDay();
         }
     }
 }

@@ -49,7 +49,12 @@ $firstActivity = $past ? null : $activities->first();
             @endguest
         </div>
     </div>
-    @each('activities.bits.list-item', $activities, 'activity', 'activities.bits.list-empty')
+    {{-- Required as foreach since list-item needs $enrollments --}}
+    @forelse ($activities as $activity)
+    @include('activities.bits.list-item')
+    @empty
+    @include('activities.bits.list-empty')
+    @endforelse
 </div>
 
 <div class="container py-8">

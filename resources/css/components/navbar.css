@@ -25,9 +25,16 @@
 }
 
 .navbar__nav-link {
-  @apply px-4 py-2 text-sm uppercase no-underline;
+  @apply block px-4 py-1;
+  @apply text-sm uppercase no-underline;
 }
 
 .navbar__nav-item:first-child .navbar__nav-link {
   @apply pl-0;
+}
+
+@screen md {
+  .navbar__nav-link {
+    @apply py-2;
+  }
 }

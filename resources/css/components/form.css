@@ -5,7 +5,7 @@
 }
 
 .form__field {
-  @apply flex flex-col;
+  @apply flex flex-col mb-4;
 }
 
 .form__field--checkbox {
@@ -17,7 +17,7 @@
 }
 
 .form__field-input {
-  @apply mb-4;
+  @apply mb-0 w-full;
 }
 
 .form__field-input--checkbox {
@@ -27,32 +27,7 @@
 }
 
 .form__field-help {
-  @apply mb-4 text-gray-700 text-sm;
-  margin-top: calc(0 - theme('spacing.2'));
-}
-
-@screen md {
-  .form__field {
-    display: grid;
-    grid-template-columns: 5fr 7fr;
-  }
-
-  .form__field--checkbox {
-    @apply flex ml-auto;
-  }
-
-  .form__field-label {
-    @apply mb-4;
-    grid-column: 1 / 2;
-  }
-
-  .form__field-input, .form__field-help {
-    grid-column: 2 / 3;
-  }
-
-  .form__field--checkbox {
-    max-width: calc(100% / 12 * 7);
-  }
+  @apply mt-2 text-gray-700 text-sm;
 }
 
 /**

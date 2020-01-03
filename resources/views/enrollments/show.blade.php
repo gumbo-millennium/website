@@ -16,7 +16,7 @@
 @if ($enrollment->state == 'created' && $activity->form !== null)
 <p><a href="{{ route('enroll.edit', compact('activity')) }}">Supply enrollment details</a></p>
 @elseif ($enrollment->state == 'seeded' && $enrollment->price > 0)
-<p><a href="{{ route('payment.start', compact('activity')) }}">Pay {{ Str::price($enrollment->price/100) }} via iDEAL</a></p>
+<p><a href="{{ route('payment.start', compact('activity')) }}">Pay {{ Str::price($enrollment->total_price) }} via iDEAL</a></p>
 @elsecan('unenroll', $enrollment)
 </p><p><a href="{{ route('enroll.delete', compact('activity')) }}">Unenroll</a></p>
 @endif

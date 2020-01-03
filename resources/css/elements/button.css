@@ -14,6 +14,14 @@
   @apply text-gray-900;
 }
 
+.btn--link {
+  @apply border-0 bg-transparent text-brand-700;
+}
+
+.btn--link:hover, .btn--link:active {
+  @apply border-0 bg-transparent text-brand-600;
+}
+
 .btn--brand {
   @apply bg-brand-600 border-brand-700 text-white;
 }
@@ -23,5 +31,6 @@
 }
 
 .btn--disabled, .btn:disabled {
-  background-image: linear-gradient(rgba(theme('colors.gray.100'), 0.6), rgba(theme('colors.gray.100'), 0.6));
+  opacity: 0.6;
+  filter: grayscale(100%);
 }

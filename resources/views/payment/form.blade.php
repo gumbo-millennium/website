@@ -5,7 +5,7 @@
 @section('content')
 <h1>{{ $activity->name }} - Betaling</h1>
 
-<p>Om je inschrijving voor {{ $activity->title }} af te ronden, dien je {{ Str::price( $enrollment->price / 100 ) }} te betalen.</p>
+<p>Om je inschrijving voor {{ $activity->title }} af te ronden, dien je {{ Str::price( $enrollment->total_price ) }} te betalen.</p>
 <p>Al onze betalingen lopen via iDEAL. Wil je niet betalen via iDEAL of wil je een betalingsregeling treffen, neem dan contact op met het bestuur.</p>
 
 @if (!$enrollment->state->isStable())
