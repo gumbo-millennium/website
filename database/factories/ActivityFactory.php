@@ -53,6 +53,10 @@ $factory->define(Activity::class, function (Faker $faker) {
         'enrollment_start' => $enrollStartCarbon,
         'enrollment_end' => $enrollEndCarbon,
 
+        // Location
+        'location' => $faker->company,
+        'location_address' => $faker->address,
+
         // Seats
         'seats' => $memberSeats,
         'is_public' => $faker->boolean(0.1),
