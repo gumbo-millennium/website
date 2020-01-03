@@ -26,6 +26,15 @@
   @apply text-brand-700;
 }
 
+.form__field-error {
+  @apply mt-2 text-red-700 text-sm;
+}
+
+.form__field-error strong {
+  @apply font-normal;
+
+  /* Hide strong effect on error */
+}
 .form__field-help {
   @apply mt-2 text-gray-700 text-sm;
 }

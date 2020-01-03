@@ -169,4 +169,23 @@ class Enrollment extends UuidModel
     {
         return $this->state instanceof ConfirmedState;
     }
+
+    /**
+     * Returns state we want to go to, depending on Enrollment's own attributes.
+     * Returns null if it can't figure it out.
+     *
+     * @return App\Models\States\Enrollment\State|null
+     */
+    public function getWantedStateAttribute(): ?EnrollmentState
+    {
+        // First check for any transition
+        $options = $this->state->transitionableStates();
+        if (in_array(PaidState::$name, $options) && $this->price) {
+            return new PaidState($this);
+        } elseif (in_array(ConfirmedState::$name, $options)) {
+            return new ConfirmedState($this);
+        }
+
+        return null;
+    }
 }

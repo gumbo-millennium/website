@@ -11,7 +11,7 @@ $expireIso = $expireDate->toIso8601String();
 $nextAction = null;
 if ($user && $is_enrolled && !$is_stable) {
     $nextAction = 'Inschrijving afronden';
-    $nextState = $enrollment->next_state;
+    $nextState = $enrollment->wanted_state;
     if ($nextState instanceof App\Models\States\Enrollment\Seeded) {
         $nextAction = 'Gegevens invullen';
     } elseif ($nextState instanceof App\Models\States\Enrollment\Paid) {
