@@ -50,7 +50,13 @@ abstract class StripeJob implements ShouldQueue
 
         // Ensure that the application is in the same mode as the source of the event.
         // This ensures that test data is never read by systems in production
-        if ($event->livemode !== (bool) config('stripe.test_mode', false)) {
+        $appInLiveMode = ((bool) config('stripe.test_mode', true)) === false;
+        if ($event->livemode !== $appInLiveMode) {
+            logger()->warning('Mismatch on event mode, got {request-mode}, but want {set-mode}', [
+                'request-mode' => $event->livemode,
+                'set-mode' => config('stripe.test_mode', true),
+                'event' => $event
+            ]);
             abort(403, "Event's origin mode is mismatching with the website mode.");
         }
 
