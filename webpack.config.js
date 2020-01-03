@@ -11,6 +11,7 @@ const HardSourcePlugin = require('hard-source-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const ManifestPlugin = require('webpack-manifest-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const WebpackStrip = require('strip-loader')
 
 // Locally used variables
@@ -63,7 +64,8 @@ module.exports = {
   // Configure devserver as a transparent proxy
   devServer: {
     index: '', // specify to enable root proxying
-    host: '0.0.0.0',
+    host: '127.0.0.1',
+    port: 3100,
     contentBase: publicDir,
     writeToDisk: true,
     proxy: {
@@ -79,13 +81,6 @@ module.exports = {
         delete proxyRes.headers.etag
         delete proxyRes.headers.date
       }
-    },
-    onListening: function (server) {
-      const proto = server.https ? 'https' : 'http'
-      const serverAddress = server.listeningApp.address()
-
-      // Write Laravel Hot file
-      fs.writeFileSync(hotFile, `${proto}://${serverAddress.address}:${serverAddress.port}/`)
     }
   },
 
@@ -267,7 +262,34 @@ module.exports = {
         // Return new file
         return file
       }
-    })
+    }),
+
+    // BrowserSync
+    new BrowserSyncPlugin(
+      // BrowserSync options
+      {
+        open: 'external',
+        port: 3000,
+        proxy: 'http://localhost:3100/',
+        callbacks: {
+          // eslint-disable-next-line handle-callback-err
+          ready: function (err, bs) {
+            /** @var {Map} urls */
+            const urls = bs.options.get('urls')
+            if (urls && urls.has('external')) {
+              fs.writeFileSync(hotFile, urls.get('external'))
+              return
+            }
+            console.error('Failed to write hotfile, Laravel won\'t know about HMR')
+          }
+        }
+      },
+      // Starter options
+      {
+        reload: false,
+      }
+    )
+
   ],
 
   // Aliasses
