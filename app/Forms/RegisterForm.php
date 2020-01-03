@@ -92,7 +92,7 @@ class RegisterForm extends Form
                 ],
                 'help_block' => [
                     // phpcs:disable Generic.Files.LineLength.TooLong
-                    'text' => 'Minimaal 10 tekens. Probeer een beetje origineel te zijn (gebruik niet je Google wachtwoord, bijvoorbeeld)'
+                    'text' => '<strong>Minimaal 10 tekens</strong>. Probeer een beetje origineel te zijn (gebruik niet je Google wachtwoord, bijvoorbeeld)'
                     // phpcs:enable Generic.Files.LineLength.TooLong
                 ],
             ])
