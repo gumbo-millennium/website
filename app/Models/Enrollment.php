@@ -150,16 +150,6 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * Returns the form, but for testing purposes now returns null
-     *
-     * @return null
-     */
-    public function getFormAttribute(): ?string
-    {
-        return null;
-    }
-
-    /**
      * Returns true if the state is stable and will not auto-delete
      *
      * @return bool
