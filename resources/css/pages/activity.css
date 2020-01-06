@@ -1,17 +1,43 @@
 /* Activity page */
 
 .activity-header {
+  @apply py-4;
+  margin-bottom: calc(theme('spacing.64') - calc(theme('spacing.8') * 2) - theme('spacing.16'));
+}
+
+.activity-header-filler {
   min-height: theme('spacing.64');
 }
 
 .activity-summary {
-  @apply relative;
-  @apply py-8 px-12 shadow bg-white border border-gray-100;
+  @apply block mb-8;
+  min-height: theme('spacing.48');
   margin-top: calc(0 - theme('spacing.48'));
+}
+
+.activity-summary__card {
+  @apply relative py-8 px-12;
+  @apply shadow bg-white border border-gray-100;
 }
 
 .activity-summary__main {
   @apply flex-grow;
+}
+
+.activity-summary__main--horizontal {
+  @apply flex flex-row;
+}
+
+.activity-summary__titles {
+  @apply flex-grow;
+}
+
+.activity-summary__title {
+  @apply text-2xl font-bold text-black;
+}
+
+.activity-summary__subtitle {
+  @apply text-lg text-gray-700;
 }
 
 .activity-summary__action {
@@ -23,7 +49,7 @@
   @apply block w-full mt-8;
 }
 
-.activity-summary__action-inline > .btn {
+.activity-summary__action-inline>.btn {
   @apply block;
 }
 
@@ -41,7 +67,7 @@
 }
 
 @screen md {
-  .activity-summary {
+  .activity-summary__card {
     @apply flex flex-row items-start;
   }
 

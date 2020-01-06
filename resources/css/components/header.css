@@ -23,6 +23,10 @@
   @apply text-4xl mb-8;
 }
 
+.header__title--single {
+  @apply mb-0;
+}
+
 .header__subtitle {
   @apply text-xl;
 }
