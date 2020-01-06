@@ -68,6 +68,7 @@ class Enrollment extends UuidModel
             ->withoutTrashed()
             ->whereUserId($user->id)
             ->whereActivityId($activity->id)
+            ->whereNotState('state', CancelledState::class)
             ->with(['activity'])
             ->first();
     }

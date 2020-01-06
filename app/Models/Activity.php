@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
-use App\Models\States\Enrollment\Cancelled;
+use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\Traits\HasEditorJsContent;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Config\Steps\ResizeStep;
@@ -11,10 +11,10 @@ use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
@@ -156,7 +156,8 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function enrollments(): Relation
     {
-        return $this->hasMany(Enrollment::class);
+        return $this->hasMany(Enrollment::class)
+            ->whereNotState('state', CancelledState::class);
     }
 
     /**
@@ -204,7 +205,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Get enrollment count
         $occupied = $this->enrollments()
-            ->whereNotState('state', Cancelled::class)
+            ->whereNotState('state', CancelledState::class)
             ->count();
 
         // Subtract active enrollments from active seats

@@ -20,18 +20,28 @@ if ($user && $is_enrolled && !$is_stable) {
 }
 @endphp
 
-@if ($user && $is_enrolled && $is_stable)
-<a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">Beheer inschrijving</a>
-@elseif ($user && $is_enrolled)
-<a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a>
-<p class="text-gray-700 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
-@elseif (!$hasRoom)
-<button class="btn m-0 btn--link" disabled>Uitverkocht</button>
-@elseif (!$isOpen)
-<button class="btn m-0 btn--link" disabled>Inschrijvingen gesloten</button>
-@else
-<form action="{{ route('enroll.create', compact('activity')) }}" method="post">
-    @csrf
-    <button type="submit" class="btn m-0 btn--brand">Inschrijven</button>
-</form>
-@endif
+<div class="flex flex-col items-center">
+    @if ($user && $is_enrolled && $is_stable)
+    <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">Beheer inschrijving</a>
+
+    {{-- Remove link --}}
+    @if ($isOpen)
+    <a href="{{ route('enroll.delete', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    @endif
+    @elseif ($user && $is_enrolled)
+    <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a>
+    <p class="text-gray-700 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
+
+    {{-- Remove link --}}
+    <a href="{{ route('enroll.delete', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    @elseif (!$hasRoom)
+    <button class="btn m-0 btn--link" disabled>Uitverkocht</button>
+    @elseif (!$isOpen)
+    <button class="btn m-0 btn--link" disabled>Inschrijvingen gesloten</button>
+    @else
+    <form action="{{ route('enroll.create', compact('activity')) }}" method="post">
+        @csrf
+        <button type="submit" class="btn m-0 btn--brand">Inschrijven</button>
+    </form>
+    @endif
+</div>
