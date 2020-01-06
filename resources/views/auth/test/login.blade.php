@@ -1,24 +1,24 @@
-<div class="card">
+<div class="card shadow-md border-gray-200 border">
     <form method="POST" action="{{ route('login') }}" class="login__form">
         @csrf
         <input type="hidden" name="password" value="Gumbo" />
 
-        <p class="mb-4">Testing mode enabled. Pick a user to log in as.</p>
+        <h2 class="font-base text-2xl">Test mode <strong>enabled</strong></h2>
+        <p class="mb-8 text-lg">Pick a test user from the drop down below to quickly log in.</p>
 
         {{-- Login user --}}
-        <div class="mb-4 login__field">
-            {{-- Label --}}
-            <label for="user" class="login__field-label block text-sm mb-2">User</label>
+        <div class="flex flex-col md:flex-row md:items-center">
+            <div class="flex-grow mb-4 md:mb-0">
+                {{-- Field --}}
+                <select name="email" id="user" class="form-select w-full">
+                    @foreach ($testUsers as $user)
+                    <option value="{{ $user->email }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-            {{-- Field --}}
-            <select name="email" id="user" class="login__field-input form-select block">
-                @foreach ($testUsers as $user)
-                <option value="{{ $user->email }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
+            {{-- Submit button --}}
+            <button class="my-0 py-2 btn btn-brand md:ml-4" type="submit">Inloggen</button>
         </div>
-
-        {{-- Submit button --}}
-        <button class="login__submit block btn btn-brand mb-4" type="submit">Inloggen</button>
     </form>
 </div>
