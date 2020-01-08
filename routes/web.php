@@ -15,9 +15,8 @@ $loginCsp = vsprintf('%s:%s', [
     App\Http\Policy\LoginPolicy::class
 ]);
 
-// Home and privacy policy
+// Home
 Route::get('/', 'PageController@homepage')->name('home');
-Route::get('/privacy-policy', 'PageController@privacy')->name('privacy');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
