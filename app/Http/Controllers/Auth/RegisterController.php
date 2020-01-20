@@ -86,8 +86,11 @@ class RegisterController extends Controller
         // Log in user
         Auth::guard()->login($user);
 
+        // Flash message
+        flash('Je bent nu geregistreerd. Je hebt een mailtje ontvangen om je inschrijving te bevestigen.', 'info');
+
         // Forward client
-        return redirect()->route('onboarding.new-user')->with(self::SESSION_ACCESS, true);
+        return response()->redirectToRoute('home');
     }
 
     /**

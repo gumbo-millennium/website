@@ -296,9 +296,9 @@ class Activity extends Resource
                 ->help('Guest price with service fees')
                 ->onlyOnDetail(),
 
-            Flexible::make('Form', 'enrollment_questions')
-                ->confirmRemove('Removing a field does not remove submitted data')
-                ->preset(ActivityForm::class)
+            // Flexible::make('Form', 'enrollment_questions')
+            //     ->confirmRemove('Removing a field does not remove submitted data')
+            //     ->preset(ActivityForm::class)
         ];
     }
 
