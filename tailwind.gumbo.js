@@ -8,7 +8,7 @@ module.exports = {
     yellow: {},
     // green: {},
     teal: {},
-    blue: {},
+    // blue: {},
     indigo: {},
     purple: {},
     pink: {},
