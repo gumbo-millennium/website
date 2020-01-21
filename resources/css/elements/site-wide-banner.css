@@ -1,0 +1,34 @@
+/* Messages */
+
+.site-wide-banner {
+  @apply relative z-50 overflow-visible;
+  max-height: 0;
+}
+
+.site-wide-banner__inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.site-wide-banner__container {
+  @apply mt-0 py-4 px-8;
+  @apply shadow rounded-b border border-t-0;
+  @apply bg-gray-200 text-gray-800 border-gray-800;
+}
+
+.site-wide-banner__container--info {
+  @apply bg-blue-200 text-blue-800 border-blue-800;
+}
+
+.site-wide-banner__container--error {
+  @apply bg-red-200 text-red-800 border-red-800;
+}
+
+.site-wide-banner__container--warning {
+  @apply bg-orange-200 text-orange-800 border-orange-800;
+}
+
+.site-wide-banner__container--success {
+  @apply bg-brand-200 text-brand-800 border-brand-800;
+}

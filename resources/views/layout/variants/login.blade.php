@@ -1,7 +1,8 @@
 @extends('layout.main')
 
-@section('content')
+@section('main.scripts', '')
 
+@section('content')
 <div class="container">
     @section('login-content')
     <div class="container container--sm my-8">

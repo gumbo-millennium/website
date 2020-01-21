@@ -15,8 +15,10 @@
     <link rel="stylesheet" href="{{ mix('/app.css') }}">
 
     {{-- Javascript (deferred) --}}
+    @section('main.scripts')
     <script src="{{ mix('/vendor.js') }}" defer></script>
     <script src="{{ mix('/app.js') }}" defer></script>
+    @show
 </head>
 
 <body>
