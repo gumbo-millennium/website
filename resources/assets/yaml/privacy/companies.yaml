@@ -1,0 +1,39 @@
+- name: Conscribo
+  url: https://www.conscribo.nl/
+  purposes:
+    - verwerken van je inschrijvingen
+    - toegang tot het documentensysteem
+    - verwerken van betalingen
+  data:
+    - naam
+    - e-mailadres
+    - adresgegevens
+    - lidmaatschappen
+    - EHBO-details (indien verstrekt)
+    - iDEAL transactiedetails (geen inloggegevens)
+
+# Stripe handles payments
+- name: Stripe Inc.
+  url: https://stripe.com/
+  privacy-urls:
+    Privacybeleid (Engels): https://stripe.com/en-nl/privacy
+  purposes:
+    - uitvoeren van betalingen voor (o.a.) activiteiten
+  data:
+    - naam
+    - e-mailadres
+    - iDEAL transactiedetails (geen inloggegevens)
+
+# Google handles e-mail lists
+- name: Google Ireland Ltd.
+  url: https://google.com/
+  privacy-urls:
+    Privacybeleid (Nederlands): https://policies.google.com/privacy?hl=nl
+    GDPR amendement voor Europese burgers (Engels): https://gsuite.google.com/terms/dpa_terms.html
+  purposes:
+    - doorsturen van e-mails voor commissie- en projectgroepleden.
+    - doorsturen van e-mails voor inschrijvingen bij activiteiten.
+    - toegang tot online dataopslag (Google Drive).
+  data:
+    - naam
+    - e-mailadres

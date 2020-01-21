@@ -27,7 +27,7 @@ class RegisterController extends Controller
     private const SESSION_ACCESS = 'onboarding.after-registration';
     private const DATA_SESSION_KEY = 'register.user';
     private const PRIVACY_CACHE_KEY = 'register.privacy.companies';
-    private const PRIVACY_COMPANY_FILE = 'assets/json/privacy/companies.yaml';
+    private const PRIVACY_COMPANY_FILE = 'assets/yaml/privacy/companies.yaml';
 
     use RedirectsUsers;
     use RedirectsToAdminHomeTrait;
