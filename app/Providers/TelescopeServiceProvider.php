@@ -26,7 +26,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $this->hideSensitiveRequestDetails();
 
         Telescope::filter(function (IncomingEntry $entry) {
-            if ($this->app->isLocal()) {
+            if (
+                $this->app->isLocal() ||
+                $this->app->get('config')->get('gumbo.beta')
+            ) {
                 return true;
             }
 
