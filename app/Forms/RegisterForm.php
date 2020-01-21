@@ -102,7 +102,7 @@ class RegisterForm extends Form
                     'nullable',
                     'string',
                     'min:4',
-                    'regex:^[a-z0-9][a-z0-9-]{2,}[a-z0-9]$',
+                    'regex:/^[a-z0-9][a-z0-9-]{2,}[a-z0-9]$/',
                     'unique:users,alias',
                 ],
                 'error_messages' => [

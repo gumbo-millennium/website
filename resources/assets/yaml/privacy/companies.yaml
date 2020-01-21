@@ -1,16 +1,14 @@
+# Conscribo, for administration
 - name: Conscribo
   url: https://www.conscribo.nl/
   purposes:
-    - verwerken van je inschrijvingen
-    - toegang tot het documentensysteem
-    - verwerken van betalingen
+    - bijhouden van de ledenadministratie
+    - incasseren van de jaarlijkse contributie
   data:
-    - naam
-    - e-mailadres
-    - adresgegevens
-    - lidmaatschappen
-    - EHBO-details (indien verstrekt)
-    - iDEAL transactiedetails (geen inloggegevens)
+    - Naam
+    - E-mailadres
+    - Adresgegevens
+    - Lidmaatschappen
 
 # Stripe handles payments
 - name: Stripe Inc.
@@ -22,7 +20,7 @@
   data:
     - naam
     - e-mailadres
-    - iDEAL transactiedetails (geen inloggegevens)
+    - iDEAL transactiedetails (bank, IBAN)
 
 # Google handles e-mail lists
 - name: Google Ireland Ltd.
