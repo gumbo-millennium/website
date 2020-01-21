@@ -161,6 +161,10 @@ Route::prefix('join')->name('join.')->group(function () {
 // Authentication and forgotten passwords
 Route::prefix('auth')->middleware($loginCsp)->group(function () {
     Route::auth(['verify' => true]);
+
+    // Register privacy
+    Route::get('/register/privacy', 'Auth\RegisterController@showPrivacy')->name('register.register-privacy');
+    Route::post('/register/privacy', 'Auth\RegisterController@savePrivacy');
 });
 
 // My account
@@ -172,7 +176,7 @@ Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
 
 // Onboarding URLs
 Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(function () {
-    Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-user');
+    Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-account');
 });
 
 // Common mistakes handler

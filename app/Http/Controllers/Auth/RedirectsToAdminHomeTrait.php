@@ -11,9 +11,14 @@ namespace App\Http\Controllers\Auth;
 trait RedirectsToAdminHomeTrait
 {
     /**
+     * Redirect to homepage
+     */
+    protected string $redirectTo = '/';
+
+    /**
      * {@inheritdoc}
      */
-    protected function redirectTo()
+    protected function redirectTo(): string
     {
         return route('home', null, false);
     }

@@ -125,12 +125,8 @@ class RegisterForm extends Form
                     'pattern' => '[a-z0-9][a-z0-9-]{2,}[a-z0-9]'
                 ],
             ])
-            ->add('accept_terms', 'checkbox', [
-                'label' => 'Ik ga akkoord met de uitgebreide privacy policy van Gumbo Millennium',
-                'rules' => 'required|accepted'
-            ])
             ->add('submit', 'submit', [
-                'label' => 'Registreren'
+                'label' => 'Verder'
             ]);
     }
 }

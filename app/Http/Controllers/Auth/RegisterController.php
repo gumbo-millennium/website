@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Forms\RegisterForm;
+use App\Forms\RegisterPrivacyForm;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\FormBuilder;
 use RuntimeException;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Registation controller
@@ -22,18 +25,30 @@ use RuntimeException;
 class RegisterController extends Controller
 {
     private const SESSION_ACCESS = 'onboarding.after-registration';
+    private const DATA_SESSION_KEY = 'register.user';
+    private const PRIVACY_CACHE_KEY = 'register.privacy.companies';
+    private const PRIVACY_COMPANY_FILE = 'assets/json/privacy/companies.yaml';
 
     use RedirectsUsers;
     use RedirectsToAdminHomeTrait;
+
+    /**
+     * A useful form builder
+     */
+    private FormBuilder $formBuilder;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(FormBuilder $formBuilder)
     {
-        $this->middleware('guest');
+        // Form builder
+        $this->formBuilder = $formBuilder;
+
+        // Middleware
+        $this->middleware('guest')->except('afterRegister');
     }
 
 
@@ -42,10 +57,10 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm(FormBuilder $formBuilder)
+    public function showRegistrationForm()
     {
         // Create form
-        $form = $formBuilder->create(RegisterForm::class, [
+        $form = $this->formBuilder->create(RegisterForm::class, [
             'method' => 'POST',
             'url' => route('register')
         ]);
@@ -56,15 +71,14 @@ class RegisterController extends Controller
 
     /**
      * Registers a new user in the system
-     *
+     * @param Request $request
      * @param FormBuilder $formBuilder
-     * @return Illuminate\Routing\Redirector|Illuminate\Http\RedirectResponse
-     * @throws BindingResolutionException
+     * @return Illuminate\Http\RedirectResponse
      */
-    public function register(FormBuilder $formBuilder)
+    public function register(Request $request)
     {
         // Get form
-        $form = $formBuilder->create(RegisterForm::class);
+        $form = $this->formBuilder->create(RegisterForm::class);
 
         // Or automatically redirect on error. This will throw an HttpResponseException with redirect
         $form->redirectIfNotValid();
@@ -77,8 +91,81 @@ class RegisterController extends Controller
         $userValues['email'] = Str::lower($userValues['email']);
         $userValues['password'] = Hash::make($userValues['password']);
 
+        // Store in session
+        $request->session()->put(self::DATA_SESSION_KEY, $userValues);
+
+        // Redirect to sign-up page
+        return response()->redirectToRoute('register.register-privacy');
+    }
+
+    /**
+     * Shows the 'what we steal from your privé' message
+     * @param Request $request
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function showPrivacy(Request $request, Repository $cache)
+    {
+        // Redirect if wrong
+        if (!$request->session()->has(self::DATA_SESSION_KEY)) {
+            return response()->redirectToRoute('register');
+        }
+
+        // Create form
+        $form = $this->formBuilder->create(RegisterPrivacyForm::class, [
+            'method' => 'POST',
+            'url' => route('register.register-privacy')
+        ]);
+
+        // Check cache
+        $companies = $cache->get(self::PRIVACY_CACHE_KEY);
+        if (!$companies) {
+            // Get new file
+            $path = \resource_path(self::PRIVACY_COMPANY_FILE);
+
+            try {
+                // Read file
+                $companies = Yaml::parseFile($path);
+            } catch (ParseException $exception) {
+                // Log
+                logger()->error('Failed to parse YAML {path}: {exception}', compact('path', 'exception'));
+                // Convert to empty array
+                $companies = [];
+            }
+            $cache->put(self::PRIVACY_CACHE_KEY, $companies, now()->addDay());
+        }
+
+        // Show page
+        return response()->view('auth.register-privacy', [
+            'companies' => $companies,
+            'form' => $form,
+            'user' => $request->session()->get(self::DATA_SESSION_KEY),
+        ]);
+    }
+
+    /**
+     * Confirms privacy policy and creates account
+     * @param Request $request
+     * @return Illuminate\Http\RedirectResponse
+     * @throws RuntimeException
+     */
+    public function savePrivacy(Request $request)
+    {
+        // Get form
+        $form = $this->formBuilder->create(RegisterPrivacyForm::class);
+
+        // Or automatically redirect on error. This will throw an HttpResponseException with redirect
+        $form->redirectIfNotValid();
+
+        // Redirect if wrong
+        if (!$request->session()->has(self::DATA_SESSION_KEY)) {
+            return response()->redirectToRoute('register');
+        }
+
+        // Get user request
+        $userRequest = $request->session()->pull(self::DATA_SESSION_KEY);
+
         // Create a user with the values
-        $user = User::create($userValues);
+        $user = User::create($userRequest);
 
         // Dispatch event
         event(new Registered($user));
@@ -86,11 +173,12 @@ class RegisterController extends Controller
         // Log in user
         Auth::guard()->login($user);
 
-        // Flash message
-        flash('Je bent nu geregistreerd. Je hebt een mailtje ontvangen om je inschrijving te bevestigen.', 'info');
+        // Flag as valid
+        $request->session()->put(self::SESSION_ACCESS, 'true');
 
         // Forward client
-        return response()->redirectToRoute('home');
+        return response()
+            ->redirectToRoute('onboarding.new-account');
     }
 
     /**
@@ -102,17 +190,22 @@ class RegisterController extends Controller
      */
     public function afterRegister(Request $request)
     {
-        // Remove session flag if continuing
+        // Check user
+        $user = $request->user();
+
+        // User can't be older than 15 mins
+        if ($user->created_at < now()->subMinutes(15)) {
+            return redirect()->intended();
+        }
+
+        // Client may want to leave
         if ($request->has('continue')) {
-            $request->session()->forget(self::SESSION_ACCESS);
+            return redirect()->intended();
         }
 
-        // Show onboarding if allowed
-        if ($request->session()->has(self::SESSION_ACCESS)) {
-            return view('onboarding.new-account');
-        }
-
-        // Redirect to next page otherwise
-        return redirect()->intended();
+        // Show onboarding
+        return view('onboarding.new-account', [
+            'nextUrl' => route('onboarding.new-account', ['continue' => true])
+        ]);
     }
 }
