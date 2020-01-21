@@ -15,6 +15,7 @@
         "doctrine/dbal": "^2.3",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
+        "google/apiclient": "^2.4",
         "gregoriohc/laravel-nova-theme-responsive": "^0.8",
         "guzzlehttp/guzzle": "^6.3",
         "kabbouchi/nova-impersonate": "^1.1",
@@ -40,6 +41,7 @@
         "spatie/laravel-view-models": "^1.2",
         "stripe/stripe-php": "^7.10",
         "symfony/process": "^4.1",
+        "symfony/yaml": "^5.0",
         "vyuldashev/nova-permission": "^2.4",
         "whitecube/nova-flexible-content": "^0.1.12"
     },
