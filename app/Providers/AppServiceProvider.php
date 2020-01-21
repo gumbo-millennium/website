@@ -10,6 +10,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -123,6 +124,7 @@ class AppServiceProvider extends ServiceProvider
             return ($number === false) ? null : $number;
         };
 
+        // Number formatting
         Str::macro('number', function ($value, int $decimals = 0) use ($validNumber) {
             // Validate number and return null if empty
             $value = $validNumber($value);
@@ -130,7 +132,9 @@ class AppServiceProvider extends ServiceProvider
             // Return formatted number, if set
             return ($value === null) ? null :  number_format($value, $decimals, ',', '.');
         });
-        Str::macro('price', function ($value) use ($validNumber) {
+
+        // Price formatting
+        Str::macro('price', function ($value, bool $decimals = null) use ($validNumber) {
             // Validate number and return null if empty
             $value = $validNumber($value);
             if ($value === null) {
@@ -138,14 +142,29 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $value /= 100;
+            $prefix = ($value < 0) ? '-' : '';
 
             // Handle round value value
-            if (($value * 100) % 100 === 0) {
-                return sprintf('€ %s,-', number_format($value, 0, ',', '.'));
+            if ($decimals === false || (($value * 100) % 100 === 0 && $decimals !== true)) {
+                return sprintf('%s€ %s,-', $prefix, number_format(abs($value), 0, ',', '.'));
             }
 
             // Handle decimal value
-            return sprintf('€ %s', number_format($value, 2, ',', '.'));
+            return sprintf('%s€ %s', $prefix, number_format(abs($value), 2, ',', '.'));
+        });
+
+        // List formatting
+        Arr::macro('implode', function ($value) {
+            // No 'and' needed
+            if (count($value) <= 1) {
+                return implode(', ', $value);
+            }
+
+            // Pull off last item
+            $last = array_pop($value);
+
+            // Merge them
+            return implode(', ', $value) . ' en ' . $last;
         });
     }
 }
