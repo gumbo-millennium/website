@@ -3,8 +3,14 @@
         {{-- Contact details --}}
         <ul class="userbar__links userbar__links--contact">
             <li class="userbar__links-link">
+                <a href="tel:+31388450100" class="userbar__links-item userbar__links-item--flex">
+                    @icon('solid/phone')
+                    <span>038 845 0100</span>
+                </a>
+            </li>
+            <li class="userbar__links-link">
                 <a href="mailto:bestuur@gumbo-millennium.nl" class="userbar__links-item userbar__links-item--flex">
-                    @icon('regular/envelope')
+                    @icon('solid/envelope')
                     <span>bestuur@gumbo-millennium.nl</span>
                 </a>
             </li>
@@ -16,7 +22,7 @@
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
                 <span class="userbar__links-item userbar__links-item--text userbar__links-item--flex">
-                    @icon('regular/user')
+                    @icon('solid/user')
                     <span>{{ $user->name }}</span>
                 </span>
             </li>
