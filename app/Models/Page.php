@@ -17,18 +17,20 @@ class Page extends SluggableModel
 {
     use HasEditorJsContent;
 
+    public const TYPE_USER = 'user';
+    public const TYPE_REQUIRED = 'required';
+    public const TYPE_GIT = 'git';
+
     /**
      * Pages required to exist, cannot be deleted or renamed
      */
     public const REQUIRED_PAGES = [
         'home' => 'Homepage',
-        'privacy-policy' => 'Privacy Policy',
-        'terms' => 'Terms and Conditions',
         'error-404' => 'Not Found',
+        'about' => 'Over gumbo',
     ];
 
     public const SLUG_HOMEPAGE = 'home';
-    public const SLUG_PRIVACY = 'privacy-policy';
     public const SLUG_404 = 'error-404';
 
     /**
@@ -37,7 +39,8 @@ class Page extends SluggableModel
     protected $fillable = [
         'slug',
         'title',
-        'contents'
+        'contents',
+        'type'
     ];
 
     /**

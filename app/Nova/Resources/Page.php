@@ -7,9 +7,11 @@ use App\Models\Page as PageModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 
 /**
  * Add page
@@ -75,6 +77,9 @@ class Page extends Resource
             // Show timestamps
             DateTime::make('Created at', 'created_at')->onlyOnDetail(),
             DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
+
+            // Add type
+            Text::make('Type')->onlyOnDetail()->displayUsing(fn($value) => Str::title($value)),
 
             // Add data
             NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),
