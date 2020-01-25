@@ -17,7 +17,9 @@
 </header>
 
 {{-- Contents --}}
-<div class="container leading-relaxed content">
-    {!! $page->html !!}
+<div class="container">
+    <article class="plain-content">
+        {!! $page->html !!}
+    </article>
 </div>
 @endsection
