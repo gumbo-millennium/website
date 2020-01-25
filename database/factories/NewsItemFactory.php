@@ -77,6 +77,7 @@ $factory->define(NewsItem::class, function (Faker $faker) use ($fakeEditorJs) {
     return [
         'title' => Str::title($faker->words($faker->numberBetween(2, 8), true)),
         'contents' => json_encode($fakeEditorJs($faker)),
-        'author_id' => optional(User::inRandomOrder()->first())->id
+        'author_id' => optional(User::inRandomOrder()->first())->id,
+        'sponsor' => $faker->optional(0.1)->company
     ];
 });

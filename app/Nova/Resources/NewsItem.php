@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 
 /**
  * News Items
@@ -62,19 +63,25 @@ class NewsItem extends Resource
             ID::make()->sortable(),
 
             TextWithSlug::make('Title', 'title')->slug('slug'),
-            Slug::make('Slug', 'slug')
-                ->nullable(false)
-                ->readonly(function () {
-                    return array_key_exists($this->slug, NewsItemModel::REQUIRED_PAGES);
-                }),
+            Slug::make('Slug', 'slug')->nullable(false),
 
             // Add multi selects
             BelongsTo::make('Last modified by', 'author', User::class)
                 ->onlyOnDetail(),
 
+            // Add sponsor field
+            Text::make('Sponsor name', 'sponsor')
+                ->nullable()
+                ->help('Sponsor that paid for this post.')
+                ->hideFromIndex(),
+
             // Show timestamps
             DateTime::make('Created at', 'created_at')->onlyOnDetail(),
             DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
+            DateTime::make('Published on', 'published_at')
+                ->nullable()
+                ->help('Optionally backdate or schedule this post')
+                ->hideFromIndex(),
 
             // Add data
             NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),

@@ -22,7 +22,7 @@ class NewsController extends Controller
     public function index()
     {
         // Get 15 items at a time, newest first
-        $allNewsItems = NewsItem::orderByDesc('created_at')->paginate(15);
+        $allNewsItems = NewsItem::available()->paginate(15);
 
         // Return the view with all items
         return view('news.index')->with([

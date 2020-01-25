@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -31,6 +32,17 @@ class NewsItem extends SluggableModel
     protected $casts = [
         'content' => 'json',
         'user_id' => 'int',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'published_at',
     ];
 
     /**
@@ -66,5 +78,21 @@ class NewsItem extends SluggableModel
     public function getHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
+    }
+
+    /**
+     * Scope to available posts
+     * @param Builder $query
+     * @return Illuminate\Database\Eloquent\Builder
+     * @throws \InvalidArgumentException
+     */
+    public function scopeAvailable(Builder $query): Builder
+    {
+        return $query
+            ->orderByDesc('published_at')
+            ->where(function ($query) {
+                $query->where('published_at', '<', now())
+                    ->orWhereNull('published_at');
+            });
     }
 }
