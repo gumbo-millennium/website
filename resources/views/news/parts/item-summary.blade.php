@@ -1,13 +1,29 @@
-{{-- Optional sponsor --}}
-@if ($item->sponsor && !empty($withAdvertorial))
-<div class="mr-4 flex flex-row items-center">
-    @icon('solid/ad', 'block mr-2')
-    <span>Advertorial door {{ $item->sponsor }}</span>
-</div>
-@endif
+@php
+// Uses
+use Carbon\Carbon;
+
+// Author
+$hasSponsor = (bool) $item->sponsor;
+$hasAuthor = !$hasSponsor && $item->author && $item->author->display_name;
+
+// Timestamp
+$postTimestamp = $item->published_at ?? $item->created_at;
+$postDateIso = $postTimestamp->toIso8601String();
+$postDate = $postTimestamp->isoFormat('DD MMMM YYYY, [om] HH:mm');
+
+// Make relative, if asked
+if (!empty($relative)) {
+    $postDate = $postTimestamp->diffForHumans([
+        'syntax' => Carbon::DIFF_RELATIVE_TO_NOW,
+        'options' => Carbon::JUST_NOW | Carbon::ONE_DAY_WORDS | Carbon::TWO_DAY_WORDS | Carbon::SEQUENTIAL_PARTS_ONLY,
+        'join' => ', ',
+        'parts' => 2
+    ]);
+}
+@endphp
 
 {{-- Optional author --}}
-@if ($item->author && $item->author->display_name)
+@if ($hasAuthor)
 <div class="mr-4 flex flex-row items-center">
     @icon('solid/user', 'block mr-2')
     <span>{{ $item->author->display_name }}</span>
@@ -15,10 +31,7 @@
 @endif
 
 {{-- Date of publication --}}
-@php
-$postDate = ($item->created_at ?? $item->published_at)->isoFormat('DD MMMM YYYY, [om] HH:mm');
-@endphp
 <div class="mr-4 flex flex-row items-center">
     @icon('solid/clock', 'block mr-2')
-    <span>{{ $postDate }}</span>
+    <time datetime="{{ $postDateIso }}">{{ $postDate }}</time>
 </div>

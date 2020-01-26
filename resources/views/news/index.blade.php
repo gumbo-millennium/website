@@ -30,7 +30,7 @@
                 </a>
             </h2>
             <div class="flex flex-row flex-wrap text-sm">
-                @include('news.parts.item-summary', ['item' => $item])
+                @include('news.parts.item-summary', ['item' => $item, 'relative' => true])
             </div>
         </div>
     </article>
