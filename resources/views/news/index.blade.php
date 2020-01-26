@@ -9,10 +9,6 @@
 </header>
 
 <div class="container after-header">
-    <div class="mb-8">
-        <p>De laatste propoganda vanuit Gumbo Millennium.</p>
-    </div>
-
     @foreach ($items as $item)
     @php
     $postDate = $item->published_at ?? $item->created_at;
