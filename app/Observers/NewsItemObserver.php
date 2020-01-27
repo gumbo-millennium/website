@@ -11,7 +11,7 @@ class NewsItemObserver
      * @param NewsItem $newsArticle
      * @return void
      */
-    public function saving(NewsItem &$newsArticle)
+    public function saving(NewsItem $newsArticle)
     {
         if ($newsArticle->author_id === null) {
             return;
