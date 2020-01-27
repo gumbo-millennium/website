@@ -85,7 +85,8 @@
         "post-install-cmd": [
           "@php artisan vendor:publish --tag=nova-assets",
           "@php artisan horizon:assets",
-          "@php artisan telescope:publish"
+          "@php artisan telescope:publish",
+          "@php artisan nova-lang:publish nl --force"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
