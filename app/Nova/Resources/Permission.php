@@ -62,7 +62,7 @@ class Permission extends Resource
      */
     public static function label()
     {
-        return __('Permissions');
+        return 'Toestemmingen';
     }
 
     /**
@@ -72,7 +72,7 @@ class Permission extends Resource
      */
     public static function singularLabel()
     {
-        return __('Permission');
+        return 'Toestemming';
     }
 
     /**
@@ -103,35 +103,35 @@ class Permission extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Name', 'name')
+            Text::make('Naam', 'name')
                 ->rules(['required', 'string', 'max:255'])
                 ->creationRules('unique:permissions')
                 ->updateRules('unique:permissions,name,{{resourceId}}'),
 
-            Text::make('Title', 'title')
+            Text::make('Titel', 'title')
                 ->rules(['required', 'string', 'max:255']),
 
-            Select::make('Guard Name', 'guard_name')
+            Select::make('Guard naam', 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)])
                 ->hideFromIndex(),
 
-            DateTime::make('Created At', 'created_at')
+            DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),
-            DateTime::make('Updated At', 'updated_at')
+            DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
 
-            Number::make('Aantal Rollen', function () {
+            Number::make('Aantal rollen', function () {
                 return $this->roles()->count();
             })->onlyOnIndex(),
-            Number::make('Aantal Gebruikers', function () {
+            Number::make('Aantal gebruikers', function () {
                 return $this->users()->count();
             })->onlyOnIndex(),
 
-            BelongsToMany::make('Roles')
+            BelongsToMany::make('Rollen')
                 ->searchable(),
 
-            MorphToMany::make('Users', 'users', $userResource)
+            MorphToMany::make('Gebruikers', 'users', $userResource)
                 ->searchable(),
         ];
     }

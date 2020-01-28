@@ -58,7 +58,7 @@ class Enrollment extends Resource
      */
     public static function label()
     {
-        return __('Enrollments');
+        return 'Inschrijvingen';
     }
 
     /**
@@ -68,7 +68,7 @@ class Enrollment extends Resource
      */
     public static function singularLabel()
     {
-        return __('Enrollment');
+        return 'Inschrijving';
     }
 
     /**
@@ -83,36 +83,36 @@ class Enrollment extends Resource
             ID::make()->sortable(),
 
             // Add multi selects
-            BelongsTo::make('Activity', 'activity')
+            BelongsTo::make('Activiteit', 'activity')
                 ->rules('required', function ($activity) use ($request) {
                     $request->can('manage', $activity);
                 })
                 ->hideWhenUpdating(),
 
             // Add user
-            BelongsTo::make('User', 'user')
+            BelongsTo::make('Gebruiker', 'user')
                 ->rules('required')
                 ->searchable()
                 ->hideWhenUpdating(),
 
             // Add data
-            KeyValue::make(__('Enrollment Data'), 'data')
+            KeyValue::make('Metadata inschrijving', 'data')
                 ->rules('json')
                 ->hideFromIndex(),
 
             // Dates
-            DateTime::make('Created at', 'created_at')
+            DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),
-            DateTime::make('Updated at', 'updated_at')
+            DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
-            DateTime::make('Trashed at', 'deleted_at')
+            DateTime::make('Verwijderd op', 'deleted_at')
                 ->onlyOnDetail(),
-            Text::make('Trashed reason', 'deleted_reason')
+            Text::make('Reden verwijdering', 'deleted_reason')
                 ->onlyOnDetail(),
 
-            Boolean::make('Paid', 'paid')
+            Boolean::make('Betaald', 'paid')
                 ->hideWhenUpdating()
-                ->help('Indicates if the user has paid the fee for this activity.'),
+                ->help('Geeft aan of de inschrijving is betaald.'),
 
             // Add payments
             HasMany::make(__('Payments'), 'payments', Payment::class),

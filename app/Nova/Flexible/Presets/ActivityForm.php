@@ -27,7 +27,7 @@ class ActivityForm extends Preset
     public function handle(Flexible $field)
     {
         // Change button
-        $field->button('Add form field');
+        $field->button('Formulierveld toevoegen');
 
         // Add text field
         $field->addLayout(FormTextField::class);

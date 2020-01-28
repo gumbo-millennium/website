@@ -50,7 +50,7 @@ class User extends Resource
      */
     public static function label()
     {
-        return __('Users');
+        return 'Gebruikers';
     }
 
     /**
@@ -60,7 +60,7 @@ class User extends Resource
      */
     public static function singularLabel()
     {
-        return __('User');
+        return 'Gebruiker';
     }
 
     /**
@@ -75,23 +75,23 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Name')
+            Text::make('Naam')
                 ->sortable()
                 ->onlyOnIndex(),
 
-            Text::make('First Name')
+            Text::make('Voornaam')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('Insert')
+            Text::make('Tussenvoegsel')
                 ->hideFromIndex()
                 ->rules('nullable', 'max:255'),
 
-            Text::make('Last Name')
+            Text::make('Achternaam')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('Email')
+            Text::make('E-mailadres')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
@@ -100,14 +100,14 @@ class User extends Resource
             Text::make('Alias')
                 ->rules('nullable', 'between:2,60'),
 
-            Password::make('Password')
+            Password::make('Wachtwoord')
                 ->onlyOnForms()
-                ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
+                ->showOnUpdating(false)
+                ->rules('required', 'string', 'min:10'),
 
             // Permissions
-            MorphToMany::make('Roles', 'roles', \Vyuldashev\NovaPermission\Role::class),
-            MorphToMany::make('Permissions', 'permissions', \Vyuldashev\NovaPermission\Permission::class),
+            MorphToMany::make('Rollen', 'roles', Role::class),
+            MorphToMany::make('Permissies', 'permissions', Permission::class),
         ];
     }
 }

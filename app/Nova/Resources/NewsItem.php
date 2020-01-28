@@ -62,29 +62,29 @@ class NewsItem extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make('Title', 'title')->slug('slug'),
-            Slug::make('Slug', 'slug')->nullable(false),
+            TextWithSlug::make('Titel', 'title')->slug('slug'),
+            Slug::make('Pad', 'slug')->nullable(false),
 
             // Add multi selects
-            BelongsTo::make('Last modified by', 'author', User::class)
+            BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
 
             // Add sponsor field
-            Text::make('Sponsor name', 'sponsor')
+            Text::make('Sponsor', 'sponsor')
                 ->nullable()
-                ->help('Sponsor that paid for this post.')
+                ->help('De sponsor die voor deze post heeft betaald. Zet dit artikel om in een advertorial.')
                 ->hideFromIndex(),
 
             // Show timestamps
-            DateTime::make('Created at', 'created_at')->onlyOnDetail(),
-            DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
-            DateTime::make('Published on', 'published_at')
+            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
+            DateTime::make('Gepubliceerd op', 'published_at')
                 ->nullable()
-                ->help('Optionally backdate or schedule this post')
+                ->help('Datum waarop dit artikel gepubliceerd is of wordt')
                 ->hideFromIndex(),
 
             // Add data
-            NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),
+            NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),
         ];
     }
 }

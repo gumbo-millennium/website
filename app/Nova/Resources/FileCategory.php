@@ -39,7 +39,7 @@ class FileCategory extends Resource
      *
      * @var string
      */
-    public static $group = 'File storage';
+    public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
@@ -64,36 +64,36 @@ class FileCategory extends Resource
             ID::make()->sortable(),
 
             // Title and slug
-            TextWithSlug::make('Title', 'title')
+            TextWithSlug::make('Titel', 'title')
                 ->slug('slug')
                 ->rules('required', 'min:4')
                 ->help('File title, does not need to be a filename'),
-            Slug::make('Slug', 'slug')
+            Slug::make('Pad', 'slug')
                 ->nullable(false)
                 ->creationRules('unique:activities,slug')
                 ->updateRules('unique:activities,slug,{{resourceId}}'),
 
             // Show timestamps
-            DateTime::make('Created at', 'created_at')->onlyOnDetail(),
-            DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
+            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
 
             // Paired files
-            HasMany::make('Files', 'files', File::class),
+            HasMany::make('Bestanden', 'files', File::class),
 
-            new Panel('Statistics', [
+            new Panel('Statistieken', [
                 // Make extra data
-                Number::make('File count', function () {
+                Number::make('Aantal bestanden', function () {
                     return $this->files()->count();
                 })->exceptOnForms(),
 
                 // List downloads, in time frames
-                Number::make('File downloads (48hrs)', function () {
+                Number::make('Aantal downloads (48hrs)', function () {
                     return $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count();
                 })->exceptOnForms(),
-                Number::make('File downloads (1 week)', function () {
+                Number::make('Aantal downloads (1 week)', function () {
                     return $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count();
                 })->onlyOnDetail(),
-                Number::make('File downloads (all time)', function () {
+                Number::make('Aantal downloads (all time)', function () {
                     return $this->downloads()->count();
                 })->onlyOnDetail(),
             ])

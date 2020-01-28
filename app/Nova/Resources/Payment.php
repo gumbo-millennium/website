@@ -56,7 +56,7 @@ class Payment extends Resource
      */
     public static function label()
     {
-        return __('Payments');
+        return 'Betalingen';
     }
 
     /**
@@ -66,7 +66,7 @@ class Payment extends Resource
      */
     public static function singularLabel()
     {
-        return __('Payment');
+        return 'Betaling';
     }
 
     /**
@@ -84,30 +84,30 @@ class Payment extends Resource
                 ->exceptOnForms(),
 
             // Dates
-            DateTime::make(__('Created At'), 'created_at')
+            DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Updated At'), 'updated_at')
+            DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Completed At'), 'refunded_at')
+            DateTime::make('Afgerond op', 'refunded_at')
                 ->onlyOnDetail(),
 
-            new Panel(__('Payment Details'), [
-                Text::make(__('Provider'), 'provider')
+            new Panel('Details', [
+                Text::make('Provider', 'provider')
                     ->readonly(),
 
-                Text::make(__('Provider ID'), 'provider_id')
+                Text::make('Provider ID', 'provider_id')
                     ->readonly()
                     ->canSee(function ($request) {
                         return $request->user()->can('admin', $this);
                     }),
 
-                Number::make(__('Amount Paid'), 'amount')
+                Number::make('Hoeveelheid betaald', 'amount')
                     ->readonly()
-                    ->help('Paid amount, in Eurocents'),
+                    ->help('Waarde van betaling, in eurocenten'),
 
-                KeyValue::make(__('Data'), 'data')
+                KeyValue::make('Data', 'data')
                     ->readonly()
                     ->onlyOnDetail()
                     ->canSee(function ($request) {
@@ -115,18 +115,18 @@ class Payment extends Resource
                     }),
             ]),
 
-            new Panel(__('Refund Information'), [
-                DateTime::make(__('Refunded At'), 'refunded_at')
+            new Panel('Terugbetaling', [
+                DateTime::make('Terugbetaald op', 'refunded_at')
                     ->onlyOnDetail(),
 
-                Number::make(__('Amount Refunded'), 'refund_amount')
+                Number::make('Hoeveelheid', 'refund_amount')
                     ->readonly()
-                    ->help('Refund amount, in Eurocents'),
+                    ->help('Waarde van terugbetaling, in eurocenten'),
 
-                Boolean::make(__('Fully refunded'), 'fully_refunded')
+                Boolean::make('Volledig', 'fully_refunded')
                     ->readonly()
                     ->onlyOnDetail()
-                    ->help('True if the entire paid amount was returned to the user'),
+                    ->help('Waar indien het gehele bedrag terug is betaald.'),
             ])
         ];
     }

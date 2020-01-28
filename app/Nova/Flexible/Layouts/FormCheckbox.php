@@ -32,8 +32,8 @@ class FormCheckbox extends Layout
     {
         return [
             Text::make('Label', 'label')->rules('required'),
-            Text::make('Help text', 'help')->nullable(),
-            Boolean::make('Must be checked', 'required')
+            Text::make('Helptekst', 'help')->nullable(),
+            Boolean::make('Verplicht (moet worden aangevinkt)', 'required')
         ];
     }
 }

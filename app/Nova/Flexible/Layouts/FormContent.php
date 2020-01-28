@@ -32,7 +32,7 @@ class FormContent extends Layout
     public function fields()
     {
         return [
-            Trix::make('Conent', 'content')->stacked()
+            Trix::make('Content', 'content')->stacked()
         ];
     }
 }

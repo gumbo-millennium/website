@@ -43,7 +43,7 @@ class File extends Resource
      *
      * @var string
      */
-    public static $group = 'File storage';
+    public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
@@ -69,31 +69,31 @@ class File extends Resource
             ID::make()->sortable(),
 
             // Title and slug
-            TextWithSlug::make('Title', 'title')
+            TextWithSlug::make('Titel', 'title')
                 ->slug('slug')
                 ->rules('required', 'min:4')
-                ->help('File title, does not need to be a filename'),
-            Slug::make('Slug', 'slug')
+                ->help('Bestandstitel, hoeft geen bestandsnaam te zijn'),
+            Slug::make('Pad', 'slug')
                 ->nullable(false)
                 ->creationRules('unique:activities,slug')
                 ->updateRules('unique:activities,slug,{{resourceId}}'),
 
             // Owning category
-            BelongsTo::make('Category', 'category', FileCategory::class)
-                ->help('Category the file belongs to')
+            BelongsTo::make('Categorie', 'category', FileCategory::class)
+                ->help('Categorie waarin dit bestand thuis hoort')
                 ->rules('required'),
 
             // Add multi selects
-            BelongsTo::make('Uploaded by', 'owner', User::class)
+            BelongsTo::make('Geupload door', 'owner', User::class)
                 ->onlyOnDetail(),
 
             // Show timestamps
-            DateTime::make('Created at', 'created_at')->onlyOnDetail(),
-            DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
+            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            DateTime::make('Laatst bewerkt op', 'updated_at')->onlyOnDetail(),
 
-            new Panel('File information', [
+            new Panel('Bestandsinformatie', [
                 // Paperclip file
-                PaperclipFile::make('File', 'file')
+                PaperclipFile::make('Bestand', 'file')
                     ->mimes(['pdf'])
                     ->rules('required', 'mimes:pdf')
                     ->disableDownload()
@@ -101,29 +101,29 @@ class File extends Resource
                     ->readonly(function () {
                         return $this->exists && $this->file;
                     })
-                    ->help('File the users will download, immutable once set'),
+                    ->help('Bestand dat de leden downloaden'),
 
                 // Thumbnail
                 PaperclipImage::make('Thumbnail', 'thumbnail')
                     ->onlyOnDetail(),
             ]),
 
-            new Panel('File Settings', [
-                Boolean::make('Pulled or superseded', 'pulled')
-                    ->help('Indicates the file has been replaced by a different version, or is no longer applicable')
+            new Panel('Instellingen', [
+                Boolean::make('Ingetrokken', 'pulled')
+                    ->help('Markeer dit bestand als niet meer relevant. Leden kunnen het nog wel downloaden.')
                     ->rules('required_with:replacement'),
-                BelongsTo::make('Replacement file', 'replacement', File::class)
-                    ->help('If pulled, indicates which file replaces it')
+                BelongsTo::make('Vervanging', 'replacement', File::class)
+                    ->help('Indien ingetrokken, vervangt dit bestand het ingetrokken bestand (een nieuwe versie oid)')
                     ->nullable(),
             ]),
 
-            new Panel('File metadata', [
+            new Panel('Metadata', [
                 // Make extra data
-                Text::make('Contents', 'contents')
+                Text::make('Inhoud', 'contents')
                     ->onlyOnDetail(),
-                Number::make('Page count', 'pages')
+                Number::make('Aantal pagina\'s', 'pages')
                     ->onlyOnDetail(),
-                Code::make('Metadata', 'file_meta')
+                Code::make('Overige metadata', 'file_meta')
                     ->json()
                     ->onlyOnDetail(),
             ])

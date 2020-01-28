@@ -136,35 +136,39 @@ class Activity extends Resource
         return $this->merge([
             ID::make()->sortable(),
 
-            TextWithSlug::make('Title', 'name')
+            TextWithSlug::make('Titel', 'name')
                 ->sortable()
                 ->slug('slug')
                 ->rules('required', 'between:4,255'),
 
-            Slug::make('Slug', 'slug')
+            Slug::make('Pad', 'slug')
                 ->creationRules('unique:activities,slug')
-                ->updateRules('unique:activities,slug,{{resourceId}}'),
+                ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
+                ->readonly(function () {
+                    return $this->exists;
+                }),
 
-            Text::make('Tagline', 'tagline')
+            Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
+                ->help('Korte slagzin om de activiteit te omschrijven')
                 ->rules('nullable', 'string', 'between:4,255'),
 
-            Text::make('Statement label', 'statement')
+            Text::make('Incasso-omschrijving', 'statement')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,16')
-                ->help('2-16 character summary of the event. Shown on iDEAL transaction'),
+                ->help('2-16 tekens lange omschrijng, welke op het iDEAL afschrift getoond wordt.'),
 
-            Text::make('Location name', 'location')
+            Text::make('Weergavenaam locatie', 'location')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,64')
-                ->help('Simple name of the location, shown in list view, detail view and e-mails'),
+                ->help('Weergavenaam van de activiteit'),
 
-            Text::make('Location address', 'location_address')
+            Text::make('Adres locatie', 'location_address')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:5,255')
-                ->help('Full address of the location, including country if required'),
+                ->help('Het adres van de locatie. Wordt doorgegeven aan Quant Maps'),
 
-            NovaEditorJs::make('Description', 'description')
+            NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
                 ->hideFromIndex()
                 ->stacked(),
@@ -173,7 +177,7 @@ class Activity extends Resource
                 ->deletable()
                 ->nullable()
                 ->mimes(['png', 'jpg'])
-                ->help('Image shown on the overview and detail page and on social media')
+                ->help('Afbeelding die op de detailpagina en op Social Media getoond wordt.')
                 ->minWidth(1920)
                 ->minHeight(960)
                 ->rules(
@@ -181,11 +185,11 @@ class Activity extends Resource
                     'image'
                 ),
 
-            DateTime::make('Created At', 'created_at')
+            DateTime::make('Aangemaakt op', 'created_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
-            DateTime::make('Updated At', 'updated_at')
+            DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
@@ -244,56 +248,45 @@ class Activity extends Resource
 
             // Validate (null ≈ 0)
             if ($isPublic && $memberPrice > $guestPrice) {
-                $fail("The guest price has to be larger than the member price.");
+                $fail("De prijs voor de bezoekers moet hoger of gelijk zijn aan de ledenprijs.");
             }
         };
 
         return [
-            DateTime::make('Event Start', 'start_date')
+            DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
                 ->firstDayOfWeek(1),
 
-            DateTime::make('Event End', 'end_date')
+            DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
-            Select::make('Payment method', 'payment_type')
-                ->readOnly($this->exists)
-                ->required(function ($request) {
-                    return $request->price_member || $request->price_guest;
-                })
-                ->displayUsingLabels()
-                ->options([
-                    'intent' => 'Via website',
-                    'billing' => 'Via mailed invoices'
-                ]),
-
-            Price::make('Member Price', 'price_member')
+            Price::make('Netto prijs leden', 'price_member')
                 ->min(2.50)
                 ->max(200)
                 ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50')
-                ->help('In Euro, not including service fees'),
+                ->help('In euro, exclusief transactiekosten'),
 
-            Price::make('Guest Price', 'price_guest')
+            Price::make('Netto prijs niet-leden', 'price_guest')
                 ->min(2.50)
                 ->max(200)
                 ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
                 ->rules('nullable', 'numeric', 'min:2.50', $guestPriceRule)
-                ->help('In Euro, not including service fees'),
+                ->help('In euro, exclusief transactiekosten'),
 
-            Price::make('Total member price', 'total_price_member')
-                ->help('Member price with service fees')
+            Price::make('Totaalprijs leden', 'total_price_member')
+                ->help('In euro, inclusief transactiekosten')
                 ->onlyOnDetail(),
 
-            Price::make('Total guest price', 'total_price_guest')
-                ->help('Guest price with service fees')
+            Price::make('Totaalprijs bezoekers', 'total_price_guest')
+                ->help('In euro, inclusief transactiekosten')
                 ->onlyOnDetail(),
 
             // Flexible::make('Form', 'enrollment_questions')
@@ -305,37 +298,36 @@ class Activity extends Resource
     public function enrollmentFields(): array
     {
         return [
-            DateTime::make('Enrollment Start', 'enrollment_start')
+            DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            DateTime::make('Enrollment End', 'enrollment_end')
+            DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            Text::make(__('Enrollment status'), function () {
+            Text::make('Status inschrijvingen', function () {
                 // Edge case for no-enrollment events
                 if ($this->enrollment_start === null && $this->enrollment_end === null) {
-                    return 'n/a';
+                    return 'n.v.t.';
                 }
 
                 // Label
-                $label = $this->enrollment_status ? 'open' : 'closed';
-                return ucfirst(__("activities.enrollment.{$label}"));
+                return $this->enrollment_status ? 'Geopend' : 'Gesloten';
             })->onlyOnIndex(),
 
-            Seats::make('Seats', 'seats')
+            Seats::make('Aantal plekken', 'seats')
                 ->min(0)
                 ->step(1)
                 ->nullable()
                 ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:0'),
 
-            Boolean::make('Public activity', 'is_public'),
+            Boolean::make('Openbare activiteit', 'is_public'),
         ];
     }
 

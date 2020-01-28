@@ -63,26 +63,26 @@ class Page extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make('Title', 'title')->slug('slug'),
-            Slug::make('Slug', 'slug')
+            TextWithSlug::make('Titel', 'title')->slug('slug'),
+            Slug::make('Pad', 'slug')
                 ->nullable(false)
                 ->readonly(function () {
                     return array_key_exists($this->slug, PageModel::REQUIRED_PAGES);
                 }),
 
             // Add multi selects
-            BelongsTo::make('Last modified by', 'author', User::class)
+            BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
 
             // Show timestamps
-            DateTime::make('Created at', 'created_at')->onlyOnDetail(),
-            DateTime::make('Updated at', 'created_at')->onlyOnDetail(),
+            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
 
             // Add type
             Text::make('Type')->onlyOnDetail()->displayUsing(fn($value) => Str::title($value)),
 
             // Add data
-            NovaEditorJs::make('Contents', 'contents')->hideFromIndex()->stacked(),
+            NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),
         ];
     }
 }

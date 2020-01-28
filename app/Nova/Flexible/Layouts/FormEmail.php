@@ -31,8 +31,8 @@ class FormEmail extends Layout
     {
         return [
             Text::make('Label', 'label')->rules('required'),
-            Text::make('Help text', 'help')->nullable(),
-            Boolean::make('Required', 'required')
+            Text::make('Helptekst', 'help')->nullable(),
+            Boolean::make('Verplicht', 'required')
         ];
     }
 }
