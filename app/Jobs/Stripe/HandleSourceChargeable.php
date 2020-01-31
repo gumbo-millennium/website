@@ -6,8 +6,6 @@ use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
-use App\Services\StripeService;
-use Stripe\Charge;
 use Stripe\Event;
 use Stripe\Invoice;
 use Stripe\Source;
@@ -19,7 +17,7 @@ use Stripe\Source;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class HandleSourceChargeable extends StripeJob
+class HandleSourceChargeable extends StripeWebhookJob
 {
     /**
      * Execute the job.

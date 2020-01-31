@@ -6,22 +6,12 @@ use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Paid as PaidState;
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Stripe\Invoice;
 use Stripe\Source;
 use Stripe\Stripe;
 
-class PaymentValidationJob implements ShouldQueue
+class PaymentValidationJob extends StripeJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     /**
      * Enrollment to check
      *

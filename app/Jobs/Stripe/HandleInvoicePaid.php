@@ -6,7 +6,6 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
 use App\Notifications\EnrollmentPaid;
-use Stripe\Charge;
 use Stripe\Event;
 use Stripe\Invoice;
 
@@ -17,7 +16,7 @@ use Stripe\Invoice;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class HandleInvoicePaid extends StripeJob
+class HandleInvoicePaid extends StripeWebhookJob
 {
     /**
      * Execute the job.

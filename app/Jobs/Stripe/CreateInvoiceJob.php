@@ -4,19 +4,9 @@ namespace App\Jobs\Stripe;
 
 use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
-class CreateInvoiceJob implements ShouldQueue
+class CreateInvoiceJob extends StripeJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     /**
      * Enrollment
      * @var \App\Models\Enrollment

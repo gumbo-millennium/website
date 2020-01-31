@@ -4,19 +4,9 @@ namespace App\Jobs\Stripe;
 
 use App\Contracts\StripeServiceContract;
 use App\Models\Activity;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
-class UpdateCouponJob implements ShouldQueue
+class UpdateCouponJob extends StripeJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     /**
      * Activity
      * @var \App\Models\Activity

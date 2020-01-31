@@ -3,22 +3,12 @@
 namespace App\Jobs\Stripe;
 
 use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Stripe\Customer;
 use Stripe\Exception\UnknownApiErrorException;
 use Stripe\Stripe;
 
-class CustomerUpdateJob implements ShouldQueue
+class CustomerUpdateJob extends StripeJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     /**
      * User
      *

@@ -3,29 +3,13 @@
 namespace App\Jobs\Stripe;
 
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Cancelled;
-use App\Models\States\Enrollment\Paid;
 use App\Services\StripeService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use LogicException;
-use Stripe\CreditNote;
-use Stripe\Exception\UnknownApiErrorException;
 use Stripe\Invoice;
-use Stripe\PaymentIntent;
-use Stripe\Refund;
 use Stripe\Stripe;
 
-class VoidInvoice implements ShouldQueue
+class VoidInvoice extends StripeJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     /**
      * Undocumented variable
      *
