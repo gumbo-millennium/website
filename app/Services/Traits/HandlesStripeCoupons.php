@@ -57,7 +57,6 @@ trait HandlesStripeCoupons
             // Return customer
             return $coupon;
         } catch (ApiErrorException $exception) {
-            dd($exception);
             // Bubble all
             $this->handleError($exception);
         }
