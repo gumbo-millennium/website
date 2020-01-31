@@ -95,6 +95,7 @@ class Enrollment extends Resource
                 ->showOnIndex()
                 ->rules('required')
                 ->searchable()
+                ->sortable()
                 ->hideWhenUpdating(),
 
             // Add data
@@ -120,7 +121,8 @@ class Enrollment extends Resource
                 ->help('Prijs in euro, excl. transactiekosten'),
 
             Price::make('Prijs bruto', 'total_price')
-                ->onlyOnDetail()
+                ->onlyOnIndex()
+                ->showOnDetail()
                 ->help('Prijs in euro, incl. transactiekosten'),
 
             Boolean::make('Betaald', 'paid')
