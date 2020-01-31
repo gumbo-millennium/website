@@ -347,14 +347,14 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         // No discount
-        if (!$this->member_discount === null) {
+        if ($this->member_discount === null) {
             // Return total price as single price point
             return Str::price($this->total_price ?? 0);
         }
 
         // Get some booleans
         $isRestricted = $this->discounts_available > 0;
-        $isFreeForMembers = $this->member_discount === $this->price;
+        $isFreeForMembers = $this->member_discount >= $this->price;
 
         if ($isFreeForMembers) {
             if ($isRestricted) {
