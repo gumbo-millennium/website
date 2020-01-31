@@ -106,9 +106,6 @@ trait UsesTemporaryFiles
             @unlink($tempFileName);
         }
 
-        //Report file
-        passthru(sprintf('ls -lh %s', escapeshellarg($fileName)));
-
         // Return file name
         return $fileName;
     }

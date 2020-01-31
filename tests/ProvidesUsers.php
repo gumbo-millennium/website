@@ -24,6 +24,9 @@ trait ProvidesUsers
      */
     public static function tearDownUsers(): void
     {
+        // Edge case when queries are being monitored
+        $this->ensureApplicationExists();
+
         // Delete users afterwards
         foreach (self::$createdUsers as $user) {
             $user->delete();
