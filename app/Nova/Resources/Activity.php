@@ -178,14 +178,14 @@ class Activity extends Resource
             PaperclipImage::make('Afbeelding', 'image')
                 ->deletable()
                 ->nullable()
-                ->mimes(['png', 'jpg'])
+                ->mimes(['png', 'jpeg', 'jpg'])
                 ->help('Afbeelding die op de detailpagina en op Social Media getoond wordt. Maximaal 2MB')
                 ->minWidth(1920)
                 ->minHeight(960)
                 ->rules(
                     'nullable',
                     'image',
-                    'mimes:jpg,png',
+                    'mimes:jpeg,png',
                     'size:2048',
                     Rule::dimensions()->maxWidth(1920)->maxHeight(600)
                 ),
