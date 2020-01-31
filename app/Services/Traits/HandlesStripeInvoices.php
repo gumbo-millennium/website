@@ -22,6 +22,12 @@ use Stripe\Source;
 trait HandlesStripeInvoices
 {
     /**
+     * Invoices retrieved from API
+     * @var Invoice[]
+     */
+    private array $invoiceCache = [];
+
+    /**
      * Returns the invoice lines for this enrollment
      * @param Enrollment $enrollment
      * @return Illuminate\Support\Collection
@@ -86,11 +92,21 @@ trait HandlesStripeInvoices
             // Reload model
             $enrollment->refresh();
 
+            if (!empty($this->invoiceCache[$enrollment->payment_invoice])) {
+                return $this->invoiceCache[$enrollment->payment_invoice];
+            }
+
             // Check API first (but inside the lock, so we don't create duplicate invoices)
             if ($enrollment->payment_invoice) {
                 try {
+                    // Get invoice
+                    $invoice = Invoice::retrieve($enrollment->payment_invoice);
+
+                    // Cache invoice
+                    $this->invoiceCache[$enrollment->payment_invoice] = $invoice;
+
                     // Return invoice
-                    return Invoice::retrieve($enrollment->payment_invoice);
+                    return $invoice;
                 } catch (ApiErrorException $exception) {
                     // Bubble any non-404 errors
                     $this->handleError($exception);
@@ -98,10 +114,11 @@ trait HandlesStripeInvoices
             }
 
             // Create invoice
-            return $this->createInvoice($enrollment);
+            // phpcs:ignore Generic.Files.LineLength.TooLong
+            return $this->invoiceCache[$enrollment->payment_invoice] = $this->createInvoice($enrollment);
         } catch (LockTimeoutException $e) {
             // Bubble
-            throw new RuntimeException('Could not get lock :(', 11, $e);
+            throw new RuntimeException('Could not get lock :(', 0, $e);
         } finally {
             // Always free lock
             optional($lock)->release();
@@ -295,7 +312,7 @@ trait HandlesStripeInvoices
             $invoice = $this->getInvoice($enrollment);
 
             // Pay invoice
-            return $invoice->pay([
+            return $this->invoiceCache[$enrollment->payment_invoice] = $invoice->pay([
                 'source' => $source->id
                 ]);
         } catch (ApiErrorException $exception) {

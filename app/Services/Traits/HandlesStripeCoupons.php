@@ -13,6 +13,12 @@ use Stripe\Exception\ApiErrorException;
 trait HandlesStripeCoupons
 {
     /**
+     * Coupons retrieved from API
+     * @var Coupon[]
+     */
+    private array $couponCache = [];
+
+    /**
      * Returns the coupon for this activity, to apply the discount on the activity
      * @param Activity $activity
      * @return Stripe\Coupon
@@ -25,14 +31,27 @@ trait HandlesStripeCoupons
             return null;
         }
 
+        // Return from cache
+        if (!empty($this->couponCache[$activity->stripe_coupon_id])) {
+            return $this->couponCache[$activity->stripe_coupon_id];
+        }
+
         // Get existing coupon
         if ($activity->stripe_coupon_id) {
             try {
-                // Return customer
-                return Coupon::retrieve($activity->stripe_coupon_id);
+                // Get coupon
+                $coupon = Coupon::retrieve($activity->stripe_coupon_id);
+
+                // Cache coupon
+                $this->couponCache[$activity->stripe_coupon_id] = $coupon;
+
+                // Return coupon
+                return $coupon;
             } catch (ApiErrorException $exception) {
                 // Bubble any non-404 errors
                 $this->handleError($exception, 404);
+
+                // Quietly weep
                 logger()->info('Failed to find discount for {activity}', compact('activity'));
             }
         }
@@ -55,7 +74,7 @@ trait HandlesStripeCoupons
             $activity->save(['stripe_coupon_id']);
 
             // Return customer
-            return $coupon;
+            return $this->couponCache[$activity->stripe_coupon_id] = $coupon;
         } catch (ApiErrorException $exception) {
             // Bubble all
             $this->handleError($exception);

@@ -14,6 +14,12 @@ use Stripe\Source;
 trait HandlesStripeSources
 {
     /**
+     * Sources retrieved from API
+     * @var Source[]
+     */
+    private array $sourceCache = [];
+
+    /**
      * Returns a single source for the given enrollment, as long as it has the
      * same bank.
      * @param Enrollment $enrollment
@@ -24,8 +30,12 @@ trait HandlesStripeSources
     {
         if ($enrollment->payment_source) {
             try {
-                // Get active source
-                $source = Source::retrieve($enrollment->payment_source);
+                // Test cache or check locally
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                $source = $this->sourceCache[$enrollment->payment_source] ?? Source::retrieve($enrollment->payment_source);
+
+                // Cache "new" result
+                $this->sourceCache[$enrollment->payment_source] = $source;
 
                 // Validation disabled, return most-recent source
                 if (!$bank) {
@@ -82,7 +92,10 @@ trait HandlesStripeSources
             $enrollment->payment_source = $source->id;
             $enrollment->save(['payment_source']);
 
-            // Return customer
+            // Cache source
+            $this->sourceCache[$enrollment->payment_source] = $source;
+
+            // Return source
             return $source;
         } catch (ApiErrorException $exception) {
             // Bubble all

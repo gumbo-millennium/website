@@ -17,6 +17,12 @@ use Stripe\Exception\InvalidArgumentException;
 trait HandlesStripeCharges
 {
     /**
+     * Charges retrieved from API
+     * @var Charge[]
+     */
+    private array $chargeCache = [];
+
+    /**
      * Returns the charge for this paid Enrollement
      * @param Enrollment $enrollment
      * @return null|Stripe\Charge
@@ -26,6 +32,11 @@ trait HandlesStripeCharges
         // Only available on paid invoice
         if (!$enrollment->state instanceof Paid) {
             return null;
+        }
+
+        // Check cached
+        if (!empty($this->chargeCache[$enrollment->payment_invoice])) {
+            return $this->chargeCache[$enrollment->payment_invoice];
         }
 
         // Get invoice
@@ -38,7 +49,13 @@ trait HandlesStripeCharges
 
         try {
             // Get charge
-            return Charge::retrieve($invoice->charge);
+            $charge = Charge::retrieve($invoice->charge);
+
+            // Cache charge
+            $this->chargeCache[$invoice->id] = $charge;
+
+            // Return charge
+            return $charge;
         } catch (ApiErrorException $exception) {
             // Bubble any non-404 errors
             $this->handleError($exception, 404);

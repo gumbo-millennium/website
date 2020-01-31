@@ -22,15 +22,21 @@ use Stripe\Stripe as StripeClient;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * Singleton bindings
+     * @var string[]
+     */
+    public $singletons = [
+        // Stripe service
+        StripeServiceContract::class => StripeService::class
+    ];
+
+    /**
      * Bootstrap any application services.
      *
      * @return void
      */
     public function boot()
     {
-        // Add Stripe services
-        $this->app->bind(StripeServiceContract::class, fn() => new StripeService());
-
         // Bind Guzzle client
         $this->app->bind(GuzzleClient::class, function () {
             return new GuzzleClient(config('gumbo.guzzle-config', []));
