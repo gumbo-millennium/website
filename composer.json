@@ -28,6 +28,7 @@
         "laravel/tinker": "^1.0",
         "laravelium/sitemap": "^6.0",
         "mischiefcollective/colorjizz": "^1.0",
+        "mtownsend/read-time": "^1.1",
         "nothingworks/blade-svg": "^0.3.2",
         "overtrue/laravel-lang": "^3.0",
         "predis/predis": "^1.1",
@@ -47,7 +48,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
-        "filp/whoops": "^2.0",
+        "facade/ignition": "^1.16",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
