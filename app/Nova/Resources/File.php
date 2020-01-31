@@ -104,7 +104,7 @@ class File extends Resource
                 ->rules('required'),
 
             // Add multi selects
-            BelongsTo::make('Geupload door', 'owner', User::class)
+            BelongsTo::make('Geüpload door', 'owner', User::class)
                 ->onlyOnDetail(),
 
             // Show timestamps

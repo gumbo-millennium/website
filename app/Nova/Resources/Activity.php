@@ -201,7 +201,6 @@ class Activity extends Resource
             BelongsTo::make('Groep', 'role', Role::class)
                 ->help('Groep of commissie die deze activiteit beheert')
                 ->hideFromIndex()
-                ->searchable()
                 ->nullable(),
         ]);
     }

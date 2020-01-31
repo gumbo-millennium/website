@@ -128,7 +128,7 @@ class Permission extends Resource
                 return $this->users()->count();
             })->onlyOnIndex(),
 
-            BelongsToMany::make('Rollen')
+            BelongsToMany::make('Rollen', 'roles', Role::class)
                 ->searchable(),
 
             MorphToMany::make('Gebruikers', 'users', $userResource)
