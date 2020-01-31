@@ -21,6 +21,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Registation controller
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RegisterController extends Controller
 {
