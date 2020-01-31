@@ -27,8 +27,8 @@ return [
         'image' => [
             'activated' => true,
             'shortcut' => 'CMD+SHIFT+I',
-            'path' => 'public/images',
-            'disk' => 'local',
+            'path' => 'content/images',
+            'disk' => 'public',
             'alterations' => [
                 'resize' => [
                     'width' => false, // integer
@@ -76,19 +76,19 @@ return [
             'shortcut' => 'CMD+SHIFT+A',
         ],
         'checklist' => [
-            'activated' => true,
+            'activated' => false,
             'inlineToolbar' => true,
             'shortcut' => 'CMD+SHIFT+J',
         ],
         'marker' => [
-            'activated' => true,
+            'activated' => false,
             'shortcut' => 'CMD+SHIFT+M',
         ],
         'delimiter' => [
             'activated' => true,
         ],
         'table' => [
-            'activated' => true,
+            'activated' => false,
             'inlineToolbar' => true,
         ],
         'raw' => [
