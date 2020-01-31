@@ -51,7 +51,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => config('app.url') . '/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 
@@ -63,7 +63,7 @@ return [
         'paperclip-public' => [
             'driver' => 'public',
             'root' => storage_path('app/public/paperclip'),
-            'url' => config('app.url') . '/storage/paperclip',
+            'url' => env('APP_URL') . '/storage/paperclip',
             'visibility' => 'public',
         ],
 
