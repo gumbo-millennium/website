@@ -68,21 +68,21 @@
         <div class="navbar__filler"></div>
         <ul class="navbar__nav">
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/">Home</a>
+                <a class="navbar__nav-link" href="{{ route('home') }}">Home</a>
             </li>
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/about">Over</a>
+                <a class="navbar__nav-link" href="{{ url('/about') }}">Over</a>
             </li>
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/activities">Activiteiten</a>
+                <a class="navbar__nav-link" href="{{ route('activity.index') }}">Activiteiten</a>
             </li>
             @if ($user && $user->is_member)
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/files">Bestanden</a>
+                <a class="navbar__nav-link" href="{{ route('files.index') }}">Bestanden</a>
             </li>
             @endif
             <li class="navbar__nav-item">
-                <a class="navbar__nav-link" href="/news">Nieuws</a>
+                <a class="navbar__nav-link" href="{{ route('news.index') }}">Nieuws</a>
             </li>
         </ul>
     </div>

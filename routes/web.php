@@ -139,8 +139,8 @@ Route::prefix('auth')->middleware($loginCsp)->group(function () {
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(function () {
     Route::get('/', 'AccountController@index')->name('index');
-    Route::get('/edit', 'AccountController@edit')->name('edit');
-    Route::patch('/update', 'AccountController@update')->name('update');
+    Route::get('/profiel', 'AccountController@edit')->name('edit');
+    Route::patch('/profiel', 'AccountController@update')->name('update');
 });
 
 // Onboarding URLs
