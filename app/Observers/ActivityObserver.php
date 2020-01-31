@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Jobs\Stripe\UpdateCouponJob;
 use App\Models\Activity;
+use Illuminate\Support\Str;
 
 /**
  * Ensures values on the activity model are up to snuff.
@@ -69,6 +70,11 @@ class ActivityObserver
         // Ensure an end date is set if a start date is too
         if ($activity->enrollment_start !== null && $activity->enrollment_end === null) {
             $activity->enrollment_end = $activity->start_date;
+        }
+
+        // Make sure statements are valid statements (ASCII uppercase)
+        if ($activity->statement !== null) {
+            $activity->statement = Str::limit(Str::ascii($activity->statement), 16, '');
         }
     }
 
