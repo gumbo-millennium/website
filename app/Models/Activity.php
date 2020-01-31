@@ -99,7 +99,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // The actual screenshots
         $this->hasAttachedFile('image', [
-            'disk' => 'paperclip-public',
+            'storage' => 'paperclip-public',
             'variants' => [
                 // Make banner-sized image (HD and HDPI)
                 Variant::make('banner')->steps([
