@@ -10,11 +10,15 @@
 [![PHP code style: PSR-12][shield-php]][link-php]
 [![License: Mozilla Public License v2][shield-license]][link-license]
 
-This is the website for the Gumbo Millennium student association.
-The website is powered by [Laravel][laravel], in combination with the [Stripe API][stripe] for payments
-and MailChimp for sending out newsletters.
+This is the website for the Gumbo Millennium student association.  The website
+is powered by [Laravel][laravel], in combination with the [Stripe API][stripe]
+for payments ,[MailChimp][mailchimp] for sending out newsletters, the [Google
+Directory API][google-directory] for mananging aliases on our domain and lastly
+the [Conscribo API][conscribo] for managing permissions on uses from our
+student association's central administration.
 
-The theme is powered by [Tailwind][tailwind] and bundled using [Webpack][webpack].
+The theme is powered by [Tailwind][tailwind] and bundled using
+[Webpack][webpack].
 
 ## License
 
@@ -23,10 +27,6 @@ The software is licensed under the [Mozilla Public License v2][link-license].
 ## Contributing
 
 Please have a look at the [Contribution Guide][contrib] on how to get started.
-
-**License acceptance**: Contributing code to this project indicates that you
-have read, and agreed to the license terms specified in the [Mozilla Public
-License v2][link-license].
 
 <!-- Links -->
 
@@ -47,7 +47,10 @@ License v2][link-license].
 [link-license]: LICENSE.md
 
 [laravel]: https://laravel.com/
-[stripe]: https://stripe.com/payments
+[stripe]: https://stripe.com/docs/api/
+[mailchimp]: https://mailchimp.com/developer/
+[google-directory]: https://developers.google.com/admin-sdk/directory/v1/guides/manage-groups
+[conscribo]: https://www.conscribo.nl/api/
 [tailwind]: https://tailwindcss.com
 [webpack]: https://webpack.js.org/
 [contrib]: ./CONTRIBUTING.md
