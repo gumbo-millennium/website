@@ -14,21 +14,21 @@ trait ProvidesUsers
      *
      * @var User[]
      */
-    protected static $createdUsers = [];
+    private $createdUsers = [];
 
     /**
      * Delete users after the class is done testing
      *
      * @return void
-     * @afterClass
+     * @after
      */
-    public static function tearDownUsers(): void
+    public function tearDownUsers(): void
     {
         // Edge case when queries are being monitored
         $this->ensureApplicationExists();
 
         // Delete users afterwards
-        foreach (self::$createdUsers as $user) {
+        foreach ($this->createdUsers as $user) {
             $user->delete();
         }
     }
@@ -51,7 +51,7 @@ trait ProvidesUsers
         }
 
         // Add to deletion queue
-        self::$createdUsers[] = $user;
+        $this->createdUsers[] = $user;
 
         // Return user
         return $user;
