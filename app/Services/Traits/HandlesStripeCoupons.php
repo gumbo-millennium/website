@@ -21,7 +21,7 @@ trait HandlesStripeCoupons
     {
         // No Coupon on activities without member discount
         if (!$activity->member_discount) {
-            dd('No discount');
+            logger()->info('Tried to get coupon for activity without discount', compact('activity'));
             return null;
         }
 
@@ -31,9 +31,9 @@ trait HandlesStripeCoupons
                 // Return customer
                 return Coupon::retrieve($activity->stripe_coupon_id);
             } catch (ApiErrorException $exception) {
-                dd('Four o Four', $exception);
                 // Bubble any non-404 errors
                 $this->handleError($exception, 404);
+                logger()->info('Failed to find discount for {activity}', compact('activity'));
             }
         }
 
