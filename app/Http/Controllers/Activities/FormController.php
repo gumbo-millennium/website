@@ -100,7 +100,7 @@ class FormController extends Controller
 
         // Get form
         /** @var Form $form */
-        $form = FormBuilder::createByArray($activity->form, $options);
+        $form = FormBuilder::createByArray($formFields, $options);
 
         // Return
         return $form;
