@@ -22,8 +22,8 @@ Route::get('/', 'PageController@homepage')->name('home');
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 
 // News route
-Route::get('/news', 'NewsController@index')->name('news.index');
-Route::get('/news/{item}', 'NewsController@show')->name('news.show');
+Route::get('/nieuws', 'NewsController@index')->name('news.index');
+Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 
 // Add search route
 // Route::get('/search', 'SearchController@index')->name('search-form');
@@ -39,7 +39,7 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
 /**
  * Files route
  */
-Route::middleware('auth')->prefix('files')->name('files.')->group(function () {
+Route::middleware('auth')->prefix('bestanden')->name('files.')->group(function () {
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
@@ -47,7 +47,7 @@ Route::middleware('auth')->prefix('files')->name('files.')->group(function () {
     Route::get('/{category}', 'FileController@category')->name('category');
 
     // Single file view
-    Route::get('/view/{file}', 'FileController@show')->name('show');
+    Route::get('/bestand/{file}', 'FileController@show')->name('show');
 
     // Download view
     Route::get('/download/{file}', 'FileController@download')->name('download');
@@ -56,7 +56,7 @@ Route::middleware('auth')->prefix('files')->name('files.')->group(function () {
 /**
  * Activities
  */
-Route::prefix('activity')->name('activity.')->group(function () {
+Route::prefix('activiteiten')->name('activity.')->group(function () {
     // USER ROUTES
     // Main route
     Route::get('/', 'Activities\\DisplayController@index')->name('index');
@@ -68,12 +68,14 @@ Route::prefix('activity')->name('activity.')->group(function () {
     Route::get('/{activity}/login', 'Activities\\DisplayController@login')->name('login');
 });
 // Fix sometimes linking to /activities
-Route::permanentRedirect('/activities', '/activity');
+Route::permanentRedirect('/activities', '/activiteiten');
+Route::permanentRedirect('/activity', '/activiteiten');
+Route::permanentRedirect('/activiteit', '/activiteiten');
 
 /**
  * Enrollments
  */
-Route::prefix('activity/{activity}/enroll')->name('enroll.')->group(function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->group(function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
@@ -84,25 +86,25 @@ Route::prefix('activity/{activity}/enroll')->name('enroll.')->group(function () 
     Route::patch('/', 'Activities\\FormController@save')->name('edit');
 
     // Enroll payment start
-    Route::post('/pay', 'Activities\\PaymentController@store')->name('pay');
+    Route::post('/betaling', 'Activities\\PaymentController@store')->name('pay');
 
     // Enroll payment start
-    Route::get('/pay', 'Activities\\PaymentController@start')->name('pay-wait');
+    Route::get('/betaling', 'Activities\\PaymentController@start')->name('pay-wait');
 
     // Enroll payment complete
-    Route::get('/pay/complete', 'Activities\\PaymentController@complete')->name('pay-return');
+    Route::get('/betaling/afronden', 'Activities\\PaymentController@complete')->name('pay-return');
 
     // Enroll form
-    Route::get('/delete', 'Activities\\EnrollmentController@delete')->name('remove');
+    Route::get('/uitschrijven', 'Activities\\EnrollmentController@delete')->name('remove');
 
     // Enroll form (do)
-    Route::delete('/delete', 'Activities\\EnrollmentController@destroy');
+    Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
 });
 
 /**
  * News
  */
-Route::prefix('news')->name('news.')->group(function () {
+Route::prefix('nieuws')->name('news.')->group(function () {
     // Main route
     Route::get('/', 'NewsController@index')->name('index');
 
@@ -113,15 +115,15 @@ Route::prefix('news')->name('news.')->group(function () {
 /**
  * Join controller
  */
-Route::prefix('join')->name('join.')->group(function () {
+Route::prefix('word-lid')->name('join.')->group(function () {
     // Join form
     Route::get('/', 'JoinController@index')->name('form');
 
     // Submit button
-    Route::post('/send', 'JoinController@submit')->name('submit');
+    Route::post('/submit', 'JoinController@submit')->name('submit');
 
     // Post-join
-    Route::get('/welcome', 'JoinController@complete')->name('complete');
+    Route::get('/welkom', 'JoinController@complete')->name('complete');
 });
 
 
@@ -135,7 +137,7 @@ Route::prefix('auth')->middleware($loginCsp)->group(function () {
 });
 
 // My account
-Route::prefix('my-account')->name('account.')->middleware('auth')->group(function () {
+Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(function () {
     Route::get('/', 'AccountController@index')->name('index');
     Route::get('/edit', 'AccountController@edit')->name('edit');
     Route::patch('/update', 'AccountController@update')->name('update');
@@ -147,10 +149,8 @@ Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(func
 });
 
 // Common mistakes handler
-Route::redirect('/sign-up', '/join');
+Route::redirect('/sign-up', '/word-lid');
+Route::redirect('/join', '/word-lid');
 
 // Page fallback
 Route::fallback('PageController@fallback');
-
-// LEGACY REDIRECTS
-Route::get('/nova', 'LegacyController@gone');
