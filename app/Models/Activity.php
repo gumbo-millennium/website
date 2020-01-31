@@ -344,24 +344,40 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->is_free) {
             // If it's free, mention it
             return 'gratis';
-        } elseif ($this->price && $this->member_discount === $this->price && $this->discounts_available > 0) {
-            // Free for members
-            return sprintf('gratis voor %d leden', $this->discounts_available);
-        } elseif ($this->price && $this->member_discount === $this->price && $this->discounts_available === null) {
-            // Free for members
-            return 'gratis voor leden';
-        } elseif ($this->member_discount && $this->price && $this->discounts_available !== 0) {
-            // Discounted for members
-            return sprintf('vanaf %s', Str::price($this->total_discount_price ?? 0));
         }
 
-        // Return total price as single price point
-        return Str::price($this->total_price ?? 0);
+        // No discount
+        if (!$this->member_discount === null) {
+            // Return total price as single price point
+            return Str::price($this->total_price ?? 0);
+        }
+
+        // Get some booleans
+        $isRestricted = $this->discounts_available > 0;
+        $isFreeForMembers = $this->member_discount === $this->price;
+
+        if ($isFreeForMembers) {
+            if ($isRestricted) {
+                // Free for some members
+                return sprintf('gratis voor %d leden', $this->discounts_available);
+            }
+
+            // Free for all members
+            return 'gratis voor leden';
+        }
+
+        // Get strings
+        $discountPrice = Str::price($this->total_discount_price ?? 0);
+        $totalPrice = Str::price($this->total_price ?? 0);
+
+        // Discounted for all members
+        return sprintf('%s - %s', $discountPrice, $totalPrice);
     }
 
     /**
      * Returns if members can go for free
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsFreeForMemberAttribute(): bool
     {
