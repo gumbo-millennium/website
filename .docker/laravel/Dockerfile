@@ -9,6 +9,19 @@ RUN pecl install redis \
     && docker-php-ext-enable redis \
     && rm -rf /tmp/pear
 
+# Install gd
+RUN docker-php-ext-configure gd \
+    --with-gd \
+    --with-webp-dir \
+    --with-jpeg-dir \
+    --with-png-dir \
+    --with-zlib-dir \
+    --with-xpm-dir \
+    --with-freetype-dir \
+    --enable-gd-native-ttf \
+    && docker-php-ext-install gd \
+    && docker-php-ext-enable gd
+
 # Use production PHP
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -28,6 +41,11 @@ RUN groupadd \
         --groups www-data \
         --password "" \
         laravel
+
+# Change tempdir
+RUN mkdir -p /usr/local/tmp/laravel && \
+    chown laravel:laravel /usr/local/tmp/laravel
+ENV TMPDIR=/usr/local/tmp/laravel
 
 # Change root to public
 ENV APACHE_DOCUMENT_ROOT=/var/www/public
