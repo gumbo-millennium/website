@@ -20,15 +20,25 @@ class AccountEditForm extends Form
 {
     use UserDataForm;
 
-    private User $subject;
+    private ?int $userId = null;
 
     /**
-     * @param User User being modified, used for rules
+     * Overrides user
+     * @param User $user
+     * @return void
      */
-    public function __construct(User $subject)
+    public function setUser(User $user)
     {
-        $this->subject = $subject;
-        $this->formOptions['model'] = $subject;
+        $this->userId = $user->id;
+    }
+
+    /**
+     * Returns a proper user id
+     * @return null|int
+     */
+    protected function getUser(): ?int
+    {
+        return $this->userId ?? $this->formOptions['user-id'] ?? null;
     }
 
     /**
@@ -37,11 +47,11 @@ class AccountEditForm extends Form
     public function buildForm()
     {
         $this
-            ->addEmail($this->subject)
-            ->addAlias($this->subject, [
+            ->addEmail($this->getUser(), [
                 // phpcs:ignore Generic.Files.LineLength.TooLong
                 'help_block.text' => 'Je moet je e-mailadres na wijziging opnieuw verifiëren.'
             ])
+            ->addAlias($this->getUser())
             ->add('submit', 'submit', [
                 'label' => 'Opslaan'
             ]);

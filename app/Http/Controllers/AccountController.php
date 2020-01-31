@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Forms\AccountEditForm;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
@@ -37,10 +39,12 @@ class AccountController extends Controller
         $user = $request->user();
 
         // Create form
+        /** @var AccountEditForm $form */
         $form = $formBuilder->create(AccountEditForm::class, [
             'method' => 'PATCH',
             'url' => route('account.update'),
             'model' => $user,
+            'user-id' => $user->id,
         ]);
 
         return response()
@@ -57,10 +61,18 @@ class AccountController extends Controller
     public function update(FormBuilder $formBuilder, Request $request)
     {
         // Get current user
+        /** @var User $user */
         $user = $request->user();
 
         // Get form
-        $form = $formBuilder->create(AccountEditForm::class);
+        /** @var AccountEditForm $form */
+        $form = $formBuilder->create(AccountEditForm::class, [
+            'model' => $user,
+            'user-id' => $user->id
+        ]);
+
+        // Set user
+        $form->setUser($user);
 
         // Or automatically redirect on error. This will throw an HttpResponseException with redirect
         $form->redirectIfNotValid();
@@ -68,11 +80,33 @@ class AccountController extends Controller
         // Get values
         $userValues = $form->getFieldValues();
 
-        // Keep track of changes
-        $changeEmail = Str::lower($userValues['email']) !== $user->email;
-        $changeAlias = Str::lower($userValues['alias']) !== $user->alias;
+        // Apply new values
+        $user->email = Str::lower($userValues['email']);
+        $user->alias = Str::lower($userValues['alias']);
 
-        // Check if e-mail was changed
-        $
+        // Flag e-mail as unverified, if changed
+        if ($user->wasChanged('email')) {
+            $user->email_verified_at = null;
+        }
+
+        // Store changes
+        $user->save();
+
+        // Get long list of changes (for message)
+        $allChanges = $user->getChanges();
+
+        // Send notification
+        $user->sendEmailVerificationNotification();
+
+        // Change count
+        $message = 'Je gegevens zijn bijgewerkt';
+        if (empty($allChanges)) {
+            $message = 'Je gegevens zijn niet aangepast.';
+        }
+
+        // Flash oK
+        flash($message, 'success');
+        return response()
+            ->redirectToRoute('account.index');
     }
 }

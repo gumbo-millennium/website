@@ -32,16 +32,17 @@ trait UserDataForm
     /**
      * Add email field
      *
-     * @param User|null $model
+     * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addEmail(User $model = null, array $override = []): Form
+    public function addEmail(int $userId = null, array $override = []): Form
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'email');
-        if ($model) {
-            $duplicateRule = $duplicateRule->ignore($model->id);
+        if ($userId) {
+            logger()->debug('Adding {userId} to ignore list', compact('userId'));
+            $duplicateRule = $duplicateRule->ignore($userId);
         }
 
         // Options
@@ -68,16 +69,17 @@ trait UserDataForm
     /**
      * Add alias
      *
-     * @param User|null $model
+     * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addAlias(User $model = null, array $override = []): Form
+    public function addAlias(int $userId = null, array $override = []): Form
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'alias');
-        if ($model) {
-            $duplicateRule = $duplicateRule->ignore($model->id);
+        if ($userId) {
+            logger()->debug('Adding {userId} to ignore list', compact('userId'));
+            $duplicateRule = $duplicateRule->ignore($userId);
         }
 
         // Options
