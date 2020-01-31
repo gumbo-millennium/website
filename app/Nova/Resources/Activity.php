@@ -51,7 +51,7 @@ class Activity extends Resource
      *
      * @var string
      */
-    public static $group = 'Activities';
+    public static $group = 'Activiteiten';
 
     /**
      * @inheritDoc
@@ -78,7 +78,7 @@ class Activity extends Resource
      */
     public static function label()
     {
-        return __('Activities');
+        return 'Activiteiten';
     }
 
     /**
@@ -88,7 +88,7 @@ class Activity extends Resource
      */
     public static function singularLabel()
     {
-        return __('Activity');
+        return 'Activiteit';
     }
 
     /**
