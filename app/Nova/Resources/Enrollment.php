@@ -3,6 +3,7 @@
 namespace App\Nova\Resources;
 
 use App\Models\Enrollment as EnrollmentModel;
+use App\Nova\Fields\Price;
 use App\Policies\ActivityPolicy;
 use App\Policies\EnrollmentPolicy;
 use Illuminate\Http\Request;
@@ -110,6 +111,17 @@ class Enrollment extends Resource
                 ->onlyOnDetail(),
             Text::make('Reden verwijdering', 'deleted_reason')
                 ->onlyOnDetail(),
+
+            // Pricing
+            Price::make('Prijs netto', 'price')
+                ->onlyOnDetail()
+                ->showOnCreating()
+                ->rules('nullable', 'gt:0')
+                ->help('Prijs in euro, excl. transactiekosten'),
+
+            Price::make('Prijs bruto', 'total_price')
+                ->onlyOnDetail()
+                ->help('Prijs in euro, incl. transactiekosten'),
 
             Boolean::make('Betaald', 'paid')
                 ->hideWhenUpdating()
