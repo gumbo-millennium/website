@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Stripe\Charge;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Stripe\Invoice;
@@ -49,6 +50,13 @@ interface StripeServiceContract
     public function getComputedInvoiceLines(Enrollment $enrollment): Collection;
 
     /**
+     * Returns the charge for this paid Enrollement
+     * @param Enrollment $enrollment
+     * @return null|Stripe\Charge
+     */
+    public function getCharge(Enrollment $enrollment): ?Charge;
+
+    /**
      * Returns a single source for the given enrollment, as long as it has the
      * same bank.
      * @param Enrollment $enrollment
@@ -56,7 +64,6 @@ interface StripeServiceContract
      * @return App\Contracts\Source
      */
     public function getSource(Enrollment $enrollment, ?string $bank): Source;
-
 
     /**
      * Builds a redirect to fulfill the Source's payment, if applicable.

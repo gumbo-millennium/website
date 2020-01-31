@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\File;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -37,11 +38,9 @@ class EnrollmentPaid extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function via($notifiable)
+    public function via()
     {
         return ['mail'];
     }
@@ -49,10 +48,9 @@ class EnrollmentPaid extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail()
     {
         // Reload enrollment
         $enrollment = $this->enrollment
@@ -63,22 +61,32 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $user = $enrollment->user;
         $activity = $enrollment->activity;
 
-        // Try to download the PDF
-        $pdf = $this->getInvoicePdf($this->enrollment);
+        // Get a link to the receipt page, or download a PDF
+        $link = $this->getReceiptLink($this->enrollment);
+        $pdf = $link ? null : $this->getInvoicePdf($this->enrollment);
 
         // Send mail
         $mail = (new MailMessage())
+            ->subject("Betaalbevestiging voor {$activity->name} 🎉")
             ->greeting('Bedankt voor je betaling!')
-            ->line(<<<TEXT
-            Je betaling voor {$activity->name} is in goede orde ontvangen.
-            Je inschrijving is nu definitief.
-            TEXT)
+            ->salutation("Beste {$user->first_name},")
+            ->line("Je betaling voor {$activity->name} is in goede orde ontvangen.")
+            ->line('Je inschrijving is nu definitief.')
             ->action('Bekijk activiteit', route('activity.show', compact('activity')));
 
-        // Add PDF if present
-        if ($pdf) {
+        // Add link to receipt
+        if ($link) {
             $mail = $mail
-                ->line('In de bijlage vind je de betaalde factuur.')
+                ->line(<<<TEXT
+                Indien je, voor eigen boekhouding of om in te lijsten, graag een betaalbevesting
+                 wil hebben, kan je deze [hier bekijken]({$link}).
+                TEXT);
+        }
+
+        // Add PDF, but only if $link is missing
+        if (!$link && $pdf) {
+            $mail = $mail
+                ->line('In de bijlage vind je een kopie van de factuur.')
                 ->attachData(Storage::get($pdf), basename($pdf), ['mime' => 'application/pdf']);
         }
 
@@ -94,19 +102,6 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         // Send the mail with the final goodbye
         return $mail
             ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, $tail.");
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
     }
 
 
@@ -151,6 +146,11 @@ class EnrollmentPaid extends Notification implements ShouldQueue
                 RequestOptions::TIMEOUT => 45.00
             ]);
 
+            // Return if non-200
+            if ($response->getStatusCode() !== 200) {
+                return null;
+            }
+
             // Generate filename
             $filename = sprintf('%s.pdf', Str::slug("invoice {$invoice->number}"));
 
@@ -170,5 +170,27 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Request failed
         return null;
+    }
+
+    /**
+     * Returns link to Stripe's receipt page
+     * @param Enrollment $enrollment
+     * @return null|string
+     * @throws BindingResolutionException
+     */
+    public function getReceiptLink(Enrollment $enrollment): ?string
+    {
+        /** @var StripeServiceContract $stripeService */
+        $stripeService = app(StripeServiceContract::class);
+
+        // Get charge
+        $charge = $stripeService->getCharge($enrollment);
+        if (!$charge) {
+            return null;
+        }
+
+        // Get link
+        $receiptLink = $charge->receipt_url;
+        return !empty($receiptLink) ? $receiptLink : null;
     }
 }

@@ -81,7 +81,7 @@ class PageController extends Controller
             $content = null;
 
             // Check filesystem
-            $pagePath = sprintf(self::PAGE_FILE_TEMPLATE, self::PAGE_DIRECTORY, Str::slug($slug));
+            $pagePath = sprintf(self::PAGE_FILE_TEMPLATE, self::PAGE_DIRECTORY, $safeSlug);
             $fullPath = resource_path($pagePath);
             if (file_exists($fullPath)) {
                 try {
@@ -116,7 +116,7 @@ class PageController extends Controller
 
             // Check database if file failed
             if (!$content) {
-                $content = Page::whereSlug($slug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
+                $content = Page::whereSlug($safeSlug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
 
                 if ($content || empty($content->html)) {
                     $content = null;

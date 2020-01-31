@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\StripeServiceContract;
+use App\Services\Traits\HandlesStripeCharges;
 use App\Services\Traits\HandlesStripeCoupons;
 use App\Services\Traits\HandlesStripeCustomers;
 use App\Services\Traits\HandlesStripeInvoices;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class StripeService implements StripeServiceContract
 {
+    use HandlesStripeCharges;
     use HandlesStripeCoupons;
     use HandlesStripeCustomers;
     use HandlesStripeInvoices;
