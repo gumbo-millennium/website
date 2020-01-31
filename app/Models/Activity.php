@@ -302,11 +302,13 @@ class Activity extends SluggableModel implements AttachableInterface
             return null;
         }
 
-        // Member price
-        $memberPrice = $this->price - $this->member_discount;
+        // In case it's free
+        if ($this->price - $this->member_discount <= 0) {
+            return 0;
+        }
 
-        // Return discount
-        return $memberPrice ? ($memberPrice + config('gumbo.transfer-fee', 0)) : 0;
+        // Otherwise, use with transfer cost
+        return max(0, $this->total_price - $this->member_discount);
     }
 
     /**
@@ -341,37 +343,25 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getPriceLabelAttribute(): string
     {
-        if ($this->is_free) {
+        if ($this->is_free || $this->total_price <= 0) {
             // If it's free, mention it
             return 'gratis';
         }
 
         // No discount
-        if ($this->member_discount === null) {
+        if ($this->total_discount_price === null) {
             // Return total price as single price point
-            return Str::price($this->total_price ?? 0);
+            return Str::price($this->total_price);
         }
 
-        // Get some booleans
-        $isRestricted = $this->discounts_available > 0;
-        $isFreeForMembers = $this->member_discount >= $this->price;
-
-        if ($isFreeForMembers) {
-            if ($isRestricted) {
-                // Free for some members
-                return sprintf('gratis voor %d leden', $this->discounts_available);
-            }
-
+        // Members might have free entry
+        if ($this->total_discount_price === 0) {
             // Free for all members
             return 'gratis voor leden';
         }
 
-        // Get strings
-        $discountPrice = Str::price($this->total_discount_price ?? 0);
-        $totalPrice = Str::price($this->total_price ?? 0);
-
         // Discounted for all members
-        return sprintf('%s - %s', $discountPrice, $totalPrice);
+        return sprintf('Vanaf %s', Str::price($this->total_discount_price ?? $this->total_price));
     }
 
     /**
