@@ -63,7 +63,8 @@ class FormController extends Controller
     public function save(Request $request, Activity $activity)
     {
         // Get enrollment
-        $this->getActi
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
+
         // Get form
         $form = $this->getForm($activity);
 
@@ -71,7 +72,7 @@ class FormController extends Controller
         $form->redirectIfNotValid(route('enroll.show', compact('activity')));
 
         // Store data
-        $
+        $enrollment->form = $form->getFieldValues();
     }
 
     /**
