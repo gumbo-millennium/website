@@ -133,11 +133,11 @@ class EnrollmentController extends Controller
         $enrollment->user()->associate($user);
 
         // Determine price with and without transfer cost
-        $enrollment->price = $activity->price_guest;
-        $enrollment->total_price = $activity->total_price_guest;
-        if ($user->is_member) {
-            $enrollment->price = $activity->price_member;
-            $enrollment->total_price = $activity->total_price_member;
+        $enrollment->price = $activity->price;
+        $enrollment->total_price = $activity->total_price;
+        if ($user->is_member && $enrollment->discounts_available !== 0 && $enrollment->member_discount !== null) {
+            $enrollment->price = $activity->discount_price;
+            $enrollment->total_price = $activity->total_discount_price;
         }
 
         // Set to null if the price is empty
@@ -318,7 +318,7 @@ class EnrollmentController extends Controller
 
         // Ask policy
         if (!$request->user()->can('unenroll', $enrollment)) {
-            flash('Je kan je niet meer uitschrijven voor dit evenement', 'info');
+            flash('Je kan je niet (meer) uitschrijven voor dit evenement', 'info');
             return redirect()->route('enroll.show', compact('activity'));
         }
 

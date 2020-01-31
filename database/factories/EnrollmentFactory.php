@@ -14,6 +14,6 @@ $factory->define(Enrollment::class, function (Faker $faker) {
         'user_id' => $user->id,
         'user_type' => $user->hasRole('member') ? 'member' : 'guest',
         'activity_id' => $activity->id,
-        'price' => $faker->boolean ? $activity->price_member : $activity->price_guest,
+        'price' => $faker->boolean ? $activity->price : ($activity->price - $activity->member_discount),
     ];
 });

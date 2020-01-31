@@ -68,8 +68,9 @@ class Activity extends SluggableModel implements AttachableInterface
         'is_public' => 'bool',
 
         // Pricing
-        'price_member' => 'int',
-        'price_guest' => 'int',
+        'member_discount' => 'int',
+        'discount_count' => 'int',
+        'price' => 'int',
 
         // Extra information
         'enrollment_questions' => 'collection',
@@ -275,13 +276,57 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
+     * Returns the price for people with discounts
+     * @return null|int
+     */
+    public function getDiscountPriceAttribute(): ?int
+    {
+        // Return null if no discounts are available
+        if (!$this->member_discount) {
+            return null;
+        }
+
+        // Member price
+        return max(0, $this->price - $this->member_discount);
+    }
+
+    /**
      * Returns member price with transfer costs
      *
      * @return int|null
      */
-    public function getTotalPriceMemberAttribute(): ?int
+    public function getTotalDiscountPriceAttribute(): ?int
     {
-        return $this->price_member ? $this->price_member + config('gumbo.transfer-fee', 0) : $this->price_member;
+        // Return null if no discounts are available
+        if (!$this->member_discount) {
+            return null;
+        }
+
+        // Member price
+        $memberPrice = $this->price - $this->member_discount;
+
+        // Return discount
+        return $memberPrice ? ($memberPrice + config('gumbo.transfer-fee', 0)) : 0;
+    }
+
+    /**
+     * Returns the number of discounts available, if any
+     * @return null|int
+     */
+    public function getDiscountsAvailableAttribute(): ?int
+    {
+        // None if no discount is available
+        if (!$this->member_discount) {
+            return null;
+        }
+
+        // Infinite if zero or empty
+        if (!$this->discount_count) {
+            return \INF;
+        }
+
+        // Count them
+        return max(0, $this->discount_count - $this->enrollments()->where('user_type', 'member')->count());
     }
 
     /**
@@ -289,9 +334,9 @@ class Activity extends SluggableModel implements AttachableInterface
      *
      * @return int|null
      */
-    public function getTotalPriceGuestAttribute(): ?int
+    public function getTotalPriceAttribute(): ?int
     {
-        return $this->price_guest ? $this->price_guest + config('gumbo.transfer-fee', 0) : $this->price_guest;
+        return $this->price ? $this->price + config('gumbo.transfer-fee', 0) : $this->price;
     }
 
     /**
@@ -304,19 +349,32 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->is_free) {
             // If it's free, mention it
             return 'gratis';
-        } elseif (!$this->total_price_member && $this->is_public) {
-            // Free for members when public
-            return 'gratis voor leden';
-        } elseif ($this->total_price_member === $this->total_price_guest) {
-            // Same price for both parties
-            return Str::price($this->total_price_member);
-        } elseif ($this->is_public) {
-            // Starting bid
-            return sprintf('vanaf %s', Str::price($this->total_price_member ?? 0));
+        } elseif ($this->price && $this->member_discount === $this->price && $this->discount_count) {
+            // Free for members
+            return sprintf('gratis voor %d leden', $this->discount_count);
+        } elseif ($this->price && $this->member_discount === $this->price) {
+            // Free for members
+            return 'gratis voor leden (beperkte korting)';
+        } elseif ($this->member_discount && $this->price && $this->discount_count) {
+            // Discounted for members
+            return sprintf('vanaf %s (beperkte korting)', Str::price($this->total_discount_price ?? 0));
+        } elseif ($this->member_discount && $this->price) {
+            // Discounted for members
+            return sprintf('vanaf %s', Str::price($this->total_discount_price ?? 0));
         }
 
         // Return total price as single price point
-        return Str::price($this->total_price_member ?? 0);
+        return Str::price($this->total_price ?? 0);
+    }
+
+    /**
+     * Returns if members can go for free
+     * @return bool
+     */
+    public function getIsFreeForMemberAttribute(): bool
+    {
+        return $this->is_free ||
+            ($this->member_discount === $this->price && $this->discount_count === null);
     }
 
     /**
@@ -326,10 +384,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getIsFreeAttribute(): bool
     {
-        return (
-            ($this->total_price_member === null && $this->total_price_guest === null) ||
-            ($this->total_price_member === null && !$this->is_public)
-        );
+        return $this->total_price === null;
     }
 
     /**

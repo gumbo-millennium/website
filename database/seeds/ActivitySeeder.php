@@ -167,8 +167,7 @@ class ActivitySeeder extends Seeder
             'start_date' => $date->setTime(10, 0, 0, 0),
             'end_date' => $date->addDays(5)->setTime(10, 0, 0, 0),
             'seats' => null,
-            'price_member' => $eventPrice * 100, // Price in cents
-            'price_guest' => $eventPrice * 100, // Price in cents
+            'price' => $eventPrice * 100, // Price in cents
 
             // Make sure users can enroll until friday
             'enrollment_end' => $date->sub('P2DT1S'),
@@ -223,6 +222,7 @@ class ActivitySeeder extends Seeder
         // Determine estimate activity price, raised € 0.50 each year since '17
         $memberPrice = (12 + ($fridayBefore->year - 2017) / 2.0);
         $guestPrice = ceil($memberPrice * 1.15);
+        $memberDiscount = max(0, $guestPrice - $memberPrice);
 
         // Create Activity 2
         $slug = "kerstdiner-{$year}";
@@ -231,8 +231,8 @@ class ActivitySeeder extends Seeder
             'tagline' => 'Haha, voer',
             'start_date' => $fridayBefore->setTime(17, 30, 0, 0),
             'end_date' => $fridayBefore->setTime(21, 0, 0, 0),
-            'price_member' => $memberPrice * 100,
-            'price_guest' => $guestPrice * 100
+            'member_discount' => $memberDiscount * 100,
+            'price' => $guestPrice * 100
         ]);
     }
 
@@ -265,13 +265,13 @@ class ActivitySeeder extends Seeder
      */
     private function seedPaymentTest(): void
     {
-        // [     slug     ] => [public, price-member, price-guest]
+        // [     slug     ] => [public, discount, price]
         $sets = [
             'private-free' => [false, null, null],
-            'private-paid' => [false, 1500, null],
+            'private-paid' => [false, null, 1500],
             'public-free' => [true, null, null],
-            'public-member' => [true, null, 1500],
-            'public-paid' => [true, 1500, 1500],
+            'public-member' => [true, 1500, 1500],
+            'public-paid' => [true, null, 1500],
             'public-discount' => [true, 1500, 3000]
         ];
 
@@ -291,8 +291,8 @@ class ActivitySeeder extends Seeder
                 'enrollment_end' => $startDate,
                 'end_date' => $endDate,
                 'is_public' => $paid,
-                'price_member' => $price,
-                'price_guest' => $priceGuest,
+                'member_discount' => max(0, $priceGuest - $price),
+                'price' => $priceGuest,
                 'seats' => 15
             ]);
 
@@ -321,15 +321,15 @@ class ActivitySeeder extends Seeder
                 'name' => "[test] {$name}",
                 'tagline' => 'Testing seat occupancy',
                 'location' => 'Het Vliegende Paard',
-                'location_address' => 'Voorstraat 17, 8011 MK Zwolle, Netherlands',
+                'location_address' => 'Het Vliegende Paard, Voorstraat 17, 8011 MK Zwolle, Netherlands',
                 'statement' => Str::limit($name, 16, ''),
                 'start_date' => $date,
                 'enrollment_start' => today(),
                 'enrollment_end' => $date->subHour(3),
                 'end_date' => $date->addHour(2),
                 'is_public' => true,
-                'price_member' => null,
-                'price_guest' => null,
+                'member_discount' => null,
+                'price' => null,
                 'seats' => $seats
             ], false);
 

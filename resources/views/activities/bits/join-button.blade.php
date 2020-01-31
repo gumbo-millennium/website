@@ -21,23 +21,28 @@ if ($user && $is_enrolled && !$is_stable) {
 @endphp
 
 <div class="flex flex-col items-center">
+    {{-- Stable --}}
     @if ($user && $is_enrolled && $is_stable)
-    <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">Beheer inschrijving</a>
-
-    {{-- Remove link --}}
-    @if ($isOpen)
-    <a href="{{ route('enroll.delete', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    <div class="btn m-0 btn--disabled" disabled>Ingeschreven</div>
+    @if ($isOpen && $user->can('unenroll', $enrollment))
+    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
     @endif
+
+    {{-- Instable --}}
     @elseif ($user && $is_enrolled)
     <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a>
     <p class="text-gray-700 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
+    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
 
-    {{-- Remove link --}}
-    <a href="{{ route('enroll.delete', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    {{-- Fully booked --}}
     @elseif (!$hasRoom)
-    <button class="btn m-0 btn--link" disabled>Uitverkocht</button>
+    <div class="btn m-0 btn--disabled" disabled>Uitverkocht</div>
+
+    {{-- Closed --}}
     @elseif (!$isOpen)
-    <button class="btn m-0 btn--link" disabled>Inschrijvingen gesloten</button>
+    <div class="btn m-0 btn--disabled" disabled>Inschrijvingen gesloten</div>
+
+    {{-- Open --}}
     @else
     <form action="{{ route('enroll.create', compact('activity')) }}" method="post">
         @csrf

@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -208,50 +209,6 @@ class Activity extends Resource
      */
     public function pricingFields(): array
     {
-        /**
-         * Validates the guest price against the member price, but only if
-         * it's set (guest price >= member price)
-         *
-         * @param string $attr
-         * @param mixed $value
-         * @param \Closure $fail
-         * @return void
-         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-         */
-        $guestPriceRule = function ($attr, $value, $fail): void {
-            // Parse to floats
-            $memberPrice = filter_input(
-                INPUT_POST,
-                'price_member',
-                \FILTER_VALIDATE_FLOAT,
-                ['options' => ['min_range' => 0.00]]
-            );
-            $guestPrice = filter_var(
-                $value,
-                \FILTER_VALIDATE_FLOAT,
-                ['options' => ['min_range' => 0.00]]
-            );
-            $isPublic = filter_input(
-                INPUT_POST,
-                'is_public',
-                \FILTER_VALIDATE_BOOLEAN,
-                \FILTER_NULL_ON_FAILURE
-            );
-
-            // Debug
-            logger()->debug('Testing {attr} value {guest-value} against {member-value}', [
-                'attr' => $attr,
-                'guest-value' => $guestPrice,
-                'member-value' => $memberPrice,
-                'public-value' => $isPublic
-            ]);
-
-            // Validate (null ≈ 0)
-            if ($isPublic && $memberPrice > $guestPrice) {
-                $fail("De prijs voor de bezoekers moet hoger of gelijk zijn aan de ledenprijs.");
-            }
-        };
-
         return [
             DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
@@ -263,7 +220,7 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
-            Price::make('Netto prijs leden', 'price_member')
+            Price::make('Netto prijs', 'price')
                 ->min(2.50)
                 ->max(200)
                 ->step(0.25)
@@ -272,22 +229,29 @@ class Activity extends Resource
                 ->rules('nullable', 'numeric', 'min:2.50')
                 ->help('In euro, exclusief transactiekosten'),
 
-            Price::make('Netto prijs niet-leden', 'price_guest')
-                ->min(2.50)
+            Price::make('Totaalprijs', 'total_price')
+                ->help('In euro, inclusief transactiekosten')
+                ->onlyOnDetail(),
+
+            Price::make('Korting leden', 'member_discount')
+                ->min(0.50)
                 ->max(200)
                 ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
-                ->rules('nullable', 'numeric', 'min:2.50', $guestPriceRule)
-                ->help('In euro, exclusief transactiekosten'),
+                ->rules('nullable', 'numeric', 'min:0.50', 'lt:total_price')
+                ->help('In euro')
+                ->onlyOnForms(),
 
-            Price::make('Totaalprijs leden', 'total_price_member')
+            Price::make('Totaalprijs korting', 'total_discount_price')
                 ->help('In euro, inclusief transactiekosten')
                 ->onlyOnDetail(),
 
-            Price::make('Totaalprijs bezoekers', 'total_price_guest')
-                ->help('In euro, inclusief transactiekosten')
-                ->onlyOnDetail(),
+            Number::make('Aantal kortingen', 'discount_count')
+                ->step(1)
+                ->nullable()
+                ->rules('nullable', 'numeric', 'min:1')
+                ->help('Beperkt het aantal keer dat de korting wordt verleend.'),
 
             // Flexible::make('Form', 'enrollment_questions')
             //     ->confirmRemove('Removing a field does not remove submitted data')

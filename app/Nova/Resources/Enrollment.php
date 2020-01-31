@@ -83,14 +83,15 @@ class Enrollment extends Resource
             ID::make()->sortable(),
 
             // Add multi selects
-            BelongsTo::make('Activiteit', 'activity')
+            BelongsTo::make('Activiteit', 'activity', Activity::class)
                 ->rules('required', function ($activity) use ($request) {
                     $request->can('manage', $activity);
                 })
                 ->hideWhenUpdating(),
 
             // Add user
-            BelongsTo::make('Gebruiker', 'user')
+            BelongsTo::make('Gebruiker', 'user', User::class)
+                ->showOnIndex()
                 ->rules('required')
                 ->searchable()
                 ->hideWhenUpdating(),
@@ -113,9 +114,6 @@ class Enrollment extends Resource
             Boolean::make('Betaald', 'paid')
                 ->hideWhenUpdating()
                 ->help('Geeft aan of de inschrijving is betaald.'),
-
-            // Add payments
-            HasMany::make(__('Payments'), 'payments', Payment::class),
         ];
     }
 

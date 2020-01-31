@@ -32,12 +32,18 @@ $factory->define(Activity::class, function (Faker $faker) {
     $memberSeats = $guestSeats = null;
     if ($faker->boolean(0.4)) {
         $memberSeats = $faker->numberBetween(12, 60) / 4 * 4;
-        $guestSeats = $faker->numberBetween(5, floor($memberSeats * 0.8)) / 4 * 4;
     } elseif ($faker->boolean(0.4)) {
         $memberSeats = $faker->numberBetween(4, 60) / 4 * 4;
-        $guestSeats = 0;
         $guestPrice = null;
     }
+
+    // Determine discounts
+    $memberDiscount = max(0, $guestPrice - $memberPrice) ?: null;
+    $discountSlots = null;
+    if ($memberDiscount) {
+        $discountSlots = $faker->optional()->numberBetween(2, $memberSeats ?? 25);
+    }
+    $price = $guestPrice;
 
     return [
         // Optionally cancel it
@@ -62,7 +68,8 @@ $factory->define(Activity::class, function (Faker $faker) {
         'is_public' => $faker->boolean(0.1),
 
         // Pricing
-        'price_member' => $memberPrice,
-        'price_guest' => $guestPrice,
+        'member_discount' => $memberDiscount,
+        'discount_count' => $discountSlots,
+        'price' => $price,
     ];
 });
