@@ -7,8 +7,6 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Paid as PaidState;
 use Stripe\Invoice;
-use Stripe\Source;
-use Stripe\Stripe;
 
 class PaymentValidationJob extends StripeJob
 {
@@ -41,32 +39,21 @@ class PaymentValidationJob extends StripeJob
      */
     public function handle(StripeServiceContract $service): void
     {
-        // Abort if Stripe key isn't set
-        if (empty(Stripe::getApiKey())) {
-            return;
-        }
-
         // Shorthand
         $enrollment = $this->enrollment;
 
         // Skip if paid
-        if ($enrollment->state instanceof PaidState || $enrollment->state instanceof CancelledState) {
+        if ($enrollment->state->isOneOf(PaidState::class, CancelledState::class)) {
             logger()->info('Got validation on paid/cancelled enrollment. Stopping');
             return;
         }
 
         // Check source first (maybe consume it)
-        $source = $service->getSource($enrollment, null);
         $invoice = $service->getInvoice($enrollment);
-
-        if (!($invoice || !$invoice->paid) && $source && $source->status === Source::STATUS_CHARGEABLE) {
-            logger()->info('Attempting to pay {invoice} with {source}', compact('invoice', 'source', 'enrollment'));
-            $invoice = $service->payInvoice($enrollment, $source);
-        }
 
         // Check invoice
         if (!$invoice) {
-            logger()->info('Found no invoice for {enrollment}', compact('source', 'enrollment'));
+            logger()->info('Found no invoice for {enrollment}', compact('enrollment'));
             return;
         }
 
@@ -87,9 +74,6 @@ class PaymentValidationJob extends StripeJob
             $newEnrollment->transitionTo(CancelledState::class)->saveOrFail();
             return;
         }
-
-        // Debug postpone
-        logger()->info('No result yet, postponing', compact('invoice', 'enrollment'));
 
         // try again in a bit
         $this->release(60);
