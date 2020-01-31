@@ -213,26 +213,4 @@ class ConfirmationController extends Controller
         flash('Er is iets fout gegaan, probeer het later opnieuw', 'error');
         return redirect()->route('enroll.show', compact('activity'));
     }
-
-    /**
-     * Returns an enrollment if the enrollment exists and the form data has been filled out if it's present.
-     *
-     * @param Request $request
-     * @param Activity $activity
-     * @return RedirectResponse|Enrollment
-     */
-    private function findValidEnrollmentOrRedirect(Request $request, Activity $activity)
-    {
-        // Get enrollment
-        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
-
-        // Redirect to the edit view if the user hasn't completed it yet.
-        if ($activity->form !== null && empty($enrollment->data)) {
-            flash('Je moet eerst even onderstaand formulier invullen, alvorens te betalen', 'info');
-            return redirect()->route('enroll.edit', compact('activity'));
-        }
-
-        // Return enrollment
-        return $enrollment;
-    }
 }

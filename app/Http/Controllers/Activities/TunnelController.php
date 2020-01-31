@@ -34,7 +34,7 @@ class TunnelController extends Controller
     public function get(Request $request, Activity $activity)
     {
         // Get enrollment
-        $enrollment = Enrollment::findActive(request()->user(), $activity);
+        $enrollment = Enrollment::findActive($request->user(), $activity);
 
         // Redirect to activity if no enrollment is present
         if (!$enrollment) {

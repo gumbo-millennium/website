@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Activities;
 use App\Contracts\StripeServiceContract;
 use App\Exceptions\EnrollmentNotFoundException;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
-use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
 use App\Http\Controllers\Controller;
-use App\Jobs\HandleDelayedPaymentJob;
 use App\Jobs\Stripe\PaymentValidationJob;
 use App\Models\Activity;
-use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
 use App\Services\IdealBankService;
@@ -18,11 +15,8 @@ use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use RuntimeException;
-use Stripe\Exception\ApiErrorException;
-use Stripe\Exception\UnexpectedValueException;
 use Stripe\Exception\InvalidArgumentException;
 use Stripe\Source;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -36,6 +30,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PaymentController extends Controller
 {
