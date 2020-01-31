@@ -1,11 +1,13 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Service Unavailable'))
-@section('code', '503')
-@section('message', __($exception->getMessage() ?: 'Service Unavailable'))
-
-@section('image')
-<div style="background-image: url({{ mix('/images/503.svg') }});"
-    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
-</div>
+@section('title', 'Systeem tijdelijk niet beschikbaar')
+@section('code', '503 Service Unavailable')
+@section('message')
+@if ($exception->getMessage())
+{{ __($exception->getMessage()) }}
+@else
+De site is tijdelijk niet beschikbaar.<br />
+Probeer het later nog eens
+@endif
 @endsection
+

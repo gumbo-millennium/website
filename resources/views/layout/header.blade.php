@@ -21,15 +21,15 @@
             @auth
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
-                <span class="userbar__links-item userbar__links-item--text userbar__links-item--flex">
+                <a href="{{ route('account.index') }}" class="userbar__links-item">
                     @icon('solid/user')
                     <span>{{ $user->name }}</span>
-                </span>
+                </a>
             </li>
             @can('enter-admin')
             {{-- Admin link --}}
             <li class="userbar__links-link">
-                <a href="{{ secure_url(Nova::path()) }}" class="userbar__links-item">
+                <a href="{{ url(Nova::path()) }}" class="userbar__links-item">
                     Administratie
                 </a>
             </li>
@@ -76,9 +76,11 @@
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="/activities">Activiteiten</a>
             </li>
+            @if ($user && $user->is_member)
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="/files">Bestanden</a>
             </li>
+            @endif
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="/news">Nieuws</a>
             </li>

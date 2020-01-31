@@ -6,6 +6,7 @@ use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
 use App\Models\States\Enrollment\Paid as PaidState;
+use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -68,7 +70,7 @@ class Enrollment extends UuidModel
             ->withoutTrashed()
             ->whereUserId($user->id)
             ->whereActivityId($activity->id)
-            ->whereNotState('state', CancelledState::class)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
             ->with(['activity'])
             ->first();
     }
@@ -108,7 +110,7 @@ class Enrollment extends UuidModel
             ->allowTransition(CreatedState::class, SeededState::class)
 
             // Seeded → Confirmed
-            ->allowTransition(SeededState::class, ConfirmedState::class)
+            ->allowTransition([CreatedState::class, SeededState::class], ConfirmedState::class)
 
             // Seeded, Confirmed → Paid
             ->allowTransition([SeededState::class, ConfirmedState::class], PaidState::class)
@@ -117,6 +119,12 @@ class Enrollment extends UuidModel
             ->allowTransition(
                 [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
                 CancelledState::class
+            )
+
+            // Paid, Cancelled → Refunded
+            ->allowTransition(
+                [PaidState::class, CancelledState::class],
+                RefundedState::class
             );
     }
 
@@ -171,12 +179,21 @@ class Enrollment extends UuidModel
     {
         // First check for any transition
         $options = $this->state->transitionableStates();
-        if (in_array(PaidState::$name, $options) && $this->price) {
+        if (in_array(SeededState::$name, $options) && $this->activity->form) {
+            return new SeededState($this);
+        } elseif (in_array(PaidState::$name, $options) && $this->price) {
             return new PaidState($this);
         } elseif (in_array(ConfirmedState::$name, $options)) {
             return new ConfirmedState($this);
         }
 
         return null;
+    }
+
+    public function getRequiresPaymentAttribute(): bool
+    {
+        return $this->exists &&
+            $this->total_price &&
+            !($this->state instanceof CancelledState);
     }
 }

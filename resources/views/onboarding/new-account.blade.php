@@ -1,6 +1,6 @@
-@extends('layout.variants.login')
+@extends('layout.variants.basic')
 
-@section('login-content-small')
+@section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Welkom <strong>{{ $user->first_name }}</strong></h1>
 <p class="text-lg text-gray-700 mb-4">Bedankt voor het aanmaken van een account.</p>

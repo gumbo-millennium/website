@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Spatie\WebhookClient\Models\WebhookCall;
 use Stripe\Event;
+use Stripe\StripeObject;
+use Stripe\Util\Util;
 
 /**
  * Basic Stripe job, with a webhook
@@ -60,18 +62,34 @@ abstract class StripeJob implements ShouldQueue
             abort(403, "Event's origin mode is mismatching with the website mode.");
         }
 
-        // Assign stripe event
-        app()->call(
-            [$this, 'process'],
-            [$event]
-        );
+        // Log
+        logger()->debug('Handling event on {class} with data {event}.', [
+            'class' => static::class,
+            'event-data' => $event->data
+        ]);
+
+        // Get payload
+        $payload = object_get($event, 'data.object');
+        logger()->debug('Event payload: {payload}', compact('payload'));
+
+        $stripeObject = Util::convertToStripeObject($payload, []);
+        if (!$stripeObject instanceof StripeObject) {
+            $stripeObject = null;
+        }
+
+        // Call next
+        $this->process($event, $stripeObject);
     }
 
     /**
-     * Actually execute the job
-     *
+     * Process the given event. Optionally a Stripe object is supplied
      * @param Event $event
+     * @param null|StripeObject $object
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    abstract public function process(Event $event): void;
+    public function process(Event $event): void
+    {
+        // noop
+    }
 }

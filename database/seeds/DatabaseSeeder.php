@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
         // Seed roles and permissions
         $this->call(PermissionSeeder::class);
 
+        // Required pages
+        $this->call(PageSeeder::class);
+
         // The rest of the seeders are not run in production
         if (App::environment(['local', 'testing'])) {
             // Add users

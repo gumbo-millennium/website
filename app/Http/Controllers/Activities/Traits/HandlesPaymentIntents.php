@@ -100,13 +100,13 @@ trait HandlesPaymentIntents
      *
      * @param Enrollment $enrollment The enrollment, required for return URL
      * @param PaymentIntent $intent The intent to verify
-     * @param PaymentMethod $method Method to pay
+     * @param Source $method Source to charge
      * @return PaymentIntent Updated intent
      */
     protected function confirmPaymentIntent(
         Enrollment $enrollment,
         PaymentIntent $intent,
-        PaymentMethod $method
+        Source $source
     ): ?PaymentIntent {
         // Make sure it's still confirm-able
         if (
@@ -117,10 +117,11 @@ trait HandlesPaymentIntents
         }
 
         try {
+            logger()->debug('Confirming {intent} using {source}', compact('intent', 'source'));
             // Confirm the intent on Stripe's end
             return $intent->confirm([
-                'payment_method' => $method->id,
-                'return_url' => route('payment.complete', ['activity' => $enrollment->activity]),
+                'payment_method' => $source->id,
+                'return_url' => route('enroll.pay-return', ['activity' => $enrollment->activity]),
             ]);
         } catch (ApiErrorException $error) {
             // Handle errors

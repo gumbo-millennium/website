@@ -2,17 +2,17 @@
 
 namespace App\Jobs\Stripe;
 
+use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Cancelled;
-use App\Models\States\Enrollment\Confirmed;
-use App\Models\States\Enrollment\Seeded;
+use App\Models\States\Enrollment\Cancelled as CancelledState;
+use App\Models\States\Enrollment\Paid as PaidState;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Stripe\Exception\UnknownApiErrorException;
-use Stripe\PaymentIntent;
+use Stripe\Invoice;
+use Stripe\Source;
 use Stripe\Stripe;
 
 class PaymentValidationJob implements ShouldQueue
@@ -30,6 +30,11 @@ class PaymentValidationJob implements ShouldQueue
     protected $enrollment;
 
     /**
+     * @var StripeServiceContract
+     */
+    protected $service;
+
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -44,7 +49,7 @@ class PaymentValidationJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(StripeServiceContract $service): void
     {
         // Abort if Stripe key isn't set
         if (empty(Stripe::getApiKey())) {
@@ -54,41 +59,49 @@ class PaymentValidationJob implements ShouldQueue
         // Shorthand
         $enrollment = $this->enrollment;
 
-        // Check if enrollment still matters and has a payment intent
-        if ($enrollment->payment_intent) {
+        // Skip if paid
+        if ($enrollment->state instanceof PaidState || $enrollment->state instanceof CancelledState) {
+            logger()->info('Got validation on paid/cancelled enrollment. Stopping');
             return;
         }
 
-        // Get intetn
-        try {
-            $intent = PaymentIntent::retrieve($enrollment->payment_intent);
-        } catch (UnknownApiErrorException $e) {
-            // If there's a 404 we don't act.
-            if ($e->getHttpStatus() === 404) {
-                return;
-            }
+        // Check source first (maybe consume it)
+        $source = $service->getSource($enrollment, null);
+        $invoice = $service->getInvoice($enrollment);
 
-            // Bubble otherwise
-            throw $e;
+        if (!($invoice || !$invoice->paid) && $source && $source->status === Source::STATUS_CHARGEABLE) {
+            logger()->info('Attempting to pay {invoice} with {source}', compact('invoice', 'source', 'enrollment'));
+            $invoice = $service->payInvoice($enrollment, $source);
         }
 
-        // Refresh the enrollment, in case the API call took some time
-        $enrollment->refresh();
-
-        // Disallow changing cancelled states
-        if ($enrollment->state->is(Cancelled::class)) {
+        // Check invoice
+        if (!$invoice) {
+            logger()->info('Found no invoice for {enrollment}', compact('source', 'enrollment'));
             return;
         }
 
-        // Check if the intent is paid, and if the enrollment state allows
-        // migrating to a paid state.
-        if (
-            $intent->status === PaymentIntent::STATUS_SUCCEEDED &&
-            $enrollment->state->isOneOf([Seeded::class, Confirmed::class])
-        ) {
-            // Change state to paid
-            $enrollment->state->transitionTo(Paid::class);
-            $enrollment->save();
+        // Paid, confirm enrollment
+        if ($invoice->status === Invoice::STATUS_PAID) {
+            logger()->info('Invoice is paid, marking {enrollment} as paid', compact('invoice', 'enrollment'));
+
+            $newEnrollment = Enrollment::find($enrollment->id);
+            $newEnrollment->transitionTo(PaidState::class)->saveOrFail();
+            return;
         }
+
+        // Voided, cancel enrollment
+        if ($invoice->status === Invoice::STATUS_VOID) {
+            logger()->info('Invoice is voided, marking {enrollment} as cancelled', compact('invoice', 'enrollment'));
+
+            $newEnrollment = Enrollment::find($enrollment->id);
+            $newEnrollment->transitionTo(CancelledState::class)->saveOrFail();
+            return;
+        }
+
+        // Debug postpone
+        logger()->info('No result yet, postponing', compact('invoice', 'enrollment'));
+
+        // try again in a bit
+        $this->release(60);
     }
 }

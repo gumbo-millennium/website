@@ -1,0 +1,26 @@
+/* Files */
+
+.file-categories {
+  @apply flex flex-row flex-wrap;
+  margin: calc(theme('spacing.4') * -1);
+}
+
+.file-categories__category {
+  @apply py-4 w-full;
+}
+
+.file-categories__category-inner {
+  @apply card;
+}
+
+@screen md {
+  .file-categories__category {
+    @apply w-1/2;
+  }
+}
+
+@screen lg {
+  .file-categories__category {
+    @apply w-1/3;
+  }
+}

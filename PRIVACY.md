@@ -20,7 +20,7 @@ The next paragraphs will explain what data is stored, per object type.
 
 ### Users
 
-For users (`App\User`) we store a lot of data, but all can be removed at the request of the board.
+For users (`App\Models\User`) we store a lot of data, but all can be removed at the request of the board.
 
 The following data is stored. The data is, by default, stored indefinitely, until the user
 decides to delete their account.

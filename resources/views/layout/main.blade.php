@@ -14,6 +14,9 @@
     {{-- Stylesheet --}}
     <link rel="stylesheet" href="{{ mix('/app.css') }}">
 
+    {{-- Inlie stylesheets --}}
+    @stack('main.styles')
+
     {{-- Javascript (deferred) --}}
     @section('main.scripts')
     <script src="{{ mix('/vendor.js') }}" defer></script>
@@ -22,14 +25,18 @@
 </head>
 
 <body>
+    @section('main.header')
     @include('layout.header')
+    @show
 
     <main class="main">
         @yield('content')
     </main>
 
+    @section('main.footer')
     @include('layout.footer')
     @includeWhen($user !== null, 'layout.logout')
+    @show
 </body>
 
 </html>

@@ -14,11 +14,10 @@ class EnrollmentObserver
 {
     /**
      * Ensure an expire date is present if required
-     *
-     * @param  Enrollment  $enrollment
+     * @param Enrollment $enrollment
      * @return void
      */
-    public function saving(Enrollment $enrollment)
+    public function saving(Enrollment $enrollment): void
     {
         // Post-start enrollments don't expire
         if ($enrollment->activity->start_date < now()) {

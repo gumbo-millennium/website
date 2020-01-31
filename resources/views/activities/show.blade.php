@@ -12,6 +12,7 @@ $startDateFull = $startLocale->isoFormat('D MMM Y, HH:mm (z)');
 $duration = $activity->start_date->diffAsCarbonInterval($activity->end_date);
 $durationIso = $duration->spec();
 $durationTime = $duration->forHumans(['parts' => 1]);
+$headerClass = "header-activity-{$activity->slug}";
 
 $memberPrice = $activity->price_member ? Str::price($activity->total_price_member) : 'gratis';
 $guestPrice = $activity->price_guest ? Str::price($activity->total_price_guest) : 'gratis';
@@ -23,6 +24,16 @@ if ($activity->available_seats === 0) {
     $seats = sprintf('%d van %d plekken beschikbaar', $activity->available_seats, $activity->seats);
 }
 @endphp
+
+@if ($activity->image->exists())
+@push('main.styles')
+<style type="text/css" nonce="{{ csp_nonce() }}">
+.{{ $headerClass }} {
+    background-image: url('{{ $activity->image->url() }}');
+}
+</style>
+@endpush
+@endif
 
 @section('title', "{$activity->name} - Activity - Gumbo Millennium")
 

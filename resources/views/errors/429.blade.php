@@ -1,5 +1,5 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Too Many Requests'))
-@section('code', '429')
-@section('message', __('Too Many Requests'))
+@section('error.title', 'Te veel aanvragen')
+@section('error.code', '429')
+@section('error.message', 'Het lijkt er op dat er wat veel aanvragen vanaf jouw adres komen. Probeer het later opnieuw.')

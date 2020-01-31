@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity;
+use App\Models\Enrollment;
 use App\Models\Page;
 use Carbon\Carbon;
 use Illuminate\Cache\Repository;
@@ -22,7 +23,7 @@ class PageController extends Controller
      *
      * @return Response
      */
-    public function homepage()
+    public function homepage(Request $request)
     {
         $nextEvent = Activity::query()
             ->available()
@@ -30,9 +31,19 @@ class PageController extends Controller
             ->orderBy('start_date')
             ->first();
 
-        return view('content.home', [
-            'nextEvent' => $nextEvent
-        ]);
+        $enrollments = [];
+        if ($request->user() && $nextEvent) {
+            $enrollments = Enrollment::query()
+                ->whereUserId($request->user()->id)
+                ->where('activity_id', $nextEvent->id)
+                ->orderBy('created_at', 'asc')
+                ->get()
+                ->keyBy('activity_id');
+        }
+
+        // Return view
+        return response()
+            ->view('content.home', compact('nextEvent', 'enrollments'));
     }
 
     /**

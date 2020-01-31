@@ -30,6 +30,9 @@ module.exports = {
         14: '3.5rem',
         16: '4rem'
       },
+      fontSize: {
+        'huge': '8rem'
+      },
       colors: gumboSettings.colors,
       backgroundPosition: {
         center: 'center'

@@ -12,6 +12,5 @@ trait HandlesStripeItems
     use FormatsStripeData;
     use HandlesCustomers;
     use HandlesPaymentIntents;
-    use HandlesPaymentMethods;
     use HandlesInvoices;
 }

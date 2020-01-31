@@ -70,23 +70,18 @@
   .activity-summary__card {
     @apply flex flex-row items-start;
   }
-
   .activity-summary__action {
     @apply block;
   }
-
   .activity-summary__action-inline {
     @apply hidden;
   }
-
   .activity-summary__stats {
     @apply flex-row;
   }
-
   .activity-summary__stat-group {
     @apply mr-8 w-1/3;
   }
-
   .activity-summary__stat {
     @apply mb-0;
   }

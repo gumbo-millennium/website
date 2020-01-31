@@ -60,7 +60,7 @@ class PagePolicy
      */
     public function update(User $user, Page $page)
     {
-        return $user->can('manage', Page::class);
+        return $user->can('manage', Page::class) && $page->type !== Page::TYPE_GIT;
     }
 
     /**
@@ -73,7 +73,7 @@ class PagePolicy
      */
     public function delete(User $user, Page $page)
     {
-        return $user->can('manage', Page::class);
+        return $user->can('manage', Page::class) && $page->type === Page::TYPE_USER;
     }
 
     /**

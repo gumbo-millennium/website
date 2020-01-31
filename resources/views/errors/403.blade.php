@@ -1,11 +1,12 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Forbidden'))
-@section('code', '403')
-@section('message', __($exception->getMessage() ?: 'Forbidden'))
+@php
+$message = __($exception->getMessage());
+if (!empty($message)) {
+    $message = 'Sorry, jouw account heeft niet de benodigde rechten om deze pagina te zien.';
+}
+@endphp
 
-@section('image')
-<div style="background-image: url({{ mix('/images/403.svg') }});"
-    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
-</div>
-@endsection
+@section('error.title', 'Toegang geweigerd')
+@section('error.code', '403')
+@section('error.message', $message)

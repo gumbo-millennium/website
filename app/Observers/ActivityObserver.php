@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\Stripe\UpdateCouponJob;
 use App\Models\Activity;
 
 /**
@@ -34,31 +35,26 @@ class ActivityObserver
             Normalize prices
         */
         // Ensure ticket prices are null or positive
-        if ($activity->price_member !== null && $activity->price_member <= 0) {
-            $activity->price_member = null;
+        if ($activity->member_discount !== null && $activity->member_discount <= 0) {
+            $activity->member_discount = null;
         }
 
         // Ensure guest ticket prices are null or positive
-        if ($activity->price_guest !== null && $activity->price_guest <= 0) {
-            $activity->price_guest = null;
+        if ($activity->price !== null && $activity->price <= 0) {
+            $activity->price = null;
         }
 
         // Ensure the ticket prices for guests are at or higher than the ticket prices for members
-        if ($activity->price_member !== null) {
-            if ($activity->price_guest !== null && $activity->price_guest < $activity->price) {
-                $activity->price_guest = $activity->price;
+        if ($activity->member_discount !== null) {
+            if ($activity->price !== null && $activity->member_discount > $activity->price) {
+                $activity->member_discount = $activity->price;
             }
         }
 
         /*
             Normalize enrollment dates
         */
-        $notOpenFree = (
-            $activity->seats !== null ||
-            $activity->public_seats !== null ||
-            $activity->price_member !== null ||
-            $activity->price_guest !== null
-        );
+        $notOpenFree = $activity->seats !== null || !$activity->is_free;
 
         // Cap enrollment end on the end date of the activity end
         if ($activity->enrollment_end > $activity->end_date) {
@@ -74,5 +70,15 @@ class ActivityObserver
         if ($activity->enrollment_start !== null && $activity->enrollment_end === null) {
             $activity->enrollment_end = $activity->start_date;
         }
+    }
+
+    /**
+     * Update the coupon
+     * @param Activity $activity
+     * @return void
+     */
+    public function saved(Activity $activity)
+    {
+        UpdateCouponJob::dispatch($activity);
     }
 }

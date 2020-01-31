@@ -16,8 +16,9 @@ return [
      * https://stripe.com/docs/api#event_types.
      */
     'jobs' => [
-        'charge_succeeded' => App\Jobs\Stripe\HandleChargeSucceeded::class,
-        'charge_refunded' => App\Jobs\Stripe\HandleChargeRefunded::class,
+        // Important payment actions
+        'invoice_payment_succeeded' => App\Jobs\Stripe\HandleInvoicePaid::class,
+        'source_chargeable' => App\Jobs\Stripe\HandleSourceChargeable::class,
     ],
 
     /*

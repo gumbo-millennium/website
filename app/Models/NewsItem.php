@@ -6,6 +6,7 @@ use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use InvalidArgumentException;
 
 /**
  * A news article
@@ -84,7 +85,7 @@ class NewsItem extends SluggableModel
      * Scope to available posts
      * @param Builder $query
      * @return Illuminate\Database\Eloquent\Builder
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function scopeAvailable(Builder $query): Builder
     {

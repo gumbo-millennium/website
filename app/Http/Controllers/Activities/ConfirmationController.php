@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Activities;
 
-use App\Http\Controllers\Activities\Traits\ConsistentRedirects;
+use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
 use App\Http\Controllers\Activities\Traits\ProvidesBankList;
 use App\Http\Controllers\Controller;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 class ConfirmationController extends Controller
 {
-    use ConsistentRedirects;
+    use HasEnrollments;
     use HandlesStripeItems;
     use ProvidesBankList;
 
@@ -47,11 +47,8 @@ class ConfirmationController extends Controller
      */
     public function form(Request $request, Activity $activity)
     {
-        // Get enrollment, or a fully supplied redirect.
-        $enrollment = $this->findValidEnrollmentOrRedirect($request, $activity);
-        if ($enrollment instanceof RedirectResponse) {
-            return $enrollment;
-        }
+        // Get enrollment
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Redirect to the display view if the user is already enrolled
         if ($enrollment->state->is(Paid::class)) {
@@ -71,11 +68,8 @@ class ConfirmationController extends Controller
      */
     public function start(Request $request, Activity $activity)
     {
-        // Get enrollment, or a fully supplied redirect.
-        $enrollment = $this->findValidEnrollmentOrRedirect($request, $activity);
-        if ($enrollment instanceof RedirectResponse) {
-            return $enrollment;
-        }
+        // Get enrollment
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Get bank list
         $bankList = $this->getBankList();
@@ -142,12 +136,8 @@ class ConfirmationController extends Controller
         // Get user
         $user = $request->user();
 
-        // Get enrollment, or a fully supplied redirect.
-        $enrollment = $this->findValidEnrollmentOrRedirect($request, $activity);
-        if ($enrollment instanceof RedirectResponse) {
-            logger()->info('Recieved redirect', ['redirect' => $enrollment]);
-            return $enrollment;
-        }
+        // Get enrollment
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Check if the enrollment is marked completed (via webhooks)
         if ($enrollment->state->is(Paid::class)) {
@@ -157,7 +147,7 @@ class ConfirmationController extends Controller
                 'user' => $enrollment->user,
                 'code' => $enrollment->payment_intent,
             ]);
-            flash("Je bent succesvol ingeschreven voor {$activity->title}.", 'success');
+            flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -201,7 +191,7 @@ class ConfirmationController extends Controller
             $enrollment->save();
 
             // Flash message and continue
-            flash("Je bent succesvol ingeschreven voor {$activity->title}.", 'success');
+            flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -233,11 +223,8 @@ class ConfirmationController extends Controller
      */
     private function findValidEnrollmentOrRedirect(Request $request, Activity $activity)
     {
-        // Use ConsistentRedirects first
-        $enrollment = $this->findActiveEnrollmentOrRedirect($request, $activity);
-        if ($enrollment instanceof RedirectResponse) {
-            return $enrollment;
-        }
+        // Get enrollment
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Redirect to the edit view if the user hasn't completed it yet.
         if ($activity->form !== null && empty($enrollment->data)) {

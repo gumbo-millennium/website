@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\ConvertsToStripe;
 use App\Notifications\VerifyEmail;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
@@ -16,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmailContract
+class User extends Authenticatable implements MustVerifyEmailContract, ConvertsToStripe
 {
     use Notifiable;
     use HasRoles;
@@ -180,5 +181,17 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail());
+    }
+
+    /**
+     * Returns Stripe-ready array
+     * @return array
+     */
+    public function toStripeCustomer(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email
+        ];
     }
 }

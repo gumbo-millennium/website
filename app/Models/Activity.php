@@ -189,7 +189,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getOrganiserAttribute(): ?string
     {
-        return optional($this->role)->title;
+        return optional($this->role)->name;
     }
 
     /**
@@ -316,17 +316,12 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getDiscountsAvailableAttribute(): ?int
     {
         // None if no discount is available
-        if (!$this->member_discount) {
+        if (!$this->member_discount || !$this->discount_count) {
             return null;
         }
 
-        // Infinite if zero or empty
-        if (!$this->discount_count) {
-            return \INF;
-        }
-
         // Count them
-        return max(0, $this->discount_count - $this->enrollments()->where('user_type', 'member')->count());
+        return (int) max(0, $this->discount_count - $this->enrollments()->where('user_type', 'member')->count());
     }
 
     /**
@@ -349,16 +344,13 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->is_free) {
             // If it's free, mention it
             return 'gratis';
-        } elseif ($this->price && $this->member_discount === $this->price && $this->discount_count) {
+        } elseif ($this->price && $this->member_discount === $this->price && $this->discounts_available > 0) {
             // Free for members
-            return sprintf('gratis voor %d leden', $this->discount_count);
-        } elseif ($this->price && $this->member_discount === $this->price) {
+            return sprintf('gratis voor %d leden', $this->discounts_available);
+        } elseif ($this->price && $this->member_discount === $this->price && $this->discounts_available === null) {
             // Free for members
-            return 'gratis voor leden (beperkte korting)';
-        } elseif ($this->member_discount && $this->price && $this->discount_count) {
-            // Discounted for members
-            return sprintf('vanaf %s (beperkte korting)', Str::price($this->total_discount_price ?? 0));
-        } elseif ($this->member_discount && $this->price) {
+            return 'gratis voor leden';
+        } elseif ($this->member_discount && $this->price && $this->discounts_available !== 0) {
             // Discounted for members
             return sprintf('vanaf %s', Str::price($this->total_discount_price ?? 0));
         }
@@ -420,5 +412,17 @@ class Activity extends SluggableModel implements AttachableInterface
             'https://www.qwant.com/maps/?%s',
             \http_build_query(['q' => $this->location_address])
         );
+    }
+
+    /**
+     * Returns a complete statement, up to 22 characters long
+     * @return string
+     */
+    public function getFullStatementAttribute(): string
+    {
+        if (!empty($this->statement)) {
+            return Str::limit(Str::ascii("Gumbo {$this->statement}", 'nl'), 22, '');
+        }
+        return 'Gumbo Millennium';
     }
 }

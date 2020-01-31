@@ -30,8 +30,8 @@ module.exports = ({ file, options, env }) => {
       content: [
         'app/**/*.php',
         'config/**/*.php',
-        'resources/**/*.blade.php',
-        'resources/**/*.html',
+        'resources/views/**/*.blade.php',
+        'resources/assets/html/**/*.html',
         'resources/**/*.js',
         'resources/**/*.vue'
       ],

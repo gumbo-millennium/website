@@ -1,5 +1,5 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Unauthorized'))
-@section('code', '401')
-@section('message', __('Unauthorized'))
+@section('error.title', 'Authorisatie vereist')
+@section('error.code', '401')
+@section('error.message', 'Je moet inloggen om de gevraagde pagina te bekijken.')

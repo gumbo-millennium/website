@@ -1,11 +1,5 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Not Found'))
-@section('code', '404')
-@section('message', __('Not Found'))
-
-@section('image')
-<div style="background-image: url({{ mix('/images/404.svg') }});"
-    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
-</div>
-@endsection
+@section('error.title', 'Niet gevonden')
+@section('error.code', '404')
+@section('error.message', 'Sorry, deze pagina is niet (meer) beschikbaar.')

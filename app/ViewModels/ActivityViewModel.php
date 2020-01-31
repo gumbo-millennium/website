@@ -97,7 +97,7 @@ class ActivityViewModel extends GumboViewModel
         $member = optional($this->user)->is_member;
 
         // Check if true-ish (non-zero and not null)
-        return ($member ? $this->activity->price_member : $this->activity->price_guest) == true;
+        return ($member ? $this->activity->is_free_for_members : $this->activity->is_free) == true;
     }
 
     /**

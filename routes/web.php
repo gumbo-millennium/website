@@ -73,64 +73,30 @@ Route::permanentRedirect('/activities', '/activity');
 /**
  * Enrollments
  */
-Route::prefix('enroll')->name('enroll.')->group(function () {
-    // Default route¸ redirect → my enrollments
-    Route::permanentRedirect('/', '/me');
-
-    // My enrollments
-    Route::get('/me', 'Activities\\EnrollmentController@index')->name('index');
-
-    // Enroll status view
-    Route::get('/{activity}', 'Activities\\EnrollmentController@show')->name('show');
+Route::prefix('activity/{activity}/enroll')->name('enroll.')->group(function () {
+    // Actioon view
+    Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
     // Enroll start
-    Route::post('/{activity}/create', 'Activities\\EnrollmentController@store')->name('create');
+    Route::post('/', 'Activities\\EnrollmentController@create')->name('create');
 
-    // Enroll update
-    Route::get('/{activity}/update', 'Activities\\EnrollmentController@edit')->name('edit');
+    // Enroll form
+    Route::patch('/', 'Activities\\FormController@save')->name('edit');
 
-    // Enroll update
-    Route::post('/{activity}/update', 'Activities\\EnrollmentController@update');
+    // Enroll payment start
+    Route::post('/pay', 'Activities\\PaymentController@store')->name('pay');
 
-    // Enroll removal (confirm)
-    Route::get('/{activity}/delete', 'Activities\\EnrollmentController@delete')->name('delete');
+    // Enroll payment start
+    Route::get('/pay', 'Activities\\PaymentController@start')->name('pay-wait');
 
-    // Enroll removal (perform)
-    Route::delete('/{activity}/delete', 'Activities\\EnrollmentController@destroy');
-});
+    // Enroll payment complete
+    Route::get('/pay/complete', 'Activities\\PaymentController@complete')->name('pay-return');
 
-/**
- * Enrollment payments with Payment Intents
- */
-Route::prefix('enrollments/pay')->name('payment.')->group(function () {
-    // Default route¸ redirect → my enrollments
-    Route::permanentRedirect('/', '/enroll/me');
+    // Enroll form
+    Route::get('/delete', 'Activities\\EnrollmentController@delete')->name('remove');
 
-    // Enroll start
-    Route::get('/{activity}/start', 'Activities\\PaymentController@form')->name('start');
-
-    // Enroll start
-    Route::post('/{activity}/start', 'Activities\\PaymentController@start');
-
-    // Enroll update
-    Route::get('/{activity}/complete', 'Activities\\PaymentController@complete')->name('complete');
-});
-
-/**
- * Enrollment payments with Invoices
- */
-Route::prefix('enrollments/confirm')->name('enroll-confirm.')->group(function () {
-    // Default route¸ redirect → my enrollments
-    Route::permanentRedirect('/', '/enroll/me');
-
-    // Enroll start
-    Route::get('/{activity}/start', 'Activities\\ConfirmationController@form')->name('start');
-
-    // Enroll start
-    Route::post('/{activity}/start', 'Activities\\ConfirmationController@start');
-
-    // Enroll update
-    Route::get('/{activity}/complete', 'Activities\\ConfirmationController@complete')->name('complete');
+    // Enroll form (do)
+    Route::delete('/delete', 'Activities\\EnrollmentController@destroy');
 });
 
 /**
@@ -158,6 +124,7 @@ Route::prefix('join')->name('join.')->group(function () {
     Route::get('/welcome', 'JoinController@complete')->name('complete');
 });
 
+
 // Authentication and forgotten passwords
 Route::prefix('auth')->middleware($loginCsp)->group(function () {
     Route::auth(['verify' => true]);
@@ -168,10 +135,10 @@ Route::prefix('auth')->middleware($loginCsp)->group(function () {
 });
 
 // My account
-Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
-    Route::get('/', 'UserController@index')->name('home');
-    Route::get('/info', 'UserController@view')->name('info');
-    Route::patch('/info', 'UserController@update');
+Route::prefix('my-account')->name('account.')->middleware('auth')->group(function () {
+    Route::get('/', 'AccountController@index')->name('index');
+    Route::get('/edit', 'AccountController@edit')->name('edit');
+    Route::patch('/update', 'AccountController@update')->name('update');
 });
 
 // Onboarding URLs

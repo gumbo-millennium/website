@@ -4,7 +4,7 @@
 $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@example.gumbo-millennium.nl')->get() : [];
 @endphp
 
-@section('login-content-small')
+@section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Even over <strong>je privacy</strong></h1>
 <p class="text-lg text-gray-700 mb-4">De impact van een account op de site op je privacy.</p>

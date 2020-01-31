@@ -33,10 +33,9 @@ trait FormatsStripeData
         // Assign description and statement
         $description = sprintf(
             'Inschrijving voor %s (%s)',
-            $activity->title,
+            $activity->name,
             $user->is_member ? 'lid' : 'bezoekers'
         );
-        $statement = sprintf('Gumbo %s', Str::limit($activity->statement ?? $activity->title, 16));
 
         // Return data
         return [
@@ -44,7 +43,7 @@ trait FormatsStripeData
             'amount' => $enrollment->total_price,
             'description' => $description,
             'receipt_email' => $user->email,
-            'statement_descriptor' => $statement,
+            'statement_descriptor' => $activity->full_statement,
             'metadata' => [
                 'user-name' => $user->name,
                 'user-id' => $user->id,

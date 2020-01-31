@@ -1,11 +1,10 @@
-@extends('errors::illustrated-layout')
+@extends('layout.variants.error')
 
-@section('title', __('Server Error'))
-@section('code', '500')
-@section('message', __('Server Error'))
-
-@section('image')
-<div style="background-image: url({{ mix('/images/500.svg') }});"
-    class="absolute pin bg-cover bg-no-repeat md:bg-left lg:bg-center">
-</div>
+@section('error.title', 'Kah BOOOHM!')
+@section('error.code', '500 Internal Server Error')
+@section('error.message')
+Oh nee, er is iets erg fout gegaan en nu is alles stuk.<br />
+Maar geen paniek, de fout is gemeld en de DC zal er naar gaan kijken.<br /><br />
+Sorry voor de vertraging.
 @endsection
+

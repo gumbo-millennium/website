@@ -90,16 +90,7 @@ class ActivityPolicy
             return false;
         }
 
-        // Get the price
-        $price = $user->is_member ? $activity->price_member : $activity->price_guest;
-
-        // Free events don't have any more requirements
-        if (!$price) {
-            return true;
-        }
-
-        // Check for refunds
-        // TODO
+        // Allow
         return true;
     }
 

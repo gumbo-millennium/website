@@ -239,7 +239,7 @@ class Activity extends Resource
                 ->step(0.25)
                 ->nullable()
                 ->nullValues([''])
-                ->rules('nullable', 'numeric', 'min:0.50', 'lt:total_price')
+                ->rules('nullable', 'numeric', 'min:0.50', 'lte:price')
                 ->help('In euro')
                 ->onlyOnForms(),
 

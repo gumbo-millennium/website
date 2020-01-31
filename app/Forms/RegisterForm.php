@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
+use App\Forms\Traits\UserDataForm;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\Form;
@@ -15,6 +16,8 @@ use Kris\LaravelFormBuilder\Form;
  */
 class RegisterForm extends Form
 {
+    use UserDataForm;
+
     private const DUMMY_NAMES = [
         ['John', null, 'Wick'],
         ['Willie', 'van', 'Oranje'],
@@ -39,6 +42,7 @@ class RegisterForm extends Form
     public function buildForm()
     {
         $dummyName = $this->getPlaceholderName();
+        $passwordPlaceholder = sprintf('hunter%d', now()->year);
 
         $this
             ->add('first_name', 'text', [
@@ -66,27 +70,18 @@ class RegisterForm extends Form
                     'autocomplete' => 'family-name'
                 ],
             ])
-            ->add('email', 'email', [
-                'label' => 'E-mailadres',
-                'rules' => 'required|email|unique:users,email',
-                'attr' => [
-                    'placeholder' => $dummyName[3],
-                    'autocomplete' => 'email'
-                ],
-                'help_block' => [
-                    // phpcs:disable Generic.Files.LineLength.TooLong
-                    'text' => <<<HTML
-                    Ben je lid van Gumbo? Typ hier dan het e-mailadres in dat bekend is bij het bestuur.
-                    Je krijgt dan automatisch je lidstatus toegewezen.
-                    HTML
-                    // phpcs:enable Generic.Files.LineLength.TooLong
-                ],
+            ->addEmail(null, [
+                'attr.placeholder' => $dummyName[3],
             ])
             ->add('password', 'password', [
                 'label' => 'Wachtwoord',
-                'rules' => 'required|string|min:10',
+                'rules' => [
+                    'required',
+                    'string',
+                    'min:10'
+                ],
                 'attr' => [
-                    'placeholder' => sprintf('hunter%d', now()->year),
+                    'placeholder' => $passwordPlaceholder,
                     'autocomplete' => 'new-password',
                     'minlength' => '10'
                 ],
@@ -96,35 +91,7 @@ class RegisterForm extends Form
                     // phpcs:enable Generic.Files.LineLength.TooLong
                 ],
             ])
-            ->add('alias', 'text', [
-                'label' => 'Alias',
-                'rules' => [
-                    'nullable',
-                    'string',
-                    'min:4',
-                    'regex:/^[a-z0-9][a-z0-9-]{2,}[a-z0-9]$/',
-                    'unique:users,alias',
-                ],
-                'error_messages' => [
-                    // phpcs:disable Generic.Files.LineLength.TooLong
-                    'alias.min' => 'Je alias moet minimaal 4 tekens lang zijn',
-                    'alias.regex' => 'Je alias mag alleen bestaan uit kleine letters, cijfers en eventueel streepjes in het midden',
-                    'alias.unique' => 'Deze alias is al in gebruik door een andere gebruiker.'
-                    // phpcs:enable Generic.Files.LineLength.TooLong
-                ],
-                'help_block' => [
-                    // phpcs:disable Generic.Files.LineLength.TooLong
-                    'text' => <<<HTML
-                    Kies een optionele nickname die wordt getoond in plaats van je voornaam.<br />
-                    Je kan gebruik maken van kleine letters en nummers, en eventueel streepjes in het midden.
-                    HTML,
-                    // phpcs:enable Generic.Files.LineLength.TooLong
-                ],
-                'attr' => [
-                    'autocomplete' => 'nickname',
-                    'pattern' => '[a-z0-9][a-z0-9-]{2,}[a-z0-9]'
-                ],
-            ])
+            ->addAlias()
             ->add('submit', 'submit', [
                 'label' => 'Verder'
             ]);

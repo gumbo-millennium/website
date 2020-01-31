@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\Payment;
 use App\Models\States\Enrollment\Cancelled;
+use App\Models\States\Enrollment\Paid;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -92,6 +93,12 @@ class EnrollmentPolicy
             return false;
         }
 
+        // Disallow cancelling paid enrollments
+        if ($enrollment->state->is(Paid::class)) {
+            logger()->info('Unenroll {enrollment} rejected. Already paid.', compact('enrollment'));
+            return false;
+        }
+
         // Get activity
         $activity = $enrollment->activity;
 
@@ -127,7 +134,7 @@ class EnrollmentPolicy
      */
     public function delete()
     {
-        // Deleting permissions is not allowed
+        // Deleting enrollments is not allowed
         return false;
     }
 

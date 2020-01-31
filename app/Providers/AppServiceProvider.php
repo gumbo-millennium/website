@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Contracts\StripeServiceContract;
 use App\Services\StripeErrorService;
 use App\Services\MenuProvider;
+use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
@@ -26,13 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Add Stripe error handler service
-        $this->app->bind(StripeErrorService::class);
-
-        // Register nav menu as $menu on all requests
-        $this->app->singleton(MenuProvider::class, function () {
-            return new MenuProvider();
-        });
+        // Add Stripe services
+        $this->app->bind(StripeServiceContract::class, fn() => new StripeService());
 
         // Bind Guzzle client
         $this->app->bind(GuzzleClient::class, function () {
