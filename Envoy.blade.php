@@ -135,9 +135,6 @@
     echo -e "\nLink storage"
     ln -s "{{ $storagePath }}" "{{ $deployPath }}/storage"
     ln -s "{{ $envPath }}" "{{ $deployPath }}/.env"
-
-    {{-- Link public storage --}}
-    php "{{ $deployPath }}/artisan" storage:link
 @endtask
 
 @task('deployment_install')
@@ -161,6 +158,10 @@
         --no-progress \
         --no-suggest \
         install
+
+    {{-- Link public storage --}}
+    echo -e "\nLink public directory to storage"
+    php "{{ $deployPath }}/artisan" storage:link
 @endtask
 
 @task('deployment_build')
