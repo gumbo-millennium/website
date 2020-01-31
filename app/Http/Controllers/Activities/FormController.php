@@ -42,7 +42,8 @@ class FormController extends Controller
         // Retrieve form
         $form = $this->getForm($activity, [
             'method' => 'PATCH',
-            'route' => route('enroll.edit', compact('activity'))
+            'route' => route('enroll.edit', compact('activity')),
+            'model' => $enrollment->form
         ]);
 
         // Skip if empty
@@ -91,15 +92,15 @@ class FormController extends Controller
             return null;
         }
 
-        $form = FormBuilder::plain($options);
+        $formFields = $activity->form;
+        $formFields[] = [
+            'type' => 'submit',
+            'value' => 'Versturen'
+        ];
 
-        // Add data
-        foreach ($formdata as $field) {
-            // TODO
-        }
-
-        // Add submit button
-        $form->add('submit', 'Versturen');
+        // Get form
+        /** @var Form $form */
+        $form = FormBuilder::createByArray($activity->form, $options);
 
         // Return
         return $form;
