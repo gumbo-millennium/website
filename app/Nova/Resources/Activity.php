@@ -13,6 +13,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -178,12 +179,15 @@ class Activity extends Resource
                 ->deletable()
                 ->nullable()
                 ->mimes(['png', 'jpg'])
-                ->help('Afbeelding die op de detailpagina en op Social Media getoond wordt.')
+                ->help('Afbeelding die op de detailpagina en op Social Media getoond wordt. Maximaal 2MB')
                 ->minWidth(1920)
                 ->minHeight(960)
                 ->rules(
                     'nullable',
-                    'image'
+                    'image',
+                    'mimes:jpg,png',
+                    'size:2048',
+                    Rule::dimensions()->maxWidth(1920)->maxHeight(600)
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')
