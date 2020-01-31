@@ -17,8 +17,8 @@ return [
      */
     'jobs' => [
         // Important payment actions
-        'invoice_payment_succeeded' => App\Jobs\Stripe\HandleInvoicePaid::class,
-        'source_chargeable' => App\Jobs\Stripe\HandleSourceChargeable::class,
+        'invoice_payment_succeeded' => App\Jobs\Stripe\Hooks\HandleInvoicePaid::class,
+        'source_chargeable' => App\Jobs\Stripe\Hooks\HandleSourceChargeable::class,
     ],
 
     /*

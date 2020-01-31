@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Stripe;
+namespace App\Jobs\Stripe\Hooks;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;

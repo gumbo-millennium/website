@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Jobs\Stripe;
+namespace App\Jobs\Stripe\Hooks;
 
+use App\Jobs\Stripe\StripeJob;
 use Spatie\WebhookClient\Models\WebhookCall;
 use Stripe\Event;
 use Stripe\StripeObject;
@@ -74,14 +75,9 @@ abstract class StripeWebhookJob extends StripeJob
             $stripeObject = null;
         }
 
-        // Call next
-        $this->process($stripeObject);
+        // Call process if it exists
+        if (\method_exists($this, 'process')) {
+            $this->process($stripeObject);
+        }
     }
-
-    /**
-     * Process the given event. Optionally a Stripe object is supplied
-     * @param null|StripeObject $object
-     * @return void
-     */
-    abstract protected function process(?StripeObject $object): void;
 }
