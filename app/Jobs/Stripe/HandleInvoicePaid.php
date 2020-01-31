@@ -21,11 +21,10 @@ class HandleInvoicePaid extends StripeWebhookJob
     /**
      * Execute the job.
      *
-     * @param Event $event
      * @param Invoice $invoice
      * @return void
      */
-    public function process(Event $event, Invoice $invoice = null): void
+    protected function process(?Invoice $invoice): void
     {
         // Check if the payment intent exists
         /** @var Enrollment $enrollment */

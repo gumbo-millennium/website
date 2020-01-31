@@ -17,7 +17,14 @@ abstract class StripeWebhookJob extends StripeJob
      *
      * @var WebhookCall
      */
-    protected $webhook;
+    protected WebhookCall $webhook;
+
+    /**
+     * The event we're processing
+     *
+     * @var Event
+     */
+    protected Event $event;
 
     /**
      * Create a new job instance.
@@ -38,7 +45,7 @@ abstract class StripeWebhookJob extends StripeJob
     final public function handle(): void
     {
         // Get event
-        $event = Event::constructFrom($this->webhook->payload);
+        $this->event = $event = Event::constructFrom($this->webhook->payload);
 
         // Ensure that the application is in the same mode as the source of the event.
         // This ensures that test data is never read by systems in production
@@ -68,18 +75,13 @@ abstract class StripeWebhookJob extends StripeJob
         }
 
         // Call next
-        $this->process($event, $stripeObject);
+        $this->process($stripeObject);
     }
 
     /**
      * Process the given event. Optionally a Stripe object is supplied
-     * @param Event $event
      * @param null|StripeObject $object
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function process(Event $event): void
-    {
-        // noop
-    }
+    abstract protected function process(?StripeObject $object): void;
 }

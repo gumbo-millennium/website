@@ -36,6 +36,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
      *
      * @param  mixed  $notifiable
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
@@ -50,12 +51,19 @@ class EnrollmentPaid extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $enrollment = $this->enrollment->refresh()->loadMissing(['user', 'activity', 'activity.role:id,title']);
+        // Reload enrollment
+        $enrollment = $this->enrollment
+            ->refresh()
+            ->loadMissing(['user', 'activity', 'activity.role:id,title']);
+
+        // Get some shorthands
         $user = $enrollment->user;
         $activity = $enrollment->activity;
 
+        // Try to download the PDF
         $pdf = $this->getInvoicePdf($this->enrollment);
 
+        // Send mail
         $mail = (new MailMessage())
             ->greeting('Bedankt voor je betaling!')
             ->line(<<<TEXT
@@ -105,7 +113,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $stripeService = app(StripeServiceContract::class);
 
         // Get invoice
-        $invoice = $stripeService->getInvoice($this->enrollment);
+        $invoice = $stripeService->getInvoice($enrollment);
         if (!$invoice) {
             return null;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Models\JoinSubmission;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;

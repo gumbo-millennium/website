@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Middleware;
 
+use RuntimeException;
 use Stripe\Stripe;
 
 class RequiresStripeKey
@@ -15,10 +16,13 @@ class RequiresStripeKey
      */
     public function handle($job, $next)
     {
+        // Fail if key is missing
         if (empty(Stripe::getApiKey())) {
-            $job->fail('No API key set for Stripe');
+            $job->fail(new RuntimeException('No API key set for Stripe'));
+            return;
         }
 
+        // Start job
         $next($job);
     }
 }
