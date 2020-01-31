@@ -23,9 +23,9 @@ abstract class StripeWebhookJob extends StripeJob
     /**
      * The event we're processing
      *
-     * @var Event
+     * @var null|Event
      */
-    protected Event $event;
+    protected ?Event $event = null;
 
     /**
      * Create a new job instance.

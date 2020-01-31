@@ -5,6 +5,9 @@ namespace App\Notifications;
 use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\RequestOptions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\File;
@@ -72,17 +75,23 @@ class EnrollmentPaid extends Notification implements ShouldQueue
             TEXT)
             ->action('Bekijk activiteit', route('activity.show', compact('activity')));
 
+        // Add PDF if present
         if ($pdf) {
             $mail = $mail
                 ->line('In de bijlage vind je de betaalde factuur.')
                 ->attachData(Storage::get($pdf), basename($pdf), ['mime' => 'application/pdf']);
         }
 
+        // Finally get some closure
         $tail = 'hopelijk tot de volgende!';
-        if ($activity->role->title) {
-            $tail = "De {$activity->role->title} is je erg dankbaar :)";
+
+        // Add thank you from the group if present
+        $group = optional($activity->role)->title;
+        if ($group) {
+            $tail = "De {$group} is je erg dankbaar :)";
         }
 
+        // Send the mail with the final goodbye
         return $mail
             ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, $tail.");
     }
@@ -124,23 +133,42 @@ class EnrollmentPaid extends Notification implements ShouldQueue
             return null;
         }
 
-
-        // Get PDF
-        /** @var Client $client */
-        $client = app(Client::class);
+        // Get temp file
         $target = tempnam(\sys_get_temp_dir(), 'pdf');
-        $response = $client->get($pdfUri, [
-            'http_error' => false,
-            'sink' => $target
-        ]);
 
-        // Fail if non-200
-        if ($response->getStatusCode() !== 200) {
-            return null;
+        try {
+            /** @var Client $client */
+            $client = app(Client::class);
+
+            // Make get request
+            $response = $client->get($pdfUri, [
+                // Write response to file
+                RequestOptions::SINK => $target,
+
+                // this API connects quickly, but generates PDFs on the fly, which is slow.
+                RequestOptions::CONNECT_TIMEOUT => 15.00,
+                RequestOptions::READ_TIMEOUT => 30.00,
+                RequestOptions::TIMEOUT => 45.00
+            ]);
+
+            // Generate filename
+            $filename = sprintf('%s.pdf', Str::slug("invoice {$invoice->number}"));
+
+            // Store sink
+            return Storage::putFileAs('payment/pdfs', new File($target), $filename);
+        } catch (ConnectException $exception) {
+            logger()->warning(
+                'Failed to connect to Stripe for Invoice PDF',
+                compact('exception', 'enrollment', 'invoice')
+            );
+        } catch (ClientException $exception) {
+            logger()->warning(
+                'Failed to get Invoice PDF from Stripe server',
+                compact('exception', 'enrollment', 'invoice')
+            );
         }
 
-        // Store file
-        $filename = sprintf('%s.pdf', Str::slug("invoice {$invoice->number}"));
-        return Storage::putFileAs('payment/pdfs', new File($target), $filename);
+        // Request failed
+        return null;
     }
 }

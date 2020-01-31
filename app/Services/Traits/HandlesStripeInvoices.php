@@ -133,7 +133,7 @@ trait HandlesStripeInvoices
         $this->createPendingInvoiceItems($customer, $computed->get('items'));
 
         // Update user discount
-        $this->updateUserDiscount($customer, $computed->get('coupon'));
+        $this->updateCustomerDiscount($customer, $computed->get('coupon'));
 
         // Create the actual invoice
         $invoice = $this->createActualInvoice($customer, $enrollment);
