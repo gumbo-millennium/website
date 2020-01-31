@@ -11,9 +11,10 @@ jobs:
     name: "Front-end build and test"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Cache node_modules
+        id: cache-node
         uses: actions/cache@v1
         with:
           path: node_modules
@@ -26,6 +27,7 @@ jobs:
         run: cp .github/actions.env .env
 
       - name: Install Yarn dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Build Front-end
@@ -57,7 +59,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@master
@@ -140,7 +142,7 @@ jobs:
           extensions: exif,json,mbstring
 
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install Laravel Envoy
         run: composer global require laravel/envoy

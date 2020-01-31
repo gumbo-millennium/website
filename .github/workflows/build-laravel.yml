@@ -12,10 +12,11 @@ jobs:
     name: "Front-end build and test"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Cache node_modules
         uses: actions/cache@v1
+        id: cache-node
         with:
           path: node_modules
           key: node-build-${{ hashFiles('**/yarn.lock') }}
@@ -27,6 +28,7 @@ jobs:
         run: cp .github/actions.env .env
 
       - name: Install Yarn dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Build Front-end
