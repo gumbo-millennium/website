@@ -24,7 +24,7 @@
 }
 
 .activity-card__body {
-  @apply flex-grow ml-4 p-4;
+  @apply flex-grow ml-4 px-4;
 }
 
 .activity-card__title {
@@ -45,7 +45,7 @@
 
 .activity-card__fact {
   @apply flex flex-row items-center;
-  @apply w-full mb-2;
+  @apply w-full mb-2 pb-2;
 }
 
 .activity-card__fact-icon {
@@ -72,23 +72,30 @@
 @screen md {
   .activity-card__image-container {
     @apply h-64 w-48;
+    @apply mt-0;
   }
   .activity-card__image--empty {
     @apply h-64 w-48;
   }
+  .activity-card__body {
+    @apply py-4;
+  }
   .activity-card__fact {
     @apply w-1/2;
+    @apply pb-0;
   }
 }
 
 @screen lg {
   .activity-card__fact {
     @apply w-full;
+    @apply pb-2;
   }
 }
 
 @screen xl {
   .activity-card__fact {
     @apply w-1/2;
+    @apply pb-0;
   }
 }
