@@ -50,11 +50,14 @@
         "barryvdh/laravel-ide-helper": "^2.5",
         "facade/ignition": "^1.16",
         "fzaninotto/faker": "^1.9",
+        "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "jakub-onderka/php-parallel-lint": "^1.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "phpmd/phpmd": "^2.8.1",
         "phpunit/phpunit": "^8.0",
         "sempro/phpunit-pretty-print": "^1.2",
+        "slevomat/coding-standard": "^6.1",
         "squizlabs/php_codesniffer": "^3.3"
     },
     "autoload": {
@@ -123,6 +126,7 @@
           "@php artisan horizon:assets"
         ],
         "lint": [
+          "parallel-lint --exclude vendor --exclude node_modules .",
           "phpcs",
           "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
         ],
