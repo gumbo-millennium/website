@@ -186,7 +186,7 @@ class Activity extends Resource
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
-                    'size:2048',
+                    'max:2048',
                     Rule::dimensions()->maxWidth(1920)->maxHeight(600)
                 ),
 
