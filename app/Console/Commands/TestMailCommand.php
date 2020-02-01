@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\AccountCreatedMail;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\User;
+use App\Notifications\EnrollmentPaid;
 use App\Notifications\VerifyEmail;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Mail\Mailable;
@@ -16,7 +18,9 @@ use Illuminate\Support\Facades\Mail;
 class TestMailCommand extends Command
 {
     private const EMAIL_CLASSES = [
+        AccountCreatedMail::class,
         VerifyEmail::class,
+        EnrollmentPaid::class,
     ];
     /**
      * The name and signature of the console command.
