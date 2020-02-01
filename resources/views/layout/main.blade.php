@@ -14,6 +14,9 @@
     {{-- Stylesheet --}}
     <link rel="stylesheet" href="{{ mix('/app.css') }}">
 
+    {{-- Google Fonts --}}
+    <link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
+
     {{-- Inlie stylesheets --}}
     @stack('main.styles')
 

@@ -4,6 +4,7 @@
 
 //  Load our settings
 const gumboSettings = require('./tailwind.gumbo')
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 // Build configs
 module.exports = {
@@ -29,6 +30,9 @@ module.exports = {
         12: '3rem',
         14: '3.5rem',
         16: '4rem'
+      },
+      fontFamily: {
+        title: ['Patua One'].concat(defaultTheme.fontFamily.sans)
       },
       fontSize: {
         'huge': '8rem'
