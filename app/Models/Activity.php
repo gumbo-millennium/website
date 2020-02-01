@@ -107,10 +107,13 @@ class Activity extends SluggableModel implements AttachableInterface
         $this->hasAttachedFile('image', [
             'storage' => 'paperclip-public',
             'variants' => [
+                Variant::make('poster-small')->steps([
+                    ResizeStep::make()->width($poster->width / 2)->height($poster->height / 2)
+                ]),
                 Variant::make('poster')->steps([
                     ResizeStep::make()->width($poster->width)->height($poster->height)
                 ]),
-                Variant::make('poster@2x')->steps([
+                Variant::make('poster-large')->steps([
                     ResizeStep::make()->width($poster->width * 2)->height($poster->height * 2)
                 ]),
                 // Make banner-sized image (HD and HDPI)

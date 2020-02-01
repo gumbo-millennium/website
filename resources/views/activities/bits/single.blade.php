@@ -24,6 +24,12 @@ $price = $activity->price_label;
 $seats = 'Onbeperkt plaats';
 if ($isSoldOut) {
     $seats = 'Uitverkocht';
+} elseif ($activity->seats > 0 && ($activity->available_seats < 10)) {
+    $seats = sprintf(
+        'Nog %d %s',
+        $activity->available_seats,
+        $activity->available_seats === 1 ? 'plek' : 'plekken'
+    );
 } elseif ($activity->seats > 0) {
     $seats = "{$activity->seats} plekken";
 }
@@ -35,7 +41,11 @@ if ($isSoldOut) {
         <img
             class="activity-card__image"
             src="{{ $activity->image->url('poster') }}"
-            srcset="{{ $activity->image->url('poster') }}, {{ $activity->image->url('poster@2x') }}" />
+            srcset="
+                {{ $activity->image->url('poster-small') }} 96w,
+                {{ $activity->image->url('poster') }} 192w,
+                {{ $activity->image->url('poster-large') }} 384w
+            " />
         @else
         <img
             class="activity-card__image activity-card__image--empty"

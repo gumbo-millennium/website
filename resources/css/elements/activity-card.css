@@ -6,7 +6,7 @@
 }
 
 .activity-card__image-container {
-  @apply h-64 w-48;
+  @apply h-32 w-24;
 }
 
 .activity-card__image {
@@ -16,7 +16,7 @@
 }
 
 .activity-card__image--empty {
-  @apply h-64 w-48;
+  @apply h-32 w-24;
   @apply px-8;
   @apply bg-brand-600;
   @apply object-contain;
@@ -48,24 +48,6 @@
   @apply w-full mb-2;
 }
 
-@screen md {
-  .activity-card__fact {
-    @apply w-1/2;
-  }
-}
-
-@screen lg {
-  .activity-card__fact {
-    @apply w-full;
-  }
-}
-
-@screen xl {
-  .activity-card__fact {
-    @apply w-1/2;
-  }
-}
-
 .activity-card__fact-icon {
   @apply h-4 w-6 mr-2;
 }
@@ -85,4 +67,28 @@
 
 .activity-card__read-more-label {
   @apply leading-none font-normal;
+}
+
+@screen md {
+  .activity-card__image-container {
+    @apply h-64 w-48;
+  }
+  .activity-card__image--empty {
+    @apply h-64 w-48;
+  }
+  .activity-card__fact {
+    @apply w-1/2;
+  }
+}
+
+@screen lg {
+  .activity-card__fact {
+    @apply w-full;
+  }
+}
+
+@screen xl {
+  .activity-card__fact {
+    @apply w-1/2;
+  }
 }

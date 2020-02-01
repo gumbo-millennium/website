@@ -18,6 +18,11 @@ if ($user && $is_enrolled && !$is_stable) {
         $nextAction = sprintf('%s betalen via iDeal', Str::price($enrollment->total_price));
     }
 }
+
+$whenOpen = null;
+if (!$isOpen && $activity->enrollment_start > now()) {
+    $whenOpen = $activity->enrollment_start->isoFormat('[Opent op] D MMM [om] HH:mm');
+}
 @endphp
 
 <div class="flex flex-col items-center">
@@ -41,6 +46,9 @@ if ($user && $is_enrolled && !$is_stable) {
     {{-- Closed --}}
     @elseif (!$isOpen)
     <div class="btn m-0 btn--disabled" disabled>Inschrijvingen gesloten</div>
+    @if ($whenOpen)
+    <div class="mt-2 text-gray-500">{{ $whenOpen }}</div>
+    @endif
 
     {{-- Open --}}
     @else
