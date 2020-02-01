@@ -4,23 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="{{ mix('/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('/mail.css') }}">
 </head>
 <body>
-    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <table class="mail" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center">
-                <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <table class="mail__content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                     {{ $header ?? '' }}
-                    <p>I AM HEADER</p>
 
                     <!-- Email Body -->
                     <tr>
-                        <td class="body" width="100%" cellpadding="0" cellspacing="0">
-                            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                        <td class="mail-body" width="100%" cellpadding="0" cellspacing="0">
+                            <table class="mail-body__inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                                 <!-- Body content -->
                                 <tr>
-                                    <td class="content-cell">
+                                    <td class="mail-body__content">
                                         {{ Illuminate\Mail\Markdown::parse($slot) }}
 
                                         {{ $subcopy ?? '' }}
@@ -30,7 +29,6 @@
                         </td>
                     </tr>
 
-                    <p>I AM FOOTER</p>
                     {{ $footer ?? '' }}
                 </table>
             </td>

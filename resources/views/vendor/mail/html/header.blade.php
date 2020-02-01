@@ -1,5 +1,5 @@
 <tr>
-    <td class="header">
+    <td class="mail-header">
         <a href="{{ $url }}">
             {{ $slot }}
         </a>
