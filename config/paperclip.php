@@ -150,7 +150,7 @@ return [
     |
     */
 
-    'imagine' => Imagine\Imagick\Image::class,
+    'imagine' => Imagine\Imagick\Imagine::class,
 
     /*
     |--------------------------------------------------------------------------
