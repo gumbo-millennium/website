@@ -46,7 +46,9 @@ if ($isSoldOut) {
     {{-- Data --}}
     <div class="activity-card__body">
         {{-- Header --}}
-        <h2 class="activity-card__title">{{ $activity->name }}</h2>
+        <h2 class="activity-card__title">
+            <a href="{{ $url }}" class="activity-card__title-link">{{ $activity->name }}</a>
+        </h2>
 
         <p class="activity-card__lead">{{ $activity->tagline }}</p>
 
@@ -54,13 +56,21 @@ if ($isSoldOut) {
         <div class="activity-card__facts">
             {{-- Date --}}
             <div class="activity-card__fact">
-                @icon('solid/calendar', 'activity-card__fact-icon')
-                <time datetime="{{ $startTimestamp->toIso8601String() }}">{{ $startTimestamp->isoFormat('ddd D MMM') }}</time>
+                @icon('solid/clock', 'activity-card__fact-icon')
+                <time datetime="{{ $startTimestamp->toIso8601String() }}">{{ $startTimestamp->isoFormat('ddd D MMM, HH:mm') }}</time>
             </div>
             {{-- Time --}}
             <div class="activity-card__fact">
-                @icon('solid/clock', 'activity-card__fact-icon')
-                <span class="activity-card__fact-label">{{ $startTimestamp->isoFormat('HH:mm') }}</span>
+                @icon('solid/map-marker-alt', 'activity-card__fact-icon')
+                <div class="activity-card__fact-label">
+                    @empty($activity->location)
+                    <span class="activity-card__fact-label text-gray-600">Onbekend</span>
+                    @elseif ($activity->location_url)
+                    <a href="{{ $activity->location_url }}" target="_blank" rel="noopener">{{ $activity->location }}</a>
+                    @else
+                    {{ $activity->location }}
+                    @endif
+                </div>
             </div>
             {{-- Price --}}
             <div class="activity-card__fact">

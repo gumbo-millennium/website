@@ -31,6 +31,10 @@
   @apply text-2xl font-normal mb-4;
 }
 
+.activity-card__title-link {
+  @apply no-underline;
+}
+
 .activity-card__lead {
   @apply text-lg font-normal mb-4;
 }
