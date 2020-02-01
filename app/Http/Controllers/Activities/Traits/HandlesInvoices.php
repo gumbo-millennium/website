@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities\Traits;
 
+use App\Helpers\Arr;
 use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Enrollment;
 use App\Services\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;

@@ -2,9 +2,9 @@
 
 namespace App\Observers;
 
+use App\Helpers\Str;
 use App\Jobs\Stripe\UpdateCouponJob;
 use App\Models\Activity;
-use Illuminate\Support\Str;
 
 /**
  * Ensures values on the activity model are up to snuff.

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Forms\Traits\UserDataForm;
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use App\Models\User;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Kris\LaravelFormBuilder\Form;
 

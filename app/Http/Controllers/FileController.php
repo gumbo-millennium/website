@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use App\Models\FileCategory;
+use App\Helpers\Str;
 use App\Models\File;
+use App\Models\FileCategory;
 use App\Models\FileDownload;
 use Czim\Paperclip\Contracts\AttachmentInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

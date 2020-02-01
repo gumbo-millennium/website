@@ -2,7 +2,7 @@
 
 namespace App\Models\States\Traits;
 
-use Illuminate\Support\Str;
+use App\Helpers\Str;
 
 /**
  * Allows Eloquent-like access to the states

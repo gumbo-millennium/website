@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Forms\AccountEditForm;
+use App\Helpers\Str;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**

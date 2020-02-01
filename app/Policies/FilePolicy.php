@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\User;
+use App\Helpers\Str;
 use App\Models\File;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 

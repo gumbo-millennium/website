@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use Kris\LaravelFormBuilder\Form;
 
 /**

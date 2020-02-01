@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Contracts\StripeServiceContract;
+use App\Helpers\Str;
 use App\Models\Enrollment;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -16,7 +17,6 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class EnrollmentPaid extends Notification implements ShouldQueue
 {

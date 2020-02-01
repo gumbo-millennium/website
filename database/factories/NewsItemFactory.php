@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Helpers\Str;
 use App\Models\NewsItem;
 use App\Models\User;
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
 
 $randomEditorBlock = function (Faker $faker) {
     switch ($faker->randomDigit) {

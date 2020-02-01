@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\ViewModels;
 
+use App\Helpers\Str;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 use Spatie\ViewModels\ViewModel;

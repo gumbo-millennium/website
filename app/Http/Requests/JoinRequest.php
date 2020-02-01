@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use App\Models\JoinSubmission;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Carbon;
 use App\Rules\PhoneNumber;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 
 /**
  * A request with sign up data

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
 use Carbon\Carbon;
 use Illuminate\Cache\Repository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use JsonException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

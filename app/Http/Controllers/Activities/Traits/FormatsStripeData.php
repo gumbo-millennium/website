@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities\Traits;
 
+use App\Helpers\Str;
 use App\Models\Enrollment;
-use Illuminate\Support\Str;
 
 /**
  * Handles preparing data for Stripe

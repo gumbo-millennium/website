@@ -2,9 +2,9 @@
 
 namespace App\Jobs\Concerns;
 
+use App\Helpers\Str;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 /**
  * Handles creation of temporrary files by streaming from any disk.

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\User;
 use Carbon\CarbonImmutable;
+use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
-use Faker\Generator as Faker;
-use Illuminate\Support\Str;
 
 class ActivitySeeder extends Seeder
 {

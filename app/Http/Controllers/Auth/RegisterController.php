@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Forms\RegisterForm;
 use App\Forms\RegisterPrivacyForm;
+use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -13,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\FormBuilder;
 use RuntimeException;
 use Symfony\Component\Yaml\Exception\ParseException;

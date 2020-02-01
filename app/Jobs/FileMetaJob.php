@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers\Str;
 use App\Jobs\Concerns\RunsCliCommands;
 use App\Jobs\Concerns\UsesTemporaryFiles;
 use App\Models\File;
@@ -12,7 +13,6 @@ use Illuminate\Http\File as LaravelFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use RuntimeException;
 use Smalot\PdfParser\Parser as PDFParser;
 

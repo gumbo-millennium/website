@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\Traits\HasEditorJsContent;
 use App\Traits\HasPaperclip;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
