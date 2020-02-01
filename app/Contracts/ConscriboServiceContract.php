@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
+use App\Exceptions\ServiceException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-interface ConscriboContract
+interface ConscriboServiceContract
 {
     /**
      * Returns if the API is configured for use.
@@ -16,6 +17,13 @@ interface ConscriboContract
      * @return bool
      */
     public function isAvailable(): bool;
+
+    /**
+     * Attempts login with the API
+     * @return void
+     * @throws ServiceException
+     */
+    public function authorise(): void;
 
     /**
      * Runs the given command on the API

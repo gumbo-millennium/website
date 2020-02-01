@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\ConscriboContract;
+use App\Contracts\ConscriboServiceContract;
+use App\Exceptions\ServiceException;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use GuzzleHttp\Client;
@@ -20,15 +21,21 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Communicates with the Conscribo API
  */
-final class ConscriboService implements ConscriboContract
+final class ConscriboService implements ConscriboServiceContract
 {
     private const API_VERSION = '0.20161212';
     private const CACHE_KEY = 'conscribo.api-session-id';
+
+    private const TTL_VALID = 60 * 25; // Cache session ID for 25 minutes
+    private const TTL_INVALID = 60 * 60 * 6; // Cache flag of invalid creds for 6 hours
 
     public const ERR_NO_SESSION = 2000;
     public const ERR_BAD_REQUEST = 2001;
     public const ERR_API_FAILURE = 2010;
     public const ERR_HTTP_FAILURE = 2011;
+
+    // Session IDs to tell software somethings wrong
+    private const SESSION_ID_INVALID = "\0invalid";
 
     /**
      * Messages about expired tokens. They might change in the future
@@ -45,11 +52,12 @@ final class ConscriboService implements ConscriboContract
     private $httpClient;
 
     /**
-     * If we're retrying calls
+     * Flags if we've ever burned the session ID, which can only
+     * happen once.
      *
      * @var bool
      */
-    private $retry = false;
+    private bool $burned = false;
 
     /**
      * Base URL
@@ -57,6 +65,8 @@ final class ConscriboService implements ConscriboContract
      * @var string
      */
     private $baseUrl;
+
+    private ?string $sessionId = null;
 
     /**
      * Creates a new service with an HTTP client
@@ -109,11 +119,11 @@ final class ConscriboService implements ConscriboContract
             'X-Conscribo-API-Version' => self::API_VERSION,
             'X-Conscribo-SessionId' => $sessionId,
             'Content-Type' => 'application/json; charset=utf-8',
-            'Content-Length' => strlen($$payloadJson)
+            'Content-Length' => strlen($payloadJson)
         ]);
 
         // Build request
-        return new Request('POST', $this->baseUrl, $headers, $payload);
+        return new Request('POST', $this->baseUrl, $headers, $payloadJson);
     }
 
     /**
@@ -126,13 +136,14 @@ final class ConscriboService implements ConscriboContract
     private function sendRequest(Request $request): array
     {
         try {
+            dd($request, $request->getBody()->getContents());
             // Send request. The Conscribo API returns 200 on errors too, so allow
             // for HTTP errors to cause exceptions
             $response = $this->httpClient->send($request, ['http_errors' => true]);
 
             // Get body and decode JSON
             $body = $response->getBody();
-            $json = json_decode($body, true, 16, JSON_THROW_ON_ERROR);
+            $json = json_decode($body->getContents(), true, 16, JSON_THROW_ON_ERROR);
 
             // Check the 'success' flag
             if (Arr::get($json, 'success', 0)) {
@@ -187,12 +198,48 @@ final class ConscriboService implements ConscriboContract
     }
 
     /**
-     * Get a session ID from the API using username / passphrase combination.
-     *
-     * @return string|null
+     * Re-authorize
+     * @return void
+     * @throws ServiceException
      */
-    private function getSessionId(): ?string
+    protected function forceReauth()
     {
+        // Only allow burning once.-m-24
+        if ($this->burned) {
+            throw new ServiceException(ServiceException::SERVICE_CONSCRIBO, 'Trying to burn already burnt session', 403);
+        }
+
+        // Trash ID
+        $this->sessionId = null;
+        $this->burned = true;
+        Cache::forget(self::CACHE_KEY);
+
+        // Re-auth
+        return $this->authorise();
+    }
+
+    /**
+     * Attempts login with the API
+     * @return void
+     * @throws ServiceException
+     */
+    public function authorise(): void
+    {
+        // Check cache key
+        $cachedKey = Cache::get(self::CACHE_KEY);
+
+        // Throw exception on cache item
+        if ($cachedKey === self::SESSION_ID_INVALID) {
+            throw new ServiceException(ServiceException::SERVICE_CONSCRIBO, 'Faield to obtain session');
+        }
+
+        // Assign from cache
+        if ($cachedKey) {
+            $this->sessionId = $cachedKey;
+            return;
+        }
+
+        // Get session id
         try {
             // Prep a login request
             $request = $this->buildRequest('authenticateWithUserAndPass', [
@@ -203,9 +250,81 @@ final class ConscriboService implements ConscriboContract
             // Make the call
             $response = $this->sendRequest($request);
 
+            // Get session ID
+            $sessionId = Arr::get($response, 'sessionId');
+
+            // Get response
+            logger()->debug('Recieved session ID form request: {session-id}', [
+                'response' => $response,
+                'session-id' => $sessionId
+            ]);
+
+            // Assign and store for 25 minutes
+            $this->sessionId = $sessionId;
+            Cache::put(self::CACHE_KEY, $sessionId, now()->addSeconds(self::TTL_VALID));
+        } catch (HttpException $exception) {
+            // Cache invalid credentials
+            $sessionId = self::SESSION_ID_INVALID;
+            Cache::put(self::CACHE_KEY, $sessionId, now()->addSeconds(self::TTL_INVALID));
+
+            // Build service exception
+            $exception = new ServiceException(
+                ServiceException::SERVICE_CONSCRIBO,
+                'Failed to get session',
+                $exception->getStatusCode(),
+                $exception
+            );
+
+            // Report new exception
+            \report($exception);
+
+            // Throw it too,
+            throw $exception;
+        }
+    }
+
+    /**
+     * Get a session ID from the API using username / passphrase combination.
+     *
+     * @return string|null
+     */
+    private function getSessionId(): ?string
+    {
+        // Log message
+        logger()->debug('Retrieving session ID');
+
+        try {
+            // Prep a login request
+            $request = $this->buildRequest('authenticateWithUserAndPass', [
+                'userName' => config('gumbo.conscribo.username'),
+                'passPhrase' => config('gumbo.conscribo.passphrase'),
+            ]);
+
+            // Make the call
+            $response = $this->sendRequest($request);
+
+            // Get session ID
+            $sessionId = Arr::get($response, 'sessionId');
+
+            dd($sessionId, $response);
+
+            // Get response
+            logger()->debug('Recieved session ID form request: {session-id}', [
+                'response' => $response,
+                'session-id' => $sessionId
+            ]);
+
             // Let's hope there's an ID here
-            return Arr::get($response, 'sessionId');
-        } catch (HttpException $e) {
+            return $sessionId;
+        } catch (HttpException $exception) {
+            // Report error
+            \report($exception);
+
+            dd($exception);
+
+            // Log error
+            logger()->debug('Failed to get ID from request: {exception}', compact('exception'));
+
             // Don't return ID on error.
             return null;
         }
