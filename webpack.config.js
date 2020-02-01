@@ -87,7 +87,8 @@ module.exports = {
   // Context and entry file
   context: __dirname,
   entry: {
-    app: ['./resources/js/app.js', './resources/css/app.css']
+    app: ['./resources/js/app.js', './resources/css/app.css'],
+    mail: ['./resources/css/mail.css']
   },
 
   // Output

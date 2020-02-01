@@ -1,0 +1,5 @@
+/* Loads all mail stylin */
+.mail {
+  @apply bg-gray-100;
+  @apply text-gray-800;
+}

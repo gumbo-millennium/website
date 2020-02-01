@@ -61,7 +61,7 @@
   },
   "scripts": {
     "run-webpack": "webpack --progress --hide-modules",
-    "start": "NODE_ENV=development webpack-dev-server --open --color --progress",
+    "start": "NODE_ENV=development webpack-dev-server --color --progress",
     "dev": "NODE_ENV=development yarn run-webpack",
     "build": "NODE_ENV=production yarn run-webpack",
     "postinstall": "resources/bin/install-font-awesome"
