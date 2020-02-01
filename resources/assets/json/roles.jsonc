@@ -41,6 +41,7 @@
     // Activiteiten Committee
     "ac": {
         "title": "Activiteiten Commissie",
+        "extends": "member",
         "permissions": [
             // Allow activity management
             "activity-admin"
@@ -50,12 +51,14 @@
     // Landhuis committee
     "lhw": {
         "title": "Landhuis Commissie",
+        "extends": "member",
         "permissions": []
     },
 
     // Public Relations Project Group
     "pr": {
         "title": "PRPG",
+        "extends": "member",
         "permissions": [
             // Allow content management
             "content-admin"
@@ -64,6 +67,7 @@
     // Board
     "board": {
         "title": "Bestuur",
+        "extends": "member",
         "permissions": [
             // Allow file management
             "file-admin",
@@ -95,6 +99,7 @@
     // Digital committee
     "dc": {
         "title": "Digitale Commissie",
+        "extends": "member",
         "permissions": [
             // Allow monitoring platforms
             "devops",
@@ -107,30 +112,36 @@
     // Copied permissions from different groups
     "ib": {
         "title": "Introbestuur",
+        "extends": "member",
         "permissions": []
     },
     "bbqpg": {
         "title": "BBQPG",
+        "extends": "member",
         "permissions": []
     },
     "bc": {
         "title": "Brascommissie",
+        "extends": "member",
         "permissions": []
     },
     "intro-accie": {
         "title": "Intro Accie",
+        "extends": "member",
         "permissions": []
     },
 
     // Empty roles
     "kc": {
         "title": "Kascommissie",
+        "extends": "member",
         "permissions": [
             "payments-monitor"
         ]
     },
     "pc": {
         "title": "Plazacommissie",
+        "extends": "member",
         "permissions": []
     }
 }

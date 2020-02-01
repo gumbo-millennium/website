@@ -43,7 +43,7 @@ class DisplayController extends Controller
         $query = $query->available();
 
         // Paginate the response
-        $activities = $query->paginate();
+        $activities = $query->simplePaginate(20);
 
         // Collect an empty list of enrollments
         $enrollments = collect();
