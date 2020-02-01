@@ -33,7 +33,7 @@ $firstActivity = $past ? null : $activities->first();
 </div>
 
 <div class="activity-blocks after-header">
-    <div class="activity-block after-header">
+    <div class="activity-block">
         <div class="container leading-loose">
             <p>
                 Bij Gumbo houden wij van leuke activiteiten.
@@ -49,12 +49,24 @@ $firstActivity = $past ? null : $activities->first();
             @endguest
         </div>
     </div>
-    {{-- Required as foreach since list-item needs $enrollments --}}
-    @forelse ($activities as $activity)
-    @include('activities.bits.list-item')
-    @empty
-    @include('activities.bits.list-empty')
-    @endforelse
+
+    @if (empty($activities))
+    <div class="text-center mt-8 p-16">
+        <h2 class="text-2xl font-normal text-center">Geen activiteiten</h2>
+        <p class="text-center text-lg">De agenda is verdacht leeg. Kom later nog eens kijken.</p>
+    </div>
+    @else
+    <div class="container pt-8">
+        {{-- Activity cards --}}
+        <div class="activity-grid">
+            @foreach ($activities as $activity)
+            <div class="activity-grid__item">
+                @include('activities.bits.single')
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 
 <div class="container py-8">

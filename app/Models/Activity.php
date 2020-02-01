@@ -9,6 +9,7 @@ use App\Traits\HasPaperclip;
 use Czim\Paperclip\Config\Steps\ResizeStep;
 use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Contracts\AttachmentInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -91,6 +92,11 @@ class Activity extends SluggableModel implements AttachableInterface
             1280 / 12 * 4, // hd laptops
         );
 
+        $poster = (object) [
+            'width' => 192,
+            'height' => 256
+        ];
+
         // Banner width:height is 2:1
         $bannerHeight = $bannerWidth / 2;
 
@@ -101,6 +107,12 @@ class Activity extends SluggableModel implements AttachableInterface
         $this->hasAttachedFile('image', [
             'storage' => 'paperclip-public',
             'variants' => [
+                Variant::make('poster')->steps([
+                    ResizeStep::make()->width($poster->width)->height($poster->height)
+                ]),
+                Variant::make('poster@2x')->steps([
+                    ResizeStep::make()->width($poster->width * 2)->height($poster->height * 2)
+                ]),
                 // Make banner-sized image (HD and HDPI)
                 Variant::make('banner')->steps([
                     ResizeStep::make()->width($bannerWidth)->height($bannerHeight)->crop()

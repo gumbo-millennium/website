@@ -1,0 +1,17 @@
+/* Activity grid */
+
+.activity-grid {
+  @apply flex flex-row flex-wrap;
+  margin: 0 calc(0 - theme('spacing.4'));
+}
+
+.activity-grid__item {
+  @apply mx-4 mb-4;
+  @apply w-full;
+}
+
+@screen md {
+  .activity-grid__item {
+    width: calc(50% - calc(theme('spacing.4') * 2));
+  }
+}

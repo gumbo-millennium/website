@@ -25,17 +25,18 @@ class PageController extends Controller
      */
     public function homepage(Request $request)
     {
-        $nextEvent = Activity::query()
+        $nextEvents = Activity::query()
             ->available()
             ->where('start_date', '>', now())
             ->orderBy('start_date')
-            ->first();
+            ->take(2)
+            ->get();
 
         $enrollments = [];
-        if ($request->user() && $nextEvent) {
+        if ($request->user() && $nextEvents) {
             $enrollments = Enrollment::query()
                 ->whereUserId($request->user()->id)
-                ->where('activity_id', $nextEvent->id)
+                ->where('activity_id', 'in', $nextEvents->pluck('id'))
                 ->orderBy('created_at', 'asc')
                 ->get()
                 ->keyBy('activity_id');
@@ -43,7 +44,7 @@ class PageController extends Controller
 
         // Return view
         return response()
-            ->view('content.home', compact('nextEvent', 'enrollments'));
+            ->view('content.home', compact('nextEvents', 'enrollments'));
     }
 
     /**

@@ -2,6 +2,10 @@
 
 .header {
   @apply bg-brand-700 relative;
+  @apply overflow-hidden;
+}
+
+.header--clipped {
   padding-bottom: theme('spacing.8');
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - theme('spacing.8')), 0 100%);
 }
@@ -37,11 +41,10 @@
 }
 
 @screen md {
-  .header {
-    padding-bottom: theme('spacing.16');
+  .header--clipped {
+    @apply pb-16;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - theme('spacing.16')), 0 100%);
   }
-
   .after-header {
     @apply pt-16;
     margin-top: calc(0 - theme('spacing.16'));
@@ -55,7 +58,6 @@
     right: 0;
     bottom: theme('spacing.4');
   }
-
   .header__floating--stacked {
     @apply flex-col items-start;
   }
