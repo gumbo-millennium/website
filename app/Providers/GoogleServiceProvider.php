@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Google_Client as GoogleApi;
@@ -8,7 +10,6 @@ use Google_Service_Directory as GoogleDirectory;
 use Google_Service_Directory_Aliases as GoogleDirectoryAliases;
 use Google_Service_Directory_Groups as GoogleDirectoryGroups;
 use Google_Service_Directory_Members as GoogleDirectoryMembers;
-use Google_Service_Exception as GoogleServiceException;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,12 +17,10 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 {
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton(GoogleApi::class, function ($app) {
+        $this->app->singleton(GoogleApi::class, static function ($app) {
             try {
                 // Config
                 $config = $app->get('config');
@@ -47,19 +46,18 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
         });
 
         // phpcs:disable Generic.Files.LineLength.TooLong
-        $this->app->singleton(GoogleDirectory::class, fn($app) => new GoogleDirectory($app->get(GoogleApi::class)));
-        $this->app->singleton(GoogleDirectoryGroups::class, fn($app) => new GoogleDirectoryGroups($app->get(GoogleDirectory::class)));
-        $this->app->singleton(GoogleDirectoryAliases::class, fn($app) => new GoogleDirectoryAliases($app->get(GoogleDirectory::class)));
-        $this->app->singleton(GoogleDirectoryMembers::class, fn($app) => new GoogleDirectoryMembers($app->get(GoogleDirectory::class)));
+        $this->app->singleton(GoogleDirectory::class, static fn($app) => new GoogleDirectory($app->get(GoogleApi::class)));
+        $this->app->singleton(GoogleDirectoryGroups::class, static fn($app) => new GoogleDirectoryGroups($app->get(GoogleDirectory::class)));
+        $this->app->singleton(GoogleDirectoryAliases::class, static fn($app) => new GoogleDirectoryAliases($app->get(GoogleDirectory::class)));
+        $this->app->singleton(GoogleDirectoryMembers::class, static fn($app) => new GoogleDirectoryMembers($app->get(GoogleDirectory::class)));
         // phpcs:enable
     }
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
+     * @return array<string>
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             GoogleApi::class,
