@@ -94,7 +94,7 @@ if ($activity->available_seats === 0) {
         </div>
     </div>
 
-    <div class="my-8 px-12 leading-relaxed content">
+    <div class="my-8 px-12 leading-relaxed plain-content">
         {!! $activity->description_html !!}
     </div>
 
