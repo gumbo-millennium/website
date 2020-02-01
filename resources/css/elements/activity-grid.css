@@ -10,7 +10,7 @@
   @apply w-full;
 }
 
-@screen md {
+@screen lg {
   .activity-grid__item {
     width: calc(50% - calc(theme('spacing.4') * 2));
   }
