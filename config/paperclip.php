@@ -150,7 +150,7 @@ return [
     |
     */
 
-    'imagine' => Imagine\Imagick\Imagine::class,
+    'imagine' => extension_loaded('imagick') ? Imagine\Imagick\Imagine::class : Imagine\Gd\Imagine::class,
 
     /*
     |--------------------------------------------------------------------------

@@ -1,12 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Helpers\Str;
 use App\Models\Activity;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
 
-$factory->define(Activity::class, function (Faker $faker) {
+$imageDir = resource_path('assets/images-test');
+$images = scandir($imageDir);
+$imageOptions = $images === false ? collect() : collect($images)
+    ->filter(static fn ($name) => Str::endsWith($name, '.jpg'))
+    ->map(static fn($file) => new SplFileInfo("{$imageDir}/{$file}"));
+
+$factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
     $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
     $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
 
@@ -71,5 +80,8 @@ $factory->define(Activity::class, function (Faker $faker) {
         'member_discount' => $memberDiscount,
         'discount_count' => $discountSlots,
         'price' => $price,
+
+        // Image
+        'image' => $faker->optional(0.8)->passthrough($imageOptions->random())
     ];
 });
