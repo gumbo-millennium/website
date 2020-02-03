@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            <img src="{{ $message->embed(resource_path('asset/images-mail/logo.png')) }}" height="60" width="180" alt="Gumbo Millennium" />
+            Gumbo Millennium
         @endcomponent
     @endslot
 
