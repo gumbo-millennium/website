@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Contracts\ConscriboServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Services\MenuProvider;
 use App\Services\StripeErrorService;
+use App\Services\ConscriboService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
@@ -32,7 +34,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
      * @return void
      */
     public function boot()
@@ -50,7 +51,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
      * @return void
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -67,6 +67,22 @@ class AppServiceProvider extends ServiceProvider
             // Allow Telemetry (only includes response times)
             StripeClient::setEnableTelemetry(true);
         }
+
+        // Conscribo API
+        $this->app->singleton(ConscriboServiceContract::class, static function ($app) {
+            // make service
+            $service = $app->make(ConscriboService::class, [
+                'account' => $app->get('config')->get('services.conscribo.account-name'),
+                'username' => $app->get('config')->get('services.conscribo.username'),
+                'password' => $app->get('config')->get('services.conscribo.passphrase')
+            ]);
+
+            // authenticate
+            $service->authorise();
+
+            // return
+            return $service;
+        });
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, bool $variants = null) {

@@ -11,13 +11,6 @@ return [
     // Cost of a single payment transaction via Stripe, in cents!
     'transfer-fee' => 35,
 
-    // Conscribo API
-    'conscribo' => [
-        'account-name' => env('CONSCRIBO_ACCOUNT_NAME'),
-        'username' => env('CONSCRIBO_USERNAME'),
-        'passphrase' => env('CONSCRIBO_PASSPHRASE'),
-    ],
-
     // Google config
     'google' => [
         // Allowed domains

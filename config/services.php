@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -33,10 +35,22 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    // Stripe API
     'stripe' => [
         'model' => App\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+    ],
+
+    // Conscribo API
+    'conscribo' => [
+        'account-name' => env('CONSCRIBO_ACCOUNT_NAME'),
+        'username' => env('CONSCRIBO_USERNAME'),
+        'passphrase' => env('CONSCRIBO_PASSPHRASE'),
+        'resources' => [
+            'user' => env('CONSCRIBO_RESOURCE_USERS', 'persoon'),
+            'role' => env('CONSCRIBO_RESOURCE_ROLE', 'commissie')
+        ]
     ],
 
 ];

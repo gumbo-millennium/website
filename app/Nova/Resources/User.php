@@ -75,32 +75,32 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Naam')
+            Text::make('Naam', 'name')
                 ->sortable()
                 ->onlyOnIndex(),
 
-            Text::make('Voornaam')
+            Text::make('Voornaam', 'first_name')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('Tussenvoegsel')
+            Text::make('Tussenvoegsel', 'insert')
                 ->hideFromIndex()
                 ->rules('nullable', 'max:255'),
 
-            Text::make('Achternaam')
+            Text::make('Achternaam', 'last_name')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('E-mailadres')
+            Text::make('E-mailadres', 'email')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Text::make('Alias')
+            Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
 
-            Password::make('Wachtwoord')
+            Password::make('Wachtwoord', 'password')
                 ->onlyOnForms()
                 ->showOnUpdating(false)
                 ->rules('required', 'string', 'min:10'),

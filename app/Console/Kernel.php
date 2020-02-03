@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Models\FileDownload;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * The Artisan commands provided by your application.
-     *
      * @var array
      */
     protected $commands = [
@@ -20,7 +20,6 @@ class Kernel extends ConsoleKernel
 
     /**
      * Define the application's command schedule.
-     *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
@@ -34,11 +33,13 @@ class Kernel extends ConsoleKernel
 
         // Update enrollments' user_type every hour
         $schedule->job(UpdateEnrollmentUserTypes::class)->dailyAt('04:00');
+
+        // Update users from API every night
+        $schedule->command('gumbo:user-update')->dailyAt('03:00');
     }
 
     /**
      * Register the commands for the application.
-     *
      * @return void
      */
     protected function commands()
