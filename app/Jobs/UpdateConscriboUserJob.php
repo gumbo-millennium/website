@@ -72,8 +72,17 @@ class UpdateConscriboUserJob implements ShouldQueue
             return;
         }
 
-        // Assign stuff
+        // Start transaction
+        DB::beginTransaction();
+
+        // Assign member role
+        $this->assignMemberRole($user, $accountingUser);
+
+        // Assign other roles
         $this->assignRoles($user, $accountingUser);
+
+        // Apply changes
+        DB::commit();
     }
 
 
@@ -146,32 +155,10 @@ class UpdateConscriboUserJob implements ShouldQueue
      * @param array $accountingUser
      * @return void
      * @throws \InvalidArgumentException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function assignRoles(User $user, array $accountingUser): void
     {
-        // Start transaction
-        DB::beginTransaction();
-
-        // Check member
-        $isMember = (
-            (
-                $user['startdatum_lid'] !== null &&
-                $user['startdatum_lid'] < now()
-            ) || (
-                $user['einddatum_lid'] === null ||
-                $user['einddatum_lid'] > now()
-            )
-        );
-
-        // Update member role
-        if ($isMember !== $user->is_member && !$isMember) {
-            logger()->info("Removing member role from user.", compact('user'));
-            $user->removeRole('member');
-        } elseif ($isMember !== $user->is_member && $isMember) {
-            logger()->info("Adding member role to user.", compact('user'));
-            $user->assignRole('member');
-        }
-
         // Update roles
         $roles = Role::whereIn('title', $accountingUser['groups'])->get();
         $allowedRoles = $roles->pluck('name')->toArray();
@@ -215,8 +202,35 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Add new role to list
             $addedRoles[] = $role->name;
         }
+    }
 
-        // Apply changes
-        DB::commit();
+    /**
+     * Assign the member role
+     * @param User $user
+     * @param array $accountingUser
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public function assignMemberRole(User $user, array $accountingUser): void
+    {
+        // Check dates
+        $memberStarted = $accountingUser['startdatum_lid'] !== null && $accountingUser['startdatum_lid'] < now();
+        $memberEnded = $accountingUser['einddatum_lid'] !== null || $accountingUser['einddatum_lid'] < now();
+
+        // Check member state
+        $isMember = $memberStarted && !$memberEnded;
+
+        // Remove member if member without permission
+        if ($isMember !== $user->is_member && !$isMember) {
+            logger()->info("Removing member role from user.", compact('user'));
+            $user->removeRole('member');
+            return;
+        }
+
+        // Add member if not member yet
+        if ($isMember !== $user->is_member && $isMember) {
+            logger()->info("Adding member role to user.", compact('user'));
+            $user->assignRole('member');
+        }
     }
 }
