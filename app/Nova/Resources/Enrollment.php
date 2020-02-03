@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use App\Models\Enrollment as EnrollmentModel;
+use App\Models\States\Enrollment\Paid;
 use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -21,6 +22,67 @@ use Laravel\Nova\Http\Requests\NovaRequest;
  */
 class Enrollment extends Resource
 {
+    /**
+     * Get the fields displayed by the resource.
+     * @return array<mixed>
+     */
+    public function fields(Request $request)
+    {
+        return [
+            ID::make()->sortable(),
+
+            // Add multi selects
+            BelongsTo::make('Activiteit', 'activity', Activity::class)
+                ->rules('required', static function ($activity) use ($request): void {
+                    $request->can('manage', $activity);
+                })
+                ->hideWhenUpdating(),
+
+            // Add user
+            BelongsTo::make('Gebruiker', 'user', User::class)
+                ->showOnIndex()
+                ->rules('required')
+                ->searchable()
+                ->sortable()
+                ->hideWhenUpdating(),
+
+            // Add data
+            KeyValue::make('Metadata inschrijving', 'data')
+                ->rules('json')
+                ->hideFromIndex(),
+
+            // Dates
+            DateTime::make('Aangemaakt op', 'created_at')
+                ->onlyOnDetail(),
+            DateTime::make('Laatst bewerkt op', 'updated_at')
+                ->onlyOnDetail(),
+            DateTime::make('Verwijderd op', 'deleted_at')
+                ->onlyOnDetail(),
+            Text::make('Reden verwijdering', 'deleted_reason')
+                ->onlyOnDetail(),
+
+            // Pricing
+            Price::make('Prijs netto', 'price')
+                ->onlyOnDetail()
+                ->showOnCreating()
+                ->rules('nullable', 'gt:0')
+                ->help('Prijs in euro, excl. transactiekosten'),
+
+            Price::make('Prijs bruto', 'total_price')
+                ->onlyOnIndex()
+                ->showOnDetail()
+                ->help('Prijs in euro, incl. transactiekosten'),
+
+            Text::make('Status', fn () => $this->state->title)
+                ->onlyOnDetail(),
+
+            Boolean::make('Betaald', fn () => $this->state instanceof Paid)
+                ->onlyOnIndex()
+                ->showOnDetail()
+                ->help('Geeft aan of de inschrijving is betaald.'),
+        ];
+    }
+
     /**
      * The model the resource corresponds to.
      * @var string
@@ -66,12 +128,9 @@ class Enrollment extends Resource
 
     /**
      * Make sure the user can only see enrollments he/she is allowed to see
-     * @param NovaRequest $request
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
      * @var App\Models\User $user
      */
-    public static function indexQuery(NovaRequest $request, $query)
+    public static function indexQuery(NovaRequest $request, Builder $query): Builder
     {
         // Get user shorthand
         $user = $request->user();
@@ -87,63 +146,5 @@ class Enrollment extends Resource
             $request,
             $query->whereIn('activity_id', $user->hosted_activity_ids)
         );
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function fields(Request $request)
-    {
-        return [
-            ID::make()->sortable(),
-
-            // Add multi selects
-            BelongsTo::make('Activiteit', 'activity', Activity::class)
-                ->rules('required', static function ($activity) use ($request) {
-                    $request->can('manage', $activity);
-                })
-                ->hideWhenUpdating(),
-
-            // Add user
-            BelongsTo::make('Gebruiker', 'user', User::class)
-                ->showOnIndex()
-                ->rules('required')
-                ->searchable()
-                ->sortable()
-                ->hideWhenUpdating(),
-
-            // Add data
-            KeyValue::make('Metadata inschrijving', 'data')
-                ->rules('json')
-                ->hideFromIndex(),
-
-            // Dates
-            DateTime::make('Aangemaakt op', 'created_at')
-                ->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'updated_at')
-                ->onlyOnDetail(),
-            DateTime::make('Verwijderd op', 'deleted_at')
-                ->onlyOnDetail(),
-            Text::make('Reden verwijdering', 'deleted_reason')
-                ->onlyOnDetail(),
-
-            // Pricing
-            Price::make('Prijs netto', 'price')
-                ->onlyOnDetail()
-                ->showOnCreating()
-                ->rules('nullable', 'gt:0')
-                ->help('Prijs in euro, excl. transactiekosten'),
-
-            Price::make('Prijs bruto', 'total_price')
-                ->onlyOnIndex()
-                ->showOnDetail()
-                ->help('Prijs in euro, incl. transactiekosten'),
-
-            Boolean::make('Betaald', 'paid')
-                ->hideWhenUpdating()
-                ->help('Geeft aan of de inschrijving is betaald.'),
-        ];
     }
 }
