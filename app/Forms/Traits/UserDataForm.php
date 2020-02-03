@@ -71,13 +71,13 @@ trait UserDataForm
                 'nullable',
                 'string',
                 'min:4',
-                'regex:/^[a-z0-9][a-z0-9\-_\.]{2,}[a-z0-9]$/',
+                'regex:/^[a-z0-9][a-z0-9-_\.]{2,}[a-z0-9]$/i',
                 $duplicateRule,
             ],
             'error_messages' => [
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 'alias.min' => 'Je alias moet minimaal 4 tekens lang zijn',
-                'alias.regex' => 'Je alias mag alleen bestaan uit kleine letters, cijfers en eventueel streepjes in het midden',
+                'alias.regex' => 'Je alias mag alleen bestaan uit letters, cijfers en eventueel streepjes in het midden',
                 'alias.unique' => 'Deze alias is al in gebruik door een andere gebruiker.'
                 // phpcs:enable Generic.Files.LineLength.TooLong
             ],
@@ -85,13 +85,13 @@ trait UserDataForm
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 'text' => <<<'HTML'
                 Kies een optionele nickname die wordt getoond op de site in plaats van je voornaam<br />
-                Je kunt a-z, 0-9 en eventueel leestekens in het midden gebruiken.
+                Je kunt a-z, A-Z, 0-9 en eventueel leestekens in het midden gebruiken.
                 HTML,
                 // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'attr' => [
                 'autocomplete' => 'nickname',
-                'pattern' => '[a-z0-9][a-z0-9-]{2,}[a-z0-9]'
+                'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]'
             ],
         ];
 
