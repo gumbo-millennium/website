@@ -259,7 +259,13 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         // Count them
-        return (int) max(0, $this->discount_count - $this->enrollments()->where('user_type', 'member')->count());
+        $usedEnrollments = $this->enrollments()
+            ->whereNotState('state', CancelledState::class)
+            ->where('user_type', 'member')
+            ->count();
+
+        // Return enrollments with discount that have been paid
+        return (int) max(0, $this->discount_count - $usedEnrollments);
     }
 
     /**

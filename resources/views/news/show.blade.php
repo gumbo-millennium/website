@@ -12,8 +12,8 @@
 
 <div class="container after-header">
     @if ($item->sponsor)
-    <div class="my-4 p-4 mb-4 border border-brand-600 rounded flex flex-row items-center">
-        @icon('solid/ad', 'mr-2 icon-lg text-brand-600')
+    <div class="notice notice--brand">
+        @icon('solid/ad', 'notice__icon')
         <p>Dit is een advertorial door {{ $item->sponsor }}.</p>
     </div>
     @endif

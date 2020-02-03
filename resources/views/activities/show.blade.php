@@ -1,6 +1,9 @@
 @extends('layout.main')
 
 @php
+// User flags
+$isMember = $user && $user->is_member;
+
 // Start date
 $startLocale = $activity->start_date;
 $startIso = $activity->start_date->toIso8601String();
@@ -14,9 +17,22 @@ $durationIso = $duration->spec();
 $durationTime = $duration->forHumans(['parts' => 1]);
 $headerClass = "header-activity-{$activity->slug}";
 
-$memberPrice = $activity->price_member ? Str::price($activity->total_price_member) : 'gratis';
-$guestPrice = $activity->price_guest ? Str::price($activity->total_price_guest) : 'gratis';
+// Price and discount
 $priceLabel = $activity->is_free ? 'Gratis toegang' : Str::ucfirst($activity->price_label);
+$normalPrice = Str::price($activity->total_price);
+$discountPrice = Str::price($activity->total_discount_price);
+
+// Discount booleans
+$hasDiscount = $activity->discount_price > 0;
+$hasRestrictedDiscount = $activity->discounts_available !== null;
+$hasSoldOutDiscount = $activity->discounts_available === 0;
+$discountLabel = sprintf(
+    '%d %s',
+    $activity->discounts_available,
+    Str::multiple('lid', 'leden', $activity->discounts_available)
+);
+
+// Number of seats
 $seats = 'Onbeperkt plaats';
 if ($activity->available_seats === 0) {
     $seats = 'Uitverkocht';
@@ -94,8 +110,29 @@ if ($activity->available_seats === 0) {
         </div>
     </div>
 
-    <div class="my-8 px-12 leading-relaxed plain-content">
-        {!! $activity->description_html !!}
+    <div class="my-8 px-12">
+        {{-- Discount banner --}}
+        @if ($hasDiscount)
+        <div class="notice notice--brand">
+            @icon('solid/percentage', 'notice__icon')
+            <p>
+                @if ($hasSoldOutDiscount && $isMember)
+                Het gereduceerde tarief is helaas uitverkocht. Je betaald nu het reguliere tarief van {{ $normalPrice }}.
+                @elseif ($isMember && $hasRestrictedDiscount)
+                Het gereduceerde tarief van {{ $discountPrice }} is nog beschikbaar voor {{ $activity->discounts_available }} leden. Hierna betaal je {{ $normalPrice }}.
+                @elseif ($isMember)
+                Als lid betaal je het gereduceerde tarief van {{ $discountPrice }}. Niet-leden betalen {{ $normalPrice }}.
+                @else
+                Het ledentarief bedraagt {{ $discountPrice }}, niet-leden betalen {{ $normalPrice }}.
+                @endif
+            </p>
+        </div>
+        @endif
+
+        {{-- Activity description --}}
+        <div class="leading-relaxed plain-content">
+            {!! $activity->description_html !!}
+        </div>
     </div>
 
     </div>
