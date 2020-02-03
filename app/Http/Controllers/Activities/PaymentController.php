@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Activities;
 
 use App\Contracts\StripeServiceContract;
-use App\Exceptions\EnrollmentNotFoundException;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Jobs\Stripe\PaymentValidationJob;
@@ -12,14 +13,9 @@ use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
 use App\Services\IdealBankService;
 use App\Services\StripeService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
-use RuntimeException;
-use Stripe\Exception\InvalidArgumentException;
 use Stripe\Source;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Handles asking for iDEAL bank account, forwarding
@@ -27,7 +23,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  *
  * Note that usually, the webhooks will have validated the
  * payment a long time before the user returns here.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -47,7 +42,6 @@ class PaymentController extends Controller
 
     /**
      * Show the form to choose a bank for the iDEAL payment
-     *
      * @param StripeServiceContract $stripeService
      * @param IdealBankService $bankService
      * @param Request $request
@@ -85,7 +79,6 @@ class PaymentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  Request  $request
      * @return Response
      */
@@ -163,7 +156,6 @@ class PaymentController extends Controller
 
     /**
      * Callback from Stripe
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response

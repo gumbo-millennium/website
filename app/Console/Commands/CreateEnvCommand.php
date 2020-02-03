@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Creates the environment file
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -44,8 +43,6 @@ class CreateEnvCommand extends Command
 
     /**
      * Custom configs for certain environments
-     *
-     * @var string
      */
     private const EXTRA_CONFIGS = [
         'local' => [
@@ -78,7 +75,6 @@ class CreateEnvCommand extends Command
 
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'app:env
@@ -87,14 +83,12 @@ class CreateEnvCommand extends Command
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Initialises the .env file';
 
     /**
      * Writes an .env file,
-     *
      * @return mixed
      */
     public function handle()
@@ -125,7 +119,6 @@ class CreateEnvCommand extends Command
 
     /**
      * Constructs a collection for the current environment.
-     *
      * @return Collection
      */
     protected function buildEnvironmentConstructionConfig(): Collection
@@ -146,7 +139,6 @@ class CreateEnvCommand extends Command
 
     /**
      * Builds content of env file, replacing keys from the example with the new values specified in CONFIGS.
-     *
      * @param string $source
      * @return string .env file content
      */
@@ -196,7 +188,6 @@ class CreateEnvCommand extends Command
 
     /**
      * Writes the .env file in a safe fashion
-     *
      * @param string $file File to write (usually /.env)
      * @param string $content Contents to write
      * @return bool True if write was performed OK

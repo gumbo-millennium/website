@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Helpers\Str;
 use App\Models\File;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
-use Czim\Paperclip\Contracts\AttachmentInterface;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -26,7 +24,6 @@ class FileController extends Controller
     private const TOP_FILE_LIMIT = 5;
     /**
      * Makes sure the user is allowed to handle files.
-     *
      * @return void
      */
     public function __construct()
@@ -37,7 +34,6 @@ class FileController extends Controller
 
     /**
      * Homepage
-     *
      * @return Response
      */
     public function index()
@@ -73,7 +69,6 @@ class FileController extends Controller
 
     /**
      * Shows all the files in a given category, ordered by newest
-     *
      * @param FileCategory $category
      * @return Response
      */
@@ -91,7 +86,6 @@ class FileController extends Controller
 
     /**
      * Returns a single file's detail page
-     *
      * @param Request $request
      * @param File $file
      * @return Response
@@ -106,15 +100,14 @@ class FileController extends Controller
 
     /**
      * Provides a download, if the file is public, available on the storage and not broken.
-     *
      * @param Request $request
      * @param File $file
      * @return Response
      */
     public function download(Request $request, File $file)
     {
-        /** @var AttachmentInterface $attachment */
         $attachment = $file->file;
+        \assert($attachment instanceof AttachmentInterface);
 
         // Abort if file is missing
         if (!$attachment || !$attachment->exists()) {

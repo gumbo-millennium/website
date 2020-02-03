@@ -1,12 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Creates permissions table for role-permission system
- *
  * @license MIT
  * @author Spatie (https://github.com/spatie)
  */
@@ -14,7 +15,6 @@ class CreatePermissionTables extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -22,21 +22,21 @@ class CreatePermissionTables extends Migration
         $tableNames = config('permission.table_names');
         $columnNames = config('permission.column_names');
 
-        Schema::create($tableNames['permissions'], function (Blueprint $table) {
+        Schema::create($tableNames['permissions'], static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('guard_name');
             $table->timestamps();
         });
 
-        Schema::create($tableNames['roles'], function (Blueprint $table) {
+        Schema::create($tableNames['roles'], static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('guard_name');
             $table->timestamps();
         });
 
-        Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use (
+        Schema::create($tableNames['model_has_permissions'], static function (Blueprint $table) use (
             $tableNames,
             $columnNames
         ) {
@@ -57,7 +57,7 @@ class CreatePermissionTables extends Migration
             );
         });
 
-        Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use (
+        Schema::create($tableNames['model_has_roles'], static function (Blueprint $table) use (
             $tableNames,
             $columnNames
         ) {
@@ -78,7 +78,7 @@ class CreatePermissionTables extends Migration
             );
         });
 
-        Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
+        Schema::create($tableNames['role_has_permissions'], static function (Blueprint $table) use ($tableNames) {
             $table->unsignedBigInteger('permission_id');
             $table->unsignedBigInteger('role_id');
 
@@ -100,7 +100,6 @@ class CreatePermissionTables extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

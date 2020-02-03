@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Contracts\ConvertsToStripe;
@@ -7,10 +9,7 @@ use App\Notifications\VerifyEmail;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,7 +25,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -40,7 +38,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be hidden for arrays.
-     *
      * @var array
      */
     protected $hidden = [
@@ -50,7 +47,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be mutated to dates.
-     *
      * @var array
      */
     protected $dates = [
@@ -60,7 +56,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The model's default values for attributes.
-     *
      * @var array
      */
     protected $attributes = [
@@ -70,7 +65,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns files the user has uploaded
-     *
      * @return HasMany
      */
     public function files(): HasMany
@@ -80,7 +74,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns downloads the user has performed
-     *
      * @return BelongsToMany
      */
     public function downloads(): Relation
@@ -92,7 +85,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns enrollments the user has performed
-     *
      * @return HasMany
      */
     public function enrollments(): HasMany
@@ -102,7 +94,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns the activities the user is enrolled in
-     *
      * @return HasManyThrough
      */
     public function activities(): Relation
@@ -112,7 +103,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns activities the user can manage
-     *
      * @return HasMany
      */
     public function hostedActivities(): Relation
@@ -122,7 +112,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns the public name of the user
-     *
      * @return string|null
      */
     public function getPublicNameAttribute(): ?string
@@ -132,7 +121,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns if this user is a member
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -143,10 +131,9 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns a list of IDs that the user hosts
-     *
      * @return Collection
      */
-    public function getHostedActivityIdsAttribute(array $attributes = null): iterable
+    public function getHostedActivityIdsAttribute(?array $attributes = null): iterable
     {
         // Run query
         $query = $this->getHostedActivityQuery(Activity::query());
@@ -158,7 +145,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     /**
      * Returns (sub)query that only returns the Activities this user
      * is a manager of
-     *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -168,14 +154,13 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
         $user = $this;
 
         // Return data as a subquery
-        return $query->where(function ($query) use ($user) {
+        return $query->where(static function ($query) use ($user) {
             $query->whereIn('role_id', $user->roles()->pluck('id'));
         });
     }
 
     /**
      * Send the email verification notification.
-     *
      * @return void
      */
     public function sendEmailVerificationNotification()

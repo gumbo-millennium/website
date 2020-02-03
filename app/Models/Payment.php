@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * A payment transaction
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -31,7 +32,6 @@ class Payment extends UuidModel
 
     /**
      * Returns if the payment was refunded
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -42,7 +42,6 @@ class Payment extends UuidModel
 
     /**
      * Returns if the payment was refunded
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -53,7 +52,6 @@ class Payment extends UuidModel
 
     /**
      * Returns true if the whole transaction was refunded
-     *
      * @return bool
      */
     public function isFullyRefunded(): bool
@@ -64,7 +62,6 @@ class Payment extends UuidModel
 
     /**
      * Scopes the query to only return completed payments
-     *
      * @param Builder $query
      * @return Builder
      */
@@ -75,7 +72,6 @@ class Payment extends UuidModel
 
     /**
      * Scopes the query to only show refunded payments
-     *
      * @param Builder $query
      * @return Builder
      */

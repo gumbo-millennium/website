@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Nova\Fields;
 
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * A seat availability field
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,7 +15,6 @@ class Seats extends Number
 {
     /**
      * Resolve the field's value for display.
-     *
      * @param  mixed  $resource
      * @param  string|null  $attribute
      * @return void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,12 +18,11 @@ class FixStatementFields extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::table('activities', function (Blueprint $table) {
+        Schema::table('activities', static function (Blueprint $table) {
             $table->string('statement', 22)
                 ->nullable()
                 ->default(null)
@@ -31,12 +32,11 @@ class FixStatementFields extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('activities', function (Blueprint $table) {
+        Schema::table('activities', static function (Blueprint $table) {
             $table->string('statement', 16)
                 ->nullable()
                 ->default(null)

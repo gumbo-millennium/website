@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Activities;
 
 use App\Http\Controllers\Controller;
@@ -8,11 +10,9 @@ use App\Models\Enrollment;
 use App\ViewModels\ActivityViewModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * Handles showing activity lists, activities and the schedule route
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -20,7 +20,6 @@ class DisplayController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
      * @param Request $request
      * @return Response
      */
@@ -68,7 +67,6 @@ class DisplayController extends Controller
 
     /**
      * Display the specified resource.
-     *
      * @param  Activity  $activity
      * @return Response
      */
@@ -89,7 +87,6 @@ class DisplayController extends Controller
 
     /**
      * Handle "please login to enroll" buttons
-     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse

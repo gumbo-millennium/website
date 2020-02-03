@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Forms\Traits\UserDataForm;
-use App\Helpers\Arr;
-use App\Helpers\Str;
 use App\Models\User;
-use Illuminate\Validation\Rule;
 use Kris\LaravelFormBuilder\Form;
 
 /**
  * Account info update form
- *
  * @package App\Forms
  */
 class AccountEditForm extends Form
@@ -33,15 +29,6 @@ class AccountEditForm extends Form
     }
 
     /**
-     * Returns a proper user id
-     * @return null|int
-     */
-    protected function getUser(): ?int
-    {
-        return $this->userId ?? $this->formOptions['user-id'] ?? null;
-    }
-
-    /**
      * Builds the form
      */
     public function buildForm()
@@ -55,5 +42,14 @@ class AccountEditForm extends Form
             ->add('submit', 'submit', [
                 'label' => 'Opslaan'
             ]);
+    }
+
+    /**
+     * Returns a proper user id
+     * @return null|int
+     */
+    protected function getUser(): ?int
+    {
+        return $this->userId ?? $this->formOptions['user-id'] ?? null;
     }
 }

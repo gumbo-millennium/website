@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe\Traits;
 
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Cancelled;
-use App\Services\StripeService;
 use Stripe\Charge;
-use Stripe\Event;
 
 /**
  * Utility methods for Charge objects

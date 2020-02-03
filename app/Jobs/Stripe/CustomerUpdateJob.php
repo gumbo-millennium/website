@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe;
 
 use App\Models\User;
@@ -11,14 +13,12 @@ class CustomerUpdateJob extends StripeJob
 {
     /**
      * User
-     *
      * @var User
      */
     protected $user;
 
     /**
      * Create a new job instance.
-     *
      * @return void
      */
     public function __construct(User $user)
@@ -28,7 +28,6 @@ class CustomerUpdateJob extends StripeJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle()
@@ -49,7 +48,6 @@ class CustomerUpdateJob extends StripeJob
 
     /**
      * Update the existing user
-     *
      * @param User $user
      * @return bool
      */
@@ -77,7 +75,6 @@ class CustomerUpdateJob extends StripeJob
 
     /**
      * Creates a new customers
-     *
      * @param User $user
      * @return void
      */

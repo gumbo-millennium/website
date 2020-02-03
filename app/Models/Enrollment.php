@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
@@ -11,8 +12,6 @@ use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
@@ -20,7 +19,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
- *
  * @property \App\Models\States\Enrollment\State $state
  */
 class Enrollment extends UuidModel
@@ -58,43 +56,71 @@ class Enrollment extends UuidModel
     ];
 
     /**
-     * Finds the active enrollment for this activity
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment|null
+     * An enrollment can have multiple payments (in case one failed, for example)
+     * @return HasMany
      */
-    public static function findActive(User $user, Activity $activity): ?Enrollment
+    public function payments(): Relation
     {
-        return self::query()
-            ->withoutTrashed()
-            ->whereUserId($user->id)
-            ->whereActivityId($activity->id)
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
-            ->with(['activity'])
-            ->first();
+        return $this->hasMany(Payment::class);
     }
 
     /**
-     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment
-     * @throws NotFoundHttpException if there is no enrollment present
+     * The user this enrollment belongs to
+     * @return BelongsTo
      */
-    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
+    public function user(): Relation
     {
-        $result = self::findActive($user, $activity);
-        if ($result) {
-            return $result;
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The activity this enrollment belongs to
+     * @return BelongsTo
+     */
+    public function activity(): Relation
+    {
+        return $this->belongsTo(Activity::class);
+    }
+
+    /**
+     * Returns true if the state is stable and will not auto-delete
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsStableAttribute(): bool
+    {
+        return $this->state instanceof ConfirmedState;
+    }
+
+    /**
+     * Returns state we want to go to, depending on Enrollment's own attributes.
+     * Returns null if it can't figure it out.
+     * @return App\Models\States\Enrollment\State|null
+     */
+    public function getWantedStateAttribute(): ?EnrollmentState
+    {
+        // First check for any transition
+        $options = $this->state->transitionableStates();
+        if (in_array(SeededState::$name, $options) && $this->activity->form) {
+            return new SeededState($this);
+        } elseif (in_array(PaidState::$name, $options) && $this->price) {
+            return new PaidState($this);
+        } elseif (in_array(ConfirmedState::$name, $options)) {
+            return new ConfirmedState($this);
         }
-        throw new NotFoundHttpException();
+
+        return null;
+    }
+
+    public function getRequiresPaymentAttribute(): bool
+    {
+        return $this->exists &&
+            $this->total_price &&
+            !($this->state instanceof CancelledState);
     }
 
     /**
      * Register the states an enrollment can have
-     *
      * @return void
      */
     protected function registerStates(): void
@@ -129,71 +155,35 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * An enrollment can have multiple payments (in case one failed, for example)
-     *
-     * @return HasMany
+     * Finds the active enrollment for this activity
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment|null
      */
-    public function payments(): Relation
+    public static function findActive(User $user, Activity $activity): ?Enrollment
     {
-        return $this->hasMany(Payment::class);
+        return self::query()
+            ->withoutTrashed()
+            ->whereUserId($user->id)
+            ->whereActivityId($activity->id)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
+            ->with(['activity'])
+            ->first();
     }
 
     /**
-     * The user this enrollment belongs to
-     *
-     * @return BelongsTo
+     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment
+     * @throws NotFoundHttpException if there is no enrollment present
      */
-    public function user(): Relation
+    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
     {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * The activity this enrollment belongs to
-     *
-     * @return BelongsTo
-     */
-    public function activity(): Relation
-    {
-        return $this->belongsTo(Activity::class);
-    }
-
-    /**
-     * Returns true if the state is stable and will not auto-delete
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getIsStableAttribute(): bool
-    {
-        return $this->state instanceof ConfirmedState;
-    }
-
-    /**
-     * Returns state we want to go to, depending on Enrollment's own attributes.
-     * Returns null if it can't figure it out.
-     *
-     * @return App\Models\States\Enrollment\State|null
-     */
-    public function getWantedStateAttribute(): ?EnrollmentState
-    {
-        // First check for any transition
-        $options = $this->state->transitionableStates();
-        if (in_array(SeededState::$name, $options) && $this->activity->form) {
-            return new SeededState($this);
-        } elseif (in_array(PaidState::$name, $options) && $this->price) {
-            return new PaidState($this);
-        } elseif (in_array(ConfirmedState::$name, $options)) {
-            return new ConfirmedState($this);
+        $result = self::findActive($user, $activity);
+        if ($result) {
+            return $result;
         }
-
-        return null;
-    }
-
-    public function getRequiresPaymentAttribute(): bool
-    {
-        return $this->exists &&
-            $this->total_price &&
-            !($this->state instanceof CancelledState);
+        throw new NotFoundHttpException();
     }
 }

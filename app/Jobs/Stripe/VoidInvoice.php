@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe;
 
 use App\Models\Enrollment;
@@ -12,14 +14,12 @@ class VoidInvoice extends StripeJob
 {
     /**
      * Undocumented variable
-     *
      * @var Enrollment
      */
     protected $enrollment;
 
     /**
      * Create a new job instance.
-     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -29,7 +29,6 @@ class VoidInvoice extends StripeJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle(StripeService $service)
@@ -50,9 +49,9 @@ class VoidInvoice extends StripeJob
             return;
         }
 
-        // Get data from Stripe
-        /** @var Invoice $invoice */
         $invoice = $service->get(Invoice::class, $enrollment->payment_invoice);
+        // Get data from Stripe
+        \assert($invoice instanceof Invoice);
 
         // Invoices voided in the Stripe dashboard might cause a trigger to end up here.
         if ($invoice->status === Invoice::STATUS_VOID) {

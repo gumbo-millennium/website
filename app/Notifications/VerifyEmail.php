@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\VerifyEmail as LaravelVerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
 {
@@ -15,7 +16,6 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
-     *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */

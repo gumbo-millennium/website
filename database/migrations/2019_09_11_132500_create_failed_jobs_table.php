@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFailedJobsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        Schema::create('failed_jobs', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('connection');
             $table->text('queue');
@@ -25,7 +26,6 @@ class CreateFailedJobsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

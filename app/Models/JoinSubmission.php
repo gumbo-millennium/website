@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Actions\Actionable;
 
 /**
  * Encrypted submission to Gumbo
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -51,7 +52,6 @@ class JoinSubmission extends Model
 
     /**
      * Default values
-     *
      * @var array
      */
     protected $attributes = [
@@ -71,7 +71,6 @@ class JoinSubmission extends Model
 
     /**
      * Full name property
-     *
      * @return string
      */
     public function getNameAttribute(): string

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\User;
@@ -8,22 +10,18 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Handle Role modifications
- *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RolePolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
-    /**
-     * @var string Permission name
-     */
     public const ADMIN_PERMISSION = 'role-admin';
     public const USER_PERMISSION = 'role';
 
     /**
      * Determine whether the user can view any models.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -34,7 +32,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can view the model.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -46,7 +43,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can create models.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -57,7 +53,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can update the model.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -69,7 +64,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can delete the model.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -81,7 +75,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can restore the model.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -93,7 +86,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can permanently delete the model.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -105,7 +97,6 @@ class RolePolicy
 
     /**
      * Allow attaching permissions if admin
-     *
      * @param User $user
      * @param Permission $permission
      * @return bool
@@ -119,7 +110,6 @@ class RolePolicy
     /**
      * Allow attaching users if admin or if granted
      * management access
-     *
      * @param User $user
      * @param Permission $permission
      * @return bool
@@ -133,7 +123,6 @@ class RolePolicy
     /**
      * Allow attaching users if admin or if granted
      * management access
-     *
      * @param User $user
      * @param Permission $permission
      * @return bool
@@ -146,12 +135,11 @@ class RolePolicy
 
     /**
      * Can the given user manage roles
-     *
      * @param User $user
      * @param Role|null $role Role that's being managed
      * @return bool
      */
-    public function manage(User $user, Role $role = null): bool
+    public function manage(User $user, ?Role $role = null): bool
     {
         // allow admins
         if ($user->can('admin', Role::class)) {
@@ -164,7 +152,6 @@ class RolePolicy
 
     /**
      * Can the given user admin all roles
-     *
      * @param User $user
      * @return bool
      */

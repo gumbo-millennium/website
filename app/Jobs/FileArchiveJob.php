@@ -5,21 +5,12 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Models\File;
-use App\Jobs\Concerns\ReplacesStoredFiles;
-use App\Jobs\Concerns\RunsCliCommands;
-use App\Jobs\Concerns\UsesTemporaryFiles;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
 /**
  * Converts PDF file to the PDF/A-3 standard. Requires Ghostscript.
  * Cannot typically error.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -27,21 +18,18 @@ class FileArchiveJob extends FileJob
 {
     /**
      * Try job 3 times
-     *
      * @var int
      */
     protected $tries = 3;
 
     /**
      * Allow 3 minutes to archive
-     *
      * @var int
      */
     protected $timeout = 180;
 
     /**
      * Get the tags that should be assigned to the job.
-     *
      * @return array
      */
     public function tags(): array
@@ -51,7 +39,6 @@ class FileArchiveJob extends FileJob
 
     /**
      * Execute the job.
-     *
      * @return void|boolean
      */
     public function handle(): void

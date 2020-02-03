@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 /**
  * Deletes a file from the database AND from the filesystem
- *
  * @author Roelof Roos <github@roelof.io>
  */
 class FileDeleteJob implements ShouldQueue
@@ -22,14 +23,12 @@ class FileDeleteJob implements ShouldQueue
 
     /**
      * The file being deleted
-     *
      * @param File $file
      */
     protected $file;
 
     /**
      * Create a new job instance.
-     *
      * @return void
      */
     public function __construct(File $file)
@@ -39,7 +38,6 @@ class FileDeleteJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle()

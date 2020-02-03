@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use App\Models\File as FileModel;
@@ -19,35 +21,30 @@ use Laravel\Nova\Panel;
 
 /**
  * File resource, highly linked.
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class File extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = FileModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
-     *
      * @var string
      */
     public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -57,7 +54,6 @@ class File extends Resource
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -67,7 +63,6 @@ class File extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -77,13 +72,10 @@ class File extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fields(Request $request)
+    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
         return [
             ID::make()->sortable(),
@@ -118,9 +110,7 @@ class File extends Resource
                     ->rules('required', 'mimes:pdf')
                     ->disableDownload()
                     ->deletable(false)
-                    ->readonly(function () {
-                        return $this->exists && $this->file;
-                    })
+                    ->readonly(fn () => $this->exists && $this->file)
                     ->help('Bestand dat de leden downloaden'),
 
                 // Thumbnail

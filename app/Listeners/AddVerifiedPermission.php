@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified as LaravelVerifiedEvent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
  * Listens to verifications of e-mail accounts
  * Adds users to 'verified' when they have.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,7 +17,6 @@ class AddVerifiedPermission
 {
     /**
      * Create the event listener.
-     *
      * @return void
      */
     public function __construct()
@@ -28,7 +26,6 @@ class AddVerifiedPermission
 
     /**
      * Handle the event.
-     *
      * @param  LaravelVerifiedEvent  $event
      * @return void
      */

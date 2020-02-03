@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
-use App\Helpers\Arr;
-use App\Helpers\Str;
 use Kris\LaravelFormBuilder\Form;
 
 /**
  * Form to accept privacy policy
- *
  * @package App\Forms
  */
 class RegisterPrivacyForm extends Form

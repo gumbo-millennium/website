@@ -7,17 +7,7 @@ namespace App\Http\Controllers\Activities\Traits;
 use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Enrollment;
 use App\Services\StripeErrorService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Invoice;
-use Stripe\Mandate;
-use Stripe\PaymentIntent;
-use Stripe\PaymentMethod;
-use Stripe\Source;
 
 /**
  * Handles customers in Stripe
@@ -26,7 +16,6 @@ trait HandlesCustomers
 {
     /**
      * Makes sure a Stripe customer is present for this user. Reloads the $enrollment if required
-     *
      * @param Enrollment $enrollment
      */
     protected function ensureCustomerExists(Enrollment &$enrollment): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
@@ -14,35 +16,30 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * News Items
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NewsItem extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = NewsItemModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
-     *
      * @var string
      */
     public static $group = 'Content';
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -52,7 +49,6 @@ class NewsItem extends Resource
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -62,7 +58,6 @@ class NewsItem extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -72,12 +67,10 @@ class NewsItem extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fields(Request $request)
+    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
         return [
             ID::make()->sortable(),

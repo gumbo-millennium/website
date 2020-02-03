@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe\Hooks;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
 use App\Notifications\EnrollmentPaid;
-use Stripe\Event;
 use Stripe\Invoice;
 
 /**
@@ -20,15 +21,14 @@ class HandleInvoicePaid extends StripeWebhookJob
 {
     /**
      * Execute the job.
-     *
      * @param Invoice $invoice
      * @return void
      */
     protected function process(?Invoice $invoice): void
     {
-        // Check if the payment intent exists
-        /** @var Enrollment $enrollment */
         $enrollment = Enrollment::wherePaymentInvoice($invoice->id)->first();
+        // Check if the payment intent exists
+        \assert($enrollment instanceof Enrollment);
 
         // Skip if not found
         if ($enrollment === null) {

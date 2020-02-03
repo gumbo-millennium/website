@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+declare(strict_types=1);
 
 /*
 |--------------------------------------------------------------------------

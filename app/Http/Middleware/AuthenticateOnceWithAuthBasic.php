@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Handles stateless authentication
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,7 +16,6 @@ class AuthenticateOnceWithAuthBasic
 {
     /**
      * Handle an incoming request.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
-use App\Nova\Flexible\Presets\ActivityForm;
-use App\Policies\ActivityPolicy;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
@@ -20,36 +20,30 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
-use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Activity extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = ActivityModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'name';
 
     /**
      * Name of the group
-     *
      * @var string
      */
     public static $group = 'Activiteiten';
@@ -62,7 +56,6 @@ class Activity extends Resource
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -74,7 +67,6 @@ class Activity extends Resource
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -84,7 +76,6 @@ class Activity extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -93,8 +84,60 @@ class Activity extends Resource
     }
 
     /**
-     * Get the search result subtitle for the resource.
+     * Make sure the user can only see enrollments he/she is allowed to see
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return self::queryAllOrManaged($request, parent::indexQuery($request, $query));
+    }
+
+    /**
+     * Build a "relatable" query for the given resource.
      *
+     * This query determines which instances of the model may be attached to other resources.
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        return self::queryAllOrManaged($request, parent::relatableQuery($request, $query));
+    }
+
+    /**
+     * Build a Scout search query for the given resource.
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Laravel\Scout\Builder  $query
+     * @return \Laravel\Scout\Builder
+     */
+    public static function scoutQuery(NovaRequest $request, $query)
+    {
+        return self::queryAllOrManaged($request, parent::scoutQuery($request, $query));
+    }
+
+    /**
+     * Return query that is filtered on allowed activities, IF the user is
+     * not allowed to view them all
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private static function queryAllOrManaged(NovaRequest $request, $query)
+    {
+        // User is admin, don't filter
+        if ($request->user()->can('admin', ActivityModel::class)) {
+            return $query;
+        }
+
+        // User only has a subset of queries, filter it
+        return $request->user()->getHostedActivityQuery($query);
+    }
+
+    /**
+     * Get the search result subtitle for the resource.
      * @return string
      */
     public function subtitle()
@@ -117,12 +160,10 @@ class Activity extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fields(Request $request)
+    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
         return [
             $this->mainFields(),
@@ -146,9 +187,7 @@ class Activity extends Resource
             Slug::make('Pad', 'slug')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
-                ->readonly(function () {
-                    return $this->exists;
-                }),
+                ->readonly(fn () => $this->exists),
 
             Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
@@ -207,7 +246,6 @@ class Activity extends Resource
 
     /**
      * Pricing fields
-     *
      * @return array
      */
     public function pricingFields(): array
@@ -296,62 +334,5 @@ class Activity extends Resource
 
             Boolean::make('Openbare activiteit', 'is_public'),
         ];
-    }
-
-    /**
-     * Return query that is filtered on allowed activities, IF the user is
-     * not allowed to view them all
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    private static function queryAllOrManaged(NovaRequest $request, $query)
-    {
-        // User is admin, don't filter
-        if ($request->user()->can('admin', ActivityModel::class)) {
-            return $query;
-        }
-
-        // User only has a subset of queries, filter it
-        return $request->user()->getHostedActivityQuery($query);
-    }
-
-    /**
-     * Make sure the user can only see enrollments he/she is allowed to see
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return self::queryAllOrManaged($request, parent::indexQuery($request, $query));
-    }
-
-    /**
-     * Build a "relatable" query for the given resource.
-     *
-     * This query determines which instances of the model may be attached to other resources.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function relatableQuery(NovaRequest $request, $query)
-    {
-        return self::queryAllOrManaged($request, parent::relatableQuery($request, $query));
-    }
-
-    /**
-     * Build a Scout search query for the given resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Scout\Builder  $query
-     * @return \Laravel\Scout\Builder
-     */
-    public static function scoutQuery(NovaRequest $request, $query)
-    {
-        return self::queryAllOrManaged($request, parent::scoutQuery($request, $query));
     }
 }

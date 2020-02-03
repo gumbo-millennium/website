@@ -1,20 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 /**
  * Adds or updates the default user
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
 class UserSeeder extends Seeder
 {
     /**
+     * Run the database seeds.
+     * @return void
+     */
+    public function run()
+    {
+        // Add test users
+        $this->makeUser('board', 'Bestuur', ['member', 'board']);
+        $this->makeUser('ac', 'AC', ['member', 'ac']);
+        $this->makeUser('dc', 'DC', ['member', 'dc']);
+        $this->makeUser('lhw', 'LHW', ['member', 'lhw']);
+        $this->makeUser('gumbo', 'Lid', ['member']);
+        $this->makeUser('guest', 'Gast', ['guest']);
+        $this->makeUser('event-owner', 'Event Owner', ['member']);
+
+        // Add more users
+        factory(User::class, 25)->create();
+    }
+
+    /**
      * Creates a user
-     *
      * @param string $email
      * @param array $roles
      * @return void
@@ -34,25 +53,5 @@ class UserSeeder extends Seeder
         if ($user->trashed()) {
             $user->restore();
         }
-    }
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        // Add test users
-        $this->makeUser('board', 'Bestuur', ['member', 'board']);
-        $this->makeUser('ac', 'AC', ['member', 'ac']);
-        $this->makeUser('dc', 'DC', ['member', 'dc']);
-        $this->makeUser('lhw', 'LHW', ['member', 'lhw']);
-        $this->makeUser('gumbo', 'Lid', ['member']);
-        $this->makeUser('guest', 'Gast', ['guest']);
-        $this->makeUser('event-owner', 'Event Owner', ['member']);
-
-        // Add more users
-        factory(User::class, 25)->create();
     }
 }

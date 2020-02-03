@@ -15,7 +15,7 @@ trait HandlesStripeSources
 {
     /**
      * Sources retrieved from API
-     * @var Source[]
+     * @var array<Source>
      */
     private array $sourceCache = [];
 
@@ -105,7 +105,6 @@ trait HandlesStripeSources
 
     /**
      * Builds a redirect to fulfill the Source's payment, if applicable.
-     *
      * @param Source $source
      * @return null|RedirectResponse
      */

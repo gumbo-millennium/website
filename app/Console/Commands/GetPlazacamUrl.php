@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\User;
@@ -11,21 +13,18 @@ class GetPlazacamUrl extends Command
     private const CAMERA_NAMES = ['plaza', 'coffee'];
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'plazacam:url {--U|user= : User ID or email}';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Gets a URL for the different webcams';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -35,7 +34,6 @@ class GetPlazacamUrl extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
@@ -46,10 +44,8 @@ class GetPlazacamUrl extends Command
 
         // Add user idenifier if present
         if ($userId) {
-            $userQuery = $userQuery->where(function ($query) use ($userId) {
-                return $query->where('id', $userId)
-                    ->orWhere('email', $userId);
-            });
+            $userQuery = $userQuery->where(static fn ($query) => $query->where('id', $userId)
+                    ->orWhere('email', $userId));
         }
 
         // Get user

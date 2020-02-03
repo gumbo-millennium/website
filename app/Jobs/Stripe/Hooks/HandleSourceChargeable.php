@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe\Hooks;
 
 use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
-use Stripe\Event;
-use Stripe\Invoice;
 use Stripe\Source;
 
 /**
@@ -21,15 +21,14 @@ class HandleSourceChargeable extends StripeWebhookJob
 {
     /**
      * Execute the job.
-     *
      * @param Invoice $invoice
      * @return void
      */
     protected function process(?Source $source): void
     {
-        // Check if the payment intent exists
-        /** @var Enrollment $enrollment */
         $enrollment = Enrollment::wherePaymentSource($source->id)->first();
+        // Check if the payment intent exists
+        \assert($enrollment instanceof Enrollment);
 
         // Skip if not found
         if ($enrollment === null) {
@@ -62,11 +61,11 @@ class HandleSourceChargeable extends StripeWebhookJob
             return;
         }
 
-        /** @var StripeServiceContract $service */
         $service = app(StripeServiceContract::class);
+        \assert($service instanceof StripeServiceContract);
 
-        /** @var \Stripe\Invoice $invoice */
         $invoice = $service->getInvoice($enrollment);
+        \assert($invoice instanceof \Stripe\Invoice);
         if (!$invoice) {
             logger()->notice(
                 'Recieved chargeable {source} for enrollment without invoice',

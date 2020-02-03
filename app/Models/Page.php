@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * A user-generated page
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -53,7 +53,6 @@ class Page extends SluggableModel
 
     /**
      * Generate the slug based on the title property
-     *
      * @return array
      */
     public function sluggable(): array
@@ -73,7 +72,6 @@ class Page extends SluggableModel
 
     /**
      * Returns the owning user, if present
-     *
      * @return BelongsTo
      */
     public function author(): Relation
@@ -83,7 +81,6 @@ class Page extends SluggableModel
 
     /**
      * Converts contents to HTML
-     *
      * @return string|null
      */
     public function getHtmlAttribute(): ?string

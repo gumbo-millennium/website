@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Mail\AccountCreatedMail;
@@ -24,21 +26,18 @@ class TestMailCommand extends Command
     ];
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'test:mail {email : e-mail address of the user}';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Sends a test e-mail to the user';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -48,14 +47,13 @@ class TestMailCommand extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
     {
         $email = $this->argument('email');
-        /** @var User $user */
         $user = User::whereEmail($email)->first();
+        \assert($user instanceof User);
 
         if (!$user) {
             $this->line("Cannot find a user with the email address <info>$email</>.");
@@ -64,14 +62,14 @@ class TestMailCommand extends Command
 
         $this->line("Recieved user <info>{$user->name}</>.");
 
-        // Find enrollment
-        /** @var Enrollment $enrollment */
         $enrollment = Enrollment::query()
             ->whereUserId($user->id)
             ->whereNotState('state', [CancelledState::class, RefundedState::class])
             ->orderByDesc('updated_at')
             ->with('activity')
             ->first();
+        // Find enrollment
+        \assert($enrollment instanceof Enrollment);
 
         $this->line(sprintf(
             'Received enrollment <info>%s</> for <comment>%s</>.',

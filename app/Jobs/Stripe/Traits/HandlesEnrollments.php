@@ -1,14 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe\Traits;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
-use App\Services\StripeService;
-use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
-use Stripe\Charge;
-use Stripe\Event;
 
 /**
  * Utility methods for Charge objects
@@ -19,7 +16,6 @@ trait HandlesEnrollments
 {
     /**
      * Cancels the given enrollment. A refund will be automatically generated
-     *
      * @param Enrollment $enrollment
      * @return void
      * @throws InvalidConfig

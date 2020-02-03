@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * WEB ROUTES
  *
@@ -39,7 +41,7 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
 /**
  * Files route
  */
-Route::middleware('auth')->prefix('bestanden')->name('files.')->group(function () {
+Route::middleware('auth')->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
@@ -56,7 +58,7 @@ Route::middleware('auth')->prefix('bestanden')->name('files.')->group(function (
 /**
  * Activities
  */
-Route::prefix('activiteiten')->name('activity.')->group(function () {
+Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // USER ROUTES
     // Main route
     Route::get('/', 'Activities\\DisplayController@index')->name('index');
@@ -75,7 +77,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->group(function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->group(static function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
@@ -104,7 +106,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->group(fun
 /**
  * News
  */
-Route::prefix('nieuws')->name('news.')->group(function () {
+Route::prefix('nieuws')->name('news.')->group(static function () {
     // Main route
     Route::get('/', 'NewsController@index')->name('index');
 
@@ -115,7 +117,7 @@ Route::prefix('nieuws')->name('news.')->group(function () {
 /**
  * Join controller
  */
-Route::prefix('word-lid')->name('join.')->group(function () {
+Route::prefix('word-lid')->name('join.')->group(static function () {
     // Join form
     Route::get('/', 'JoinController@index')->name('form');
 
@@ -128,7 +130,7 @@ Route::prefix('word-lid')->name('join.')->group(function () {
 
 
 // Authentication and forgotten passwords
-Route::prefix('auth')->middleware($loginCsp)->group(function () {
+Route::prefix('auth')->middleware($loginCsp)->group(static function () {
     Route::auth(['verify' => true]);
 
     // Register privacy
@@ -137,14 +139,14 @@ Route::prefix('auth')->middleware($loginCsp)->group(function () {
 });
 
 // My account
-Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(function () {
+Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
     Route::get('/', 'AccountController@index')->name('index');
     Route::get('/profiel', 'AccountController@edit')->name('edit');
     Route::patch('/profiel', 'AccountController@update')->name('update');
 });
 
 // Onboarding URLs
-Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(function () {
+Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(static function () {
     Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-account');
 });
 

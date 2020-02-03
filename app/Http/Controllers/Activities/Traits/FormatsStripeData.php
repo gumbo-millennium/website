@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities\Traits;
 
-use App\Helpers\Str;
 use App\Models\Enrollment;
 
 /**
@@ -15,7 +14,6 @@ trait FormatsStripeData
     /**
      * Returns common data, such as a price, currency and statement
      * description.
-     *
      * @param Enrollment $enrollment Enrollment to apply
      * @return array|null
      */

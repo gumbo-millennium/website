@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePaymentsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('payments', static function (Blueprint $table) {
             // IDs
             $table->uuid('id')->primary();
             $table->string('transaction_id', 180)->unique();
@@ -45,7 +46,6 @@ class CreatePaymentsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

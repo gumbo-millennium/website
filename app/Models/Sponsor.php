@@ -14,10 +14,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Gumbo Millennium sponsors
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- *
  * @property-read AttachmentInterface $logo
  * @property-read AttachmentInterface $image
  */
@@ -28,7 +26,6 @@ class Sponsor extends Model implements AttachableInterface
 
     /**
      * The Sponsors default attributes.
-     *
      * @var array
      */
     protected $attributes = [
@@ -41,7 +38,6 @@ class Sponsor extends Model implements AttachableInterface
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -56,7 +52,6 @@ class Sponsor extends Model implements AttachableInterface
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -70,8 +65,26 @@ class Sponsor extends Model implements AttachableInterface
     ];
 
     /**
+     * Returns sponsors that are available right now
+     * @param Builder $builder
+     * @return Builder
+     */
+    public function scopeAvailable(Builder $builder): Builder
+    {
+        return $builder
+            ->whereNotNull('image_file_name')
+            ->where(static function ($query) {
+                $query->where('starts_at', '>=', now())
+                    ->orWhereNull('starts_at');
+            })
+            ->where(static function ($query) {
+                $query->where('ends_at', '<', now())
+                    ->orWhereNull('ends_at');
+            });
+    }
+
+    /**
      * Binds paperclip files
-     *
      * @return void
      */
     protected function bindPaperclip(): void
@@ -94,25 +107,5 @@ class Sponsor extends Model implements AttachableInterface
                 ])->extension('png'),
             ]
         ]);
-    }
-
-    /**
-     * Returns sponsors that are available right now
-     *
-     * @param Builder $builder
-     * @return Builder
-     */
-    public function scopeAvailable(Builder $builder): Builder
-    {
-        return $builder
-            ->whereNotNull('image_file_name')
-            ->where(function ($query) {
-                $query->where('starts_at', '>=', now())
-                    ->orWhereNull('starts_at');
-            })
-            ->where(function ($query) {
-                $query->where('ends_at', '<', now())
-                    ->orWhereNull('ends_at');
-            });
     }
 }

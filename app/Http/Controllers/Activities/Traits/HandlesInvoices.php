@@ -5,21 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities\Traits;
 
 use App\Helpers\Arr;
-use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Enrollment;
 use App\Services\StripeErrorService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Invoice;
 use Stripe\InvoiceItem;
-use Stripe\Mandate;
 use Stripe\PaymentIntent;
-use Stripe\PaymentMethod;
-use Stripe\Source;
 
 /**
  * Creates Billing Invoices in Stripe
@@ -29,7 +20,6 @@ trait HandlesInvoices
     /**
      * Creates a Billing Invoice at Stripe and returns it.
      * Returns null if $enrollment is a free activity (for this user)
-     *
      * @param Enrollment $enrollment
      * @return Invoice|null
      */
@@ -110,7 +100,6 @@ trait HandlesInvoices
     /**
      * Retrieves or creates invoice for the given enrollment.
      * Returns null if this user need not pay.
-     *
      * @param Enrollment $enrollment
      * @return null|Stripe\Invoice
      * @throws BindingResolutionException

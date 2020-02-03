@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use GuzzleHttp\Client;
@@ -7,7 +9,6 @@ use Illuminate\Console\Command;
 
 /**
  * Auto download an ignore file for this project.
- *
  * @author Roelof Roos
  * @license MPL-2.0
  */
@@ -15,21 +16,18 @@ class UpdateIgnore extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'app:gitignore';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Updates the .gitignore file';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -39,7 +37,6 @@ class UpdateIgnore extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
@@ -78,7 +75,7 @@ class UpdateIgnore extends Command
             return false;
         }
 
-        $ignoreContent = $data->getBody() . <<<IGNORE
+        $ignoreContent = $data->getBody() . <<<'IGNORE'
 
 ### App config ###
 

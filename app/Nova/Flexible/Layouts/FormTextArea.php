@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Flexible\Layouts;
 
 use Laravel\Nova\Fields\Boolean;
@@ -10,21 +12,18 @@ class FormTextArea extends Layout
 {
     /**
      * The layout's unique identifier
-     *
      * @var string
      */
     protected $name = 'text-area';
 
     /**
      * The displayed title
-     *
      * @var string
      */
     protected $title = 'Text Area';
 
     /**
      * Get the fields displayed by the layout.
-     *
      * @return array
      */
     public function fields()

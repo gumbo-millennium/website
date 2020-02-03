@@ -15,8 +15,131 @@ use Spatie\Permission\Models\Role;
 class ActivitySeeder extends Seeder
 {
     /**
+     * Returns start of semester, as immutable element
+     * @return \DateTimeImmutable
+     */
+    protected static function getStartOfYear(): CarbonImmutable
+    {
+        static $start;
+
+        if ($start) {
+            return $start;
+        }
+
+        // Determine start of university year
+        $start = (new Carbon('First Monday of September', 'UTC'))->toImmutable();
+
+        // Get next start of university year if this year has already started.
+        if ($start < now()) {
+            $start = (new Carbon('First Monday of September next year', 'UTC'))->toImmutable();
+        }
+
+        // Return the start of the college year
+        return $start;
+    }
+
+    /**
+     * Run the database seeds.
+     * @return void
+     */
+    public function run()
+    {
+        // Create Bruisweken event
+        $this->seedBruisweken();
+
+        // Create introduction period event
+        $this->seedGumboIntro();
+
+        // Create Christmas events
+        $this->seedChristmasEvents();
+
+        // Create permission test events
+        $this->seedBasicAccessEvent();
+
+        // Create payments events
+        $this->seedPaymentTest();
+
+        // Create seat tests
+        $this->seedSeatTest();
+    }
+
+    /**
+     * Adds a Bruisweken event
+     * @return void
+     */
+    public function seedBruisweken(): void
+    {
+        // Bruisweken are one week before start of semester
+        $startDate = $this->getStartOfYear()->sub('P1W');
+        $year = $startDate->year;
+
+        // Get slug
+        $slug = "bruisweken-{$year}";
+
+        // Find or create Activity
+        $this->safeCreate($slug, [
+            'name' => 'Bruisweken',
+            'tagline' => 'De Bruisweken zijn de algemene introductieweken voor nieuwe studenten in Zwolle.',
+            'start_date' => $startDate->setTime(10, 0, 0, 0),
+            'end_date' => $startDate->addDays(2)->setTime(15, 0, 0, 0),
+            'enrollment_start' => null,
+            'enrollment_end' => null,
+        ]);
+    }
+
+    /**
+     * Adds an introduction week event
+     * @return void
+     */
+    public function seedGumboIntro(): void
+    {
+        // Bruisweken are one week before start of semester
+        $date = $this->getStartOfYear()->add('P7W');
+        $year = $date->year;
+
+        // Get slug
+        $slug = "intro-{$year}";
+
+        // Enrollment price
+        $eventPrice = 50;
+
+        // Find or create Activity
+        $this->safeCreate($slug, [
+            'name' => 'Introductieweek',
+            'tagline' =>
+            'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
+            'start_date' => $date->setTime(10, 0, 0, 0),
+            'end_date' => $date->addDays(5)->setTime(10, 0, 0, 0),
+            'seats' => null,
+            'price' => $eventPrice * 100, // Price in cents
+
+            // Make sure users can enroll until friday
+            'enrollment_end' => $date->sub('P2DT1S'),
+        ]);
+    }
+
+    /**
+     * Adds Christmas drinks and Christmas dinner
+     * @return void
+     */
+    public function seedChristmasEvents(): void
+    {
+        // Find christmas
+        $christmasDate = Carbon::parse('December 25th', 'UTC')->toImmutable();
+
+        // Make sure it's in the future
+        if ($christmasDate > now()) {
+            $christmasDate = $christmasDate->addYears(1);
+        }
+
+        // Create events yet to happen
+        $this->createChristmasEvents($christmasDate);
+
+        // Create events already happened
+        $this->createChristmasEvents($christmasDate->subYear(1));
+    }
+    /**
      * Creates an activity if it's not already there yet
-     *
      * @param string $slug
      * @param array $args
      * @param bool $withEnrollments Automatically register some users?
@@ -68,135 +191,6 @@ class ActivitySeeder extends Seeder
         return $activity;
     }
     /**
-     * Returns start of semester, as immutable element
-     *
-     * @return \DateTimeImmutable
-     */
-    protected static function getStartOfYear(): CarbonImmutable
-    {
-        static $start;
-
-        if ($start) {
-            return $start;
-        }
-
-        // Determine start of university year
-        $start = (new Carbon('First Monday of September', 'UTC'))->toImmutable();
-
-        // Get next start of university year if this year has already started.
-        if ($start < now()) {
-            $start = (new Carbon('First Monday of September next year', 'UTC'))->toImmutable();
-        }
-
-        // Return the start of the college year
-        return $start;
-    }
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        // Create Bruisweken event
-        $this->seedBruisweken();
-
-        // Create introduction period event
-        $this->seedGumboIntro();
-
-        // Create Christmas events
-        $this->seedChristmasEvents();
-
-        // Create permission test events
-        $this->seedBasicAccessEvent();
-
-        // Create payments events
-        $this->seedPaymentTest();
-
-        // Create seat tests
-        $this->seedSeatTest();
-    }
-
-    /**
-     * Adds a Bruisweken event
-     *
-     * @return void
-     */
-    public function seedBruisweken(): void
-    {
-        // Bruisweken are one week before start of semester
-        $startDate = $this->getStartOfYear()->sub('P1W');
-        $year = $startDate->year;
-
-        // Get slug
-        $slug = "bruisweken-{$year}";
-
-        // Find or create Activity
-        $this->safeCreate($slug, [
-            'name' => 'Bruisweken',
-            'tagline' => 'De Bruisweken zijn de algemene introductieweken voor nieuwe studenten in Zwolle.',
-            'start_date' => $startDate->setTime(10, 0, 0, 0),
-            'end_date' => $startDate->addDays(2)->setTime(15, 0, 0, 0),
-            'enrollment_start' => null,
-            'enrollment_end' => null,
-        ]);
-    }
-
-    /**
-     * Adds an introduction week event
-     *
-     * @return void
-     */
-    public function seedGumboIntro(): void
-    {
-        // Bruisweken are one week before start of semester
-        $date = $this->getStartOfYear()->add('P7W');
-        $year = $date->year;
-
-        // Get slug
-        $slug = "intro-{$year}";
-
-        // Enrollment price
-        $eventPrice = 50;
-
-        // Find or create Activity
-        $this->safeCreate($slug, [
-            'name' => 'Introductieweek',
-            'tagline' =>
-            'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
-            'start_date' => $date->setTime(10, 0, 0, 0),
-            'end_date' => $date->addDays(5)->setTime(10, 0, 0, 0),
-            'seats' => null,
-            'price' => $eventPrice * 100, // Price in cents
-
-            // Make sure users can enroll until friday
-            'enrollment_end' => $date->sub('P2DT1S'),
-        ]);
-    }
-
-    /**
-     * Adds Christmas drinks and Christmas dinner
-     *
-     * @return void
-     */
-    public function seedChristmasEvents(): void
-    {
-        // Find christmas
-        $christmasDate = Carbon::parse('December 25th', 'UTC')->toImmutable();
-
-        // Make sure it's in the future
-        if ($christmasDate > now()) {
-            $christmasDate = $christmasDate->addYears(1);
-        }
-
-        // Create events yet to happen
-        $this->createChristmasEvents($christmasDate);
-
-        // Create events already happened
-        $this->createChristmasEvents($christmasDate->subYear(1));
-    }
-
-    /**
      * Creates all christmas events for this given date
      */
     private function createChristmasEvents(DateTimeImmutable $date): void
@@ -239,7 +233,6 @@ class ActivitySeeder extends Seeder
     /**
      * Creates an event on the lhw role, to test role-level
      * access
-     *
      * @return void
      */
     private function seedBasicAccessEvent(): void
@@ -260,7 +253,6 @@ class ActivitySeeder extends Seeder
 
     /**
      * Seeds a bunch of events that start soon
-     *
      * @return void
      */
     private function seedPaymentTest(): void
@@ -280,7 +272,7 @@ class ActivitySeeder extends Seeder
         $endDate = (clone $startDate)->addHour(3);
 
         // Iterate
-        foreach ($sets as $slug => list($paid, $price, $discount)) {
+        foreach ($sets as $slug => [$paid, $price, $discount]) {
             $name = Str::studly($slug);
             $this->safeCreate($slug, [
                 'name' => "[test] {$name}",
@@ -315,7 +307,7 @@ class ActivitySeeder extends Seeder
         $date = today()->addWeek(3)->setTime(20, 0, 0)->toImmutable();
 
         // Iterate
-        foreach ($sets as $slug => list($seats, $memberEnroll, $guestEnroll)) {
+        foreach ($sets as $slug => [$seats, $memberEnroll, $guestEnroll]) {
             $name = Str::studly($slug);
             $activity = $this->safeCreate($slug, [
                 'name' => "[test] {$name}",

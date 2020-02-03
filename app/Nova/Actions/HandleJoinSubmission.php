@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Actions;
 
 use App\Models\JoinSubmission;
-use Illuminate\Bus\Queueable;
-use Laravel\Nova\Actions\Action;
-use Illuminate\Support\Collection;
-use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Laravel\Nova\Fields\Select;
 use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
+use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\Select;
 
 /**
  * Handles join submission completions, which have either a positive or negative
  * response.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -28,7 +28,6 @@ class HandleJoinSubmission extends Action
 
     /**
      * Perform the action on the given models.
-     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -70,7 +69,6 @@ class HandleJoinSubmission extends Action
 
     /**
      * Get the fields available on the action.
-     *
      * @return array
      */
     public function fields()
@@ -86,7 +84,6 @@ class HandleJoinSubmission extends Action
 
     /**
      * Handles a single submission
-     *
      * @param JoinSubmission $submission
      * @param bool $accepted
      * @return bool

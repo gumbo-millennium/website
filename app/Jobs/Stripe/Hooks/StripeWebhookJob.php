@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe\Hooks;
 
 use App\Jobs\Stripe\StripeJob;
@@ -15,21 +17,18 @@ abstract class StripeWebhookJob extends StripeJob
 {
     /**
      * Provided webhook
-     *
      * @var WebhookCall
      */
     protected WebhookCall $webhook;
 
     /**
      * The event we're processing
-     *
      * @var null|Event
      */
     protected ?Event $event = null;
 
     /**
      * Create a new job instance.
-     *
      * @return void
      */
     public function __construct(WebhookCall $webhook)
@@ -40,7 +39,6 @@ abstract class StripeWebhookJob extends StripeJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     final public function handle(): void

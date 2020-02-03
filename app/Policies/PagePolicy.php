@@ -10,6 +10,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PagePolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'content-admin';
@@ -29,9 +30,8 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function view(User $user, Page $page)
+    public function view(User $user)
     {
         return $user->can('manage', Page::class);
     }
@@ -51,7 +51,6 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, Page $page)
     {
@@ -63,7 +62,6 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, Page $page)
     {
@@ -75,9 +73,8 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function restore(User $user, Page $page)
+    public function restore(User $user)
     {
         return $user->can('manage', Page::class);
     }
@@ -87,9 +84,8 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function forceDelete(User $user, Page $page)
+    public function forceDelete(User $user)
     {
         return $user->can('manage', Page::class);
     }

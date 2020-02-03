@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Forms\Traits;
 
 use App\Helpers\Arr;
-use App\Models\User;
 use Illuminate\Validation\Rule;
 use Kris\LaravelFormBuilder\Form;
 
@@ -15,28 +14,12 @@ use Kris\LaravelFormBuilder\Form;
 trait UserDataForm
 {
     /**
-     * Builsd merged array from dot notation
-     *
-     * @param array $source
-     * @param array $merges
-     * @return array
-     */
-    private function dotMerge(array $source, array $merges): array
-    {
-        // merge dot-notation
-        foreach ($merges as $key => $value) {
-            Arr::set($source, $key, $value);
-        }
-        return $source;
-    }
-    /**
      * Add email field
-     *
      * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addEmail(int $userId = null, array $override = []): Form
+    public function addEmail(?int $userId = null, array $override = []): Form
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'email');
@@ -68,12 +51,11 @@ trait UserDataForm
 
     /**
      * Add alias
-     *
      * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addAlias(int $userId = null, array $override = []): Form
+    public function addAlias(?int $userId = null, array $override = []): Form
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'alias');
@@ -101,7 +83,7 @@ trait UserDataForm
             ],
             'help_block' => [
                 // phpcs:disable Generic.Files.LineLength.TooLong
-                'text' => <<<HTML
+                'text' => <<<'HTML'
                 Kies een optionele nickname die wordt getoond op de site in plaats van je voornaam<br />
                 Je kunt a-z, 0-9 en eventueel leestekens in het midden gebruiken.
                 HTML,
@@ -115,5 +97,19 @@ trait UserDataForm
 
         // Return field
         return $this->add('alias', 'text', $this->dotMerge($options, $override));
+    }
+    /**
+     * Builsd merged array from dot notation
+     * @param array $source
+     * @param array $merges
+     * @return array
+     */
+    private function dotMerge(array $source, array $merges): array
+    {
+        // merge dot-notation
+        foreach ($merges as $key => $value) {
+            Arr::set($source, $key, $value);
+        }
+        return $source;
     }
 }

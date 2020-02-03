@@ -14,7 +14,6 @@ class EnrollmentNotFoundException extends NotFoundHttpException implements Respo
 {
     /**
      * Create an HTTP response that represents the object.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

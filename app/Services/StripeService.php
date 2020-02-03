@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Handles making calls on the Stripe API
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -29,13 +28,12 @@ class StripeService implements StripeServiceContract
 
     /**
      * Handles exceptions from Stripe
-     *
      * @param ApiErrorException $exception
      * @param int|null $expect Expected error code (like 404)
      * @return void
      * @throws HttpException
      */
-    protected function handleError(ApiErrorException $exception, int $expect = null): void
+    protected function handleError(ApiErrorException $exception, ?int $expect = null): void
     {
         // Be quiet about expected errors
         if ($expect && $exception->getHttpStatus() === $expect) {

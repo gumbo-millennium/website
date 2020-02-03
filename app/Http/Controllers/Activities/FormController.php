@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Activities;
 
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\Facades\FormBuilder;
 use Kris\LaravelFormBuilder\Form;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Handles forms on activities
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -31,7 +31,6 @@ class FormController extends Controller
 
     /**
      * Shows the Activity's from
-     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Activity $activity)
@@ -57,7 +56,6 @@ class FormController extends Controller
 
     /**
      * Stores changes to the activity
-     *
      * @param  Request  $request
      * @return Response
      */
@@ -98,9 +96,9 @@ class FormController extends Controller
             'value' => 'Versturen'
         ];
 
-        // Get form
-        /** @var Form $form */
         $form = FormBuilder::createByArray($formFields, $options);
+        // Get form
+        \assert($form instanceof Form);
 
         // Return
         return $form;

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\Authorize;
 use Laravel\Nova\Http\Middleware\BootTools;
-use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\DispatchServingNovaEvent;
 use Vyuldashev\NovaPermission\ForgetCachedPermissions;
 

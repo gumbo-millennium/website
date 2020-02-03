@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSponsorsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('sponsors', function (Blueprint $table) {
+        Schema::create('sponsors', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
 
@@ -35,7 +36,6 @@ class CreateSponsorsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

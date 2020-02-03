@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEnrollmentsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('enrollments', function (Blueprint $table) {
+        Schema::create('enrollments', static function (Blueprint $table) {
             // IDs and owners
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id');
@@ -34,7 +35,6 @@ class CreateEnrollmentsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

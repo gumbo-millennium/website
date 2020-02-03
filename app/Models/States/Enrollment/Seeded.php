@@ -11,7 +11,6 @@ class Seeded extends State
 {
     /**
      * Name of the state, as human-readable version
-     *
      * @var string
      */
     public static $name = 'seeded';

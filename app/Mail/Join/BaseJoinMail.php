@@ -1,27 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail\Join;
 
 use App\Models\JoinSubmission;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
  * Shared elements for the join mail
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-abstract class BaseMail extends Mailable
+abstract class BaseJoinMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
 
     /**
      * The "reply to" recipients of the message.
-     *
      * @var array
      */
     public $replyTo = [
@@ -33,14 +32,12 @@ abstract class BaseMail extends Mailable
 
     /**
      * Registry submission
-     *
      * @var JoinSubmission
      */
     public $submission;
 
     /**
      * Create a new message instance.
-     *
      * @param JoinSubmission $submission Submission to send
      * @return void
      */
@@ -52,14 +49,12 @@ abstract class BaseMail extends Mailable
 
     /**
      * Build the message.
-     *
      * @return $this
      */
     abstract public function build();
 
     /**
      * Returns the subject
-     *
      * @param JoinSubmission $submission
      * @return string
      */

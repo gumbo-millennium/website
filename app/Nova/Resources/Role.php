@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use Illuminate\Http\Request;
@@ -18,28 +20,24 @@ use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Roles, for the Permission Framework
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Role extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = RoleModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -49,14 +47,12 @@ class Role extends Resource
 
     /**
      * Hide the item in the navbar
-     *
      * @var bool
      */
     public static $displayInNavigation = false;
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -66,7 +62,6 @@ class Role extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -81,16 +76,12 @@ class Role extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fields(Request $request)
+    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
-        $guardOptions = collect(config('auth.guards'))->keys()->mapWithKeys(function ($key) {
-            return [$key => $key];
-        });
+        $guardOptions = collect(config('auth.guards'))->keys()->mapWithKeys(static fn ($key) => [$key => $key]);
 
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
 
@@ -115,12 +106,8 @@ class Role extends Resource
             DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
 
-            Number::make('Aantal permissies', function () {
-                return $this->permissions()->count();
-            })->onlyOnIndex(),
-            Number::make('Aantal gebruikers', function () {
-                return $this->users()->count();
-            })->onlyOnIndex(),
+            Number::make('Aantal permissies', fn () => $this->permissions()->count())->onlyOnIndex(),
+            Number::make('Aantal gebruikers', fn () => $this->users()->count())->onlyOnIndex(),
 
             BelongsToMany::make('permissies', 'permissions', Permission::class)
                 ->searchable(),

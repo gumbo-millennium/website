@@ -4,30 +4,27 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\File;
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileThumbnailJob;
+use App\Models\File;
 use Illuminate\Console\Command;
 
 class TestFile extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'test:file {file}';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Tests a file processing job';
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle(): void

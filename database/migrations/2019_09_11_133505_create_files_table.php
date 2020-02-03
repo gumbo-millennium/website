@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('files', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('category_id')->nullable()->default(null);
 
@@ -50,7 +51,6 @@ class CreateFilesTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

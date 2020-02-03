@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
-use App\Models\File;
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileThumbnailJob;
+use App\Models\File;
 
 class FileObserver
 {
     /**
      * Handle the file "created" event.
-     *
      * @param  \App\File  $file
      * @return void
      */

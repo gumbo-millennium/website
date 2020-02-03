@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\JoinRequest;
 use App\Mail\Join\BoardJoinMail;
 use App\Mail\Join\UserJoinMail;
 use App\Models\Page;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
 use PDOException;
 
 /**
  * Handles sign ups to the student community. Presents a whole form and
  * isn't very user-friendly.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -32,7 +30,6 @@ class JoinController extends Controller
 
     /**
      * Shows the sign-up form
-     *
      * @param Request $request
      * @return Response
      */
@@ -47,7 +44,6 @@ class JoinController extends Controller
 
     /**
      * Handldes the user registration
-     *
      * @param SignUpRequest $request
      * @return Response
      */
@@ -97,7 +93,6 @@ class JoinController extends Controller
 
     /**
      * Request completed
-     *
      * @param Request $request
      * @return View
      */

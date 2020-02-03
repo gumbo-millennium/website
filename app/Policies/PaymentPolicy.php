@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
 use App\Model\Payment;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -11,21 +13,15 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class PaymentPolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
-    /**
-     * @var string Permission to monitor payments
-     */
     public const ADMIN_PERMISSION = 'payment-monitor';
 
-    /**
-     * @var string Permission to manage payments
-     */
     public const PURGE_PERMISSION = 'payment-admin';
 
     /**
      * Determine whether the user can view any payments.
-     *
      * @param  User  $user
      * @return bool
      */
@@ -36,7 +32,6 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can view the payment.
-     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -49,7 +44,6 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can create payments.
-     *
      * @param  User  $user
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -61,7 +55,6 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can update the payment.
-     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -74,7 +67,6 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can delete the payment.
-     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -86,7 +78,6 @@ class PaymentPolicy
 
     /**
      * Returns if the user is allowed to view payments
-     *
      * @param User $user
      * @return bool
      */
@@ -100,7 +91,6 @@ class PaymentPolicy
 
     /**
      * Returns if the user is allowed to modify payments
-     *
      * @param User $user
      * @return bool
      */

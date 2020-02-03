@@ -1,49 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use App\Models\FileCategory as FileCategoryModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipFile;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 
 class FileCategory extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = FileCategoryModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
-     *
      * @var string
      */
     public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -53,7 +45,6 @@ class FileCategory extends Resource
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -63,7 +54,6 @@ class FileCategory extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -73,12 +63,10 @@ class FileCategory extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function fields(Request $request)
+    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
         return [
             ID::make()->sortable(),
@@ -102,20 +90,14 @@ class FileCategory extends Resource
 
             new Panel('Statistieken', [
                 // Make extra data
-                Number::make('Aantal bestanden', function () {
-                    return $this->files()->count();
-                })->exceptOnForms(),
+                Number::make('Aantal bestanden', fn () => $this->files()->count())->exceptOnForms(),
 
                 // List downloads, in time frames
-                Number::make('Aantal downloads (48hrs)', function () {
-                    return $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count();
-                })->exceptOnForms(),
-                Number::make('Aantal downloads (1 week)', function () {
-                    return $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count();
-                })->onlyOnDetail(),
-                Number::make('Aantal downloads (all time)', function () {
-                    return $this->downloads()->count();
-                })->onlyOnDetail(),
+                // phpcs:disable Generic.Files.LineLength.TooLong
+                Number::make('Aantal downloads (48hrs)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count())->exceptOnForms(),
+                Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
+                // phpcs:enable
+                Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
             ])
         ];
     }

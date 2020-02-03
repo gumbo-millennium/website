@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -12,7 +11,6 @@ use Tests\Traits\TempUserTrait;
 
 /**
  * Tests updating the plazacam
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -22,7 +20,6 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
     public function testReadUser(): void
@@ -51,7 +48,6 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
     public function testReadMember(): void

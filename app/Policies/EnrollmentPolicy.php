@@ -1,28 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\Activity;
-use App\Models\User;
 use App\Models\Enrollment;
-use App\Models\Payment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Handles allowing mutations on enrollments
- *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class EnrollmentPolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     /**
      * Determine whether the user can view any enrollments.
-     *
      * @param  \App\Models\User  $user
      * @return bool
      */
@@ -33,7 +32,6 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can view the enrollment.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -45,7 +43,6 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can create enrollments.
-     *
      * @param  \App\Models\User  $user
      * @return bool
      */
@@ -56,7 +53,6 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can update the enrollment.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -68,7 +64,6 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can refund the money paid for the enrollment.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -80,7 +75,6 @@ class EnrollmentPolicy
 
     /**
      * Returns if the user can unenroll
-     *
      * @param User $user
      * @param Enrollment $enrollment
      * @return bool
@@ -117,6 +111,7 @@ class EnrollmentPolicy
 
         // Log as notice. We'll probably look for this.
         logger()->notice('User {user} wanted to unenroll after window. Result {judgement}', [
+            'user' => $user,
             'enrollment' => $enrollment,
             'judgement' => $judgement,
             'has-expiration' => $hasExpiration,
@@ -129,7 +124,6 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can delete the enrollment.
-     *
      * @return false
      */
     public function delete()
@@ -140,12 +134,11 @@ class EnrollmentPolicy
 
     /**
      * Can the given user manage the given enrollment or enrollments in general
-     *
      * @param User $user
      * @param Enrollment $enrollment
      * @return bool
      */
-    public function manage(User $user, Enrollment $enrollment = null): bool
+    public function manage(User $user, ?Enrollment $enrollment = null): bool
     {
         // Get activity safely
         $activity = optional($enrollment)->activity;
@@ -161,7 +154,6 @@ class EnrollmentPolicy
 
     /**
      * Can the given user admin enrollments
-     *
      * @param User $user
      * @return bool
      */

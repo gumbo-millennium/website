@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
+use App\Models\FileCategory;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\FileCategory;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 /**
  * Deletes a category, assigning all child items to the lost+found directory.
- *
  * @author Roelof Roos <github@roelof.io>
  */
 class FileCategoryDeleteJob implements ShouldQueue
@@ -23,14 +24,12 @@ class FileCategoryDeleteJob implements ShouldQueue
 
     /**
      * File category to be deleted
-     *
      * @var FileCategory
      */
     protected $category;
 
     /**
      * Create a new job instance.
-     *
      * @param FileCategory $category
      * @return void
      */
@@ -41,7 +40,6 @@ class FileCategoryDeleteJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle()

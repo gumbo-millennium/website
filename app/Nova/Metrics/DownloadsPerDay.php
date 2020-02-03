@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Metrics;
 
 use Illuminate\Http\Request;
@@ -9,7 +11,6 @@ class DownloadsPerDay extends Trend
 {
     /**
      * Calculate the value of the metric.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
@@ -20,7 +21,6 @@ class DownloadsPerDay extends Trend
 
     /**
      * Get the ranges available for the metric.
-     *
      * @return array
      */
     public function ranges()
@@ -34,7 +34,6 @@ class DownloadsPerDay extends Trend
 
     /**
      * Determine for how many minutes the metric should be cached.
-     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -44,7 +43,6 @@ class DownloadsPerDay extends Trend
 
     /**
      * Get the URI key for the metric.
-     *
      * @return string
      */
     public function uriKey()

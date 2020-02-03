@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Models\Page;
@@ -8,7 +10,6 @@ class PageObserver
 {
     /**
      * Handle the page "created" event.
-     *
      * @param  \App\Page  $page
      * @return void
      */

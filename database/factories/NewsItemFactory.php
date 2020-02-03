@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Helpers\Str;
@@ -7,7 +9,7 @@ use App\Models\NewsItem;
 use App\Models\User;
 use Faker\Generator as Faker;
 
-$randomEditorBlock = function (Faker $faker) {
+$randomEditorBlock = static function (Faker $faker) {
     switch ($faker->randomDigit) {
         case 1:
             return [
@@ -53,7 +55,7 @@ $randomEditorBlock = function (Faker $faker) {
     }
 };
 
-$fakeEditorJs = function (Faker $faker) use ($randomEditorBlock) {
+$fakeEditorJs = static function (Faker $faker) use ($randomEditorBlock) {
     // prep array
     $result = [
         'time' => $faker->dateTime()->getTimestamp(),
@@ -73,11 +75,9 @@ $fakeEditorJs = function (Faker $faker) use ($randomEditorBlock) {
     return $result;
 };
 
-$factory->define(NewsItem::class, function (Faker $faker) use ($fakeEditorJs) {
-    return [
+$factory->define(NewsItem::class, static fn (Faker $faker) => [
         'title' => Str::title($faker->words($faker->numberBetween(2, 8), true)),
         'contents' => json_encode($fakeEditorJs($faker)),
         'author_id' => optional(User::inRandomOrder()->first())->id,
         'sponsor' => $faker->optional(0.1)->company
-    ];
-});
+    ]);

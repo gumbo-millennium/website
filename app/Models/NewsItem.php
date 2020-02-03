@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use InvalidArgumentException;
 
 /**
  * A news article
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -37,7 +36,6 @@ class NewsItem extends SluggableModel
 
     /**
      * The attributes that should be mutated to dates.
-     *
      * @var array
      */
     protected $dates = [
@@ -48,7 +46,6 @@ class NewsItem extends SluggableModel
 
     /**
      * Generate the slug based on the title property
-     *
      * @return array
      */
     public function sluggable(): array
@@ -63,7 +60,6 @@ class NewsItem extends SluggableModel
 
     /**
      * Returns the owning user, if present
-     *
      * @return BelongsTo
      */
     public function author(): Relation
@@ -73,7 +69,6 @@ class NewsItem extends SluggableModel
 
     /**
      * Converts contents to HTML
-     *
      * @return string|null
      */
     public function getHtmlAttribute(): ?string
@@ -91,7 +86,7 @@ class NewsItem extends SluggableModel
     {
         return $query
             ->orderByDesc('published_at')
-            ->where(function ($query) {
+            ->where(static function ($query) {
                 $query->where('published_at', '<', now())
                     ->orWhereNull('published_at');
             });

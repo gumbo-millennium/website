@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Forms\AccountEditForm;
@@ -38,14 +40,14 @@ class AccountController extends Controller
         // Get current user
         $user = $request->user();
 
-        // Create form
-        /** @var AccountEditForm $form */
         $form = $formBuilder->create(AccountEditForm::class, [
             'method' => 'PATCH',
             'url' => route('account.update'),
             'model' => $user,
             'user-id' => $user->id,
         ]);
+        // Create form
+        \assert($form instanceof AccountEditForm);
 
         return response()
             ->view('account.edit', compact('user', 'form'))
@@ -60,16 +62,16 @@ class AccountController extends Controller
      */
     public function update(FormBuilder $formBuilder, Request $request)
     {
-        // Get current user
-        /** @var User $user */
         $user = $request->user();
+        // Get current user
+        \assert($user instanceof User);
 
-        // Get form
-        /** @var AccountEditForm $form */
         $form = $formBuilder->create(AccountEditForm::class, [
             'model' => $user,
             'user-id' => $user->id
         ]);
+        // Get form
+        \assert($form instanceof AccountEditForm);
 
         // Set user
         $form->setUser($user);
@@ -83,6 +85,7 @@ class AccountController extends Controller
         // Apply new values
         $user->email = Str::lower($userValues['email']);
         $user->alias = Str::lower($userValues['alias']);
+        $user->syncChanges();
 
         // Flag e-mail as unverified, if changed
         if ($user->wasChanged('email')) {

@@ -7,14 +7,9 @@ namespace App\Http\Controllers\Activities\Traits;
 use App\Models\Enrollment;
 use App\Services\StripeErrorService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Mandate;
 use Stripe\PaymentIntent;
-use Stripe\PaymentMethod;
 use Stripe\Source;
 
 /**
@@ -23,9 +18,36 @@ use Stripe\Source;
 trait HandlesPaymentIntents
 {
     /**
+     * Builds a redirect to Stripe, if applicable. Returns null otherwise.
+     * @param PaymentIntent $intent
+     * @return RedirectResponse|null
+     */
+    public function redirectPaymentIntent(PaymentIntent $intent): ?RedirectResponse
+    {
+        // Check the status
+        if ($intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION) {
+            return null;
+        }
+
+        // Check the action
+        if (!$intent->next_action) {
+            return null;
+        }
+
+        // Check action type and url
+        $actionType = data_get($intent->next_action, 'type');
+        $actionUrl = data_get($intent->next_action, 'redirect_to_url.url');
+        if ($actionType !== 'redirect_to_url' || empty($actionUrl)) {
+            return null;
+        }
+
+        // Redirect to Stripe
+        return redirect()->away($actionUrl);
+    }
+
+    /**
      * Creates a Payment Intent at Stripe and returns it
      * Returns null if $enrollment is a free activity (for this user)
-     *
      * @param Enrollment $enrollment
      * @return PaymentIntent|null
      */
@@ -51,8 +73,7 @@ trait HandlesPaymentIntents
 
         // Create Intent on the Stripe servers
         try {
-            $intent = PaymentIntent::create(array_merge($sharedInfo, $intentInfo));
-            return $intent;
+            return PaymentIntent::create(array_merge($sharedInfo, $intentInfo));
         } catch (ApiErrorException $error) {
             app(StripeErrorService::class)->handleCreate($error);
         }
@@ -60,7 +81,6 @@ trait HandlesPaymentIntents
     /**
      * Creates a Payment Intent at Stripe, returns the ID.
      * Returns null if $enrollment is a free activity (for this user)
-     *
      * @param Enrollment $enrollment
      * @return string|null
      */
@@ -97,7 +117,6 @@ trait HandlesPaymentIntents
 
     /**
      * Confirms the intent, returnin the user to the corresponding Enrollment
-     *
      * @param Enrollment $enrollment The enrollment, required for return URL
      * @param PaymentIntent $intent The intent to verify
      * @param Source $method Source to charge
@@ -130,34 +149,5 @@ trait HandlesPaymentIntents
             // Return null if the error wasn't worthy of a throw (unlikely)
             return null;
         }
-    }
-
-    /**
-     * Builds a redirect to Stripe, if applicable. Returns null otherwise.
-     *
-     * @param PaymentIntent $intent
-     * @return RedirectResponse|null
-     */
-    public function redirectPaymentIntent(PaymentIntent $intent): ?RedirectResponse
-    {
-        // Check the status
-        if ($intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION) {
-            return null;
-        }
-
-        // Check the action
-        if (!$intent->next_action) {
-            return null;
-        }
-
-        // Check action type and url
-        $actionType = data_get($intent->next_action, 'type');
-        $actionUrl = data_get($intent->next_action, 'redirect_to_url.url');
-        if ($actionType !== 'redirect_to_url' || empty($actionUrl)) {
-            return null;
-        }
-
-        // Redirect to Stripe
-        return redirect()->away($actionUrl);
     }
 }

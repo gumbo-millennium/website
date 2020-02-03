@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Models\NewsItem;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Tests\TestCase;
 
 /**
  * Tests the following flow
@@ -21,7 +21,6 @@ class NewsItemTest extends TestCase
 {
     /**
      * A basic feature test example.
-     *
      * @return void
      */
     public function testIndex(): void
@@ -35,7 +34,6 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if the newly created news item is shown
-     *
      * @return NewsItem
      * @depends testIndex
      */
@@ -61,7 +59,6 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if the item can be seen
-     *
      * @param NewsItem $item
      * @return void
      * @depends testIndexWithItem
@@ -80,7 +77,6 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if an item that's deleted, returns a 404
-     *
      * @param NewsItem $item
      * @return void
      * @depends testIndexWithItem
@@ -100,7 +96,6 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if an item that's deleted, isn't shown on the cover (of Vogue)
-     *
      * @param NewsItem $item
      * @return void
      * @depends testIndexWithItem

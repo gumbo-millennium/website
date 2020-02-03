@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -13,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Handles receiving, storing and publishing of the plazacam.
  * Requires a valid user with 'member' status.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -21,19 +22,16 @@ class PlazaCamController extends Controller
 {
     /**
      * Path of the plaza cam
-     * @var string
      */
     private const IMAGE_PLAZA = 'plazacam/image-plaza.jpg';
 
     /**
      * Path of the coffee cam
-     * @var string
      */
     private const IMAGE_COFFEE = 'plazacam/image-coffee.jpg';
 
     /**
      * Prevent the images from being updated on weekends and between 22.00 - 07.00.
-     *
      * @return bool
      */
     protected static function isAvailable(): bool
@@ -46,7 +44,6 @@ class PlazaCamController extends Controller
 
     /**
      * Gets an image from the web endpoint
-     *
      * @param string $location Location to retrieve
      * @return Response
      * @throws BadRequestHttpException
@@ -64,7 +61,6 @@ class PlazaCamController extends Controller
 
     /**
      * Responds with images from API calls
-     *
      * @param Request $request
      * @return Response
      * @throws BadRequestHttpException if something is wrong
@@ -87,7 +83,6 @@ class PlazaCamController extends Controller
 
     /**
      * Stores images of the plaza- and coffeecam. Requires a user that's a member
-     *
      * @param Request $request
      * @param User $user Issuing user
      * @param string $image Image location
@@ -134,7 +129,6 @@ class PlazaCamController extends Controller
 
     /**
      * Actually retrieves images
-     *
      * @param string $image
      * @return Response
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Metrics;
 
 use Illuminate\Http\Request;
@@ -9,7 +11,6 @@ class NewUsers extends Value
 {
     /**
      * Calculate the value of the metric.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
@@ -20,7 +21,6 @@ class NewUsers extends Value
 
     /**
      * Get the ranges available for the metric.
-     *
      * @return array
      */
     public function ranges()
@@ -37,7 +37,6 @@ class NewUsers extends Value
 
     /**
      * Determine for how many minutes the metric should be cached.
-     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -47,7 +46,6 @@ class NewUsers extends Value
 
     /**
      * Get the URI key for the metric.
-     *
      * @return string
      */
     public function uriKey()

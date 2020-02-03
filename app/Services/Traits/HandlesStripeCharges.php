@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services\Traits;
 
-use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Paid;
-use App\Models\User;
 use Stripe\Charge;
-use Stripe\Coupon;
-use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Exception\InvalidArgumentException;
 
 trait HandlesStripeCharges
 {
     /**
      * Charges retrieved from API
-     * @var Charge[]
+     * @var array<Charge>
      */
     private array $chargeCache = [];
 

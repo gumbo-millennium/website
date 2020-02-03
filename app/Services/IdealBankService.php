@@ -10,7 +10,6 @@ use JsonException;
 
 /**
  * Provides banks for iDEAL
- *
  * @author Roelof Roos <github@roelof.io>
  */
 class IdealBankService
@@ -25,42 +24,6 @@ class IdealBankService
      * @package App\Services
      */
     private $cachedList = null;
-
-    /**
-     * Returns the bank list
-     * @return Illuminate\Support\Collection
-     */
-    private function getList(): Collection
-    {
-        // Check cached
-        if ($this->cachedList) {
-            return $this->cachedList;
-        }
-
-        // Check global cache
-        if (Cache::has('ideal.banklist')) {
-            $this->cachedList = Collection::make(Cache::get('ideal.banklist'));
-            return $this->cachedList;
-        }
-
-        // Cache nothing
-        $this->cachedList = Collection::make();
-
-        // Check existance
-        $path = \resource_path(self::BANKS_FILE);
-        if (!\file_exists($path)) {
-            return $this->cachedList;
-        }
-
-        // Convert from json
-        try {
-            $json = json_decode(\file_get_contents($path), true, 15, \JSON_THROW_ON_ERROR);
-            Cache::put('ideal.banklist', $json, now()->addHours(6));
-            return $this->cachedList = Collection::make($json);
-        } catch (JsonException $e) {
-            return $this->cachedList;
-        }
-    }
 
     /**
      * Returns all banks
@@ -97,5 +60,41 @@ class IdealBankService
     public function getName(string $code): ?string
     {
         return $this->getList()->get($code);
+    }
+
+    /**
+     * Returns the bank list
+     * @return Illuminate\Support\Collection
+     */
+    private function getList(): Collection
+    {
+        // Check cached
+        if ($this->cachedList) {
+            return $this->cachedList;
+        }
+
+        // Check global cache
+        if (Cache::has('ideal.banklist')) {
+            $this->cachedList = Collection::make(Cache::get('ideal.banklist'));
+            return $this->cachedList;
+        }
+
+        // Cache nothing
+        $this->cachedList = Collection::make();
+
+        // Check existance
+        $path = \resource_path(self::BANKS_FILE);
+        if (!\file_exists($path)) {
+            return $this->cachedList;
+        }
+
+        // Convert from json
+        try {
+            $json = json_decode(\file_get_contents($path), true, 15, \JSON_THROW_ON_ERROR);
+            Cache::put('ideal.banklist', $json, now()->addHours(6));
+            return $this->cachedList = Collection::make($json);
+        } catch (JsonException $e) {
+            return $this->cachedList;
+        }
     }
 }

@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
-use App\Jobs\Stripe\RefundEnrollment;
 use App\Jobs\Stripe\VoidInvoice;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
-use App\Models\States\Enrollment\Paid;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Spatie\ModelStates\Events\StateChanged;
 
 class EnrollmentStateListener
 {
     /**
      * Create the event listener.
-     *
      * @return void
      */
     public function __construct()
@@ -25,7 +22,6 @@ class EnrollmentStateListener
 
     /**
      * Handle the event.
-     *
      * @param  StateChanged  $event
      * @return void
      */

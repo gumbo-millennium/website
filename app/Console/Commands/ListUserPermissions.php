@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\User;
@@ -10,7 +12,6 @@ class ListUserPermissions extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'perms:user
@@ -19,14 +20,12 @@ class ListUserPermissions extends Command
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Finds user permissions';
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
@@ -36,7 +35,7 @@ class ListUserPermissions extends Command
 
         // Find user
         $username = $this->argument('user');
-        $user = User::where(function ($query) use ($username) {
+        $user = User::where(static function ($query) use ($username) {
             $query->where('id', $username)
                 ->orWhere('email', $username);
         })->firstOrFail();
@@ -63,9 +62,10 @@ class ListUserPermissions extends Command
             }
 
             // Now check the roles
-            $rolesWithPerm = $userRolePerm->filter(function ($role) use ($perm) {
-                return $role->permissions->contains('name', $perm->name);
-            })->pluck($view)->sort();
+            $rolesWithPerm = $userRolePerm
+                ->filter(static fn ($role) => $role->permissions->contains('name', $perm->name))
+                ->pluck($view)
+                ->sort();
 
             // Add roles with the permission to the list fields
             $why = $why->concat($rolesWithPerm);

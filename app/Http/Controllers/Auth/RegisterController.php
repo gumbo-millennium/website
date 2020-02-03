@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Forms\RegisterForm;
@@ -11,11 +13,9 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Kris\LaravelFormBuilder\FormBuilder;
-use RuntimeException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -25,13 +25,13 @@ use Symfony\Component\Yaml\Yaml;
  */
 class RegisterController extends Controller
 {
+    use RedirectsUsers;
+    use RedirectsToAdminHomeTrait;
+
     private const SESSION_ACCESS = 'onboarding.after-registration';
     private const DATA_SESSION_KEY = 'register.user';
     private const PRIVACY_CACHE_KEY = 'register.privacy.companies';
     private const PRIVACY_COMPANY_FILE = 'assets/yaml/privacy/companies.yaml';
-
-    use RedirectsUsers;
-    use RedirectsToAdminHomeTrait;
 
     /**
      * A useful form builder
@@ -40,7 +40,6 @@ class RegisterController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct(FormBuilder $formBuilder)
@@ -55,7 +54,6 @@ class RegisterController extends Controller
 
     /**
      * Show the application registration form.
-     *
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
@@ -184,7 +182,6 @@ class RegisterController extends Controller
 
     /**
      * Show welcome response
-     *
      * @param Request $request
      * @return Response
      * @throws RuntimeException

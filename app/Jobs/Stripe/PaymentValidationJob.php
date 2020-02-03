@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe;
 
 use App\Contracts\StripeServiceContract;
@@ -12,7 +14,6 @@ class PaymentValidationJob extends StripeJob
 {
     /**
      * Enrollment to check
-     *
      * @var Enrollment
      */
     protected $enrollment;
@@ -24,7 +25,6 @@ class PaymentValidationJob extends StripeJob
 
     /**
      * Create a new job instance.
-     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -34,7 +34,6 @@ class PaymentValidationJob extends StripeJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle(StripeServiceContract $service): void

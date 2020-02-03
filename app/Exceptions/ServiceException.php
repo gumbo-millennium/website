@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Illuminate\Contracts\Support\Responsable;
 use RuntimeException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 /**
@@ -26,14 +24,13 @@ class ServiceException extends RuntimeException
 
     /**
      * Creates a new service error
-     *
      * @param string $service
      * @param string $message
      * @param int $code
      * @param Throwable|null $previous
      * @return void
      */
-    public function __construct(string $service, string $message = "", int $code = 0, Throwable $previous = null)
+    public function __construct(string $service, string $message = "", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->service = $service;
@@ -50,7 +47,6 @@ class ServiceException extends RuntimeException
 
     /**
      * Create an HTTP response that represents the object.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

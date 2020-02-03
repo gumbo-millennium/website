@@ -11,7 +11,6 @@ use Kris\LaravelFormBuilder\Form;
 
 /**
  * Registration form
- *
  * @package App\Forms
  */
 class RegisterForm extends Form

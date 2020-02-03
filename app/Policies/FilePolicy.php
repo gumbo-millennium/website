@@ -1,27 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Helpers\Str;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Nova;
 
 class FilePolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
-    /**
-     * @var string Permission name
-     */
     public const USER_PERMISSION = 'file-view';
     public const ADMIN_PERMISSION = 'file-admin';
 
     /**
      * Determine whether the user can view any files.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -32,7 +28,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can view the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -45,7 +40,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can view the file.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -56,7 +50,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can download the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -69,7 +62,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can create files.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -80,7 +72,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can update the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -93,7 +84,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can delete the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -106,7 +96,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can restore the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -119,7 +108,6 @@ class FilePolicy
 
     /**
      * Determine whether the user can permanently delete the file.
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
@@ -132,7 +120,6 @@ class FilePolicy
 
     /**
      * Can the given user manage the given activities or activities in general
-     *
      * @param User $user
      * @return bool
      */

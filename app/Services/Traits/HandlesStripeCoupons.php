@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace App\Services\Traits;
 
 use App\Models\Activity;
-use App\Models\User;
 use Stripe\Coupon;
-use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
 
 trait HandlesStripeCoupons
 {
     /**
      * Coupons retrieved from API
-     * @var Coupon[]
+     * @var array<Coupon>
      */
     private array $couponCache = [];
 

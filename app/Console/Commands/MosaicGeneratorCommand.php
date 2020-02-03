@@ -4,53 +4,27 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use DOMDocument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use MischiefCollective\ColorJizz\Formats\Hex;
-use MischiefCollective\ColorJizz\Formats\HSV;
-use Symfony\Component\Process\Process;
-use DOMDocument;
 
 class MosaicGeneratorCommand extends Command
 {
-    /**
-     * @var string xlink:href DTD. Don't change.
-     */
     private const DTD_XLINK = 'http://www.w3.org/1999/xlink';
 
-    /**
-     * @var int[] Lightness deviation from the base color. 100 = 1%
-     */
     private const LIGHTNESS_DEVIATION = [-500, 500];
 
-    /**
-     * @var int[] Lightness deviation from the base color. 100 = 1%
-     */
     private const CONTRAST_DEVIATION = [-500, 500];
 
-    /**
-     * @var int[] Opacity range, in percentage. Used in mt_rand.
-     */
     private const OPACITY_RANGE = [40, 80];
 
-    /**
-     * @var int[] Image dimensions. Will be fileld completely
-     */
     private const IMAGE_SIZE = [1024, 512];
 
-    /**
-     * @var int Size of the diamonds
-     */
     private const DIAMOND_SIZE = 32;
 
-    /**
-     * @var string Base color
-     */
     private const DIAMOND_COLOUR = '#007d00';
 
-    /**
-     * @var string XML template
-     */
     private const XML_BASE = <<<'XML'
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -66,7 +40,6 @@ XML;
 
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'asset:mosaic
@@ -75,14 +48,12 @@ XML;
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Builds an SVG file containing a mosaic, used in sliders';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -92,7 +63,6 @@ XML;
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
@@ -140,50 +110,7 @@ XML;
     }
 
     /**
-     * Builds a seed, which is just based on the time
-     *
-     * @return int
-     */
-    protected function buildSeed(): int
-    {
-        list($usec, $sec) = explode(' ', microtime());
-        return (int) round($sec / 3949 + $usec * 30000);
-    }
-
-    /**
-     * Builds a list of diamonds, with X and Y coordinates. Overlaps outside of the screen.
-     *
-     * @return Collection
-     */
-    protected function buildDiamonds(): Collection
-    {
-        // Get dimensions
-        list($width, $height) = self::IMAGE_SIZE;
-        $diamondSize = self::DIAMOND_SIZE;
-
-        // Determine counts
-        $diamondCountX = ceil($width / $diamondSize + 1);
-        $diamondCountY = ceil($height / $diamondSize + 1);
-        $diamondCount = $diamondCountX * $diamondCountY;
-
-        // Result
-        $result = collect();
-
-        // Build coords for each diamond
-        for ($i = 0; $i < $diamondCount; $i++) {
-            $result->push([
-                'x' => $diamondSize * -0.5 + (($i % $diamondCountX) * $diamondSize),
-                'y' => $diamondSize * -0.5 + (floor($i / $diamondCountX) * $diamondSize)
-            ]);
-        }
-
-        // Return diamond
-        return $result;
-    }
-
-    /**
      * Adds random color values and opacity to each diamond
-     *
      * @param Collection $diamonds
      * @return Collection
      */
@@ -227,15 +154,54 @@ XML;
     }
 
     /**
+     * Builds a seed, which is just based on the time
+     * @return int
+     */
+    protected function buildSeed(): int
+    {
+        [$usec, $sec] = explode(' ', microtime());
+        return (int) round($sec / 3949 + $usec * 30000);
+    }
+
+    /**
+     * Builds a list of diamonds, with X and Y coordinates. Overlaps outside of the screen.
+     * @return Collection
+     */
+    protected function buildDiamonds(): Collection
+    {
+        // Get dimensions
+        [$width, $height] = self::IMAGE_SIZE;
+        $diamondSize = self::DIAMOND_SIZE;
+
+        // Determine counts
+        $diamondCountX = ceil($width / $diamondSize + 1);
+        $diamondCountY = ceil($height / $diamondSize + 1);
+        $diamondCount = $diamondCountX * $diamondCountY;
+
+        // Result
+        $result = collect();
+
+        // Build coords for each diamond
+        for ($i = 0; $i < $diamondCount; $i++) {
+            $result->push([
+                'x' => $diamondSize * -0.5 + (($i % $diamondCountX) * $diamondSize),
+                'y' => $diamondSize * -0.5 + (floor($i / $diamondCountX) * $diamondSize)
+            ]);
+        }
+
+        // Return diamond
+        return $result;
+    }
+
+    /**
      * Converts a list of diamond positions, colors and opacties to an SVG document
-     *
      * @param Collection $diamonds
      * @return DOMDocument
      */
     protected function buildXmlDocument(Collection $diamonds): DOMDocument
     {
         // Get dimensions
-        list($width, $height) = self::IMAGE_SIZE;
+        [$width, $height] = self::IMAGE_SIZE;
         $diamondSize = self::DIAMOND_SIZE;
 
         // Complete XML template
@@ -287,7 +253,6 @@ XML;
 
     /**
      * Converts SVG file to PNG, in normal, high and ultra-high DPI
-     *
      * @param string $svgPath
      * @param string $pngTemplate
      * @return void
@@ -315,7 +280,7 @@ XML;
         $helper = $this->getHelper('process');
 
         // Run the queue
-        foreach ($queue as list($dpi, $file)) {
+        foreach ($queue as [$dpi, $file]) {
             // Report task
             $this->line(sprintf(
                 'Exporting at <info>%d</> DPI to <comment>%s/</><info>%s</>',

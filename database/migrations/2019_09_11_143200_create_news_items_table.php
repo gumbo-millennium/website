@@ -1,21 +1,21 @@
 <?php
 
-use App\Models\Page;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateNewsItemsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
         // Create database
-        Schema::create('news_items', function (Blueprint $table) {
+        Schema::create('news_items', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
 
@@ -36,7 +36,6 @@ class CreateNewsItemsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

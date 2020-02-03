@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Metrics;
 
 use App\Models\User;
@@ -10,12 +12,10 @@ class MemberRatio extends Partition
 {
     /**
      * Calculate the value of the metric.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function calculate(Request $request)
+    public function calculate(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
         // Get all users and all members
         $allUsers = User::count();
@@ -30,7 +30,6 @@ class MemberRatio extends Partition
 
     /**
      * Determine for how many minutes the metric should be cached.
-     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -41,7 +40,6 @@ class MemberRatio extends Partition
 
     /**
      * Get the URI key for the metric.
-     *
      * @return string
      */
     public function uriKey()

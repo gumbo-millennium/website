@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -11,7 +13,6 @@ class ListRolePermissions extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'perms:role
@@ -20,14 +21,12 @@ class ListRolePermissions extends Command
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Lists permissions';
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
@@ -60,17 +59,13 @@ class ListRolePermissions extends Command
         foreach ($allPerms as $perm) {
             $scopedList->push(
                 collect($perm->$view)
-                    ->concat($allRoles->map(function ($role) use ($perm) {
-                        return $perm->roles->contains($role) ? '<info>✔</>' : '';
-                    }))
+                    ->concat($allRoles->map(static fn ($role) => $perm->roles->contains($role) ? '<info>✔</>' : ''))
             );
         }
 
         // Generate headers
         $headers = collect(['Permission'])
-            ->concat($allRoles->map(function ($role) use ($view) {
-                return $role->$view;
-            }));
+            ->concat($allRoles->map(static fn ($role) => $role->$view));
 
         // Check if scopedList is empty
         if ($scopedList->count() == 0) {

@@ -6,15 +6,10 @@ namespace App\Providers;
 
 use App\Contracts\ConscriboServiceContract;
 use App\Contracts\StripeServiceContract;
-use App\Helpers\Arr;
-use App\Helpers\Str;
-use App\Services\MenuProvider;
-use App\Services\StripeErrorService;
 use App\Services\ConscriboService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -25,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Singleton bindings
-     * @var string[]
+     * @var array<string>
      */
     public $singletons = [
         // Stripe service
@@ -39,14 +34,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Bind Guzzle client
-        $this->app->bind(GuzzleClient::class, function () {
-            return new GuzzleClient(config('gumbo.guzzle-config', []));
-        });
+        $this->app->bind(GuzzleClient::class, static fn () => new GuzzleClient(config('gumbo.guzzle-config', [])));
 
         // Handle Horizon auth
-        Horizon::auth(function ($request) {
-            return $request->user() !== null && $request->user()->hasPermissionTo('devops');
-        });
+        Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
     }
 
     /**
@@ -85,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Add Paperclip macro to the database helper
-        Blueprint::macro('paperclip', function (string $name, bool $variants = null) {
+        Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
             $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
             $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
             $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
@@ -97,7 +88,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Add Paperclip drop macro to database
-        Blueprint::macro('dropPaperclip', function (string $name, bool $variants = null) {
+        Blueprint::macro('dropPaperclip', function (string $name, ?bool $variants = null) {
             $this->dropColumn(array_filter([
                 "{$name}_file_name",
                 "{$name}_file_size",
@@ -107,11 +98,8 @@ class AppServiceProvider extends ServiceProvider
             ]));
         });
 
-        // Boot string macros
-        $this->bootStrMacros();
-
         // Provide User for all views
-        view()->composer('*', function (View $view) {
+        view()->composer('*', static function (View $view) {
             $view->with([
                 'user' => request()->user()
             ]);
@@ -124,14 +112,5 @@ class AppServiceProvider extends ServiceProvider
             'warning' => "site-wide-banner__container--warning",
             'success' => "site-wide-banner__container--success",
         ]);
-    }
-
-    /**
-     * Adds macros for number formatting to the Str helper
-     *
-     * @return void
-     */
-    private function bootStrMacros(): void
-    {
     }
 }

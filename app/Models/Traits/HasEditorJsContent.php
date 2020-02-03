@@ -13,7 +13,6 @@ trait HasEditorJsContent
 {
     /**
      * Adds a HTML conversion method
-     *
      * @param string|array $contents
      * @return string|null
      */

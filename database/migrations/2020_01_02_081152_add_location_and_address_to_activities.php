@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,12 +10,11 @@ class AddLocationAndAddressToActivities extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::table('activities', function (Blueprint $table) {
+        Schema::table('activities', static function (Blueprint $table) {
             $table->string('location', 64)->nullable()->default(null)->after('statement');
             $table->string('location_address')->nullable()->default(null)->after('location');
         });
@@ -21,12 +22,11 @@ class AddLocationAndAddressToActivities extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('activities', function (Blueprint $table) {
+        Schema::table('activities', static function (Blueprint $table) {
             $table->dropColumn([
                 'location',
                 'location_address'

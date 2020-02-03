@@ -9,7 +9,6 @@ use Tests\Traits\TempUserTrait;
 
 /**
  * Tests viewing the plazacam
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -19,7 +18,6 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
     public function testReadAnonymous(): void
@@ -38,7 +36,6 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
     public function testReadUser(): void
@@ -60,7 +57,6 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
     public function testReadMember(): void

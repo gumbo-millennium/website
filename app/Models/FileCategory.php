@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Scopes\DefaultOrderScope;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Traits\HasParent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * A file category, containing files
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -37,7 +31,6 @@ class FileCategory extends SluggableModel
 
     /**
      * Find the default category
-     *
      * @param array $columns
      * @return Model|Collection
      */
@@ -51,14 +44,12 @@ class FileCategory extends SluggableModel
 
     /**
      * Categories don't have timestamps.
-     *
      * @var bool
      */
     public $timestamps = false;
 
     /**
      * Title and default are fillable
-     *
      * @var array
      */
     protected $fillable = ['title'];
@@ -70,7 +61,6 @@ class FileCategory extends SluggableModel
 
     /**
      * Slug on the category title
-     *
      * @return array
      */
     public function sluggable(): array
@@ -86,7 +76,6 @@ class FileCategory extends SluggableModel
 
     /**
      * The files that belong to this category
-     *
      * @return HasMany
      */
     public function files(): Relation
@@ -97,7 +86,6 @@ class FileCategory extends SluggableModel
 
     /**
      * The files that belong to this category
-     *
      * @return HasManyThrough
      */
     public function downloads(): Relation

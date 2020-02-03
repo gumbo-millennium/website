@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\JoinSubmission;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -11,16 +13,13 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class JoinSubmissionPolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
-    /**
-     * @var string Permission name
-     */
     public const ADMIN_PERMISSION = 'join-admin';
 
     /**
      * Determine whether the user can view any join submissions.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -31,20 +30,16 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can view the join submission.
-     *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\JoinSubmission  $joinSubmission
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function view(User $user, JoinSubmission $joinSubmission)
+    public function view(User $user)
     {
         return $user->can('manage', JoinSubmission::class);
     }
 
     /**
      * Determine whether the user can create join submissions.
-     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -55,33 +50,26 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can update the join submission.
-     *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\JoinSubmission  $joinSubmission
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function update(User $user, JoinSubmission $joinSubmission)
+    public function update(User $user)
     {
         return $user->can('manage', JoinSubmission::class);
     }
 
     /**
      * Determine whether the user can delete the join submission.
-     *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\JoinSubmission  $joinSubmission
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function delete(User $user, JoinSubmission $joinSubmission)
+    public function delete(User $user)
     {
         return $user->can('manage', JoinSubmission::class);
     }
 
     /**
      * Determine whether the user can manage join submission.
-     *
      * @param  \App\Models\User  $user
      * @return bool
      */

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Console\Commands\Traits\FindsUserTrait;
+use Illuminate\Console\Command;
 
 /**
  * Grants or revokes Super Admin priviliges on a user.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,21 +18,18 @@ class GumboSuperAdminCommand extends Command
 
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'gumbo:admin {user} {--revoke}';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Grants or revokes superadmin';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -41,7 +39,6 @@ class GumboSuperAdminCommand extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()

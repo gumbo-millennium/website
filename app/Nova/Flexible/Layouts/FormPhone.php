@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Flexible\Layouts;
 
 use Laravel\Nova\Fields\Boolean;
@@ -10,21 +12,18 @@ class FormPhone extends Layout
 {
     /**
      * The layout's unique identifier
-     *
      * @var string
      */
     protected $name = 'phone';
 
     /**
      * The displayed title
-     *
      * @var string
      */
     protected $title = 'Phone number';
 
     /**
      * Get the fields displayed by the layout.
-     *
      * @return array
      */
     public function fields()

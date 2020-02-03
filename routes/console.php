@@ -1,6 +1,7 @@
 <?php
 
-use App\Jobs\CreateVersionedPagesJob;
+declare(strict_types=1);
+
 use Illuminate\Foundation\Inspiring;
 
 /*
@@ -17,6 +18,3 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
-
-// Update command
-Artisan::command('page:update-git-pages', fn() => app()->call([app()->make(CreateVersionedPagesJob::class), 'handle']));

@@ -12,20 +12,6 @@ use Illuminate\Support\Str as SupportStr;
 class Str extends SupportStr
 {
     /**
-     * Validates given number
-     * @param mixed $value
-     * @return null|float
-     */
-    private static function getValidNumber($value): ?float
-    {
-        // Validate number value
-        $number = filter_var($value, FILTER_VALIDATE_FLOAT);
-
-        // Skip if empty
-        return ($number === false) ? null : $number;
-    }
-
-    /**
      * Formats as Dutch number
      * @param mixed $value
      * @param int $decimals
@@ -41,7 +27,7 @@ class Str extends SupportStr
     }
 
     // Price formatting
-    public static function price($value, bool $decimals = null): ?string
+    public static function price($value, ?bool $decimals = null): ?string
     {
         // Validate number and return null if empty
         $value = self::getValidNumber($value);
@@ -71,5 +57,19 @@ class Str extends SupportStr
     public static function multiple(string $singular, string $plural, int $value): string
     {
         return $value === 1 ? $singular : $plural;
+    }
+
+    /**
+     * Validates given number
+     * @param mixed $value
+     * @return null|float
+     */
+    private static function getValidNumber($value): ?float
+    {
+        // Validate number value
+        $number = filter_var($value, FILTER_VALIDATE_FLOAT);
+
+        // Skip if empty
+        return ($number === false) ? null : $number;
     }
 }

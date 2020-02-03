@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ViewModels;
 
 use App\Models\Activity;
@@ -16,18 +18,17 @@ class ActivityViewModel extends GumboViewModel
     public $activity;
 
     /**
-     * @var User|null $user
-     */
-    protected $user;
-
-    /**
      * @var Enrollment|false
      */
     public $enrollment;
 
     /**
+     * @var User|null $user
+     */
+    protected $user;
+
+    /**
      * Creates a new Activity Model for the given user
-     *
      * @param Activity $activity
      */
     public function __construct(?User $user, Activity $activity)
@@ -39,7 +40,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns the user's enrollment. Should be just one
-     *
      * @return Enrollment|null
      */
     protected function getEnrollment(): ?Enrollment
@@ -64,7 +64,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Handles checking if a user is enrolled
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -75,7 +74,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Handles checking if a user paid for this enrollment
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -87,7 +85,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns if the user needs to pay for this enrollment
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -102,7 +99,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns if the user is enrolled and the enrollment is in a non-volatile state.
-     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */

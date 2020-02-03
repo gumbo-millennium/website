@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Concerns;
 
 use App\Models\File;
@@ -8,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * Safely replaces stored files and updates the File object.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,7 +18,6 @@ trait ReplacesStoredFiles
     /**
      * Replaces the current file path with the new file in a rather safe fashion.
      * The old file is deleted after update.
-     *
      * @param string $newFile
      * @return void
      */

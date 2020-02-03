@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddEnrollmentPaymentData extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('enrollments', static function (Blueprint $table) {
             // Add price
             $table->unsignedSmallInteger('price')->nullable()->default(null)->after('deleted_reason');
 
@@ -27,12 +28,11 @@ class AddEnrollmentPaymentData extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('enrollments', static function (Blueprint $table) {
             // Drop columns
             $table->dropColumn(['price', 'payment_intent']);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Middleware;
 
 use RuntimeException;
@@ -9,7 +11,6 @@ class RequiresStripeKey
 {
     /**
      * Process the queued job.
-     *
      * @param  mixed  $job
      * @param  callable  $next
      * @return mixed

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Models\Enrollment;
@@ -24,7 +26,6 @@ class UpdateEnrollmentUserTypes implements ShouldQueue
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle()

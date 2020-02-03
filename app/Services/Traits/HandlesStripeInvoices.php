@@ -13,8 +13,6 @@ use RuntimeException;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Exception\InvalidArgumentException;
-use Stripe\Exception\UnexpectedValueException;
 use Stripe\Invoice;
 use Stripe\InvoiceItem;
 use Stripe\Source;
@@ -23,7 +21,7 @@ trait HandlesStripeInvoices
 {
     /**
      * Invoices retrieved from API
-     * @var Invoice[]
+     * @var array<Invoice>
      */
     private array $invoiceCache = [];
 
@@ -126,6 +124,32 @@ trait HandlesStripeInvoices
     }
 
     /**
+     * Pays the invoice for the enrollment using the given source
+     * @param Enrollment $enrollment
+     * @param App\Contracts\Source $source
+     * @return Stripe\Invoice
+     */
+    public function payInvoice(Enrollment $enrollment, Source $source): Invoice
+    {
+        if ($source->status !== Source::STATUS_CHARGEABLE) {
+            throw new RuntimeException('Source was already consumed');
+        }
+
+        try {
+            // Get invoice
+            $invoice = $this->getInvoice($enrollment);
+
+            // Pay invoice
+            return $this->invoiceCache[$enrollment->payment_invoice] = $invoice->pay([
+                'source' => $source->id
+                ]);
+        } catch (ApiErrorException $exception) {
+                        // Bubble all
+                        $this->handleError($exception);
+        }
+    }
+
+    /**
      * Creates an Enrollment by purging the account of line items, creating
      * new ones, applying a coupon if present and finalising it.
      * @param Enrollment $enrollment
@@ -206,7 +230,7 @@ trait HandlesStripeInvoices
         try {
             logger()->debug('Adding items');
             // Create all items
-            foreach ($items as list($linePrice, $lineDesc, $lineDiscount)) {
+            foreach ($items as [$linePrice, $lineDesc, $lineDiscount]) {
                 InvoiceItem::create([
                     'customer' => $customer->id,
                     'currency' => 'eur',
@@ -292,32 +316,6 @@ trait HandlesStripeInvoices
         } catch (ApiErrorException $exception) {
             // Bubble all
             $this->handleError($exception);
-        }
-    }
-
-    /**
-     * Pays the invoice for the enrollment using the given source
-     * @param Enrollment $enrollment
-     * @param App\Contracts\Source $source
-     * @return Stripe\Invoice
-     */
-    public function payInvoice(Enrollment $enrollment, Source $source): Invoice
-    {
-        if ($source->status !== Source::STATUS_CHARGEABLE) {
-            throw new RuntimeException('Source was already consumed');
-        }
-
-        try {
-            // Get invoice
-            $invoice = $this->getInvoice($enrollment);
-
-            // Pay invoice
-            return $this->invoiceCache[$enrollment->payment_invoice] = $invoice->pay([
-                'source' => $source->id
-                ]);
-        } catch (ApiErrorException $exception) {
-                        // Bubble all
-                        $this->handleError($exception);
         }
     }
 }

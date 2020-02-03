@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Stripe;
 
 use App\Contracts\StripeServiceContract;
@@ -23,7 +25,6 @@ class CreateInvoiceJob extends StripeJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle(StripeServiceContract $service)

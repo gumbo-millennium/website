@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use HJSON\HJSONException as HumanJsonException;
 use HJSON\HJSONParser as HumanJsonParser;
 use Illuminate\Support\Collection;
@@ -8,7 +10,6 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Creates all roles required for ranks that users can have.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -16,19 +17,16 @@ class PermissionSeeder extends VerboseSeeder
 {
     /**
      * Filename of the permission file, relative from the resources path
-     * @var string
      */
     private const PERMISSION_FILE = 'assets/json/permissions.jsonc';
 
     /**
      * Filename of the roles file, relative from the resources path
-     * @var string
      */
     private const ROLES_FILE = 'assets/json/roles.jsonc';
 
     /**
      * A human-friendly json parser
-     *
      * @var HumanJsonParser
      */
     public $jsonParser;
@@ -43,7 +41,6 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Run the database seeds.
-     *
      * @return void
      */
     public function run()
@@ -76,7 +73,6 @@ class PermissionSeeder extends VerboseSeeder
     /**
      * Creates all permissions in the $permissions collection, and returns a
      * collection filled with Permission elements, based on name
-     *
      * @param Collection $permissionMap
      * @return Collection
      */
@@ -103,7 +99,6 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creates a map with permissons to assign to roles
-     *
      * @param Collection $permissions
      * @param Collection $roles
      * @param Collection $roleMap
@@ -174,7 +169,6 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creats all roles and assings permissions
-     *
      * @param Collection $permissions
      * @param Collection $roleMap
      * @return Collection
@@ -236,7 +230,6 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Returns JSON from file, as Collection
-     *
      * @param string $path
      * @return Collection|null
      */

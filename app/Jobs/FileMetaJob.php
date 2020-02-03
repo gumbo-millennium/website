@@ -1,25 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Helpers\Str;
-use App\Jobs\Concerns\RunsCliCommands;
-use App\Jobs\Concerns\UsesTemporaryFiles;
-use App\Models\File;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\File as LaravelFile;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Smalot\PdfParser\Parser as PDFParser;
 
 /**
  * Processes the metadata of the file, which retrieves document contents,
  * metadata and the number of pages.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -27,21 +18,18 @@ class FileMetaJob extends FileJob
 {
     /**
      * Try job 3 times
-     *
      * @var int
      */
     protected $tries = 3;
 
     /**
      * Allow 1 minute to get metadata
-     *
      * @var int
      */
     protected $timeout = 60;
 
     /**
      * Get the tags that should be assigned to the job.
-     *
      * @return array
      */
     public function tags(): array
@@ -51,7 +39,6 @@ class FileMetaJob extends FileJob
 
     /**
      * Execute the job.
-     *
      * @return void
      */
     public function handle(): void
@@ -84,7 +71,6 @@ class FileMetaJob extends FileJob
 
     /**
      * Handle PDF content, which is extracted by the PDF parser.
-     *
      * @param string $filePath
      * @return void
      */
@@ -101,7 +87,6 @@ class FileMetaJob extends FileJob
     /**
      * Retrieves metadata from listed file using exiftool and
      * saves it to the file.
-     *
      * @param string $filePath
      * @return void
      */
@@ -112,9 +97,7 @@ class FileMetaJob extends FileJob
             'PDF:all',
             'XMP-pdfaid:all',
             'XMP-pdf:all'
-        ])->map(function ($value) {
-            return Str::start($value, '-');
-        });
+        ])->map(static fn ($value) => Str::start($value, '-'));
 
         // Build command. The structure is [exittool + commands] + [fields] + [filename].
         $command = array_merge(

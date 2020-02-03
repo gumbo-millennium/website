@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Resources;
 
 use App\Models\JoinSubmission as JoinSubmissionModel;
@@ -14,7 +16,6 @@ use Laravel\Nova\Panel;
 
 /**
  * Returns join requests
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -23,21 +24,18 @@ class JoinSubmission extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
      * @var string
      */
     public static $model = JoinSubmissionModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
      * @var string
      */
     public static $title = 'name';
 
     /**
      * The columns that should be searched.
-     *
      * @var array
      */
     public static $search = [
@@ -51,7 +49,6 @@ class JoinSubmission extends Resource
 
     /**
      * Get the displayable label of the resource.
-     *
      * @return string
      */
     public static function label()
@@ -61,7 +58,6 @@ class JoinSubmission extends Resource
 
     /**
      * Get the displayable singular label of the resource.
-     *
      * @return string
      */
     public static function singularLabel()
@@ -71,11 +67,10 @@ class JoinSubmission extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
@@ -110,9 +105,7 @@ class JoinSubmission extends Resource
                     ->rules(['required', "before:{$sixteenYears}"]),
             ]),
             new Panel('Adres informatie', [
-                Text::make('Adres', function () {
-                    return "{$this->street} {$this->number}";
-                })->onlyOnDetail(),
+                Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),
 
                 // Heading in form
                 Heading::make('Adres')->onlyOnForms(),
@@ -163,11 +156,10 @@ class JoinSubmission extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function actions(Request $request)
     {
         return [

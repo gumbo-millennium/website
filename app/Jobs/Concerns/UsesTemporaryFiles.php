@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs\Concerns;
 
 use App\Helpers\Str;
@@ -9,7 +11,6 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Handles creation of temporrary files by streaming from any disk.
  * Should support both local as cloud-based drives.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,7 +19,6 @@ trait UsesTemporaryFiles
     /**
      * Returns an absolute path to a file mirroring the given file on the given
      * disk, ensuring a certain extension is set.
-     *
      * @param string $path Path of the file on the $disk
      * @param string $ext Extension to set, without leading period
      * @param string $disk Disk to use
@@ -60,7 +60,6 @@ trait UsesTemporaryFiles
 
     /**
      * Converts attachment to file
-     *
      * @param AttachmentInterface $attachment
      * @return string
      */
@@ -88,7 +87,6 @@ trait UsesTemporaryFiles
 
     /**
      * Returns a filename for a temporary file with the given extension
-     *
      * @param string $ext Extension, without leading period.
      * @return string File path
      */
@@ -112,7 +110,6 @@ trait UsesTemporaryFiles
 
     /**
      * Attempts to delete the given file, but only if it's a temp file.
-     *
      * @param string $file
      * @return void
      */

@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Models\File;
 use App\Models\FileCategory;
-use Tests\TestCase;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Tests\TestCase;
 
 /**
  * Tests the following cases
@@ -42,7 +42,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Create a file in a new category before the item starts
-     *
      * @return void
      * @before
      */
@@ -69,7 +68,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Delete the test items after testing
-     *
      * @return void
      * @after
      */
@@ -92,7 +90,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Ensures there are some files and categories to work with
-     *
      * @return void
      */
     public function seedBefore(): void
@@ -102,7 +99,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test viewing as logged out user
-     *
      * @param string $route
      * @param bool $notFound
      * @return void
@@ -125,7 +121,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * A basic feature test example.
-     *
      * @param string $route
      * @param bool $notFound
      * @return void
@@ -152,7 +147,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing our first category when looking at the file index
-     *
      * @return void
      */
     public function testViewIndex()
@@ -179,7 +173,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right files when looking at an existing category.
-     *
      * @return void
      */
     public function testViewExistingCategory()
@@ -199,9 +192,9 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        // Get the first 5 files of this category
-        /** @var Collection $fileTitles */
         $fileTitles = $this->getCategoryModel()->files()->take(5)->pluck('title');
+        // Get the first 5 files of this category
+        \assert($fileTitles instanceof Collection);
 
         // Can't check if there are no titles
         if (empty($fileTitles)) {
@@ -214,7 +207,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're getting a 404 when requesting a non-existing category
-     *
      * @return void
      */
     public function testViewNonExistingCategory()
@@ -238,7 +230,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Provide translated list of test routes
-     *
      * @return array
      */
     public function provideTestRoutes(): array
@@ -269,8 +260,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Provides routes as a predictable list
-     *
-     * @return string[]
+     * @return array<string>
      */
     public function getTestRoutes(): array
     {
@@ -302,7 +292,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Returns most recent category
-     *
      * @return FileCategory|null
      */
     private function getCategoryModel(): ?FileCategory
@@ -327,7 +316,6 @@ class FileDisplayTest extends TestCase
 
     /**
      * Returns most recent file
-     *
      * @return File|null
      */
     private function getFileModel(): File

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Contracts\StripeServiceContract;
@@ -10,7 +12,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\File;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -27,7 +28,6 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
-     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -37,7 +37,6 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
-     *
      * @return array
      */
     public function via()
@@ -47,7 +46,6 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
-     *
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail()
@@ -106,6 +104,28 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
 
     /**
+     * Returns link to Stripe's receipt page
+     * @param Enrollment $enrollment
+     * @return null|string
+     * @throws BindingResolutionException
+     */
+    public function getReceiptLink(Enrollment $enrollment): ?string
+    {
+        $stripeService = app(StripeServiceContract::class);
+        \assert($stripeService instanceof StripeServiceContract);
+
+        // Get charge
+        $charge = $stripeService->getCharge($enrollment);
+        if (!$charge) {
+            return null;
+        }
+
+        // Get link
+        $receiptLink = $charge->receipt_url;
+        return !empty($receiptLink) ? $receiptLink : null;
+    }
+
+    /**
      * Returns path to the PDF, or null if missing
      * @param Enrollment $enrollment
      * @return null|string
@@ -113,8 +133,8 @@ class EnrollmentPaid extends Notification implements ShouldQueue
      */
     private function getInvoicePdf(Enrollment $enrollment): ?string
     {
-        /** @var StripeServiceContract $stripeService */
         $stripeService = app(StripeServiceContract::class);
+        \assert($stripeService instanceof StripeServiceContract);
 
         // Get invoice
         $invoice = $stripeService->getInvoice($enrollment);
@@ -132,8 +152,8 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $target = tempnam(\sys_get_temp_dir(), 'pdf');
 
         try {
-            /** @var Client $client */
             $client = app(Client::class);
+            \assert($client instanceof Client);
 
             // Make get request
             $response = $client->get($pdfUri, [
@@ -170,27 +190,5 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Request failed
         return null;
-    }
-
-    /**
-     * Returns link to Stripe's receipt page
-     * @param Enrollment $enrollment
-     * @return null|string
-     * @throws BindingResolutionException
-     */
-    public function getReceiptLink(Enrollment $enrollment): ?string
-    {
-        /** @var StripeServiceContract $stripeService */
-        $stripeService = app(StripeServiceContract::class);
-
-        // Get charge
-        $charge = $stripeService->getCharge($enrollment);
-        if (!$charge) {
-            return null;
-        }
-
-        // Get link
-        $receiptLink = $charge->receipt_url;
-        return !empty($receiptLink) ? $receiptLink : null;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Activity;
@@ -26,7 +28,6 @@ use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\SponsorPolicy;
 use App\Policies\UserPolicy;
-use Closure;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -37,7 +38,6 @@ class AuthServiceProvider extends ServiceProvider
 {
     /**
      * The policy mappings for the application.
-     *
      * @var array
      */
     protected $policies = [
@@ -58,7 +58,6 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register any authentication / authorization services.
-     *
      * @return void
      */
     public function boot(GateContract $gate)
@@ -75,13 +74,10 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Check if a user has permission to be super admin. Cannot be inherited from roles.
-     *
      * @param User $user User to authenticate
-     * @param mixed $ability (unused)
      * @return bool|null
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function hasDirectAdminPermission(User $user, $ability): ?bool
+    public function hasDirectAdminPermission(User $user): ?bool
     {
         // Check for direct super-admin permission
         if ($user->hasDirectPermission('super-admin')) {

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
-use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
+use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
-use App\Jobs\CreateStripeInvoiceJob;
-use App\Jobs\CreateStripePaymentIntentJob;
 use App\Jobs\Stripe\CreateInvoiceJob;
 use App\Models\Activity;
 use App\Models\Enrollment;
@@ -16,19 +14,12 @@ use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
-use App\Models\User;
-use App\Services\StripeErrorService;
-use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Stripe\Exception\ApiErrorException;
-use Stripe\PaymentIntent;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Handles creating enrollments, changes in the enrollment form and unenrollment
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -47,7 +38,6 @@ class EnrollmentController extends Controller
 
     /**
      * Creates the new enrollment for the activity
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -60,8 +50,8 @@ class EnrollmentController extends Controller
      */
     public function create(Request $request, Activity $activity)
     {
-        /** @var User $user */
         $user = $request->user();
+        \assert($user instanceof User);
 
         // Redirect to the display view if the user is already enrolled
         if (Enrollment::findActive($user, $activity)) {
@@ -160,7 +150,6 @@ class EnrollmentController extends Controller
 
     /**
      * Shows the form to update the enrollment details
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -186,7 +175,6 @@ class EnrollmentController extends Controller
 
     /**
      * Creates the new enrollment for the activity
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -218,7 +206,6 @@ class EnrollmentController extends Controller
     /**
      * Redirects users to the proper route. Note that this route might redirect
      * to the payments, even if the activity has ended.
-     *
      * @param Enrollment $enrollment
      * @return RedirectResponse
      */
@@ -249,7 +236,6 @@ class EnrollmentController extends Controller
 
     /**
      * Unenroll form
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -271,7 +257,6 @@ class EnrollmentController extends Controller
 
     /**
      * Confirmed unenroll requst
-     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -307,7 +292,6 @@ class EnrollmentController extends Controller
 
     /**
      * Adds a Stripe Payment Intent or Stripe Invoice to the enrollment, if required.
-     *
      * @param Enrollment $enrollment
      * @return void
      */

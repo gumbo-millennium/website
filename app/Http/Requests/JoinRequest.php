@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\JoinSubmission;
 use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Carbon;
-use Illuminate\Validation\Rule;
 
 /**
  * A request with sign up data
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -22,24 +18,12 @@ class JoinRequest extends FormRequest
 {
     /**
      * Phone rule
-     *
      * @var PhoneNumber
      */
     private $phoneNumberRule;
 
     /**
-     * Returns the phone rule
-     *
-     * @return PhoneNumber
-     */
-    private function phoneRule(): PhoneNumber
-    {
-        return $this->phoneNumberRule ?? ($this->phoneNumberRule = new PhoneNumber('NL'));
-    }
-
-    /**
      * Determine if the user is authorized to make this request.
-     *
      * @return bool
      */
     public function authorize()
@@ -49,7 +33,6 @@ class JoinRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     public function rules()
@@ -86,7 +69,6 @@ class JoinRequest extends FormRequest
 
     /**
      * Returns the data without sensitive fields
-     *
      * @return array
      */
     public function safe(): array
@@ -96,7 +78,6 @@ class JoinRequest extends FormRequest
 
     /**
      * Returns the submission for this data
-     *
      * @return JoinSubmission
      */
     public function submission(): JoinSubmission
@@ -127,5 +108,14 @@ class JoinRequest extends FormRequest
 
         // Make submission
         return new JoinSubmission($submissionData);
+    }
+
+    /**
+     * Returns the phone rule
+     * @return PhoneNumber
+     */
+    private function phoneRule(): PhoneNumber
+    {
+        return $this->phoneNumberRule ?? ($this->phoneNumberRule = new PhoneNumber('NL'));
     }
 }

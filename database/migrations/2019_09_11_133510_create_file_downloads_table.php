@@ -1,19 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFileDownloadsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::create('file_downloads', function (Blueprint $table) {
+        Schema::create('file_downloads', static function (Blueprint $table) {
             $table->uuid('id');
             $table->timestamp('created_at')->nullable();
             $table->unsignedBigInteger('user_id');
@@ -28,7 +29,6 @@ class CreateFileDownloadsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

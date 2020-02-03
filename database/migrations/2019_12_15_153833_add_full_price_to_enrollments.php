@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Enrollment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -9,12 +11,11 @@ class AddFullPriceToEnrollments extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('enrollments', static function (Blueprint $table) {
             $table->unsignedSmallInteger('total_price')->nullable()->default(null)->after('price');
         });
 
@@ -26,12 +27,11 @@ class AddFullPriceToEnrollments extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('enrollments', static function (Blueprint $table) {
             $table->dropColumn('total_price');
         });
     }

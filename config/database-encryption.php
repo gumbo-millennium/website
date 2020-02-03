@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * src/config/database-encryption.php.
- *
  * @author      Austin Heap <me@austinheap.com>
  * @version     v0.2.0
  */

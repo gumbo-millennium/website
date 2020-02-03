@@ -1,24 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
-use App\Models\File;
-use App\Jobs\Concerns\RunsCliCommands;
-use App\Jobs\Concerns\UsesTemporaryFiles;
 use Czim\Paperclip\Contracts\AttachmentInterface;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\File as LaravelFile;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 use RuntimeException;
-use Smalot\PdfParser\Parser as PDFParser;
 
 /**
  * Makes a thumbnail of the file's first page.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -26,45 +16,23 @@ class FileThumbnailJob extends FileJob
 {
     /**
      * Imag size of thumbnails
-     *
-     * @var string
      */
     private const RESIZE_WIDTH = '300x400';
 
-    private const ERROR_MSG = <<<MSG
-Failed to make thumbnail [%s].
-
-Command: %s
-
-Outputs follow
-======== stdout  ========
-
-%s
-
-======== stderr  ========
-
-%s
-
-=========================
-MSG;
-
     /**
      * Try job 3 times
-     *
      * @var int
      */
     protected $tries = 3;
 
     /**
      * Allow 60 seconds for Ghostscript and Imagick to get a thumbnail.
-     *
      * @var int
      */
     protected $timeout = 60;
 
     /**
      * Get the tags that should be assigned to the job.
-     *
      * @return array
      */
     public function tags(): array
@@ -74,7 +42,6 @@ MSG;
 
     /**
      * Execute the job.
-     *
      * @return void|boolean
      */
     public function handle(): void

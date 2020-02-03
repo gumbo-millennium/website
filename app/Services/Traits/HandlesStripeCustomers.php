@@ -12,7 +12,7 @@ trait HandlesStripeCustomers
 {
     /**
      * Customers retrieved from API
-     * @var Customer[]
+     * @var array<Customer>
      */
     private array $customerCache = [];
 
