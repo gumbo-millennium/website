@@ -22,6 +22,8 @@ if ($user && $is_enrolled && !$is_stable) {
 $whenOpen = null;
 if (!$isOpen && $activity->enrollment_start > now()) {
     $whenOpen = $activity->enrollment_start->isoFormat('[Opent op] D MMM [om] HH:mm');
+} elseif ($isOpen && $activity->enrollment_end > now()) {
+$whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
 }
 @endphp
 
@@ -56,5 +58,8 @@ if (!$isOpen && $activity->enrollment_start > now()) {
         @csrf
         <button type="submit" class="btn m-0 btn--brand">Inschrijven</button>
     </form>
+    @if ($whenOpen)
+    <div class="mt-2 text-gray-500">{{ $whenOpen }}</div>
+    @endif
     @endif
 </div>
