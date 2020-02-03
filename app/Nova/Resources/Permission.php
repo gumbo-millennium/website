@@ -85,7 +85,8 @@ class Permission extends Resource
      * @param  \Illuminate\Http\Request $request
      * @return array
      */
-    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    public function fields(Request $request)
     {
         $guardOptions = collect(config('auth.guards'))->keys()->mapWithKeys(static fn ($key) => [$key => $key]);
 
@@ -129,7 +130,8 @@ class Permission extends Resource
      * @return array
      * @return array
      */
-    public function actions(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    public function actions(Request $request)
     {
         return [
             new AttachToRole(),

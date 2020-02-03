@@ -45,10 +45,7 @@
     <type>error</type>
   </rule>
 
-  <!-- Functional checks (enure PHP 7.4+) -->
-  <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint" />
-  <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
-  <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" />
+  <!-- Other types -->
   <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint" />
   <rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly" />
   <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
@@ -64,9 +61,13 @@
         <element value="public constants"/>
         <element value="protected constants"/>
         <element value="private constants"/>
+        <element value="public static properties, protected static properties, private static properties"/>
+        <element value="public static methods, protected static methods, private static methods"/>
+        <element value="public static abstract methods, protected static abstract methods"/>
         <element value="public properties, protected properties, private properties"/>
         <element value="constructor"/>
         <element value="public methods, protected methods, private methods"/>
+        <element value="public abstract methods, protected abstract methods"/>
         <element value="magic methods"/>
       </property>
     </properties>

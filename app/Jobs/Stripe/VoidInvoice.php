@@ -6,9 +6,7 @@ namespace App\Jobs\Stripe;
 
 use App\Models\Enrollment;
 use App\Services\StripeService;
-use LogicException;
 use Stripe\Invoice;
-use Stripe\Stripe;
 
 class VoidInvoice extends StripeJob
 {

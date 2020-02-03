@@ -163,7 +163,8 @@ class Activity extends Resource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    public function fields(Request $request)
     {
         return [
             $this->mainFields(),

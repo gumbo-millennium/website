@@ -79,7 +79,8 @@ class Role extends Resource
      * @param  \Illuminate\Http\Request $request
      * @return array
      */
-    public function fields(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
+    public function fields(Request $request)
     {
         $guardOptions = collect(config('auth.guards'))->keys()->mapWithKeys(static fn ($key) => [$key => $key]);
 
