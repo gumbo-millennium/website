@@ -115,6 +115,7 @@ jobs:
 
       - name: Run linters
         run: composer run lint
+        continue-on-error: true
 
       - name: Run unit tests
         run: |
