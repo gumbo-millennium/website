@@ -106,18 +106,15 @@
   <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse" />
   <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash" />
   <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+    <!-- Exclude directories -->
+    <include-pattern type="relative">^/app/</include-pattern>
+    <include-pattern type="relative">^/tests/</include-pattern>
+
+    <!-- Properties -->
     <properties>
       <property name="rootNamespaces" type="array">
         <element key="app" value="App"/>
         <element key="tests" value="Tests"/>
-      </property>
-      <property name="skipDirs" type="array">
-        <element value="bootstrap" />
-        <element value="config" />
-        <element value="database" />
-        <element value="public" />
-        <element value="resources" />
-        <element value="routes" />
       </property>
     </properties>
   </rule>
