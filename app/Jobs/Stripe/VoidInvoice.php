@@ -73,7 +73,10 @@ class VoidInvoice extends StripeJob
         }
 
         // Void the invoice if it's possible
-        \assert(in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE]), "Invoice in unknown ste {$invoice->status}");
+        \assert(
+            in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE]),
+            "Invoice in unknown ste {$invoice->status}"
+        );
 
         // Void invoice
         logger()->info('Voiding invoice {invoice}', [

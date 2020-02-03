@@ -2,37 +2,25 @@
 
 declare(strict_types=1);
 
-/**
- * src/config/database-encryption.php.
- * @author      Austin Heap <me@austinheap.com>
- * @version     v0.2.0
- */
-
 return [
 
     /*
      * Enable database encryption.
-     *
      * Default: false
-     *
      * @var null|bool
      */
     'enabled'            => env('DB_ENCRYPTION_ENABLED', true),
 
     /*
      * Prefix used in attribute header.
-     *
      * Default: __LARAVEL-DATABASE-ENCRYPTED-%VERSION%__
-     *
      * @var null|string
      */
     'prefix'             => env('DB_ENCRYPTION_PREFIX', '__LARAVEL-DATABASE-ENCRYPTED-%VERSION%__'),
 
     /*
      * Enable header versioning.
-     *
      * Default: true
-     *
      * @var null|bool
      */
     'versioning'         => env('DB_ENCRYPTION_VERSIONING', true),
