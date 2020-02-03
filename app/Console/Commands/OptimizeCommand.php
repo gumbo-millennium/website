@@ -20,9 +20,6 @@ class OptimizeCommand extends BaseOptimizeCommand
         // Create versioned pages
         $this->call('gumbo:content');
 
-        // Update users pages
-        $this->call('gumbo:user-update');
-
         // Forward
         parent::handle();
     }
