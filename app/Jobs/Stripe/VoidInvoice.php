@@ -14,9 +14,8 @@ class VoidInvoice extends StripeJob
 {
     /**
      * Undocumented variable
-     * @var Enrollment
      */
-    protected $enrollment;
+    protected Enrollment $enrollment;
 
     /**
      * Create a new job instance.
@@ -29,15 +28,9 @@ class VoidInvoice extends StripeJob
 
     /**
      * Execute the job.
-     * @return void
      */
-    public function handle(StripeService $service)
+    public function handle(StripeService $service): void
     {
-        // Abort if Stripe key isn't set
-        if (empty(Stripe::getApiKey())) {
-            return;
-        }
-
         // Shorthand
         $enrollment = $this->enrollment;
 
@@ -49,8 +42,8 @@ class VoidInvoice extends StripeJob
             return;
         }
 
-        $invoice = $service->get(Invoice::class, $enrollment->payment_invoice);
         // Get data from Stripe
+        $invoice = $service->getInvoice($enrollment);
         \assert($invoice instanceof Invoice);
 
         // Invoices voided in the Stripe dashboard might cause a trigger to end up here.
@@ -65,20 +58,9 @@ class VoidInvoice extends StripeJob
         // Issue a refund if the user has already paid the invoice.
         if ($invoice->status === Invoice::STATUS_PAID) {
             logger()->info(
-                'Cannot void paid invoice {invoice}, issuing a refund instead',
+                'Cannot void paid invoice {invoice}.',
                 compact('enrollment', 'invoice')
             );
-            RefundEnrollment::dispatch($invoice);
-            return;
-        }
-
-        // Void the invoice if it's possible
-        if (in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE])) {
-            logger()->info('Voiding invoice {invoice}', [
-                'enrollment' => $enrollment,
-                'invoice' => $invoice
-            ]);
-            $invoice->voidInvoice();
             return;
         }
 
@@ -92,12 +74,14 @@ class VoidInvoice extends StripeJob
             return;
         }
 
-        logger()->error('Invoice status {status} is uknown for this {invoice}', [
-            'status' => $invoice->status,
+        // Void the invoice if it's possible
+        \assert(in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE]), "Invoice in unknown ste {$invoice->status}");
+
+        // Void invoice
+        logger()->info('Voiding invoice {invoice}', [
             'enrollment' => $enrollment,
             'invoice' => $invoice
         ]);
-
-        throw new LogicException("Unknown invoice status {$invoice->status}");
+        $invoice->voidInvoice();
     }
 }
