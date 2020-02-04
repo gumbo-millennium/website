@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cache node_modules
-        uses: actions/cache@v1
         id: cache-node
+        uses: actions/cache@v1
         with:
           path: node_modules
           key: node-build-${{ hashFiles('**/yarn.lock') }}
@@ -124,9 +124,10 @@ jobs:
 
       - name: Report test results to CodeClimate
         run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          curl -o ./cc-test-reporter -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
           chmod +x ./cc-test-reporter
-          ./cc-test-reporter format-coverage -t clover ./dist/coverage-clover.xml || true
+          ./cc-test-reporter format-coverage -t clover ./dist/coverage-clover.xml
+          ./cc-test-reporter upload-coverage
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
