@@ -11,6 +11,8 @@ use Mtownsend\ReadTime\ReadTime;
 
 class NewsItemObserver
 {
+    private const WORDS_PER_MINUTE = 190;
+
     /**
      * Try to make sure a news article has an author
      * @param NewsItem $newsArticle
@@ -33,7 +35,7 @@ class NewsItemObserver
         $textContent = (new Html2Text($content))->getText();
 
         // Determine read time
-        $readTimeObject = new ReadTime($textContent, false);
+        $readTimeObject = new ReadTime($textContent, false, false, self::WORDS_PER_MINUTE);
         $readTimeObject->abbreviated(true);
         $readTimeObject->omitSeconds(false);
         $readTimeData = $readTimeObject->toArray();
