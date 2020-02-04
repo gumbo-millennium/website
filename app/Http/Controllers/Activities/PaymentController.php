@@ -108,7 +108,7 @@ class PaymentController extends Controller
         // Redirect to 'please wait' page
         return response()
             ->view('activities.enrollments.payment-go')
-            ->header('Refresh', '1;url=' . route('enroll.pay-wait', compact('activity')))
+            ->header('Refresh', '0;url=' . route('enroll.pay-wait', compact('activity')))
             ->setPrivate();
     }
 
@@ -164,7 +164,7 @@ class PaymentController extends Controller
         // Redirect to 'please wait' page
         return response()
             ->view('activities.enrollments.payment-go')
-            ->header('Refresh', '1;url=' . route('enroll.pay-wait', compact('activity')))
+            ->header('Refresh', '0;url=' . route('enroll.pay-wait', compact('activity')))
             ->setPrivate();
     }
 
@@ -184,7 +184,7 @@ class PaymentController extends Controller
             ->view('activities.enrollments.payment-complete', [
                 'enrollment' => $enrollment,
             ])
-            ->header('Refresh', '1;url=' . route('enroll.pay-validate', compact('activity')))
+            ->header('Refresh', '0;url=' . route('enroll.pay-validate', compact('activity')))
             ->setPrivate();
     }
 
