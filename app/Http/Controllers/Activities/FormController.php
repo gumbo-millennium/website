@@ -22,14 +22,6 @@ class FormController extends Controller
     use HasEnrollments;
 
     /**
-     * Require verified, logged-in users
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * Shows the Activity's from
      * @return \Illuminate\Http\Response
      */

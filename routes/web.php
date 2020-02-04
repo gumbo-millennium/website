@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
     App\Http\Policy\LoginPolicy::class
@@ -69,7 +71,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->group(static function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'verified'])->group(static function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 

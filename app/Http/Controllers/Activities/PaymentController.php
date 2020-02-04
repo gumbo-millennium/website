@@ -32,15 +32,6 @@ class PaymentController extends Controller
     use HasEnrollments;
 
     /**
-     * Require verified, logged-in users
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified'])->except('resume');
-        $this->middleware(['signed'])->only('resume');
-    }
-
-    /**
      * Show the form to choose a bank for the iDEAL payment
      * @param StripeServiceContract $stripeService
      * @param IdealBankService $bankService

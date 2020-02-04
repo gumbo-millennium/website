@@ -29,14 +29,6 @@ class EnrollmentController extends Controller
     use HandlesStripeItems;
 
     /**
-     * Require verified, logged-in users
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * Creates the new enrollment for the activity
      * @param Request $request
      * @param Activity $activity
