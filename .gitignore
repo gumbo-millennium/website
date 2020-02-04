@@ -103,6 +103,7 @@ typings/
 !/public/favicon.ico
 !/public/index.php
 !/public/robots.txt
+!/public/email/
 
 # Development helper
 storage/debugbar
