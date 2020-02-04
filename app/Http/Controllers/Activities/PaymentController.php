@@ -56,10 +56,11 @@ class PaymentController extends Controller
         }
 
         // Invoice lines and bank list
-        $quotedInvoice = $stripeService->getComputedInvoiceLines($enrollment);
-        $invoiceLines = $quotedInvoice->get('items', []);
-        $invoiceCoupon = $quotedInvoice->get('coupon');
+        $invoiceLines = $stripeService->getComputedInvoiceLines($enrollment);
+        $invoiceCoupon = $enrollment->is_discounted ? $stripeService->getComputedCoupon($enrollment->activity) : null;
         $banks = $bankService->getAll();
+
+        // Build response
         return response()
             ->view(
                 'activities.enrollments.payment',

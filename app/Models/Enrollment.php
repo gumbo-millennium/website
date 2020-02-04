@@ -93,6 +93,16 @@ class Enrollment extends UuidModel
     }
 
     /**
+     * Returns if the enrollment is discounted.
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsDiscountedAttribute(): bool
+    {
+        return $this->price === $this->activity->discount_price;
+    }
+
+    /**
      * Returns state we want to go to, depending on Enrollment's own attributes.
      * Returns null if it can't figure it out.
      * @return App\Models\States\Enrollment\State|null

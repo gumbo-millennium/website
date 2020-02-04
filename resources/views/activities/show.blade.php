@@ -29,7 +29,7 @@ $hasSoldOutDiscount = $activity->discounts_available === 0;
 $discountLabel = sprintf(
     '%d %s',
     $activity->discounts_available,
-    Str::multiple('lid', 'leden', $activity->discounts_available)
+    Str::multiple('lid', 'leden', $activity->discounts_available ?? 0)
 );
 
 // Number of seats
@@ -119,7 +119,7 @@ if ($activity->available_seats === 0) {
                 @if ($hasSoldOutDiscount && $isMember)
                 Het gereduceerde tarief is helaas uitverkocht. Je betaald nu het reguliere tarief van {{ $normalPrice }}.
                 @elseif ($isMember && $hasRestrictedDiscount)
-                Het gereduceerde tarief van {{ $discountPrice }} is nog beschikbaar voor {{ $activity->discounts_available }} leden. Hierna betaal je {{ $normalPrice }}.
+                Het gereduceerde tarief van {{ $discountPrice }} is nog beschikbaar voor {{ $discountLabel }}. Hierna betaal je {{ $normalPrice }}.
                 @elseif ($isMember)
                 Als lid betaal je het gereduceerde tarief van {{ $discountPrice }}. Niet-leden betalen {{ $normalPrice }}.
                 @else

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services\Traits;
 
 use App\Models\Activity;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Collection;
 use Stripe\Coupon;
 use Stripe\Exception\ApiErrorException;
 
@@ -15,6 +17,33 @@ trait HandlesStripeCoupons
      * @var array<Coupon>
      */
     private array $couponCache = [];
+
+    /**
+     * Returns the computed coupon for this activity.
+     * @param Activity $activity
+     * @return null|Collection
+     */
+    public function getComputedCoupon(Activity $activity): ?Collection
+    {
+        // Skip if no activity is available
+        if ($activity->discount_price === null) {
+            return null;
+        }
+
+        // Create proper name
+        $couponName = sprintf('Bijdrage %s', optional($activity->role)->title ?? 'Gumbo Millennium');
+
+        // Assert that an end date is set
+        \assert($activity->end_date instanceof CarbonInterface, 'Activity has no end date!');
+        $dueDate = (clone $activity->end_date)->addDay()->getTimestamp();
+
+        // Return collection
+        return collect([
+            'label' => $couponName,
+            'discount' => $activity->member_discount,
+            'due-date' => $dueDate
+        ]);
+    }
 
     /**
      * Returns the coupon for this activity, to apply the discount on the activity
@@ -55,16 +84,16 @@ trait HandlesStripeCoupons
         }
 
         try {
-            // Create proper name
-            $couponName = sprintf('Bijdrage %s', optional($activity->role)->title ?? 'Gumbo Millennium');
+            // Get coupon parameters
+            $couponData = $this->getComputedCoupon($activity);
 
             // Create customer
             $coupon = Coupon::create([
-                'amount_off' => $activity->member_discount,
+                'amount_off' => $couponData->get('discount'),
                 'currency' => 'eur',
                 'duration' => 'once',
-                'name' => $couponName,
-                'redeem_by' => optional($activity->end_date)->getTimestamp() ?? now()->addMonths(6)->getTimestamp()
+                'name' => $couponData->get('label'),
+                'redeem_by' => $couponData->get('due-date'),
             ]);
 
             // Update activity

@@ -33,10 +33,7 @@ trait HandlesStripeInvoices
     public function getComputedInvoiceLines(Enrollment $enrollment): Collection
     {
         // Items
-        $result = collect([
-            'items' => collect(),
-            'coupon' => null
-        ]);
+        $items = collect();
 
         // Prep some numbers
         $userPrice = $enrollment->price;
@@ -47,30 +44,21 @@ trait HandlesStripeInvoices
         $discountPrice = $enrollment->activity->discount_price;
 
         // Always add full price
-        $result->get('items')[] = [$fullPrice, "Deelnamekosten {$enrollment->name}", true];
+        $items[] = [$fullPrice, "Deelnamekosten {$enrollment->name}", true];
 
         // Add transfer fees if not free
         if (!empty($userPrice)) {
-            $result->get('items')[] = [$transferPrice, 'Transactiekosten', false];
+            $items[] = [$transferPrice, 'Transactiekosten', false];
         }
 
-        // No discount was applied, we're done
-        if ($userPrice === $fullPrice) {
-            return $result;
+        // There's a discount, but it's non-default. Add it as a line
+        if ($userPrice !== $discountPrice && $userPrice !== $fullPrice) {
+            $discount = $userPrice - $fullPrice;
+            $items[] = [$discount, $discount > 0 ? 'Toeslag' :  'Korting', true];
         }
 
-        // Apply coupon and complete
-        if ($userPrice === $discountPrice) {
-            $result->put('coupon', $this->getCoupon($enrollment->activity));
-            return $result;
-        }
-
-        // Apply special discount
-        $discount = $userPrice - $fullPrice;
-        $result->get('items')[] = [$discount, $discount > 0 ? 'Toeslag' :  'Bijzondere korting', true];
-
-        // Done
-        return $result;
+        // Return the items
+        return $items;
     }
 
     /**
@@ -167,14 +155,13 @@ trait HandlesStripeInvoices
         // Remove already present lines (might 404)
         $this->clearPendingInvoiceItems($customer);
 
-        // Get computed items
+        // Add computed lines
         $computed = $this->getComputedInvoiceLines($enrollment);
+        $this->createPendingInvoiceItems($customer, $computed);
 
-        // Add new lines
-        $this->createPendingInvoiceItems($customer, $computed->get('items'));
-
-        // Update user discount
-        $this->updateCustomerDiscount($customer, $computed->get('coupon'));
+        // Add discount, if any
+        $coupon = $this->getCoupon($enrollment->activity);
+        $this->updateCustomerDiscount($customer, $coupon);
 
         // Create the actual invoice
         $invoice = $this->createActualInvoice($customer, $enrollment);

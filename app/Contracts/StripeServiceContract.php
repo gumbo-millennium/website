@@ -29,6 +29,13 @@ interface StripeServiceContract
     public function getCustomer(User $user): Customer;
 
     /**
+     * Returns the computed coupon for this activity.
+     * @param Activity $activity
+     * @return null|Collection
+     */
+    public function getComputedCoupon(Activity $activity): ?Collection;
+
+    /**
      * Returns the coupon for this activity, to apply the discount on the activity
      * @param Activity $activity
      * @return Stripe\Coupon

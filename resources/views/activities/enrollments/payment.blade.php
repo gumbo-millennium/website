@@ -38,8 +38,8 @@
                     <tfoot>
                         @if ($invoiceCoupon)
                         <tr>
-                            <td>{{ $invoiceCoupon->name }}</td>
-                            <td class="text-right mt-2 pt-2 border-t border-black">{{ Str::price($invoiceCoupon->amount_off * -1) }}</td>
+                            <td>{{ $invoiceCoupon->get('label') }}</td>
+                            <td class="text-right mt-2 pt-2 border-t border-black">{{ Str::price($invoiceCoupon->get('discount') * -1) }}</td>
                         </tr>
                         @endif
                         <tr>
