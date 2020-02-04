@@ -67,7 +67,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $mail = (new MailMessage())
             ->subject("Betaalbevestiging voor {$activity->name} 🎉")
             ->greeting('Bedankt voor je betaling!')
-            ->salutation("Beste {$user->first_name},")
+            ->line("Beste {$user->first_name},")
             ->line("Je betaling voor {$activity->name} is in goede orde ontvangen.")
             ->line('Je inschrijving is nu definitief.')
             ->action('Bekijk activiteit', route('activity.show', compact('activity')));

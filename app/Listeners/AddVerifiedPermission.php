@@ -16,15 +16,6 @@ use Illuminate\Auth\Events\Verified as LaravelVerifiedEvent;
 class AddVerifiedPermission
 {
     /**
-     * Create the event listener.
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      * @param  LaravelVerifiedEvent  $event
      * @return void
