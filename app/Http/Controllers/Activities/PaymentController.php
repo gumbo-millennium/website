@@ -217,6 +217,9 @@ class PaymentController extends Controller
         $timeout = now()->addSeconds(15);
 
         do {
+            // Refresh model
+            $enrollment->refresh();
+
             // Check if paid
             if ($enrollment->state instanceof Paid) {
                 logger()->notice('iDEAL payment for {enrollment} with ID {code} successful', [
@@ -245,7 +248,8 @@ class PaymentController extends Controller
                     ->setPrivate();
             }
 
-            // Get source
+            // Wait a bit
+            sleep(3);
         } while ($timeout > now());
 
         // Redirect
