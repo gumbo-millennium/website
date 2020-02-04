@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Helpers\Arr;
 use App\Models\NewsItem;
 use Illuminate\Database\Migrations\Migration;
@@ -10,13 +12,12 @@ class AddReadTimeToNewsItems extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
         // Add field
-        Schema::table('news_items', function (Blueprint $table) {
+        Schema::table('news_items', static function (Blueprint $table) {
             $table->string('read_time', 15)->nullable()->default(null)->after('contents');
         });
 
@@ -31,12 +32,11 @@ class AddReadTimeToNewsItems extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('news_items', function (Blueprint $table) {
+        Schema::table('news_items', static function (Blueprint $table) {
             $table->dropColumn('read_time');
         });
     }
