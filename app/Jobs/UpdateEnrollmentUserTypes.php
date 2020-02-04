@@ -42,8 +42,7 @@ class UpdateEnrollmentUserTypes implements ShouldQueue
 
         // Use a cursor (read one item at a time)
         foreach ($cursor as $enrollment) {
-            $userIsMember = $enrollment->user->hasRole('member');
-            $intendedState = $userIsMember ? Enrollment::USER_TYPE_MEMBER : Enrollment::USER_TYPE_GUEST;
+            $intendedState = $enrollment->user->is_member ? Enrollment::USER_TYPE_MEMBER : Enrollment::USER_TYPE_GUEST;
 
             // Update counts
             $parsed++;
