@@ -215,7 +215,7 @@ class UpdateConscriboUserJob implements ShouldQueue
     {
         // Check dates
         $memberStarted = $accountingUser['startdatum_lid'] !== null && $accountingUser['startdatum_lid'] < now();
-        $memberEnded = $accountingUser['einddatum_lid'] !== null || $accountingUser['einddatum_lid'] < now();
+        $memberEnded = $accountingUser['einddatum_lid'] !== null && $accountingUser['einddatum_lid'] < now();
 
         // Check member state
         $isMember = $memberStarted && !$memberEnded;
@@ -232,5 +232,15 @@ class UpdateConscriboUserJob implements ShouldQueue
             logger()->info("Adding member role to user.", compact('user'));
             $user->assignRole('member');
         }
+
+        // No change
+        logger()->info("User's member-state is already up-to-date.", [
+            'user' => $user,
+            'checks' => [
+                'is-member' => $isMember,
+                'member-started' => $memberStarted,
+                'member-ended' => $memberEnded
+            ]
+        ]);
     }
 }
