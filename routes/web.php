@@ -87,8 +87,11 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
     // Enroll payment start
     Route::get('/betaling', 'Activities\\PaymentController@start')->name('pay-wait');
 
-    // Enroll payment complete
+    // Enroll payment return
     Route::get('/betaling/afronden', 'Activities\\PaymentController@complete')->name('pay-return');
+
+    // Enroll payment validation
+    Route::get('/betaling/validatie', 'Activities\\PaymentController@completeVerify')->name('pay-validate');
 
     // Enroll form
     Route::get('/uitschrijven', 'Activities\\EnrollmentController@delete')->name('remove');

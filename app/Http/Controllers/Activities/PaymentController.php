@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Activities;
 use App\Contracts\StripeServiceContract;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
-use App\Jobs\Stripe\PaymentValidationJob;
 use App\Models\Activity;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
@@ -74,12 +73,8 @@ class PaymentController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store(
-        IdealBankService $bankService,
-        StripeServiceContract $stripeService,
-        Request $request,
-        Activity $activity
-    ) {
+    public function store(IdealBankService $bankService, Request $request, Activity $activity)
+    {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
@@ -90,21 +85,23 @@ class PaymentController extends Controller
             'accept' => 'required|accepted'
         ];
 
-        logger()->debug("Got rules", array_merge(compact('bankList', 'rules', 'request')));
-
         // Validate the request
         $valid = $this->validate($request, $rules, [], [
             'bank' => 'bank naam',
             'accept' => 'voorwaarden'
         ]);
 
-        // Get invoice (for sanity)
-        $invoice = $stripeService->getInvoice($enrollment);
-        logger()->info('Going to pay {invoice}.', compact('invoice'));
+        // Ensure the user actually needs to pay for this
+        if (!$enrollment->price) {
+            logger()->warning('Tried to "pay" for an enrollment that\'s free.', compact('activity', 'enrollment'));
+            return response()
+                ->redirectToRoute('enroll.show', compact('activity'))
+                ->setPrivate();
+        }
 
-        // Build source
-        $source = $stripeService->getSource($enrollment, $valid['bank']);
-        logger()->info('Built source {source}.', compact('source'));
+        // Store bank and expire the thing in an hour
+        $request->session()->put("enroll.{$enrollment->id}.bank", $valid['bank']);
+        $request->session()->put("enroll.{$enrollment->id}.expire", now()->addHour());
 
         // Redirect to 'please wait' page
         return response()
@@ -128,6 +125,26 @@ class PaymentController extends Controller
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
+        // Get params for invoice
+        $requestBank = $request->session()->get("enroll.{$enrollment->id}.bank");
+        $requestExpire = $request->session()->get("enroll.{$enrollment->id}.expire");
+
+        // Redirect if expired
+        if ($requestExpire < now() || empty($requestBank)) {
+            logger()->warning('The payment request for {enrollment} has expired.', compact('activity', 'enrollment'));
+            return response()
+                ->redirectToRoute('enroll.show', compact('activity'))
+                ->setPrivate();
+        }
+
+        // Get the invoice we're going to pay (since we need this for a source to apply)
+        $invoice = $stripeService->getInvoice($enrollment);
+        logger()->info('Going to pay {invoice}.', compact('invoice'));
+
+        // Create or retireve the source
+        $source = $stripeService->getSource($enrollment, $requestBank);
+        logger()->info('Built source {source}.', compact('source'));
+
         // Build source
         $source = $stripeService->getSource($enrollment, null);
         logger()->info('Re-retrieved source {source}.', compact('source'));
@@ -139,10 +156,13 @@ class PaymentController extends Controller
             return $redirect;
         }
 
+        // Log it
+        logger()->info('Recieved {source}, but it can\'t be paid yet.', compact('source', 'enrollment'));
+
         // Redirect to 'please wait' page
         return response()
             ->view('activities.enrollments.payment-go')
-            ->header('Refresh', '1;url=' . route('pay-wait', compact('activity')))
+            ->header('Refresh', '1;url=' . route('enroll.pay-wait', compact('activity')))
             ->setPrivate();
     }
 
@@ -152,52 +172,82 @@ class PaymentController extends Controller
      * @param Activity $activity
      * @return Response
      */
-    public function complete(Request $request, StripeService $stripeService, Activity $activity)
+    public function complete(Request $request, Activity $activity)
     {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
-        // Check if the Webhook had already caught it
-        if ($enrollment->state->isOneOf(Paid::class, Cancelled::class)) {
-            return response()
-                ->redirectToRoute('activity.show', compact('activity'))
-                ->setPrivate();
-        }
-
-        // Check it ourselves
-        PaymentValidationJob::dispatchNow($enrollment);
-
-        // Reload model
-        $enrollment->refresh();
-
-        // Check if the Webhook had already caught it
-        if ($enrollment->state instanceof Paid) {
-            logger()->notice('iDEAL payment for {enrollment} with ID {code} successful', [
+        // Redirect to 'please wait' page
+        return response()
+            ->view('activities.enrollments.payment-complete', [
                 'enrollment' => $enrollment,
-                'activity' => $activity,
-                'user' => $enrollment->user,
-                'code' => $enrollment->payment_invoice,
-            ]);
-            flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
-            return response()
-                ->redirectToRoute('activity.show', compact('activity'))
-                ->setPrivate();
-        }
+            ])
+            ->header('Refresh', '1;url=' . route('enroll.pay-validate', compact('activity')))
+            ->setPrivate();
+    }
 
-        // Get source
-        $source = $stripeService->getSource($enrollment, null);
+    /**
+     * Perform the actual validation
+     * @param Request $request
+     * @param StripeServiceContract $service
+     * @param Activity $activity
+     * @return RedirectResponse
+     * @throws EnrollmentNotFoundException
+     */
+    public function completeVerify(Request $request, StripeServiceContract $service, Activity $activity)
+    {
+        // Get enrollment
+        $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
+
+        // Check the source
+        $source = $service->getSource($enrollment, null);
         if (in_array($source->status, [Source::STATUS_CANCELED, Source::STATUS_FAILED])) {
-            flash("De betaling voor {$activity->name} is mislukt of geannuleerd.", 'info');
+            $result = $source->status === Source::STATUS_CANCELED ? 'geannuleerd' : 'mislukt';
+            flash("De betaling voor {$activity->name} is {$result}.", 'info');
+
+            // Redirect to activity
             return response()
                 ->redirectToRoute('activity.show', compact('activity'))
                 ->setPrivate();
         }
 
-        // Queue a re-check
-        PaymentValidationJob::dispatch($enrollment);
+        // We'll retry this bit for 15 seconds
+        $timeout = now()->addSeconds(15);
+
+        do {
+            // Check if paid
+            if ($enrollment->state instanceof Paid) {
+                logger()->notice('iDEAL payment for {enrollment} with ID {code} successful', [
+                    'enrollment' => $enrollment,
+                    'activity' => $activity,
+                    'user' => $enrollment->user,
+                    'code' => $enrollment->payment_invoice,
+                ]);
+                flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
+                return response()
+                    ->redirectToRoute('activity.show', compact('activity'))
+                    ->setPrivate();
+            }
+
+            // Check if cancelled
+            if ($enrollment->state instanceof Cancelled) {
+                logger()->notice('Payment received for cancelled invoice', [
+                    'enrollment' => $enrollment,
+                    'activity' => $activity,
+                    'user' => $enrollment->user,
+                    'code' => $enrollment->payment_invoice,
+                ]);
+                flash("Je staat niet meer ingeschreven voor {$activity->name}.", 'warning');
+                return response()
+                    ->redirectToRoute('activity.show', compact('activity'))
+                    ->setPrivate();
+            }
+
+            // Get source
+        } while ($timeout > now());
 
         // Redirect
-        flash("We kijken je betaling even na, hold tight..", 'info');
+        flash("De controle duurt wat lang. Je krijgt een mailtje zodra de betaling is gecontroleerd.", 'info');
         return response()
             ->redirectToRoute('activity.show', compact('activity'))
             ->setPrivate();
