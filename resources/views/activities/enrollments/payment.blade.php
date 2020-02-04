@@ -12,17 +12,21 @@
     </div>
 </div>
 
-<div class="container-md">
+<div class="container container-md my-8">
     <div class="flex flex-row">
-        <div class="flex-grow">
+        <div class="flex-grow mr-8">
+            <h2 class="text-2xl font-normal mb-4">Inschrijving betalen</h2>
             <p>
                 Om je inschrijving voor {{ $activity->title }} af te ronden, dien je {{ Str::price( $enrollment->total_price ) }} te betalen.
             </p>
             <p>
                 Al onze betalingen lopen via iDEAL. Wil je niet betalen via iDEAL of wil je een betalingsregeling treffen, neem dan contact op met het bestuur.
             </p>
+
+            {{-- Render form --}}
+            {!! form($form, ['class' => 'form']) !!}
         </div>
-        <div class="flex-shrink-0 w-3/12">
+        <div class="flex-shrink-0 w-4/12">
             <div class="card">
                 Overzicht van je bestelling
 
@@ -51,22 +55,5 @@
         </div>
     </div>
 </div>
-
-<form action="{{ route('enroll.pay', compact('activity')) }}" method="post">
-@csrf
-<label for="bank">Bank</label>
-<select name="bank" id="bank">
-@foreach ($banks as $bank => $bankName)
-<option value="{{ $bank }}">{{ $bankName }}</option>
-@endforeach
-</select>
-
-<label>
-    <input type="checkbox" name="accept" required />
-    Ik ga akkoord met de voorwaarden voor betalingen via de Gumbo Website.
-</label>
-
-<input type="submit" value="Ok">
-</form>
 
 @endsection

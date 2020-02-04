@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities;
 
 use App\Contracts\StripeServiceContract;
+use App\Forms\PaymentStartForm;
+use App\Helpers\Arr;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
-use App\Services\IdealBankService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Kris\LaravelFormBuilder\FormBuilder;
 use Stripe\Source;
 
 /**
@@ -41,7 +42,7 @@ class PaymentController extends Controller
      */
     public function show(
         StripeServiceContract $stripeService,
-        IdealBankService $bankService,
+        FormBuilder $formBuilder,
         Request $request,
         Activity $activity
     ) {
@@ -54,16 +55,21 @@ class PaymentController extends Controller
             return redirect()->route('activity.show', compact('activity'));
         }
 
-        // Invoice lines and bank list
+        // Invoice lines and discount
         $invoiceLines = $stripeService->getComputedInvoiceLines($enrollment);
         $invoiceCoupon = $enrollment->is_discounted ? $stripeService->getComputedCoupon($enrollment->activity) : null;
-        $banks = $bankService->getAll();
+
+        // Form
+        $form = $formBuilder->create(PaymentStartForm::class, [
+            'method' => 'POST',
+            'url' => route('enroll.pay', compact('activity'))
+        ]);
 
         // Build response
         return response()
             ->view(
                 'activities.enrollments.payment',
-                compact('enrollment', 'activity', 'banks', 'invoiceLines', 'invoiceCoupon')
+                compact('enrollment', 'activity', 'form', 'invoiceLines', 'invoiceCoupon')
             )
             ->setPrivate();
     }
@@ -73,23 +79,10 @@ class PaymentController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store(IdealBankService $bankService, Request $request, Activity $activity)
+    public function store(FormBuilder $formBuilder, Request $request, Activity $activity)
     {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
-
-        // Get bank list
-        $bankList = $bankService->codes();
-        $rules = [
-            'bank' => ['required', 'string', Rule::in($bankList)],
-            'accept' => 'required|accepted'
-        ];
-
-        // Validate the request
-        $valid = $this->validate($request, $rules, [], [
-            'bank' => 'bank naam',
-            'accept' => 'voorwaarden'
-        ]);
 
         // Ensure the user actually needs to pay for this
         if (!$enrollment->price) {
@@ -99,8 +92,17 @@ class PaymentController extends Controller
                 ->setPrivate();
         }
 
+        // Get form
+        $form = $formBuilder->create(PaymentStartForm::class);
+
+        // Or automatically redirect on error. This will throw an HttpResponseException with redirect
+        $form->redirectIfNotValid();
+
+        // Get bank
+        $bankName = Arr::get($form->getFieldValues(), 'bank');
+
         // Store bank and expire the thing in an hour
-        $request->session()->put("enroll.{$enrollment->id}.bank", $valid['bank']);
+        $request->session()->put("enroll.{$enrollment->id}.bank", $bankName);
         $request->session()->put("enroll.{$enrollment->id}.expire", now()->addHour());
 
         // Redirect to 'please wait' page
