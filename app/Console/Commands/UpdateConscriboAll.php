@@ -52,9 +52,28 @@ class UpdateConscriboAll extends Command
                 continue;
             }
 
+            // Keep current roles
+            $currentRoles = $user->roles;
+
             // Update user from API
             $this->line(sprintf('Updating <info>%s</>.', $user->name), null, OutputInterface::VERBOSITY_VERBOSE);
             UpdateConscriboUserJob::dispatchNow($user);
+
+            // Get new roles
+            $user->refresh();
+            $newRoles = $user->roles;
+
+            // Get role update
+            $separator = '</>, <info>';
+            $added = $newRoles->whereNotIn('name', $currentRoles->pluck('name'))->pluck('title')->implode($separator);
+            $removed = $currentRoles->whereNotIn('name', $newRoles->pluck('name'))->pluck('title')->implode($separator);
+            $existing = $currentRoles->whereIn('name', $newRoles->pluck('name'))->pluck('title')->implode($separator);
+
+            // Log stuff
+            $this->line('Update complete.', null,  OutputInterface::VERBOSITY_VERBOSE);
+            $this->line("Added roles: <info>{$added}</>", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+            $this->line("Removed roles: <info>{$removed}</>", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+            $this->line("Existing roles: <info>{$existing}</>", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         // Done
