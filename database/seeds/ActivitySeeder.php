@@ -257,14 +257,15 @@ class ActivitySeeder extends Seeder
      */
     private function seedPaymentTest(): void
     {
-        // [     slug     ] => [public, price, discount]
+        // [     slug     ] => [public, price, discount, discount-slots]
         $sets = [
-            'private-free' => [false, null, null],
-            'private-paid' => [false, 1500, null],
-            'public-free' => [true, null, null],
-            'public-member' => [true, 1500, 1500],
-            'public-paid' => [true, 1500, null],
-            'public-discount' => [true, 3000, 1500]
+            'private-free' => [false, null, null, null],
+            'private-paid' => [false, 1500, null, null],
+            'public-free' => [true, null, null, null],
+            'public-member' => [true, 1500, 1500, null],
+            'public-paid' => [true, 1500, null, null],
+            'public-short-discount' => [true, 3000, 1500, 15],
+            'public-discount' => [true, 3000, 1500, null]
         ];
 
         // Date
@@ -272,7 +273,7 @@ class ActivitySeeder extends Seeder
         $endDate = (clone $startDate)->addHour(3);
 
         // Iterate
-        foreach ($sets as $slug => [$paid, $price, $discount]) {
+        foreach ($sets as $slug => [$paid, $price, $discount, $discountCount]) {
             $name = Str::studly($slug);
             $this->safeCreate($slug, [
                 'name' => "[test] {$name}",
@@ -284,6 +285,7 @@ class ActivitySeeder extends Seeder
                 'end_date' => $endDate,
                 'is_public' => $paid,
                 'member_discount' => max(0, $discount),
+                'discount_count' => $discountCount,
                 'price' => $price,
                 'seats' => 15
             ]);
