@@ -67,8 +67,8 @@ trait HandlesPaymentIntents
             'payment_method_types' => ['ideal'],
         ];
 
-        if ($enrollment->user->stripe_customer_id) {
-            $intentInfo['customer'] = $enrollment->user->stripe_customer_id;
+        if ($enrollment->user->stripe_id) {
+            $intentInfo['customer'] = $enrollment->user->stripe_id;
         }
 
         // Create Intent on the Stripe servers

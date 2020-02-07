@@ -49,7 +49,7 @@ trait HandlesInvoices
         $invoiceInfo = array_merge(
             Arr::only($sharedInfo, ['receipt_email', 'statement_descriptor', 'metadata']),
             [
-                'customer' => $enrollment->user->stripe_customer_id,
+                'customer' => $enrollment->user->stripe_id,
                 'payment_method_types' => ['ideal'],
                 'collection_method' => 'send_invoice',
                 'due_date' => $dueDate,

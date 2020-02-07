@@ -24,18 +24,18 @@ trait HandlesStripeCustomers
     public function getCustomer(User $user): Customer
     {
         // Check request cache
-        if (!empty($this->customerCache[$user->stripe_customer_id])) {
-            return $this->customerCache[$user->stripe_customer_id];
+        if (!empty($this->customerCache[$user->stripe_id])) {
+            return $this->customerCache[$user->stripe_id];
         }
 
         // Check online
-        if ($user->stripe_customer_id) {
+        if ($user->stripe_id) {
             try {
                 // Get customer
-                $customer = Customer::retrieve($user->stripe_customer_id);
+                $customer = Customer::retrieve($user->stripe_id);
 
                 // Cache customer
-                $this->customerCache[$user->stripe_customer_id] = $customer;
+                $this->customerCache[$user->stripe_id] = $customer;
 
                 // Return customer
                 return $customer;
@@ -50,11 +50,11 @@ trait HandlesStripeCustomers
             $customer = Customer::create($user->toStripeCustomer());
 
             // Update user
-            $user->stripe_customer_id = $customer->id;
+            $user->stripe_id = $customer->id;
             $user->save(['stripe_customer_id']);
 
             // Return customer
-            return $this->customerCache[$user->stripe_customer_id] = $customer;
+            return $this->customerCache[$user->stripe_id] = $customer;
         } catch (ApiErrorException $exception) {
             // Bubble all
             $this->handleError($exception);

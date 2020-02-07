@@ -84,7 +84,7 @@ trait HandlesStripeSources
 
             // Bind to customer
             // Associate new source with user
-            $source = Customer::createSource($enrollment->user->stripe_customer_id, [
+            $source = Customer::createSource($enrollment->user->stripe_id, [
                 'source' => $source->id,
             ]);
 

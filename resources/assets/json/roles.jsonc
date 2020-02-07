@@ -88,11 +88,11 @@
             // Allow changing roles
             "role-admin",
 
+            // Allow managing users
+            "user-admin",
+
             // Allow looking into /join submits
             "join-admin",
-
-            // Allow payment admin
-            "payment-admin"
         ]
     },
 

@@ -38,7 +38,7 @@ class CustomerUpdateJob extends StripeJob
         }
 
         // Update user if an ID is present and the update worked out okay
-        if ($this->user->stripe_customer_id !== null && $this->update($this->user)) {
+        if ($this->user->stripe_id !== null && $this->update($this->user)) {
             return;
         }
 
@@ -55,7 +55,7 @@ class CustomerUpdateJob extends StripeJob
     {
         try {
             // Update user
-            Customer::update($user->stripe_customer_id, [
+            Customer::update($user->stripe_id, [
                 'name' => $user->name,
                 'email' => $user->email
             ]);
@@ -87,7 +87,7 @@ class CustomerUpdateJob extends StripeJob
         ]);
 
         // Assign user
-        $user->stripe_customer_id = $customer->id;
+        $user->stripe_id = $customer->id;
         $user->save();
     }
 }

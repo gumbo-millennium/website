@@ -21,7 +21,7 @@ trait HandlesCustomers
     protected function ensureCustomerExists(Enrollment &$enrollment): void
     {
         // Skip if a user exists
-        if ($enrollment->user->stripe_customer_id) {
+        if ($enrollment->user->stripe_id) {
             return;
         }
 

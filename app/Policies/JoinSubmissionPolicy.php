@@ -45,7 +45,7 @@ class JoinSubmissionPolicy
      */
     public function create(User $user)
     {
-        return $user->can('manage', JoinSubmission::class);
+        return false;
     }
 
     /**
@@ -65,7 +65,7 @@ class JoinSubmissionPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('manage', JoinSubmission::class);
+        return false;
     }
 
     /**
