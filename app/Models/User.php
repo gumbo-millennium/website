@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Contracts\ConvertsToStripe;
 use App\Notifications\VerifyEmail;
+use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,10 +19,19 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmailContract, ConvertsToStripe
 {
+    use HasEncryptedAttributes;
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
     use MustVerifyEmail;
+
+    /**
+     * @inheritDoc
+     */
+    protected $encrypted = [
+        'address',
+        'phone'
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -70,6 +80,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     protected $casts = [
         'conscribo_id' => 'int',
+        'address' => 'json'
     ];
 
     /**
