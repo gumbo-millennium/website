@@ -19,6 +19,7 @@ class Role extends SpatieRole
      */
     protected $casts = [
         'default' => 'bool',
+        'conscribo_id' => 'int',
     ];
 
     /**
