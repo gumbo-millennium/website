@@ -34,6 +34,7 @@ class AccountEditForm extends Form
     public function buildForm()
     {
         $this
+            ->addNames($this->formOptions['is-linked'] ?? false)
             ->addEmail($this->getUser(), [
                 // phpcs:ignore Generic.Files.LineLength.TooLong
                 'help_block.text' => 'Je moet je e-mailadres na wijziging opnieuw verifiëren.'

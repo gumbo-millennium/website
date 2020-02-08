@@ -52,8 +52,11 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     protected $hidden = [
         'stripe_id',
+        'conscribo_id',
         'password',
         'remember_token',
+        'phone',
+        'address',
     ];
 
     /**
@@ -76,7 +79,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [

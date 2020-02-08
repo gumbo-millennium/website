@@ -39,18 +39,27 @@ class AccountController extends Controller
     {
         // Get current user
         $user = $request->user();
+        \assert($user instanceof User);
+
+        // Get some params
+        $isLinked = $user->conscribo_id !== null;
 
         $form = $formBuilder->create(AccountEditForm::class, [
             'method' => 'PATCH',
             'url' => route('account.update'),
             'model' => $user,
             'user-id' => $user->id,
+            'is-linked' => $isLinked
         ]);
         // Create form
         \assert($form instanceof AccountEditForm);
 
         return response()
-            ->view('account.edit', compact('user', 'form'))
+            ->view('account.edit', [
+                'user' => $user,
+                'form' => $form,
+                'isLinked' => $isLinked
+            ])
             ->setPrivate();
     }
 
@@ -62,13 +71,17 @@ class AccountController extends Controller
      */
     public function update(FormBuilder $formBuilder, Request $request)
     {
-        $user = $request->user();
         // Get current user
+        $user = $request->user();
         \assert($user instanceof User);
+
+        // Get some params
+        $isLinked = $user->conscribo_id !== null;
 
         $form = $formBuilder->create(AccountEditForm::class, [
             'model' => $user,
-            'user-id' => $user->id
+            'user-id' => $user->id,
+            'is-linked' => $isLinked
         ]);
         // Get form
         \assert($form instanceof AccountEditForm);
@@ -90,6 +103,13 @@ class AccountController extends Controller
         // Flag e-mail as unverified, if changed
         if ($user->wasChanged('email')) {
             $user->email_verified_at = null;
+        }
+
+        // Update name, if allowed
+        if (!$isLinked) {
+            $user->first_name = $userValues['first_name'];
+            $user->insert = $userValues['insert'];
+            $user->last_name = $userValues['last_name'];
         }
 
         // Store changes

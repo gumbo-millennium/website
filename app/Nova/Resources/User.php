@@ -6,9 +6,9 @@ namespace App\Nova\Resources;
 
 use App\Models\User as UserModel;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 
 /**
@@ -95,10 +95,12 @@ class User extends Resource
             Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
 
-            Password::make('Wachtwoord', 'password')
-                ->onlyOnForms()
-                ->showOnUpdating(false)
-                ->rules('required', 'string', 'min:10'),
+            Boolean::make('E-mailadres bevestigd', fn () => $this->hasVerifiedEmail())
+                ->onlyOnDetail(),
+
+            Boolean::make('Lid', fn () => $this->is_member)
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             // Permissions
             MorphToMany::make('Rollen', 'roles', Role::class),

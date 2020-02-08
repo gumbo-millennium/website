@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Contracts\ConscriboServiceContract;
+use App\Helpers\Arr;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -65,15 +66,25 @@ class UpdateConscriboUserJob implements ShouldQueue
         }
 
         // Get user from Conscribo
-        $accountingUser = $this->getConscriboUser($service, $user->email);
+        $accountingUser = $this->getConscriboUser($service, $user);
 
         if (!$accountingUser) {
+            // Log it
             logger()->notice('No user in Conscribo this e-mail address', compact('user'));
+
+            // Remove ID to allow changes
+            $user->conscribo_id = null;
+            $user->save(['conscribo_id']);
+
+            // End job
             return;
         }
 
         // Start transaction
         DB::beginTransaction();
+
+        // Update credentials
+        $this->updateUserDetails($user, $accountingUser);
 
         // Assign member role
         $this->assignMemberRole($user, $accountingUser);
@@ -85,28 +96,44 @@ class UpdateConscriboUserJob implements ShouldQueue
         DB::commit();
     }
 
-
     /**
      * Returns user information from Conscribo
      * @param ConscriboServiceContract $service
      * @param string $email
      * @return null|array
      */
-    private function getConscriboUser(ConscriboServiceContract $service, string $email): ?array
+    private function getConscriboUser(ConscriboServiceContract $service, User $dbUser): ?array
     {
         $user = null;
         $groups = null;
 
+        $query = ['email' => $dbUser->email];
+        if (!empty($dbUser->conscribo_id)) {
+            $query = ['code' => $dbUser->conscribo_id];
+        }
+
         try {
             // Get user info from API
-            $user = $service->getResource('user', [
-                'email' => $email
-            ], [
+            $user = $service->getResource('user', $query, [
                 'code',
+
+                // Names
+                'naam',
                 'voornaam',
                 'tussenvoegsel',
+
+                // Contact info
                 'email',
-                'naam',
+                'telefoonnummer',
+
+                // Address
+                'straat',
+                'huisnr',
+                'huisnr_toev',
+                'postcode',
+                'plaats',
+
+                // Membership
                 'startdatum_lid',
                 'einddatum_lid',
             ])->first();
@@ -116,7 +143,13 @@ class UpdateConscriboUserJob implements ShouldQueue
             }
 
             // Print result
-            logger()->info('Recieved {user} for {email}', compact('user', 'email'));
+            logger()->info('Recieved {user} for {query}', [
+                'user' => [
+                    'code' => Arr::get($user, 'code'),
+                    'name' => Arr::get($user, 'name'),
+                ],
+                'query' => $query
+            ]);
         } catch (HttpExceptionInterface $exception) {
             report(new RuntimeException('Failed to get user from API', 0, $exception));
             return null;
@@ -147,6 +180,45 @@ class UpdateConscriboUserJob implements ShouldQueue
         return array_merge($user, [
             'groups' => $groups->pluck('naam', 'code')->toArray()
         ]);
+    }
+
+    private function updateUserDetails(User $user, array $accountingUser): void
+    {
+        $notEmptyGet = static function ($key) use ($accountingUser) {
+            $val = trim((string) Arr::get($accountingUser, $key));
+            return !empty($val) ? $val : null;
+        };
+
+        // Store ID
+        $user->conscribo_id = $accountingUser['code'];
+
+        // Update name
+        $user->first_name = $notEmptyGet('voornaam');
+        $user->insert = $notEmptyGet('tussenvoegsel');
+        $user->last_name = $notEmptyGet('naam');
+
+        // Update address
+        $firstLine = collect(['straat', 'huisnr', 'huisnr_toev'])
+            ->map(static fn ($line) => $notEmptyGet($line))
+            ->reject(static fn ($value) => empty($value))
+            ->implode(' ');
+
+        $newAddress = [
+            'line1' => $firstLine,
+            'line2' => null,
+            'postal_code' => $notEmptyGet('postcode'),
+            'city' =>  $notEmptyGet('plaats')
+        ];
+
+        if ($user->address !== $newAddress) {
+            $user->address = $newAddress;
+        }
+
+        // Update phone number
+        $user->phone = $notEmptyGet('telefoonnummer');
+
+        // Save changes
+        $user->save();
     }
 
     /**

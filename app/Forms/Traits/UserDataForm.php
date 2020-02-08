@@ -6,7 +6,6 @@ namespace App\Forms\Traits;
 
 use App\Helpers\Arr;
 use Illuminate\Validation\Rule;
-use Kris\LaravelFormBuilder\Form;
 
 /**
  * Registration form
@@ -19,7 +18,7 @@ trait UserDataForm
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addEmail(?int $userId = null, array $override = []): Form
+    public function addEmail(?int $userId = null, array $override = []): self
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'email');
@@ -55,7 +54,7 @@ trait UserDataForm
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
-    public function addAlias(?int $userId = null, array $override = []): Form
+    public function addAlias(?int $userId = null, array $override = []): self
     {
         // Unique rule
         $duplicateRule = Rule::unique('users', 'alias');
@@ -90,7 +89,6 @@ trait UserDataForm
                 // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'attr' => [
-                'autocomplete' => 'nickname',
                 'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]'
             ],
         ];
@@ -98,6 +96,56 @@ trait UserDataForm
         // Return field
         return $this->add('alias', 'text', $this->dotMerge($options, $override));
     }
+
+    /**
+     * Adds names to the field
+     * @param bool $disabled
+     * @return $this
+     */
+    protected function addNames(bool $disabled): self
+    {
+        if ($disabled) {
+            return $this
+                ->add('name', 'static', [
+                    'label' => 'Naam',
+                ])
+                ->add('after_name', 'hidden');
+        }
+
+        return $this
+            ->add('first_name', 'text', [
+                'label' => 'Voornaam',
+                'rules' => [
+                    'required',
+                    'string',
+                ],
+                'attr' => [
+                    'autocomplete' => 'given-name',
+                ],
+            ])
+            ->add('insert', 'text', [
+                'label' => 'Tussenvoegsel',
+                'rules' => [
+                    'required',
+                    'string',
+                ],
+                'attr' => [
+                    'autocomplete' => 'additional-name',
+                ],
+            ])
+            ->add('last_name', 'text', [
+                'label' => 'Achternaam',
+                'rules' => [
+                    'required',
+                    'string',
+                ],
+                'attr' => [
+                    'autocomplete' => 'family-name',
+                ],
+            ])
+            ->add('after_name', 'hidden');
+    }
+
     /**
      * Builsd merged array from dot notation
      * @param array $source

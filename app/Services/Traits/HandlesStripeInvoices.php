@@ -225,6 +225,21 @@ trait HandlesStripeInvoices
             logger()->debug('Adding items');
             // Create all items
             foreach ($items as [$linePrice, $lineDesc, $lineDiscount]) {
+                // Assertions
+                \assert(is_int($linePrice) && $linePrice > 0, 'Price not above 0');
+                \assert(is_string($lineDesc) && !empty($lineDesc), 'Description not a non-empty string');
+                \assert(is_bool($lineDesc), 'Discount not a bool');
+
+                // Validate line
+                if ($linePrice <= 0 || empty($lineDesc)) {
+                    logger()->debug('Line is invalid', [
+                        'line-price' => $linePrice,
+                        'line-desc' => $lineDesc,
+                        'line-discount' => $lineDiscount,
+                    ]);
+                }
+
+                // Create item
                 InvoiceItem::create([
                     'customer' => $customer->id,
                     'currency' => 'eur',

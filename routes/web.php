@@ -138,8 +138,8 @@ Route::prefix('auth')->middleware($loginCsp)->group(static function () {
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
     Route::get('/', 'AccountController@index')->name('index');
-    Route::get('/profiel', 'AccountController@edit')->name('edit');
-    Route::patch('/profiel', 'AccountController@update')->name('update');
+    Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
+    Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
 });
 
 // Onboarding URLs
