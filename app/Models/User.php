@@ -51,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      * @var array
      */
     protected $hidden = [
+        'stripe_id',
         'password',
         'remember_token',
     ];

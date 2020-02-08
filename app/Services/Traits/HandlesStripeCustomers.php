@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Traits;
 
+use App\Contracts\StripeServiceContract;
 use App\Models\User;
 use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
@@ -19,9 +20,10 @@ trait HandlesStripeCustomers
     /**
      * Returns the customer for this user
      * @param User $user
-     * @return Stripe\Customer
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Customer
      */
-    public function getCustomer(User $user): Customer
+    public function getCustomer(User $user, int $options = 0): ?Customer
     {
         // Check request cache
         if (!empty($this->customerCache[$user->stripe_id])) {
@@ -43,6 +45,11 @@ trait HandlesStripeCustomers
                 // Bubble any non-404 errors
                 $this->handleError($exception, 404);
             }
+        }
+
+        // Allow no-create
+        if ($options & StripeServiceContract::OPT_NO_CREATE) {
+            return null;
         }
 
         try {

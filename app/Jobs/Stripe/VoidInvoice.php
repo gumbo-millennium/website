@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Stripe;
 
+use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use App\Services\StripeService;
 use Stripe\Invoice;
@@ -41,8 +42,15 @@ class VoidInvoice extends StripeJob
         }
 
         // Get data from Stripe
-        $invoice = $service->getInvoice($enrollment);
+        $invoice = $service->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
+        if (!$invoice) {
+            logger()->info('Cannot find invoice on {enrollment}.', compact('enrollment'));
+            return;
+        }
+
+        // Log contract
         \assert($invoice instanceof Invoice);
+        logger()->debug('Got {invoice}.', compact('invoice'));
 
         // Invoices voided in the Stripe dashboard might cause a trigger to end up here.
         if ($invoice->status === Invoice::STATUS_VOID) {

@@ -21,12 +21,15 @@ use Stripe\Source;
  */
 interface StripeServiceContract
 {
+    public const OPT_NO_CREATE = 1;
+
     /**
      * Returns the customer for this user
      * @param User $user
-     * @return Stripe\Customer
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Customer
      */
-    public function getCustomer(User $user): Customer;
+    public function getCustomer(User $user, int $options = 0): ?Customer;
 
     /**
      * Returns the computed coupon for this activity.
@@ -38,16 +41,18 @@ interface StripeServiceContract
     /**
      * Returns the coupon for this activity, to apply the discount on the activity
      * @param Activity $activity
-     * @return Stripe\Coupon
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Coupon
      */
-    public function getCoupon(Activity $activity): ?Coupon;
+    public function getCoupon(Activity $activity, int $options = 0): ?Coupon;
 
     /**
      * Returns a single invoice for the given Enrollment
      * @param Enrollment $enrollment
-     * @return Stripe\Invoice
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Invoice
      */
-    public function getInvoice(Enrollment $enrollment): Invoice;
+    public function getInvoice(Enrollment $enrollment, int $options = 0): ?Invoice;
 
     /**
      * Returns the invoice lines for this enrollment
@@ -68,9 +73,10 @@ interface StripeServiceContract
      * same bank.
      * @param Enrollment $enrollment
      * @param null|string $bank
-     * @return App\Contracts\Source
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Source
      */
-    public function getSource(Enrollment $enrollment, ?string $bank): Source;
+    public function getSource(Enrollment $enrollment, ?string $bank, int $options = 0): ?Source;
 
     /**
      * Builds a redirect to fulfill the Source's payment, if applicable.

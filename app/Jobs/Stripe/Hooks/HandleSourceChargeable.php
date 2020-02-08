@@ -64,7 +64,7 @@ class HandleSourceChargeable extends StripeWebhookJob
         $service = app(StripeServiceContract::class);
         \assert($service instanceof StripeServiceContract);
 
-        $invoice = $service->getInvoice($enrollment);
+        $invoice = $service->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
         \assert($invoice instanceof \Stripe\Invoice);
         if (!$invoice) {
             logger()->notice(

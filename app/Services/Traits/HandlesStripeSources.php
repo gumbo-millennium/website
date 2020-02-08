@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Traits;
 
+use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
 use RuntimeException;
@@ -24,9 +25,10 @@ trait HandlesStripeSources
      * same bank.
      * @param Enrollment $enrollment
      * @param null|string $bank
+     * @param int $options Bitwise options, see OPT_ constants
      * @return App\Contracts\Source
      */
-    public function getSource(Enrollment $enrollment, ?string $bank): Source
+    public function getSource(Enrollment $enrollment, ?string $bank, int $options = 0): Source
     {
         if ($enrollment->payment_source) {
             try {
@@ -59,6 +61,11 @@ trait HandlesStripeSources
         // Don't return a new source on blank requests
         if (!$bank) {
             throw new RuntimeException('Not found', 404);
+        }
+
+        // Allow no-create
+        if ($options & StripeServiceContract::OPT_NO_CREATE) {
+            return null;
         }
 
         try {

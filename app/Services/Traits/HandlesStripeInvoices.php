@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Traits;
 
+use App\Contracts\StripeServiceContract;
 use App\Helpers\Str;
 use App\Models\Enrollment;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -64,9 +65,10 @@ trait HandlesStripeInvoices
     /**
      * Returns a single invoice for the given Enrollment
      * @param Enrollment $enrollment
+     * @param int $options Bitwise options, see OPT_ constants
      * @return Stripe\Invoice
      */
-    public function getInvoice(Enrollment $enrollment): Invoice
+    public function getInvoice(Enrollment $enrollment, int $options = 0): ?Invoice
     {
         // Forward to locked Create Enrollment method
         // Get a 1 minute lock on this user
@@ -97,6 +99,11 @@ trait HandlesStripeInvoices
                     // Bubble any non-404 errors
                     $this->handleError($exception);
                 }
+            }
+
+            // Allow no-create
+            if ($options & StripeServiceContract::OPT_NO_CREATE) {
+                return null;
             }
 
             // Create invoice

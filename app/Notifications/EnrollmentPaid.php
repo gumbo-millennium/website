@@ -137,7 +137,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         \assert($stripeService instanceof StripeServiceContract);
 
         // Get invoice
-        $invoice = $stripeService->getInvoice($enrollment);
+        $invoice = $stripeService->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
         if (!$invoice) {
             return null;
         }

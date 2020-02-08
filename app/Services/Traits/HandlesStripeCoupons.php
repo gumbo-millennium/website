@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Traits;
 
+use App\Contracts\StripeServiceContract;
 use App\Models\Activity;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
@@ -48,9 +49,10 @@ trait HandlesStripeCoupons
     /**
      * Returns the coupon for this activity, to apply the discount on the activity
      * @param Activity $activity
-     * @return Stripe\Coupon
+     * @param int $options Bitwise options, see OPT_ constants
+     * @return null|Stripe\Coupon
      */
-    public function getCoupon(Activity $activity): ?Coupon
+    public function getCoupon(Activity $activity, int $options = 0): ?Coupon
     {
         // No Coupon on activities without member discount
         if (!$activity->member_discount) {
@@ -81,6 +83,11 @@ trait HandlesStripeCoupons
                 // Quietly weep
                 logger()->info('Failed to find discount for {activity}', compact('activity'));
             }
+        }
+
+        // Allow no-create
+        if ($options & StripeServiceContract::OPT_NO_CREATE) {
+            return null;
         }
 
         try {

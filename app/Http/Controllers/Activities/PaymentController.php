@@ -145,11 +145,9 @@ class PaymentController extends Controller
 
         // Create or retireve the source
         $source = $stripeService->getSource($enrollment, $requestBank);
-        logger()->info('Built source {source}.', compact('source'));
+        \assert($source instanceof Source);
 
-        // Build source
-        $source = $stripeService->getSource($enrollment, null);
-        logger()->info('Re-retrieved source {source}.', compact('source'));
+        logger()->info('Built source {source}.', compact('source'));
 
         // Check for redirect
         $redirect = $stripeService->getSourceRedirect($source);
@@ -202,7 +200,22 @@ class PaymentController extends Controller
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Check the source
-        $source = $service->getSource($enrollment, null);
+        $source = $service->getSource($enrollment, null, StripeServiceContract::OPT_NO_CREATE);
+
+        // Check if it exists
+        if ($source === null) {
+            logger()->warning('Cannot find Stripe source for {enrollment}.', [
+                'enrollment' => $enrollment,
+                'activity' => $activity,
+                'user' => $enrollment->user,
+                'code' => $enrollment->payment_invoice,
+            ]);
+            flash("Er is iets bijzonder fout gegaan, probeer het opnieuw.", 'warning');
+            return response()
+                ->redirectToRoute('activity.show', compact('activity'))
+                ->setPrivate();
+        }
+
         if (in_array($source->status, [Source::STATUS_CANCELED, Source::STATUS_FAILED])) {
             $result = $source->status === Source::STATUS_CANCELED ? 'geannuleerd' : 'mislukt';
             flash("De betaling voor {$activity->name} is {$result}.", 'info');
