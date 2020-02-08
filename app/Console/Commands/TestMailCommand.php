@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Mail\AccountCreatedMail;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
@@ -20,7 +19,6 @@ use Illuminate\Support\Facades\Mail;
 class TestMailCommand extends Command
 {
     private const EMAIL_CLASSES = [
-        AccountCreatedMail::class,
         VerifyEmail::class,
         EnrollmentPaid::class,
     ];
