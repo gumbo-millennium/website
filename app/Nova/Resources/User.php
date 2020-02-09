@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use App\Models\User as UserModel;
+use App\Nova\Filters\UserRoleFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
@@ -105,6 +106,19 @@ class User extends Resource
             // Permissions
             MorphToMany::make('Rollen', 'roles', Role::class),
             MorphToMany::make('Permissies', 'permissions', Permission::class),
+        ];
+    }
+
+    /**
+     * Get the filters available for the resource.
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function filters(Request $request)
+    {
+        return [
+            new UserRoleFilter(),
         ];
     }
 }

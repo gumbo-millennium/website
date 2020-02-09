@@ -7,7 +7,7 @@
 
     // Create 'verified' role
     "verified": {
-        "title": "Geverifiëerde gebruikers",
+        "title": "E-mail geverifiëerd",
         "permissions": [
             "verfied"
         ]
