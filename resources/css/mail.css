@@ -6,8 +6,10 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 
-/* Load our tweaks, elements, components and pages */
+/* Load our base, elements, components and mail styling */
 @import 'base/all.css';
+@import 'components/all.css';
+@import 'elements/all.css';
 @import 'mail/all.css';
 
 /* Load remaining tailwind stuff */

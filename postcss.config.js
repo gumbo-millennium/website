@@ -13,13 +13,22 @@ const responsiveImages = require('./resources/postcss/responsive-image')
 const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
+  const remConfig = {
+    convert: 'rem'
+  }
+
+  // Mail needs pixels, instead of rem
+  if (file.basename === 'mail.css') {
+    remConfig.convert = 'px'
+  }
+
   const plugins = [
     postcssImport(),
     tailwindcss(),
     // purgecss
     responsiveImages(),
     postcssCalc({}),
-    postcssRem({ convert: 'rem' }),
+    postcssRem(remConfig),
     autoprefixer()
     // cssnano
   ]

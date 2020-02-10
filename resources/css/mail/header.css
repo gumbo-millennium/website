@@ -1,0 +1,9 @@
+/* Mail header */
+
+.mail-header {
+  @apply px-8 py-4;
+}
+
+.mail-header__logo {
+  max-height: 64px;
+}

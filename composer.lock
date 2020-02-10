@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b085b12c703dd9f4ace88229ab58d56",
+    "content-hash": "8d6a0c1800a5c22abdf60bc629e3399c",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -1134,6 +1134,79 @@
                 "schedule"
             ],
             "time": "2019-03-31T00:38:28+00:00"
+        },
+        {
+            "name": "eduardokum/laravel-mail-auto-embed",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/roelofr/laravel-mail-auto-embed.git",
+                "reference": "036bbffc73578493dc183b2ee1e0611a7bfb7557"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/roelofr/laravel-mail-auto-embed/zipball/036bbffc73578493dc183b2ee1e0611a7bfb7557",
+                "reference": "036bbffc73578493dc183b2ee1e0611a7bfb7557",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "illuminate/contracts": "^5.3 | ^6.0",
+                "illuminate/mail": "^5.3 | ^6.0",
+                "illuminate/support": "^5.3 | ^6.0",
+                "php": ">=5.6",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.4 | ^4.0",
+                "php": ">=7.0",
+                "phpunit/phpunit": "^6.0 | ^7.0 | ^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Eduardokum\\LaravelMailAutoEmbed\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eduardokum\\LaravelMailAutoEmbed\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Eduardokum\\LaravelMailAutoEmbed\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ],
+                "lint": [
+                    "phpcs"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gusmão",
+                    "email": "eduguscontra3@hotmail.com"
+                }
+            ],
+            "description": "Library for embed images in emails automatically",
+            "homepage": "https://github.com/eduardokum/laravel-mail-auto-embed",
+            "keywords": [
+                "eduardokum",
+                "laravel-mail-auto-embed"
+            ],
+            "support": {
+                "source": "https://github.com/roelofr/laravel-mail-auto-embed/tree/v1.1.0"
+            },
+            "time": "2020-02-10T08:11:27+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -5144,6 +5217,57 @@
                 "temporary-directory"
             ],
             "time": "2019-12-15T18:52:09+00:00"
+        },
+        {
+            "name": "squizlabs/php_codesniffer",
+            "version": "3.5.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+                "reference": "dceec07328401de6211037abbb18bda423677e26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/dceec07328401de6211037abbb18bda423677e26",
+                "reference": "dceec07328401de6211037abbb18bda423677e26",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "bin": [
+                "bin/phpcs",
+                "bin/phpcbf"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Sherwood",
+                    "role": "lead"
+                }
+            ],
+            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
+            "keywords": [
+                "phpcs",
+                "standards"
+            ],
+            "time": "2020-01-30T22:20:29+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -9678,57 +9802,6 @@
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "time": "2020-02-01T17:48:45+00:00"
-        },
-        {
-            "name": "squizlabs/php_codesniffer",
-            "version": "3.5.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "dceec07328401de6211037abbb18bda423677e26"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/dceec07328401de6211037abbb18bda423677e26",
-                "reference": "dceec07328401de6211037abbb18bda423677e26",
-                "shasum": ""
-            },
-            "require": {
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
-                "ext-xmlwriter": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
-            },
-            "bin": [
-                "bin/phpcs",
-                "bin/phpcbf"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
-            "keywords": [
-                "phpcs",
-                "standards"
-            ],
-            "time": "2020-01-30T22:20:29+00:00"
         },
         {
             "name": "symfony/config",

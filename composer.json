@@ -13,6 +13,7 @@
         "czim/laravel-paperclip": "^2.7",
         "daniel-de-wit/nova-paperclip": "^0.1",
         "doctrine/dbal": "^2.3",
+        "eduardokum/laravel-mail-auto-embed": "^1.1",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
         "google/apiclient": "^2.4",
@@ -167,6 +168,10 @@
       {
         "type": "composer",
         "url": "https://nova.laravel.com"
+      },
+      {
+        "type": "vcs",
+        "url": "https://github.com/roelofr/laravel-mail-auto-embed"
       }
     ]
 }

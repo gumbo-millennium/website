@@ -1,0 +1,6 @@
+/* Mail message */
+
+.mail-message {
+  @apply p-8;
+  @apply bg-white;
+}

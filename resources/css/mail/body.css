@@ -1,0 +1,6 @@
+/* Mail page styling */
+
+.mail {
+  @apply bg-gray-100;
+  @apply text-gray-800;
+}

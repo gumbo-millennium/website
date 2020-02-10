@@ -1,0 +1,10 @@
+/* Mail footer */
+
+.mail-footer {
+  @apply px-8 py-4;
+}
+
+.mail-footer__body {
+  @apply text-sm;
+  @apply text-gray-700;
+}

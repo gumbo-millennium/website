@@ -1,5 +1,6 @@
 /* Loads all mail stylin */
-.mail {
-  @apply bg-gray-100;
-  @apply text-gray-800;
-}
+
+@import 'body.css';
+@import 'header.css';
+@import 'message.css';
+@import 'footer.css';
