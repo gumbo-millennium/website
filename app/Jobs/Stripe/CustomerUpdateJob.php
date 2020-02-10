@@ -37,8 +37,15 @@ class CustomerUpdateJob extends StripeJob
 
         // Get Skip if no update is required (the customer was created)
         if (!$shouldUpdate) {
+            \logger()->info('Not issuing an update');
             return;
         }
+
+        // Check for customer
+        \logger()->info('Updating user {user} with id {stripe-id}', [
+            'user' => $this->user,
+            'stripe-id' => $customer->id
+        ]);
 
         // Update customer
         $customer->updateAttributes($this->user->toStripeCustomer());

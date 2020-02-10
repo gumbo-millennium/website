@@ -198,16 +198,23 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     public function toStripeCustomer(): array
     {
-        return [
+        // Build base data
+        $data = [
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'address' => [
-                'line1' => Arr::get($this->address, 'line1'),
-                'line2' => Arr::get($this->address, 'line2'),
-                'postal_code' => Arr::get($this->address, 'postal_code'),
-                'city' => Arr::get($this->address, 'city'),
-            ]
+            'address' => $this->address
         ];
+
+        // Add shipping with subset of data
+        $data['shipping'] = Arr::only($data, ['name', 'phone', 'address']);
+
+        // Remove shipping address if empty, since the Stripe API doesn't allow changing it
+        if (Arr::get($data, 'shipping.address') === null) {
+            Arr::forget($data, 'shipping');
+        }
+
+        // Return new data
+        return $data;
     }
 }

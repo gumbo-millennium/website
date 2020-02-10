@@ -73,19 +73,31 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Log it
             logger()->notice('No user in Conscribo this e-mail address', compact('user'));
 
-            // Remove ID to allow changes
+            // Remove Conscribo-provided data
             $user->conscribo_id = null;
-            $user->save(['conscribo_id']);
+            $user->address = null;
+            $user->phone = null;
+
+            // Save it
+            $user->save();
+
+            // Trigger update
+            $this->maybeIssueStripeUpdate($user);
 
             // End job
             return;
         }
+
+        logger()->debug('Got user from Conscribo');
 
         // Start transaction
         DB::beginTransaction();
 
         // Update credentials
         $this->updateUserDetails($user, $accountingUser);
+
+        // Trigger update
+        $this->maybeIssueStripeUpdate($user);
 
         // Assign member role
         $this->assignMemberRole($user, $accountingUser);
@@ -95,6 +107,20 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Apply changes
         DB::commit();
+    }
+
+    /**
+     * Issues an update on Stripe if any visible data was changed
+     * @param User $user
+     * @return void
+     */
+    private function maybeIssueStripeUpdate(User $user): void
+    {
+        // Check for changes
+        if (!empty($user->wasChanged(['first_name', 'insert', 'last_name', 'phone', 'address']))) {
+            // Issue a Stripe customer update
+            CustomerUpdateJob::dispatch($user);
+        }
     }
 
     /**
@@ -208,7 +234,8 @@ class UpdateConscriboUserJob implements ShouldQueue
             'line1' => $firstLine,
             'line2' => null,
             'postal_code' => $notEmptyGet('postcode'),
-            'city' =>  $notEmptyGet('plaats')
+            'city' =>  $notEmptyGet('plaats'),
+            'country' => 'nl'
         ];
 
         if ($user->address !== $newAddress) {
@@ -220,12 +247,6 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Save changes
         $user->save();
-
-        // Check for changes
-        if (!empty($user->getChanges())) {
-            // Issue a Stripe customer update
-            CustomerUpdateJob::dispatch($user);
-        }
     }
 
     /**
