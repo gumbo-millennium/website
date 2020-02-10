@@ -100,33 +100,25 @@ class FileDisplayTest extends TestCase
     /**
      * Test viewing as logged out user
      * @param string $route
-     * @param bool $notFound
      * @return void
      * @dataProvider provideTestRoutes
      */
-    public function testViewListAsAnonymous(string $route, bool $notFound)
+    public function testViewListAsAnonymous(string $route)
     {
         // Request the index
         $response = $this->get($route);
 
-        // Handle not found routes
-        if ($notFound) {
-            $response->assertNotFound();
-            return;
-        }
-
-        // Expect a response redirecting to login
+        // Expect 401 redirect on all routes
         $response->assertRedirect(route('login'));
     }
 
     /**
      * A basic feature test example.
      * @param string $route
-     * @param bool $notFound
      * @return void
      * @dataProvider provideTestRoutes
      */
-    public function testViewListAsGuest(string $route, bool $notFound)
+    public function testViewListAsGuest(string $route)
     {
         // Get a guest user
         $user = $this->getGuestUser();
@@ -135,13 +127,7 @@ class FileDisplayTest extends TestCase
         $response = $this->actingAs($user)
                     ->get($route);
 
-        // Expect 404 on not found resources
-        if ($notFound) {
-            $response->assertNotFound();
-            return;
-        }
-
-        // Expect 403 on private routes
+        // Expect 403 on all routes
         $response->assertForbidden();
     }
 

@@ -35,7 +35,7 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
 /**
  * Files route
  */
-Route::middleware('auth')->prefix('bestanden')->name('files.')->group(static function () {
+Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
