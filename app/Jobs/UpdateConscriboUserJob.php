@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use App\Contracts\ConscriboServiceContract;
 use App\Helpers\Arr;
+use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -219,6 +220,12 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Save changes
         $user->save();
+
+        // Check for changes
+        if (!empty($user->getChanges())) {
+            // Issue a Stripe customer update
+            CustomerUpdateJob::dispatch($user);
+        }
     }
 
     /**

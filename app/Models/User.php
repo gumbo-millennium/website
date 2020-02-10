@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\ConvertsToStripe;
+use App\Helpers\Arr;
 use App\Notifications\VerifyEmail;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Auth\MustVerifyEmail;
@@ -199,7 +200,14 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     {
         return [
             'name' => $this->name,
-            'email' => $this->email
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => [
+                'line1' => Arr::get($this->address, 'line1'),
+                'line2' => Arr::get($this->address, 'line2'),
+                'postal_code' => Arr::get($this->address, 'postal_code'),
+                'city' => Arr::get($this->address, 'city'),
+            ]
         ];
     }
 }
