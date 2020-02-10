@@ -16,7 +16,7 @@ use App\Observers\EnrollmentObserver;
 use App\Observers\FileObserver;
 use App\Observers\NewsItemObserver;
 use App\Observers\UserObserver;
-use Illuminate\Auth\Events\Registered as RegisteredEvent;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        RegisteredEvent::class => [
+        Registered::class => [
             SendEmailVerificationNotification::class,
         ],
         Verified::class => [

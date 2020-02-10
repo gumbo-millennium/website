@@ -6,7 +6,6 @@ namespace App\Nova\Filters;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\BooleanFilter;
 use Laravel\Nova\Filters\Filter;
 
 /**
