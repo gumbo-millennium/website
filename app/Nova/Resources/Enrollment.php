@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use App\Models\Enrollment as EnrollmentModel;
+use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
+use App\Nova\Actions\UnenrollUser;
 use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -151,6 +153,33 @@ class Enrollment extends Resource
                 ->onlyOnIndex()
                 ->showOnDetail()
                 ->help('Geeft aan of de inschrijving is betaald.'),
+        ];
+    }
+
+    /**
+     * Get the actions available on the entity.
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function actions(Request $request)
+    {
+        return [
+            (new UnenrollUser())
+                ->onlyOnTableRow()
+                ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
+                ->cancelButtonText('Niet annuleren')
+                ->confirmButtonText('Inschrijving annuleren')
+                ->canSee(function () {
+                    return !$this->state->isOneOf([Cancelled::class]);
+                })
+                ->canRun(static function ($request, $enrollment) {
+                    if ($enrollment->state->isOneOf([Cancelled::class])) {
+                        return false;
+                    }
+                    $action = $enrollment->price !== null ? 'refund' : 'cancel';
+                    return $request->user()->can($action, $enrollment);
+                })
         ];
     }
 }
