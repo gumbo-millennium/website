@@ -6,7 +6,6 @@ namespace App\Jobs\Stripe;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
-use App\Notifications\EnrollmentCancelled;
 use App\Services\StripeService;
 use InvalidArgumentException;
 use UnderflowException;
@@ -75,8 +74,6 @@ class RefundInvoice extends StripeJob
 
             // Complete the job
             return;
-        } finally {
-            $user->notify(EnrollmentCancelled::class);
         }
     }
 }
