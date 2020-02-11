@@ -200,7 +200,7 @@ class PaymentController extends Controller
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Check the source
-        $source = $service->getSource($enrollment, null, StripeServiceContract::OPT_NO_CREATE);
+        $source = $service->getSource($enrollment, null);
 
         // Check if it exists
         if ($source === null) {

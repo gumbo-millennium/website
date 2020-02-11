@@ -7,7 +7,6 @@ namespace App\Services\Traits;
 use App\Contracts\StripeServiceContract;
 use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
-use RuntimeException;
 use Stripe\Customer;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Source;
@@ -58,13 +57,8 @@ trait HandlesStripeSources
             }
         }
 
-        // Don't return a new source on blank requests
-        if (!$bank) {
-            throw new RuntimeException('Not found', 404);
-        }
-
         // Allow no-create
-        if ($options & StripeServiceContract::OPT_NO_CREATE) {
+        if (!$bank || ($options & StripeServiceContract::OPT_NO_CREATE)) {
             return null;
         }
 
