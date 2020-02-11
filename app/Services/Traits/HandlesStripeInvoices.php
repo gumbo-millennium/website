@@ -139,8 +139,8 @@ trait HandlesStripeInvoices
                 'source' => $source->id
                 ]);
         } catch (ApiErrorException $exception) {
-                        // Bubble all
-                        $this->handleError($exception);
+            // Bubble all
+            $this->handleError($exception);
         }
     }
 
@@ -265,13 +265,15 @@ trait HandlesStripeInvoices
     private function updateCustomerDiscount(Customer $customer, ?Coupon $coupon): void
     {
         // Update discount, if applicable
-        try {
-            // Remove any existing coupons
-            logger()->debug('Dropping discount coupon');
-            $customer->deleteDiscount();
-        } catch (ApiErrorException $exception) {
-            // Bubble all
-            $this->handleError($exception, 404);
+        if ($customer->discount !== null) {
+            try {
+                // Remove any existing coupons
+                logger()->debug('Dropping discount coupon');
+                $customer->deleteDiscount();
+            } catch (ApiErrorException $exception) {
+                // Bubble all
+                $this->handleError($exception, 404);
+            }
         }
 
         try {
