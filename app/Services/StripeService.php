@@ -9,6 +9,7 @@ use App\Services\Traits\HandlesStripeCharges;
 use App\Services\Traits\HandlesStripeCoupons;
 use App\Services\Traits\HandlesStripeCustomers;
 use App\Services\Traits\HandlesStripeInvoices;
+use App\Services\Traits\HandlesStripeRefunds;
 use App\Services\Traits\HandlesStripeSources;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -24,6 +25,7 @@ class StripeService implements StripeServiceContract
     use HandlesStripeCoupons;
     use HandlesStripeCustomers;
     use HandlesStripeInvoices;
+    use HandlesStripeRefunds;
     use HandlesStripeSources;
 
     /**

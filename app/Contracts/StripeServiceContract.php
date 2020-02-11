@@ -13,6 +13,7 @@ use Stripe\Charge;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Stripe\Invoice;
+use Stripe\Refund;
 use Stripe\Source;
 
 /**
@@ -22,6 +23,15 @@ use Stripe\Source;
 interface StripeServiceContract
 {
     public const OPT_NO_CREATE = 1;
+
+    public const REFUND_REQUESTED_BY_CUSTOMER = 'requested_by_customer';
+    public const REFUND_DUPLICATE = 'duplicate';
+    public const REFUND_FRAUDULENT = 'fraudulent';
+
+    public const CREDIT_DUPLICATE = 'duplicate';
+    public const CREDIT_FRAUDULENT = 'fraudulent';
+    public const CREDIT_ORDER_CHANGE = 'order_change';
+    public const CREDIT_PRODUCT_UNSATISFACTORY = 'product_unsatisfactory';
 
     /**
      * Returns the customer for this user
@@ -92,4 +102,14 @@ interface StripeServiceContract
      * @return Stripe\Invoice
      */
     public function payInvoice(Enrollment $enrollment, Source $source): Invoice;
+
+    /**
+     * Creates a refund for the given enrollment, which will issue a refund for the
+     * charge, and then add that refund as a credit note on the invoice.
+     * @param Enrollment $enrollment
+     * @param string $reason
+     * @param null|int $amount
+     * @return Refund
+     */
+    public function createRefund(Enrollment $enrollment, string $reason, ?int $amount): Refund;
 }

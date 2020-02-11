@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Helpers\Str;
 use App\Models\Enrollment;
+use App\Notifications\Traits\UsesStripePaymentData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,6 +17,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
+    use UsesStripePaymentData;
 
     protected Enrollment $enrollment;
 
@@ -52,6 +55,10 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
         // Get some shorthands
         $user = $enrollment->user;
         $activity = $enrollment->activity;
+        $price = Str::price($enrollment->total_price);
+
+        // Get payment data
+        $paymentData = $this->getPaymentInfo($enrollment);
 
         // Send mail
         $mail = (new MailMessage())
@@ -70,6 +77,21 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
                 jouw inschrijving was dit {$expireText}. Je inschrijving
                 is hierom geannuleerd.
                 TEXT);
+        }
+
+        if ($paymentData['paid']) {
+            if ($paymentData['iban']) {
+                $mail->line(<<<TEXT
+                Het betaalde bedrag van {$price} zal binnen enkele werkdagen
+                teruggeboekt worden op je {$paymentData['bank']} rekening eindigend
+                op {$paymentData['iban']}.
+                TEXT);
+            } else {
+                $mail->line(<<<TEXT
+                Het betaalde bedrag van {$price} zal binnen enkele werkdagen
+                teruggeboekt worden.
+                TEXT);
+            }
         }
 
         // Add action button
