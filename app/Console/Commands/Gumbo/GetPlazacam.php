@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Gumbo;
 
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\URL;
 
-class GetPlazacamUrl extends Command
+class GetPlazacam extends Command
 {
     private const CAMERA_NAMES = ['plaza', 'coffee'];
     /**
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'plazacam:url {--U|user= : User ID or email}';
+    protected $signature = 'plazacam:get-plazacam {--U|user= : User ID or email}';
 
     /**
      * The console command description.

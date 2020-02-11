@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\App;
 
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
  * @author Roelof Roos
  * @license MPL-2.0
  */
-class UpdateIgnore extends Command
+class MakeGitignore extends Command
 {
     /**
      * The name and signature of the console command.

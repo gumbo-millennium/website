@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Gumbo;
 
 use App\Console\Commands\Traits\FindsUserTrait;
 use Illuminate\Console\Command;
@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class GumboRoleCommand extends Command
+class UpdateRole extends Command
 {
     use FindsUserTrait;
 
@@ -22,7 +22,7 @@ class GumboRoleCommand extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'gumbo:role {user} {role} {--force} {--revoke}';
+    protected $signature = 'gumbo:update-role {user} {role} {--force} {--revoke}';
 
     /**
      * The console command description.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\App;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class CreateEnvCommand extends Command
+class MakeEnv extends Command
 {
     /**
      * Environment template file's name

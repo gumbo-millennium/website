@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(UpdateEnrollmentUserTypes::class)->dailyAt('04:00');
 
         // Update users from API every night
-        $schedule->command('gumbo:user-update')->dailyAt('03:00');
+        $schedule->command('gumbo:update-user')->dailyAt('03:00');
     }
 
     /**

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Test;
 
 use App\Jobs\FileMetaJob;
 use App\Jobs\FileThumbnailJob;
 use App\Models\File;
 use Illuminate\Console\Command;
 
-class TestFile extends Command
+class ProcessFile extends Command
 {
     /**
      * The name and signature of the console command.

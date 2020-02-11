@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Gumbo;
 
 use App\Console\Commands\Traits\FindsUserTrait;
 use Illuminate\Console\Command;
@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class GumboSuperAdminCommand extends Command
+class SetAdmin extends Command
 {
     use FindsUserTrait;
 
@@ -20,7 +20,7 @@ class GumboSuperAdminCommand extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'gumbo:admin {user} {--revoke}';
+    protected $signature = 'gumbo:set-admin {user} {--revoke}';
 
     /**
      * The console command description.

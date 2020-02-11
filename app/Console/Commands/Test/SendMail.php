@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Test;
 
 use App\Models\Activity;
 use App\Models\Enrollment;
@@ -16,7 +16,7 @@ use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Mail;
 
-class TestMailCommand extends Command
+class SendMail extends Command
 {
     private const EMAIL_CLASSES = [
         VerifyEmail::class,

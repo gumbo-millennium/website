@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Permissions;
 
 use App\Models\User;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 
-class ListUserPermissions extends Command
+class ListUser extends Command
 {
     /**
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'perms:user
+    protected $signature = 'permissions:user
                             {user : User to check; e-mail, alias or ID}
                             {--p|pretty : Print titles instead of names}';
 

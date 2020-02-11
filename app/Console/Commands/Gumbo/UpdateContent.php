@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Gumbo;
 
 use App\Helpers\Str;
 use App\Models\Page;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * directory, and adds them to the pages table. Git pages cannot be modified,
  * so it also unflags pages that are no longer version controlled.
  */
-class UpdateGitBasedContent extends Command
+class UpdateContent extends Command
 {
     private const PAGE_DIRECTORY = 'assets/json/pages';
     private const PAGE_REGEX = '/^([a-z0-9\-]+)\.json$/';
@@ -26,7 +26,7 @@ class UpdateGitBasedContent extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'gumbo:content';
+    protected $signature = 'gumbo:update-content';
 
     /**
      * The console command description.

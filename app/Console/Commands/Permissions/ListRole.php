@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Permissions;
 
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\Console\Helper\TableCell;
 
-class ListRolePermissions extends Command
+class ListRole extends Command
 {
     /**
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'perms:role
+    protected $signature = 'permissions:role
                                 {permission? : Permission to check}
                                 {--p|pretty : Print titles instead of names}';
 
