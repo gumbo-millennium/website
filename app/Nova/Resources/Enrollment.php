@@ -96,7 +96,7 @@ class Enrollment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make()->hideFromIndex(),
 
             // Add multi selects
             BelongsTo::make('Activiteit', 'activity', Activity::class)
@@ -105,14 +105,16 @@ class Enrollment extends Resource
                 })
                 ->hideWhenUpdating(),
 
+            Text::make('Gebruiker', fn () => $this->user->name)
+                ->onlyOnIndex()
+                ->showOnDetail(),
+
             // Add user
             BelongsTo::make('Gebruiker', 'user', User::class)
-                ->canSee(static fn() => true)
-                ->showOnIndex()
+                ->onlyOnForms()
+                ->hideWhenUpdating()
                 ->rules('required')
-                ->searchable()
-                ->sortable()
-                ->hideWhenUpdating(),
+                ->searchable(),
 
             // Add data
             KeyValue::make('Metadata inschrijving', 'data')
@@ -142,7 +144,8 @@ class Enrollment extends Resource
                 ->help('Prijs in euro, incl. transactiekosten'),
 
             Text::make('Status', fn () => $this->state->title)
-                ->onlyOnDetail(),
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Boolean::make('Betaald', fn () => $this->state instanceof Paid)
                 ->onlyOnIndex()
