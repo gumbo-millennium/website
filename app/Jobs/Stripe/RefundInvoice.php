@@ -33,7 +33,6 @@ class RefundInvoice extends StripeJob
     {
         // Shorthand
         $enrollment = $this->enrollment;
-        $user = $enrollment->user;
 
         // Stop if enrollment is free or not cancelled
         if (!$enrollment->payment_invoice) {

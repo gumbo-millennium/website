@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services\Traits;
 
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Paid;
 use Stripe\Charge;
 use Stripe\Exception\ApiErrorException;
 

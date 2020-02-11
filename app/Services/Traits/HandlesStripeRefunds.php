@@ -11,7 +11,6 @@ use Stripe\Charge;
 use Stripe\CreditNote;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Invoice;
-use Stripe\InvoiceLineItem;
 use Stripe\Refund;
 use UnderflowException;
 

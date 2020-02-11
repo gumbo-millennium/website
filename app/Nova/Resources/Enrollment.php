@@ -170,9 +170,7 @@ class Enrollment extends Resource
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
                 ->cancelButtonText('Niet annuleren')
                 ->confirmButtonText('Inschrijving annuleren')
-                ->canSee(function () {
-                    return !$this->state->isOneOf([Cancelled::class]);
-                })
+                ->canSee(fn () => !$this->state->isOneOf([Cancelled::class]))
                 ->canRun(static function ($request, $enrollment) {
                     if ($enrollment->state->isOneOf([Cancelled::class])) {
                         return false;
