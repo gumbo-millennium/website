@@ -11,6 +11,7 @@ use Stripe\Charge;
 use Stripe\CreditNote;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Invoice;
+use Stripe\InvoiceLineItem;
 use Stripe\Refund;
 use UnderflowException;
 
@@ -58,11 +59,11 @@ trait HandlesStripeRefunds
         $charge = $this->getCharge($enrollment);
 
         if (!$invoice) {
-            return new UnderflowException('No invoice has been created for the given enrollment.');
+            throw new UnderflowException('No invoice has been created for the given enrollment.');
         }
 
         if (!$charge) {
-            return new UnderflowException('No charge has been made for the given enrollment.');
+            throw new UnderflowException('No charge has been made for the given enrollment.');
         }
 
         // Amount
@@ -156,10 +157,22 @@ trait HandlesStripeRefunds
             $reason = self::$refundCreditReasonMap[$reason];
         }
 
+        $lineItems = [];
+        $lineItems[] = [
+            "type" => "custom_line_item",
+            "unit_amount" => "1535",
+            "quantity" => "1",
+            "description" => "Terugbetaling van {$invoice->number}"
+        ];
+
+        $memo = "Terugbetaling na annulering van inschrijving op {$enrollment->activity->name}";
+
         // Data
         $data = [
             'invoice' => $invoice->id,
             'refund' => $refund->id,
+            'lines' => $lineItems,
+            'memo' => $memo,
             'metadata' => [
                 'enrollment-id' => $enrollment->id,
                 'user-id' => $enrollment->user->id,
