@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use App\Jobs\PruneExpiredEnrollments;
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -36,6 +37,9 @@ class Kernel extends ConsoleKernel
 
         // Update users from API every night
         $schedule->command('gumbo:update-user')->dailyAt('03:00');
+
+        // Clean enrollments hourly
+        $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
     }
 
     /**

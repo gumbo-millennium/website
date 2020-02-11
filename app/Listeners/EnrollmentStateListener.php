@@ -7,6 +7,7 @@ namespace App\Listeners;
 use App\Jobs\Stripe\VoidInvoice;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
+use App\Notifications\EnrollmentCancelled;
 use Spatie\ModelStates\Events\StateChanged;
 
 class EnrollmentStateListener
@@ -35,9 +36,13 @@ class EnrollmentStateListener
         // Get shorthand
         $enrollment = $event->model;
         $finalState = $enrollment->state;
+        $user = $enrollment->user;
 
         // Handle cancellation
         if ($finalState instanceof Cancelled) {
+            // Send cancellation notice
+            $user->notify(new EnrollmentCancelled($enrollment));
+
             if ($enrollment->payment_invoice) {
                 // Void the invoice if the enrollment wasn't paid yet
                 VoidInvoice::dispatch($enrollment);
