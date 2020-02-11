@@ -8,6 +8,7 @@ use App\Models\User as UserModel;
 use App\Nova\Filters\UserRoleFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
@@ -106,6 +107,9 @@ class User extends Resource
             // Permissions
             MorphToMany::make('Rollen', 'roles', Role::class),
             MorphToMany::make('Permissies', 'permissions', Permission::class),
+
+            // Enrollments
+            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class)
         ];
     }
 
