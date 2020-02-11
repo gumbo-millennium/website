@@ -276,7 +276,7 @@ class Activity extends Resource
                 ->onlyOnDetail(),
 
             Price::make('Korting leden', 'member_discount')
-                ->min(0.50)
+                ->min(0)
                 ->max(200)
                 ->step(0.25)
                 ->nullable()
