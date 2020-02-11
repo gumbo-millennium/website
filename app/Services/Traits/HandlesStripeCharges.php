@@ -25,7 +25,7 @@ trait HandlesStripeCharges
     public function getCharge(Enrollment $enrollment): ?Charge
     {
         // Only available on paid invoice
-        if (!$enrollment->state instanceof Paid) {
+        if (empty($enrollment->payment_invoice)) {
             return null;
         }
 
