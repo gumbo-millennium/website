@@ -166,6 +166,10 @@
         "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
       },
       {
+        "type": "vcs",
+        "url": "https://github.com/roelofr/laravel-mail-auto-embed"
+      },
+      {
         "type": "composer",
         "url": "https://nova.laravel.com"
       }
