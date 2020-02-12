@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions;
 
-use App\Contracts\StripeServiceCotract;
 use App\Jobs\Stripe\CreateInvoiceJob;
 use App\Jobs\Stripe\VoidInvoice;
 use App\Models\Enrollment;

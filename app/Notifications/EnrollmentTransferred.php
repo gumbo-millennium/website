@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
-use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Paid;
@@ -79,7 +78,6 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
         Action $action
     ): MailMessage {
         // Variables
-        $newUser = $enrollment->user;
         $oldUser = $this->oldUser;
 
         // Begin
@@ -90,14 +88,14 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
             ->greeting("Je bent nu ingeschreven voor {$activity->name}")
             ->line("Beste {$recipient->first_name},")
             ->line(<<<TEXT
-            {$oldUser->name} heeft de inschrijving voor {$activity->name} overgedragen aan jou. Dit betekend
+            *{$oldUser->name}* heeft de inschrijving voor *{$activity->name}* overgedragen aan jou. Dit betekend
             dat jij nu ingeschreven staat voor deze activiteit, met alle rechten en plichten die hierbij horen.
             TEXT)
             ->line("Beter loop je even naar {$oldUser->name} toe met je liefste blik als bedankje 🥺.");
 
         if ($enrollment->state instanceof Paid) {
             $mail->line(<<<MARKDOWN
-            Het wordt nóg beter, aangezien {$oldUser->first_name} al heeft betaald voor deze inschrijving.
+            Het wordt *nóg* beter, aangezien {$oldUser->first_name} al heeft betaald voor deze inschrijving.
             Je mag lekker zelf regelen hoe dat geld terugkomt bij {$oldUser->first_name}.
             MARKDOWN);
         } elseif (!$enrollment->state->isStable() && $enrollment->expire) {
@@ -131,7 +129,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
         $mail->subject("Overdracht van inschrijving voor {$activity->name}")
             ->greeting("Je inschrijving is nu van {$newUser->first_name}")
             ->line("Beste {$recipient->first_name},")
-            ->line("Je inschrijving voor {$activity->name} is succesvol overgedragen naar {$newUser->name}.")
+            ->line("Je inschrijving voor *{$activity->name}* is succesvol overgedragen naar *{$newUser->name}*.")
             ->line("{$newUser->first_name} is hier vast super blij mee.");
 
         if ($enrollment->state instanceof Paid) {
@@ -141,7 +139,9 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
             MARKDOWN);
         }
 
-        $mail->line("Wil je nog wat nostaligsche gevoelens over de activiteit waar je {$newUser->first_name} nu naartoe stuurt? 🥺")
+        $mail->line(<<<MARKDOWN
+            Wil je nog wat nostaligsche gevoelens over de activiteit waar je {$newUser->first_name} nu naartoe stuurt 🥺?
+            MARKDOWN)
             ->line($action);
 
         return $mail;
