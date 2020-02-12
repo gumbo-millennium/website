@@ -159,7 +159,7 @@ trait HandlesStripeRefunds
         $lineItems = [];
         $lineItems[] = [
             "type" => "custom_line_item",
-            "unit_amount" => "1535",
+            "unit_amount" => $refund->amount,
             "quantity" => "1",
             "description" => "Terugbetaling van {$invoice->number}"
         ];
