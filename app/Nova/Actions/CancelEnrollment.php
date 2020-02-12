@@ -16,7 +16,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
 
-class UnenrollUser extends Action
+class CancelEnrollment extends Action
 {
     use InteractsWithQueue;
     use Queueable;

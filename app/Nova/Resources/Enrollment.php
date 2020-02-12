@@ -7,8 +7,8 @@ namespace App\Nova\Resources;
 use App\Models\Enrollment as EnrollmentModel;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
+use App\Nova\Actions\CancelEnrollment;
 use App\Nova\Actions\TransferEnrollment;
-use App\Nova\Actions\UnenrollUser;
 use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -166,7 +166,7 @@ class Enrollment extends Resource
     public function actions(Request $request)
     {
         return [
-            (new UnenrollUser())
+            (new CancelEnrollment())
                 ->onlyOnTableRow()
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
                 ->cancelButtonText('Niet annuleren')
