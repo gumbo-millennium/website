@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7e52d804ad92a6b921c1122fa1503ab",
+    "content-hash": "9745a0f998aa4cbc440f93584876d933",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -4556,6 +4556,47 @@
                 "uuid"
             ],
             "time": "2019-12-17T08:18:51+00:00"
+        },
+        {
+            "name": "sloveniangooner/searchable-select",
+            "version": "1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/slovenianGooner/nova-searchable-select.git",
+                "reference": "f946cc2af0f4bc02a20d93b724bbfb67ffd2e211"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/slovenianGooner/nova-searchable-select/zipball/f946cc2af0f4bc02a20d93b724bbfb67ffd2e211",
+                "reference": "f946cc2af0f4bc02a20d93b724bbfb67ffd2e211",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Sloveniangooner\\SearchableSelect\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sloveniangooner\\SearchableSelect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2019-12-04T08:26:43+00:00"
         },
         {
             "name": "smalot/pdfparser",

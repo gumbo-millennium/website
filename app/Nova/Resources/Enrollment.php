@@ -7,6 +7,7 @@ namespace App\Nova\Resources;
 use App\Models\Enrollment as EnrollmentModel;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
+use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Actions\UnenrollUser;
 use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
@@ -177,6 +178,18 @@ class Enrollment extends Resource
                     }
                     $action = $enrollment->price !== null ? 'refund' : 'cancel';
                     return $request->user()->can($action, $enrollment);
+                }),
+            (new TransferEnrollment())
+                ->onlyOnTableRow()
+                ->confirmText('Weet je zeker dat je deze inschrijving wil overschrijven naar een andere gebruiker?')
+                ->cancelButtonText('Annuleren')
+                ->confirmButtonText('Inschrijving overschrijven')
+                ->canSee(fn () => !$this->state->isOneOf([Cancelled::class]))
+                ->canRun(static function ($request, $enrollment) {
+                    if ($enrollment->state->isOneOf([Cancelled::class])) {
+                        return false;
+                    };
+                    return $request->user()->can('manage', $enrollment);
                 })
         ];
     }

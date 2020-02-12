@@ -76,7 +76,14 @@ class VoidInvoice extends StripeJob
                 'enrollment' => $enrollment,
                 'invoice' => $invoice
             ]);
+
+            // Delete the invoice
             $invoice->delete();
+
+            // Clear data from model
+            $enrollment->payment_invoice = null;
+            $enrollment->payment_source = null;
+            $enrollment->save();
             return;
         }
 
@@ -92,5 +99,10 @@ class VoidInvoice extends StripeJob
             'invoice' => $invoice
         ]);
         $invoice->voidInvoice();
+
+        // Remove from enrollment
+        $enrollment->payment_invoice = null;
+        $enrollment->payment_source = null;
+        $enrollment->save();
     }
 }

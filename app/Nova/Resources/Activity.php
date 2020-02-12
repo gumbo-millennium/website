@@ -168,10 +168,10 @@ class Activity extends Resource
     {
         return [
             $this->mainFields(),
-            new Panel('Date and price settings', $this->pricingFields()),
-            new Panel('Enrollment settings', $this->enrollmentFields()),
+            new Panel('Datum en prijs-instellingen', $this->pricingFields()),
+            new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
-            HasMany::make('Enrollments', 'enrollments', Enrollment::class),
+            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
         ];
     }
 
