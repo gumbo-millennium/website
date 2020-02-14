@@ -7,21 +7,29 @@ $isEnrolled = isset($enrollments[$activity->id]);
 $isSoldOut = $activity->available_seats === 0;
 
 // Enrollment state
-$enrolled = 'Niet ingeschreven';
-$enrolledIcon = 'solid/user-times';
-$enrollmentClass = '';
-if ($isEnrolled && $enrollments[$activity->id]->is_stable) {
-    $enrolledIcon = 'solid/user-check';
-    $enrolled = "Ingeschreven";
+$statusText = 'Openbaar';
+$statusIcon = 'solid/globe';
+$statusStyle = '';
+
+// Get a proper status
+if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
+    $statusText = 'Actie vereist';
+    $statusIcon = 'solid/exclamation-triangle';
+    $statusStyle = 'text-red-700';
 } elseif ($isEnrolled) {
-    $enrolledIcon = 'solid/exclamation-triangle';
-    $enrolled = "Actie vereist!";
-    $enrollmentClass = 'text-red-700';;
+    $statusText = "Ingeschreven";
+    $statusIcon = 'solid/user-check';
+} elseif ($isSoldOut) {
+    $statusText = 'Uitverkocht';
+    $statusIcon = 'solid/times';
+} elseif (!$activity->is_public) {
+    $statusText = 'Besloten';
+    $statusIcon = 'solid/user-friends';
 }
 
 // Determine price label
 $price = $activity->price_label;
-$seats = 'Onbeperkt plaats';
+$seats = 'Onbeperkt';
 if ($activity->seats > 0 && !$isSoldOut && ($activity->available_seats < 10)) {
     $seats = sprintf(
         'Nog %d %s',
@@ -40,17 +48,9 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
             @icon('solid/clock', 'icon mr-2')
             <time datetime="{{ $activity->start_date->toIso8601String() }}">{{ $date }}</time>
         </div>
-        <div class="activity-card__header-item">
-            @if ($isSoldOut)
-                @icon('solid/times', 'icon mr-2')
-                <span>Uitverkocht</span>
-            @elseif ($activity->is_public)
-                @icon('solid/globe', 'icon mr-2')
-                <span>Openbaar</span>
-            @else
-                @icon('solid/user-friends', 'icon mr-2')
-                <span>Besloten</span>
-            @endif
+        <div class="activity-card__header-item {{ $statusStyle }}">
+            @icon($statusIcon, 'icon mr-2')
+            <span>{{ $statusText }}</span>
         </div>
     </div>
 

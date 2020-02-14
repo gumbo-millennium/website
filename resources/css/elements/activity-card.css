@@ -18,11 +18,11 @@
 }
 
 .activity-card__body-icon {
-  @apply h-32 w-32 mb-8 mx-auto text-center;
+  @apply h-32 w-full mb-8 text-center;
 }
 
 .activity-card__body-icon-image {
-  @apply object-contain mx-auto;
+  @apply object-contain mx-auto h-32;
 }
 
 .activity-card__body-title {
