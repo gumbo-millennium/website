@@ -57,6 +57,7 @@ return [
     'url' => env('APP_URL', 'https://gumbo-millennium.nl'),
 
     'asset_url' => env('ASSET_URL', null),
+    'mix_url' => env('MIX_URL', env('ASSET_URL', null)),
 
     /*
     |--------------------------------------------------------------------------
