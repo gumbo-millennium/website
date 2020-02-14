@@ -97,7 +97,7 @@ trait HandlesStripeInvoices
                     return $invoice;
                 } catch (ApiErrorException $exception) {
                     // Bubble any non-404 errors
-                    $this->handleError($exception);
+                    $this->handleError($exception, 404);
                 }
             }
 
