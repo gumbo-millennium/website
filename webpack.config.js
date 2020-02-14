@@ -226,6 +226,13 @@ module.exports = {
         to: withHash('images/[name].[ext]'),
         toType: 'template',
         writeToDisk: true
+      },
+      {
+        test: /\.(png|svg|jpg)$/,
+        from: 'resources/assets/images-mail/**/*',
+        to: withHash('images/mail/[name].[ext]'),
+        toType: 'template',
+        writeToDisk: true
       }
     ]),
 
