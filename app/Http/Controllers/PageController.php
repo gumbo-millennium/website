@@ -77,7 +77,7 @@ class PageController extends Controller
             if (!$content) {
                 $content = Page::whereSlug($safeSlug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
 
-                if ($content || empty($content->html)) {
+                if (!$content || empty($content->html)) {
                     $content = null;
                 }
             }
