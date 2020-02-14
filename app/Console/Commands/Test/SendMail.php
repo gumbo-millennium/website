@@ -10,6 +10,7 @@ use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\User;
 use App\Notifications\EnrollmentPaid;
+use App\Notifications\KitchenSink;
 use App\Notifications\VerifyEmail;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Mail\Mailable;
@@ -18,15 +19,17 @@ use Illuminate\Support\Facades\Mail;
 
 class SendMail extends Command
 {
-    private const EMAIL_CLASSES = [
-        VerifyEmail::class,
+    private const DEFAULT_MAIL = KitchenSink::class;
+
+    private const ALL_MAILS = [
         EnrollmentPaid::class,
+        VerifyEmail::class,
     ];
     /**
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'test:mail {email : e-mail address of the user}';
+    protected $signature = 'test:mail {email : e-mail address of the user} {--all : Send all mails}';
 
     /**
      * The console command description.
@@ -84,7 +87,12 @@ class SendMail extends Command
 
         $this->line('Sending emails');
 
-        foreach (self::EMAIL_CLASSES as $email) {
+        $queue = [self::DEFAULT_MAIL];
+        if ($this->option('all')) {
+            $queue = array_merge($queue, self::ALL_MAILS);
+        }
+
+        foreach ($queue as $email) {
             $emailClass = class_basename($email);
             $this->line("Creating <info>{$emailClass}</>...");
             $instance = app()->make($email);
