@@ -1,30 +1,30 @@
-@extends('layout.main')
+@extends('layout.variants.login')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form class="card" method="POST" action="{{ route('verification.resend') }}">
-                @csrf
-                <div class="card-header">{{ __('Verify Your Email Address') }}</div>
+@php
+$formOptions = [
+    'url' => route('verification.resend'),
+    'method' => 'POST'
+];
 
-                <div class="card-body">
-                    @if (session('resent'))
-                        <div class="alert alert-success" role="alert">
-                            {{ __('A fresh verification link has been sent to your email address.') }}
-                        </div>
-                    @endif
+$form = \FormBuilder::plain($formOptions)->add('submit', 'submit', [
+    'label' => 'Verificatie opnieuw versturen'
+]);
+@endphp
 
-                    <p>
-                        {{ __('Before proceeding, please check your email for a verification link.') }}
-                    </p>
-                    <p>
-                        {{ __('If you did not receive the email') }},<br />
-                        <button class="btn btn-brand" type="submit">{{ __('click here to request another') }}.</button>
-                    </p>
-                </div>
-            </form>
-        </div>
-    </div>
+@section('basic-content-small')
+{{-- Header --}}
+<h1 class="login__title">E-mailadres <strong class="login__title-fat">bevestigen</strong></h1>
+<p class="login__subtitle italic">"I am not a robot", maar dan voor je e-mailadres.</p>
+
+@if (session('resent'))
+<div class="notice" role="alert">
+    {{ __('A fresh verification link has been sent to your email address.') }}
 </div>
+@endif
+
+<p class="mb-8">Voordat je verder gaat, moet je je e-mailadres verifiëren</p>
+
+{{-- Form --}}
+<p>Geen e-mail ontvangen, of kan je 'm even niet vinden? Klik dan hieronder om een nieuwe verificatiemail aan te vragen.</p>
+{!! form($form, ['class' => 'form']) !!}
 @endsection

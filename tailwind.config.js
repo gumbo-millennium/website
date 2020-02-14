@@ -32,10 +32,10 @@ module.exports = {
         16: '4rem'
       },
       fontFamily: {
-        title: ['Patua One'].concat(defaultTheme.fontFamily.sans)
+        title: ['Poppins'].concat(defaultTheme.fontFamily.sans)
       },
       fontSize: {
-        'huge': '8rem'
+        huge: '8rem'
       },
       colors: gumboSettings.colors,
       backgroundPosition: {

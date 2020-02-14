@@ -6,8 +6,8 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 
 @section('basic-content-small')
 {{-- Header --}}
-<h1 class="login__header font-base text-4xl">Even over <strong>je privacy</strong></h1>
-<p class="text-lg text-gray-700 mb-4">De impact van een account op de site op je privacy.</p>
+<h1 class="login__title">Even over <strong class="login__title-fat">je privacy</strong></h1>
+<p class="login__subtitle">Omdat "we value your privacy" te vaak gebruikt wordt.</p>
 
 <div class="mb-8">
     <p>

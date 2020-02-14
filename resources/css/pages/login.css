@@ -5,7 +5,19 @@
 }
 
 .login__title {
-  @apply text-3xl mb-8;
+  @apply text-4xl mb-8 font-title font-medium;
+}
+
+.login__title-fat {
+  @apply font-bold;
+}
+
+.login__subtitle {
+  @apply text-lg text-gray-700 mb-8;
+}
+
+.login__title+.login__subtitle {
+  margin-top: calc(0 - theme('spacing.8'));
 }
 
 .login__inner-small {
@@ -18,3 +30,8 @@
     max-width: calc(theme('screens.sm') / 12 * 9);
   }
 }
+
+@screen md {
+  .login__title {
+    @apply text-5xl;
+  }
