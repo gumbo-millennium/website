@@ -1,7 +1,11 @@
 /* Mail header */
 
 .mail-header {
-  @apply px-8 py-4;
+  /* noop */
+}
+
+.mail-header__inner {
+  @apply py-6;
 }
 
 .mail-header__logo {

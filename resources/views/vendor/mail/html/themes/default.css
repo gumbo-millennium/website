@@ -201,52 +201,6 @@ img {
 
 /* Buttons */
 
-.action {
-    margin: 30px auto;
-    padding: 0;
-    text-align: center;
-    width: 100%;
-    -premailer-cellpadding: 0;
-    -premailer-cellspacing: 0;
-    -premailer-width: 100%;
-}
-
-.button {
-    border-radius: 3px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
-    color: #fff;
-    display: inline-block;
-    text-decoration: none;
-    -webkit-text-size-adjust: none;
-}
-
-.button-blue,
-.button-primary {
-    background-color: #3490dc;
-    border-top: 10px solid #3490dc;
-    border-right: 18px solid #3490dc;
-    border-bottom: 10px solid #3490dc;
-    border-left: 18px solid #3490dc;
-}
-
-.button-green,
-.button-success {
-    background-color: #38c172;
-    border-top: 10px solid #38c172;
-    border-right: 18px solid #38c172;
-    border-bottom: 10px solid #38c172;
-    border-left: 18px solid #38c172;
-}
-
-.button-red,
-.button-error {
-    background-color: #e3342f;
-    border-top: 10px solid #e3342f;
-    border-right: 18px solid #e3342f;
-    border-bottom: 10px solid #e3342f;
-    border-left: 18px solid #e3342f;
-}
-
 /* Panels */
 
 .panel {

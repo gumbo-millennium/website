@@ -1,14 +1,13 @@
 @component('mail::message')
 {{-- Greeting --}}
+@slot('header')
+
 @if (! empty($greeting))
-# {{ $greeting }}
+{{ $greeting }}
 @else
-@if ($level === 'error')
-# @lang('Whoops!')
-@else
-# @lang('Hello!')
+@lang($level === 'error' ? 'Whoops!' : 'Hello!')
 @endif
-@endif
+@endslot
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)

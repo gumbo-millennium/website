@@ -1,13 +1,14 @@
-@component('mail::message')
+@component('mail::layout')
 
 {{-- Greeting --}}
 @slot('header')
-{{ $greeting or "Hallo!" }}
+Greeting: {{ $greeting or "Hallo!" }}
 @endslot
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
-<p class="mail-line">{{ $line }}</p>
+{{ $line }}
+
 @endforeach
 
 {{-- Action Button --}}
@@ -19,18 +20,17 @@
 
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
-<p class="mail-line">{{ $line }}</p>
+{{ $line }}
+
 @endforeach
 
 {{-- Salutation --}}
-@slot('footer')
-@if (! empty($salutation))
+@if (!empty($salutation))
 {{ $salutation }}
 @else
 Met vriendelijke groet,
 Gumbo Millennium
 @endif
-@endslot
 
 {{-- Subcopy --}}
 @isset($actionText)

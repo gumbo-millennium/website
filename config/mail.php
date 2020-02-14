@@ -115,7 +115,7 @@ return [
     */
 
     'markdown' => [
-        'theme' => 'default',
+        'theme' => 'gumbo',
 
         'paths' => [
             resource_path('views/mail'),

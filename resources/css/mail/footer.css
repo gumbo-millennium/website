@@ -1,10 +1,13 @@
 /* Mail footer */
 
 .mail-footer {
-  @apply px-8 py-4;
+  /* noop */
 }
 
-.mail-footer__body {
-  @apply text-sm;
-  @apply text-gray-700;
+.mail-footer__inner {
+  @apply py-6;
+}
+
+.mail-footer__text {
+  @apply text-center text-sm text-gray-500;
 }

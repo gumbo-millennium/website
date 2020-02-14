@@ -1,6 +1,34 @@
 /* Mail message */
 
 .mail-message {
+  /* noop */
+}
+
+.mail-message__inner {
+  /* noop */
+}
+
+.mail-body__content {
   @apply p-8;
   @apply bg-white;
+}
+
+.mail-body__content--header {
+  @apply py-4;
+  @apply bg-brand-600 text-white;
+  @apply text-2xl font-bold;
+}
+
+.mail-body__content--main p {
+  @apply mb-2;
+}
+
+.mail-body__content--subcopy {
+  @apply pt-2;
+  @apply bg-gray-100 text-gray-500;
+}
+
+.mail-body__content--subcopy p, .mail-body__content--subcopy a {
+  @apply text-gray-500;
+  @apply text-sm;
 }

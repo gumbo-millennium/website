@@ -1,0 +1,34 @@
+/* Mail page styling */
+
+body {
+  width: 100% !important;
+  height: 100%;
+  margin: 0;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+
+p, ul, ol, blockquote {
+  text-align: left;
+  line-height: 1.4;
+}
+
+p {
+  @apply text-gray-800;
+  margin-top: 0;
+  line-height: 1.5em;
+}
+
+body, .mail, .mail__wrapper {
+  @apply bg-gray-100;
+  @apply text-gray-800;
+  @apply text-base;
+}
+
+.mail__wrapper, .mail__content {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

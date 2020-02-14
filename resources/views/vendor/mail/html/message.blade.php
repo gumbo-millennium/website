@@ -1,27 +1,18 @@
 @component('mail::layout')
-    {{-- Header --}}
-    @slot('header')
-        @component('mail::header', ['url' => config('app.url')])
-            Gumbo Millennium
-        @endcomponent
-    @endslot
+    {{-- Mail lead --}}
+    @if(isset($header) && !empty($header))
+        @slot('header')
+            {{ $header }}
+        @endslot
+    @endif
 
     {{-- Body --}}
     {{ $slot }}
 
     {{-- Subcopy --}}
-    @isset($subcopy)
+    @if(isset($subcopy) && !empty($subcopy))
         @slot('subcopy')
-            @component('mail::subcopy')
-                {{ $subcopy }}
-            @endcomponent
+            {{ $subcopy }}
         @endslot
-    @endisset
-
-    {{-- Footer --}}
-    @slot('footer')
-        @component('mail::footer')
-            © {{ date('Y') }} {{ config('app.name') }}. Alle rechten voorbehouden.
-        @endcomponent
-    @endslot
+    @endif
 @endcomponent
