@@ -14,5 +14,8 @@
 /* Page-level styling comes late */
 @import 'pages/all.css';
 
+/* Tweaks */
+@import 'tweaks/all.css';
+
 /* Load remaining tailwind stuff */
 @import 'tailwindcss/utilities';

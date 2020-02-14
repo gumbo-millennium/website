@@ -1,101 +1,58 @@
 /* Activity card */
 
 .activity-card {
-  @apply card p-4 shadow rounded overflow-hidden;
-  @apply flex flex-row items-stretch;
+  @apply flex flex-col m-8 bg-white shadow rounded relative;
 }
 
-.activity-card__image-container {
-  @apply h-32 w-24;
+.activity-card__header {
+  @apply w-full flex flex-row items-center justify-between p-8 pb-0;
 }
 
-.activity-card__image {
-  @apply object-fill shadow;
-  max-width: theme('spacing.64');
-  max-height: theme('spacing.64');
-}
-
-.activity-card__image--empty {
-  @apply h-32 w-24;
-  @apply px-8;
-  @apply bg-brand-600;
-  @apply object-contain;
-  box-sizing: border-box;
+.activity-card__header-item {
+  @apply flex items-center;
 }
 
 .activity-card__body {
-  @apply flex-grow ml-4 px-4;
+  @apply flex flex-col justify-start w-full p-8 text-center;
+  @apply flex-grow;
 }
 
-.activity-card__title {
-  @apply text-2xl font-normal mb-4;
+.activity-card__body-icon {
+  @apply h-32 w-32 mb-8 mx-auto text-center;
 }
 
-.activity-card__title-link {
+.activity-card__body-icon-image {
+  @apply object-contain mx-auto;
+}
+
+.activity-card__body-title {
+  @apply font-title font-medium text-2xl mb-4;
+}
+
+.activity-card__body-title-link {
   @apply no-underline;
 }
 
-.activity-card__lead {
-  @apply text-lg font-normal mb-4;
+.activity-card__body-tagline {
+  @apply leading-relaxed;
 }
 
-.activity-card__facts {
-  @apply mb-6 flex flex-row flex-wrap;
+.activity-card__details {
+  @apply flex flex-row border-t border-gray-200 text-center;
 }
 
-.activity-card__fact {
-  @apply flex flex-row items-center;
-  @apply w-full mb-2 pb-2;
+.activity-card__detail {
+  @apply w-1/2 text-center p-2 pb-4 border-r border-gray-200;
 }
 
-.activity-card__fact-icon {
-  @apply h-4 w-6 mr-2;
+.activity-card__detail:last-child {
+  @apply border-r-0;
 }
 
-.activity-card__fact-label {
-  @apply leading-none font-normal;
+.activity-card__detail-title {
+  @apply text-sm text-gray-600 leading-loose;
 }
 
-.activity-card__read-more {
-  @apply flex flex-row items-center justify-between p-4;
-  @apply rounded border border-2 border-gray-100 no-underline;
-}
-
-.activity-card__read-more-icon {
-  @apply h-4 ml-4 w-6;
-}
-
-.activity-card__read-more-label {
-  @apply leading-none font-normal;
-}
-
-@screen md {
-  .activity-card__image-container {
-    @apply h-64 w-48;
-    @apply mt-0;
-  }
-  .activity-card__image--empty {
-    @apply h-64 w-48;
-  }
-  .activity-card__body {
-    @apply py-4;
-  }
-  .activity-card__fact {
-    @apply w-1/2;
-    @apply pb-0;
-  }
-}
-
-@screen lg {
-  .activity-card__fact {
-    @apply w-full;
-    @apply pb-2;
-  }
-}
-
-@screen xl {
-  .activity-card__fact {
-    @apply w-1/2;
-    @apply pb-0;
-  }
+.activity-card__detail-value {
+  @apply block;
 }

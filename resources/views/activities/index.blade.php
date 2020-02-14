@@ -58,9 +58,9 @@ $firstActivity = $past ? null : $activities->first();
     @else
     <div class="container pt-8">
         {{-- Activity cards --}}
-        <div class="activity-grid">
+        <div class="flex flex-row flex-wrap">
             @foreach ($activities as $activity)
-            <div class="activity-grid__item">
+            <div class="activity-grid__item mx-0 lg:w-1/3">
                 @include('activities.bits.single')
             </div>
             @endforeach

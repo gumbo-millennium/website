@@ -23,7 +23,7 @@ class PageController extends Controller
             ->available()
             ->where('start_date', '>', now())
             ->orderBy('start_date')
-            ->take(2)
+            ->take(3)
             ->get();
 
         $enrollments = [];
