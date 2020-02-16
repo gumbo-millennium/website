@@ -115,7 +115,7 @@
         "extends": "member",
         "permissions": []
     },
-    "bbqpg": {
+    "bbq": {
         "title": "BBQPG",
         "extends": "member",
         "permissions": []
@@ -135,9 +135,7 @@
     "kc": {
         "title": "Kascommissie",
         "extends": "member",
-        "permissions": [
-            "payments-monitor"
-        ]
+        "permissions": []
     },
     "pc": {
         "title": "Plazacommissie",
