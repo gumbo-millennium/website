@@ -64,6 +64,7 @@
             "content-admin"
         ]
     },
+
     // Board
     "board": {
         "title": "Bestuur",
@@ -107,39 +108,5 @@
             // Allow becoming other users
             "impersonate"
         ]
-    },
-
-    // Copied permissions from different groups
-    "ib": {
-        "title": "Introbestuur",
-        "extends": "member",
-        "permissions": []
-    },
-    "bbq": {
-        "title": "BBQPG",
-        "extends": "member",
-        "permissions": []
-    },
-    "bc": {
-        "title": "Brascommissie",
-        "extends": "member",
-        "permissions": []
-    },
-    "intro-accie": {
-        "title": "Intro Accie",
-        "extends": "member",
-        "permissions": []
-    },
-
-    // Empty roles
-    "kc": {
-        "title": "Kascommissie",
-        "extends": "member",
-        "permissions": []
-    },
-    "pc": {
-        "title": "Plazacommissie",
-        "extends": "member",
-        "permissions": []
     }
 }
