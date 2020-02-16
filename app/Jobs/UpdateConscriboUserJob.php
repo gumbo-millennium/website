@@ -143,6 +143,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Get user info from API
             $user = $service->getResource('user', $query, [
                 'code',
+                'selector',
 
                 // Names
                 'naam',
@@ -185,16 +186,8 @@ class UpdateConscriboUserJob implements ShouldQueue
         try {
             // Get group info from API
             $groups = $service->getResource('role', [
-                ['leden', '~', $user['code']]
+                ['leden', '~', $user['selector']]
             ], ['code', 'naam', 'leden'], ['limit' => 100]);
-
-            // Make sure the user is actually a part of this group
-            // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
-            $groups = $groups->filter(static function ($item) use ($user) {
-                return collect(explode(',', $item['leden']))
-                    ->map(static fn ($row) => intval(explode(':', trim($row), 2)[0]), 10)
-                    ->contains((string) $user['code']);
-            });
 
             // Print result
             logger()->info('Recieved {groups} for user', compact('groups'));
