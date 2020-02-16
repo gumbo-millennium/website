@@ -7,7 +7,7 @@ return [
     'beta' => env('GUMBO_BETA', env('APP_URL', 'http://localhost') !== 'https://www.gumbo-millennium.nl'),
 
     // Cost of a single payment transaction via Stripe, in cents!
-    'transfer-fee' => 35,
+    'transfer-fee' => 29,
 
     // Google config
     'google' => [
