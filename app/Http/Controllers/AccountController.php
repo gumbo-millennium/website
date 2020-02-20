@@ -8,6 +8,7 @@ use App\Forms\AccountEditForm;
 use App\Helpers\Str;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
@@ -26,6 +27,66 @@ class AccountController extends Controller
 
         return response()
             ->view('account.index', compact('user'))
+            ->setPrivate();
+    }
+
+    public function urls(Request $request)
+    {
+        // Shorthands
+        $user = $request->user();
+        $urlExpire = now()->addYear()->diffInSeconds();
+
+        $urls = \collect();
+
+        // Plazacam view
+        if ($request->user()->hasPermissionTo('plazacam-view')) {
+            // Plazacam
+            $urls->push([
+                'expires' => true,
+                'title' => 'Plazacam',
+                'url' => URL::signedRoute('api.plazacam.view', [
+                    'user' => $user->id,
+                    'image' => 'plaza',
+                ], $urlExpire)
+            ]);
+
+            // Coffeecam
+            $urls->push([
+                'expires' => true,
+                'title' => 'Koffiecam',
+                'url' => URL::signedRoute('api.plazacam.view', [
+                    'user' => $user->id,
+                    'image' => 'coffee',
+                ], $urlExpire)
+            ]);
+        }
+
+        // Plazacam update
+        if ($request->user()->hasPermissionTo('plazacam-update')) {
+            // Plazacam
+            $urls->push([
+                'expires' => true,
+                'title' => 'Plazacam (update)',
+                'url' => URL::signedRoute('api.plazacam.store', [
+                    'user' => $user->id,
+                    'image' => 'plaza',
+                ], $urlExpire)
+            ]);
+
+            // Coffeecam
+            $urls->push([
+                'expires' => true,
+                'title' => 'Koffiecam (update)',
+                'url' => URL::signedRoute('api.plazacam.store', [
+                    'user' => $user->id,
+                    'image' => 'coffee',
+                ], $urlExpire)
+            ]);
+        }
+
+        // Render view
+        return response()
+            ->view('account.urls', compact('urls'))
             ->setPrivate();
     }
 

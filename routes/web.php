@@ -138,6 +138,7 @@ Route::prefix('auth')->middleware($loginCsp)->group(static function () {
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
     Route::get('/', 'AccountController@index')->name('index');
+    Route::get('/api-urls', 'AccountController@urls')->name('urls');
     Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
     Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
 });

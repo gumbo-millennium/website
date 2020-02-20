@@ -9,6 +9,8 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 <h1 class="login__header font-base text-4xl">Account <strong>bewerken</strong></h1>
 <p class="text-lg text-gray-700 mb-4">Soms wil je gewoon iemand anders zijn, dat kan.</p>
 
+<a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
+
 <p>
     Je kan hieronder de gegevens aanpassen. Indien je een actief lidmaatschap hebt, kan je je naam niet aanpassen.
 </p>

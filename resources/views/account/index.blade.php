@@ -18,6 +18,15 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
+{{-- API toegang --}}
+<div class="card">
+    <h3 class="heading-3 mt-0">API toegang</h3>
+    <div class="flex flex-row items-center">
+        <p class="leading-none m-0 mr-4 flex-grow">Hacken op de Gumbo site</p>
+        <a href="{{ route('account.urls') }}" class="btn my-0">Naar overzicht</a>
+    </div>
+</div>
+
 {{-- Delete account --}}
 <div class="card">
     <h3 class="heading-3 mt-0">Account verwijderen</h3>
