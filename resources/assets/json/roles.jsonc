@@ -57,7 +57,7 @@
 
     // Public Relations Project Group
     "pr": {
-        "title": "PRPG",
+        "title": "Public Relations Projectgroep",
         "extends": "member",
         "permissions": [
             // Allow content management
