@@ -67,9 +67,9 @@ class PlazaCamController extends Controller
      */
     public function api(User $user, string $image)
     {
-        // Only allow members
-        if (!$user->hasRole('member')) {
-            throw new AccessDeniedHttpException('You are not a member');
+        // Check permission
+        if (!$user->hasPermissionTo('plazacam-view')) {
+            throw new AccessDeniedHttpException('You are not allowed to view the plazacam');
         }
 
         // Only allow certain cams
@@ -93,9 +93,9 @@ class PlazaCamController extends Controller
      */
     public function store(Request $request, User $user, string $image)
     {
-        // Only allow members
-        if ($user->hasRole('member')) {
-            throw new AccessDeniedHttpException('You are not a member');
+        // Check permission
+        if (!$user->hasPermissionTo('plazacam-update')) {
+            throw new AccessDeniedHttpException('You are not allowed to write new plazacam images');
         }
 
         // Only allow certain cams
