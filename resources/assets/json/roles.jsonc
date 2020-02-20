@@ -55,6 +55,15 @@
         "permissions": []
     },
 
+    // Landhuis committee
+    "pc": {
+        "title": "Plaza Commissie",
+        "extends": "member",
+        "permissions": [
+            "plazacam-update"
+        ]
+    },
+
     // Public Relations Project Group
     "pr": {
         "title": "Public Relations Projectgroep",
