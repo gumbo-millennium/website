@@ -31,6 +31,39 @@ class Enrollment extends UuidModel
     public const USER_TYPE_GUEST = 'guest';
 
     /**
+     * Finds the active enrollment for this activity
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment|null
+     */
+    public static function findActive(User $user, Activity $activity): ?Enrollment
+    {
+        return self::query()
+            ->withoutTrashed()
+            ->whereUserId($user->id)
+            ->whereActivityId($activity->id)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
+            ->with(['activity'])
+            ->first();
+    }
+
+    /**
+     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
+     * @param User $user
+     * @param Activity $activity
+     * @return Enrollment
+     * @throws NotFoundHttpException if there is no enrollment present
+     */
+    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
+    {
+        $result = self::findActive($user, $activity);
+        if ($result) {
+            return $result;
+        }
+        throw new NotFoundHttpException();
+    }
+
+    /**
      * @inheritDoc
      */
     protected $encrypted = [
@@ -162,38 +195,5 @@ class Enrollment extends UuidModel
                 [PaidState::class, CancelledState::class],
                 RefundedState::class
             );
-    }
-
-    /**
-     * Finds the active enrollment for this activity
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment|null
-     */
-    public static function findActive(User $user, Activity $activity): ?Enrollment
-    {
-        return self::query()
-            ->withoutTrashed()
-            ->whereUserId($user->id)
-            ->whereActivityId($activity->id)
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
-            ->with(['activity'])
-            ->first();
-    }
-
-    /**
-     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment
-     * @throws NotFoundHttpException if there is no enrollment present
-     */
-    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
-    {
-        $result = self::findActive($user, $activity);
-        if ($result) {
-            return $result;
-        }
-        throw new NotFoundHttpException();
     }
 }
