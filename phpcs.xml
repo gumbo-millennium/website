@@ -62,10 +62,12 @@
         <element value="protected constants"/>
         <element value="private constants"/>
         <element value="public static properties, protected static properties, private static properties"/>
+        <element value="static constructors"/>
         <element value="public static methods, protected static methods, private static methods"/>
         <element value="public static abstract methods, protected static abstract methods"/>
         <element value="public properties, protected properties, private properties"/>
         <element value="constructor"/>
+        <element value="destructor"/>
         <element value="public methods, protected methods, private methods"/>
         <element value="public abstract methods, protected abstract methods"/>
         <element value="magic methods"/>

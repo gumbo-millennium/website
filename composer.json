@@ -99,6 +99,9 @@
           "@php artisan telescope:publish",
           "@php artisan nova-lang:publish nl --force"
         ],
+        "post-update-cmd": [
+          "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
