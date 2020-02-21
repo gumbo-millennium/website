@@ -75,6 +75,7 @@
     "@tailwindcss/custom-forms": "^0.2",
     "axios": "^0.19",
     "bootstrap": "^4.3",
+    "botman-tinker": "^0.0.1",
     "moment": "^2.24",
     "tailwindcss": "^1.0",
     "tooltip.js": "^1.3",

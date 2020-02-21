@@ -137,8 +137,13 @@ Route::prefix('auth')->middleware($loginCsp)->group(static function () {
 
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
+    // Home
     Route::get('/', 'AccountController@index')->name('index');
+
+    // Urls
     Route::get('/api-urls', 'AccountController@urls')->name('urls');
+
+    // Edit profile
     Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
     Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
 });
@@ -151,6 +156,9 @@ Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(stat
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
+
+// Botman front-end
+Route::get('/botman/tinker', 'BotManController@tinker')->name('botman');
 
 // Page fallback
 Route::fallback('PageController@fallback');

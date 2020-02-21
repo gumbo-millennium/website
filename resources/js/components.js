@@ -3,21 +3,15 @@
  */
 
 import Vue from 'vue'
-
-/**
- * Available vue components
- */
-export const Components = new Set({
-  // Register icon stuff
-  'fa-icon': require('./fontawesome').default,
-  'gumbo-icon': require('./components/shared/icon.vue').default
-})
+import FontAwesome from './fontawesome'
+import GumboIcon from './components/shared/icon.vue'
+import { TinkerComponent } from 'botman-tinker'
 
 /**
  * Creates all components in Vue
  */
 export default function () {
-  Components.forEach(([name, call]) => {
-    Vue.component(name, call)
-  })
+  Vue.component('fa-icon', FontAwesome)
+  Vue.component('gumbo-icon', GumboIcon)
+  Vue.component('botman-tinker', TinkerComponent)
 }

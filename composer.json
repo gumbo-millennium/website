@@ -8,6 +8,11 @@
         "advoor/nova-editor-js": "^0.6",
         "austinheap/laravel-database-encryption": "^0.3.0-rc1",
         "benjaminhirsch/nova-slug-field": "^1.2",
+        "botman/botman": "^2.5",
+        "botman/driver-telegram": "^1.5",
+        "botman/driver-web": "^1.5",
+        "botman/studio-addons": "^1.6",
+        "botman/tinker": "^1.1",
         "coderello/laravel-nova-lang": "^1.0",
         "cviebrock/eloquent-sluggable": "^6.0",
         "czim/laravel-paperclip": "^2.7",
@@ -94,13 +99,15 @@
             "@php artisan key:generate"
         ],
         "post-install-cmd": [
+          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
           "@php artisan vendor:publish --tag=nova-assets",
           "@php artisan horizon:assets",
           "@php artisan telescope:publish",
           "@php artisan nova-lang:publish nl --force"
         ],
         "post-update-cmd": [
-          "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+          "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

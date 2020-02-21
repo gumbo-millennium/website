@@ -115,3 +115,6 @@ storage/debugbar
 
 # Allow vendored views
 !/resources/views/vendor
+
+# Ignore Botman discovery
+/.discovery/

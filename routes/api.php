@@ -29,3 +29,6 @@ Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
 
 // Register API for Stripe endpoints
 Route::stripeWebhooks('payments/stripe/handle');
+
+// Register Botman
+Route::match(['get', 'post'], '/botman', 'BotManController@handle')->name('botman');

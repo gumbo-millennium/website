@@ -11,16 +11,34 @@ import bindComponents from './components'
 // Register components
 bindComponents()
 
-// Wait for DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+// Build registration function
+const initElement = (selector, element) => {
   // Find Vue-enabled container
-  const container = document.querySelector('[data-content=vue]')
+  const container = document.querySelector(`[data-content=${selector}]`)
 
   // Handle content
-  if (container) {
-    return new Vue({
-      el: container,
-      render: createElement => createElement('gumbo', { props: {} }, [])
-    })
+  if (!container) {
+    return
   }
+
+  const props = {}
+  for (const key in container.dataset) {
+    if (key === 'tinker') {
+      continue
+    }
+
+    props[key] = container.dataset[key]
+  }
+
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: container,
+    render: createElement => createElement(element, { props }, [])
+  })
+}
+
+// Wait for DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initElement('vue', 'gumbo')
+  initElement('bot-tinker', 'botman-tinker')
 })
