@@ -8,9 +8,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use UnderflowException;
 
 /**
  * Handles receiving, storing and publishing of the plazacam.
@@ -40,6 +42,41 @@ class PlazaCamController extends Controller
         $hour = $time->hour;
 
         return $time->isWeekday() && ($hour >= 7 && $hour < 22);
+    }
+
+    /**
+     * Returns the path to the file of the given cam.
+     * @param string $name
+     * @return null|string
+     * @throws InvalidArgumentException
+     * @throws UnderflowException
+     */
+    public static function getPlazacamPath(string $name): ?string
+    {
+        // Get proper cam
+        switch ($name) {
+            case 'plaza':
+                $image = self::IMAGE_PLAZA;
+                break;
+            case 'coffee':
+                $image = self::IMAGE_COFFEE;
+                break;
+            default:
+                $image = null;
+        }
+
+        // Throw unknown exception
+        if (!$image) {
+            throw new InvalidArgumentException('Cam not recognized');
+        }
+
+        // Throw 404 if the image is unavailable
+        if (!Storage::exists($image)) {
+            throw new UnderflowException("Cannot locate cam file");
+        }
+
+        // Return path
+        return $image;
     }
 
     /**
@@ -134,29 +171,21 @@ class PlazaCamController extends Controller
      */
     protected function getImage(string $name)
     {
-        $image = null;
-        if ($name === 'plaza') {
-            $image = self::IMAGE_PLAZA;
-        } elseif ($name === 'coffee') {
-            $image = self::IMAGE_COFFEE;
+        try {
+            $path = self::getPlazacamPath($name);
+
+            // Get expiration
+            $expiresAt = now()->addMinutes(5);
+
+            // Send file, with an expiration of 5 minutes or the first monday at 07.00.
+            return Storage::response($path, "{$name}.jpg", [
+                'Expire' => $expiresAt->toRfc7231String(),
+                'Cache-Control' => sprintf('private, max-age=%d', $expiresAt->diffInSeconds(now()))
+            ]);
+        } catch (InvalidArgumentException $exception) {
+            throw new NotFoundHttpException('Deze webcam is niet beschikbaar', $exception);
+        } catch (UnderflowException $exception) {
+            throw new NotFoundHttpException('Deze webcam is tijdelijk niet beschikbaar', $exception);
         }
-
-        if (!$image) {
-            throw new NotFoundHttpException('Unknown cam');
-        }
-
-        // Throw 404 if the image is unavailable
-        if (!Storage::exists($image)) {
-            throw new NotFoundHttpException();
-        }
-
-        // Get expiration
-        $expiresAt = now()->addMinutes(5);
-
-        // Send file, with an expiration of 5 minutes or the first monday at 07.00.
-        return Storage::response($image, "{$name}.jpg", [
-            'Expire' => $expiresAt->toRfc7231String(),
-            'Cache-Control' => sprintf('private, max-age=%d', $expiresAt->diffInSeconds(now()))
-        ]);
     }
 }

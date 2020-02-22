@@ -17,6 +17,7 @@ $botman->middleware->received(new LogsReceives());
 $botman->middleware->sending(new LogsSends());
 
 // Member-only commands
+$botman->hears('/(plaza|koffie)cam', PlazaCamMessage::class);
 $botman->hears('/wjd.*', QuoteConversation::class);
 
 $botman->fallback(static function (BotMan $bot) {
