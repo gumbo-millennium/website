@@ -142,7 +142,7 @@
           "@php artisan horizon:assets"
         ],
         "lint": [
-          "parallel-lint --exclude vendor --exclude node_modules .",
+          "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
           "phpcs",
           "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
         ],
