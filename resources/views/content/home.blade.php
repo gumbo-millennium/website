@@ -1,12 +1,22 @@
 @extends('layout.main')
 
+@php
+use Carbon\Carbon;
+$leadTop = "Dubbel L, Dubbel N,";
+$leadBig = "Dubbel genieten";
+if (today() < Carbon::parse('2020-02-26')) {
+    $leadTop = "Enkel A, Dubbel L,";
+    $leadBig = "Alaaf!";
+}
+@endphp
+
 @section('content')
 <div class="container">
     <div class="home-hero">
         <div class="home-hero__text">
             <h2 class="home-hero__title">
-                Dubbel L, Dubbel N,<br />
-                <span class="home-hero__title-fat">Dubbel genieten</span>
+                {{ $leadTop }}<br />
+                <span class="home-hero__title-fat">{{ $leadBig }}</span>
             </h2>
 
             <p class="home-hero__lead">Welkom bij de gezelligste studentenvereniging van Zwolle.</p>
