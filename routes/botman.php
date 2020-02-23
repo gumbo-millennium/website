@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\BotMan\Conversations\QuoteConversation;
+use App\BotMan\Messages\ActivitiesCommand;
 use App\BotMan\Messages\PlazaCamMessage;
 use App\BotMan\Middleware\LogsReceives;
 use App\BotMan\Middleware\LogsSends;
@@ -18,6 +19,7 @@ $botman->middleware->received(new LogsReceives(), new TelegramMiddleware());
 $botman->middleware->sending(new LogsSends(), new TelegramMiddleware());
 
 // Member-only commands
+$botman->hears('/activiteiten', ActivitiesCommand::class);
 $botman->hears('/(plaza|koffie)cam', PlazaCamMessage::class);
 $botman->hears('/wjd', QuoteConversation::class);
 $botman->hears('/wjd {text}', QuoteConversation::class);

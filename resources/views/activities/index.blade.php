@@ -5,7 +5,7 @@ $title = 'Aankomende activiteiten';
 $subtitle = 'Binnenkort op de agenda bij Gumbo Millennium';
 if ($past) {
     $title = 'Afgelopen activiteiten';
-    $subtitle = 'Overzicht van afgelopen activiteiten, tot 1 jaar terug.';
+    $subtitle = 'Overzicht van afgelopen activiteiten.';
 }
 
 // Get first activity
@@ -66,17 +66,11 @@ $firstActivity = $past ? null : $activities->first();
             @endforeach
         </div>
     </div>
-    @endif
-</div>
 
-<div class="container py-8">
-    <p>
-        @if ($past)
-        <a href="{{ route('activity.index') }}">Toon alleen toekomstige evenementen</a>
-        @else
-        <a href="{{ route('activity.index', ['past' => true]) }}">Toon afgelopen evenementen</a>
-        @endif
-    </p>
+    <div class="container pt-8">
+        {{ $activities->links() }}
+    </div>
+    @endif
 </div>
 
 @endsection

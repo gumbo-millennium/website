@@ -25,24 +25,22 @@ class DisplayController extends Controller
      */
     public function index(Request $request)
     {
+        // Get the requesting user
         $user = $request->user();
+
         // Get all future events by default
-        $query = Activity::query()
-            ->where('end_date', '>', now())
-            ->orderBy('start_date');
+        $query = Activity::getNextActivities($user);
 
         // Get all past events instead
         if ($request->has('past')) {
             $query = Activity::query()
                 ->where('end_date', '<=', now())
-                ->orderByDesc('end_date');
+                ->orderByDesc('end_date')
+                ->available($user);
         }
 
-        // Only show activities availabe to this user.
-        $query = $query->available();
-
         // Paginate the response
-        $activities = $query->simplePaginate(20);
+        $activities = $query->simplePaginate(9);
 
         // Collect an empty list of enrollments
         $enrollments = collect();

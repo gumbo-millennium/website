@@ -34,6 +34,21 @@ class Activity extends SluggableModel implements AttachableInterface
     public const PAYMENT_TYPE_BILLING = 'billing';
 
     /**
+     * Lists the next up activities
+     * @param null|User $user
+     * @return Builder
+     * @throws InvalidArgumentException
+     */
+    public static function getNextActivities(?User $user): Builder
+    {
+        $query = self::query()
+            ->where('end_date', '>', now())
+            ->orderBy('start_date');
+
+        return $user ? $query->available($user) : $query;
+    }
+
+    /**
      * @inheritDoc
      */
     protected $dates = [
