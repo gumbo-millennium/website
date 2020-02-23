@@ -14,6 +14,18 @@ use Illuminate\Support\Facades\Cache;
  */
 abstract class AbstractMessage
 {
+    private BotMan $bot;
+
+    protected function getBot(): BotMan
+    {
+        return $this->bot;
+    }
+
+    protected function setBot(BotMan $bot): void
+    {
+        $this->bot = $bot;
+    }
+
     /**
      * Processing an incoming message from the optional user via the given bot
      * @param BotMan $bot
@@ -29,6 +41,9 @@ abstract class AbstractMessage
      */
     public function __invoke(BotMan $bot): void
     {
+        // Assign bot
+        $this->setBot($bot);
+
         // Get message
         $message = $bot->getMessage();
 

@@ -22,11 +22,12 @@ abstract class InvokableConversation extends Conversation
     protected function getName(): string
     {
         $bot = $this->getBot();
-        return
+        return (string) (
             optional($this->getUser())->first_name ??
             $bot->getUser()->getFirstName() ??
             $bot->getUser()->getUsername() ??
-            $bot->getMessage()->getSender();
+            $bot->getMessage()->getSender()
+        );
     }
 
     /**

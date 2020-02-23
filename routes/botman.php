@@ -6,6 +6,7 @@ use App\BotMan\Conversations\QuoteConversation;
 use App\BotMan\Messages\PlazaCamMessage;
 use App\BotMan\Middleware\LogsReceives;
 use App\BotMan\Middleware\LogsSends;
+use App\BotMan\Middleware\TelegramMiddleware;
 use App\Helpers\Arr;
 use BotMan\BotMan\BotMan;
 
@@ -13,12 +14,13 @@ $botman = resolve('botman');
 \assert($botman instanceof BotMan);
 
 // Add middlewares
-$botman->middleware->received(new LogsReceives());
-$botman->middleware->sending(new LogsSends());
+$botman->middleware->received(new LogsReceives(), new TelegramMiddleware());
+$botman->middleware->sending(new LogsSends(), new TelegramMiddleware());
 
 // Member-only commands
 $botman->hears('/(plaza|koffie)cam', PlazaCamMessage::class);
-$botman->hears('/wjd.*', QuoteConversation::class);
+$botman->hears('/wjd', QuoteConversation::class);
+$botman->hears('/wjd {text}', QuoteConversation::class);
 
 $botman->fallback(static function (BotMan $bot) {
     $message = $bot->getMessage();

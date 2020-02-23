@@ -30,34 +30,21 @@ class QuoteConversation extends InvokableConversation
      */
     public function askForQuote()
     {
-        // Get bot
-        $bot = $this->getBot();
-        $message = $bot->getMessage();
-
-        // Prep extra params
-        $extraParams = [];
-
-        if ($bot->getDriver() instanceof TelegramDriver && $message->getSender() !== $message->getRecipient()) {
-            $extraParams['reply_to_message_id'] = Arr::get($message->getPayload(), 'message_id');
-            $extraParams['reply_markup'] = json_encode([
-                'force_reply' => true,
-                'selective' => true,
-            ]);
-        }
-
+        // Ask the question
         $prompt = \str_replace(':name', $this->getName(), Arr::random(self::STR_ASK));
+
+        // Ask it
         $this->ask($prompt, function (Answer $response) {
             $this->storeQuote($response->getText());
-        }, $extraParams);
+        }, [
+            'auto-reply' => true
+        ]);
     }
 
     protected function storeQuote(string $quote)
     {
-        // Get bot
-        $bot = $this->getBot();
-
-        // Start typing
-        $bot->types(2);
+        // Get bot and start typing
+        $this->getBot()->types();
 
         // Save the quote
         $quote = BotQuote::create([
@@ -66,6 +53,7 @@ class QuoteConversation extends InvokableConversation
             'quote' => $quote,
         ]);
 
+        // Reply about it
         $this->say(str_replace(':name', $this->getName(), Arr::random(self::STR_THANKS)));
     }
 
@@ -76,19 +64,15 @@ class QuoteConversation extends InvokableConversation
     {
         // Check for quote
         $bot = $this->getBot();
-        $message = $bot->getMessage();
-        $messageText = $message->getText();
-        $quote = trim(Str::after($messageText, '/wjd'));
+        $quote = Arr::get($bot->getMatches(), 'text');
 
-        if (preg_match("/^(.*)\@(?:[a-z0-9-_\.]+)$/", $quote, $matches)) {
-            $quote = trim($matches[1]);
-        }
-
+        // Ask for the quote
         if (empty($quote)) {
             $this->askForQuote();
             return;
         }
 
+        // Store the quote
         $this->storeQuote($quote);
     }
 }

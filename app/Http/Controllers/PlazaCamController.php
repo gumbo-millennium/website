@@ -172,6 +172,7 @@ class PlazaCamController extends Controller
     protected function getImage(string $name)
     {
         try {
+            // Ask for the path
             $path = self::getPlazacamPath($name);
 
             // Get expiration
