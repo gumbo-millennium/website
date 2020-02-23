@@ -97,9 +97,8 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer install --no-suggest --no-progress --no-scripts --no-interaction
-          php artisan key:generate
           composer install --no-suggest --no-progress --no-interaction
+          php artisan key:generate
 
       - name: Prepare database
         run: php artisan migrate --seed
