@@ -143,8 +143,7 @@
         ],
         "lint": [
           "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
-          "phpcs",
-          "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
+          "phpcs"
         ],
         "test": [
           "phpunit"
