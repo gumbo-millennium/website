@@ -26,6 +26,16 @@ class PlazaCamMessage extends AbstractMessage
         'plaza' => 'Plazacam',
     ];
 
+    /**
+     * Sends the requested cam to the user
+     * @param BotMan $bot
+     * @param null|User $user
+     * @return void
+     * @throws BadMethodCallException
+     * @throws InvalidArgumentException
+     * @throws RouteNotFoundException
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
     public function run(BotMan $bot, ?User $user): void
     {
         // Send image notification

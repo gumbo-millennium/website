@@ -7,7 +7,6 @@ namespace App\BotMan\Messages;
 use App\Models\Activity;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
-use InvalidArgumentException;
 
 class ActivitiesCommand extends AbstractMessage
 {

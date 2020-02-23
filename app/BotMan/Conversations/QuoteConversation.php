@@ -7,8 +7,6 @@ namespace App\BotMan\Conversations;
 use App\Helpers\Arr;
 use App\Models\BotQuote;
 use BotMan\BotMan\Messages\Incoming\Answer;
-use BotMan\Drivers\Telegram\TelegramDriver;
-use Str;
 
 class QuoteConversation extends InvokableConversation
 {
