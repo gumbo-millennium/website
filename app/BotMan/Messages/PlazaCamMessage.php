@@ -57,7 +57,8 @@ class PlazaCamMessage extends AbstractMessage
         // HACK remove when we're authenticating
         $user ??= User::query()->permission(['plazacam-update'])->first(['id', 'name']);
         if (!$user) {
-            $bot->reply('Cannot find user.');
+            $bot->reply('Sorry, ik heb moenteel geen plazacam voor je');
+            return;
         }
 
         // Get URL

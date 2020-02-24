@@ -73,7 +73,7 @@ class TelegramMiddleware implements Sending, Received
     private function applyTelegramSending(array $payload, BotMan $bot, bool $autoReply)
     {
         // Enable Markdown
-        $payload['parse_mode'] = 'MarkdownV2';
+        $payload['parse_mode'] = 'HTML';
 
         // Check for groups
         $message = $bot->getMessage();

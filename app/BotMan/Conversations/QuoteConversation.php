@@ -19,8 +19,8 @@ class QuoteConversation extends InvokableConversation
     private const STR_ASK = [
         'Nee :name, zo werkt dat niet. Wat wou je insturen?',
         'Ik ga niet wéér een lege quote opslaan :name, wat is je wist-je-datje?',
-        'Bleep bloop, geeef bericht',
-        '[Michael Nicht] Klootviool, wat doe je?'
+        'Bleep bloop, geeef bericht.',
+        '[<i>Michael Nicht</i>] Klootviool, wat doe je?'
     ];
 
     /**

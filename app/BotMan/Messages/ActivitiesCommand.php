@@ -15,7 +15,8 @@ class ActivitiesCommand extends AbstractMessage
 
     %s
 
-    Voor meer info, check [de site](%s) of het [activiteitenkanaal](https://t.me/joinchat/AAAAAFOnLOIW0Tt-Ag-eKA).
+    Voor meer info, check <a href="%s">de site</a> of het <a
+    href="https://t.me/joinchat/AAAAAFOnLOIW0Tt-Ag-eKA">activiteitenkanaal</a>.
     MARKDOWN;
 
     /**
@@ -45,11 +46,10 @@ class ActivitiesCommand extends AbstractMessage
 
             // Prep a default line
             $line = sprintf(
-                '%s | [%s](%s)',
-                $activity->start_date->isoFormat('D MMM'),
-                preg_replace('/([\[\]\(\)\*\_])/', '\\\\\1', $activity->name),
+                '%s | <a href="%s">%s</a>',
+                $activity->start_date->isoFormat('DD-MM'),
                 route('activity.show', compact('activity')),
-                $activity->available_seats > 0 ? $activity->price_label : 'uitverkocht'
+                $activity->name,
             );
 
             if ($activity->available_seats > 0 && $activity->price > 0) {
