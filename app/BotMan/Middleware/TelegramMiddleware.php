@@ -103,7 +103,7 @@ class TelegramMiddleware implements Sending, Received
         // Check if we're in a group and if the message ends with a mention.
         if (
             $message->getSender() !== $message->getRecipient() &&
-            \preg_match('/^(.+)\@(?:[a-z0-9_-]+)$/', $message->getText(), $matches)
+            \preg_match('/^(.+)\@(?:[a-z0-9_-]+)$/i', $message->getText(), $matches)
         ) {
             $message->setText($matches[1]);
         }

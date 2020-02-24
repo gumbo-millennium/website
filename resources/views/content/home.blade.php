@@ -4,10 +4,6 @@
 use Carbon\Carbon;
 $leadTop = "Dubbel L, Dubbel N,";
 $leadBig = "Dubbel genieten";
-if (today() < Carbon::parse('2020-02-26')) {
-    $leadTop = "Enkel A, Dubbel L,";
-    $leadBig = "Alaaf!";
-}
 @endphp
 
 @section('content')
