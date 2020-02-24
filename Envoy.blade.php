@@ -20,7 +20,7 @@
     $logFormat = '%h %s (%cr, %cn)'; // see `man git log`
 
     // Deploy name
-    $deployName = (new DateTime())->format('Y-m-d--h-i-s');
+    $deployName = (new DateTime())->format('Y-m-d--H-i-s');
 
     // Paths
     $root = "\$HOME/laravel";
