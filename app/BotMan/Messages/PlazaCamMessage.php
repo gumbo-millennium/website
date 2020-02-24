@@ -38,6 +38,16 @@ class PlazaCamMessage extends AbstractMessage
      */
     public function run(BotMan $bot, ?User $user): void
     {
+        // if (!$user || !$user->hasPermissionTo('plazacam-view')) {
+        //     $bot->randomReply([
+        //         'Sorry, deze cam is niet voor jou beschikbaar',
+        //         'Oeps, het lijkt er op dat je geen toegang hebt tot de plazacam',
+        //         '"Computer says no"',
+        //         'Ai, het lijkt er op dat je deze cam niet mag opvragen.'
+        //     ]);
+        //     return;
+        // }
+
         // Send image notification
         if ($bot->getDriver() instanceof TelegramDriver) {
             $bot->sendRequest('sendChatAction', ['action' => 'upload_photo']);

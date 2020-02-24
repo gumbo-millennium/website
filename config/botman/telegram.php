@@ -14,4 +14,14 @@ return [
     |
     */
     'token' => env('BOTMAN_TELEGRAM_TOKEN'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Telegram Username
+    |--------------------------------------------------------------------------
+    |
+    | The username of the Telegram bot
+    |
+    */
+    'username' => env('BOTMAN_TELEGRAM_USERNAME')
 ];
