@@ -10,7 +10,9 @@ use BotMan\BotMan\BotMan;
 
 class FallbackMessage extends AbstractMessage
 {
-    private const QUOTES = [
+    private const DEFAULT_MESSAGE = 'Sorry, dit commando ken ik niet.';
+
+    private const QUOTE_LIST = [
         'Klootviool, wat doe je!?',
         'Waar zat je met je lul, toen je zei dat Born To Be Alive van The Village People was?',
         ['Hoe gaat \'ie met jou?', 1100, 'Met mij best wel wauw.'],
@@ -19,6 +21,7 @@ class FallbackMessage extends AbstractMessage
         'Baas, ik voel me gebruikt.',
         'Heeft er ooit iemand <i>iets</i> bereikt met leren?'
     ];
+
     /**
      * Returns a 'you're doing it wrong' prompt.
      * @param BotMan $bot
@@ -37,11 +40,11 @@ class FallbackMessage extends AbstractMessage
         // Only quote movies if we really have to
         $quoteFactor = random_int(1, 100);
         if ($quoteFactor < 95) {
-            $bot->reply('Sorry, dit commando ken ik niet.');
+            $bot->reply(self::DEFAULT_MESSAGE);
             return;
         }
 
-        $quote = Arr::random(self::QUOTES);
+        $quote = Arr::random(self::QUOTE_LIST);
 
         if (!is_array($quote)) {
             $bot->reply($quote);

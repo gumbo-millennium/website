@@ -12,6 +12,12 @@ class HelpMessage extends AbstractMessage
 {
     use FormatsCommands;
 
+    private const COMMAND_TEMPLATE = <<<'HTML'
+    Beschikbare commando's 🤖
+
+    %s
+    HTML;
+
     private const COMMAND_LIST = [
         'start' => 'Laat welkomstbericht zien.',
         'help' => 'Laat de commando\'s zien.',
@@ -20,12 +26,6 @@ class HelpMessage extends AbstractMessage
         'koffiecam' => 'Laat de koffiecam zien.',
         'wjd' => 'Stuur een wist-je-datje of quote in.',
     ];
-
-    private const COMMAND_TEMPLATE = <<<'HTML'
-        Beschikbare commando's 🤖
-
-        %s
-    HTML;
 
     /**
      * Sends a list of commands to the user

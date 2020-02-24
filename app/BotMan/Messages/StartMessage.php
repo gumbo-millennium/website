@@ -14,9 +14,9 @@ class StartMessage extends AbstractMessage
 
     private const BASE_COMMAND = '/help';
     private const COMMAND_TEMPLATE = <<<'HTML'
-        Welkom bij de Gumbot 🤖
+    Welkom bij de Gumbot 🤖
 
-        Typ %s om een overzicht te krijgen van de mogelijke commando's.
+    Typ %s om een overzicht te krijgen van de mogelijke commando's.
     HTML;
 
     /**
