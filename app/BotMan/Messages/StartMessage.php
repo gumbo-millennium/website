@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
-use App\BotMan\Traits\FormatsCommands;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 
 class StartMessage extends AbstractMessage
 {
-    use FormatsCommands;
-
-    private const BASE_COMMAND = '/help';
     private const COMMAND_TEMPLATE = <<<'HTML'
     Welkom bij de Gumbot 🤖
 
-    Typ %s om een overzicht te krijgen van de mogelijke commando's.
+    Typ /help om een overzicht te krijgen van de mogelijke commando's.
     HTML;
 
     /**
@@ -29,9 +25,6 @@ class StartMessage extends AbstractMessage
     public function run(BotMan $bot, ?User $user): void
     {
         // Send hello
-        $bot->reply(sprintf(
-            self::COMMAND_TEMPLATE,
-            $this->formatCommand($bot, self::BASE_COMMAND)
-        ));
+        $bot->reply(self::COMMAND_TEMPLATE);
     }
 }

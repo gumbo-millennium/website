@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
-use App\BotMan\Traits\FormatsCommands;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 
 class HelpMessage extends AbstractMessage
 {
-    use FormatsCommands;
-
     private const COMMAND_TEMPLATE = <<<'HTML'
     Beschikbare commando's 🤖
 
@@ -39,8 +36,7 @@ class HelpMessage extends AbstractMessage
         // Prep list
         $commands = [];
         foreach (self::COMMAND_LIST as $command => $help) {
-            $command = $this->formatCommand($bot, "/{$command}");
-            $commands[] = "{$command} - {$help}";
+            $commands[] = "/{$command} - {$help}";
         }
 
         // Send list
