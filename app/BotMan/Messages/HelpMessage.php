@@ -40,10 +40,10 @@ class HelpMessage extends AbstractMessage
         $commands = [];
         foreach (self::COMMAND_LIST as $command => $help) {
             $command = $this->formatCommand($bot, "/{$command}");
-            $commands = "{$command} - {$help}\n";
+            $commands[] = "{$command} - {$help}";
         }
 
         // Send list
-        $bot->reply(sprintf(self::COMMAND_TEMPLATE, $commands));
+        $bot->reply(sprintf(self::COMMAND_TEMPLATE, implode(PHP_EOL, $commands)));
     }
 }
