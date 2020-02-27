@@ -25,9 +25,18 @@ class QuoteConversation extends InvokableConversation
         'Nee :name, zo werkt dat niet. Wat wou je insturen?',
         'Ik ga niet wéér een lege quote opslaan :name, wat is je wist-je-datje?',
         'Bleep bloop, geeef bericht.',
-        '[<i>Michael Nicht</i>] Klootviool, wat doe je?',
+        '<em>Michael Nicht</em>: Klootviool, wat doe je?',
         'Maak je altijd van die lege beloftes :name?',
         'Ik denk dat je even voor de herkansing moet :name...',
+        'What do you mean? An African or European swallow?',
+        // phpcs:ignore Generic.Files.LineLength.TooLong
+        'Stop. Who would cross the Bridge of Death must answer me these questions three, ere the other side he see. What... is your quest?',
+        '<em>Sir Bedevere</em>: What makes you think she\'s a witch?',
+        '<em>Black Knight</em>: Come on, you pansy!',
+        '<em>King Arthur</em>: How does it... um... how does it work?',
+        // phpcs:ignore Generic.Files.LineLength.TooLong
+        '<em>French Soldier</em>: I don\'t want to talk to you no more, you empty-headed animal food trough wiper! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries!',
+        '<em>French Soldier</em>: Mind your own business.'
     ];
 
     private const STR_CANCEL = [
