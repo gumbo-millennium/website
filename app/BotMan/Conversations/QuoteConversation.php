@@ -21,6 +21,10 @@ class QuoteConversation extends InvokableConversation
         'Bleep bloop, opgeslagen onder "Chantagemateriaal van :name".',
         // phpcs:ignore Generic.Files.LineLength.TooLong
         '<em>King Arthur</em>: Go and tell your master that we have been charged by :name with a sacred quest. If he will give us food and shelter for the night, he can join us in our quest for the Gumbode.',
+        <<<'HTML'
+        <em>King Arthur</em>: Who are you who can summon fire without flint or tinder?
+        <em>:name</em>: There are some who call me... :name.
+        HTML,
     ];
 
     private const STR_ASK = [

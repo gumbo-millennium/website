@@ -41,11 +41,10 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public static function getNextActivities(?User $user): Builder
     {
-        $query = self::query()
+        return self::query()
             ->where('end_date', '>', now())
-            ->orderBy('start_date');
-
-        return $user ? $query->available($user) : $query;
+            ->orderBy('start_date')
+            ->available($user);
     }
 
     /**
