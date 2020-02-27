@@ -19,6 +19,8 @@ class QuoteConversation extends InvokableConversation
         'Bedankt voor het insturen van je wist-je-datje, :name!',
         'Whoop, lekker bezig :name, ik stuur \'m door naar de Gumbode',
         'Bleep bloop, opgeslagen onder "Chantagemateriaal van :name".',
+        // phpcs:ignore Generic.Files.LineLength.TooLong
+        '<em>King Arthur</em>: Go and tell your master that we have been charged by :name with a sacred quest. If he will give us food and shelter for the night, he can join us in our quest for the Gumbode.',
     ];
 
     private const STR_ASK = [
