@@ -327,6 +327,11 @@ class ActivitySeeder extends Seeder
                 'seats' => $seats
             ], false);
 
+            // Skip if not created
+            if (!$activity) {
+                continue;
+            }
+
             // Add member enrollments
             if ($memberEnroll) {
                 $enrollments = factory(Enrollment::class, $memberEnroll)->create([
