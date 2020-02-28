@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-use Czim\Paperclip\Config\Steps\ResizeStep;
-use Czim\Paperclip\Config\Variant;
-
 return [
 
     /*
@@ -118,9 +115,7 @@ return [
         // variant definitions will be used.
         'default' => [
             // Always add social step
-            Variant::make('social')->steps([
-                ResizeStep::make()->width(1200)->height(650)->crop()
-            ])->extension('jpg'),
+            'social' => '1200x650#'
         ],
     ],
 

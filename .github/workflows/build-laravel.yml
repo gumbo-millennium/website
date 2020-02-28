@@ -121,6 +121,11 @@ jobs:
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
 
+      - name: Attempt to optimize the config
+        run: |
+          php artisan optimize
+          php artisan optimize:clear
+
       - name: Report test results to CodeClimate
         run: |
           curl -o ./cc-test-reporter -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
