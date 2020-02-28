@@ -437,11 +437,6 @@ class Activity extends SluggableModel implements AttachableInterface
                 Variant::make('cover@2x')->steps([
                     ResizeStep::make()->width($coverWidth * 2)->height($coverHeight * 2)->crop()
                 ])->extension('jpg'),
-
-                // Make Social Media
-                Variant::make('social')->steps([
-                    ResizeStep::make()->width(1200)->height(650)->crop()
-                ])->extension('jpg'),
             ]
         ]);
     }

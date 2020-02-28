@@ -219,15 +219,15 @@ class Activity extends Resource
                 ->deletable()
                 ->nullable()
                 ->mimes(['png', 'jpeg', 'jpg'])
-                ->help('Afbeelding die op de detailpagina en op Social Media getoond wordt. Maximaal 2MB')
-                ->minWidth(1920)
-                ->minHeight(960)
+                ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt. Maximaal 2MB')
+                ->minWidth(640)
+                ->minHeight(480)
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(1920)->maxHeight(600)
+                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')

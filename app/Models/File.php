@@ -146,6 +146,9 @@ class File extends SluggableModel implements AttachableInterface
                 // Square picture, used in collection view or something
                 Variant::make('square')->steps(ResizeStep::make()->square($squareSize)->crop()),
                 Variant::make('square@2x')->steps(ResizeStep::make()->square($squareSize * 2)->crop()),
+
+                // Disable social media
+                'social' => false,
             ]
         ]);
     }

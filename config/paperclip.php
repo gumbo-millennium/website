@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Czim\Paperclip\Config\Steps\ResizeStep;
+use Czim\Paperclip\Config\Variant;
+
 return [
 
     /*
@@ -109,19 +112,15 @@ return [
         //
         // When this is enabled, it is possible to 'disable' the default variants by setting
         // the attachment configuration to `false` (instead of an array with steps).
-        'merge-default' => false,
+        'merge-default' => true,
 
         // If no specific variants are set for a clipped file on a Model, these
         // variant definitions will be used.
         'default' => [
-
-            // Fluent object format is allowed:
-            // \Czim\Paperclip\Config\Steps\ResizeStep::make('variant-name')->square(50)->crop(),
-
-            // Classic array format is allowed:
-            // 'variantname' => [
-            //     'strategy-alias' => [ 'strategy' => 'configuration' ],
-            // ],
+            // Always add social step
+            Variant::make('social')->steps([
+                ResizeStep::make()->width(1200)->height(650)->crop()
+            ])->extension('jpg'),
         ],
     ],
 
