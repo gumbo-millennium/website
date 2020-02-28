@@ -76,6 +76,7 @@ class NewsItem extends Resource
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
+        $options = config('gumbo.news-categories', ['Nieuws']);
         return [
             ID::make()->sortable(),
 
@@ -85,7 +86,7 @@ class NewsItem extends Resource
             // Category
             Select::make('Categorie', 'category')
                 ->required()
-                ->options(config('gumbo.news-categories', ['Nieuws'])),
+                ->options(\array_combine($options, $options)),
 
             // Add multi selects
             BelongsTo::make('Laatst bewerkt door', 'author', User::class)
