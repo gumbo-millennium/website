@@ -3,23 +3,23 @@
 @section('title', $page->title)
 
 @section('content')
+{{-- All in an article --}}
 <article>
-{{-- Welcome --}}
-<header class="header">
-    <div class="container header__container">
-        <h1 class="header__title">{{ $page->title }}</h1>
-        @if (!empty($page->tagline))
-        <p class="header__subtitle">
-            {{ $page->tagline }}
-        </p>
-        @endif
+    {{-- Header --}}
+    <div class="container">
+        <div class="page-hero">
+            <h1 class="page-hero__title">{{ $page->title }}</h1>
+            @if (!empty($page->tagline))
+            <p class="page-hero__lead">{{ $page->tagline }}</p>
+            @endif
+        </div>
     </div>
-</header>
 
-{{-- Contents --}}
-<div class="container">
-    <article class="plain-content">
-        {!! $page->html !!}
-    </article>
-</div>
+    {{-- Contents --}}
+    <div class="container">
+        <div class="plain-content">
+            {!! $page->html !!}
+        </div>
+    </div>
+</article>
 @endsection

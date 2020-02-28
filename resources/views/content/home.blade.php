@@ -6,6 +6,8 @@ $leadTop = "Dubbel L, Dubbel N,";
 $leadBig = "Dubbel genieten";
 @endphp
 
+@push('header.navbar-class', 'navbar--no-shadow')
+
 @section('content')
 <div class="container">
     <div class="home-hero">

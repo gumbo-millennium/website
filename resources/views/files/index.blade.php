@@ -1,12 +1,13 @@
 @extends('layout.main')
 
 @section('content')
-<header class="header header--activity">
-    <div class="container header__container">
-        <h1 class="header__title">Bestandensysteem</h1>
-        <p class="header__subtitle">Ye be plundering the olde books</p>
+{{-- Header --}}
+<div class="container">
+    <div class="page-hero">
+        <h1 class="page-hero__title">Bestandensysteem</h1>
+        <p class="page-hero__lead">De officiële documenten van Gumbo Millennium, speciaal voor leden.</p>
     </div>
-</header>
+</div>
 
 <div class="container after-header">
     <p class="text-lg mb-4">Kies een categorie om verder te gaan</p>

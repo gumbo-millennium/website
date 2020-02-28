@@ -85,11 +85,11 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
     <div class="flex flex-row border-t border-gray-200 text-center">
         <div class="activity-card__detail">
             <p class="activity-card__detail-title">Prijs</p>
-            <p class="activity-card__detail-value">{{ $price }}</p>
+            <p class="activity-card__detail-value">{{ ucfirst($price) }}</p>
         </div>
         <div class="activity-card__detail">
             <p class="activity-card__detail-title">Aantal plekken</p>
-            <p class="activity-card__detail-value">{{ $seats }}</p>
+            <p class="activity-card__detail-value">{{ ucfirst($seats) }}</p>
         </div>
     </div>
 </div>

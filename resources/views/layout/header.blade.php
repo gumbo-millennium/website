@@ -1,4 +1,6 @@
-<section class="userbar">
+@push('header.userbar-class', 'userbar')
+@push('header.navbar-class', 'navbar')
+<section class="@stack('header.userbar-class')">
     <div class="container userbar__container">
         {{-- Contact details --}}
         <ul class="userbar__links userbar__links--contact">
@@ -59,7 +61,7 @@
 </section>
 
 {{-- Actual navbar --}}
-<nav class="navbar" role="navigation" aria-roledescription="Website navigatie">
+<nav class="@stack('header.navbar-class')" role="navigation" aria-roledescription="Website navigatie">
     <div class="container navbar__container">
         <a href="{{ route('home') }}" class="logo-wrapper">
             <img src="{{ mix('/images/logo-text-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"

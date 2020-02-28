@@ -25,38 +25,22 @@ $firstActivity = $past ? null : $activities->first();
 @endif
 
 @section('content')
-<div class="header header--activity">
-    <div class="container header__container">
-        <h1 class="header__title">{{ $title }}</h1>
-        <p class="header__subtitle">{{ $subtitle }}</p>
+{{-- Header --}}
+<div class="container">
+    <div class="page-hero">
+        <h1 class="page-hero__title">{{ $title }}</h1>
+        <p class="page-hero__lead">{{ $subtitle }}</p>
     </div>
 </div>
 
-<div class="activity-blocks after-header">
-    <div class="activity-block">
-        <div class="container leading-loose">
-            <p>
-                Bij Gumbo houden wij van leuke activiteiten.
-                Van een gezellige soosavond tot een spektaculair weekend weg in een prachtig landhuis.
-            </p>
-            <p>
-                In onderstaand overzicht zie je de {{ Str::lower($title) }}.
-            </p>
-            @guest
-            <div class="alert alert-info">
-                Je bent niet ingelogd. Activiteiten die alleen toegankelijk zijn voor leden worden niet getoond.
-            </div>
-            @endguest
-        </div>
-    </div>
-
+<div class="activity-blocks">
     @if (empty($activities))
-    <div class="text-center mt-8 p-16">
+    <div class="text-center p-16">
         <h2 class="text-2xl font-normal text-center">Geen activiteiten</h2>
         <p class="text-center text-lg">De agenda is verdacht leeg. Kom later nog eens kijken.</p>
     </div>
     @else
-    <div class="container pt-8">
+    <div class="container">
         {{-- Activity cards --}}
         <div class="flex flex-row flex-wrap">
             @foreach ($activities as $activity)
