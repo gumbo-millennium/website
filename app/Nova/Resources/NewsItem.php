@@ -8,10 +8,13 @@ use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\NewsItem as NewsItemModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
 /**
@@ -79,6 +82,11 @@ class NewsItem extends Resource
             TextWithSlug::make('Titel', 'title')->slug('slug'),
             Slug::make('Pad', 'slug')->nullable(false),
 
+            // Category
+            Select::make('Categorie', 'category')
+                ->required()
+                ->options(config('gumbo.news-categories', ['Nieuws'])),
+
             // Add multi selects
             BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
@@ -96,6 +104,22 @@ class NewsItem extends Resource
                 ->nullable()
                 ->help('Datum waarop dit artikel gepubliceerd is of wordt')
                 ->hideFromIndex(),
+
+            // Image
+            PaperclipImage::make('Afbeelding', 'image')
+                ->deletable()
+                ->nullable()
+                ->mimes(['png', 'jpeg', 'jpg'])
+                ->help('Afbeelding die bij het artikel en op Social Media getoond wordt. Maximaal 2MB')
+                ->minWidth(640)
+                ->minHeight(480)
+                ->rules(
+                    'nullable',
+                    'image',
+                    'mimes:jpeg,png',
+                    'max:2048',
+                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                ),
 
             // Add data
             NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),

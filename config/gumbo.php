@@ -50,5 +50,14 @@ return [
 
         // Don't throw exceptions on response codes ≥ 400.
         'http_errors' => false
+    ],
+
+    // News categories
+    'news-categories' => [
+        'Nieuws',
+        'Aankondiging',
+        'Persbericht',
+        'Advertorial',
+        'Vacature'
     ]
 ];

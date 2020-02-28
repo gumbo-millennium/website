@@ -5,6 +5,10 @@
   @apply shadow;
 }
 
+.navbar--no-shadow {
+  @apply shadow-none;
+}
+
 .navbar__container {
   @apply flex flex-col items-center;
 }

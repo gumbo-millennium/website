@@ -1,38 +1,45 @@
 @extends('layout.main')
 
 @section('content')
-<header class="header header--activity">
-    <div class="container header__container">
-        <h1 class="header__title">Nieuws</h1>
-        <p class="header__subtitle">Het laatste nieuws van Gumbo Millennium</p>
+{{-- Header --}}
+<div class="container">
+    <div class="page-hero">
+        <h1 class="page-hero__title">Nieuws</h1>
+        <p class="page-hero__lead">Het laatste nieuws van Gumbo Millennium</p>
     </div>
-</header>
+</div>
 
-<div class="container after-header">
+{{-- Content --}}
+<div class="container">
+    <div class="flex flex-row flex-wrap row">
     @foreach ($items as $item)
     @php
-    $postDate = $item->published_at ?? $item->created_at;
-    $postMonth = trim($postDate->isoFormat('MMM'), '.');
-    $postDay = $postDate->isoFormat('DD');
+    $postTimestamp = $item->published_at ?? $item->created_at;
+    $postIso = $postTimestamp->toIso8601String();
+    $postDate = $postTimestamp->isoFormat('DD MMM \'YY');
     @endphp
-    <article class="flex flex-row mb-8 py-4">
-        <div class="flex flex-col items-center mr-4 px-4">
-            <span class="text-block text-sm uppercase text-black">{{ $postMonth }}</span>
-            <span class="text-block text-xl text-brand-600">{{ $postDay }}</span>
-            <span class="text-block text-lg text-center">
-                @if ($item->sponsor)@icon('solid/ad')@endif
-            </span>
+    <article class="col w-full flex-none md:w-1/2 mb-8">
+    <div class="shadow rounded bg-white relative">
+        <div class="h-64 bg-gray-200" role="presentation">
+        @if ($item->image->exists())
+            <img class="w-full h-64 object-cover" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
+        @else
+        <div class="w-full h-64 flex items-center">
+            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
         </div>
-        <div class="flex-grow">
-            <h2 class="font-bold text-brand-600 text-2xl">
-                <a href="{{ route('news.show', ['news' => $item]) }}">
-                    {{ $item->title }}
-                </a>
+        @endif
+        </div>
+
+        <div class="p-8 w-full">
+            <p class="mb-0 uppercase font-bold text-sm text-gray-600 leading-none mb-2">{{ $item->category }}</p>
+            <h2 class="text-xl font-title mb-21">
+                <a href="{{ route('news.show', ['news' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
             </h2>
-            <div class="flex flex-row flex-wrap text-sm">
-                @include('news.parts.item-summary', ['item' => $item, 'relative' => true])
-            </div>
+
+            <p class="mb-4">{{ Str::words(strip_tags($item->html), 10) }}</p>
+            <time datetime="{{ $postIso }}" class="text-right text-gray-600">{{ $postDate }}</time>
         </div>
+    </div>
     </article>
     @endforeach
 </div>

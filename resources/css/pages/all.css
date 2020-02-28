@@ -1,7 +1,8 @@
 /* Load pages */
 
-@import 'home.css';
 @import 'activity.css';
 @import 'botman.css';
+@import 'generic.css';
+@import 'home.css';
 @import 'login.css';
 @import 'payment-redirect.css';
