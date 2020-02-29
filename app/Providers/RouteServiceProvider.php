@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    private static bool $botManMapped = false;
+    /**
+     * Defines the BotMan "hears" commands.
+     * @return void
+     */
+    public static function mapBotManCommands(): void
+    {
+        if (!self::$botManMapped) {
+            self::$botManMapped = true;
+            require base_path('routes/botman.php');
+        }
+    }
+
     /**
      * This namespace is applied to your controller routes.
      *
@@ -23,8 +36,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mapBotManCommands();
-
         parent::boot();
     }
 
@@ -37,15 +48,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-    }
-
-    /**
-     * Defines the BotMan "hears" commands.
-     * @return void
-     */
-    protected function mapBotManCommands(): void
-    {
-        require base_path('routes/botman.php');
     }
 
     /**
