@@ -4,20 +4,12 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Jobs\IndexFileContents;
 use App\Models\FileBundle;
 use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
 
-class RecomputeFileBundleSize
+class MediaUploadListener
 {
-    /**
-     * Create the event listener.
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      * @param  object  $event
@@ -33,9 +25,23 @@ class RecomputeFileBundleSize
             return;
         }
 
+        // Dispatch file indexes
+        IndexFileContents::dispatch($media);
+
+        // Update file size
+        $this->updateFileSize($model);
+    }
+
+    /**
+     * Recomputes total bundle size
+     * @param FileBundle $bundle
+     * @return void
+     */
+    private function updateFileSize(FileBundle $bundle)
+    {
         // Recompute size
-        $size = $model->getMedia()->sum('size');
-        $model->total_size = $size;
-        $model->save();
+        $size = $bundle->getMedia()->sum('size');
+        $bundle->total_size = $size;
+        $bundle->save();
     }
 }

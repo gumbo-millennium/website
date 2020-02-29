@@ -63,11 +63,13 @@ class FileBundle extends SluggableModel implements HasMedia
      * @return Builder
      * @throws InvalidArgumentException
      */
-    public function scopeAvailable(Builder $query): Builder
+    public function scopeWhereAvailable(Builder $query): Builder
     {
         // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
         return $query->where(static function ($builder) {
-            return $builder->whereNull('published_at')
+            return $builder
+                ->whereNull('published_at')
+                ->has('media')
                 ->orWhere('published_at', '<', now());
         });
     }

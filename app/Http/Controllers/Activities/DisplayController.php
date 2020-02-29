@@ -35,8 +35,8 @@ class DisplayController extends Controller
         if ($request->has('past')) {
             $query = Activity::query()
                 ->where('end_date', '<=', now())
-                ->orderByDesc('end_date')
-                ->available($user);
+                ->whereAvailable($user)
+                ->orderByDesc('end_date');
         }
 
         // Paginate the response

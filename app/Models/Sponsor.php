@@ -69,7 +69,7 @@ class Sponsor extends Model implements AttachableInterface
      * @param Builder $builder
      * @return Builder
      */
-    public function scopeAvailable(Builder $builder): Builder
+    public function scopeWhereAvailable(Builder $builder): Builder
     {
         return $builder
             ->whereNotNull('image_file_name')

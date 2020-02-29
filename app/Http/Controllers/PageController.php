@@ -20,7 +20,7 @@ class PageController extends Controller
     public function homepage(Request $request)
     {
         $nextEvents = Activity::query()
-            ->available()
+            ->whereAvailable()
             ->where('start_date', '>', now())
             ->orderBy('start_date')
             ->take(3)

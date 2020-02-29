@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\File;
+use App\Models\FileBundle;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -20,7 +20,7 @@ class FileCategoryPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('viewAny', File::class);
+        return $user->can('viewAny', FileBundle::class);
     }
 
     /**
@@ -30,7 +30,7 @@ class FileCategoryPolicy
      */
     public function view(User $user)
     {
-        return $user->can('viewAny', File::class);
+        return $user->can('viewAny', FileBundle::class);
     }
 
     /**
@@ -40,7 +40,7 @@ class FileCategoryPolicy
      */
     public function create(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -50,7 +50,7 @@ class FileCategoryPolicy
      */
     public function update(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -60,7 +60,7 @@ class FileCategoryPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -70,7 +70,7 @@ class FileCategoryPolicy
      */
     public function restore(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -80,6 +80,6 @@ class FileCategoryPolicy
      */
     public function forceDelete(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 }

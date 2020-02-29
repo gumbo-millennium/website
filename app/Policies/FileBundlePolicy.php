@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\File;
+use App\Models\FileBundle;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class FilePolicy
+class FileBundlePolicy
 {
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
@@ -23,7 +23,7 @@ class FilePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -33,9 +33,9 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function view(User $user, File $file)
+    public function view(User $user, FileBundle $file)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -55,7 +55,7 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function download(User $user, File $file)
+    public function download(User $user, FileBundle $file)
     {
         return $user->hasPermissionTo(self::USER_PERMISSION);
     }
@@ -67,7 +67,7 @@ class FilePolicy
      */
     public function create(User $user)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -77,9 +77,9 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function update(User $user, File $file)
+    public function update(User $user, FileBundle $file)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -89,9 +89,9 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function delete(User $user, File $file)
+    public function delete(User $user, FileBundle $file)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -101,9 +101,9 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function restore(User $user, File $file)
+    public function restore(User $user, FileBundle $file)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
@@ -113,9 +113,9 @@ class FilePolicy
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function forceDelete(User $user, File $file)
+    public function forceDelete(User $user, FileBundle $file)
     {
-        return $user->can('manage', File::class);
+        return $user->can('manage', FileBundle::class);
     }
 
     /**

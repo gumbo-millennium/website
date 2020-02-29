@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use Illuminate\Support\Str as SupportStr;
+use Spatie\MediaLibrary\Helpers\File;
 
 /**
  * String extensions
@@ -50,23 +51,11 @@ class Str extends SupportStr
     /**
      * Returns file size
      * @param mixed $size
-     * @param string|null $unit
      * @return string
      */
-    public static function filesize($size, ?string $unit = null): string
+    public static function filesize($size): string
     {
-        $unit = null;
-        $size = intval(self::getValidNumber($size));
-        if ((!$unit && $size >= 1 << 30) || $unit == "G") {
-            return self::number($size / (1 << 30), 1) . " GB";
-        }
-        if ((!$unit && $size >= 1 << 20) || $unit == "M") {
-            return self::number($size / (1 << 20), 1) . " MB";
-        }
-        if ((!$unit && $size >= 1 << 10) || $unit == "K") {
-            return self::number($size / (1 << 10), 1) . " KB";
-        }
-        return self::number($size) . " bytes";
+        return File::getHumanReadableSize(intval(self::getValidNumber($size)));
     }
 
     /**

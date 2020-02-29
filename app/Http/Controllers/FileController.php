@@ -41,21 +41,19 @@ class FileController extends Controller
     public function index(): Response
     {
         // Try to only get non-empty categories
-        $categoryQuery = FileCategory::has('bundles');
+        $categoryQuery = FileCategory::whereAvailable();
 
         // Ignore if that's impossible
         if (!(clone $categoryQuery)->exists()) {
             $categoryQuery = FileCategory::query();
         }
 
+        $categoryQuery = $categoryQuery
+            ->withCount('bundles');
+
         // Get items
         $categories = $categoryQuery
-            ->with(['bundles' => static function ($query) {
-                $query
-                    ->available()
-                    ->orderByDesc('updated_at')
-                    ->orderBy('title');
-            }])
+            ->withAvailable()
             ->withCount('bundles')
             ->orderByDesc('updated_at')
             ->orderBy('title')
@@ -75,7 +73,10 @@ class FileController extends Controller
     public function category(FileCategory $category)
     {
         // Get most recent files
-        $bundles = $category->bundles()->available()->paginate(20);
+        $bundles = $category
+            ->bundles()
+            ->whereAvailable()
+            ->paginate(20);
 
         // Render view
         return view('files.category')->with(compact('category', 'bundles'));
@@ -132,6 +133,9 @@ class FileController extends Controller
      */
     public function download(Request $request, FileBundle $bundle): Responsable
     {
+        // Check permissions
+        $this->authorize('download', $bundle);
+
         // Log bundle download
         $this->log($request, $bundle, null);
 
@@ -155,8 +159,16 @@ class FileController extends Controller
      */
     public function downloadSingle(Request $request, Media $media): BinaryFileResponse
     {
+        $bundle = $media->model();
+        if (!$bundle instanceof FileBundle) {
+            throw new NotFoundHttpException();
+        }
+
+        // Check permissions
+        $this->authorize('download', $bundle);
+
         // Log bundle download
-        $this->log($request, null, $media);
+        $this->log($request, $bundle, $media);
 
         // Send single file
         return response()->download($media->getPath(), $media->file_name);

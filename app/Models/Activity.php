@@ -44,7 +44,7 @@ class Activity extends SluggableModel implements AttachableInterface
         return self::query()
             ->where('end_date', '>', now())
             ->orderBy('start_date')
-            ->available($user);
+            ->whereAvailable($user);
     }
 
     /**
@@ -345,7 +345,7 @@ class Activity extends SluggableModel implements AttachableInterface
      * @param User $user
      * @return Illuminate\Database\Eloquent\Builder
      */
-    public function scopeAvailable(Builder $query, ?User $user = null): Builder
+    public function scopeWhereAvailable(Builder $query, ?User $user = null): Builder
     {
         $user ??= request()->user();
         \assert($user instanceof User);

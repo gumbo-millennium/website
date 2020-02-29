@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Scopes\DefaultOrderScope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -94,5 +96,35 @@ class FileCategory extends SluggableModel
             'category_id',
             'bundle_id',
         );
+    }
+
+    /**
+     * Hide categories that are empty or only have non-released bundles.
+     * @param Builder $query
+     * @return Builder
+     * @throws InvalidArgumentException
+     */
+    public function scopeWhereAvailable(Builder $query): Builder
+    {
+        // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
+        return $query->whereHas('bundles', static function (Builder $query) {
+            return $query->whereAvailable();
+        });
+    }
+
+    /**
+     * Attach all available scopes
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWithAvailable(Builder $query): Builder
+    {
+        // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
+        return $query->with(['bundles' => static function (HasMany $query) {
+            $query
+                ->whereAvailable()
+                ->orderByDesc('published_at')
+                ->orderBy('title');
+        }]);
     }
 }

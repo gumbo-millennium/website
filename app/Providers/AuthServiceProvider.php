@@ -6,7 +6,7 @@ namespace App\Providers;
 
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\File;
+use App\Models\FileBundle;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
 use App\Models\JoinSubmission;
@@ -17,9 +17,9 @@ use App\Models\Sponsor;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\EnrollmentPolicy;
+use App\Policies\FileBundlePolicy;
 use App\Policies\FileCategoryPolicy;
 use App\Policies\FileDownloadPolicy;
-use App\Policies\FilePolicy;
 use App\Policies\JoinSubmissionPolicy;
 use App\Policies\NewsItemPolicy;
 use App\Policies\PagePolicy;
@@ -43,7 +43,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Activity::class => ActivityPolicy::class,
         Enrollment::class => EnrollmentPolicy::class,
-        File::class => FilePolicy::class,
+        FileBundle::class => FileBundlePolicy::class,
         FileCategory::class => FileCategoryPolicy::class,
         FileDownload::class => FileDownloadPolicy::class,
         JoinSubmission::class => JoinSubmissionPolicy::class,

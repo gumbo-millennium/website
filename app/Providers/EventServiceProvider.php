@@ -6,7 +6,7 @@ namespace App\Providers;
 
 use App\Listeners\AddVerifiedPermission;
 use App\Listeners\CheckConscriboWhenVerified;
-use App\Listeners\RecomputeFileBundleSize;
+use App\Listeners\MediaUploadListener;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\FileBundle;
@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         MediaHasBeenAdded::class => [
-            RecomputeFileBundleSize::class
+            MediaUploadListener::class
         ],
         Registered::class => [
             SendEmailVerificationNotification::class,

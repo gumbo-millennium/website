@@ -179,7 +179,12 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        $bundleTitles = $this->getCategoryModel()->bundles()->available()->take(5)->pluck('title');
+        $bundleTitles = $this
+            ->getCategoryModel()
+            ->bundles()
+            ->whereAvailable()
+            ->take(5)
+            ->pluck('title');
 
         // Get the first 5 bundles of this category
         \assert($bundleTitles instanceof Collection);
@@ -292,14 +297,8 @@ class FileDisplayTest extends TestCase
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
-        // Return first auto-sorted category with file bundles
-        $withBundles = FileCategory::has('bundles')->first();
-        if ($withBundles) {
-            return $withBundles;
-        }
-
-        // Return first auto-sorted category
-        return FileCategory::first();
+        // Return first auto-sorted category with file bundles, or just the first one.
+        return FileCategory::whereAvailable()->first() ?? FileCategory::first();
     }
 
     /**
@@ -317,6 +316,6 @@ class FileDisplayTest extends TestCase
         $this->ensureApplicationExists();
 
         // Return most recent file
-        return $this->getCategoryModel()->bundles()->available()->latest()->firstOrFail();
+        return $this->getCategoryModel()->bundles()->whereAvailable()->latest()->firstOrFail();
     }
 }

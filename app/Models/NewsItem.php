@@ -126,7 +126,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
      * @return Illuminate\Database\Eloquent\Builder
      * @throws InvalidArgumentException
      */
-    public function scopeAvailable(Builder $query): Builder
+    public function scopeWhereAvailable(Builder $query): Builder
     {
         return $query
             ->orderByDesc('published_at')
