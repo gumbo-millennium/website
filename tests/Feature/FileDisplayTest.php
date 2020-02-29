@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\FileBundle;
 use App\Models\FileCategory;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -39,55 +38,7 @@ class FileDisplayTest extends TestCase
     /**
      * @var \App\Models\FileBundle
      */
-    protected static ?FileBundle $file = null;
-
-    /**
-     * Create a file in a new category before the item starts
-     * @return void
-     * @before
-     */
-    public function createFileAndCategoryBefore(): void
-    {
-        // Make sure we have a router
-        $this->ensureApplicationExists();
-
-        // Create test category
-        $name = sprintf('AA test %s', now()->toIso8601String());
-        static::$category = factory(FileCategory::class, 1)
-            ->create(['title' => $name])
-            ->first();
-
-        // Create test bundles in our test category
-        static::$file = factory(FileBundle::class, 5)
-            ->create(['category_id' => static::$category->id])
-            ->first();
-
-        // Reload items, just to be sure
-        static::$category->refresh();
-        static::$file->refresh();
-    }
-
-    /**
-     * Delete the test items after testing
-     * @return void
-     * @after
-     */
-    public function deleteFileAndCategoryAfter(): void
-    {
-        // Skip if missing
-        if (!static::$category || !static::$category->exists) {
-            return;
-        }
-
-        // Ensure an app is available
-        $this->ensureApplicationExists();
-
-        // Delete bundles in category
-        static::$category->bundles()->delete();
-
-        // Delete category too
-        static::$category->delete();
-    }
+    protected static ?FileBundle $bundle = null;
 
     /**
      * Ensures there are some bundles and categories to work with
@@ -179,23 +130,12 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        $bundleTitles = $this
-            ->getCategoryModel()
-            ->bundles()
-            ->whereAvailable()
-            ->take(5)
-            ->pluck('title');
-
-        // Get the first 5 bundles of this category
-        \assert($bundleTitles instanceof Collection);
-
-        // Can't check if there are no titles
-        if (empty($bundleTitles)) {
-            return;
-        }
+        // Get the bundle
+        $bundleTitle = $this->getBundleModel();
+        \assert($bundleTitle instanceof FileBundle);
 
         // Check if we're getting the bundles in the same order we're expecting them.
-        $response->assertSeeTextInOrder($bundleTitles->toArray());
+        $response->assertSeeText($bundleTitle->title);
     }
 
     /**
@@ -275,7 +215,7 @@ class FileDisplayTest extends TestCase
 
             // File bundles
             'bundle' => route('files.show', [
-                'bundle' => $this->getFileBundleModel()
+                'bundle' => $this->getBundleModel()
             ]),
             'bundle-missing' => route('files.show', [
                 'bundle' => sprintf('test-file-%d', time())
@@ -297,25 +237,52 @@ class FileDisplayTest extends TestCase
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
-        // Return first auto-sorted category with file bundles, or just the first one.
-        return FileCategory::whereAvailable()->first() ?? FileCategory::first();
+        // Create a category
+        $data = [];
+        $data['created_at'] = $data['updated_at'] = now()->addWeek();
+        $data['title'] = sprintf(
+            "Category for test on %s.",
+            now()->format('H:i:s.u (T)')
+        );
+        $data['slug'] = Str::slug($data['title']);
+
+        // Create a category
+        return static::$category = factory(FileCategory::class, 1)
+            ->create($data)
+            ->first();
     }
 
     /**
      * Returns most recent file
      * @return FileBundle|null
      */
-    private function getFileBundleModel(): FileBundle
+    private function getBundleModel(): FileBundle
     {
         // Return local file if set
-        if (static::$file && static::$file->exists) {
-            return static::$file;
+        if (static::$bundle && static::$bundle->exists) {
+            return static::$bundle;
         }
 
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
-        // Return most recent file
-        return $this->getCategoryModel()->bundles()->whereAvailable()->latest()->firstOrFail();
+        // Get the category
+        $category = $this->getCategoryModel();
+
+        // Create a bundle
+        $data = [];
+        $data['created_at'] = $data['updated_at'] = now()->addWeek();
+        $data['published_at'] = now()->subWeek();
+        $data['category_id'] = $category->id;
+        $data['title'] = sprintf(
+            "Bundle for test on %s.",
+            now()->format('H:i:s.u (T)')
+        );
+        $data['slug'] = Str::slug($data['title']);
+
+        // Create a bundle
+        return static::$bundle = factory(FileBundle::class, 1)
+            ->create($data)
+            ->first();
     }
 }
