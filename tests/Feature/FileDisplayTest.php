@@ -179,7 +179,7 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        $bundleTitles = $this->getCategoryModel()->bundles()->take(5)->pluck('title');
+        $bundleTitles = $this->getCategoryModel()->bundles()->available()->take(5)->pluck('title');
 
         // Get the first 5 bundles of this category
         \assert($bundleTitles instanceof Collection);
@@ -317,6 +317,6 @@ class FileDisplayTest extends TestCase
         $this->ensureApplicationExists();
 
         // Return most recent file
-        return $this->getCategoryModel()->bundles()->latest()->firstOrFail();
+        return $this->getCategoryModel()->bundles()->available()->latest()->firstOrFail();
     }
 }
