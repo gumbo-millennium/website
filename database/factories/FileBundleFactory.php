@@ -10,7 +10,7 @@ use Illuminate\Http\File;
 
 // Create instance
 $factory->define(FileBundle::class, static fn (Faker $faker) => [
-        'title' => "[test] {$faker->sentence}",
+        'title' => "[test bundle] {$faker->sentence}",
     ]);
 
 // Attach chicken
