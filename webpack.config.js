@@ -27,7 +27,7 @@ const hotFile = path.resolve(publicDir, 'hot')
 // SVGO config (compat with mPDF)
 const imageMinPlugins = !inProduction ? [] : [
   require('imagemin-gifsicle')({}),
-  require('imagemin-mozjpeg')({}),
+  require('imagemin-jpegtran')({}),
   require('imagemin-optipng')({}),
   require('imagemin-svgo')({
     plugins: [
