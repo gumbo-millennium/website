@@ -9,10 +9,12 @@ use App\Listeners\CheckConscriboWhenVerified;
 use App\Listeners\RecomputeFileBundleSize;
 use App\Models\Activity;
 use App\Models\Enrollment;
+use App\Models\FileBundle;
 use App\Models\NewsItem;
 use App\Models\User;
 use App\Observers\ActivityObserver;
 use App\Observers\EnrollmentObserver;
+use App\Observers\FileBundleObserver;
 use App\Observers\NewsItemObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
@@ -51,6 +53,7 @@ class EventServiceProvider extends ServiceProvider
         // Register observers
         Activity::observe(ActivityObserver::class);
         Enrollment::observe(EnrollmentObserver::class);
+        FileBundle::observe(FileBundleObserver::class);
         NewsItem::observe(NewsItemObserver::class);
         User::observe(UserObserver::class);
     }

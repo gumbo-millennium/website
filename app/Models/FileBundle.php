@@ -22,29 +22,6 @@ class FileBundle extends SluggableModel implements HasMedia
     use HasMediaTrait;
 
     /**
-     * Ensure dates are set and a bundle has an owner.
-     * @return void
-     */
-    public static function boot()
-    {
-        // Boot parent
-        parent::boot();
-
-        // Ensure some values
-        self::saving(static function (FileBundle $model) {
-            // Publish now
-            if ($model->published_at === null) {
-                $model->published_at = now();
-            }
-
-            // Assign ID, if possible
-            if ($model->owner_id === null) {
-                $model->owner_id = optional(auth()->user())->id;
-            }
-        });
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected $appends = [
