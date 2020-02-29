@@ -25,7 +25,6 @@ class NewsItem extends SluggableModel implements AttachableInterface
     use HasPaperclip;
     use HasEditorJsContent;
 
-
     /**
      * @inheritDoc
      */

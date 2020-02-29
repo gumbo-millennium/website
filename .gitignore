@@ -121,3 +121,6 @@ storage/debugbar
 
 # Ignore medialibrary temp
 /storage/medialibrary
+
+# Ignore TNTSearch
+/storage/*.index

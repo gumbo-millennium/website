@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
@@ -20,6 +21,7 @@ use Spatie\MediaLibrary\Models\Media;
 class FileBundle extends SluggableModel implements HasMedia
 {
     use HasMediaTrait;
+    use Searchable;
 
     /**
      * {@inheritDoc}
@@ -164,5 +166,14 @@ class FileBundle extends SluggableModel implements HasMedia
     public function getIsAvailableAttribute(): bool
     {
         return $this->published_at === null || $this->published_at < now();
+    }
+
+    /**
+     * Prevent searching non-published files
+     * @return bool
+     */
+    public function shouldBeSearchable()
+    {
+        return $this->is_available;
     }
 }
