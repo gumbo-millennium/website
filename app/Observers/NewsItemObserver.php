@@ -20,14 +20,13 @@ class NewsItemObserver
      */
     public function saving(NewsItem $newsArticle)
     {
+        // Add user if missing
         if ($newsArticle->author_id === null) {
-            return;
-        }
-
-        $user = request()->user();
-        if ($user) {
-            // Update author if available
-            $newsArticle->author_id ??= $user->id;
+            $user = request()->user();
+            if ($user) {
+                // Update author if available
+                $newsArticle->author_id = $user->id;
+            }
         }
 
         // Determine text-only content

@@ -1,7 +1,7 @@
 @extends('layout.main')
 
 @php
-$authorName = optional($item->author)->display_name ?? 'Onbekend';
+$authorName = optional($item->author)->public_name ?? 'Onbekend';
 $isSponsor = !empty($item->sponsor);
 if ($isSponsor) {
     $authorName = $item->sponsor;
