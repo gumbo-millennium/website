@@ -7,7 +7,7 @@ if (empty($description)) {
 }
 
 $properties = [
-    'Auteur' => optional($bundle->user)->public_name ?? 'Onbekend',
+    'Auteur' => optional($bundle->owner)->public_name ?? 'Onbekend',
     'Downloads' => $bundle->downloads_count,
     'Totale grootte' => Str::filesize($bundle->total_size),
     'Aangemaakt op' => $bundle->created_at->isoFormat('D MMM Y, HH:mm (z)'),
