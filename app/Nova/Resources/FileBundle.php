@@ -114,10 +114,9 @@ class FileBundle extends Resource
                 ->hideFromIndex(),
 
             // Files
-            new Panel('Bestanden', [
-                Files::make('Bestanden', 'default')
-                    ->help("Bestand dat de leden downloaden, max {$maxSize} per bestand."),
-                ]),
+            Files::make('Bestanden', 'default')
+                ->help("Bestand dat de leden downloaden, max {$maxSize} per bestand, alleen PDF.")
+                ->singleMediaRules('mimetypes:application/pdf'),
 
             // Read-only metadata
             new Panel('Metadata', [
