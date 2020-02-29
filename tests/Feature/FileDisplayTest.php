@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\File;
+use App\Models\FileBundle;
 use App\Models\FileCategory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -33,12 +34,12 @@ class FileDisplayTest extends TestCase
     /**
      * @var \App\Models\FileCategory
      */
-    protected static $category;
+    protected static ?FileCategory $category = null;
 
     /**
-     * @var \App\Models\File
+     * @var \App\Models\FileBundle
      */
-    protected static $file;
+    protected static ?FileBundle $file = null;
 
     /**
      * Create a file in a new category before the item starts
@@ -56,8 +57,8 @@ class FileDisplayTest extends TestCase
             ->create(['title' => $name])
             ->first();
 
-        // Create test files in our test category
-        static::$file = factory(File::class, 5)
+        // Create test bundles in our test category
+        static::$file = factory(FileBundle::class, 5)
             ->create(['category_id' => static::$category->id])
             ->first();
 
@@ -81,15 +82,15 @@ class FileDisplayTest extends TestCase
         // Ensure an app is available
         $this->ensureApplicationExists();
 
-        // Delete files in category
-        static::$category->files()->delete();
+        // Delete bundles in category
+        static::$category->bundles()->delete();
 
         // Delete category too
         static::$category->delete();
     }
 
     /**
-     * Ensures there are some files and categories to work with
+     * Ensures there are some bundles and categories to work with
      * @return void
      */
     public function seedBefore(): void
@@ -158,7 +159,7 @@ class FileDisplayTest extends TestCase
     }
 
     /**
-     * Test if we're seeing the right files when looking at an existing category.
+     * Test if we're seeing the right bundles when looking at an existing category.
      * @return void
      */
     public function testViewExistingCategory()
@@ -178,17 +179,18 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        $fileTitles = $this->getCategoryModel()->files()->take(5)->pluck('title');
-        // Get the first 5 files of this category
-        \assert($fileTitles instanceof Collection);
+        $bundleTitles = $this->getCategoryModel()->bundles()->take(5)->pluck('title');
+
+        // Get the first 5 bundles of this category
+        \assert($bundleTitles instanceof Collection);
 
         // Can't check if there are no titles
-        if (empty($fileTitles)) {
+        if (empty($bundleTitles)) {
             return;
         }
 
-        // Check if we're getting the files in the same order we're expecting them.
-        $response->assertSeeTextInOrder($fileTitles->toArray());
+        // Check if we're getting the bundles in the same order we're expecting them.
+        $response->assertSeeTextInOrder($bundleTitles->toArray());
     }
 
     /**
@@ -266,12 +268,12 @@ class FileDisplayTest extends TestCase
                 'category' => sprintf('test-category-%d', time())
             ]),
 
-            // Files
-            'file' => route('files.show', [
-                'file' => $this->getFileModel()
+            // File bundles
+            'bundle' => route('files.show', [
+                'bundle' => $this->getFileBundleModel()
             ]),
-            'file-missing' => route('files.show', [
-                'file' => sprintf('test-file-%d', time())
+            'bundle-missing' => route('files.show', [
+                'bundle' => sprintf('test-file-%d', time())
             ]),
         ];
     }
@@ -290,10 +292,10 @@ class FileDisplayTest extends TestCase
         // Make sure we have a database connection
         $this->ensureApplicationExists();
 
-        // Return first auto-sorted category with files
-        $withFiles = FileCategory::has('files')->first();
-        if ($withFiles) {
-            return $withFiles;
+        // Return first auto-sorted category with file bundles
+        $withBundles = FileCategory::has('bundles')->first();
+        if ($withBundles) {
+            return $withBundles;
         }
 
         // Return first auto-sorted category
@@ -302,9 +304,9 @@ class FileDisplayTest extends TestCase
 
     /**
      * Returns most recent file
-     * @return File|null
+     * @return FileBundle|null
      */
-    private function getFileModel(): File
+    private function getFileBundleModel(): FileBundle
     {
         // Return local file if set
         if (static::$file && static::$file->exists) {
@@ -315,6 +317,6 @@ class FileDisplayTest extends TestCase
         $this->ensureApplicationExists();
 
         // Return most recent file
-        return $this->getCategoryModel()->files()->latest()->firstOrFail();
+        return $this->getCategoryModel()->bundles()->latest()->firstOrFail();
     }
 }

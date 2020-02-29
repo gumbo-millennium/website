@@ -118,3 +118,6 @@ storage/debugbar
 
 # Ignore Botman discovery
 /.discovery/
+
+# Ignore medialibrary temp
+/storage/medialibrary

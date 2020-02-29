@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFileDownloadsTable extends Migration
+class DropFileDownloadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFileDownloadsTable extends Migration
      */
     public function up()
     {
-        // no-op
+        Schema::dropIfExists('file_downloads');
     }
 
     /**
@@ -22,6 +22,6 @@ class CreateFileDownloadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('file_downloads');
+        // noop
     }
 }

@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use App\Models\File as FileModel;
+use App\Helpers\Str;
+use App\Models\FileBundle as FileBundleModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipFile;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 
 /**
  * File resource, highly linked.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class File extends Resource
+class FileBundle extends Resource
 {
     /**
      * The model the resource corresponds to.
      * @var string
      */
-    public static $model = FileModel::class;
+    public static $model = FileBundleModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -58,7 +58,7 @@ class File extends Resource
      */
     public static function label()
     {
-        return 'Bestanden';
+        return 'Bundels';
     }
 
     /**
@@ -67,7 +67,7 @@ class File extends Resource
      */
     public static function singularLabel()
     {
-        return 'Bestand';
+        return 'Bundel';
     }
 
     /**
@@ -78,6 +78,11 @@ class File extends Resource
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
+        $maxSize = Cache::remember(
+            'nova.filebundle.maxsize',
+            now()->addDay(),
+            static fn() => Str::filesize(config('medialibrary.max_file_size'))
+        );
         return [
             ID::make()->sortable(),
 
@@ -85,59 +90,42 @@ class File extends Resource
             TextWithSlug::make('Titel', 'title')
                 ->slug('slug')
                 ->rules('required', 'min:4')
-                ->help('Bestandstitel, hoeft geen bestandsnaam te zijn'),
+                ->help('Titel van de bundel'),
             Slug::make('Pad', 'slug')
                 ->nullable(false)
-                ->creationRules('unique:activities,slug')
-                ->updateRules('unique:activities,slug,{{resourceId}}'),
+                ->readonly(fn () => $this->exists)
+                ->creationRules('unique:file_bundles,slug')
+                ->updateRules('unique:file_bundles,slug,{{resourceId}}'),
 
             // Owning category
             BelongsTo::make('Categorie', 'category', FileCategory::class)
-                ->help('Categorie waarin dit bestand thuis hoort')
+                ->help('Categorie waarin deze bundel thuis hoort')
                 ->rules('required'),
 
-            // Add multi selects
-            BelongsTo::make('Geüpload door', 'owner', User::class)
-                ->onlyOnDetail(),
+            // Data
+            Textarea::make('Omschrijving', 'description')
+                ->nullable(),
 
             // Show timestamps
             DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
             DateTime::make('Laatst bewerkt op', 'updated_at')->onlyOnDetail(),
+            DateTime::make('Publicatiedatum', 'published_at')
+                ->help('Datum waarop deze bundel openbaar wordt of is geworden.')
+                ->hideFromIndex(),
 
-            new Panel('Bestandsinformatie', [
-                // Paperclip file
-                PaperclipFile::make('Bestand', 'file')
-                    ->mimes(['pdf'])
-                    ->rules('required', 'mimes:pdf')
-                    ->disableDownload()
-                    ->deletable(false)
-                    ->readonly(fn () => $this->exists && $this->file)
-                    ->help('Bestand dat de leden downloaden'),
+            // Files
+            new Panel('Bestanden', [
+                Files::make('Bestanden', 'default')
+                    ->help("Bestand dat de leden downloaden, max {$maxSize} per bestand."),
+                ]),
 
-                // Thumbnail
-                PaperclipImage::make('Thumbnail', 'thumbnail')
-                    ->onlyOnDetail(),
-            ]),
-
-            new Panel('Instellingen', [
-                Boolean::make('Ingetrokken', 'pulled')
-                    ->help('Markeer dit bestand als niet meer relevant. Leden kunnen het nog wel downloaden.')
-                    ->rules('required_with:replacement'),
-                BelongsTo::make('Vervanging', 'replacement', File::class)
-                    ->help('Indien ingetrokken, vervangt dit bestand het ingetrokken bestand (een nieuwe versie oid)')
-                    ->nullable(),
-            ]),
-
+            // Read-only metadata
             new Panel('Metadata', [
-                // Make extra data
-                Text::make('Inhoud', 'contents')
+                Text::make('Totale bestandsgrootte', fn() => Str::filesize($this->total_size))
                     ->onlyOnDetail(),
-                Number::make('Aantal pagina\'s', 'pages')
-                    ->onlyOnDetail(),
-                Code::make('Overige metadata', 'file_meta')
-                    ->json()
-                    ->onlyOnDetail(),
-            ])
+                Number::make('Aantal downloads', 'downloads_count')
+                    ->onlyOnDetail()
+                ])
         ];
     }
 }

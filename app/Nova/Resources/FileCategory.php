@@ -49,7 +49,7 @@ class FileCategory extends Resource
      */
     public static function label()
     {
-        return 'Bestandscategorieën';
+        return 'Categorieën';
     }
 
     /**
@@ -58,7 +58,7 @@ class FileCategory extends Resource
      */
     public static function singularLabel()
     {
-        return 'Bestandscategorie';
+        return 'Categorie';
     }
 
     /**
@@ -79,27 +79,25 @@ class FileCategory extends Resource
                 ->help('File title, does not need to be a filename'),
             Slug::make('Pad', 'slug')
                 ->nullable(false)
-                ->creationRules('unique:activities,slug')
-                ->updateRules('unique:activities,slug,{{resourceId}}'),
+                ->readonly(fn () => $this->exists)
+                ->creationRules('unique:file_categories,slug')
+                ->updateRules('unique:file_categories,slug,{{resourceId}}'),
 
             // Show timestamps
             DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
             DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
 
             // Paired files
-            HasMany::make('Bestanden', 'files', File::class),
+            HasMany::make('Bundels', 'bundles', FileBundle::class),
 
             new Panel('Statistieken', [
-                // Make extra data
-                Number::make('Aantal bestanden', fn () => $this->files()->count())->exceptOnForms(),
-
                 // List downloads, in time frames
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 Number::make('Aantal downloads (48hrs)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count())->exceptOnForms(),
                 Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
                 // phpcs:enable
                 Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
-            ])
+                ])
         ];
     }
 }

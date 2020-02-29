@@ -1,5 +1,15 @@
 @extends('layout.main')
 
+@php
+$variants = [
+    'bg-blue-200',
+    'bg-green-200',
+    'bg-orange-200',
+    'bg-red-200'
+];
+$getVariant = static fn ($index) => $variants[$index % count($variants)];
+@endphp
+
 @section('content')
 {{-- Header --}}
 <div class="container">
@@ -9,19 +19,32 @@
     </div>
 </div>
 
-<div class="container after-header">
-    <p class="text-lg mb-4">Kies een categorie om verder te gaan</p>
-    <div class="file-categories">
-        @foreach ($categories as $category)
-        <div class="file-categories__category">
-            <div class="file-categories__category-inner">
-                <a class="no-underline" href="{{ route('files.category', compact('category')) }}">
-                    <h3 class="text-2xl font-normal underline">{{ $category->title }}</h3>
-                    <p>{{ $category->files_count }} bestand(en)</p>
-                </a>
-            </div>
+{{-- Categories --}}
+<div class="container">
+    @foreach ($categories as $category)
+    <div class="mb-12">
+        {{-- Get label --}}
+        <a href="{{ route('files.category', compact('category')) }}" class="inline-block p-2 px-4 {{ $getVariant($loop->index) }} no-underline mb-4 rounded-full">{{ $category->title }}</a>
+
+        {{-- Files --}}
+        @foreach ($category->bundles->take(3) as $bundle)
+        <div class="flex flex-row p-4 border-gray-300 hover:shadow hover:border-brand-300 border rounded items-center relative mb-4">
+            {{-- Get title --}}
+            <a href="{{ route('files.show', compact('bundle')) }}" class="flex-grow stretched-link no-underline">
+                {{ $bundle->title }}
+            </a>
+
+            {{-- Get count --}}
+            <p class="p-0 ml-4 text-gray-600 flex-none">{{ $bundle->getMedia()->count() ?? 0 }} bestand(en)</p>
         </div>
         @endforeach
+
+        {{-- Show all link --}}
+        <a href="{{ route('files.category', compact('category')) }}" class="block flex-grow no-underline p-4">
+            Bekijk alle bundels in {{ $category->title }}
+            @icon('chevron-right', 'ml-2')
+        </a>
     </div>
+    @endforeach
 </div>
 @endsection

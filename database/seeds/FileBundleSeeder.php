@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Models\File;
+use App\Models\FileBundle;
 use App\Models\FileCategory;
 use Illuminate\Database\Seeder;
 
-class FileSeeder extends Seeder
+class FileBundleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,7 +21,7 @@ class FileSeeder extends Seeder
         // Create a bunch of files for each category
         foreach ($categories as $category) {
             // Create a bunch of files in this category
-            factory(File::class, random_int(5, 30))->create([
+            factory(FileBundle::class, random_int(5, 30))->create([
                 'category_id' => $category->id
             ]);
         }

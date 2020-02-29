@@ -7,10 +7,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Ramsey\Uuid\Uuid;
+use Spatie\MediaLibrary\Models\Media;
 
 /**
- * An individual file download, logs the file downloaded,
- * the user, the timestamp and the IP from which the user downloaded.
+ * An individual file download, logs the bundle downloaded, the specific file downloaded (if any),
+ * the user, the timestamp, the IP from which the user downloaded and the user agent used.
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -55,8 +56,10 @@ class FileDownload extends Pivot
      */
     public $fillable = [
         'user_id',
-        'file_id',
+        'bundle_id',
+        'media_id',
         'ip',
+        'user_agent'
     ];
 
     /**
@@ -83,11 +86,20 @@ class FileDownload extends Pivot
     }
 
     /**
-     * File the user downloaded
+     * Bundle the media came from downloaded
      * @return BelongsTo
      */
-    public function file(): Relation
+    public function bundle(): Relation
     {
-        return $this->belongsTo(File::class);
+        return $this->belongsTo(FileBundle::class);
+    }
+
+    /**
+     * Media file the user downloaded
+     * @return BelongsTo
+     */
+    public function media(): Relation
+    {
+        return $this->belongsTo(Media::class);
     }
 }

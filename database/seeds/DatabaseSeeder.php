@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
             // Add activities
             $this->call(ActivitySeeder::class);
 
-            // Add a bunch of files
-            $this->call(FileSeeder::class);
+            // Add a bunch of file bundles
+            $this->call(FileBundleSeeder::class);
 
             // Create some news articles
             $this->call(NewsSeeder::class);

@@ -59,7 +59,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
      */
     protected function bindPaperclip(): void
     {
-        // Sizess
+        // Sizes
         $size = (object) [
             'article' => [1440, 960],
             'cover' => [384, 256]

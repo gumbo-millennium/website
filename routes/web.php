@@ -43,10 +43,11 @@ Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->grou
     Route::get('/{category}', 'FileController@category')->name('category');
 
     // Single file view
-    Route::get('/bestand/{file}', 'FileController@show')->name('show');
+    Route::get('/bestand/{bundle}', 'FileController@show')->name('show');
 
-    // Download view
-    Route::get('/download/{file}', 'FileController@download')->name('download');
+    // Download views
+    Route::get('/download/{bundle}', 'FileController@download')->name('download');
+    Route::get('/download-single/{media?}', 'FileController@downloadSingle')->name('download-single');
 });
 
 /**

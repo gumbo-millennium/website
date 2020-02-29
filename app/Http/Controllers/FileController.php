@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
+use App\Helpers\Str;
+use App\Models\FileBundle;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
+use LogicException;
+use Spatie\MediaLibrary\MediaStream;
+use Spatie\MediaLibrary\Models\Media;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -18,10 +24,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class FileController extends Controller
 {
-    /**
-     * Files shown as summary
-     */
-    private const TOP_FILE_LIMIT = 5;
     /**
      * Makes sure the user is allowed to handle files.
      * @return void
@@ -36,10 +38,10 @@ class FileController extends Controller
      * Homepage
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         // Try to only get non-empty categories
-        $categoryQuery = FileCategory::has('files');
+        $categoryQuery = FileCategory::has('bundles');
 
         // Ignore if that's impossible
         if (!(clone $categoryQuery)->exists()) {
@@ -47,24 +49,22 @@ class FileController extends Controller
         }
 
         // Get items
-        $categoryList = $categoryQuery->withCount('files')->orderBy('title')->get();
-
-        // Get a base query
-        $baseQuery = File::query();
-
-        // Get queries for new, popular and random files
-        $baseQuery = File::query()->take(self::TOP_FILE_LIMIT);
-        $queries = collect([
-            'newest' => $baseQuery->latest(),
-            'popular' => $baseQuery->withCount('downloads')->orderBy('downloads_count', 'DESC')->latest(),
-            'random' => $baseQuery->inRandomOrder(),
-        ])->each->get();
+        $categories = $categoryQuery
+            ->with(['bundles' => static function ($query) {
+                $query
+                    ->available()
+                    ->orderByDesc('updated_at')
+                    ->orderBy('title');
+            }])
+            ->withCount('bundles')
+            ->orderByDesc('updated_at')
+            ->orderBy('title')
+            ->get();
 
         // Show view
-        return view('files.index')->with([
-            'categories' => $categoryList,
-            'files' => $queries
-        ]);
+        return response()
+            ->view('files.index', compact('categories'))
+            ->setPrivate();
     }
 
     /**
@@ -75,58 +75,90 @@ class FileController extends Controller
     public function category(FileCategory $category)
     {
         // Get most recent files
-        $files = $category->files()->paginate(20);
+        $bundles = $category->bundles()->available()->paginate(20);
 
         // Render view
-        return view('files.category')->with([
-            'category' => $category,
-            'files' => $files
-        ]);
+        return view('files.category')->with(compact('category', 'bundles'));
     }
 
     /**
      * Returns a single file's detail page
      * @param Request $request
-     * @param File $file
+     * @param FileBundle $bundle
      * @return Response
      */
-    public function show(Request $request, File $file)
+    public function show(FileBundle $bundle)
     {
-        return view('files.show')->with([
-            'file' => $file,
-            'user' => $request->user()
-        ]);
+        if (!$bundle->is_available) {
+            throw new NotFoundHttpException();
+        }
+
+        $bundle->loadMissing('media', 'category');
+        $bundleMedia = $bundle->getMedia();
+        return view('files.show')->with(compact('bundle', 'bundleMedia'));
     }
 
     /**
-     * Provides a download, if the file is public, available on the storage and not broken.
+     * Logs a download
      * @param Request $request
-     * @param File $file
-     * @return Response
+     * @param null|FileBundle $bundle
+     * @param null|Media $media
+     * @return void
+     * @throws LogicException
+     * @throws ConflictingHeadersException
      */
-    public function download(Request $request, File $file)
+    private function log(Request $request, ?FileBundle $bundle, ?Media $media): void
     {
-        $attachment = $file->file;
-        \assert($attachment instanceof AttachmentInterface);
-
-        // Abort if file is missing
-        if (!$attachment || !$attachment->exists()) {
-            throw new NotFoundHttpException();
+        // Fail
+        if (empty($bundle) && empty($media)) {
+            throw new LogicException('Cannot log when neither bundle nor media is present');
         }
 
         // Log download
         FileDownload::create([
             'user_id' => $request->user()->id,
-            'file_id' => $file->id,
-            'ip' => $request->ip()
+            'bundle_id' => $bundle ? $bundle->id : $media->model->id,
+            'media_id' => optional($media)->id,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent()
         ]);
+    }
 
+    /**
+     * Streams a zipfile to the user
+     * @param Request $request
+     * @param FileBundle $bundle
+     * @return MediaStream
+     */
+    public function download(Request $request, FileBundle $bundle): Responsable
+    {
+        // Log bundle download
+        $this->log($request, $bundle, null);
 
-        // Get some calculation properties
-        $disk = $attachment->getStorage();
-        $path = $attachment->path();
+        // Determine a proper filename
+        $filename = Str::ascii($bundle->title, 'nl');
 
-        // Get download
-        return Storage::disk($disk)->download($path, $attachment->originalFilename());
+        // Get all media
+        $media = $bundle->getMedia();
+
+        // Stream a zip to the user
+        return MediaStream::create("{$filename}.zip")->addMedia($media);
+    }
+
+    /**
+     * Returns a single file download
+     * @param Request $request
+     * @param Media $media
+     * @return BinaryFileResponse
+     * @throws InvalidUrlGenerator
+     * @throws InvalidConversion
+     */
+    public function downloadSingle(Request $request, Media $media): BinaryFileResponse
+    {
+        // Log bundle download
+        $this->log($request, null, $media);
+
+        // Send single file
+        return response()->download($media->getPath(), $media->file_name);
     }
 }

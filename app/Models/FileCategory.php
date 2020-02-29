@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Scopes\DefaultOrderScope;
-use App\Traits\HasParent;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A file category, containing files
+ * A file category, containing file bundles
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
 class FileCategory extends SluggableModel
 {
-    use HasParent;
-
     /**
      * Add a check to automatically sort by title if none is set
      */
@@ -56,7 +54,7 @@ class FileCategory extends SluggableModel
 
     // Always auto-load files
     protected $with = [
-        'files'
+        'bundles'
     ];
 
     /**
@@ -78,25 +76,23 @@ class FileCategory extends SluggableModel
      * The files that belong to this category
      * @return HasMany
      */
-    public function files(): Relation
+    public function bundles(): Relation
     {
-        return $this->hasMany(File::class, 'category_id', 'id')
+        return $this->hasMany(FileBundle::class, 'category_id', 'id')
             ->latest();
     }
 
     /**
-     * The files that belong to this category
+     * Returns download counts
      * @return HasManyThrough
      */
-    public function downloads(): Relation
+    public function downloads(): HasManyThrough
     {
         return $this->hasManyThrough(
             FileDownload::class,
-            File::class,
-            'category_id', // Foreign key on files table
-            'file_id', // Foreign key on downloads table
-            'id', // Local key on file_categories table
-            'id' // Local key on files table
+            FileBundle::class,
+            'category_id',
+            'bundle_id',
         );
     }
 }

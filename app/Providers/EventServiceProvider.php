@@ -6,20 +6,20 @@ namespace App\Providers;
 
 use App\Listeners\AddVerifiedPermission;
 use App\Listeners\CheckConscriboWhenVerified;
+use App\Listeners\RecomputeFileBundleSize;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\File;
 use App\Models\NewsItem;
 use App\Models\User;
 use App\Observers\ActivityObserver;
 use App\Observers\EnrollmentObserver;
-use App\Observers\FileObserver;
 use App\Observers\NewsItemObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        MediaHasBeenAdded::class => [
+            RecomputeFileBundleSize::class
+        ],
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
@@ -48,7 +51,6 @@ class EventServiceProvider extends ServiceProvider
         // Register observers
         Activity::observe(ActivityObserver::class);
         Enrollment::observe(EnrollmentObserver::class);
-        File::observe(FileObserver::class);
         NewsItem::observe(NewsItemObserver::class);
         User::observe(UserObserver::class);
     }
