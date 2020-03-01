@@ -107,10 +107,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Boot flash settings
         Flash::levels([
-            'info' => "site-wide-banner__container--info",
-            'error' => "site-wide-banner__container--error",
-            'warning' => "site-wide-banner__container--warning",
-            'success' => "site-wide-banner__container--success",
+            'info' => "notice notice--info",
+            'error' => "notice notice--warning",
+            'warning' => "notice notice--warning",
+            'success' => "notice notice--brand",
         ]);
     }
 }

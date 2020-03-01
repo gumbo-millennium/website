@@ -17,7 +17,7 @@ $postDate = $postTimestamp->isoFormat('D MMMM, Y');
 {{-- Header --}}
 <header class="container container--md">
     {{-- Title --}}
-    <h1 class="text-2xl font-title font-bold mb-6">{{ $item->title }}</h1>
+    <h1 class="text-3xl font-title font-normal mb-6">{{ $item->title }}</h1>
 
     {{-- Author --}}
     <div class="py-4 mb-5 border-gray-200 border-t border-b">

@@ -14,6 +14,7 @@ use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Stripe\Exception\ApiErrorException;

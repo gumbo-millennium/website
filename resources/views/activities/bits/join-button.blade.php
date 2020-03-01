@@ -1,6 +1,7 @@
 @php
 // Enrollment open
 $isOpen = $activity->enrollment_open;
+$isStable = optional($enrollment)->is_stable;
 $places = $activity->available_seats;
 $hasRoom = $places > 0;
 $hasRoomMember = $activity->available_seats > 0;
@@ -9,7 +10,7 @@ $expireText = $expireDate->isoFormat(($expireDate->diffInMonths() > 1) ? 'DD MMM
 $expireIso = $expireDate->toIso8601String();
 
 $nextAction = null;
-if ($user && $is_enrolled && !$is_stable) {
+if ($user && $is_enrolled && !$isStable) {
     $nextAction = 'Inschrijving afronden';
     $nextState = $enrollment->wanted_state;
     if ($nextState instanceof App\Models\States\Enrollment\Seeded) {
@@ -27,9 +28,10 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
 }
 @endphp
 
+<div class="flex flex-row mb-4">
 <div class="flex flex-col items-center">
     {{-- Stable --}}
-    @if ($user && $is_enrolled && $is_stable)
+    @if ($user && $is_enrolled && $isStable)
     <div class="btn m-0 btn--disabled" disabled>Ingeschreven</div>
     @if ($isOpen && $user->can('unenroll', $enrollment))
     <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
@@ -37,7 +39,7 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
 
     {{-- Instable --}}
     @elseif ($user && $is_enrolled)
-    <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a>
+    <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a><br />
     <p class="text-gray-700 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
     <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
 
@@ -62,4 +64,6 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     <div class="mt-2 text-gray-500">{{ $whenOpen }}</div>
     @endif
     @endif
+</div>
+<div class="hidden lg:block flex-grow"></div>
 </div>

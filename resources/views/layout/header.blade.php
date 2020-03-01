@@ -92,11 +92,9 @@
 
 {{-- Flashed messages --}}
 @if (flash()->message)
-<div class="site-wide-banner" role="alert">
-    <div class="site-wide-banner__wrapper">
-        <div class="site-wide-banner__container container {{ flash()->class }}">
-            <p>{{ flash()->message }}</p>
-        </div>
+<div class="container mt-2" role="alert">
+    <div class="notice {{ flash()->class }}">
+        <p>{{ flash()->message }}</p>
     </div>
 </div>
 @endif

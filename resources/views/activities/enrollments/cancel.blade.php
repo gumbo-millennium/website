@@ -1,59 +1,44 @@
-@extends('layout.main')
+@extends('layout.variants.two-col')
 
-@section('title', "Uitschrijven - {{ $activity->name }} - Gumbo Millennium")
+@section('title', "Uitschrijven - {$activity->name} - Gumbo Millennium")
 
-@section('content')
-<div class="header">
-    <div class="container header__container activity-header">
-        <h1 class="header__title header__title--single">Uitschrijven voor {{ $activity->name }}</h1>
-    </div>
-    <div class="header__floating" role="presentation">
-        {{ Str::ascii($activity->name) }}
-    </div>
+{{-- Set sidebar --}}
+@section('two-col.right')
+@component('activities.bits.sidebar', compact('activity'))
+    @slot('showTagline', false)
+    @slot('showMeta', true)
+@endcomponent
+@endsection
+
+{{-- Set main --}}
+@section('two-col.left')
+<h1 class="text-3xl font-title mb-4">Inschrijving annuleren</h1>
+
+<div class="leading-loose mb-4">
+    <p>
+        Indien je wil, kan je je via onderstaande knop uitschrijven voor {{ $activity->title }}.
+    </p>
+    @if ($activity->available_seats > 0 && $activity->available_seats < 5)
+        <p>
+            Deze activiteit is <em>bijna</em> uitverkocht. Door je uit te schrijven voor deze activiteit
+            komt je plek onmiddelijk vrij. Het kan zijn dat je hierdoor zelf niet meer opnieuw kan inschrijven.
+        </p>
+    @endif
 </div>
-<div class="container">
-    <div class="activity-summary">
-        @include('activities.bits.small-header')
-    </div>
-</div>
 
-<div class="container container-md">
+<div class="leading-loose">
+    <p>Klik hieronder om je uit te schrijven.</p>
 
 </div>
-        <div class="activity-summary__card">
-            <h1 class="">Uitschrijven voor
-        </div>
-    </div>
-
-    <div class="my-8 px-12 leading-relaxed content">
-        {!! $activity->description_html !!}
-    </div>
-
-</div>
-</div>
-<div class="container container--md">
-<h1>{{ $activity->name }} - Annuleren</h1>
-
-<p>Klik hieronder om je uit te schrijven voor {{ $activity->title }}.</p>
-
-@if ($enrollment->state->name === 'Paid')
-<p class="py-2 px-4 text-blue-800">Het geld wordt binnen 3 werkdagen automatisch teruggestort op je bankrekening.
-@endif
 
 <form action="{{ route('enroll.remove', compact('activity')) }}" method="post">
-@method('DELETE')
-@csrf
+    @method('DELETE')
+    @csrf
+    <input type="hidden" name="accept" value="1">
 
-@if ($enrollment->state->name === 'Paid')
-<div class="my-2 p-4 flex flex-row items-center">
-    <input type="checkbox" name="accept" id="accept" required>
-    <label for="accept" class="px-2">Ik ga akkoord dat ik, na uitschrijving, mij <strong>niet meer via de website kan inschrijven</strong>.</label>
-</div>
-@else
-<input type="hidden" name="accept" value="1">
-@endif
-
-<input type="submit" value="Uitschrijven" class="cursor-pointer rounded px-4 py-2 text-white bg-red-800 shadow">
+    <div class="flex flex-col items-stretch lg:flex-row lg:items-center lg:justify-end">
+        <a href="{{ route('activity.show', compact('activity')) }}" class="btn btn--link md:mr-4">Annuleren</a>
+        <input type="submit" value="Uitschrijven" class="btn btn--danger">
+    </div>
 </form>
-</div>
 @endsection
