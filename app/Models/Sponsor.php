@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Traits\HasPaperclip;
-use Czim\Paperclip\Config\Steps\ResizeStep;
-use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,6 +22,7 @@ class Sponsor extends Model implements AttachableInterface
 {
     use PaperclipTrait;
     use HasPaperclip;
+    use HasSimplePaperclippedMedia;
 
     /**
      * The Sponsors default attributes.
@@ -89,23 +89,9 @@ class Sponsor extends Model implements AttachableInterface
      */
     protected function bindPaperclip(): void
     {
-        // Max sizes
-        $bannerWidth = 1280 / 12 * 8;
-        $bannerHeight = 120;
-
-        // The actual screenshots
-        $this->hasAttachedFile('image', [
-            'variants' => [
-                // Make banner-sized image
-                Variant::make('banner')->steps([
-                    ResizeStep::make()->width($bannerWidth)->height($bannerHeight)
-                ])->extension('png'),
-
-                // Make banner-sized image at hdpi scale
-                Variant::make('banner@2x')->steps([
-                    ResizeStep::make()->width($bannerWidth * 2)->height($bannerHeight * 2)
-                ])->extension('png'),
-            ]
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'banner' => [1280 / 12 * 8, 120, false]
         ]);
     }
 }

@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
+use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Traits\HasPaperclip;
-use Czim\Paperclip\Config\Steps\ResizeStep;
-use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +23,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     use PaperclipTrait;
     use HasPaperclip;
     use HasEditorJsContent;
+    use HasSimplePaperclippedMedia;
 
     /**
      * @inheritDoc
@@ -59,31 +59,9 @@ class NewsItem extends SluggableModel implements AttachableInterface
     protected function bindPaperclip(): void
     {
         // Sizes
-        $size = (object) [
-            'article' => [1440, 960],
-            'cover' => [384, 256]
-        ];
-
-        // The actual screenshots
-        $this->hasAttachedFile('image', [
-            'storage' => 'paperclip-public',
-            'variants' => [
-                // Article
-                Variant::make('article')->steps(
-                    ResizeStep::make()->width($size->article[0])->height($size->article[1])
-                ),
-                Variant::make('article-2x')->steps(
-                    ResizeStep::make()->width($size->article[0] * 2)->height($size->article[1] * 2)
-                ),
-
-                // Covers
-                Variant::make('cover')->steps([
-                    ResizeStep::make()->width($size->cover[0])->height($size->cover[1])
-                ]),
-                Variant::make('cover-2x')->steps([
-                    ResizeStep::make()->width($size->cover[0] * 2)->height($size->cover[1] * 2)
-                ]),
-            ]
+        $this->createSimplePaperclip('image', [
+            'article' => [1440, 960, false],
+            'cover' => [384, 256, false]
         ]);
     }
 

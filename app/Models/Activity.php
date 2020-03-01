@@ -7,9 +7,8 @@ namespace App\Models;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\Traits\HasEditorJsContent;
+use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Traits\HasPaperclip;
-use Czim\Paperclip\Config\Steps\ResizeStep;
-use Czim\Paperclip\Config\Variant;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,6 +28,7 @@ class Activity extends SluggableModel implements AttachableInterface
     use HasPaperclip;
     use HasEditorJsContent;
     use HasFlexible;
+    use HasSimplePaperclippedMedia;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
@@ -390,54 +390,11 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     protected function bindPaperclip(): void
     {
-        // Max sizes
-        $bannerWidth = max(
-            640, // Landscape phones
-            768 / 12 * 6, // tables
-            1024 / 12 * 4, // small laptops
-            1280 / 12 * 4, // hd laptops
-        );
-
-        $poster = (object) [
-            'width' => 192,
-            'height' => 256
-        ];
-
-        // Banner width:height is 2:1
-        $bannerHeight = $bannerWidth / 2;
-
-        $coverWidth = 1920; // Full HD width
-        $coverHeight = 33 * 16; // 33rem
-
-        // The actual screenshots
-        $this->hasAttachedFile('image', [
-            'storage' => 'paperclip-public',
-            'variants' => [
-                Variant::make('poster-small')->steps([
-                    ResizeStep::make()->width($poster->width / 2)->height($poster->height / 2)
-                ]),
-                Variant::make('poster')->steps([
-                    ResizeStep::make()->width($poster->width)->height($poster->height)
-                ]),
-                Variant::make('poster-large')->steps([
-                    ResizeStep::make()->width($poster->width * 2)->height($poster->height * 2)
-                ]),
-                // Make banner-sized image (HD and HDPI)
-                Variant::make('banner')->steps([
-                    ResizeStep::make()->width($bannerWidth)->height($bannerHeight)->crop()
-                ])->extension('jpg'),
-                Variant::make('banner@2x')->steps([
-                    ResizeStep::make()->width($bannerWidth * 2)->height($bannerHeight * 2)->crop()
-                ])->extension('jpg'),
-
-                // Make activity cover image (HD and HDPI)
-                Variant::make('cover')->steps([
-                    ResizeStep::make()->width($coverWidth)->height($coverHeight)->crop()
-                ])->extension('jpg'),
-                Variant::make('cover@2x')->steps([
-                    ResizeStep::make()->width($coverWidth * 2)->height($coverHeight * 2)->crop()
-                ])->extension('jpg'),
-            ]
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'article' => [1440, 960, false],
+            'cover' => [384, 256, true],
+            'poster' => [192, 256, false]
         ]);
     }
 }
