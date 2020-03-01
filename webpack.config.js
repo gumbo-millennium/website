@@ -279,6 +279,13 @@ module.exports = {
         open: 'external',
         port: 3000,
         proxy: 'http://localhost:3100/',
+        middleware: [
+          // Add X-Forwarded-Host, for the hot replacement of paths
+          function (req, res, next) {
+            req.headers['X-Forwarded-Host'] = req.headers.host
+            next()
+          }
+        ],
         callbacks: {
           // eslint-disable-next-line handle-callback-err
           ready: function (err, bs) {
