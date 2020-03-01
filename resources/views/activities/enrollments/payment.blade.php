@@ -52,7 +52,7 @@
 
 <div class="leading-loose">
     <p class="mb-4">
-        Om je inschrijving voor {{ $activity->title }} af te ronden, dien je het inschrijftarief van {{ Str::price( $enrollment->total_price ) }} te betalen.
+        Om je inschrijving voor {{ $activity->name }} af te ronden, dien je het inschrijftarief van {{ Str::price( $enrollment->total_price ) }} te betalen.
     </p>
     <p>
         Al onze betalingen lopen via iDEAL. Wil je niet betalen via iDEAL of wil je een betalingsregeling treffen, neem dan contact op met het bestuur.

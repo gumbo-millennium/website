@@ -16,7 +16,7 @@
 
 <div class="leading-loose mb-4">
     <p>
-        Indien je wil, kan je je via onderstaande knop uitschrijven voor {{ $activity->title }}.
+        Indien je wil, kan je je via onderstaande knop uitschrijven voor {{ $activity->name }}.
     </p>
     @if ($activity->available_seats > 0 && $activity->available_seats < 5)
         <p>
