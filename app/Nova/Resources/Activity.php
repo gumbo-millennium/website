@@ -203,7 +203,7 @@ class Activity extends Resource
             Text::make('Weergavenaam locatie', 'location')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,64')
-                ->help('Weergavenaam van de activiteit'),
+                ->help('Weergavenaam van de locatie.'),
 
             Text::make('Adres locatie', 'location_address')
                 ->hideFromIndex()

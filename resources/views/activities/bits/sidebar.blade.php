@@ -1,4 +1,6 @@
 @php
+use Illuminate\Support\HtmlString;
+
 // User flags
 $isMember = $user && $user->is_member;
 
@@ -88,8 +90,20 @@ if ($hasAnyDiscount) {
     ];
 }
 
+// Prep location
+$location = new HtmlString('<span class="text-gray-600">Onbekend</span>');
+if (!empty($activity->location) && !empty($activity->location_url)) {
+    $location = new HtmlString(sprintf(
+        '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
+        e($activity->location_url),
+        e($activity->location)
+    ));
+} elseif (!empty($activity->location)) {
+    $location = $activity->location;
+}
+
 // Bundle properties
-$properties = array_merge($baseProperties, $dateData, $priceData);
+$properties = array_merge($baseProperties, $dateData, $priceData, ['Locatie' => $location]);
 
 // Tagline
 $tagline = $activity->tagline ?? vsprintf('Op %s, van %s tot %s.', [
