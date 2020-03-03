@@ -24,5 +24,9 @@ class FileBundleObserver
         if ($bundle->owner_id === null) {
             $bundle->owner_id = optional(request()->user())->id;
         }
+
+        // Update sizes
+        $size = $bundle->getMedia()->sum('size');
+        $bundle->total_size = $size;
     }
 }

@@ -27,21 +27,5 @@ class MediaUploadListener
 
         // Dispatch file indexes
         IndexFileContents::dispatch($media);
-
-        // Update file size
-        $this->updateFileSize($model);
-    }
-
-    /**
-     * Recomputes total bundle size
-     * @param FileBundle $bundle
-     * @return void
-     */
-    private function updateFileSize(FileBundle $bundle)
-    {
-        // Recompute size
-        $size = $bundle->getMedia()->sum('size');
-        $bundle->total_size = $size;
-        $bundle->save();
     }
 }
