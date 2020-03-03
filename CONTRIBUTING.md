@@ -4,8 +4,8 @@ The following guide quickly describes how to get started with the project.
 
 ## Required programs
 
-- **PHP 7.3 or newer** - [Website][site-php] - We use the new [flexible
-  Heredoc][heredoc] on some occasions, which doesn't work in PHP 7.2.
+- **PHP 7.4 or newer** - [Website][site-php] - We use the new [flexible
+  Heredoc][heredoc] and arrow functions on some occasions, which doesn't work in PHP <7.3.
 - **NodeJS** - [Website][site-nodejs] - We use Webpack for linting, compiling
   and optimizing the code, which runs in NodeJS
 - **Yarn** - [Website][site-yarn] - Yarn has a significant speed gain on npm,
