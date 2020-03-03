@@ -47,7 +47,7 @@ class PermissionPolicy
      */
     public function create(User $user)
     {
-        return $user->can('manage', Permission::class);
+        return false;
     }
 
     /**
@@ -58,7 +58,7 @@ class PermissionPolicy
      */
     public function update(User $user, Permission $permission)
     {
-        return $user->can('manage', $permission);
+        return false;
     }
 
     /**
@@ -69,7 +69,7 @@ class PermissionPolicy
      */
     public function delete(User $user, Permission $permission)
     {
-        return $user->can('manage', $permission);
+        return false;
     }
 
     /**
@@ -80,7 +80,7 @@ class PermissionPolicy
      */
     public function restore(User $user, Permission $permission)
     {
-        return $user->can('manage', $permission);
+        return false;
     }
 
     /**
@@ -91,7 +91,7 @@ class PermissionPolicy
      */
     public function forceDelete(User $user, Permission $permission)
     {
-        return $user->can('manage', $permission);
+        return false;
     }
 
     /**

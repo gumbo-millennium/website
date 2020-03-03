@@ -38,7 +38,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return $user->can('manage', $role);
+        return $user->can('admin', $role);
     }
 
     /**
@@ -117,7 +117,7 @@ class RolePolicy
      */
     public function attachUser(User $user, Role $role, User $model)
     {
-        return $user->can('manage', $role);
+        return $user->can('admin', $role);
     }
 
     /**
@@ -130,24 +130,7 @@ class RolePolicy
      */
     public function detachUser(User $user, Role $role, User $model)
     {
-        return $user->can('manage', $role);
-    }
-
-    /**
-     * Can the given user manage roles
-     * @param User $user
-     * @param Role|null $role Role that's being managed
-     * @return bool
-     */
-    public function manage(User $user, ?Role $role = null): bool
-    {
-        // allow admins
-        if ($user->can('admin', Role::class)) {
-            return true;
-        }
-
-        return $user->hasPermissionTo(self::USER_PERMISSION)
-            && ($role === null || $user->hasRole($role));
+        return $user->can('admin', $role);
     }
 
     /**
