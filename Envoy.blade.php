@@ -2,7 +2,7 @@
     // Check required variables
     $required = [
         'remote' => 'clone URL',
-        'env' => 'environment',
+        'branch' => 'branch',
         'hash' => 'hash'
     ];
 
@@ -12,9 +12,12 @@
         }
     }
 
-    if (!in_array($env, ['staging', 'production'])) {
-        throw new Exception("Cannot deploy to environment, since it's invalid");
+    if (!in_array($branch, ['master', 'develop'])) {
+        throw new Exception("Cannot deploy for this branch, since it's not whitelisted");
     }
+
+    // Set env from branch
+    $env = $branch === 'master' ? 'production' : 'staging';
 
     // Settings
     $logFormat = '%h %s (%cr, %cn)'; // see `man git log`
