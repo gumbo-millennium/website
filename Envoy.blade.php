@@ -2,19 +2,27 @@
     // Check required variables
     $required = [
         'remote' => 'clone URL',
-        'env' => 'environment',
+        'branch' => 'branch',
         'hash' => 'hash'
     ];
 
+    // Check required vars
     foreach ($required as $var => $label) {
         if (empty($$var)) {
             throw new Exception("The $label has not been set. Set it using --$var=[value]");
         }
     }
 
-    if (!in_array($env, ['staging', 'production'])) {
-        throw new Exception("Cannot deploy to environment, since it's invalid");
+    // Get branch name
+    $branch = array_pop(explode('/', $branch));
+
+    // Check branch name
+    if (!in_array($branch, ['master', 'develop'])) {
+        throw new Exception("Cannot deploy for branch [{$branch}], since it's not whitelisted");
     }
+
+    // Set env from branch
+    $env = $branch === 'master' ? 'production' : 'staging';
 
     // Settings
     $logFormat = '%h %s (%cr, %cn)'; // see `man git log`

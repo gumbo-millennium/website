@@ -170,6 +170,6 @@ jobs:
           export GUMBO_GIT_REMOTE="$(git remote get-url origin)"
           export GUMBO_GIT_SHA="$(git log -1 --format='%H')"
           envoy run deploy \
-            --env=staging \
+            --branch=${GITHUB_REF} \
             --remote=${GUMBO_GIT_REMOTE} \
             --hash=${GUMBO_GIT_SHA}
