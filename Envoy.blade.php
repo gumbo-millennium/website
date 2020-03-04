@@ -13,7 +13,7 @@
     }
 
     if (!in_array($branch, ['master', 'develop'])) {
-        throw new Exception("Cannot deploy for this branch, since it's not whitelisted");
+        throw new Exception("Cannot deploy for branch [{$branch}], since it's not whitelisted");
     }
 
     // Set env from branch
