@@ -1,76 +1,116 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
+use App\Contracts\ConscriboServiceContract;
+use App\Contracts\StripeServiceContract;
+use App\Services\ConscriboService;
+use App\Services\StripeService;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\View;
-use App\Services\MenuProvider;
-use GuzzleHttp\Client;
+use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
-use App\Models\File;
-use App\Observers\FileObserver;
-use App\Models\User;
-use App\Observers\UserObserver;
+use Spatie\Flash\Flash;
+use Stripe\Stripe as StripeClient;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * Singleton bindings
+     * @var array<string>
+     */
+    public $singletons = [
+        // Stripe service
+        StripeServiceContract::class => StripeService::class
+    ];
+
+    /**
      * Bootstrap any application services.
-     *
      * @return void
      */
     public function boot()
     {
-        // Register nav menu as $menu on all requests
-        $this->app->singleton(MenuProvider::class, function () {
-            return new MenuProvider();
-        });
+        // Bind Guzzle client
+        $this->app->bind(GuzzleClient::class, static fn () => new GuzzleClient(config('gumbo.guzzle-config', [])));
 
         // Handle Horizon auth
-        Horizon::auth(function ($request) {
-            return $request->user() !== null && $request->user()->hasPermissionTo('devops');
-        });
-
-        // Handle File and User changes
-        File::observe(FileObserver::class);
-        User::observe(UserObserver::class);
-
-        // Create method to render SVG icons
-        Blade::directive('icon', function ($icon, $className) {
-            return (
-                "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" aria-hidden=\"true\" class=\"{$className}\">" .
-                "<use xlink:href=\"<?php echo asset(\"{$icon}\"); ?>\" />" .
-                "</svg>"
-            );
-        });
+        Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
     }
 
     /**
      * Register any application services.
-     *
      * @return void
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function register()
     {
-        // Register Guzzle client (singleton)
-        $this->app->singleton(Client::class, function () {
+        // Configure Stripe service
+        if ($apiKey = config('stripe.private_key')) {
+            // Set key
+            StripeClient::setApiKey($apiKey);
 
-            // Publish our name, some version info and how to contact us.
-            $userAgent = sprintf(
-                'gumbo-millennium.nl/1.0 (incompatible; curl/%s; php/%s; https://www.gumbo-millennium.nl);',
-                curl_version()['version'],
-                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION
-            );
+            // Retry API calls, a bunch of times
+            StripeClient::setMaxNetworkRetries(5);
 
-            // The client should send a user agent that allows sysadmins to contact us,
-            // aside from that we should be snappy with declining the connection and not
-            // throw exceptions on response codes ≥ 400.
-            return new Client([
-                'http_errors' => false,
-                'connect_timeout' => 0.50,
-                'headers' => ["User-Agent: {$userAgent}"]
+            // Allow Telemetry (only includes response times)
+            StripeClient::setEnableTelemetry(true);
+        }
+
+        // Conscribo API
+        $this->app->singleton(ConscriboServiceContract::class, static function ($app) {
+            // make service
+            $service = $app->make(ConscriboService::class, [
+                'account' => $app->get('config')->get('services.conscribo.account-name'),
+                'username' => $app->get('config')->get('services.conscribo.username'),
+                'password' => $app->get('config')->get('services.conscribo.passphrase')
+            ]);
+
+            // authenticate
+            $service->authorise();
+
+            // return
+            return $service;
+        });
+
+        // Add Paperclip macro to the database helper
+        Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
+            $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
+            $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
+            $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
+            $this->timestamp("{$name}_updated_at")->comment("{$name} update timestamp")->nullable();
+
+            if ($variants !== false) {
+                $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
+            }
+        });
+
+        // Add Paperclip drop macro to database
+        Blueprint::macro('dropPaperclip', function (string $name, ?bool $variants = null) {
+            $this->dropColumn(array_filter([
+                "{$name}_file_name",
+                "{$name}_file_size",
+                "{$name}_content_type",
+                "{$name}_updated_at",
+                $variants !== false ? "{$name}_variants" : null
+            ]));
+        });
+
+        // Provide User for all views
+        view()->composer('*', static function (View $view) {
+            $view->with([
+                'user' => request()->user()
             ]);
         });
+
+        // Boot flash settings
+        Flash::levels([
+            'info' => "notice notice--info",
+            'error' => "notice notice--warning",
+            'warning' => "notice notice--warning",
+            'success' => "notice notice--brand",
+        ]);
     }
 }

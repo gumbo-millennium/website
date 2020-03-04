@@ -1,6 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Horizon Domain
+    |--------------------------------------------------------------------------
+    |
+    | This is the subdomain where Horizon will be accessible from. If this
+    | setting is null, Horizon will reside under the same domain as the
+    | application. Otherwise, this value will serve as the subdomain.
+    |
+    */
+
+    'domain' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Horizon Path
+    |--------------------------------------------------------------------------
+    |
+    | This is the URI path where Horizon will be accessible from. Feel free
+    | to change this path to anything you like. Note that the URI will not
+    | affect the paths of its internal API that aren't exposed to users.
+    |
+    */
+
+    'path' => 'admin/horizon',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,6 +58,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Horizon Route Middleware
+    |--------------------------------------------------------------------------
+    |
+    | These middleware will get attached onto each Horizon route, giving you
+    | the chance to add your own middleware to this list or change any of
+    | the existing middleware. Or, you can simply stick with this list.
+    |
+    */
+
+    'middleware' => ['web'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Queue Wait Time Thresholds
     |--------------------------------------------------------------------------
     |
@@ -56,7 +97,9 @@ return [
 
     'trim' => [
         'recent' => 60,
+        'recent_failed' => 10080,
         'failed' => 10080,
+        'monitored' => 10080,
     ],
 
     /*
@@ -76,6 +119,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Memory Limit (MB)
+    |--------------------------------------------------------------------------
+    |
+    | This value describes the maximum amount of memory the Horizon worker
+    | may consume before it is terminated and restarted. You should set
+    | this value according to the resources available to your server.
+    |
+    */
+
+    'memory_limit' => 64,
+
+    /*
+    |--------------------------------------------------------------------------
     | Queue Worker Configuration
     |--------------------------------------------------------------------------
     |
@@ -87,26 +143,10 @@ return [
 
     'environments' => [
         'production' => [
-            'alpha-centauri' => [
+            'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => [
-                    'default',
-                    'files',
-                ],
-                'balance' => 'auto',
-                'processes' => 10,
-                'tries' => 3,
-            ],
-        ],
-
-        'staging' => [
-            'alpha-centauri' => [
-                'connection' => 'redis',
-                'queue' => [
-                    'default',
-                    'files',
-                ],
-                'balance' => 'auto',
+                'queue' => ['default'],
+                'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 3,
             ],
@@ -115,10 +155,7 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => [
-                    'default',
-                    'files',
-                ],
+                'queue' => ['default'],
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 3,

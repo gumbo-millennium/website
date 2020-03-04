@@ -1,0 +1,51 @@
+/* Any form rendered by the form builder */
+
+.form {
+  @apply flex flex-col items-stretch my-8;
+}
+
+.form__field {
+  @apply flex flex-col mb-4;
+}
+
+.form__field--checkbox {
+  @apply flex flex-row items-start;
+}
+
+.form__field-label {
+  @apply mb-2 py-2 px-0;
+}
+
+.form__field-input {
+  @apply mb-0 w-full;
+}
+
+.form__field-input--checkbox {
+  @apply m-2;
+  @apply h-6 w-6;
+  @apply text-brand-700;
+}
+
+.form__field-error {
+  @apply mt-2 text-red-700 text-sm;
+}
+
+.form__field-error strong {
+  @apply font-normal;
+
+  /* Hide strong effect on error */
+}
+.form__field-help {
+  @apply mt-2 text-gray-700 text-sm;
+}
+
+/**
+<div class="form__field">
+  <label for="insert" class="form__field-label">Tussenvoegsel</label>
+  <input class="form__field-input" autocomplete="additional-name" minlength="2" name="insert" type="text" id="insert">
+  <p class="form__field-help">
+    Kies een optionele nickname die wordt getoond in plaats van je voornaam.<br>
+    Je kan gebruik maken van kleine letters en nummers, en eventueel streepjes in het midden.
+  </p>
+</div>
+*/

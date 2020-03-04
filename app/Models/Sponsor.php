@@ -4,20 +4,28 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\HasSimplePaperclippedMedia;
+use App\Traits\HasPaperclip;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Gumbo Millennium sponsors
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @property-read AttachmentInterface $logo
+ * @property-read AttachmentInterface $image
  */
-class Sponsor extends SluggableModel
+class Sponsor extends Model implements AttachableInterface
 {
+    use PaperclipTrait;
+    use HasPaperclip;
+    use HasSimplePaperclippedMedia;
+
     /**
      * The Sponsors default attributes.
-     *
      * @var array
      */
     protected $attributes = [
@@ -30,7 +38,6 @@ class Sponsor extends SluggableModel
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -45,56 +52,46 @@ class Sponsor extends SluggableModel
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
         'classic' => 'bool',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
+        'view_count' => 'int',
+        'click_count' => 'int'
     ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'deleted_at'
-    ];
-
-    /**
-     * Generate the slug based on the display_title property
-     *
-     * @return array
-     */
-    public function sluggable() : array
-    {
-        return [
-            'slug' => [
-                'source' => 'display_title',
-                'unique' => true,
-                'onUpdate' => true,
-                'reserved' => ['add']
-            ]
-        ];
-    }
 
     /**
      * Returns sponsors that are available right now
-     *
      * @param Builder $builder
      * @return Builder
      */
-    public function scopeAvailable(Builder $builder) : Builder
+    public function scopeWhereAvailable(Builder $builder): Builder
     {
         return $builder
-            ->whereNotNull('image_url')
-            ->where(function ($query) {
+            ->whereNotNull('image_file_name')
+            ->where(static function ($query) {
                 $query->where('starts_at', '>=', now())
                     ->orWhereNull('starts_at');
             })
-            ->where(function ($query) {
+            ->where(static function ($query) {
                 $query->where('ends_at', '<', now())
                     ->orWhereNull('ends_at');
             });
+    }
+
+    /**
+     * Binds paperclip files
+     * @return void
+     */
+    protected function bindPaperclip(): void
+    {
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'banner' => [1280 / 12 * 8, 120, false]
+        ]);
     }
 }

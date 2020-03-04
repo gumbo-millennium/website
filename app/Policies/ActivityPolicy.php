@@ -1,83 +1,225 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
+use App\Models\Activity;
 use App\Models\User;
-use App\Activity;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Permission policy of the Activity model
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ActivityPolicy
 {
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
+
+    public const ADMIN_PERMISSION = 'activity-admin';
+    public const PURGE_PERMISSION = 'activity-purge';
+
+    /**
+     * Returns if the user is the owner of the given activity.
+     * @param User $user
+     * @param Activity $activity
+     * @return bool
+     */
+    private static function isOwner(User $user, Activity $activity): bool
+    {
+        return $activity->role && $user->hasRole($activity->role);
+    }
+
+    /**
+     * Returns if the user is the owner of any activity.
+     * @param User $user
+     * @return bool
+     */
+    private static function isAnyOwner(User $user): bool
+    {
+        return $user->getHostedActivityQuery(Activity::query())->exists();
+    }
+
+    /**
+     * Determine whether the user can view any activities.
+     * @param  User  $user
+     * @return bool
+     */
+    public function viewAny(User $user): bool
+    {
+        // Anyone can view activities
+        return $user->can('manage', Activity::class);
+    }
 
     /**
      * Determine whether the user can view the activity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Activity  $activity
-     * @return mixed
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function view(User $user, Activity $activity)
+    public function view(?User $user, Activity $activity): bool
     {
-        //
+        // Anyone can see activities
+        return $activity->is_public || ($user && $user->is_member);
+    }
+
+    /**
+     * Can this user enroll
+     * @param User $user
+     * @param Activity $activity
+     * @return bool
+     */
+    public function enroll(User $user, Activity $activity): bool
+    {
+        // Non-public activities cannot be enrolled by guests
+        if (!$user->is_member && !$activity->is_public) {
+            return false;
+        }
+
+        // Cannot enroll when there is no more room
+        if ($activity->available_seats <= 0) {
+            return false;
+        }
+
+        // Allow
+        return true;
     }
 
     /**
      * Determine whether the user can create activities.
-     *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
-        //
+        // Check creation
+        return $user->can('admin', Activity::class);
     }
 
     /**
      * Determine whether the user can update the activity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Activity  $activity
-     * @return mixed
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
      */
-    public function update(User $user, Activity $activity)
+    public function update(User $user, Activity $activity): bool
     {
-        //
+        // Can't edit activities that have ended
+        if ($activity->end_date < now()) {
+            return false;
+        }
+
+        // Check update
+        return $user->can('manage', $activity);
     }
 
     /**
      * Determine whether the user can delete the activity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Activity  $activity
-     * @return mixed
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
      */
-    public function delete(User $user, Activity $activity)
+    public function cancel(User $user, Activity $activity): bool
     {
-        //
+        // Can't cancel activities that have already started
+        if ($activity->start_date < now()) {
+            return false;
+        }
+
+        // Identical to update
+        return $user->can('manage', $activity);
+    }
+
+    /**
+     * Determine whether the user can delete the activity.
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
+     */
+    public function delete(User $user, Activity $activity): bool
+    {
+        // Can't delete activities that have already started
+        if ($activity->start_date < now()) {
+            return false;
+        }
+
+        // Delete is only allowed if there are no enrollments yet.
+        if ($activity->enrollments()->whereNull('deleted_at')->count() == 0) {
+            return $user->can('manage', $activity);
+        }
+
+        // Allow delete only if the permission is granted
+        return $user->can('admin', $activity);
     }
 
     /**
      * Determine whether the user can restore the activity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Activity  $activity
-     * @return mixed
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
      */
-    public function restore(User $user, Activity $activity)
+    public function restore(User $user, Activity $activity): bool
     {
-        //
+        // Can't restore activities that happened in the past
+        if ($activity->start_date < now()) {
+            return false;
+        }
+
+        // Check if restoration is possible
+        return $user->can('manage', $activity);
     }
 
     /**
      * Determine whether the user can permanently delete the activity.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Activity  $activity
-     * @return mixed
+     * @param  User  $user
+     * @param  Activity  $activity
+     * @return bool
      */
-    public function forceDelete(User $user, Activity $activity)
+    public function forceDelete(User $user, Activity $activity): bool
     {
-        //
+        // Disallow deletion if the user can't manage
+        if ($user->can('manage', $activity)) {
+            return false;
+        }
+
+        // Don't allow deletion of activities that have payments within the
+        // last 7 years, unless the user can purge
+        return $activity->payments()->where('updated_at', '>', today()->subYears(7))
+            || $user->hasPermissionTo(self::PURGE_PERMISSION);
+    }
+
+    /**
+     * Allow linking an enrollment if the user is a manager of the event
+     * @param User $user
+     * @param Activity $activity
+     * @return bool
+     */
+    public function addEnrollment(User $user, Activity $activity): bool
+    {
+        return $user->can('manage', $activity);
+    }
+
+    /**
+     * Can the given user manage the given activities or activities in general
+     * @param User $user
+     * @param Activity|null $activity
+     * @return bool
+     */
+    public function manage(User $user, ?Activity $activity = null): bool
+    {
+        return $user->can('admin', $activity ?? Activity::class)
+            || ($activity ? self::isOwner($user, $activity) : self::isAnyOwner($user));
+    }
+
+    /**
+     * Can the user perform admin actions on this object
+     * @param User $user
+     * @return bool
+     */
+    public function admin(User $user): bool
+    {
+        return $user->hasPermissionTo(self::ADMIN_PERMISSION);
     }
 }

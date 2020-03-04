@@ -15,6 +15,7 @@ public/storage
 public/hot
 storage/*.key
 .env
+.env.backup
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -102,6 +103,7 @@ typings/
 !/public/favicon.ico
 !/public/index.php
 !/public/robots.txt
+!/public/email/
 
 # Development helper
 storage/debugbar
@@ -110,3 +112,15 @@ storage/debugbar
 /_ide_helper_models.php
 /_ide_helper.php
 /.phpstorm.meta.php
+
+# Allow vendored views
+!/resources/views/vendor
+
+# Ignore Botman discovery
+/.discovery/
+
+# Ignore medialibrary temp
+/storage/medialibrary
+
+# Ignore TNTSearch
+/storage/*.index

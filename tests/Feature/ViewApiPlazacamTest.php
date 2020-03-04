@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Illuminate\Http\Response;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 use Tests\Traits\TempUserTrait;
 
 /**
  * Tests API access to the plazacam
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -22,15 +19,14 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
-    public function testReadAnonymous() : void
+    public function testReadAnonymous(): void
     {
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => 29839,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam
@@ -42,10 +38,9 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
-    public function testReadUser() : void
+    public function testReadUser(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -53,7 +48,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam
@@ -65,10 +60,9 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
-     *
      * @return void
      */
-    public function testReadMember() : void
+    public function testReadMember(): void
     {
         // Gets the user
         $user = $this->getUser(['guest', 'member']);
@@ -76,7 +70,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'camera' => 'plaza'
+            'image' => 'plaza'
         ]);
 
         //  Retrieve plazacam

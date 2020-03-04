@@ -1,0 +1,7 @@
+/* Loads all mail stylin */
+
+@import 'base.css';
+/* @import 'body.css'; */
+@import 'header.css';
+@import 'message.css';
+@import 'footer.css';

@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 
 return [
@@ -35,7 +38,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
+            'ignore_exceptions' => false,
         ],
 
         'single' => [
@@ -48,7 +52,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
-            'days' => 7,
+            'days' => 14,
         ],
 
         'slack' => [
@@ -62,6 +66,7 @@ return [
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,
+            'formatter' => env('LOG_STDERR_FORMATTER'),
             'with' => [
                 'stream' => 'php://stderr',
             ],
@@ -75,6 +80,15 @@ return [
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
+        ],
+
+        'null' => [
+            'driver' => 'monolog',
+            'handler' => NullHandler::class,
+        ],
+
+        'emergency' => [
+            'path' => storage_path('logs/laravel.log'),
         ],
     ],
 

@@ -1,25 +1,29 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+declare(strict_types=1);
 
-/**
- * WEB ROUTES
- *
- * Here is where you can register web routes for your application. These
- * routes are loaded by the RouteServiceProvider within a group which
- * contains the "web" middleware group. Now create something great!
- */
+use Illuminate\Support\Facades\Route;
 
-// Home and privacy policy
-Route::get('/', 'WordPressController@homepage')->name('home');
-Route::get('/privacy-policy', 'WordPressController@privacy')->name('privacy');
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+$loginCsp = vsprintf('%s:%s', [
+    Spatie\Csp\AddCspHeaders::class,
+    App\Http\Policy\LoginPolicy::class
+]);
+
+// Home
+Route::get('/', 'PageController@homepage')->name('home');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
 
 // News route
-Route::get('/news', 'NewsController@index');
-Route::get('/news/{slug}', 'NewsController@post');
+Route::get('/nieuws', 'NewsController@index')->name('news.index');
+Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
+
+// Add search route
+// Route::get('/search', 'SearchController@index')->name('search-form');
+// Route::get('/search/{query}', 'SearchController@search')->name('search');
 
 /**
  * Plazacam routes
@@ -31,7 +35,7 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
 /**
  * Files route
  */
-Route::prefix('files')->name('files.')->group(function () {
+Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
@@ -39,80 +43,68 @@ Route::prefix('files')->name('files.')->group(function () {
     Route::get('/{category}', 'FileController@category')->name('category');
 
     // Single file view
-    Route::get('/view/{file}', 'FileController@show')->name('show');
+    Route::get('/bestand/{bundle}', 'FileController@show')->name('show');
 
-    // Download view
-    Route::get('/download/{file}', 'FileController@download')->name('download');
+    // Download views
+    Route::get('/download/{bundle}', 'FileController@download')->name('download');
+    Route::get('/download-single/{media?}', 'FileController@downloadSingle')->name('download-single');
 });
 
 /**
  * Activities
  */
-Route::prefix('activity')->name('activity.')->group(function () {
+Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // USER ROUTES
     // Main route
-    Route::get('/', 'ActivityController@index')->name('index');
+    Route::get('/', 'Activities\\DisplayController@index')->name('index');
 
     // Single view
-    Route::get('/{activity}', 'ActivityController@show')->name('show');
+    Route::get('/{activity}', 'Activities\\DisplayController@show')->name('show');
 
-    // ADMIN ROUTES
-    Route::namespace('Admin\\')->group(function () {
-        // Edit activity
-        Route::get('/{activity}/edit', 'ActivityController@edit')->name('edit');
-        Route::put('/{activity}/edit', 'ActivityController@update');
-
-        // Cancel activity
-        Route::patch('{activity}/cancel', 'ActivityController@cancel')->name('cancel');
-
-        // Delete activity
-        Route::get('/{activity}/delete', 'ActivityController@remove')->name('delete');
-        Route::delete('/{activity}/delete', 'ActivityController@destroy');
-    });
+    // Single view
+    Route::get('/{activity}/login', 'Activities\\DisplayController@login')->name('login');
 });
+// Fix sometimes linking to /activities
+Route::permanentRedirect('/activities', '/activiteiten');
+Route::permanentRedirect('/activity', '/activiteiten');
+Route::permanentRedirect('/activiteit', '/activiteiten');
 
 /**
  * Enrollments
  */
-Route::prefix('enroll')->name('enroll.')->group(function () {
-    // Default route¸ redirect → my enrollments
-    Route::permanentRedirect('/', '/me');
-
-    // My enrollments
-    Route::get('/me', 'EnrollmentController@index')->name('index');
-
-    // Enroll status view
-    Route::post('/{activity}', 'EnrollmentController@status')->name('show');
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'verified'])->group(static function () {
+    // Actioon view
+    Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
     // Enroll start
-    Route::post('/{activity}/create', 'EnrollmentController@create')->name('create');
+    Route::post('/', 'Activities\\EnrollmentController@create')->name('create');
 
-    // Enroll update
-    Route::get('/{activity}/update', 'EnrollmentController@edit')->name('edit');
+    // Enroll form
+    Route::patch('/', 'Activities\\FormController@save')->name('edit');
 
-    // Enroll update
-    Route::post('/{activity}/update', 'EnrollmentController@update');
+    // Enroll payment start
+    Route::post('/betaling', 'Activities\\PaymentController@store')->name('pay');
 
-    // Enroll payment (configure)
-    Route::get('/{activity}/payment', 'EnrollmentController@payment')->name('pay');
+    // Enroll payment start
+    Route::get('/betaling', 'Activities\\PaymentController@start')->name('pay-wait');
 
-    // Enroll payment (apply or update)
-    Route::post('/{activity}/payment', 'EnrollmentController@paymentStart');
+    // Enroll payment return
+    Route::get('/betaling/afronden', 'Activities\\PaymentController@complete')->name('pay-return');
 
-    // Enroll payment (completed)
-    Route::get('/{activity}/payment', 'EnrollmentController@paymentReturn')->name('pay-after');
+    // Enroll payment validation
+    Route::get('/betaling/validatie', 'Activities\\PaymentController@completeVerify')->name('pay-validate');
 
-    // Enroll removal (confirm)
-    Route::get('/{activity}/delete', 'EnrollmentController@unenroll')->name('delete');
+    // Enroll form
+    Route::get('/uitschrijven', 'Activities\\EnrollmentController@delete')->name('remove');
 
-    // Enroll removal (perform)
-    Route::delete('/{activity}/delete', 'EnrollmentController@destroy');
+    // Enroll form (do)
+    Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
 });
 
 /**
- * News (through WordPress posts)
+ * News
  */
-Route::prefix('news')->name('news.')->group(function () {
+Route::prefix('nieuws')->name('news.')->group(static function () {
     // Main route
     Route::get('/', 'NewsController@index')->name('index');
 
@@ -123,31 +115,51 @@ Route::prefix('news')->name('news.')->group(function () {
 /**
  * Join controller
  */
-Route::prefix('join')->name('join.')->group(function () {
+Route::prefix('word-lid')->name('join.')->group(static function () {
     // Join form
-    Route::get('/', 'JoinController@create')->name('form');
+    Route::get('/', 'JoinController@index')->name('form');
 
     // Submit button
-    Route::post('/send', 'JoinController@submit')->name('submit');
+    Route::post('/submit', 'JoinController@submit')->name('submit');
 
     // Post-join
-    Route::get('/welcome', 'JoinController@complete')->name('complete');
+    Route::get('/welkom', 'JoinController@complete')->name('complete');
 });
 
+
 // Authentication and forgotten passwords
-Route::prefix('auth')->group(function () {
-    $this->auth([
-        'verify' => true,
-        'register' => true
-    ]);
+Route::prefix('auth')->middleware($loginCsp)->group(static function () {
+    Route::auth(['verify' => true]);
+
+    // Register privacy
+    Route::get('/register/privacy', 'Auth\RegisterController@showPrivacy')->name('register.register-privacy');
+    Route::post('/register/privacy', 'Auth\RegisterController@savePrivacy');
 });
 
 // My account
-Route::prefix('me')->name('user.')->middleware('auth')->group(function () {
-    $this->get('/', 'UserController@index')->name('home');
-    $this->get('/info', 'UserController@view')->name('info');
-    $this->patch('/info', 'UserController@update');
+Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
+    // Home
+    Route::get('/', 'AccountController@index')->name('index');
+
+    // Urls
+    Route::get('/api-urls', 'AccountController@urls')->name('urls');
+
+    // Edit profile
+    Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
+    Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
 });
 
-// WordPress fallback
-Route::fallback('WordPressController@fallback');
+// Onboarding URLs
+Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(static function () {
+    Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-account');
+});
+
+// Common mistakes handler
+Route::redirect('/sign-up', '/word-lid');
+Route::redirect('/join', '/word-lid');
+
+// Botman front-end
+Route::get('/botman/tinker', 'BotManController@tinker')->name('botman');
+
+// Page fallback
+Route::fallback('PageController@fallback');

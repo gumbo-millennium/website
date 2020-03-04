@@ -1,6 +1,12 @@
 {
-    "extends": "standard",
+    "extends": [
+        "standard",
+        "plugin:vue/recommended"
+    ],
     "env": {
         "browser": true
+    },
+    "rules": {
+        "no-prototype-builtins": "off"
     }
 }

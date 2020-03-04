@@ -1,0 +1,25 @@
+/* Container variants */
+
+@screen sm {
+  .container--sm {
+    max-width: theme('screens.sm');
+  }
+}
+
+@screen md {
+  .container--md {
+    max-width: theme('screens.md');
+  }
+}
+
+@screen lg {
+  .container--lg {
+    max-width: theme('screens.lg');
+  }
+}
+
+@screen xl {
+  .container--xl {
+    max-width: theme('screens.xl');
+  }
+}

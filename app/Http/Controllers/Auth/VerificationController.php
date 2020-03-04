@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Routing\Controller;
 
 class VerificationController extends Controller
 {
@@ -16,15 +16,15 @@ class VerificationController extends Controller
     |
     | This controller is responsible for handling email verification for any
     | user that recently registered with the application. Emails may also
-    | be resent if the user did not receive the original email message.
+    | be re-sent if the user didn't receive the original email message.
     |
-     */
+    */
+
     use VerifiesEmails;
     use RedirectsToAdminHomeTrait;
 
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()

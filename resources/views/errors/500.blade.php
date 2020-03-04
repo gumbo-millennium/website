@@ -1,14 +1,10 @@
-@extends('main.layout.default')
+@extends('layout.variants.error')
 
-@section('content')
-<div class="hero hero--large hero--with-cover">
-    <div class="hero__container">
-        <h3 class="hero__header">Oooeps!</h3>
-        <p class="hero__lead">Ai, hier is iets heel erg fout gegaan.</p>
-        <p>We hebben de fout gemeld en de DC gaat binenkort op onderzoek uit.</p>
-        <div class="hero__cta">
-            <a class="btn btn-brand hero__cta-btn" href="/">Naar homepage</a>
-        </div>
-    </div>
-</div>
+@section('error.title', 'Kah BOOOHM!')
+@section('error.code', '500 Internal Server Error')
+@section('error.message')
+Oh nee, er is iets erg fout gegaan en nu is alles stuk.<br />
+Maar geen paniek, de fout is gemeld en de DC zal er naar gaan kijken.<br /><br />
+Sorry voor de vertraging.
 @endsection
+

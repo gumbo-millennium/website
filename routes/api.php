@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+declare(strict_types=1);
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +17,6 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::middleware('wordpress')->prefix('wordpress/')->name('wordpress.')->group(function () {
-    $this->get('menu', 'WordPressController@menu')->name('menu');
-});
-
 // Plazacam submission
 Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
     ->middleware('signed')
@@ -30,3 +26,9 @@ Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
 Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
     ->middleware('signed')
     ->name('plazacam.view');
+
+// Register API for Stripe endpoints
+Route::stripeWebhooks('payments/stripe/handle');
+
+// Register Botman
+Route::match(['get', 'post'], '/botman', 'BotManController@handle')->name('botman');

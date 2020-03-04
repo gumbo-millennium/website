@@ -23,24 +23,21 @@ navbar--opaque
         <div class="unique-selling-points__header">
             <h3 class="unique-selling-points__header-title">Aanmelden voor Gumbo Millennium?</h3>
             <p class="unique-selling-points__header-text">
-                Vul onderstaand formulier in om lid te worden van Gumbo Millennium. Het bestuur neemt
-                daarna contact met je op.
+                Vul hieronder je naam, e-mailadres en (eventueel) telefoonnummer in, dan neemt
+                het bestuur contact met je op om je aan te melden.
             </p>
         </div>
-        <form novalidate method="POST" action="{{ route('join') }}" class="unique-selling-points__features">
+        <form novalidate method="POST" action="{{ route('join.submit') }}" class="unique-selling-points__features">
             @csrf
 
             {{-- Display errors --}}
             @include('main.join.errors')
 
             {{-- Display form --}}
-            @include('main.join.form')
+            @include('main.join.short.form')
 
             {{-- Display privacy acceptance --}}
-            @include('main.join.privacy')
-
-            {{-- Display newsletter --}}
-            @include('main.join.newsletter')
+            @include('main.join.short.privacy')
 
             {{-- Display submit button --}}
             <div class="row">
@@ -49,7 +46,7 @@ navbar--opaque
                         Aanmelden
                     </button>
 
-                    <p class="text-muted mt-1 text-center">We sturen een kopie van je aanmelding per mail.</p>
+                    <p class="text-muted mt-1 text-center">We sturen een bevestiging van je aanmelding per mail.</p>
                 </div>
             </div>
         </form>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -52,6 +54,18 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
+        'paperclip' => [
+            'driver' => 'local',
+            'root' => storage_path('app/paperclip'),
+        ],
+
+        'paperclip-public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/paperclip'),
+            'url' => env('APP_URL') . '/storage/paperclip',
             'visibility' => 'public',
         ],
 

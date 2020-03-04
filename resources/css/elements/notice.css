@@ -1,0 +1,33 @@
+/* Notices */
+
+.notice {
+  @apply my-4 p-4 mb-4 border border-gray-600 rounded flex flex-row items-center;
+}
+
+.notice__icon {
+  @apply mr-2 icon-lg border-gray-600;
+}
+
+.notice--brand {
+  @apply border-brand-600;
+}
+
+.notice--brand .notice__icon {
+  @apply text-brand-600;
+}
+
+.notice--warning {
+  @apply border-orange-600;
+}
+
+.notice--warning .notice__icon {
+  @apply text-orange-600;
+}
+
+.notice--info {
+  @apply border-blue-600;
+}
+
+.notice--info .notice__icon {
+  @apply text-blue-600;
+}

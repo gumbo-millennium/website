@@ -1,0 +1,32 @@
+name: "Build Docker Compose images"
+
+on:
+  push:
+    branches:
+    - master
+    - develop
+
+jobs:
+  laravel-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create empty env
+        run: cp .env.example .env
+
+      - name: Log in to GitHub Packages
+        run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin <<< "${DOCKER_PASSWORD}"
+        env:
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull images
+        run: docker-compose pull
+        continue-on-error: true
+
+      - name: Build images
+        run: docker-compose build
+
+      - name: Upload images
+        run: docker-compose push

@@ -1,0 +1,44 @@
+/*
+  Heading content
+*/
+
+.plain-content h1 {
+  @apply heading-1;
+}
+
+.plain-content h2 {
+  @apply heading-2;
+}
+
+.plain-content h3 {
+  @apply heading-3;
+}
+
+.plain-content h4 {
+  @apply heading-4;
+}
+
+.plain-content p, .plain-content ul, .plain-content ol {
+  @apply mb-4;
+}
+
+.plain-content p {
+  @apply leading-relaxed;
+}
+
+.plain-content ul {
+  @apply list-disc pl-4;
+}
+
+.plain-content ol {
+  @apply list-decimal pl-4;
+}
+
+.plain-content li {
+  @apply mb-2;
+}
+
+.plain-content .editor-js-delimiter::before {
+  @apply block text-2xl my-4 p-4 pb-2 text-center text-gray-400 leading-none;
+  content: '***';
+}

@@ -1,27 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use Laravel\Telescope\Telescope;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 {
     /**
      * Register any application services.
-     *
      * @return void
      */
     public function register()
     {
-        // Telescope::night();
+        // Disable night mode
+        if ($this->app->environment('testing')) {
+            return;
+        }
+
+        Telescope::night();
 
         $this->hideSensitiveRequestDetails();
 
         Telescope::filter(function (IncomingEntry $entry) {
-            if ($this->app->environment(['local', 'staging'])) {
+            if (
+                $this->app->isLocal() ||
+                $this->app->get('config')->get('gumbo.beta')
+            ) {
                 return true;
             }
 
@@ -34,12 +43,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
     /**
      * Prevent sensitive request details from being logged by Telescope.
-     *
      * @return void
      */
     protected function hideSensitiveRequestDetails()
     {
-        if ($this->app->isLocal()) {
+        if ($this->app->isLocal() || $this->app->environment('testing')) {
             return;
         }
 
@@ -56,13 +64,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      * Register the Telescope gate.
      *
      * This gate determines who can access Telescope in non-local environments.
-     *
      * @return void
      */
     protected function gate()
     {
-        Gate::define('viewTelescope', function ($user) {
-            return $user && $user->hasPermission('devops');
-        });
+        Gate::define('viewTelescope', static fn ($user) => $user && $user->hasPermission('devops'));
     }
 }

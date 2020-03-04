@@ -1,104 +1,76 @@
-@extends('main.layout.auth')
+@extends('layout.variants.login')
 
-{{-- Change page title --}}
-@section('title')
-Inloggen - Gumbo Millennium
-@endsection
-
-
-{{-- Add notice --}}
-@push('auth.alert')
-<div class="alert alert-info" role="alert">
-    Onderstaand inlogscherm is voor toegang tot besloten systemen.
-    Je hebt het niet nodig voor algemeen gebruik van de website.
-</div>
-@endpush
-
-@if (file_exists('/.dockerenv'))
 @php
-$possibleUsers = App\Models\User::query()
-    ->where('email', 'like', '%@example.com')
-    ->orderBy('email', 'ASC')
-    ->pluck('email');
+$testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@example.gumbo-millennium.nl')->get() : [];
 @endphp
-@push('auth.alert')
-<div class="alert alert-info" role="alert">
-    <h4 class="alert-title">Test credentials</h4>
-    Docker supplies the following users with password <code>Gumbo</code>:<br />
-    @foreach ($possibleUsers as $email)
-    - <code>{{ $email }}</code><br />
-    @endforeach
-</Div>
-@endpush
-@endif
 
+@section('basic-content-small')
+{{-- Header --}}
+<h1 class="login__title">Welkom <strong class="login__title-fat">terug</strong></h1>
+<p class="login__subtitle">Log in om je aan te melden voor activiteiten.</p>
 
-@section('content')
-{{-- Login text --}}
-<div class="login__text login__text--before">
-    <p>
-        Vul hieronder je e-mail adres en wachtwoord in
-        om in te loggen op de website.
-    </p>
-</div>
+{{-- Auto login form --}}
+@includeWhen($testUsers, 'auth.test.login', ['users' => $testUsers])
 
-{{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-    {{-- CSRF token --}}
+{{-- Form --}}
+<form method="POST" action="{{ route('login') }}" class="login__form">
     @csrf
 
-    {{-- Username field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
-        type="email"
-        name="email"
-        placeholder="bestuur@gumbo-millennium.nl"
-        value="{{ old('email') }}"
-        required>
+    {{-- Login e-mail --}}
+    <div class="form__field">
+        {{-- Label --}}
+        <label for="email" class="form__field-label form__field-label--required">E-mailadres</label>
+
+        {{-- Input --}}
+        <input id="email" type="email" class="form__field-input form-input" name="email"
+            value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+        {{-- Error --}}
+        @error('email')
+        <div class="form__field-error" role="alert">
+            <strong>{{ $message }}</strong>
+        </div>
+        @enderror
     </div>
 
-    {{-- Password field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-        type="password"
-        name="password"
-        placeholder="wachtwoord"
-        required>
+    {{-- Login password --}}
+    <div class="login__field mb-4">
+        {{-- Label --}}
+        <div class="flex flex-row items-center">
+            <label for="password" class="form__field-label form__field-label--required flex-grow">Wachtwoord</label>
+            <a class="text-sm" href="{{ route('password.request') }}">Wachtwoord vergeten?</a>
+        </div>
 
-        @if ($errors->has('password'))
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('password') }}</strong>
-        </span>
-        @endif
+        {{-- Input --}}
+        <input id="password" type="password" class="form__field-input form-input" name="password"
+            value="{{ old('password') }}" required autocomplete="current-password">
+
+        {{-- Error --}}
+        @error('password')
+        <div class="form__field-error" role="alert">
+            <strong>{{ $message }}</strong>
+        </div>
+        @enderror
     </div>
 
-    {{-- Remember me --}}
-    <div class="login__form-group login__form-checkbox custom-control custom-checkbox">
-        <input class="custom-control-input login__form-checkbox-input" type="checkbox" id="remember-me" name="remember" {{ old('remember') ? 'checked' : '' }} />
-        <label class="custom-control-label login__form-checkbox-label" for="remember-me">
-            {{ __('Remember Me') }}
-        </label>
+    {{-- Don't you, forget about me --}}
+    <div class="form__field form__field--checkbox">
+        <input class="form__field-input form__field-input--checkbox form-checkbox" id="remember" name="remember"
+            type="checkbox" value="1" {{ old('remember') ? 'checked' : '' }}>
+        <label for="remember_me" class="form__field-label">Blijf ingelogd</label>
     </div>
 
-    {{-- Submit button --}}
-    <div class="login__form-action">
-        <button class="login__form-submit" type="submit">
-            {{ __('Login') }}
-        </button>
+    <div class="sm:flex flex-row items-center">
+        {{-- Register links --}}
+        <p class="m-0 text-sm flex-shrink-0 flex flex-row">
+            <span class="mr-1">Nog geen account?</span>
+            <a class="login__link block flex-shrink-0" href="{{ route('register') }}">Aanmelden</a>
+        </p>
+
+        {{-- Spacing --}}
+        <div class="flex-grow mr-8"></div>
+        {{-- Submit button --}}
+        <button class="form__field-input form-input flex-grow inline-block w-auto" type="submit">Inloggen</button>
     </div>
 </form>
-
-{{-- Login actions --}}
-<div class="login__text login__text--after">
-    <p>
-        <a href="{{ route('password.request') }}">
-            Wachtwoord vergeten?
-        </a>
-    </p>
-    <p>
-        Heb je nog geen account? <a href="{{ route('register') }}">Maak er een aan</a>.
-    </p>
-</div>
 @endsection

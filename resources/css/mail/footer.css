@@ -1,0 +1,13 @@
+/* Mail footer */
+
+.mail-footer {
+  /* noop */
+}
+
+.mail-footer__inner {
+  @apply py-6;
+}
+
+.mail-footer__text {
+  @apply text-center text-sm text-gray-500;
+}

@@ -1,60 +1,21 @@
-@extends('main.layout.auth')
+@extends('layout.variants.login')
 
-{{-- Change page title --}}
-@section('title')
-Wachtwoord herstellen - Gumbo Millennium
-@endsection
+@section('basic-content-small')
+{{-- Header --}}
+<h1 class="login__title">Wachtwoord <strong class="login__title-fat">vergeten</strong>?</h1>
+<p class="login__subtitle">Ook wel bekend als "ik heb te lang niet ingelogd".</p>
 
-
-{{-- Alert --}}
 @if (session('status'))
-@push('auth.alert')
-
-<div class="alert alert-success" role="alert">
+<div class="notice" role="alert">
     {{ session('status') }}
 </div>
-@endpush
 @endif
 
-@section('content')
-{{-- Login text --}}
-<div class="login__text login__text--before">
-    <p>Vul hieronder je e-mail adres in, om je wachtwoord te herstellen.</p>
-    <p>Zorg dat je direct bij je e-mail kan. De herstellink is namelijk slechts 3 uur geldig.</p>
-</div>
+<p>Het overkomt iedereen wel eens, dat je je wachtwoord vergeet.</p>
+<p>Maar geen zorgen, tik hieronder gewoon je e-mailadres in, en dan sturen we je een mailtje om je wachtwoord te herstellen.</p>
 
-{{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
-    {{-- CSRF token --}}
-    @csrf
+{{-- Render form --}}
+{!! form($form, ['class' => 'form']) !!}
 
-    {{-- Username field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
-        type="email"
-        name="email"
-        placeholder="bestuur@gumbo-millennium.nl"
-        value="{{ old('email') }}"
-        required>
-
-        @if ($errors->has('email'))
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('email') }}</strong>
-        </span>
-        @endif
-    </div>
-
-    {{-- Submit button --}}
-    <div class="login__form-action">
-        <button class="login__form-submit" type="submit">
-            Stuur wachtwoord herstellink
-        </button>
-    </div>
-</form>
-
-{{-- Login actions --}}
-<div class="login__text login__text--after">
-    <p><a href="{{ route('login') }}">Terug naar inloggen</a></p>
-</div>
+<p class="mt-8 text-gray-600">De link die je ontvang is 1 uur lang geldig.</p>
 @endsection

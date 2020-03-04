@@ -4,186 +4,72 @@ The following guide quickly describes how to get started with the project.
 
 ## Required programs
 
-- PHP 7.2+ or nightly
-- Node
-- Yarn
-- Composer
-- Docker + docker-compose
+- **PHP 7.4 or newer** - [Website][site-php] - We use the new [flexible
+  Heredoc][heredoc] and arrow functions on some occasions, which doesn't work in PHP <7.3.
+- **NodeJS** - [Website][site-nodejs] - We use Webpack for linting, compiling
+  and optimizing the code, which runs in NodeJS
+- **Yarn** - [Website][site-yarn] - Yarn has a significant speed gain on npm,
+  and some more predictiable script handling.
+- **Composer** - [Website][site-composer] - We need a lot of dependencies
+  (Laravel, to begin with) and Composer handles them.
+- **Docker** - [Website][site-docker] - We use Docker to present an environment
+  that matches the production servers.
+- **Docker Compose** - [Website][site-docker-compose] - Docker compose provides
+  sandboxed environments to deploy the Docker containers.
 
-## Required files
-
-Some files could not be packaged along with this repository. They've been uploaded
-to Google Drive and are added as a remote dependancy.
-
-- [`library/npm/spacial-theme.tar.gz`](https://drive.google.com/file/d/1-GkTD3XFdLXYKso81JUp021LQDoHKEqA/view?usp=sharing).
-
-Download the files above and put them in the mentioned location (extraction of
-archives is not required), otherwise the application *might* not install
-correctly.
-
-## Global Git ignore file
-
-We *highly* recommend using a system or user-wide gitignore file, as explained in [this guide][ggi-1]. This
-keeps our repository's `.gitignore` file nice and short and platform agnostic. You can easily create an
-ignore file for your editor and platform using [gitignore.io][ggi-2].
-
-Or, just ignore all platforms and most common editors and run these two lines in a Bash shell:
-
-```
-wget -O ~/.gitignore_global https://www.gitignore.io/api/code,netbeans,intellij,eclipse,linux,windows,macos
-git config --global core.excludesfile ~/.gitignore_global
-```
-
-If you're missing any rules, or want to add your own, just update the `~/.gitignore_global` file.
-
-**Requests containing IDE-specific files that should *not* be added to git, will be closed!**
-
-[ggi-1]: https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
-[ggi-2]: https://www.gitignore.io/
+[site-php]: https://php.net/
+[site-nodejs]: https://nodejs.org/
+[site-yarn]: https://yarnpkg.org/
+[site-composer]: https://getcomposer.org/
+[site-docker]: https://www.docker.com/products/docker-desktop
+[site-docker-compose]: https://docs.docker.com/compose/
+[heredoc]: https://www.php.net/manual/en/migration73.incompatible.php#migration73.incompatible.core.heredoc-nowdoc
 
 ## Quick start
 
-After installing the above dependencies and files, make sure the following commands work
-in your console:
+After installing the above dependencies and files, make sure the following
+commands work in your console:
 
 - `composer`
 - `php`
 - `yarn`
 - `docker-compose`
 
-When that works, simply run the following commands to quickly configure and
-launch the project:
+After you've installed these programs, you need to make sure you have access to
+the Laravel Nova repository.  Use the command `composer config
+http-basic.nova.laravel.com <username> <password>` to configure the access
+credentials. Give a shout to @roelofr if you need credentials and are a member.
+
+After that, simply run the following command to quickly configure and
+launch the project.
 
 ```
 composer run contribute
 ```
 
-## Getting started
+After this command completes, go to <http://localhost:13370> to test it out.
 
-Run the following steps to make a hasty getaway.
+Happy developing.
 
-### Clone repo
+## Issue policy
 
-Clone this repo somewhere. Make sure to install the submodules as well (`git
-clone --recursive` before cloning or `git submodule update --init` after
-cloning).
+When opening an issue, please consider the following:
 
-### Build Docker
+1. Be sure to describe the issue in detail. Include demo code and/or
+   screenshots if possible.
+2. Mention your platform and relevant versions. As a minumum, mention your OS
+   and PHP version (`php -v` is your friend here).
+3. Don't be a dick.
 
-Build requires the entire project as context, and since `node_modules` and
-`vendor` are big maps, we'll build the images first.
+## Pull request policy
 
-```
-docker-compose build
-```
+When creating a policy file, please keep the following in mind:
 
-### Install dependencies
+1. Describe your changes, and if any tests are affected. If there's a relevant
+   issue, mention that too.
+2. When changing dependencies, also add their lockfiles (composer.lock for
+   Composer, yarn.lock for Node)
+3. Don't commit IDE-specific files (like the `.idea` folder), they often
+   contain absolute paths, which won't work across systems.
 
-Install Yarn (node) and Composer dependencies
-
-```
-yarn install
-composer install
-```
-
-### Configure env
-
-We need a `.env` file for our development environment. Luckily there's a command
-that auto-generates an `.env` file, using the latest `.env.example` file as
-reference:
-
-```
-php artisan app:env
-```
-
-### Build assets
-
-Now that the environment is ready, tiem to create some assets.
-
-```
-yarn run development
-```
-
-### Copy vendor assets
-
-We use Laravel Horizon for queue management, which also has a bunch of assets that
-need to be published, before the application works.
-
-```
-php artisan vendor:publish --tag=horizon-assets
-```
-
-### Fire up docker envs
-
-Now it's time to launch the docker environments so we have a database.
-
-```
-docker-compose up -d
-```
-
-### Prepare database
-
-After the database is ready, run the migrations and the seeder.
-
-```
-php artisan migrate:fresh --seed
-```
-
-### Install and build WordPress theme and plugin
-
-The theme uses Yarn to build a nice admin env. Make sure to run the following,
-from the project root.
-
-#### Build theme
-
-```
-yarn --cwd=library/wordpress/themes/gumbo-millennium/ install
-yarn --cwd=library/wordpress/themes/gumbo-millennium/ build
-```
-
-#### Build plugin
-
-```
-composer --working-dir=library/wordpress/plugins/gumbo-millennium/ install
-yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install
-yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build
-```
-
-### Get to coding
-
-You are now ready to start developing. If you're working on assets (Javascript or Sass),
-use the `yarn start` command to compile for development and watch for changes.
-
-The Docker container endpoints are as follows:
-
-- Website: <http://127.13.37.1>
-- PhpMyAdmin: <http://127.13.37.1:8000>
-- MailHog: <http://127.13.37.1:8025>
-- Wordpress: <http://127.13.37.1:8080/wp-admin>
-
-### (Optional) Connect nginx-proxy
-
-Please install the [`nginx-proxy` for Docker](https://github.com/jwilder/nginx-proxy),
-and make sure you add the container to the local network for this project.
-
-```bash
-docker network connect \
-    gumbo-website \
-    "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )"
-```
-
-Now you *should* be able to connect over the following domains:
-
-- Website: <http://gumbo.localhost/>
-- PhpMyAdmin: <http://pma.gumbo.localhost/>
-- MailHog: <http://mail.gumbo.localhost/>
-- Wordpress: <http://wordpress.gumbo.localhost/wp-admin>
-
-#### Restart the proxy
-
-In some occasions, you'll still get timeouts. This is easily solved by restarting the nginx proxy
-container:
-
-```
-docker restart "$( docker ps --filter ancestor=jwilder/nginx-proxy --format '{{.ID}}' | head -n1 )"
-```
+If at all possible, please sign the last commit of your PR.

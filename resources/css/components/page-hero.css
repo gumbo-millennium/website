@@ -1,0 +1,25 @@
+.page-hero {
+  @apply flex flex-col items-center;
+  @apply py-8 mb-8;
+}
+
+.page-hero__title {
+  @apply text-4xl font-title font-medium;
+}
+
+.page-hero__title-fat {
+  @apply font-bold text-brand-700;
+}
+
+.page-hero__lead {
+  @apply text-xl text-gray-600 mt-2;
+}
+
+@screen md {
+  .page-hero {
+    @apply py-12;
+  }
+  .page-hero__title {
+    @apply text-5xl;
+  }
+}

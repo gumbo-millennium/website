@@ -1,13 +1,12 @@
-@extends('main.layout.default')
+@extends('layout.variants.error')
 
-@section('content')
-<div class="hero hero--large hero--with-cover">
-    <div class="hero__container">
-        <h3 class="hero__header">Geen toegang</h3>
-        <p class="hero__lead">Je bent niet gemachtigd om deze pagina te bekijken.</p>
-        <div class="hero__cta">
-            <a class="btn btn-brand hero__cta-btn" href="/">Naar homepage</a>
-        </div>
-    </div>
-</div>
-@endsection
+@php
+$message = __($exception->getMessage());
+if (!empty($message)) {
+    $message = 'Sorry, jouw account heeft niet de benodigde rechten om deze pagina te zien.';
+}
+@endphp
+
+@section('error.title', 'Toegang geweigerd')
+@section('error.code', '403')
+@section('error.message', $message)

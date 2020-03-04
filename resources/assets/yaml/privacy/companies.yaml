@@ -1,0 +1,37 @@
+# Conscribo, for administration
+- name: Conscribo
+  url: https://www.conscribo.nl/
+  purposes:
+    - bijhouden van de ledenadministratie
+    - incasseren van de jaarlijkse contributie
+  data:
+    - Naam
+    - E-mailadres
+    - Adresgegevens
+    - Lidmaatschappen
+
+# Stripe handles payments
+- name: Stripe Inc.
+  url: https://stripe.com/
+  privacy-urls:
+    Privacybeleid (Engels): https://stripe.com/en-nl/privacy
+  purposes:
+    - uitvoeren van betalingen voor (o.a.) activiteiten
+  data:
+    - naam
+    - e-mailadres
+    - iDEAL transactiedetails (bank, IBAN)
+
+# Google handles e-mail lists
+- name: Google Ireland Ltd.
+  url: https://google.com/
+  privacy-urls:
+    Privacybeleid (Nederlands): https://policies.google.com/privacy?hl=nl
+    GDPR amendement voor Europese burgers (Engels): https://gsuite.google.com/terms/dpa_terms.html
+  purposes:
+    - doorsturen van e-mails voor commissie- en projectgroepleden.
+    - doorsturen van e-mails voor inschrijvingen bij activiteiten.
+    - toegang tot online dataopslag (Google Drive).
+  data:
+    - naam
+    - e-mailadres

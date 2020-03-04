@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Helpers\Str;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 $randomGenders = [
@@ -10,15 +16,11 @@ $randomGenders = [
     'Aggressieve wasbeer',
 ];
 
-$factory->define(App\User::class, function (Faker $faker) use (
-    $randomGenders
-) {
-    return [
+$factory->define(User::class, static fn (Faker $faker) => [
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'gender' => $faker->randomElement($randomGenders),
-        'password' => password_hash('secret', PASSWORD_DEFAULT), // secret
-        'remember_token' => str_random(10),
-    ];
-});
+        'password' => password_hash('password', PASSWORD_DEFAULT), // password
+        'remember_token' => Str::random(10),
+    ]);

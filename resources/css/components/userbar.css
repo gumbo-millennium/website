@@ -1,0 +1,67 @@
+/* Userbar */
+
+.userbar {
+  @apply bg-brand-700 py-2;
+}
+
+.userbar__container {
+  @apply flex flex-col items-end;
+}
+
+@screen md {
+  .userbar__container {
+    @apply flex-row justify-between items-center;
+  }
+}
+
+.userbar__links {
+  @apply flex flex-row flex-wrap list-none;
+  @apply justify-center;
+  @apply items-center;
+}
+
+.userbar__links--contact {
+  @apply hidden order-1;
+}
+
+.userbar__links--user {
+  @apply order-2;
+}
+
+@screen md {
+  .userbar__links--contact {
+    @apply flex;
+  }
+
+  .userbar__links--user {
+    @apply ml-0 flex-grow-0;
+  }
+}
+
+.userbar__links-link {
+  @apply px-2 text-sm;
+}
+
+.userbar__links-item {
+  @apply text-white leading-none no-underline;
+}
+
+.userbar__links-item:hover, .userbar__links-item:active {
+  @apply text-gray-100 underline;
+}
+
+.userbar__links-item:first-child .userbar__links-link {
+  @apply pl-0;
+}
+
+.userbar__links-item--text, .userbar__links-item--text:hover, .userbar__links-item--text:active {
+  @apply no-underline text-white;
+}
+
+.userbar__links-item--flex {
+  @apply flex flex-row items-center;
+}
+
+.userbar__links-item--flex .icon {
+  @apply mr-2;
+}

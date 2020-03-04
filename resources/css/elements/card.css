@@ -1,0 +1,9 @@
+/* Card */
+
+.card {
+  @apply p-8 my-8 shadow bg-white rounded;
+}
+
+.card--large {
+  @apply p-16 my-16 shadow-lg;
+}

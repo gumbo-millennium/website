@@ -1,0 +1,11 @@
+/*
+  Link formatting
+*/
+
+a {
+  @apply text-gray-800 underline;
+}
+
+a:hover, a:active {
+  @apply text-gray-700 no-underline;
+}

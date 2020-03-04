@@ -1,46 +1,84 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "gumbo-millennium/website",
+    "description": "The Gumbo Millennium website.",
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.1.3",
-        "cviebrock/eloquent-sluggable": "^4.6",
-        "doctrine/dbal": "~2.3",
+        "php": "^7.4 | ^8.0",
+        "advoor/nova-editor-js": "^0.6",
+        "austinheap/laravel-database-encryption": "^0.3.0-rc1",
+        "benjaminhirsch/nova-slug-field": "^1.2",
+        "botman/botman": "^2.5",
+        "botman/driver-telegram": "^1.5",
+        "botman/driver-web": "^1.5",
+        "botman/studio-addons": "^1.6",
+        "botman/tinker": "^1.1",
+        "coderello/laravel-nova-lang": "^1.0",
+        "cviebrock/eloquent-sluggable": "^6.0",
+        "czim/laravel-paperclip": "^2.7",
+        "daniel-de-wit/nova-paperclip": "^0.1",
+        "doctrine/dbal": "^2.3",
+        "ebess/advanced-nova-media-library": "^2.9",
+        "eduardokum/laravel-mail-auto-embed": "dev-master",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
-        "gumbo-millennium/laravel-database-encryption": "^0.3.0",
+        "google/apiclient": "^2.4",
+        "gregoriohc/laravel-nova-theme-responsive": "^0.8",
         "guzzlehttp/guzzle": "^6.3",
-        "jgrossi/corcel": "^2.6",
-        "laravel/framework": "~5.7.0",
-        "laravel/horizon": "^1.4",
-        "laravel/telescope": "^1.0",
-        "laravel/tinker": "^1.0",
-        "laravelium/sitemap": "^3.0",
+        "html2text/html2text": "^4.2",
+        "kabbouchi/nova-impersonate": "^1.1",
+        "kris/laravel-form-builder": "^1.22",
+        "laktak/hjson": "^2.1",
+        "laravel/framework": "^6.7",
+        "laravel/horizon": "^3.3",
+        "laravel/nova": "^2.0",
+        "laravel/scout": "^7.2",
+        "laravel/telescope": "^2.1",
+        "laravel/tinker": "^2.0",
+        "laravelium/sitemap": "^6.0",
         "mischiefcollective/colorjizz": "^1.0",
+        "mtownsend/read-time": "^1.1",
+        "nothingworks/blade-svg": "^0.3.2",
         "overtrue/laravel-lang": "^3.0",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
-        "smalot/pdfparser": "^0.13.2",
-        "spatie/laravel-permission": "^2.23",
-        "symfony/process": "^4.1"
+        "sloveniangooner/searchable-select": "^1.3",
+        "smalot/pdfparser": "^0.13",
+        "spatie/laravel-csp": "^2.4",
+        "spatie/laravel-flash": "^1.3",
+        "spatie/laravel-medialibrary": "^7.18",
+        "spatie/laravel-model-states": "^1.4",
+        "spatie/laravel-permission": "^3.3",
+        "spatie/laravel-stripe-webhooks": "^2.2",
+        "spatie/laravel-view-models": "^1.2",
+        "stripe/stripe-php": "^7.10",
+        "symfony/process": "^4.1",
+        "symfony/yaml": "^5.0",
+        "teamtnt/laravel-scout-tntsearch-driver": "^7.2",
+        "vyuldashev/nova-permission": "^2.4",
+        "whitecube/nova-flexible-content": "^0.1.12"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2",
         "barryvdh/laravel-ide-helper": "^2.5",
-        "filp/whoops": "^2.0",
-        "fzaninotto/faker": "^1.4",
+        "facade/ignition": "^1.16",
+        "fzaninotto/faker": "^1.9",
+        "jakub-onderka/php-console-highlighter": "^0.4.0",
+        "jakub-onderka/php-parallel-lint": "^1.0",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^2.0",
-        "phpmd/phpmd": "^2.6",
-        "phpunit/phpunit": "^7.0",
+        "nunomaduro/collision": "^3.0",
+        "phpmd/phpmd": "^2.8.1",
+        "phpunit/phpunit": "^8.0",
+        "sempro/phpunit-pretty-print": "^1.2",
+        "slevomat/coding-standard": "^6.1",
         "squizlabs/php_codesniffer": "^3.3"
     },
     "autoload": {
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "files": [
+          "app/Helpers/helpers.php"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -64,33 +102,38 @@
         "post-create-project-cmd": [
             "@php artisan key:generate"
         ],
+        "post-install-cmd": [
+          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
+          "@php artisan vendor:publish --tag=nova-assets",
+          "@php artisan horizon:assets",
+          "@php artisan telescope:publish",
+          "@php artisan nova-lang:publish nl --force"
+        ],
+        "post-update-cmd": [
+          "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover",
-            "@composer dump-autoload -d library/wordpress/plugins/gumbo-millennium"
+            "@php artisan package:discover"
         ],
         "contribute": [
-          "docker-compose build",
+          "@composer install --dev --no-scripts",
+          "@php artisan app:env",
+          "docker-compose pull",
+          "docker-compose up -d",
           "@composer install --dev",
           "yarn install --dev",
-          "@php artisan app:env",
-          "yarn run development",
+          "yarn run build",
           "@php artisan vendor:publish --tag=horizon-assets",
           "@php artisan telescope:publish",
           "docker-compose up -d",
           "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-          "@php artisan migrate:fresh --seed",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
-          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ --dev",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build"
+          "@php artisan migrate:fresh --seed --force"
         ],
         "symlink": [
           "ln -fs node_modules/bootstrap/scss ./@bootstrap",
           "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-          "ln -fs library/wordpress/plugins/gumbo-millennium ./@wp-plugin",
-          "ln -fs library/wordpress/themes/gumbo-millennium ./@wp-theme",
           "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
         ],
         "ide": [
@@ -98,27 +141,30 @@
           "@php artisan ide-helper:generate",
           "@php artisan ide-helper:models"
         ],
-        "optimize": [
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/themes/gumbo-millennium/ build",
-          "rm -rf library/wordpress/themes/gumbo-millennium/node_modules/",
-
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ install",
-          "yarn --cwd=library/wordpress/plugins/gumbo-millennium/ build",
-          "rm -rf library/wordpress/plugins/gumbo-millennium/node_modules/",
-
-          "@composer install --working-dir=library/wordpress/plugins/gumbo-millennium/ -ao"
-        ],
         "server": [
           "@php artisan telescope:publish",
           "@php artisan horizon:assets"
         ],
         "lint": [
-          "phpcs",
-          "phpmd app,bootstrap,database,public,resources,routes,tests text phpmd.xml"
+          "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
+          "phpcs"
         ],
         "test": [
           "phpunit"
+        ],
+        "nova-testing": [
+          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+          "cd ./vendor/laravel/nova && yarn install",
+          "cd ./vendor/laravel/nova && yarn run dev",
+          "cd ./vendor/laravel/nova && rm -rf node_modules",
+          "@php artisan nova:publish"
+        ],
+        "nova-production": [
+          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+          "cd ./vendor/laravel/nova && yarn install",
+          "cd ./vendor/laravel/nova && yarn run prod",
+          "cd ./vendor/laravel/nova && rm -rf node_modules",
+          "@php artisan nova:publish"
         ]
     },
     "config": {
@@ -126,7 +172,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-          "php": "7.2"
+          "php": "7.4.1"
         }
     },
     "minimum-stability": "dev",
@@ -135,6 +181,14 @@
       {
         "type": "vcs",
         "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
+      },
+      {
+        "type": "vcs",
+        "url": "https://github.com/roelofr/laravel-mail-auto-embed"
+      },
+      {
+        "type": "composer",
+        "url": "https://nova.laravel.com"
       }
     ]
 }

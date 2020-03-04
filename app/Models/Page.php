@@ -1,27 +1,90 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
-use Corcel\Model\Page as CorcelPage;
-use App\Concerns\PostContentTrait;
+use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
-use Corcel\Model\Option;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * WordPress Page with more features
- *
+ * A user-generated page
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-class Page extends CorcelPage
+class Page extends SluggableModel
 {
-    use PostContentTrait;
+    use HasEditorJsContent;
 
-    public function scopePrivacyPolicy(Builder $builder)
+    public const TYPE_USER = 'user';
+    public const TYPE_REQUIRED = 'required';
+    public const TYPE_GIT = 'git';
+
+    /**
+     * Pages required to exist, cannot be deleted or renamed
+     */
+    public const REQUIRED_PAGES = [
+        'home' => 'Homepage',
+        'error-404' => 'Not Found',
+        'about' => 'Over gumbo',
+    ];
+
+    public const SLUG_HOMEPAGE = 'home';
+    public const SLUG_404 = 'error-404';
+
+    /**
+     * @inheritDoc
+     */
+    protected $fillable = [
+        'slug',
+        'title',
+        'contents',
+        'type'
+    ];
+
+    /**
+     * @inheritDoc
+     */
+    protected $casts = [
+        'content' => 'json',
+        'user_id' => 'int',
+    ];
+
+    /**
+     * Generate the slug based on the title property
+     * @return array
+     */
+    public function sluggable(): array
     {
-        return $builder
-            ->where('ID', '=', Option::get('wp_page_for_privacy_policy'))
-            ->limit(1);
+        return [
+            'slug' => [
+                'source' => 'title',
+                'unique' => true
+            ]
+        ];
+    }
+
+    public function scopeHome(Builder $query): Builder
+    {
+        return $query->where('slug', 'homepage');
+    }
+
+    /**
+     * Returns the owning user, if present
+     * @return BelongsTo
+     */
+    public function author(): Relation
+    {
+        return $this->belongsTo(User::class, 'author_id', 'id');
+    }
+
+    /**
+     * Converts contents to HTML
+     * @return string|null
+     */
+    public function getHtmlAttribute(): ?string
+    {
+        return $this->convertToHtml($this->contents);
     }
 }

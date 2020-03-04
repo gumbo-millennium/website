@@ -1,71 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
+use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\User;
-use function Opis\Closure\serialize;
-use App\Jobs\UpdateWordPressUserJob;
 
-/**
- * Observes changes in users and mimics them to the User's Wordpress account.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
- */
 class UserObserver
 {
     /**
-     * Handle the user "created" event.
-     *
-     * @param  \App\App\User  $user
+     * Handle any kind of changes to the user
+     * @param User $user
      * @return void
      */
-    public function created(User $user)
+    public function saved(User $user): void
     {
-        UpdateWordPressUserJob::dispatch($user);
-    }
+        // Don't act on console commands (speed up CLI commands)
+        if (\app()->runningInConsole()) {
+            return;
+        }
 
-    /**
-     * Handle the user "updated" event.
-     *
-     * @param  \App\App\User  $user
-     * @return void
-     */
-    public function updated(User $user)
-    {
-        UpdateWordPressUserJob::dispatch($user);
-    }
-
-    /**
-     * Handle the user "deleted" event.
-     *
-     * @param  \App\App\User  $user
-     * @return void
-     */
-    public function deleted(User $user)
-    {
-        UpdateWordPressUserJob::dispatch($user);
-    }
-
-    /**
-     * Handle the user "restored" event.
-     *
-     * @param  \App\App\User  $user
-     * @return void
-     */
-    public function restored(User $user)
-    {
-        UpdateWordPressUserJob::dispatch($user);
-    }
-
-    /**
-     * Handle the user "force deleted" event.
-     *
-     * @param  \App\App\User  $user
-     * @return void
-     */
-    public function forceDeleted(User $user)
-    {
-        //
+        // Trigger update if the user was created, or if the name or email address was changed
+        if ($user->wasRecentlyCreated || $user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
+            // Create or update the customer on Stripe
+            dispatch(new CustomerUpdateJob($user));
+        }
     }
 }

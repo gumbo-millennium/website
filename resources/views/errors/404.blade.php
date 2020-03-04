@@ -1,13 +1,5 @@
-@extends('main.layout.default')
+@extends('layout.variants.error')
 
-@section('content')
-<div class="hero hero--large hero--with-cover">
-    <div class="hero__container">
-        <h3 class="hero__header">Pagina niet gevonden</h3>
-        <p class="hero__lead">Sorry! De aangevraagde pagina konden we niet vinden.</p>
-        <div class="hero__cta">
-            <a class="btn btn-brand hero__cta-btn" href="/">Naar homepage</a>
-        </div>
-    </div>
-</div>
-@endsection
+@section('error.title', 'Niet gevonden')
+@section('error.code', '404')
+@section('error.message', 'Sorry, deze pagina is niet (meer) beschikbaar.')

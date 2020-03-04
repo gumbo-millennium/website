@@ -1,0 +1,44 @@
+/* Navbar */
+
+.navbar {
+  @apply bg-white py-4;
+  @apply shadow;
+}
+
+.navbar--no-shadow {
+  @apply shadow-none;
+}
+
+.navbar__container {
+  @apply flex flex-col items-center;
+}
+
+@screen md {
+  .navbar__container {
+    @apply flex-row justify-between;
+  }
+
+  .navbar__filler {
+    @apply flex-grow;
+  }
+}
+
+.navbar__nav {
+  @apply flex flex-row flex-wrap list-none;
+  @apply justify-center;
+}
+
+.navbar__nav-link {
+  @apply block px-4 py-1;
+  @apply text-sm uppercase no-underline;
+}
+
+.navbar__nav-item:first-child .navbar__nav-link {
+  @apply pl-0;
+}
+
+@screen md {
+  .navbar__nav-link {
+    @apply py-2;
+  }
+}

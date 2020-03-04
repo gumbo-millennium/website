@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Roumen\Sitemap\Sitemap;
-use Corcel\Model\Post;
-use App\Models\Page;
 use App\Activity;
+use App\Models\Page;
+use Corcel\Model\Post;
+use Illuminate\Http\Request;
+use Roumen\Sitemap\Sitemap;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Generates sitemaps for WordPress pages and our pages.
- *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -19,7 +21,6 @@ class SitemapController extends Controller
 {
     /**
      * Make sure the request has a valid type before sending it
-     *
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -34,12 +35,18 @@ class SitemapController extends Controller
 
     /**
      * Present index sitemap on homepage
-     *
      * @param Request $request
      * @return Response
      */
     public function index(Request $request)
     {
+        // Reject if the user can't handle XML
+        if (!$request->accepts('text/xml')) {
+            return new NotAcceptableHttpException(
+                'Sitemap is only available as XML, but you don\'t seem to want that.'
+            );
+        }
+
         $map = app('sitemap');
         // $map->setCache('sitemap', 60);
 

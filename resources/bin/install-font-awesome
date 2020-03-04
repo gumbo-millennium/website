@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Computed directories
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_PATH="$( git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null )"
+
+# Determine backup path
+if [ -z "$ROOT_PATH" ]; then
+    ROOT_PATH="$( realpath -s "${SCRIPT_DIR}/../../" )"
+fi
+
+# Directories
+FA_DIR="${ROOT_PATH}/storage/app/font-awesome"
+NODE_DIR="${ROOT_PATH}/node_modules"
+
+if [ ! -d "$FA_DIR" ]; then
+    mkdir -p "$FA_DIR"
+fi
+
+function copy_node() {
+    # Allocate variables
+    PACK="$1"
+    NAME="$2"
+    DEST="$3"
+
+    # Check path
+    SOURCE_PATH="${NODE_DIR}/@fortawesome/fontawesome-${PACK}/svgs/${NAME}"
+    if [ ! -d "${SOURCE_PATH}" ]; then
+        echo "Skipping Font Awesome $PACK / $NAME. Directory not found"
+        return 1
+    fi
+
+    # Make directory if not found
+    DEST_PATH="${FA_DIR}/${NAME}"
+    if [ ! -d "$DEST_PATH" ]; then
+        mkdir -p "$DEST_PATH"
+    fi
+
+    # Copy files
+    cp -fu ${SOURCE_PATH}/*.svg "$DEST_PATH"
+}
+
+# Make directories
+copy_node free brands brands
+copy_node free solid solid
+copy_node free regular regular
+
+# Link all files in solid to root
+( cd "$FA_DIR" && cp -fus ./solid/*.svg ./ )

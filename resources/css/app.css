@@ -1,0 +1,21 @@
+/**
+    Application styling
+*/
+
+/* Load base tailwind */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+
+/* Load our tweaks, elements, components and pages */
+@import 'base/all.css';
+@import 'elements/all.css';
+@import 'components/all.css';
+
+/* Page-level styling comes late */
+@import 'pages/all.css';
+
+/* Tweaks */
+@import 'tweaks/all.css';
+
+/* Load remaining tailwind stuff */
+@import 'tailwindcss/utilities';

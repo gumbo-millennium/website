@@ -1,84 +1,17 @@
-@extends('main.layout.auth')
+@extends('layout.variants.login')
 
-{{-- Change page title --}}
-@section('title')
-Wachtwoord herstellen - Gumbo Millennium
-@endsection
+@section('basic-content-small')
+{{-- Header --}}
+<h1 class="login__title">Wachtwoord <strong class="login__title-fat">herstellen</strong></h1>
+<p class="login__subtitle">Je bent nog maar 2 × 10 tekens verwijderd van een nieuw wachtwoord.</p>
 
-{{-- Alert --}}
-@if (session('status'))
-@push('auth.alert')
+<p>Je hebt het zware werk al gehad. Kijk even na of je e-mailadres klopt.</p>
 
-<div class="alert alert-success" role="alert">
-    {{ session('status') }}
-</div>
-@endpush
-@endif
+{{-- Render form --}}
+{!! form_start($form, ['class' => 'form']) !!}
+{!! form_until($form, 'email') !!}
 
-@section('content')
-{{-- Login text --}}
-<div class="login__text login__text--before">
-    <p>Vul hieronder ter controle je e-mail adres in, en daarna 2x je nieuwe wachtwoord.</p>
-    <p>Daarna zal je wachtwoord gewijzigd worden.</p>
-</div>
+<p class="mt-8">Als je e-mailadres klopt, tik dan hieronder 2x hetzelfde wachtwoord in van <strong>minimaal 10 tekens</strong></p>
 
-{{-- Login form --}}
-<form class="login__form" method="post" action="{{ route('password.request') }}" aria-label="{{ __('Reset Password') }}">
-    {{-- CSRF token --}}
-    @csrf
-
-    {{-- Reset token --}}
-    <input type="hidden" name="token" value="{{ $token }}">
-
-    {{-- Username field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
-        type="email"
-        name="email"
-        placeholder="{{ __('E-mail adres') }}"
-        value="{{ old('email') }}"
-        autofocus
-        required>
-
-        @if ($errors->has('email'))
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('email') }}</strong>
-        </span>
-        @endif
-    </div>
-
-    {{-- Password field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-        type="password"
-        name="password"
-        placeholder="{{ __('Wachtwoord') }}"
-        required>
-
-        @if ($errors->has('password'))
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $errors->first('password') }}</strong>
-        </span>
-        @endif
-    </div>
-
-    {{-- Password confirmation field --}}
-    <div class="login__form-group">
-        <input
-        class="login__form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-        type="password"
-        name="password_confirmation"
-        placeholder="Bevestig wachtwoord"
-        required>
-    </div>
-
-    {{-- Submit button --}}
-    <div class="login__form-action">
-        <button class="login__form-submit" type="submit">
-            Wachtwoord opnieuw instellen
-        </button>
-    </div>
-</form>
+{!! form_end($form) !!}
 @endsection

@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Models\JoinSubmission;
 use Faker\Generator as Faker;
 
 $inserts = [
@@ -19,8 +24,7 @@ $genders = array_merge(
     array_fill(0, 4, 'Waluigi')
 );
 
-$factory->define(App\JoinSubmission::class, function (Faker $faker) use ($inserts, $genders) {
-    return [
+$factory->define(JoinSubmission::class, static fn (Faker $faker) => [
         // Names
         'first_name' => $faker->firstName,
         'insert' => $faker->optional(0.4)->randomElement($inserts),
@@ -44,5 +48,4 @@ $factory->define(App\JoinSubmission::class, function (Faker $faker) use ($insert
         // Result
         'granted' => $faker->optional(0.15)->boolean()
 
-    ];
-});
+    ]);

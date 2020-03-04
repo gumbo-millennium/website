@@ -1,0 +1,28 @@
+/* Activity grid */
+
+.activity-grid {
+  @apply flex flex-row flex-wrap items-stretch;
+  margin: 0 calc(0 - theme('spacing.4'));
+}
+
+.activity-grid__item {
+  @apply flex flex-row items-stretch;
+  @apply mx-4 mb-4;
+  @apply w-full;
+}
+
+.activity-grid__item .activity-card {
+  @apply flex-grow;
+}
+
+@screen sm {
+  .activity-grid__item {
+    width: calc(50% - calc(theme('spacing.4') * 2));
+  }
+}
+
+@screen lg {
+  .activity-grid__item {
+    width: calc(33.3333% - calc(theme('spacing.4') * 2));
+  }
+}

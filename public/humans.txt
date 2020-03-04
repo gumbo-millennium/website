@@ -1,0 +1,16 @@
+Hallo aardebewoner!
+
+De website van Gumbo Millennium wordt met liefde onderhouden door de leden van
+de Digiale Commissie.
+
+We gebruiken hiervoor wat programma's, maar hoofdzakelijk praten we gewoon met
+elkaar over wat we willen bereiken.
+
+Wil jij meedenken, een stukje code bijdragen of gewoon gezellig kletsen? Kom
+eens bij ons langs, of kijk op onze GitHub pagina voor de code van dit project.
+
+[1]: https://beta.gumbo-millennium.nl/over/locatie
+[2]: https://github.com/gumbo-millennium/website
+
+If you're English (or, well, non-Dutch), you can probably hire a robot to
+translate this file for you.
