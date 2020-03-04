@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Activity;
+use App\Models\Activity;
+use App\Models\NewsItem;
 use App\Models\Page;
-use Corcel\Model\Post;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Roumen\Sitemap\Sitemap;
+use Laravelium\Sitemap\Sitemap;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
- * Generates sitemaps for WordPress pages and our pages.
+ * Generates sitemaps for activities,
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -47,9 +48,14 @@ class SitemapController extends Controller
             );
         }
 
+        // Get new sitemap
         $map = app('sitemap');
-        // $map->setCache('sitemap', 60);
 
+        // set cache key (string), duration in minutes (Carbon|Datetime|int), turn on/off (boolean)
+        // by default cache is disabled
+        $map->setCache('laravel.sitemap', now()->addHour());
+
+        // Create new map if not cached or debugging
         if (!$map->isCached() || config('app.debug', false)) {
             $this->buildSitemap($map);
         }
@@ -59,40 +65,35 @@ class SitemapController extends Controller
 
     private function buildSitemap(Sitemap &$sitemap)
     {
-        // Get change dates for archive pages
-        $postLast = Post::published()->newest()->first();
-        $activityLast = Activity::published()->newest()->first();
+        // Most important page, duh
+        $sitemap->add(route('home'), null, '1.0', 'daily');
 
-        // Most important pages
-        $sitemap->add(secure_url('/'), null, '1.0', 'weekly');
-        $sitemap->add(secure_url('/activiteiten'), optional($postLast)->post_modified, '1.0', 'daily');
-        $sitemap->add(secure_url('/nieuws'), optional($activityLast)->post_modified, '1.0', 'daily');
+        // Add routes
+        $this->addModelRoute($sitemap, 'activity', 'activity', Activity::whereAvailable());
+        $this->addModelRoute($sitemap, 'news', 'news', NewsItem::whereAvailable());
 
-        // dd([
-        //     'page' => Page::published()->get(),
-        //     'post' => Post::published()->get(),
-        //     'activity' => Activity::published()->get()
-        // ]);
-
-        // WordPress Pages
-        foreach (Page::published()->get() as $page) {
-            $sitemap->add(secure_url($page->slug), $page->post_modified, 0.7, 'weekly');
+        // Add other pages
+        foreach (Page::cursor() as $page) {
+            $sitemap->add(url("/{$page->slug}"), $page->updated_at, '0.7', 'weekly');
         }
+    }
 
-        // WordPress Posts
-        foreach (Post::published()->get() as $post) {
-            $sitemap->add(secure_url($post->slug), $post->post_modified, 0.5, 'monthly');
+    private function addModelRoute(Sitemap &$sitemap, string $base, string $field, Builder $query): void
+    {
+        // Get the most recent item
+        $mostRecent = (clone $query)->max('updated_at');
+
+        // Index page
+        $sitemap->add(route("$base.index"), $mostRecent, '0.9', 'daily');
+
+        // Item page
+        foreach ($query->cursor() as $model) {
+            $sitemap->add(
+                route("$base.show", [$field => $model]),
+                $model->updated_at,
+                '0.8',
+                'weekly'
+            );
         }
-
-        // WordPress Activities
-        foreach (Activity::published()->get() as $activity) {
-            $sitemap->add(secure_url($activity->slug), $activity->post_modified, 0.6, 'weekly');
-        }
-
-        // WordPress documents
-        // Not indexed, due to privacy reasons
-
-        // Other pages
-        // TODO
     }
 }
