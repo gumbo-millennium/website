@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Forms\Traits\UserDataForm;
-use App\Helpers\Arr;
-use App\Helpers\Str;
+use App\Forms\Traits\UseTemplateStrings;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -16,31 +15,14 @@ use Kris\LaravelFormBuilder\Form;
 class RegisterForm extends Form
 {
     use UserDataForm;
+    use UseTemplateStrings;
 
-    private const DUMMY_NAMES = [
-        ['John', null, 'Wick'],
-        ['Willie', 'van', 'Oranje'],
-        ['Robin', 'of', 'Loxley'],
-        ['Knights', 'of', 'The Round Table'],
-        ['John', null, 'Doe'],
-    ];
-
-    /**
-     * Returns a placeholder name
-     * @return array
-     */
-    public function getPlaceholderName(): array
-    {
-        $name = Arr::random(self::DUMMY_NAMES);
-        $name[3] = Str::slug(implode(' ', $name), '.') . '@example.com';
-        return $name;
-    }
     /**
      * Builds the form
      */
     public function buildForm()
     {
-        $dummyName = $this->getPlaceholderName();
+        $dummyName = $this->getTemplateName();
         $passwordPlaceholder = sprintf('hunter%d', now()->year);
 
         $this
