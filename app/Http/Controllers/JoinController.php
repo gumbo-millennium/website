@@ -9,7 +9,6 @@ use App\Mail\Join\BoardJoinMail;
 use App\Mail\Join\UserJoinMail;
 use App\Models\JoinSubmission;
 use App\Models\Page;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
