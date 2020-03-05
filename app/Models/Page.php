@@ -28,6 +28,7 @@ class Page extends SluggableModel
         'home' => 'Homepage',
         'error-404' => 'Not Found',
         'about' => 'Over gumbo',
+        'word-lid' => 'Nieuw lid pagina',
     ];
 
     public const SLUG_HOMEPAGE = 'home';

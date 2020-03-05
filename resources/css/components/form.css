@@ -9,11 +9,20 @@
 }
 
 .form__field--checkbox {
-  @apply flex flex-row items-start;
+  @apply flex flex-row flex-wrap;
 }
 
 .form__field-label {
   @apply mb-2 py-2 px-0;
+}
+
+.form__field--checkbox .form__field-label {
+  @apply mb-0 flex-grow;
+}
+
+.form__field--checkbox .form__field-help {
+  @apply w-full;
+  margin-left: calc(theme('spacing.6') + calc(theme('spacing.2') * 2));
 }
 
 .form__field-input {
