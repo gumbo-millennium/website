@@ -20,6 +20,10 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
  */
 class SitemapController extends Controller
 {
+    private const SKIPPED_PAGES = [
+        'word-lid'
+    ];
+
     /**
      * Make sure the request has a valid type before sending it
      * @param Request $request
@@ -74,6 +78,10 @@ class SitemapController extends Controller
 
         // Add other pages
         foreach (Page::cursor() as $page) {
+            if (in_array($page->slug, self::SKIPPED_PAGES)) {
+                continue;
+            }
+
             $sitemap->add(url("/{$page->slug}"), $page->updated_at, '0.7', 'weekly');
         }
     }

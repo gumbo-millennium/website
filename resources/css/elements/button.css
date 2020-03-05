@@ -34,3 +34,7 @@
   opacity: 0.6;
   filter: grayscale(100%);
 }
+
+.btn--wide {
+  @apply block text-center;
+}
