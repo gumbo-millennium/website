@@ -11,7 +11,7 @@ Het bestuur zal z.s.m. contact met je opnemen via {{ $submission->email }} of {{
 Het bestuur zal z.s.m. contact met je opnemen via {{ $submission->email }}.
 @endif
 
-Bedankt voor je aanmelding, en hopelijk tot snel!
+Leuk dat je er bij bent, en hopelijk tot snel!
 
 Met vriendelijke groet,
 

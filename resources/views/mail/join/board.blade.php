@@ -13,23 +13,12 @@ Haar naam is {{ $submission->name }}.
 Zijn/haar naam is {{ $submission->name }}.
 @endif
 
-Meer informatie vind je hieronder. Je kan het item ook bekijken via het admin panel.
+Verdere gegevens zijn, ter waarboring van de privacy van het lid,
+te vinden in het administratiepaneel.
 
-@component('mail::button', ['url' => $adminRoute])
-Bekijk aanmelding op de site
+@component('mail::button', ['url' => $actionUrl])
+Bekijk aanmelding
 @endcomponent
-
-## Gegevens aanmelding
-
-@component('mail::table')
-|      Veld      |    Waarde    |
-|----------------|--------------|
-@foreach ($submission->toArray() as $key => $value)
-| **{{ $key }}** | {{ $value }} |
-@endforeach
-@endcomponent
-
-------
 
 Met vriendelijke groet,
 

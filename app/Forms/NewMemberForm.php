@@ -75,7 +75,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Om je aan te melden voor Gumbo Millennium via de website moet je minimaal 17 jaar oud zijn.
+                    Om je aan te melden voor Gumbo Millennium via de website
+                    moet je minimaal 17 jaar oud zijn.
                     TEXT
                 ],
             ])
@@ -88,8 +89,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Wil je liever een andere notatie vast laten leggen? Stuur dan
-                    even een mailtje naar bestuur@gumbo-millennium.nl.
+                    Wil je liever een andere notatie vast laten leggen? Stuur
+                    dan even een mailtje naar bestuur@gumbo-millennium.nl.
                     TEXT
                 ],
             ]);
@@ -133,8 +134,9 @@ class NewMemberForm extends Form
                 'label' => 'Windesheim student',
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en begunstigers. Alleen Windesheim studenten
-                    kunnen lid worden. Ben je Windesheim student, zet dan hierboven een vinkje.
+                    Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en
+                    begunstigers. Om te bepalen welke vorm voor jou mogelijk
+                    is, moeten we weten of je op Windesheim studeert.
                     TEXT
                 ]
             ])
@@ -142,8 +144,9 @@ class NewMemberForm extends Form
                 'label' => 'Nieuwsbrief',
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    1x per maand sturen wij de Gumbode op, met een samenvatting van de maand, leuke verhaaltjes
-                    en de gekste uitspraken van onze leden. Wil je deze ontvangen?
+                    Als je dat wilt, kan je elke maand de Gumbode ontvangen,
+                    met daarin een samenvatting van de maand, leuke verhaaltjes
+                    en de gekste uitspraken van onze leden.
                     TEXT
                 ]
             ]);
@@ -156,8 +159,8 @@ class NewMemberForm extends Form
                 'help_block' => [
                     'text' => sprintf(
                         <<<'HTML'
-                        'Ons privacybeleid kan je hier bekijken:
-                        <a href="%s" target="_blank">privacybeleid</a> (opent in een nieuw tabblad).
+                        <a href="%s" target="_blank">Lees het Privacybeleid</a>
+                        (opent in een nieuw tabblad).
                         HTML,
                         url('/privacy-policy')
                     )

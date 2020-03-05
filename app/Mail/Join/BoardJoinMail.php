@@ -27,15 +27,15 @@ class BoardJoinMail extends BaseJoinMail
     public function build()
     {
         // Build link to admin panel
-        $adminRoute = implode('/', [
-            Nova::path(),
+        $actionUrl = implode('/', [
+            secure_url(Nova::path()),
             'resources',
             NovaJoinSubmission::uriKey(),
             $this->submission->id
         ]);
 
         // Render view
-        return $this->markdown('mail.join.board')->with(['adminRoute' => $adminRoute]);
+        return $this->markdown('mail.join.board')->with(['actionUrl' => $actionUrl]);
     }
 
     /**
