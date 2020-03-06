@@ -17,7 +17,7 @@
     $branch = array_pop(explode('/', $branch));
 
     // Check branch name
-    if (!in_array($branch, ['master', 'develop'])) {
+    if (!in_array($branch, ['master'])) {
         throw new Exception("Cannot deploy for branch [{$branch}], since it's not whitelisted");
     }
 
