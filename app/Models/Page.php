@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
+use App\Models\Traits\HasSimplePaperclippedMedia;
+use App\Traits\HasPaperclip;
+use Czim\Paperclip\Contracts\AttachableInterface;
+use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -12,10 +16,14 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * A user-generated page
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
+ * @property-read AttachmentInterface $image
  */
-class Page extends SluggableModel
+class Page extends SluggableModel implements AttachableInterface
 {
     use HasEditorJsContent;
+    use HasPaperclip;
+    use HasSimplePaperclippedMedia;
+    use PaperclipTrait;
 
     public const TYPE_USER = 'user';
     public const TYPE_REQUIRED = 'required';
@@ -33,6 +41,15 @@ class Page extends SluggableModel
 
     public const SLUG_HOMEPAGE = 'home';
     public const SLUG_404 = 'error-404';
+
+    /**
+     * Returns pages required by the system, all in the main group
+     * @return array
+     */
+    public static function getRequiredPages(): array
+    {
+        return array_merge(self::REQUIRED_PAGES, config('gumbo.page-groups'));
+    }
 
     /**
      * @inheritDoc
@@ -87,5 +104,19 @@ class Page extends SluggableModel
     public function getHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
+    }
+
+    /**
+     * Binds paperclip files
+     * @return void
+     */
+    protected function bindPaperclip(): void
+    {
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'article' => [1440, 960, false],
+            'cover' => [384, 256, true],
+            'poster' => [192, 256, false]
+        ]);
     }
 }

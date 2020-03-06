@@ -13,9 +13,9 @@ class PageSeeder extends Seeder
      */
     public function run()
     {
-        foreach (Page::REQUIRED_PAGES as $slug => $title) {
+        foreach (Page::getRequiredPages() as $slug => $title) {
             Page::updateOrCreate(
-                ['slug' => $slug],
+                ['slug' => $slug, 'group' => null],
                 ['title' => $title, 'type' => Page::TYPE_REQUIRED]
             );
         }

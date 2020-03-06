@@ -82,7 +82,8 @@ class SitemapController extends Controller
                 continue;
             }
 
-            $sitemap->add(url("/{$page->slug}"), $page->updated_at, '0.7', 'weekly');
+            $pageUrl = $page->group ? route('group.show', $page->only('group', 'slug')) : url("/{$page->slug}");
+            $sitemap->add($pageUrl, $page->updated_at, $page->group ? '0.5' : '0.7', 'weekly');
         }
     }
 

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Forms\RegisterForm;
 use App\Forms\RegisterPrivacyForm;
 use App\Helpers\Str;
+use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -26,7 +27,7 @@ use Symfony\Component\Yaml\Yaml;
 class RegisterController extends Controller
 {
     use RedirectsUsers;
-    use RedirectsToAdminHomeTrait;
+    use RedirectsToHomepage;
 
     private const SESSION_ACCESS = 'onboarding.after-registration';
     private const DATA_SESSION_KEY = 'register.user';

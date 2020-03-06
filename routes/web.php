@@ -161,5 +161,16 @@ Route::redirect('/join', '/word-lid');
 // Botman front-end
 Route::get('/botman/tinker', 'BotManController@tinker')->name('botman');
 
+// Page groups
+$groupRegex = sprintf(
+    '^(%s)$',
+    implode('|', array_map(
+        static fn ($key) => preg_quote($key, '/'),
+        array_keys(config('gumbo.page-groups'))
+    ))
+);
+Route::get("{group}", 'PageController@group')->where('group', $groupRegex)->name('group.index');
+Route::get("{group}/{slug}", 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
+
 // Page fallback
 Route::fallback('PageController@fallback');
