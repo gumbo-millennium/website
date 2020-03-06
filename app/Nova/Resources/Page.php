@@ -119,7 +119,8 @@ class Page extends Resource
 
             // Group / Slug, for index
             Text::make('Samenvatting', 'summary')
-                ->rules('required', 'string')
+                ->nullable()
+                ->rules('nullable', 'string', 'min:5', 'max:90')
                 ->hideFromIndex()
                 ->help('Wordt getoond op kaarten en in Google / Facebook'),
 
