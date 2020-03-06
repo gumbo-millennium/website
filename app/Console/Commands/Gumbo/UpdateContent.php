@@ -87,6 +87,7 @@ class UpdateContent extends Command
             $page->updated_at = $data['updated_at'];
             $page->contents = json_encode($data['content']);
             $page->title = $data['title'] ?? $this->buildTitle($slug);
+            $page->summary = $data['summary'] ?? $data['tagline'] ?? null;
 
             // Save changes
             $page->save();
