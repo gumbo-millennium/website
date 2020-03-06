@@ -54,13 +54,6 @@ class Page extends SluggableModel implements AttachableInterface
     /**
      * @inheritDoc
      */
-    protected $attributes = [
-        'summary' => null,
-    ];
-
-    /**
-     * @inheritDoc
-     */
     protected $fillable = [
         'slug',
         'title',
