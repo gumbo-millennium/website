@@ -62,7 +62,12 @@ class NewMemberForm extends Form
                 'rules' => ['required', new PhoneNumber('NL')],
                 'attr' => [
                     'autocomplete' => 'tel'
-                ]
+                ],
+                'help_block' => [
+                    'text' => <<<'TEXT'
+                    Geen Nederlands nummer? Typ dan een internationaal nummer in (zoals +49 201 567 890).
+                    TEXT
+                ],
             ]);
 
         // Personal info
