@@ -9,20 +9,11 @@
 }
 
 .form__field--checkbox {
-  @apply flex flex-row flex-wrap;
+  @apply block;
 }
 
 .form__field-label {
   @apply mb-2 py-2 px-0;
-}
-
-.form__field--checkbox .form__field-label {
-  @apply mb-0 flex-grow;
-}
-
-.form__field--checkbox .form__field-help {
-  @apply w-full;
-  margin-left: calc(theme('spacing.6') + calc(theme('spacing.2') * 2));
 }
 
 .form__field-input {
@@ -33,6 +24,7 @@
   @apply m-2;
   @apply h-6 w-6;
   @apply text-brand-700;
+  @apply float-left;
 }
 
 .form__field-error {
@@ -41,11 +33,26 @@
 
 .form__field-error strong {
   @apply font-normal;
-
   /* Hide strong effect on error */
 }
+
 .form__field-help {
   @apply mt-2 text-gray-700 text-sm;
+}
+
+.form__field--checkbox .form__field-label {
+  @apply mb-0 flex-grow block;
+}
+
+.form__field--checkbox .form__field-label::after {
+  display: table;
+  clear: both;
+  content: '';
+}
+
+.form__field--checkbox .form__field-help {
+  margin-top: 0;
+  margin-left: calc(theme('spacing.6') + calc(theme('spacing.2') * 2));
 }
 
 /**

@@ -56,9 +56,11 @@ class PhoneNumber implements Rule
             return false;
         }
 
-        // Validate using region, if it's set
+        // If a region is set, check if locally valid or an international number
         if ($this->region !== null) {
-            return $this->util->isValidNumberForRegion($number, $this->region);
+            return
+                $this->util->isValidNumberForRegion($number, $this->region) ||
+                $this->util->canBeInternationallyDialled($number);
         }
 
         // Just validate the number otherwise

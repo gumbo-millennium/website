@@ -25,25 +25,25 @@ class NewMemberForm extends Form
                 'label' => 'Voornaam',
                 'rules' => 'required|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[0],
                     'autocomplete' => 'given-name',
-                    'autofocus' => true
+                    'autofocus' => true,
+                    'placeholder' => $dummyName[0]
                 ],
             ])
             ->add('insert', 'text', [
                 'label' => 'Tussenvoegsel',
                 'rules' => 'nullable|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[1],
-                    'autocomplete' => 'additional-name'
+                    'autocomplete' => 'additional-name',
+                    'placeholder' => $dummyName[1]
                 ],
             ])
             ->add('last-name', 'text', [
                 'label' => 'Achternaam',
                 'rules' => 'required|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[2],
-                    'autocomplete' => 'family-name'
+                    'autocomplete' => 'family-name',
+                    'placeholder' => $dummyName[2]
                 ],
             ]);
 
@@ -53,16 +53,22 @@ class NewMemberForm extends Form
                 'label' => 'E-mailadres',
                 'rules' => 'required|email',
                 'attr' => [
-                    'placeholder' => $dummyName[3],
-                    'autocomplete' => 'email'
+                    'autocomplete' => 'email',
+                    'placeholder' => $dummyName[3]
                 ],
             ])
             ->add('phone', 'tel', [
                 'label' => 'Telefoonnummer',
                 'rules' => ['required', new PhoneNumber('NL')],
                 'attr' => [
-                    'autocomplete' => 'tel'
-                ]
+                    'autocomplete' => 'tel',
+                    'placeholder' => '038 845 0100'
+                ],
+                'help_block' => [
+                    'text' => <<<'TEXT'
+                    Geen Nederlands nummer? Typ dan een internationaal nummer in (zoals +49 201 567 890).
+                    TEXT
+                ],
             ]);
 
         // Personal info
@@ -75,7 +81,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Om je aan te melden voor Gumbo Millennium via de website moet je minimaal 17 jaar oud zijn.
+                    Om je aan te melden voor Gumbo Millennium via de website
+                    moet je minimaal 17 jaar oud zijn.
                     TEXT
                 ],
             ])
@@ -88,8 +95,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Wil je liever een andere notatie vast laten leggen? Stuur dan
-                    even een mailtje naar bestuur@gumbo-millennium.nl.
+                    Wil je liever een andere notatie vast laten leggen? Stuur
+                    dan even een mailtje naar bestuur@gumbo-millennium.nl.
                     TEXT
                 ],
             ]);
@@ -98,24 +105,32 @@ class NewMemberForm extends Form
         $this
             ->add('street', 'text', [
                 'label' => 'Straatnaam',
-                'rules' => 'required'
+                'rules' => 'required',
+                'attr' => [
+                    'placeholder' => 'Campus',
+                ]
             ])
             ->add('number', 'text', [
                 'label' => 'Huisnummer',
-                'rules' => 'required'
+                'rules' => 'required',
+                'attr' => [
+                    'placeholder' => '2-6',
+                ]
             ])
             ->add('postal-code', 'text', [
                 'label' => 'Postcode',
                 'rules' => 'required',
                 'attr' => [
-                    'autocomplete' => 'postal-code'
+                    'autocomplete' => 'postal-code',
+                    'placeholder' => '8017 CA'
                 ]
             ])
             ->add('city', 'text', [
                 'label' => 'Plaats',
                 'rules' => 'required',
                 'attr' => [
-                    'autocomplete' => 'address-level2'
+                    'autocomplete' => 'address-level2',
+                    'placeholder' => 'Zwolle'
                 ]
             ])
             ->add('country', 'text', [
@@ -133,8 +148,9 @@ class NewMemberForm extends Form
                 'label' => 'Windesheim student',
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en begunstigers. Alleen Windesheim studenten
-                    kunnen lid worden. Ben je Windesheim student, zet dan hierboven een vinkje.
+                    Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en
+                    begunstigers. Om te bepalen welke vorm voor jou mogelijk
+                    is, moeten we weten of je op Windesheim studeert.
                     TEXT
                 ]
             ])
@@ -142,8 +158,9 @@ class NewMemberForm extends Form
                 'label' => 'Nieuwsbrief',
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    1x per maand sturen wij de Gumbode op, met een samenvatting van de maand, leuke verhaaltjes
-                    en de gekste uitspraken van onze leden. Wil je deze ontvangen?
+                    Als je dat wilt, kan je elke maand de Gumbode ontvangen,
+                    met daarin een samenvatting van de maand, leuke verhaaltjes
+                    en de gekste uitspraken van onze leden.
                     TEXT
                 ]
             ]);
@@ -156,8 +173,8 @@ class NewMemberForm extends Form
                 'help_block' => [
                     'text' => sprintf(
                         <<<'HTML'
-                        'Ons privacybeleid kan je hier bekijken:
-                        <a href="%s" target="_blank">privacybeleid</a> (opent in een nieuw tabblad).
+                        <a href="%s" target="_blank">Lees het Privacybeleid</a>
+                        (opent in een nieuw tabblad).
                         HTML,
                         url('/privacy-policy')
                     )

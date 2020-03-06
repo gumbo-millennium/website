@@ -9,6 +9,7 @@ use App\Nova\Actions\HandleJoinSubmission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -78,6 +79,9 @@ class JoinSubmission extends Resource
         return [
             new Panel('Basisinformatie', [
                 ID::make()->sortable(),
+
+                DateTime::make('Ontvangen op', 'created_at')
+                    ->onlyOnDetail(),
 
                 // Heading in form
                 Heading::make('Persoonsgegevens')->onlyOnForms(),

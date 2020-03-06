@@ -48,6 +48,8 @@ class JoinSubmission extends Model
         'city',
         'postal_code',
         'country',
+        'windesheim_student',
+        'newsletter',
     ];
 
     /**
