@@ -113,14 +113,12 @@ class JoinController extends Controller
                 ->withErrors('Er is iets fout gegaan bij het aanmelden.');
         }
 
-        // Send mail to user
-        Mail::to([
-            $submission->only('name', 'email')
-        ])->send(new UserJoinMail($submission));
+        // Send mail to submitter
+        $recipient = $submission->only('name', 'email');
+        Mail::to([$recipient])->queue(new UserJoinMail($submission));
 
         // Send mail to board
-        Mail::to(self::TO_BOARD)
-            ->send(new BoardJoinMail($submission));
+        Mail::to(self::TO_BOARD)->queue(new BoardJoinMail($submission));
 
         // Write session
         Session::put(self::SESSION_NAME, $submission);
