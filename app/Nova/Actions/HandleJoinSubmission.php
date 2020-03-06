@@ -98,21 +98,19 @@ class HandleJoinSubmission extends Action
 
         // Add granted flag
         $submission->granted = $accepted;
-        $submission->save(['granted']);
+        $submission->save(['granted', 'updated_at']);
 
         // Mark as completed
         $this->markAsFinished($submission);
 
-        // Find user with the same email address
-        $user = User::where(['email' => $submission->email])->first();
+        // Find user with the same verified email address
+        $user = User::query()
+            ->where('email', $submission->email)
+            ->whereNotNull('email_verified_at')
+            ->first();
 
-        // Report as failed when no user could be found
-        if (!$user) {
-            return false;
-        }
-
-        // Flag as accepted
-        if ($accepted) {
+        // Flag as accepted if a user was found and the request was granted
+        if ($user && $accepted) {
             $user->assignRole('member');
         }
 
