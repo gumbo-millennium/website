@@ -5,6 +5,22 @@
 
     RewriteEngine On
 
+    # Handle HTTPS redirect
+    RewriteCond %{HTTPS} off
+    RewriteCond %{ENV:DOCKER_LOCAL} !=yes
+    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Add Strict-Transport-Security on HTTPS
+    RewriteCond %{HTTPS} on
+    RewriteCond %{ENV:DOCKER_LOCAL} !=yes
+    RewriteRule .* - [E=ADD_HSTS]
+
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" env=ADD_HSTS
+
+    # Force WWW on root
+    RewriteCond %{HTTP_HOST} ^gumbo-millennium.nl
+    RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
