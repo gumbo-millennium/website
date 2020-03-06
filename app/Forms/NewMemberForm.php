@@ -25,25 +25,25 @@ class NewMemberForm extends Form
                 'label' => 'Voornaam',
                 'rules' => 'required|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[0],
                     'autocomplete' => 'given-name',
-                    'autofocus' => true
+                    'autofocus' => true,
+                    'placeholder' => $dummyName[0]
                 ],
             ])
             ->add('insert', 'text', [
                 'label' => 'Tussenvoegsel',
                 'rules' => 'nullable|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[1],
-                    'autocomplete' => 'additional-name'
+                    'autocomplete' => 'additional-name',
+                    'placeholder' => $dummyName[1]
                 ],
             ])
             ->add('last-name', 'text', [
                 'label' => 'Achternaam',
                 'rules' => 'required|string|min:2',
                 'attr' => [
-                    'placeholder' => $dummyName[2],
-                    'autocomplete' => 'family-name'
+                    'autocomplete' => 'family-name',
+                    'placeholder' => $dummyName[2]
                 ],
             ]);
 
@@ -53,15 +53,16 @@ class NewMemberForm extends Form
                 'label' => 'E-mailadres',
                 'rules' => 'required|email',
                 'attr' => [
-                    'placeholder' => $dummyName[3],
-                    'autocomplete' => 'email'
+                    'autocomplete' => 'email',
+                    'placeholder' => $dummyName[3]
                 ],
             ])
             ->add('phone', 'tel', [
                 'label' => 'Telefoonnummer',
                 'rules' => ['required', new PhoneNumber('NL')],
                 'attr' => [
-                    'autocomplete' => 'tel'
+                    'autocomplete' => 'tel',
+                    'placeholder' => '038 845 0100'
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
@@ -104,24 +105,32 @@ class NewMemberForm extends Form
         $this
             ->add('street', 'text', [
                 'label' => 'Straatnaam',
-                'rules' => 'required'
+                'rules' => 'required',
+                'attr' => [
+                    'placeholder' => 'Campus',
+                ]
             ])
             ->add('number', 'text', [
                 'label' => 'Huisnummer',
-                'rules' => 'required'
+                'rules' => 'required',
+                'attr' => [
+                    'placeholder' => '2-6',
+                ]
             ])
             ->add('postal-code', 'text', [
                 'label' => 'Postcode',
                 'rules' => 'required',
                 'attr' => [
-                    'autocomplete' => 'postal-code'
+                    'autocomplete' => 'postal-code',
+                    'placeholder' => '8017 CA'
                 ]
             ])
             ->add('city', 'text', [
                 'label' => 'Plaats',
                 'rules' => 'required',
                 'attr' => [
-                    'autocomplete' => 'address-level2'
+                    'autocomplete' => 'address-level2',
+                    'placeholder' => 'Zwolle'
                 ]
             ])
             ->add('country', 'text', [
