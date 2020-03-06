@@ -13,6 +13,13 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    private Repository $cache;
+
+    public function __construct(Repository $cache)
+    {
+        $this->cache = $cache;
+    }
+
     /**
      * Renders the homepage
      * @return Response
@@ -47,12 +54,42 @@ class PageController extends Controller
      */
     public function fallback(Request $request)
     {
-        return app()->call(
-            \Closure::fromCallable([$this, 'render']),
-            [
-                trim($request->path(), '/\\')
-            ]
-        );
+        return $this->render(null, trim($request->path(), '/\\'));
+    }
+
+    /**
+     * Group overview page
+     * @param string $group
+     * @return JsonResponse
+     * @throws InvalidArgumentException
+     */
+    public function group(string $group)
+    {
+        $pages = Page::where(compact('group'))->get();
+        $lastModified = $pages->max('updated_at');
+        $page = Page::where([
+            'group' => null,
+            'slug' => $group
+        ])->first();
+
+        return response()
+            ->view('content.group', compact('pages', 'page'))
+            ->setLastModified($lastModified)
+            ->setMaxAge(now()->addHours(6)->diffInSeconds())
+            ->setSharedMaxAge(now()->addHour()->diffInSeconds())
+            ->setPublic();
+    }
+
+    /**
+     * Group detail page
+     * @param string $group
+     * @param string $slug
+     * @return App\Http\Controllers\Response
+     * @throws HttpResponseException
+     */
+    public function groupPage(string $group, string $slug)
+    {
+        return $this->render($group, $slug);
     }
 
     /**
@@ -60,44 +97,44 @@ class PageController extends Controller
      * @param string $slug
      * @return Response
      */
-    protected function render(Repository $cache, string $slug)
+    protected function render(?string $group, string $slug)
     {
-        $safeSlug = Str::slug(str_replace('/', '-slash-', Str::ascii($slug)));
-
-        // Form cache key
-        $cacheKey = sprintf('cache.%s', Str::slug($slug, '--'));
+        $safeSlug = Str::slug($slug);
+        $cacheKey = sprintf('pages-cache.%s.slug', $group ?? 'default', $safeSlug);
 
         // Check cache
-        $content = $cache->get($cacheKey);
-        if (!$cache->has($cacheKey)) {
+        $page = $this->cache->get($cacheKey);
+        if (!$this->cache->has($cacheKey)) {
             // Create instance
-            $content = null;
+            $page = null;
 
             // Check database
-            if (!$content) {
-                $content = Page::whereSlug($safeSlug)->first() ?? Page::whereSlug(Page::SLUG_404)->first();
+            if (!$page) {
+                $page = Page::where([
+                    'group' => $group,
+                    'slug' => $safeSlug
+                ])->first();
 
-                if (!$content || empty($content->html)) {
-                    $content = null;
+                if (!$page || empty($page->html)) {
+                    $page = null;
                 }
             }
 
             // 404 if still no results
-            if (!$content) {
+            if (!$page) {
                 abort(404);
             }
 
             // Store in cache
-            $cache->put($cacheKey, $content, now()->addHour());
+            $this->cache->put($cacheKey, $page, now()->addHour());
         }
 
         // Show view
         return response()
-            ->view('content.page', ['page' => $content])
-            ->withHeaders([
-                'Last-Modified' => $content->updated_at->toRfc7231String(),
-                'Expires' => now()->addHour()->toRfc7231String(),
-                'Cache-Control' => ['public', 'must-revalidate', 'max-age=3600']
-            ]);
+            ->view('content.page', compact('page'))
+            ->setLastModified($page->updated_at)
+            ->setMaxAge(now()->addHours(6)->diffInSeconds())
+            ->setSharedMaxAge(now()->addHour()->diffInSeconds())
+            ->setPublic();
     }
 }

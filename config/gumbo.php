@@ -33,6 +33,13 @@ return [
         ]
     ],
 
+    // Page groups
+    'page-groups' => [
+        'commissies' => 'Commissies',
+        'disputen' => 'Disputen',
+        'projectgroepen' => 'Projectgroepen',
+    ],
+
     // Guzzle config
     'guzzle-config' => [
         // Identify ourselves when making requests

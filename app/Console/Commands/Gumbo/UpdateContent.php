@@ -120,16 +120,20 @@ class UpdateContent extends Command
         // Mark existing files
         $existingPages = Page::query()
             ->whereType(Page::TYPE_GIT)
+            ->whereNull('group')
             ->whereNotIn('slug', $pageSlugs)
             ->get();
 
         // Keep track
         $updateCount = 0;
 
+        // Fetch required pages
+        $requiredPages = Page::getRequiredPages();
+
         // Mark all pages as required or user, but remove the git flag anyway.
         foreach ($existingPages as $page) {
             // Change type if not empty
-            $page->type = in_array($page->slug, Page::REQUIRED_PAGES) ? Page::TYPE_REQUIRED : Page::TYPE_USER;
+            $page->type = \array_key_exists($page->slug, $requiredPages) ? Page::TYPE_REQUIRED : Page::TYPE_USER;
             $page->save(['type']);
 
             // Increase count

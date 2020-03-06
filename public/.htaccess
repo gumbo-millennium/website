@@ -1,3 +1,35 @@
+<IfModule mod_alias.c>
+    # Old homepage
+    Redirect permanent /site/index.php /
+    Redirect permanent /site/portal.php /
+
+    # Old pages -> new pages
+    Redirect permanent /site/gumbo/over_ons.php /over
+    Redirect permanent /site/gumbo/societeit.php /over
+    Redirect permanent /site/gumbo/news.php /nieuws
+    Redirect permanent /site/dc/dc_activity_list.php /activiteiten
+    Redirect permanent /site/gumbo/sponsors.php /sponsoren
+
+    # Committees
+    Redirect permanent /site/gumbo/committee.php /commissies
+
+    # Disputes
+    Redirect permanent /site/gumbo/disputes.php /disputen
+    Redirect permanent /site/gumbo/amicae.php /disputen/amicae
+    Redirect permanent /site/gumbo/m-power.php /disputen/m-power
+    Redirect permanent /site/gumbo/aliquando.php /disputen/aliquando
+    Redirect permanent /site/gumbo/amicae.php /disputemn/amicae
+    Redirect permanent /site/gumbo/proximus.php /disputen/proximus
+    Redirect gone /site/gumbo/equester.php
+
+    # Removed pages
+    Redirect gone /poolkampioenschap/
+    Redirect gone /site/viewtopic.php
+    Redirect gone /site/viewforum.php
+    Redirect gone /site/gumbo/plazacam.php
+    Redirect gone /site/gumbo/pictures.php
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
