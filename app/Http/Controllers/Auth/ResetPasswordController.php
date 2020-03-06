@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Forms\ResetPasswordForm;
+use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
-    use RedirectsToAdminHomeTrait;
+    use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.

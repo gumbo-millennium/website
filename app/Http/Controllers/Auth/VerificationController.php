@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Routing\Controller;
 
@@ -21,7 +22,7 @@ class VerificationController extends Controller
     */
 
     use VerifiesEmails;
-    use RedirectsToAdminHomeTrait;
+    use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.

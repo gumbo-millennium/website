@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\Traits;
 
 /**
  * Redirects users to the homepage.
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
-trait RedirectsToAdminHomeTrait
+trait RedirectsToHomepage
 {
     /**
      * Redirect to homepage

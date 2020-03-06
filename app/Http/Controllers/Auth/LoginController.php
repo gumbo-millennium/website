@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class LoginController extends Controller
     use AuthenticatesUsers {
         logout as private doLogout;
     }
-    use RedirectsToAdminHomeTrait;
+    use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.
