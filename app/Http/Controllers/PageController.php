@@ -111,23 +111,19 @@ class PageController extends Controller
             if (!$page) {
                 $page = Page::where(compact('group', 'slug'))->first();
 
+                // Empty or not found, store a null value
                 if (!$page || empty($page->html)) {
                     $page = null;
                 }
-            }
-
-            // 404 if still no results
-            if (!$page) {
-                $page = 404;
             }
 
             // Store in cache
             $this->cache->put($cacheKey, $page, now()->addHour());
         }
 
-        // Allow caching 404
-        if (is_scalar($page) && $page === 404) {
-            abort($page);
+        // Handle cached 404
+        if ($page === null) {
+            abort(404);
         }
 
         // Show view
