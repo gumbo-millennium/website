@@ -2,9 +2,6 @@ name: "Build and test Laravel"
 
 on:
   pull_request:
-  push:
-    branches-ignore:
-    - master
 
 jobs:
   laravel-frontend:
@@ -115,15 +112,15 @@ jobs:
       - name: Run linters
         run: composer run lint
 
+      - name: Test optimizing the config
+        run: |
+          php artisan optimize
+          php artisan optimize:clear
+
       - name: Run unit tests
         run: |
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
-
-      - name: Attempt to optimize the config
-        run: |
-          php artisan optimize
-          php artisan optimize:clear
 
       - name: Report test results to CodeClimate
         run: |

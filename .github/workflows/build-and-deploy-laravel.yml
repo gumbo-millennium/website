@@ -114,6 +114,11 @@ jobs:
       - name: Run linters
         run: composer run lint
 
+      - name: Test optimizing the config
+        run: |
+          php artisan optimize
+          php artisan optimize:clear
+
       - name: Run unit tests
         run: |
           test -d dist || mkdir dist
