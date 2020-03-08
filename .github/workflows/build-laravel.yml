@@ -43,6 +43,7 @@ jobs:
       matrix:
         php:
           - '7.4'
+          - '8.0'
     services:
       database:
         image: mysql:5
@@ -69,8 +70,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: vendor
-          key: composer-build-${{ hashFiles('**/composer.lock') }}
+          key: composer-build-${{ hashFiles('**/composer.lock') }}-${{ matrix.php }}
           restore-keys: |
+            composer-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}-
             composer-build-${{ env.cache-name }}-
             composer-build-
 
@@ -91,6 +93,14 @@ jobs:
 
       - name: Copy environment config
         run: cp .github/actions.env .env
+
+      - name: Pretend to be PHP 7.4
+        if: matrix.php == '8.0'
+        run: |
+          composer config platform.php ${FAKED_VERSION}
+          composer config platform.ext-filter ${FAKED_VERSION}
+        env:
+          FAKED_VERSION: '7.4.2'
 
       - name: Install composer dependencies
         run: |
