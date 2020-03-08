@@ -11,11 +11,13 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\FileBundle;
 use App\Models\NewsItem;
+use App\Models\Sponsor;
 use App\Models\User;
 use App\Observers\ActivityObserver;
 use App\Observers\EnrollmentObserver;
 use App\Observers\FileBundleObserver;
 use App\Observers\NewsItemObserver;
+use App\Observers\SponsorObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
@@ -55,6 +57,7 @@ class EventServiceProvider extends ServiceProvider
         Enrollment::observe(EnrollmentObserver::class);
         FileBundle::observe(FileBundleObserver::class);
         NewsItem::observe(NewsItemObserver::class);
+        Sponsor::observe(SponsorObserver::class);
         User::observe(UserObserver::class);
     }
 

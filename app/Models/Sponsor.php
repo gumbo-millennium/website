@@ -90,8 +90,8 @@ class Sponsor extends Model implements AttachableInterface
     protected function bindPaperclip(): void
     {
         // Sizes
-        $this->createSimplePaperclip('image', [
-            'banner' => [1280 / 12 * 8, 120, false]
+        $this->createSimplePaperclip('backdrop', [
+            'banner' => [1920, 960, true]
         ]);
     }
 }
