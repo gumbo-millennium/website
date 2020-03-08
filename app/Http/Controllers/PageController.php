@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
@@ -99,8 +98,8 @@ class PageController extends Controller
      */
     protected function render(?string $group, string $slug)
     {
-        $safeSlug = Str::slug($slug);
-        $cacheKey = sprintf('pages-cache.%s.%s', $group ?? 'default', $safeSlug);
+        // Get cache key
+        $cacheKey = sprintf('pages-cache.%s.%s', $group ?? 'default', $slug);
 
         // Check cache
         $page = $this->cache->get($cacheKey);
@@ -110,10 +109,7 @@ class PageController extends Controller
 
             // Check database
             if (!$page) {
-                $page = Page::where([
-                    'group' => $group,
-                    'slug' => $safeSlug
-                ])->first();
+                $page = Page::where(compact('group', 'slug'))->first();
 
                 if (!$page || empty($page->html)) {
                     $page = null;
@@ -130,8 +126,8 @@ class PageController extends Controller
         }
 
         // Allow caching 404
-        if (is_scalar($cacheKey) && $cacheKey === 404) {
-            abort($cacheKey);
+        if (is_scalar($page) && $page === 404) {
+            abort($page);
         }
 
         // Show view
