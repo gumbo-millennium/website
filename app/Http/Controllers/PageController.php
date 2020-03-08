@@ -100,7 +100,7 @@ class PageController extends Controller
     protected function render(?string $group, string $slug)
     {
         $safeSlug = Str::slug($slug);
-        $cacheKey = sprintf('pages-cache.%s.slug', $group ?? 'default', $safeSlug);
+        $cacheKey = sprintf('pages-cache.%s.%s', $group ?? 'default', $safeSlug);
 
         // Check cache
         $page = $this->cache->get($cacheKey);
@@ -122,11 +122,16 @@ class PageController extends Controller
 
             // 404 if still no results
             if (!$page) {
-                abort(404);
+                $page = 404;
             }
 
             // Store in cache
             $this->cache->put($cacheKey, $page, now()->addHour());
+        }
+
+        // Allow caching 404
+        if (is_scalar($cacheKey) && $cacheKey === 404) {
+            abort($cacheKey);
         }
 
         // Show view
