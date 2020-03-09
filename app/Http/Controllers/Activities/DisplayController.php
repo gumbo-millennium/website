@@ -55,6 +55,26 @@ class DisplayController extends Controller
                 ->keyBy('activity_id');
         }
 
+        // SEO
+        $title = 'Activiteiten';
+        $description = "Ga mee op avontuur met Gumbo Millennium en kom naar onze feesten en activiteiten.";
+        $canonical = route('activity.index');
+
+        // Set SEO data
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::setCanonical($canonical);
+
+        // Set Open Graph
+        OpenGraph::setTitle($title);
+        OpenGraph::setDescription($description);
+        OpenGraph::setUrl($canonical);
+
+        // Set JSON+LD
+        JsonLd::setTitle($title);
+        JsonLd::setDescription($description);
+        JsonLd::setUrl($canonical);
+
         // Render the view with the events and their enrollments
         return view('activities.index', [
             'activities' => $activities,

@@ -4,12 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Gumbo Millennium')</title>
 
-    {{-- Tell robots to fuck off when we're testing --}}
-    @if (config('gumbo.beta'))
-    <meta name="robots" value="noindex,nofollow" />
-    @endif
+    {{-- Title, meta tags and JSON-LD --}}
+    {!! SEO::generate(config('app.debug') !== true) !!}
 
     {{-- Stylesheet --}}
     <link rel="stylesheet" href="{{ mix('/app.css') }}">
