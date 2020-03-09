@@ -60,9 +60,9 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
         <div class="activity-card__body-icon">
             @if ($activity->image->exists())
             <img class="activity-card__body-icon-image" src="{{ $activity->image->url('poster') }}" srcset="
-                    {{ $activity->image->url('poster-small') }} 96w,
+                    {{ $activity->image->url('poster-half') }} 96w,
                     {{ $activity->image->url('poster') }} 192w,
-                    {{ $activity->image->url('poster-large') }} 384w
+                    {{ $activity->image->url('poster-2x') }} 384w
                 " />
             @else
             <img class="activity-card__body-icon-image" src="{{ mix('images/logo-glass-green.svg') }}">
