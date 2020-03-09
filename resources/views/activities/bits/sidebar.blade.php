@@ -70,23 +70,23 @@ if ($hasAnyDiscount) {
 
     if ($hasRestrictedDiscount && $isMember) {
         // Alter labels
-        $guestLabel = "Prijs korting (×{$activity->discount_count})";
-        $memberLabel = 'Prijs regulier';
+        $memberLabel = "Prijs korting (×{$activity->discount_count})";
+        $guestLabel = 'Prijs regulier';
 
         // Alter values
         if ($hasSoldOutDiscount) {
             $memberPrice .= ' (uitverkocht)';
         }
     } elseif ($hasRestrictedDiscount && $hasDiscount) {
-        $guestPrice = sprintf("Vanaf %s", Str::lower($guestPrice));
+        $memberPrice = sprintf("Vanaf %s", Str::lower($memberPrice));
     } elseif ($hasRestrictedDiscount) {
-        $guestPrice = sprintf("Vanaf %s", Str::price(0));
+        $memberPrice = sprintf("Vanaf %s", Str::price(0));
     }
 
     // Add values
     $priceData = [
-        $memberLabel => $guestPrice,
-        $guestLabel => $memberPrice
+        $memberLabel => $memberPrice,
+        $guestLabel => $guestPrice
     ];
 }
 
