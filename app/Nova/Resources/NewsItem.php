@@ -88,6 +88,12 @@ class NewsItem extends Resource
                 ->required()
                 ->options(\array_combine($options, $options)),
 
+            // Add sponsor field
+            Text::make('Headline', 'headline')
+                ->nullable()
+                ->help('De headline van dit artikel, net zoals in de krant.')
+                ->hideFromIndex(),
+
             // Add multi selects
             BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
