@@ -52,6 +52,14 @@ $postDate = $postTimestamp->isoFormat('D MMMM, Y');
 
 {{-- Content --}}
 <div class="container container--md leading-loose">
+    @if ($item->headline)
+    <div class="mb-4">
+        <p class="font-bold text-lg">
+            {{ $item->headline }}
+        </p>
+    </div>
+    @endif
+
     <div class="plain-content plain-content--narrow">
         {!! $item->html !!}
     </div>

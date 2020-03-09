@@ -17,6 +17,7 @@
     $postTimestamp = $item->published_at ?? $item->created_at;
     $postIso = $postTimestamp->toIso8601String();
     $postDate = $postTimestamp->isoFormat('DD MMM \'YY');
+    $headline = $item->headline ?? Str::words(strip_tags($item->html), 10);
     @endphp
     <article class="col w-full flex-none md:w-1/2 mb-8">
     <div class="shadow rounded bg-white relative">
@@ -36,7 +37,7 @@
                 <a href="{{ route('news.show', ['news' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
             </h2>
 
-            <p class="mb-4">{{ Str::words(strip_tags($item->html), 10) }}</p>
+            <p class="mb-4">{{ $headline }}</p>
             <time datetime="{{ $postIso }}" class="text-right text-gray-600">{{ $postDate }}</time>
         </div>
     </div>
