@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-/**
- * @see https://github.com/artesaos/seotools
+/*
+ * See https://github.com/artesaos/seotools
  */
 
 // phpcs:disable Generic.Files.LineLength.TooLong
