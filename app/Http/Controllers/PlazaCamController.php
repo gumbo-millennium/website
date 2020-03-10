@@ -32,6 +32,11 @@ class PlazaCamController extends Controller
      */
     private const IMAGE_COFFEE = 'plazacam/image-coffee.jpg';
 
+    private const VALID_IMAGES = [
+        'plaza' => self::IMAGE_PLAZA,
+        'coffee' => self::IMAGE_COFFEE,
+    ];
+
     /**
      * Prevent the images from being updated on weekends and between 22.00 - 07.00.
      * @return bool
@@ -42,6 +47,29 @@ class PlazaCamController extends Controller
         $hour = $time->hour;
 
         return $time->isWeekday() && ($hour >= 7 && $hour < 22);
+    }
+
+    /**
+     * Return if the cam is still valid (up to 90 minutes after creation)
+     * @param string $cam
+     * @return bool
+     */
+    public static function isExpired(string $cam): bool
+    {
+        // Check if the requested cam exists
+        if (!\array_key_exists($cam, self::VALID_IMAGES)) {
+            return true;
+        }
+
+        $camPath = self::VALID_IMAGES[$cam];
+
+        // Check if the cam
+        if (!Storage::exists($camPath)) {
+            return false;
+        }
+
+        // Check the modified date
+        return Storage::lastModified($camPath) < (now()->subMinutes(90))->timestamp;
     }
 
     /**
