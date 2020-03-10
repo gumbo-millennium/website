@@ -24,7 +24,7 @@ class OptimizeUserSvg implements ShouldQueue
 
     public const TARGET_FULL_COLOR = 'color';
     public const TARGET_MONOTONE = 'mono';
-    private const VALID_TARGET = [
+    private const VALID_TARGETS = [
         self::TARGET_FULL_COLOR,
         self::TARGET_MONOTONE,
     ];

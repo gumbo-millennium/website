@@ -22,8 +22,13 @@ trait RunsCliCommands
      * @param string|resource|null $stdin
      * @return int|null Exit code, or null if non-runnable
      */
-    protected function runCliCommand(array $command, &$stdout = null, &$stderr = null, ?int $timeout = null, &$stdin = null): ?int
-    {
+    protected function runCliCommand(
+        array $command,
+        &$stdout = null,
+        &$stderr = null,
+        ?int $timeout = null,
+        &$stdin = null
+    ): ?int {
         // Make sure the command we want to run exists
         $testProc = new Process(['which', $command[0]]);
         $testProc->setInput($stdin);
