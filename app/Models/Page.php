@@ -119,4 +119,18 @@ class Page extends SluggableModel implements AttachableInterface
             'poster' => [192, 256, false]
         ]);
     }
+
+    /**
+     * Returns the URL to this page
+     * @return string
+     * @throws LogicException
+     */
+    public function getUrlAttribute(): string
+    {
+        if ($this->group) {
+            return route('group.show', $this->only('group', 'slug'));
+        }
+
+        return url("/{$this->slug}");
+    }
 }

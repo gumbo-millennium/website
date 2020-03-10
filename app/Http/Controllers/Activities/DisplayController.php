@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
+use App\Http\Controllers\Activities\Traits\HandlesSettingMetadata;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\ViewModels\ActivityViewModel;
+use Artesaos\SEOTools\Facades\JsonLd;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -18,6 +22,8 @@ use Illuminate\Http\Request;
  */
 class DisplayController extends Controller
 {
+    use HandlesSettingMetadata;
+
     /**
      * Display a listing of the resource.
      * @param Request $request
@@ -55,6 +61,26 @@ class DisplayController extends Controller
                 ->keyBy('activity_id');
         }
 
+        // SEO
+        $title = 'Activiteiten';
+        $description = "Ga mee op avontuur met Gumbo Millennium en kom naar onze feesten en activiteiten.";
+        $canonical = route('activity.index');
+
+        // Set SEO data
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::setCanonical($canonical);
+
+        // Set Open Graph
+        OpenGraph::setTitle($title);
+        OpenGraph::setDescription($description);
+        OpenGraph::setUrl($canonical);
+
+        // Set JSON+LD
+        JsonLd::setTitle($title);
+        JsonLd::setDescription($description);
+        JsonLd::setUrl($canonical);
+
         // Render the view with the events and their enrollments
         return view('activities.index', [
             'activities' => $activities,
@@ -75,6 +101,9 @@ class DisplayController extends Controller
 
         // Load enrollments
         $activity->load(['enrollments']);
+
+        // Set meta
+        $this->setActivityMeta($activity);
 
         // Show view
         return view('activities.show', new ActivityViewModel(

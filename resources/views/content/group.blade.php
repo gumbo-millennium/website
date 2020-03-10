@@ -1,6 +1,11 @@
 @extends('layout.main')
 
-@section('title', $page->title)
+@php
+// Set the metadata
+SEOMeta::setTitle($page->title);
+SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
+@endphp
+
 
 @section('content')
 {{-- All in an article --}}

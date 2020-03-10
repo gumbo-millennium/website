@@ -6,6 +6,7 @@
     "require": {
         "php": "^7.4 | ^8.0",
         "advoor/nova-editor-js": "^0.6",
+        "artesaos/seotools": "^0.16.0",
         "austinheap/laravel-database-encryption": "^0.3.0-rc1",
         "benjaminhirsch/nova-slug-field": "^1.2",
         "botman/botman": "^2.5",
