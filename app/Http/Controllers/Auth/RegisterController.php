@@ -10,6 +10,7 @@ use App\Helpers\Str;
 use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Auth\RedirectsUsers;
@@ -65,6 +66,9 @@ class RegisterController extends Controller
             'url' => route('register')
         ]);
 
+        // Title
+        SEOMeta::setTitle('Registreren');
+
         // Make form
         return view('auth.register', compact('form'));
     }
@@ -109,6 +113,9 @@ class RegisterController extends Controller
         if (!$request->session()->has(self::DATA_SESSION_KEY)) {
             return response()->redirectToRoute('register');
         }
+
+        // Title
+        SEOMeta::setTitle('Jouw privacy');
 
         // Create form
         $form = $this->formBuilder->create(RegisterPrivacyForm::class, [
@@ -201,6 +208,9 @@ class RegisterController extends Controller
         if ($request->has('continue')) {
             return redirect()->intended();
         }
+
+        // Title
+        SEOMeta::setTitle('Registratie voltooid');
 
         // Show onboarding
         return view('onboarding.new-account', [

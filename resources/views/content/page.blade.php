@@ -1,6 +1,10 @@
 @extends('layout.main')
 
-@section('title', $page->title)
+@php
+// Set the metadata
+SEOMeta::setTitle($page->title);
+SEOMeta::setCanonical($page->url);
+@endphp
 
 @section('content')
 {{-- All in an article --}}

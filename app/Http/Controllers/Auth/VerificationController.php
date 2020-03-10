@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Routing\Controller;
 
@@ -33,5 +34,6 @@ class VerificationController extends Controller
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+        SEOTools::setTitle('E-mailadres valideren');
     }
 }

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Forms\ForgotPasswordForm;
 use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
+use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -34,6 +35,7 @@ class ForgotPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        SEOMeta::setTitle('Wachtwoord herstellen');
     }
 
     /**
