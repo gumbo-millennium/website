@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
+use App\Http\Controllers\PlazaCamController;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Messages\Attachments\Image;
@@ -48,13 +49,6 @@ class PlazaCamMessage extends AbstractMessage
         //     return;
         // }
 
-        // Send image notification
-        if ($bot->getDriver() instanceof TelegramDriver) {
-            $bot->sendRequest('sendChatAction', ['action' => 'upload_photo']);
-        } else {
-            $bot->types();
-        }
-
         // Get cam
         $message = $bot->getMessage();
 
@@ -63,6 +57,19 @@ class PlazaCamMessage extends AbstractMessage
 
         // Get cam name
         $name = (string) (self::COMMAND_IMAGE_MAP[trim($message->getText())] ?? null);
+
+        // Check if we actually have a plazacam
+        if (PlazaCamController::isExpired($name)) {
+            $bot->reply("Sorry, de {$name}cam is te ver verouderd, en niet meer beschikbaar");
+            return;
+        }
+
+        // Send image notification
+        if ($bot->getDriver() instanceof TelegramDriver) {
+            $bot->sendRequest('sendChatAction', ['action' => 'upload_photo']);
+        } else {
+            $bot->types();
+        }
 
         // HACK remove when we're authenticating
         $user ??= User::query()->permission(['plazacam-update'])->first(['id', 'name']);
