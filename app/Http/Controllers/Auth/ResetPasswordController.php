@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Forms\ResetPasswordForm;
 use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use App\Http\Controllers\Controller;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -35,6 +36,7 @@ class ResetPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        SEOTools::setTitle('Wachtwoord herstellen');
     }
 
     /**
