@@ -52,7 +52,9 @@ class ActivitiesCommand extends AbstractMessage
                 $activity->name,
             );
 
-            if ($activity->available_seats > 0 && $activity->price > 0) {
+            if ($activity->is_cancelled) {
+                $line .= " (GEANNULEERD)";
+            } elseif ($activity->available_seats > 0 && $activity->price > 0) {
                 $line .= " ($activity->price_label)";
             } elseif ($activity->available_seats === 0) {
                 $line .= " (uitverkocht)";
