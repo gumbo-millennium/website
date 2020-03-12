@@ -28,6 +28,7 @@ class PageController extends Controller
         $nextEvents = Activity::query()
             ->whereAvailable()
             ->where('start_date', '>', now())
+            ->whereNull('cancelled_at')
             ->orderBy('start_date')
             ->take(3)
             ->get();

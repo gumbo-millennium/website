@@ -140,6 +140,12 @@ $showTagline ??= true;
 </p>
 @endif
 
+{{-- Show cancellation prompt if cancelled --}}
+@if ($activity->is_cancelled)
+<div class="notice notice--warning">
+    <strong class="notice__title">Geannuleerd</strong>: {{ $activity->cancelled_reason ?: 'Deze activiteit is geannuleerd' }}
+</div>
+@else
 {{-- Description --}}
 @if ($showTagline)
     <p class="text-gray-600 mb-4">{{ $tagline }}</p>
@@ -149,6 +155,7 @@ $showTagline ??= true;
 @if ($showJoin)
     {{-- In an if-statement, otherwise "compact" goes kaboohm --}}
     @include('activities.bits.join-button', compact('is_enrolled', 'enrollment'))
+@endif
 @endif
 
 {{-- Metadata --}}
