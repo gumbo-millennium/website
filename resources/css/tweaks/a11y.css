@@ -1,0 +1,8 @@
+.a11y-skip {
+  @apply sr-only;
+}
+
+.a11y-skip:focus {
+  @apply not-sr-only;
+  @apply block text-center text-lg font-bold p-4;
+}

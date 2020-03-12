@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 
 <head>
     <meta charset="UTF-8">
@@ -25,11 +25,16 @@
 </head>
 
 <body>
+    {{-- Container --}}
+    <div class="container">
+        <a href="#content" class="a11y-skip">Ga direct naar inhoud</a>
+    </div>
+
     @section('main.header')
     @include('layout.header')
     @show
 
-    <main class="main">
+    <main class="main" id="content">
         @yield('content')
     </main>
 
