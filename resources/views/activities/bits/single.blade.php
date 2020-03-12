@@ -59,13 +59,25 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
         {{-- Icon --}}
         <div class="activity-card__body-icon">
             @if ($activity->image->exists())
-            <img class="activity-card__body-icon-image" src="{{ $activity->image->url('poster') }}" srcset="
+            <img
+                class="activity-card__body-icon-image"
+                alt="Foto van {{ $activity->name }}"
+                src="{{ $activity->image->url('poster') }}" srcset="
                     {{ $activity->image->url('poster-half') }} 96w,
                     {{ $activity->image->url('poster') }} 192w,
                     {{ $activity->image->url('poster-2x') }} 384w
+                " sizes="
+                    (min-width: 1280px) 288px,
+                    (min-width: 768px) and (max-width: 1280px) 210px,
+                    (min-width: 640px) and (max-width: 768px) 164px,
+                480px
                 " />
             @else
-            <img class="activity-card__body-icon-image" src="{{ mix('images/logo-glass-green.svg') }}">
+            <img
+                src="{{ mix('images/logo-glass-green.svg') }}"
+                alt="Gumbo Millennium logo, omdat geen foto aanwezig is voor {{ $activity->name }}"
+                class="activity-card__body-icon-image"
+                />
             @endif
         </div>
 

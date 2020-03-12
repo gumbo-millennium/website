@@ -32,7 +32,7 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
 <div class="flex flex-col items-center">
     {{-- Stable --}}
     @if ($user && $is_enrolled && $isStable)
-    <div class="btn m-0 btn--disabled" disabled>Ingeschreven</div>
+    <div class="btn m-0 btn--disabled">Ingeschreven</div>
     @if ($isOpen && $user->can('unenroll', $enrollment))
     <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
     @endif
