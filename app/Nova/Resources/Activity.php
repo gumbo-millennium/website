@@ -6,8 +6,10 @@ namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
+use App\Nova\Actions\CancelActivity;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
+use App\Nova\Filters\RelevantActivitiesFilter;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
@@ -238,6 +240,14 @@ class Activity extends Resource
                 ->readonly()
                 ->onlyOnDetail(),
 
+            DateTime::make('Geannuleerd op', 'cancelled_at')
+                ->readonly()
+                ->onlyOnDetail(),
+
+            Text::make('Geannuleerd om', 'cancelled_reason')
+                ->readonly()
+                ->onlyOnDetail(),
+
             BelongsTo::make('Groep', 'role', Role::class)
                 ->help('Groep of commissie die deze activiteit beheert')
                 ->hideFromIndex()
@@ -334,6 +344,36 @@ class Activity extends Resource
                 ->rules('nullable', 'numeric', 'min:0'),
 
             Boolean::make('Openbare activiteit', 'is_public'),
+        ];
+    }
+
+    /**
+     * Get the actions available on the entity.
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function actions(Request $request)
+    {
+        return [
+            (new CancelActivity())
+                ->exceptOnTableRow()
+                ->confirmText('Weet je zeker dat je de activiteit(en) wilt annuleren')
+                ->cancelButtonText('Niet annuleren')
+                ->confirmButtonText('Activiteit annuleren')
+                ->canSee(fn () => !$this->is_cancelled)
+        ];
+    }
+
+    /**
+     * Get the filters available on the entity.
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [
+            new RelevantActivitiesFilter()
         ];
     }
 }

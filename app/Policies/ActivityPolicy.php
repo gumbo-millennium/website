@@ -83,6 +83,11 @@ class ActivityPolicy
             return false;
         }
 
+        // Cannot enroll if it's cancelled
+        if ($activity->is_cancelled) {
+            return false;
+        }
+
         // Allow
         return true;
     }

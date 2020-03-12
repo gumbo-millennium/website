@@ -78,7 +78,7 @@ trait HandlesSettingMetadata
 
         // Build JSON+LD
         $data = [
-            'type' => 'Event',
+            'type' => 'SocialEvent',
             'url' => $url,
             'identifier' => $url,
             'name' => $activity->name,
@@ -87,9 +87,18 @@ trait HandlesSettingMetadata
             'organizer' => $activity->organiser,
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
+            'eventStatus' => 'https://schema.org/EventCancelled',
             'location' => $this->buildLocationMeta($activity),
-            'offers' => $this->buildPricingAndTicketMeta($activity),
         ];
+
+        // If cancelled, we're done here
+        if ($activity->is_cancelled) {
+            return $data;
+        }
+
+        // Add data
+        $data['eventStatus'] = 'https://schema.org/EventScheduled';
+        $data['offers'] = $this->buildPricingAndTicketMeta($activity);
 
         // Add seat count
         if ($activity->seats > 0 && $activity->available_seats > 0) {

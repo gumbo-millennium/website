@@ -129,16 +129,6 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the activity has been cancelled
-     * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getCancelledAttribute(): bool
-    {
-        return $this->cancelled_at !== null;
-    }
-
-    /**
      * Returns the name of the organiser, either committee or user
      * @return string|null
      */
@@ -174,6 +164,11 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getEnrollmentOpenAttribute(): ?bool
     {
+        // Prevent if cancelled
+        if ($this->is_cancelled) {
+            return false;
+        }
+
         // Don't re-create a timestamp every time
         $now = now();
 
@@ -337,6 +332,16 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getIsFreeAttribute(): bool
     {
         return $this->total_price === null;
+    }
+
+    /**
+     * Returns if the activity has been cancelled
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsCancelledAttribute(): bool
+    {
+        return $this->cancelled_at !== null;
     }
 
     /**

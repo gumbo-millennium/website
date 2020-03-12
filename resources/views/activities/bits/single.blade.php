@@ -40,6 +40,12 @@ if ($activity->seats > 0 && !$isSoldOut && ($activity->available_seats < 10)) {
     $seats = "{$activity->seats} plekken";
 }
 $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
+
+// Link class
+$linkClass = 'activity-card__body-title-link stretched-link';
+if ($activity->cancelled) {
+    $linkClass .= ' line-through';
+}
 @endphp
 <div class="activity-card">
     {{-- Header --}}
@@ -83,9 +89,13 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
 
         {{-- Title and tagline --}}
         <h3 class="activity-card__body-title">
-            <a href="{{ $url }}" class="activity-card__body-title-link stretched-link">{{ $activity->name }}</a>
+            <a href="{{ $url }}" class="{{ $linkClass }}">{{ $activity->name }}</a>
         </h3>
+        @if ($activity->is_cancelled)
+        <p class="activity-card__body-tagline">Geannuleerd: {{ $activity->cancelled_reason }}</p>
+        @else
         <p class="activity-card__body-tagline">{{ $activity->tagline }}</p>
+        @endif
 
         {{-- Users going --}}
         <div class="activity-card__body-user-list">
