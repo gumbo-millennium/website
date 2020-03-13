@@ -15,7 +15,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Actions\DestructiveAction;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class CancelActivity extends DestructiveAction
 {
@@ -116,9 +116,10 @@ class CancelActivity extends DestructiveAction
     public function fields()
     {
         return [
-            Text::make('Reden', 'reason')
-                ->rules('required')
-                ->help('De reden voor annulering'),
+            Textarea::make('Reden', 'reason')
+                ->rules('required|max:190')
+                ->rows(4)
+                ->help('De reden voor annulering, max 190 tekens'),
             Boolean::make('Betalingen terugboeken', 'refund_all')
                 ->help('Alle uitgevoerde betalingen terugboeken')
         ];

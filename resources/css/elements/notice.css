@@ -8,26 +8,35 @@
   @apply mr-2 icon-lg border-gray-600;
 }
 
-.notice--brand {
-  @apply border-brand-600;
+.notice--large {
+  @apply flex-col items-start;
 }
 
-.notice--brand .notice__icon {
-  @apply text-brand-600;
+.notice--large .notice__title {
+  @apply mb-2;
+  @apply text-sm font-bold uppercase text-gray-600;
+}
+
+.notice--brand {
+  @apply border-brand-600;
 }
 
 .notice--warning {
   @apply border-orange-600;
 }
 
-.notice--warning .notice__icon {
-  @apply text-orange-600;
-}
-
 .notice--info {
   @apply border-blue-600;
 }
 
-.notice--info .notice__icon {
+.notice--brand .notice__icon, .notice--brand.notice--large .notice__title {
+  @apply text-brand-600;
+}
+
+.notice--warning .notice__icon, .notice--warning.notice--large .notice__title {
+  @apply text-orange-600;
+}
+
+.notice--info .notice__icon, .notice--info.notice--large .notice__title {
   @apply text-blue-600;
 }
