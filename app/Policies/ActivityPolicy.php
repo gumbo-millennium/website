@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Activity;
+use App\Models\States\Enrollment\Paid as PaidState;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -129,7 +130,7 @@ class ActivityPolicy
     public function cancel(User $user, Activity $activity): bool
     {
         // Can't cancel activities that have already started
-        if ($activity->start_date < now()) {
+        if ($activity->end_date < now() || $activity->is_cancelled) {
             return false;
         }
 
@@ -145,18 +146,33 @@ class ActivityPolicy
      */
     public function delete(User $user, Activity $activity): bool
     {
-        // Can't delete activities that have already started
-        if ($activity->start_date < now()) {
+        // Prevent deletion if not allowed
+        if (!$user->can('admin', $activity)) {
             return false;
         }
 
-        // Delete is only allowed if there are no enrollments yet.
-        if ($activity->enrollments()->whereNull('deleted_at')->count() == 0) {
-            return $user->can('manage', $activity);
+        // Disallow if there are paid enrollments
+        if ($activity->enrollments()->whereState('state', PaidState::class)->exists()) {
+            return false;
         }
 
-        // Allow delete only if the permission is granted
-        return $user->can('admin', $activity);
+        // Allow if created less than 1 hour ago
+        if ($activity->created_at > now()->subHour()) {
+            return true;
+        }
+
+        // Allow if cancelled and would've ended more than 1 month ago
+        if ($activity->is_cancelled && $activity->end_date < now()->subMonth()) {
+            return true;
+        }
+
+        // Allow if ended more than 1 year ago
+        if ($activity->end_date < now()->subYear()) {
+            return true;
+        }
+
+        // Disallow in other scenarios
+        return false;
     }
 
     /**
