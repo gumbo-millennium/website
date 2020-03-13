@@ -356,12 +356,7 @@ class Activity extends Resource
     public function actions(Request $request)
     {
         return [
-            (new CancelActivity())
-                ->exceptOnTableRow()
-                ->confirmText('Weet je zeker dat je de activiteit(en) wilt annuleren')
-                ->cancelButtonText('Niet annuleren')
-                ->confirmButtonText('Activiteit annuleren')
-                ->canSee(fn () => !$this->is_cancelled)
+            new CancelActivity()
         ];
     }
 

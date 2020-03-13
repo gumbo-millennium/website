@@ -37,6 +37,7 @@
         "laravel/telescope": "^2.1",
         "laravel/tinker": "^2.0",
         "laravelium/sitemap": "^6.0",
+        "madewithlove/laravel-nova-uuid-support": "^1.0",
         "mischiefcollective/colorjizz": "^1.0",
         "mtownsend/read-time": "^1.1",
         "nothingworks/blade-svg": "^0.3.2",

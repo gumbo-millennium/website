@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd16e4e8eecc2e900c52c0f536c07bde",
+    "content-hash": "325aebb7bcd5ef3de578e1556941c906",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -4007,6 +4007,52 @@
                 "processing"
             ],
             "time": "2019-04-03T23:46:42+00:00"
+        },
+        {
+            "name": "madewithlove/laravel-nova-uuid-support",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/madewithlove/laravel-nova-uuid-support.git",
+                "reference": "2e74aef735bdbb4a2f9f28d75997dfd29d6db23c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/madewithlove/laravel-nova-uuid-support/zipball/2e74aef735bdbb4a2f9f28d75997dfd29d6db23c",
+                "reference": "2e74aef735bdbb4a2f9f28d75997dfd29d6db23c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.7.15 | 5.8.* | ^6.0",
+                "php": "^7.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Madewithlove\\NovaUuidSupport\\NovaUuidSupportServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Madewithlove\\NovaUuidSupport\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Adds uuid and other string identifier support to Laravel Nova",
+            "keywords": [
+                "identifiers",
+                "laravel",
+                "nova",
+                "primary",
+                "string",
+                "uuid"
+            ],
+            "time": "2019-11-22T07:45:38+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
