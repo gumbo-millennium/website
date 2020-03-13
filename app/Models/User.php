@@ -93,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     public function files(): HasMany
     {
-        return $this->hasMany(File::class, 'owner_id');
+        return $this->hasMany(FileBundle::class, 'owner_id');
     }
 
     /**
@@ -102,9 +102,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     public function downloads(): Relation
     {
-        return $this->belongsToMany(File::class, 'file_downloads')
-            ->as('download')
-            ->using(FileDownload::class);
+        return $this->hasMany(FileDownload::class, 'user_id');
     }
 
     /**
