@@ -87,17 +87,23 @@ trait HandlesSettingMetadata
             'organizer' => $activity->organiser,
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
-            'eventStatus' => 'https://schema.org/EventCancelled',
+            'eventStatus' => 'https://schema.org/EventScheduled',
             'location' => $this->buildLocationMeta($activity),
         ];
 
         // If cancelled, we're done here
         if ($activity->is_cancelled) {
+            $data['eventStatus'] = 'https://schema.org/EventCancelled';
             return $data;
         }
 
-        // Add data
-        $data['eventStatus'] = 'https://schema.org/EventScheduled';
+        // Check if the event has been rescheduled
+        if ($activity->is_rescheduled) {
+            $data['eventStatus'] = 'https://schema.org/EventRescheduled';
+            $data['previousStartDate'] = $activity->rescheduled_from->toIso8601String();
+        }
+
+        // Add offers
         $data['offers'] = $this->buildPricingAndTicketMeta($activity);
 
         // Add seat count

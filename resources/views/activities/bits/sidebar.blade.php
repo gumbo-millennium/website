@@ -158,8 +158,25 @@ $showTagline ??= true;
         <a href="{{ route('activity.index') }}">de activiteitenpagina</a>.
     </p>
 </div>
-@elseif ($showTagline)
+@else
+@if ($activity->is_rescheduled && !$activity->is_cancelled)
+@php
+$fromDateIso = $activity->rescheduled_from->toIso8601String();
+$fromDate = $activity->rescheduled_from->isoFormat('D MMM Y, HH:mm (z)');
+$toDateIso = $activity->start_date->toIso8601String();
+$toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
+@endphp
+<div class="notice notice--large notice--warning">
+    <strong class="notice__title">Activiteit verplaatst</strong>
+    <p class="m-0 w-full">
+        Deze activiteit is verplaatst van <time datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
+        naar <time class="font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
+    </p>
+</div>
+@endif
+@if ($showTagline)
     <p class="text-gray-600 mb-4">{{ $tagline }}</p>
+@endif
 @endif
 
 {{-- Join button --}}

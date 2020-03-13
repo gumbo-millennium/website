@@ -7,6 +7,7 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions\CancelActivity;
+use App\Nova\Actions\RescheduleActivity;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters\RelevantActivitiesFilter;
@@ -265,7 +266,9 @@ class Activity extends Resource
             DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
-                ->firstDayOfWeek(1),
+                ->firstDayOfWeek(1)
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
@@ -356,7 +359,8 @@ class Activity extends Resource
     public function actions(Request $request)
     {
         return [
-            new CancelActivity()
+            new CancelActivity(),
+            new RescheduleActivity()
         ];
     }
 

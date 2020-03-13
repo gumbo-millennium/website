@@ -28,33 +28,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
     $enrollEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
     $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
 
-    // Determine price
-    $memberPrice = $guestPrice = null;
-    if ($faker->boolean(0.4)) {
-        $memberPrice = intdiv($faker->numberBetween(500, 6000), 25) * 25;
-        $guestPrice = intdiv($faker->numberBetween(500, $memberPrice * 1.25), 25) * 25;
-    } elseif ($faker->boolean(0.4)) {
-        $guestPrice = intdiv($faker->numberBetween(500, 2000), 25) * 25;
-    }
-
-    // Determine seat count
-    $memberSeats = $guestSeats = null;
-    if ($faker->boolean(0.4)) {
-        $memberSeats = $faker->numberBetween(12, 60) / 4 * 4;
-    } elseif ($faker->boolean(0.4)) {
-        $memberSeats = $faker->numberBetween(4, 60) / 4 * 4;
-        $guestPrice = null;
-    }
-
-    // Determine discounts
-    $memberDiscount = max(0, $guestPrice - $memberPrice) ?: null;
-    $discountSlots = null;
-    if ($memberDiscount) {
-        $discountSlots = $faker->optional()->numberBetween(2, $memberSeats ?? 25);
-    }
-    $price = $guestPrice;
-
-    return [
+    $factoryData = [
         // Optionally cancel it
         'cancelled_at' => $faker->optional(0.05)->dateTimeBetween('-2 years', '-6 hours'),
 
@@ -73,15 +47,47 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         'location_address' => $faker->address,
 
         // Seats
-        'seats' => $memberSeats,
-        'is_public' => $faker->boolean(0.1),
+        'seats' => $faker->optional(0.2)->numberBetween(4, 60),
+        'is_public' => $faker->boolean(90),
 
         // Pricing
-        'member_discount' => $memberDiscount,
-        'discount_count' => $discountSlots,
-        'price' => $price,
+        'price' => null,
+        'member_discount' => null,
+        'discount_count' => null,
 
         // Image
-        'image' => $faker->optional(0.8)->passthrough($imageOptions->random())
+        'image' => $faker->optional(0.2)->passthrough($imageOptions->random())
     ];
+
+    // Does this activity has a price?
+    if ($faker->boolean(80)) {
+        $price = $faker->numberBetween(500, $faker->numberBetween(500, 6000) * 1.25);
+        $price = ($price - ($price % 25));
+        $factoryData['price'] = $price;
+
+        if ($faker->boolean(10)) {
+            // Full discount for members
+            $factoryData['member_discount'] = $price;
+        } elseif ($faker->boolean(35)) {
+            // Partial discount
+            $factoryData['member_discount'] = $faker->numberBetween(0, $price);
+            $factoryData['member_discount'] -= $factoryData['member_discount'] % 25;
+        }
+
+        // Restrict discount
+        if ($factoryData['member_discount'] && $faker->boolean(25)) {
+            $factoryData['discount_count'] = $faker->numberBetween(1, $factoryData['seats']);
+        }
+    }
+
+    // Reschedule 20% of the activity
+    if ($faker->boolean(20)) {
+        $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
+            (clone $factoryData['start_date'])->subMonth(),
+            $factoryData['start_date']
+        );
+        $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
+    }
+
+    return $factoryData;
 });

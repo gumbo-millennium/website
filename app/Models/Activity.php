@@ -63,7 +63,10 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Enrollment date
         'enrollment_start',
-        'enrollment_end'
+        'enrollment_end',
+
+        // Reschedule date
+        'rescheduled_from',
     ];
 
     /**
@@ -342,6 +345,16 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getIsCancelledAttribute(): bool
     {
         return $this->cancelled_at !== null;
+    }
+
+    /**
+     * Returns if the activity was rescheduled to a different date
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsRescheduledAttribute(): bool
+    {
+        return $this->rescheduled_from !== null;
     }
 
     /**
