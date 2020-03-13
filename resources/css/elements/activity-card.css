@@ -38,12 +38,14 @@
 }
 
 .activity-card__body-notice {
-  @apply mb-2 uppercase text-sm text-gray-600 font-bold;
+  @apply mb-2 p-2;
+  @apply uppercase text-sm text-gray-600 font-bold;
+  @apply border rounded border-gray-600;
   margin-top: calc(0 - theme('spacing.2'));
 }
 
 .activity-card__body-notice--danger {
-  @apply text-red-600;
+  @apply text-red-600 border-red-600;
 }
 
 .activity-card__body-tagline {

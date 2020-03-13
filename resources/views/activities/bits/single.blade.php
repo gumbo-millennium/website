@@ -92,7 +92,7 @@ if ($activity->cancelled) {
             <a href="{{ $url }}" class="{{ $linkClass }}">{{ $activity->name }}</a>
         </h3>
         @if ($activity->is_cancelled)
-            <p class="activity-card__body-notice">Geannuleerd</p>
+            <p class="activity-card__body-notice activity-card__body-notice--danger">Geannuleerd</p>
         @endif
         <p class="activity-card__body-tagline">{{ $activity->tagline }}</p>
 
