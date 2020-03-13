@@ -142,8 +142,11 @@ $showTagline ??= true;
 
 {{-- Show cancellation prompt if cancelled --}}
 @if ($activity->is_cancelled)
-<div class="notice notice--warning">
-    <strong class="notice__title">Geannuleerd</strong>: {{ $activity->cancelled_reason ?: 'Deze activiteit is geannuleerd' }}
+<div class="notice notice--large notice--warning">
+    <strong class="notice__title">Geannuleerd</strong>
+    <p class="m-0 w-full">
+        {{ $activity->cancelled_reason ?: 'Deze activiteit is geannuleerd.' }}
+    </p>
 </div>
 @else
 {{-- Description --}}
