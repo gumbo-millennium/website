@@ -44,7 +44,7 @@ $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
 // Link class
 $linkClass = 'activity-card__body-title-link stretched-link';
 if ($activity->cancelled) {
-    $linkClass .= ' line-through';
+    $linkClass .= ' activity-card__body-title-link--cancelled';
 }
 @endphp
 <div class="activity-card">
@@ -92,10 +92,9 @@ if ($activity->cancelled) {
             <a href="{{ $url }}" class="{{ $linkClass }}">{{ $activity->name }}</a>
         </h3>
         @if ($activity->is_cancelled)
-        <p class="activity-card__body-tagline">Geannuleerd: {{ $activity->cancelled_reason }}</p>
-        @else
-        <p class="activity-card__body-tagline">{{ $activity->tagline }}</p>
+            <p class="activity-card__body-notice">Geannuleerd</p>
         @endif
+        <p class="activity-card__body-tagline">{{ $activity->tagline }}</p>
 
         {{-- Users going --}}
         <div class="activity-card__body-user-list">
@@ -104,6 +103,7 @@ if ($activity->cancelled) {
     </div>
 
     {{-- Footer data --}}
+    @if (!$activity->is_cancelled)
     <div class="flex flex-row border-t border-gray-200 text-center">
         <div class="activity-card__detail">
             <p class="activity-card__detail-title">Prijs</p>
@@ -114,4 +114,5 @@ if ($activity->cancelled) {
             <p class="activity-card__detail-value">{{ ucfirst($seats) }}</p>
         </div>
     </div>
+    @endif
 </div>
