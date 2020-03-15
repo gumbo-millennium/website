@@ -10,7 +10,7 @@ SEOMeta::setTitle('Welkom');
 SEOMeta::setCanonical(url('/'));
 @endphp
 
-@push('header.navbar-class', 'navbar--no-shadow')
+@push('header.navbar-class', ' navbar--no-shadow')
 
 @section('content')
 <div class="container">
