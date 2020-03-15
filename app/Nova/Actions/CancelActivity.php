@@ -12,12 +12,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Actions\DestructiveAction;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
 
-class CancelActivity extends DestructiveAction
+class CancelActivity extends Action
 {
     use BlocksCancelledActivityRuns;
     use InteractsWithQueue;
@@ -117,7 +116,7 @@ class CancelActivity extends DestructiveAction
     {
         return [
             Textarea::make('Reden', 'reason')
-                ->rules('required|max:190')
+                ->rules('required', 'max:190')
                 ->rows(4)
                 ->help('De reden voor annulering, max 190 tekens'),
             Boolean::make('Betalingen terugboeken', 'refund_all')
