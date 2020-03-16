@@ -41,78 +41,66 @@ if ($activity->seats > 0 && !$isSoldOut && ($activity->available_seats < 10)) {
 }
 $date = $activity->start_date->isoFormat('DD MMM, HH:mm');
 
-// Link class
-$linkClass = 'activity-card__body-title-link stretched-link';
-if ($activity->cancelled) {
-    $linkClass .= ' activity-card__body-title-link--cancelled';
+// Add bottom data
+$footerData = [];
+if ($activity->location && $activity->location_address) {
+    $footerData[] = $activity->location;
 }
-@endphp
-<div class="activity-card">
-    {{-- Header --}}
-    <div class="activity-card__header">
-        <div class="activity-card__header-item">
-            @icon('solid/clock', 'icon mr-2')
-            <time datetime="{{ $activity->start_date->toIso8601String() }}">{{ $date }}</time>
-        </div>
-        <div class="activity-card__header-item {{ $statusStyle }}">
-            @icon($statusIcon, 'icon mr-2')
-            <span>{{ $statusText }}</span>
-        </div>
-    </div>
 
-    {{-- Main --}}
-    <div class="activity-card__body">
-        {{-- Icon --}}
-        <div class="activity-card__body-icon">
-            @if ($activity->image->exists())
-            <img
-                class="activity-card__body-icon-image"
-                alt="Foto van {{ $activity->name }}"
-                src="{{ $activity->image->url('poster') }}" srcset="
-                    {{ $activity->image->url('poster-half') }} 96w,
-                    {{ $activity->image->url('poster') }} 192w,
-                    {{ $activity->image->url('poster-2x') }} 384w
-                " sizes="
-                    (min-width: 1280px) 288px,
-                    (min-width: 768px) and (max-width: 1280px) 210px,
-                    (min-width: 640px) and (max-width: 768px) 164px,
-                480px
-                " />
-            @else
-            <img
-                src="{{ mix('images/logo-glass-green.svg') }}"
-                alt="Gumbo Millennium logo, omdat geen foto aanwezig is voor {{ $activity->name }}"
-                class="activity-card__body-icon-image"
-                />
+if ($activity->total_price !== null || $activity->seats !== null) {
+    $footerData[] = ucfirst($seats);
+    $footerData[] = ucfirst($price);
+}
+
+$urlClass = ['stretched-link'];
+if ($activity->is_cancelled) {
+    $urlClass[] = 'line-through';
+}
+$urlClass = implode(' ', $urlClass);
+
+@endphp
+<div class="card">
+    <div class="card__figure" role="presentation">
+        @if ($activity->image->exists())
+        <img
+            class="card__figure-image"
+            src="{{ $activity->image->url('cover') }}"
+            srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
+        @else
+        <div class="card__figure-wrapper">
+            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
+        </div>
+        @endif
+
+        {{-- Badges --}}
+        <div class="card__figure-badges">
+            @if ($activity->is_cancelled)
+                <span class="card__figure-badge card__figure-badge--danger">Geannuleerd</span>
+            @elseif ($activity->is_postponed && $activity->postponed_from > now())
+                <span class="card__figure-badge card__figure-badge--warning">Uitgesteld</span>
             @endif
         </div>
-
-        {{-- Title and tagline --}}
-        <h3 class="activity-card__body-title">
-            <a href="{{ $url }}" class="{{ $linkClass }}">{{ $activity->name }}</a>
-        </h3>
-        @if ($activity->is_cancelled)
-            <p class="activity-card__body-notice activity-card__body-notice--danger">Geannuleerd</p>
-        @endif
-        <p class="activity-card__body-tagline">{{ $activity->tagline }}</p>
-
-        {{-- Users going --}}
-        <div class="activity-card__body-user-list">
-            {{-- TODO --}}
-        </div>
     </div>
 
-    {{-- Footer data --}}
-    @if (!$activity->is_cancelled)
-    <div class="flex flex-row border-t border-gray-200 text-center">
-        <div class="activity-card__detail">
-            <p class="activity-card__detail-title">Prijs</p>
-            <p class="activity-card__detail-value">{{ ucfirst($price) }}</p>
+    <div class="card__body">
+        <div class="card__body-label card__list">
+            <time datetime="{{ $activity->start_date->toIso8601String() }}">{{ $date }}</time>
         </div>
-        <div class="activity-card__detail">
-            <p class="activity-card__detail-title">Aantal plekken</p>
-            <p class="activity-card__detail-value">{{ ucfirst($seats) }}</p>
+
+        <h2 class="card__body-title">
+            <a href="{{ $url }}" class="{{ $urlClass }}">{{ $activity->name }}</a>
+        </h2>
+
+        <p class="card__body-content">{{ $activity->tagline }}</p>
+
+        <div class="card__body-meta card__list">
+            @foreach ($footerData as $item)
+                <div>{{ $item }}</div>
+
+                @if (!$loop->last)
+                <div class="card__list-separator">&bull;</div>
+                @endif
+            @endforeach
         </div>
     </div>
-    @endif
 </div>

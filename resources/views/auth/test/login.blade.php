@@ -1,5 +1,5 @@
-<div class="card shadow-md border-gray-200 border">
-    <form method="POST" action="{{ route('login') }}" class="login__form">
+<div class="card border-gray-200 border">
+    <form method="POST" action="{{ route('login') }}" class="login__form card__body">
         @csrf
         <input type="hidden" name="password" value="Gumbo" />
 

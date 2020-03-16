@@ -11,7 +11,7 @@
 
 {{-- Content --}}
 <div class="container">
-    <div class="flex flex-row flex-wrap row">
+    <div class="card-grid">
     @foreach ($items as $item)
     @php
     $postTimestamp = $item->published_at ?? $item->created_at;
@@ -19,28 +19,28 @@
     $postDate = $postTimestamp->isoFormat('DD MMM \'YY');
     $headline = $item->headline ?? Str::words(strip_tags($item->html), 10);
     @endphp
-    <article class="col w-full flex-none md:w-1/2 mb-8">
-    <div class="shadow rounded bg-white relative">
-        <div class="h-64 bg-gray-200" role="presentation">
-        @if ($item->image->exists())
-            <img class="w-full h-64 object-cover" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
-        @else
-        <div class="w-full h-64 flex items-center">
-            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
-        </div>
-        @endif
-        </div>
+    <article class="card-grid__item">
+        <div class="card">
+            <div class="card__figure" role="presentation">
+            @if ($item->image->exists())
+                <img class="card__figure-image" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
+            @else
+                <div class="card__figure-wrapper">
+                    <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
+                </div>
+            @endif
+            </div>
 
-        <div class="p-8 w-full">
-            <p class="mb-0 uppercase font-bold text-sm text-gray-600 leading-none mb-2">{{ $item->category }}</p>
-            <h2 class="text-xl font-title mb-21">
-                <a href="{{ route('news.show', ['news' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
-            </h2>
+            <div class="card__body">
+                <p class="card__body-label">{{ $item->category }}</p>
+                <h2 class="card__body-title">
+                    <a href="{{ route('news.show', ['news' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
+                </h2>
 
-            <p class="mb-4">{{ $headline }}</p>
-            <time datetime="{{ $postIso }}" class="text-right text-gray-600">{{ $postDate }}</time>
+                <p class="card__body-content">{{ $headline }}</p>
+                <time datetime="{{ $postIso }}" class="card__body-meta">{{ $postDate }}</time>
+            </div>
         </div>
-    </div>
     </article>
     @endforeach
 </div>
