@@ -398,8 +398,7 @@ class Activity extends SluggableModel implements AttachableInterface
         // Sizes
         $this->createSimplePaperclip('image', [
             'article' => [1440, 960, false],
-            'cover' => [384, 256, true],
-            'poster' => [192, 256, false]
+            'cover' => [384, 256, true]
         ]);
     }
 }

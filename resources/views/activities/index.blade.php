@@ -33,28 +33,26 @@ $firstActivity = $past ? null : $activities->first();
     </div>
 </div>
 
-<div class="activity-blocks">
-    @if (empty($activities))
+<div class="container">
+@if (empty($activities))
     <div class="text-center p-16">
         <h2 class="text-2xl font-normal text-center">Geen activiteiten</h2>
         <p class="text-center text-lg">De agenda is verdacht leeg. Kom later nog eens kijken.</p>
     </div>
-    @else
-    <div class="container">
-        {{-- Activity cards --}}
-        <div class="flex flex-row flex-wrap">
-            @foreach ($activities as $activity)
-            <div class="activity-grid__item mx-0 lg:w-1/3">
-                @include('activities.bits.single')
-            </div>
-            @endforeach
+@else
+    {{-- Activity cards --}}
+    <div class="card-grid mb-4">
+        @foreach ($activities as $activity)
+        <div class="card-grid__item">
+            @include('activities.bits.single')
         </div>
+        @endforeach
     </div>
 
     <div class="container pt-8">
         {{ $activities->links() }}
     </div>
-    @endif
+@endif
 </div>
 
 @endsection

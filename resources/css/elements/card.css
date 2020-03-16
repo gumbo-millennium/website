@@ -1,9 +1,79 @@
 /* Card */
 
 .card {
-  @apply p-8 my-8 shadow bg-white rounded;
+  @apply shadow bg-white rounded relative;
 }
 
-.card--large {
+.card--padded {
+  @apply p-8 my-8;
+}
+
+.card--padded-lg {
   @apply p-16 my-16 shadow-lg;
+}
+
+.card__figure {
+  @apply h-64 bg-gray-200 relative;
+}
+
+.card__figure-image {
+  @apply w-full h-64 object-cover;
+}
+
+.card__figure-wrapper {
+  @apply h-64 flex items-center;
+}
+
+.card__figure-badges {
+  @apply flex justify-start flex-wrap;
+  @apply absolute;
+  right: theme('spacing.8');
+  bottom: theme('spacing.8');
+  left: theme('spacing.8');
+}
+
+.card__figure-badge {
+  @apply px-4 py-2 rounded;
+  @apply bg-white shadow;
+  @apply text-brand-600 font-bold uppercase text-sm;
+}
+
+.card__figure-badge--danger, .card__figure-badge--warning {
+  @apply border rounded-none;
+}
+
+.card__figure-badge--danger {
+  @apply border-red-600 text-red-600;
+}
+
+.card__figure-badge--warning {
+  @apply border-orange-600 text-orange-600;
+}
+
+.card__body {
+  @apply p-8 w-full;
+}
+
+.card__body-label {
+  @apply mb-0 uppercase font-bold text-sm text-gray-600 leading-none mb-2;
+}
+
+.card__body-title {
+  @apply text-xl font-title mb-2;
+}
+
+.card__body-content {
+  @apply mb-4;
+}
+
+.card__body-meta {
+  @apply text-right text-gray-600;
+}
+
+.card__list {
+  @apply flex items-center flex-wrap;
+}
+
+.card__list-separator {
+  @apply mx-2 opacity-75;
 }

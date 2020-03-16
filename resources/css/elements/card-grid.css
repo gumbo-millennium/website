@@ -1,0 +1,15 @@
+/* Grid of cards */
+
+.card-grid {
+  @apply flex flex-row flex-wrap row;
+}
+
+.card-grid__item {
+  @apply col w-full flex-none mb-8;
+}
+
+@screen md {
+  .card-grid__item {
+    @apply w-1/2;
+  }
+}
