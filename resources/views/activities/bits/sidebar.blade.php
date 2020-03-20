@@ -150,7 +150,15 @@ $showTagline ??= true;
 </div>
 @else
 {{-- Description --}}
-@if ($showTagline)
+@if ($activity->end_date)
+<div class="notice notice--large notice--warning">
+    <strong class="notice__title">Activiteit afgelopen</strong>
+    <p class="m-0 w-full">
+        Deze activiteit is inmiddels afgelopen. Bekijk onze recente activiteiten op
+        <a href="{{ route('activity.index') }}">de activiteitenpagina</a>.
+    </p>
+</div>
+@elseif ($showTagline)
     <p class="text-gray-600 mb-4">{{ $tagline }}</p>
 @endif
 
