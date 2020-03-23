@@ -150,7 +150,7 @@ $showTagline ??= true;
 </div>
 @else
 {{-- Description --}}
-@if ($activity->end_date)
+@if ($activity->end_date < now())
 <div class="notice notice--large notice--warning">
     <strong class="notice__title">Activiteit afgelopen</strong>
     <p class="m-0 w-full">
