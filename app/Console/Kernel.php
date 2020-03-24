@@ -43,6 +43,9 @@ class Kernel extends ConsoleKernel
 
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
+
+        // Daily update the Cloudflare IPs
+        $schedule->command('cloudflare:reload')->dailyAt('04:44');
     }
 
     /**

@@ -19,8 +19,14 @@ class OptimizeCommand extends BaseOptimizeCommand
     {
         // Create versioned pages
         $this->call('gumbo:update-content');
+        $this->call('cloudflare:reload');
 
         // Forward
         parent::handle();
+
+        // Purge caches
+        if (config('cloudflare.token')) {
+            $this->call('cloudflare:cache:purge');
+        }
     }
 }
