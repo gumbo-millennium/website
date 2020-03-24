@@ -38,9 +38,9 @@ SEOMeta::setCanonical(url('/'));
     <p class="text-center text-gray-600 mb-4">Altijd iets te doen</p>
     <h2 class="text-3xl text-medium font-title mb-8 text-center">Binnenkort bij Gumbo Millennium</h2>
     {{-- Activity cards --}}
-    <div class="activity-grid">
+    <div class="card-grid">
         @foreach ($nextEvents as $activity)
-        <div class="activity-grid__item">
+        <div class="card-grid__item">
             @include('activities.bits.single')
         </div>
         @endforeach
