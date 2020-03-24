@@ -4,6 +4,7 @@
     <div class="container userbar__container">
         {{-- Contact details --}}
         <ul class="userbar__links userbar__links--contact">
+            <!--sse-->
             <li class="userbar__links-link">
                 <a href="tel:+31388450100" class="userbar__links-item userbar__links-item--flex">
                     @icon('solid/phone', ['aria-label' => 'Telefoon symbool'])
@@ -16,6 +17,7 @@
                     <span>bestuur@gumbo-millennium.nl</span>
                 </a>
             </li>
+            <!--/sse-->
         </ul>
 
         {{-- User info --}}
