@@ -33,5 +33,6 @@ class ConfirmPasswordController extends Controller
     {
         $this->middleware('auth');
         SEOMeta::setTitle('Wachtwoord verifiëren');
+        SEOMeta::setRobots('noindex,nofollow');
     }
 }

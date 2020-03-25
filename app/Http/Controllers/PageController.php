@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
 use Illuminate\Http\Request;
 
@@ -105,18 +106,8 @@ class PageController extends Controller
         // Check cache
         $page = $this->cache->get($cacheKey);
         if (!$this->cache->has($cacheKey)) {
-            // Create instance
-            $page = null;
-
             // Check database
-            if (!$page) {
-                $page = Page::where(compact('group', 'slug'))->first();
-
-                // Empty or not found, store a null value
-                if (!$page || empty($page->html)) {
-                    $page = null;
-                }
-            }
+            $page = Page::where(compact('group', 'slug'))->first();
 
             // Store in cache
             $this->cache->put($cacheKey, $page, now()->addHour());
@@ -126,6 +117,12 @@ class PageController extends Controller
         if ($page === null) {
             abort(404);
         }
+
+        // Set SEO
+        SEOTools::setCanonical($page->url);
+        SEOTools::setTitle($page->title);
+        SEOTools::setDescription($page->description);
+        SEOTools::addImages([$page->image->url('social')]);
 
         // Show view
         return response()

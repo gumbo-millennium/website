@@ -68,6 +68,7 @@ class RegisterController extends Controller
 
         // Title
         SEOMeta::setTitle('Registreren');
+        SEOMeta::setRobots('noindex,nofollow');
 
         // Make form
         return view('auth.register', compact('form'));
@@ -116,6 +117,7 @@ class RegisterController extends Controller
 
         // Title
         SEOMeta::setTitle('Jouw privacy');
+        SEOMeta::setRobots('noindex,nofollow');
 
         // Create form
         $form = $this->formBuilder->create(RegisterPrivacyForm::class, [

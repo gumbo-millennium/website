@@ -8,7 +8,7 @@ use App\Helpers\Arr;
 use App\Models\Activity;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
-use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\SEOTools;
 
 trait HandlesSettingMetadata
 {
@@ -33,13 +33,12 @@ trait HandlesSettingMetadata
         $url = $this->getCanonical($activity);
 
         // Set SEO
-        SEOMeta::setTitle($activity->name);
-        SEOMeta::setDescription($activity->tagline);
-        SEOMeta::setCanonical($this->getCanonical($activity));
+        SEOTools::setTitle($activity->name);
+        SEOTools::setDescription($activity->tagline);
+        SEOTools::setCanonical($this->getCanonical($activity));
+        SEOTools::addImages([$activity->image->url('social')]);
 
         // Set Open Graph
-        OpenGraph::setTitle($activity->name);
-        OpenGraph::setDescription($activity->tagline);
         OpenGraph::setUrl($url);
         OpenGraph::addImages([
             $activity->image->url('social'),
@@ -76,6 +75,16 @@ trait HandlesSettingMetadata
         // Get props
         $url = $this->getCanonical($activity);
 
+        $performer = [
+            '@type' => 'Organization',
+            'name' => 'Gumbo Millennium',
+            'url' => 'https://www.gumbo-millennium.nl/',
+            'department' => [
+                '@type' => 'Organization',
+                'name' => $activity->organiser,
+            ]
+        ];
+
         // Build JSON+LD
         $data = [
             'type' => 'SocialEvent',
@@ -84,9 +93,10 @@ trait HandlesSettingMetadata
             'name' => $activity->name,
             'description' => $activity->tagline,
             'image' => $activity->image->url('social'),
-            'organizer' => $activity->organiser,
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
+            'organizer' => $performer,
+            'performer' => $performer,
             'eventStatus' => 'https://schema.org/EventScheduled',
             'location' => $this->buildLocationMeta($activity),
         ];

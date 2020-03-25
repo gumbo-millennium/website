@@ -145,7 +145,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getOrganiserAttribute(): ?string
     {
-        return optional($this->role)->name;
+        return optional($this->role)->title ?? optional($this->role)->name;
     }
 
     /**
