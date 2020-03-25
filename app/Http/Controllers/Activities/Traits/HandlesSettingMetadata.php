@@ -87,17 +87,37 @@ trait HandlesSettingMetadata
             'organizer' => $activity->organiser,
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
-            'eventStatus' => 'https://schema.org/EventCancelled',
+            'eventStatus' => 'https://schema.org/EventScheduled',
             'location' => $this->buildLocationMeta($activity),
         ];
 
+        // Add location
+        switch ($activity->location_type) {
+            case Activity::LOCATION_ONLINE:
+                $data['eventAttendanceMode'] = 'OnlineEventAttendanceMode';
+                break;
+            case Activity::LOCATION_MIXED:
+                $data['eventAttendanceMode'] = 'MixedEventAttendanceMode';
+                break;
+            default:
+                $data['eventAttendanceMode'] = 'OfflineEventAttendanceMode';
+        }
+
         // If cancelled, we're done here
         if ($activity->is_cancelled) {
+            $data['eventStatus'] = 'https://schema.org/EventCancelled';
             return $data;
         }
 
-        // Add data
-        $data['eventStatus'] = 'https://schema.org/EventScheduled';
+        // Check if the event has been rescheduled
+        if ($activity->is_rescheduled) {
+            $data['eventStatus'] = 'https://schema.org/EventRescheduled';
+            $data['previousStartDate'] = $activity->rescheduled_from->toIso8601String();
+        } elseif ($activity->is_postponed) {
+            $data['eventStatus'] = 'https://schema.org/EventPostponed';
+        }
+
+        // Add offers
         $data['offers'] = $this->buildPricingAndTicketMeta($activity);
 
         // Add seat count
@@ -172,10 +192,29 @@ trait HandlesSettingMetadata
         return $offerList;
     }
 
-    public function buildLocationMeta(Activity $activity): ?array
+    /**
+     * Location meta
+     * @param Activity $activity
+     * @return null|array<string>|string
+     */
+    public function buildLocationMeta(Activity $activity)
     {
+        // Return null if there's no location
+        if (!$activity->location) {
+            return null;
+        }
+
+        // Online-only
+        if ($activity->location_type === Activity::LOCATION_ONLINE) {
+            return [
+                '@type' => 'VirtualPlace',
+                'name' => $activity->location,
+                'url' => \secure_url('/')
+            ];
+        }
+
         // Add proper location
-        if ($activity->location_address && $activity->location) {
+        if ($activity->location_address) {
             return [
                 '@type' => 'Place',
                 'name' => $activity->location,
@@ -183,13 +222,6 @@ trait HandlesSettingMetadata
             ];
         }
 
-        if ($activity->location) {
-            return [
-                '@type' => 'Place',
-                'name' => $activity->location
-            ];
-        }
-
-        return null;
+        return $activity->location;
     }
 }

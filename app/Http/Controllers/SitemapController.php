@@ -21,7 +21,8 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 class SitemapController extends Controller
 {
     private const SKIPPED_PAGES = [
-        'word-lid'
+        'word-lid',
+        'error-404',
     ];
 
     /**
@@ -78,7 +79,7 @@ class SitemapController extends Controller
 
         // Add other pages
         foreach (Page::cursor() as $page) {
-            if (in_array($page->slug, self::SKIPPED_PAGES)) {
+            if (in_array($page->slug, self::SKIPPED_PAGES) || empty($page->html)) {
                 continue;
             }
 

@@ -7,6 +7,8 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions\CancelActivity;
+use App\Nova\Actions\PostponeActivity;
+use App\Nova\Actions\RescheduleActivity;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters\RelevantActivitiesFilter;
@@ -22,6 +24,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -212,6 +215,15 @@ class Activity extends Resource
                 ->rules('nullable', 'string', 'between:5,255')
                 ->help('Het adres van de locatie. Wordt doorgegeven aan Quant Maps'),
 
+            Select::make('Type locatie', 'location_type')
+                ->hideFromIndex()
+                ->options([
+                    ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
+                    ActivityModel::LOCATION_ONLINE => 'Geheel online',
+                    ActivityModel::LOCATION_MIXED => 'Gemixt',
+                ])
+                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?'),
+
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
                 ->hideFromIndex()
@@ -265,7 +277,9 @@ class Activity extends Resource
             DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
-                ->firstDayOfWeek(1),
+                ->firstDayOfWeek(1)
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
@@ -356,7 +370,9 @@ class Activity extends Resource
     public function actions(Request $request)
     {
         return [
-            new CancelActivity()
+            new CancelActivity(),
+            new PostponeActivity(),
+            new RescheduleActivity()
         ];
     }
 

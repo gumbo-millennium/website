@@ -33,6 +33,10 @@ class Activity extends SluggableModel implements AttachableInterface
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
 
+    public const LOCATION_OFFLINE = 'offline';
+    public const LOCATION_ONLINE = 'online';
+    public const LOCATION_MIXED = 'mixed';
+
     /**
      * Lists the next up activities
      * @param null|User $user
@@ -42,7 +46,8 @@ class Activity extends SluggableModel implements AttachableInterface
     public static function getNextActivities(?User $user): Builder
     {
         return self::query()
-            ->where('end_date', '>', now())
+            ->where(static fn (Builder $query) => $query->where('end_date', '>', now())
+                        ->orWhereNotNull('postponed_at'))
             ->orderBy('start_date')
             ->whereAvailable($user);
     }
@@ -63,7 +68,13 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Enrollment date
         'enrollment_start',
-        'enrollment_end'
+        'enrollment_end',
+
+        // Reschedule date
+        'rescheduled_from',
+
+        // Postpone date
+        'postponed_at',
     ];
 
     /**
@@ -342,6 +353,26 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getIsCancelledAttribute(): bool
     {
         return $this->cancelled_at !== null;
+    }
+
+    /**
+     * Returns if the activity was rescheduled to a different date
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsRescheduledAttribute(): bool
+    {
+        return $this->rescheduled_from !== null;
+    }
+
+    /**
+     * Returns if the activity was postponed to an as-of-yet unknown date
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsPostponedAttribute(): bool
+    {
+        return $this->postponed_at !== null;
     }
 
     /**
