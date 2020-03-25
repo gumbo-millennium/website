@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
 use Illuminate\Http\Request;
 
@@ -126,6 +127,12 @@ class PageController extends Controller
         if ($page === null) {
             abort(404);
         }
+
+        // Set SEO
+        SEOTools::setCanonical($page->url);
+        SEOTools::setTitle($page->title);
+        SEOTools::setDescription($page->description);
+        SEOTools::addImages([$page->image->url('social')]);
 
         // Show view
         return response()

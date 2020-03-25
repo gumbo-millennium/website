@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\NewsItem;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
-use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\SEOTools;
 
 /**
  * Renders user-generated news articles
@@ -55,9 +55,9 @@ class NewsController extends Controller
         }
 
         // Set SEO
-        SEOMeta::setTitle($title);
-        SEOMeta::setDescription($description);
-        SEOMeta::setCanonical($url);
+        SEOTools::setTitle($title);
+        SEOTools::setDescription($description);
+        SEOTools::setCanonical($url);
 
         // Set Open Graph
         OpenGraph::setTitle($title);
@@ -91,13 +91,14 @@ class NewsController extends Controller
         $url = route('news.show', ['news' => $item]);
 
         // Set SEO
-        SEOMeta::setTitle($title);
-        SEOMeta::setDescription($description);
-        SEOMeta::setCanonical($url);
+        SEOTools::setTitle($title);
+        SEOTools::setDescription($description);
+        SEOTools::setCanonical($url);
+        SEOTools::addImages([
+            $item->image->url('social')
+        ]);
 
         // Set Open Graph
-        OpenGraph::setTitle($title);
-        OpenGraph::setDescription($description);
         OpenGraph::setUrl($url);
 
         // Set JSON+LD
