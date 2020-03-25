@@ -1,12 +1,13 @@
 @php
 use Illuminate\Support\HtmlString;
+use App\Models\Activity;
 
 // User flags
 $isMember = $user && $user->is_member;
 
 // Prepare collection of details
 $baseProperties = [
-    'Organisatie' => optional($activity->role)->title ?? 'Gumbo Millennium',
+    'Organisatie' => [optional($activity->role)->title ?? 'Gumbo Millennium', null],
 ];
 
 // Number of seats
@@ -19,7 +20,7 @@ if ($activity->seats) {
         $seats .= " ({$activity->available_seats} beschikbaar)";
     }
 }
-$baseProperties['Aantal plekken'] = $seats;
+$baseProperties['Aantal plekken'] = [$seats, null];
 
 // Start date
 $startTimestamp = $activity->start_date;
@@ -35,20 +36,20 @@ $startDateFull = $startTimestamp->isoFormat('D MMM Y, HH:mm (z)');
 
 // Build data set
 $dateData = [
-    'Datum' => $startTimestamp->isoFormat('D MMM Y'),
-    'Aanvang' => $startTimestamp->isoFormat('H:mm (z)'),
+    'Datum' => [$startTimestamp->isoFormat('D MMM Y'), null],
+    'Aanvang' => [$startTimestamp->isoFormat('H:mm (z)'), null],
 ];
 
 $durationTitle = 'Duur';
 $durationValue = $startTimestamp->diffAsCarbonInterval($endTimestamp)->forHumans(['parts' => 1]);
 if ($durationIsLong && $durationIsMultiDay) {
     $dateData = [
-        'Aanvang' => $startTimestamp->isoFormat('D MMM, HH:mm (z)'),
-        'Einde' => $endTimestamp->isoFormat('D MMM, HH:mm (z)')
+        'Aanvang' => [$startTimestamp->isoFormat('D MMM, HH:mm (z)'), null],
+        'Einde' => [$endTimestamp->isoFormat('D MMM, HH:mm (z)'), null]
     ];
 } elseif ($durationIsLong) {
     unset($dateData['Duur']);
-    $dateData['Einde'] =$endTimestamp->isoFormat('HH:mm (z)');
+    $dateData['Einde'] = [$endTimestamp->isoFormat('HH:mm (z)'), null];
 }
 
 $hasAnyDiscount = $activity->discount_price !== null;
@@ -58,11 +59,11 @@ $hasSoldOutDiscount = $activity->discounts_available === 0;
 
 // Prep pricing info
 $priceData = [
-    'Prijs' => Str::price($activity->total_price) ?? 'Gratis'
+    'Prijs' => [Str::price($activity->total_price) ?? 'Gratis', null]
 ];
 
 if ($hasAnyDiscount) {
-    $guestPrice = $priceData['Prijs'];
+    $guestPrice = $priceData['Prijs'][0];
     $memberPrice = Str::price($activity->total_discount_price) ?? 'Gratis';
 
     $guestLabel = 'Prijs gasten';
@@ -85,14 +86,18 @@ if ($hasAnyDiscount) {
 
     // Add values
     $priceData = [
-        $memberLabel => $memberPrice,
-        $guestLabel => $guestPrice
+        $memberLabel => [$memberPrice, null],
+        $guestLabel => [$guestPrice, null]
     ];
 }
 
 // Prep location
 $location = new HtmlString('<span class="text-gray-600">Onbekend</span>');
-if (!empty($activity->location) && !empty($activity->location_url)) {
+$locationIcon = null;
+if (!empty($activity->location) && $activity->location_type === Activity::LOCATION_ONLINE) {
+    $location = $activity->location;
+    $locationIcon = 'solid/globe-europe';
+} elseif (!empty($activity->location) && !empty($activity->location_url)) {
     $location = new HtmlString(sprintf(
         '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
         e($activity->location_url),
@@ -102,8 +107,12 @@ if (!empty($activity->location) && !empty($activity->location_url)) {
     $location = $activity->location;
 }
 
+$locationData = [
+    'Locatie' => [$location, $locationIcon]
+];
+
 // Bundle properties
-$properties = array_merge($baseProperties, $dateData, $priceData, ['Locatie' => $location]);
+$properties = array_merge($baseProperties, $dateData, $priceData, $locationData);
 
 // Tagline
 $tagline = $activity->tagline ?? vsprintf('Op %s, van %s tot %s.', [
@@ -169,8 +178,8 @@ $toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
 <div class="notice notice--large notice--warning">
     <strong class="notice__title">Activiteit verplaatst</strong>
     <p class="m-0 w-full">
-        Deze activiteit is verplaatst van <time datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
-        naar <time class="font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
+        Deze activiteit is verplaatst van <time class="inline-block" datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
+        naar <time class="inline-block font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
     </p>
 </div>
 @elseif ($activity->is_postponed && !$activity->is_cancelled)
@@ -181,8 +190,8 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 <div class="notice notice--large notice--warning">
     <strong class="notice__title">Activiteit uitgesteld</strong>
     <p class="m-0 w-full">
-        Deze activiteit is uitgesteld op <time datetime="{{ $onDateIso }}">{{ $onDate }}</time>.<br />
-        Een nieuwe datum is <strong>nog niet bekend</strong>.
+        Deze activiteit is uitgesteld op <time class="inline-block" datetime="{{ $onDateIso }}">{{ $onDate }}</time>.<br />
+        Een nieuwe datum is <strong class="inline-block">nog niet bekend</strong>.
     </p>
 </div>
 @endif
@@ -209,9 +218,14 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 
 {{-- Data --}}
 <dl class="flex flex-row flex-wrap row">
-    @foreach ($properties as $label => $value)
+    @foreach ($properties as $label => list($value, $icon))
     <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
-    <dd class="col w-2/3 flex-none mb-2 text-sm">{{ $value }}</dd>
+    <dd class="col w-2/3 flex-none mb-2 text-sm">
+        @if ($icon)
+            @icon($icon, 'mr-2')
+        @endif
+        {{ $value }}
+    </dd>
     @endforeach
 </dl>
 

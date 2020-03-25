@@ -62,24 +62,6 @@ $discountWarning = (object) [
     </div>
     @endif
 
-    @if ($activity->is_rescheduled && !$activity->is_cancelled)
-    @php
-    $fromDateIso = $activity->rescheduled_from->toIso8601String();
-    $fromDate = $activity->rescheduled_from->isoFormat('D MMM Y, HH:mm (z)');
-    $toDateIso = $activity->start_date->toIso8601String();
-    $toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
-    @endphp
-    <div class="notice notice--brand">
-        @icon('solid/random', 'notice__icon')
-        <p>
-            Deze activiteit is verplaatst van
-            <time datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
-            naar
-            <time class="font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
-        </p>
-    </div>
-    @endif
-
     {{-- Activity description --}}
     @if (!empty($activity->description_html))
         <div class="leading-relaxed plain-content">

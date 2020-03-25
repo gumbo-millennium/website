@@ -33,6 +33,10 @@ class Activity extends SluggableModel implements AttachableInterface
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
 
+    public const LOCATION_OFFLINE = 'offline';
+    public const LOCATION_ONLINE = 'online';
+    public const LOCATION_MIXED = 'mixed';
+
     /**
      * Lists the next up activities
      * @param null|User $user

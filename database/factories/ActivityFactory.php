@@ -45,6 +45,11 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         // Location
         'location' => $faker->company,
         'location_address' => $faker->address,
+        'location_type' => $faker->optional(0.5, Activity::LOCATION_OFFLINE)->randomElement([
+            Activity::LOCATION_OFFLINE,
+            Activity::LOCATION_ONLINE,
+            Activity::LOCATION_MIXED,
+        ]),
 
         // Seats
         'seats' => $faker->optional(0.2)->numberBetween(4, 60),

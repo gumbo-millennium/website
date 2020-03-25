@@ -24,6 +24,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -213,6 +214,15 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:5,255')
                 ->help('Het adres van de locatie. Wordt doorgegeven aan Quant Maps'),
+
+            Select::make('Type locatie', 'location_type')
+                ->hideFromIndex()
+                ->options([
+                    ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
+                    ActivityModel::LOCATION_ONLINE => 'Geheel online',
+                    ActivityModel::LOCATION_MIXED => 'Gemixt',
+                ])
+                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?'),
 
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
