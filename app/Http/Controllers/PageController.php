@@ -106,18 +106,8 @@ class PageController extends Controller
         // Check cache
         $page = $this->cache->get($cacheKey);
         if (!$this->cache->has($cacheKey)) {
-            // Create instance
-            $page = null;
-
             // Check database
-            if (!$page) {
-                $page = Page::where(compact('group', 'slug'))->first();
-
-                // Empty or not found, store a null value
-                if (!$page || empty($page->html)) {
-                    $page = null;
-                }
-            }
+            $page = Page::where(compact('group', 'slug'))->first();
 
             // Store in cache
             $this->cache->put($cacheKey, $page, now()->addHour());
