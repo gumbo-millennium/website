@@ -36,6 +36,7 @@
   @apply px-4 py-2 rounded;
   @apply bg-white shadow;
   @apply text-brand-600 font-bold uppercase text-sm;
+  @apply mr-2;
 }
 
 .card__figure-badge--danger, .card__figure-badge--warning {

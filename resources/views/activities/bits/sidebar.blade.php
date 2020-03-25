@@ -178,8 +178,12 @@ $toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
 <div class="notice notice--large notice--warning">
     <strong class="notice__title">Activiteit verplaatst</strong>
     <p class="m-0 w-full">
-        Deze activiteit is verplaatst van <time class="inline-block" datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
-        naar <time class="inline-block font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
+        @if (!empty($activity->rescheduled_reason))
+            {{ $activity->rescheduled_reason }}
+        @else
+            Deze activiteit is verplaatst van <time class="inline-block" datetime="{{ $fromDateIso }}">{{ $fromDate }}</time>
+            naar <time class="inline-block font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
+        @endif
     </p>
 </div>
 @elseif ($activity->is_postponed && !$activity->is_cancelled)
@@ -190,8 +194,12 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 <div class="notice notice--large notice--warning">
     <strong class="notice__title">Activiteit uitgesteld</strong>
     <p class="m-0 w-full">
-        Deze activiteit is uitgesteld op <time class="inline-block" datetime="{{ $onDateIso }}">{{ $onDate }}</time>.<br />
-        Een nieuwe datum is <strong class="inline-block">nog niet bekend</strong>.
+        @if (!empty($activity->postponed_reason))
+            {{ $activity->postponed_reason }}
+        @else
+            Deze activiteit is uitgesteld op <time class="inline-block" datetime="{{ $onDateIso }}">{{ $onDate }}</time>.<br />
+            Een nieuwe datum is <strong class="inline-block">nog niet bekend</strong>.
+        @endif
     </p>
 </div>
 @endif
