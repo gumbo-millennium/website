@@ -80,13 +80,19 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         }
     }
 
-    // Reschedule 20% of the activity
+    // Postpone or reschedule 20% of the activity
     if ($faker->boolean(20)) {
-        $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
-            (clone $factoryData['start_date'])->subMonth(),
-            $factoryData['start_date']
-        );
-        $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
+        // Postpone activity
+        if ($faker->boolean) {
+            $factoryData['postponed_at'] = $faker->dateTimeBetween('-2 weeks', '+2 weeks');
+            $factoryData['postponed_reason'] = $faker->optional(0.80)->sentence;
+        } else {
+            $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
+                (clone $factoryData['start_date'])->subMonth(),
+                $factoryData['start_date']
+            );
+            $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
+        }
     }
 
     return $factoryData;

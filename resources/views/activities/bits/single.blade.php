@@ -78,6 +78,8 @@ $urlClass = implode(' ', $urlClass);
                 <span class="card__figure-badge card__figure-badge--danger">Geannuleerd</span>
             @elseif ($activity->is_rescheduled && $activity->rescheduled_from > now())
                 <span class="card__figure-badge card__figure-badge--warning">Verplaatst</span>
+            @elseif ($activity->is_postponed)
+                <span class="card__figure-badge card__figure-badge--warning">Uitgesteld</span>
             @endif
         </div>
     </div>

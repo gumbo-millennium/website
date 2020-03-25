@@ -7,6 +7,7 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions\CancelActivity;
+use App\Nova\Actions\PostponeActivity;
 use App\Nova\Actions\RescheduleActivity;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
@@ -360,6 +361,7 @@ class Activity extends Resource
     {
         return [
             new CancelActivity(),
+            new PostponeActivity(),
             new RescheduleActivity()
         ];
     }

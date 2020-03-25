@@ -101,6 +101,8 @@ trait HandlesSettingMetadata
         if ($activity->is_rescheduled) {
             $data['eventStatus'] = 'https://schema.org/EventRescheduled';
             $data['previousStartDate'] = $activity->rescheduled_from->toIso8601String();
+        } elseif ($activity->is_postponed) {
+            $data['eventStatus'] = 'https://schema.org/EventPostponed';
         }
 
         // Add offers

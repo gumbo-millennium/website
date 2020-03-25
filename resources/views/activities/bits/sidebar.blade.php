@@ -173,6 +173,18 @@ $toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
         naar <time class="font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
     </p>
 </div>
+@elseif ($activity->is_postponed && !$activity->is_cancelled)
+@php
+$onDateIso = $activity->postponed_at->toIso8601String();
+$onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
+@endphp
+<div class="notice notice--large notice--warning">
+    <strong class="notice__title">Activiteit uitgesteld</strong>
+    <p class="m-0 w-full">
+        Deze activiteit is uitgesteld op <time datetime="{{ $onDateIso }}">{{ $onDate }}</time>.<br />
+        Een nieuwe datum is <strong>nog niet bekend</strong>.
+    </p>
+</div>
 @endif
 @if ($showTagline)
     <p class="text-gray-600 mb-4">{{ $tagline }}</p>

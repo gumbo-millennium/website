@@ -86,6 +86,10 @@ class RescheduleActivity extends Action
         $activity->rescheduled_from = $activity->start_date;
         $activity->rescheduled_reason = $reason;
 
+        // Remove postponed flag.
+        $activity->postponed_at = null;
+        $activity->postponed_reason = null;
+
         // Apply new date
         $activity->start_date = $startDate;
         $activity->end_date = $endDate;

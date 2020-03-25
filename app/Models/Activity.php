@@ -42,7 +42,8 @@ class Activity extends SluggableModel implements AttachableInterface
     public static function getNextActivities(?User $user): Builder
     {
         return self::query()
-            ->where('end_date', '>', now())
+            ->where(static fn (Builder $query) => $query->where('end_date', '>', now())
+                        ->orWhereNotNull('postponed_at'))
             ->orderBy('start_date')
             ->whereAvailable($user);
     }
@@ -67,6 +68,9 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Reschedule date
         'rescheduled_from',
+
+        // Postpone date
+        'postponed_at',
     ];
 
     /**
@@ -355,6 +359,16 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getIsRescheduledAttribute(): bool
     {
         return $this->rescheduled_from !== null;
+    }
+
+    /**
+     * Returns if the activity was postponed to an as-of-yet unknown date
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsPostponedAttribute(): bool
+    {
+        return $this->postponed_at !== null;
     }
 
     /**
