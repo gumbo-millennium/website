@@ -24,7 +24,8 @@ use Tests\TestCase;
  * - Category detail on non-existing category (404)
  * - File detail on existing file (200)
  * - File detail on non-existing file (404)
- * - Download on existing file (200)
+ * - Download on existing file as bundle (200)
+ * - Download on existing file as single (200)
  * - Download on existing file with missing attachment (404)
  * - Download on non-existing file (404)
  */
@@ -139,6 +140,94 @@ class FileDisplayTest extends TestCase
     }
 
     /**
+     * Test if we're seeing the right bundles when looking at an existing category.
+     * @return void
+     */
+    public function testViewBundle()
+    {
+        $routes = $this->getTestRoutes();
+        if (!array_key_exists('bundle', $routes)) {
+            $this->markTestIncomplete('Cannot find [bundle] key in route list');
+        }
+
+        // Get a member user
+        $user = $this->getMemberUser();
+
+        // Request the index
+        $response = $this->actingAs($user)
+            ->get($routes['bundle']);
+
+        // Expect an OK response
+        $response->assertOk();
+
+        // Get the bundle
+        $bundleTitle = $this->getBundleModel();
+        \assert($bundleTitle instanceof FileBundle);
+
+        // Check if we're getting the bundles in the same order we're expecting them.
+        $response->assertSeeText($bundleTitle->title);
+    }
+
+    /**
+     * Test if we're seeing the right bundles when looking at an existing category.
+     * @return void
+     */
+    public function testDownloadBundle()
+    {
+        $routes = $this->getTestRoutes();
+        if (!array_key_exists('bundle-download', $routes)) {
+            $this->markTestIncomplete('Cannot find [bundle-download] key in route list');
+        }
+
+        // Get a member user
+        $user = $this->getMemberUser();
+
+        // Request the index
+        $response = $this->actingAs($user)
+            ->get($routes['bundle-download']);
+
+        // Get the bundle
+        $bundle = $this->getBundleModel();
+        \assert($bundle instanceof FileBundle);
+
+        // Expect an OK response
+        $response->assertOk();
+        $response->assertHeader('Content-Disposition', "attachment; filename=\"{$bundle->title}.zip\"");
+        $response->assertHeader('Content-Type', 'application/octet-stream');
+        $response->assertHeaderMissing('Location');
+    }
+
+
+    /**
+     * Test if we're seeing the right bundles when looking at an existing category.
+     * @return void
+     */
+    public function testDownloadBundleFile()
+    {
+        $routes = $this->getTestRoutes();
+        if (!array_key_exists('bundle-download-single', $routes)) {
+            $this->markTestIncomplete('Cannot find [bundle-download-single] key in route list');
+        }
+
+        // Get a member user
+        $user = $this->getMemberUser();
+
+        // Request the index
+        $response = $this->actingAs($user)
+            ->get($routes['bundle-download-single']);
+
+        // Get the bundle file
+        $file = $this->getBundleModel()->media->first();
+        \assert($file instanceof FileBundle);
+
+        // Expect an OK response
+        $response->assertOk();
+        $response->assertHeader('Content-Disposition', "attachment; filename=chicken.pdf");
+        $response->assertHeader('Content-Type', 'application/pdf');
+        $response->assertHeaderMissing('Location');
+    }
+
+    /**
      * Test if we're getting a 404 when requesting a non-existing category
      * @return void
      */
@@ -217,6 +306,12 @@ class FileDisplayTest extends TestCase
             'bundle' => route('files.show', [
                 'bundle' => $this->getBundleModel()
             ]),
+            'bundle-download' => route('files.download', [
+                'bundle' => $this->getBundleModel()
+            ]),
+            'bundle-download-single' => route('files.download-single', [
+                'media' => $this->getBundleModel()->getFirstMedia()
+            ]),
             'bundle-missing' => route('files.show', [
                 'bundle' => sprintf('test-file-%d', time())
             ]),
@@ -281,8 +376,17 @@ class FileDisplayTest extends TestCase
         $data['slug'] = Str::slug($data['title']);
 
         // Create a bundle
-        return static::$bundle = factory(FileBundle::class, 1)
+        static::$bundle = factory(FileBundle::class, 1)
             ->create($data)
             ->first();
+
+        // Add file
+        static::$bundle
+            ->addMedia(\resource_path('assets/pdf/chicken.pdf'))
+            ->preservingOriginal()
+            ->toMediaCollection();
+
+        // Return
+        return static::$bundle;
     }
 }
