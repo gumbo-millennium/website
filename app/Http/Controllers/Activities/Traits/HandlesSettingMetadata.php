@@ -150,29 +150,35 @@ trait HandlesSettingMetadata
         // Add price info
         JsonLd::addValue('isAccessibleForFree', $activity->is_free);
 
-        // Don't add if no price is set
-        if (!$activity->total_price) {
-            return null;
-        }
-
+        // Add regular ticket
         $url = $this->getCanonical($activity);
         $offers = [
             ["{$url}/regular", $activity->total_price, $activity->available_seats > 0]
         ];
-        if ($activity->total_discount_price) {
+
+        // Add discounted ticket
+        if ($activity->total_discount_price && $activity->total_price) {
             $offers[] = ["{$url}/discount", $activity->total_discount_price, $activity->discounts_available !== 0];
         }
 
+        // Prep list
         $offerList = [];
 
-        $validFrom = ($activity->enrollment_start ?? now())->toIso8601String();
-        $validThrough = ($activity->enrollment_end ?? $activity->end_date)->toIso8601String();
+        // Prep dates
+        $validFromDate = ($activity->enrollment_start ?? now());
+        $validThroughDate = ($activity->enrollment_end ?? $activity->end_date);
+
+        $validFrom = $$validFromDate->toIso8601String();
+        $validThrough = $$validThroughDate->toIso8601String();
+
+        // Prep default org
         $gumboOrg = [
             '@type' => 'Organization',
             'name' => 'Gumbo Millennium',
             'url' => url('/')
         ];
 
+        // A default offer
         $defaultOffer = [
             '@type' => 'Offer',
             'identifier' => null,
@@ -189,13 +195,19 @@ trait HandlesSettingMetadata
             'offeredBy' => $gumboOrg
         ];
 
+        // Add offers
         foreach ($offers as [$id, $price, $available]) {
             $offerList[] = array_merge($defaultOffer, [
                 'identifier' => $id,
                 'url' => $url,
-                'price' => $price / 100,
+                'price' => $price ? $price / 100 : '0.00',
                 'availability' => $available ? 'https://schema.org/OnlineOnly' : 'https://schema.org/SoldOut'
             ]);
+        }
+
+        // Remove 'availability' from data if the tickets are not available right now.
+        if ($validFrom > now() || $validThrough < now()) {
+            Arr::forget($offerList, '*.availability');
         }
 
         // Add offers
