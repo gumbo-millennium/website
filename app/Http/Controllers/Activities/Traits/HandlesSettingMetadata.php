@@ -168,8 +168,8 @@ trait HandlesSettingMetadata
         $validFromDate = ($activity->enrollment_start ?? now());
         $validThroughDate = ($activity->enrollment_end ?? $activity->end_date);
 
-        $validFrom = $$validFromDate->toIso8601String();
-        $validThrough = $$validThroughDate->toIso8601String();
+        $validFrom = $validFromDate->toIso8601String();
+        $validThrough = $validThroughDate->toIso8601String();
 
         // Prep default org
         $gumboOrg = [
