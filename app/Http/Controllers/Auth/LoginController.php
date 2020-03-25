@@ -36,6 +36,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         SEOMeta::setTitle('Inloggen');
+        SEOMeta::setRobots('noindex,nofollow');
     }
 
     /**

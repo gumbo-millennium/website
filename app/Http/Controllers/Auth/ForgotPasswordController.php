@@ -36,6 +36,7 @@ class ForgotPasswordController extends Controller
     {
         $this->middleware('guest');
         SEOMeta::setTitle('Wachtwoord herstellen');
+        SEOMeta::setRobots('noindex,nofollow');
     }
 
     /**
