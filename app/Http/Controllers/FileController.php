@@ -159,7 +159,7 @@ class FileController extends Controller
      */
     public function downloadSingle(Request $request, Media $media): BinaryFileResponse
     {
-        $bundle = $media->model();
+        $bundle = $media->model;
         if (!$bundle instanceof FileBundle) {
             throw new NotFoundHttpException();
         }
