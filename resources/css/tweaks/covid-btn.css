@@ -1,5 +1,6 @@
 .covid-btn {
-  @apply inline-block;
+  @apply flex;
+  @apply flex-row items-center;
   @apply px-4 py-2;
   @apply rounded shadow-sm;
   @apply font-bold text-white no-underline;
