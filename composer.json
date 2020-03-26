@@ -43,6 +43,7 @@
         "mtownsend/read-time": "^1.1",
         "nothingworks/blade-svg": "^0.3.2",
         "overtrue/laravel-lang": "^3.0",
+        "phpoffice/phpspreadsheet": "^1.11",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
         "sebdesign/artisan-cloudflare": "^2.2",

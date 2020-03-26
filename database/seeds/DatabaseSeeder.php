@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             // Add users
             $this->call(UserSeeder::class);
 
+            // Add bot quotes
+            $this->call(BotQuoteSeeder::class);
+
             // Add activities
             $this->call(ActivitySeeder::class);
 
