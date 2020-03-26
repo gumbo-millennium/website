@@ -229,7 +229,7 @@ trait HandlesSettingMetadata
         // Online-only
         if ($activity->location_type === Activity::LOCATION_ONLINE) {
             return [
-                '@type' => 'VirtualPlace',
+                '@type' => 'VirtualLocation',
                 'name' => $activity->location,
                 'url' => \secure_url('/')
             ];
