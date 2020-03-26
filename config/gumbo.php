@@ -66,5 +66,8 @@ return [
         'Persbericht',
         'Advertorial',
         'Vacature'
-    ]
+    ],
+
+    // Quote e-mail address
+    'quote-to' => env('GUMBO_QUOTE_EMAIL')
 ];
