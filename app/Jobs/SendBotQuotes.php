@@ -48,9 +48,12 @@ class SendBotQuotes implements ShouldQueue
             return;
         }
 
+        $count = $quotes->count();
+        logger()->info("Sending {$count} quotes", compact('quotes'));
+
         // Prepare mail
         Mail::to((string) $recipient)
-            ->sendNow(new MailSendBotQuotes($quotes));
+            ->send(new MailSendBotQuotes($quotes));
 
         // Mark quotes as sent
         foreach ($quotes as $quote) {

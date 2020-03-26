@@ -3,7 +3,7 @@
 @slot('header')
     Welkom bij de kitchen sink
 @endslot
-Beste {{ $user->first_name }},
+Beste {{ $recipient->first_name }},
 
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam exercitationem,
 doloribus officiis rerum recusandae temporibus fugiat repellendus debitis
