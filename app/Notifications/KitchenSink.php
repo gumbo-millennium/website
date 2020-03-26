@@ -4,14 +4,23 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
-use Illuminate\Auth\Notifications\VerifyEmail as LaravelVerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class KitchenSink extends LaravelVerifyEmail implements ShouldQueue
+class KitchenSink extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    /**
+     * Get the notification's delivery channels.
+     * @return array
+     */
+    public function via()
+    {
+        return ['mail'];
+    }
 
     /**
      * Get the mail representation of the notification.
@@ -23,7 +32,7 @@ class KitchenSink extends LaravelVerifyEmail implements ShouldQueue
         // Otherwise, they're updating
         return (new MailMessage())
             ->markdown('mail::kitchen-sink', [
-                'user' => $notifiable
+                'recipient' => $notifiable
             ]);
     }
 }
