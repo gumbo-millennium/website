@@ -207,13 +207,16 @@ class Activity extends Resource
 
             Text::make('Weergavenaam locatie', 'location')
                 ->hideFromIndex()
-                ->rules('nullable', 'string', 'between:2,64')
+                ->rules('required', 'string', 'between:2,64')
                 ->help('Weergavenaam van de locatie.'),
 
             Text::make('Adres locatie', 'location_address')
                 ->hideFromIndex()
-                ->rules('nullable', 'string', 'between:5,255')
-                ->help('Het adres van de locatie. Wordt doorgegeven aan Quant Maps'),
+                ->rules('required_unless:location_type,online', 'max:190')
+                ->help(<<<'LOCATION'
+                    Het adres van de locatie, indien niet geheel online.
+                    Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
+                LOCATION),
 
             Select::make('Type locatie', 'location_type')
                 ->hideFromIndex()

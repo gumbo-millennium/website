@@ -1,0 +1,28 @@
+.covid-btn {
+  @apply inline-block;
+  @apply px-4 py-2;
+  @apply rounded shadow-sm;
+  @apply font-bold text-white no-underline;
+  background-color: #01689b;
+}
+
+.covid-btn:hover, .covid-btn:focus {
+  @apply text-gray-100;
+  background-color: #005c8a;
+}
+
+.covid-btn:active {
+  background-color: #005885;
+}
+
+.covid-btn-wrapper {
+  @apply my-2 block w-full;
+}
+
+.covid-btn-wrapper:last-child {
+  @apply mb-0;
+}
+
+.covid-btn-wrapper:first-child {
+  @apply mt-0;
+}
