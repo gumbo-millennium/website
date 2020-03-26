@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Jobs\PruneExpiredEnrollments;
+use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -46,6 +47,9 @@ class Kernel extends ConsoleKernel
 
         // Daily update the Cloudflare IPs
         $schedule->command('cloudflare:reload')->dailyAt('04:44');
+
+        // Send quotes weekly
+        $schedule->job(SendBotQuotes::class)->weeklyOn('monday', '08:15');
     }
 
     /**
