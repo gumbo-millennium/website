@@ -113,25 +113,23 @@ trait HandlesSettingMetadata
                 $data['eventAttendanceMode'] = 'OfflineEventAttendanceMode';
         }
 
-        // If cancelled, we're done here
         if ($activity->is_cancelled) {
+            // Check if the event was cancelled
             $data['eventStatus'] = 'https://schema.org/EventCancelled';
-            return $data;
-        }
-
-        // Check if the event has been rescheduled
-        if ($activity->is_rescheduled) {
+        } elseif ($activity->is_rescheduled) {
+            // Check if the event was rescheduled
             $data['eventStatus'] = 'https://schema.org/EventRescheduled';
             $data['previousStartDate'] = $activity->rescheduled_from->toIso8601String();
         } elseif ($activity->is_postponed) {
+            // Check if the event was postponed
             $data['eventStatus'] = 'https://schema.org/EventPostponed';
         }
 
         // Add offers
         $data['offers'] = $this->buildPricingAndTicketMeta($activity);
 
-        // Add seat count
-        if ($activity->seats > 0 && $activity->available_seats > 0) {
+        // Add seat count, if applicable
+        if (!$activity->is_cancelled && $activity->seats > 0 && $activity->available_seats > 0) {
             $data['remainingAttendeeCapacity'] = $activity->available_seats;
         }
 
