@@ -14,6 +14,7 @@ Als lid van de PRPG krijg je deze mailtjes, hiervoor kan je je niet afmelden.
 Liebe, lieve Klass,
 
 Bij deze alle wist je datjes van afgelopen periode.
+De quotes zijn ook als bijlage in de mail gezet, voor het gemak.
 
 @foreach ($quotesList as list($date, $quotes))
 <div class="block w-full mb-2 text-center">
