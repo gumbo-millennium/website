@@ -50,7 +50,7 @@ class SendBotQuotes implements ShouldQueue
 
         // Prepare mail
         Mail::to((string) $recipient)
-            ->sendNow(new MailSendBotQuotes($quotes));
+            ->send(new MailSendBotQuotes($quotes));
 
         // Mark quotes as sent
         foreach ($quotes as $quote) {
