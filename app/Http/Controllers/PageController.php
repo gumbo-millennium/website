@@ -74,7 +74,7 @@ class PageController extends Controller
         ])->first();
 
         return response()
-            ->view('content.group', compact('pages', 'page'))
+            ->view('content.group', compact('pages', 'page', 'group'))
             ->setLastModified($lastModified)
             ->setMaxAge(now()->addHours(6)->diffInSeconds())
             ->setSharedMaxAge(now()->addHour()->diffInSeconds())

@@ -1,19 +1,19 @@
 .covid-btn {
-  @apply flex;
+  @apply inline-flex;
   @apply flex-row items-center;
   @apply px-4 py-2;
   @apply rounded shadow-sm;
   @apply font-bold text-white no-underline;
-  background-color: #01689b;
+  @apply bg-blue-600;
 }
 
 .covid-btn:hover, .covid-btn:focus {
   @apply text-gray-100;
-  background-color: #005c8a;
+  @apply bg-blue-700;
 }
 
 .covid-btn:active {
-  background-color: #005885;
+  @apply bg-blue-800;
 }
 
 .covid-btn-wrapper {

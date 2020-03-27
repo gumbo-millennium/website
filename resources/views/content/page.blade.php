@@ -28,7 +28,7 @@ SEOMeta::setCanonical($page->url);
                 Voor actuele informatie, adviezen en cijfers raden wij je altijd aan
                 om te kijken naar de officiële instanties.
             </p>
-            @includeWhen($showCovidWarning, 'covid19.block')
+            @include('covid19.block')
         </div>
     </div>
     @endif

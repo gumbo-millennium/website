@@ -10,7 +10,7 @@ SEOMeta::setTitle('Welkom');
 SEOMeta::setCanonical(url('/'));
 @endphp
 
-@push('header.navbar-class', ' navbar--no-shadow')
+@push('header.navbar-class', ' navbar--no-shadow ')
 
 @section('content')
 <div class="container">
@@ -29,6 +29,23 @@ SEOMeta::setCanonical(url('/'));
         <div class="home-hero__logo">
             <img src="{{ mix('images/logo-glass-green.svg') }}" alt="Gumbo Millennium" class="home-hero__logo-image" />
         </div>
+    </div>
+</div>
+
+<div class="bg-blue-100 text-lg font-normal">
+    <div class="container container--sm py-20 text-center">
+        {{-- Title --}}
+        <div class="flex flex-row justify-center items-center mb-4">
+            @icon('solid/virus', 'h-8 w-8 text-blue-600 mr-4')
+            <strong class="mb-2 md:mb-0 md:mr-4">Coronavirus informatie</strong>
+        </div>
+
+        <p class="mb-2">
+            De coronacrisis laat Gumbo Millennium ook niet ongeroerd. Ook wij hebben annuleringen, verplaatsingen
+            en regelwijzigingen doorgevoerd aan de hand van de Covid-19 uitbraak.
+        </p>
+
+        <a href="/coronavirus" class="text-lg text-blue-600 no-underline">Lees hier meer</a>
     </div>
 </div>
 
