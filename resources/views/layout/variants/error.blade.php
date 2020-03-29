@@ -21,7 +21,7 @@ $version = request()->getProtocolVersion() ?? 'HTTP';
 
     {{-- HTTP code --}}
     <div class="container" role="presentation">
-        <p class="text-small text-gray-600 text-center">Error code: {{ $version }} @yield('error.code', '500')</h2>
+        <p class="text-small text-gray-primary-1 text-center">Error code: {{ $version }} @yield('error.code', '500')</h2>
     </div>
 </article>
 @endsection

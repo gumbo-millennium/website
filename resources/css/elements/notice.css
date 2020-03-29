@@ -1,11 +1,11 @@
 /* Notices */
 
 .notice {
-  @apply my-4 p-4 mb-4 border border-gray-600 rounded flex flex-row items-center;
+  @apply my-4 p-4 mb-4 border border-gray-primary-1 rounded flex flex-row items-center;
 }
 
 .notice__icon {
-  @apply mr-2 icon-lg border-gray-600;
+  @apply mr-2 icon-lg border-gray-primary-1;
 }
 
 .notice--large {
@@ -14,29 +14,29 @@
 
 .notice--large .notice__title {
   @apply mb-2;
-  @apply text-sm font-bold uppercase text-gray-600;
+  @apply text-sm font-bold uppercase text-gray-primary-2;
 }
 
 .notice--brand {
-  @apply border-brand-600;
+  @apply border-brand-primary-1;
 }
 
 .notice--warning {
-  @apply border-orange-600;
+  @apply border-orange-primary-1;
 }
 
 .notice--info {
-  @apply border-blue-600;
+  @apply border-blue-primary-1;
 }
 
 .notice--brand .notice__icon, .notice--brand.notice--large .notice__title {
-  @apply text-brand-600;
+  @apply text-brand-primary-1;
 }
 
 .notice--warning .notice__icon, .notice--warning.notice--large .notice__title {
-  @apply text-orange-600;
+  @apply text-orange-primary-1;
 }
 
 .notice--info .notice__icon, .notice--info.notice--large .notice__title {
-  @apply text-blue-600;
+  @apply text-blue-primary-1;
 }

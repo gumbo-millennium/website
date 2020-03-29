@@ -7,7 +7,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Time to become <strong>hackerman</strong></h1>
-<p class="text-lg text-gray-700 mb-4">Maak wat je wil, samen met de informatie van Gumbo.</p>
+<p class="text-lg text-gray-primary-2 mb-4">Maak wat je wil, samen met de informatie van Gumbo.</p>
 
 <a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
 

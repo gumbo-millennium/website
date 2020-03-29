@@ -9,7 +9,7 @@
 
     @slot('details')
     {{-- Make some room --}}
-    <hr class="border-gray-300 my-8" />
+    <hr class="border-gray-secondary-3 my-8" />
 
     {{-- Price title --}}
     <h2 class="font-title text-xl font-normal my-4">Jouw inschrijving</h2>
@@ -20,7 +20,7 @@
             {{-- Product lines --}}
             @foreach ($invoiceLines as list($price, $label))
             <tr class="mb-2">
-                <td class="text-gray-600">{{ $label }}</td>
+                <td class="text-gray-primary-1">{{ $label }}</td>
                 <td class="text-right">{{ Str::price($price, true) }}</td>
             </tr>
             @endforeach
@@ -28,7 +28,7 @@
             {{-- Discount line, if any --}}
             @if ($invoiceCoupon)
             <tr class="mb-2">
-                <td class="text-gray-600">{{ $invoiceCoupon->get('label') }}</td>
+                <td class="text-gray-primary-1">{{ $invoiceCoupon->get('label') }}</td>
                 <td class="text-right">{{ Str::price($invoiceCoupon->get('discount') * -1) }}</td>
             </tr>
             @endif
@@ -37,8 +37,8 @@
         {{-- Total price --}}
         <tfoot>
             <tr class="text-left font-bold">
-                <td class="pt-4 text-gray-600">Totaalprijs</td>
-                <td class="pt-4 text-right text-brand-600">{{ Str::price($enrollment->total_price) }}</td>
+                <td class="pt-4 text-gray-primary-1">Totaalprijs</td>
+                <td class="pt-4 text-right text-brand-primary-1">{{ Str::price($enrollment->total_price) }}</td>
             </tr>
         </tfoot>
     </table>

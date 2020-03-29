@@ -14,21 +14,21 @@
 .site-wide-banner__container {
   @apply mt-0 py-4 px-8;
   @apply shadow rounded-b border border-t-0;
-  @apply bg-gray-200 text-gray-800 border-gray-800;
+  @apply bg-gray-secondary-2 text-gray-primary-3 border-gray-primary-3;
 }
 
 .site-wide-banner__container--info {
-  @apply bg-blue-200 text-blue-800 border-blue-800;
+  @apply bg-blue-secondary-2 text-blue-primary-3 border-blue-primary-3;
 }
 
 .site-wide-banner__container--error {
-  @apply bg-red-200 text-red-800 border-red-800;
+  @apply bg-red-secondary-2 text-red-primary-3 border-red-primary-3;
 }
 
 .site-wide-banner__container--warning {
-  @apply bg-orange-200 text-orange-800 border-orange-800;
+  @apply bg-orange-secondary-2 text-orange-primary-3 border-orange-primary-3;
 }
 
 .site-wide-banner__container--success {
-  @apply bg-brand-200 text-brand-800 border-brand-800;
+  @apply bg-brand-secondary-2 text-brand-primary-3 border-brand-primary-3;
 }

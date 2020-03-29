@@ -1,0 +1,11 @@
+/* Dev tool */
+
+.color-swatch {
+  background-color: theme('colors.gray.50');
+  background-image:
+    linear-gradient(45deg, theme('colors.gray.100') 25%, transparent 25%, transparent 75%, theme('colors.gray.100') 75%, theme('colors.gray.100')),
+    linear-gradient(45deg, theme('colors.gray.100') 25%, transparent 25%, transparent 75%, theme('colors.gray.100') 75%, theme('colors.gray.100'));
+  background-position: 0 0, 8px 8px;
+  background-size: 16px 16px;
+  color: theme('colors.gray.500');
+}

@@ -161,6 +161,12 @@ Route::redirect('/join', '/word-lid');
 // Botman front-end
 Route::get('/botman/tinker', 'BotManController@tinker')->name('botman');
 
+// Styling pages
+if (app()->isLocal()) {
+    Route::view('/test/colors', 'tests.colors');
+    Route::view('/test/loading', 'tests.loading');
+}
+
 // Page groups
 $groupRegex = sprintf(
     '^(%s)$',

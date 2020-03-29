@@ -1,7 +1,7 @@
 /* Userbar */
 
 .userbar {
-  @apply bg-brand-700 py-2;
+  @apply bg-brand-primary-2 text-light py-2;
 }
 
 .userbar__container {
@@ -32,7 +32,6 @@
   .userbar__links--contact {
     @apply flex;
   }
-
   .userbar__links--user {
     @apply ml-0 flex-grow-0;
   }
@@ -43,11 +42,12 @@
 }
 
 .userbar__links-item {
-  @apply text-white leading-none no-underline;
+  @apply leading-none no-underline;
+  color: inherit;
 }
 
 .userbar__links-item:hover, .userbar__links-item:active {
-  @apply text-gray-100 underline;
+  @apply text-gray-secondary-2 underline;
 }
 
 .userbar__links-item:first-child .userbar__links-link {
@@ -55,7 +55,8 @@
 }
 
 .userbar__links-item--text, .userbar__links-item--text:hover, .userbar__links-item--text:active {
-  @apply no-underline text-white;
+  @apply no-underline;
+  color: inherit;
 }
 
 .userbar__links-item--flex {
@@ -64,4 +65,14 @@
 
 .userbar__links-item--flex .icon {
   @apply mr-2;
+}
+
+@screen dark {
+  .userbar {
+    @apply bg-brand-primary-1 text-gray-primary-3;
+  }
+
+  .userbar__links-item:hover, .userbar__links-item:active {
+    @apply text-gray-primary-1;
+  }
 }

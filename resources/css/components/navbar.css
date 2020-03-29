@@ -1,7 +1,7 @@
 /* Navbar */
 
 .navbar {
-  @apply bg-white py-4;
+  @apply bg-light py-4 text-dark;
   @apply shadow;
 }
 
@@ -17,7 +17,6 @@
   .navbar__container {
     @apply flex-row justify-between;
   }
-
   .navbar__filler {
     @apply flex-grow;
   }
@@ -40,5 +39,11 @@
 @screen md {
   .navbar__nav-link {
     @apply py-2;
+  }
+}
+
+@screen dark {
+  .navbar {
+    @apply text-gray-primary-3;
   }
 }

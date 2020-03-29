@@ -67,7 +67,9 @@
     <div class="container navbar__container">
         <a href="{{ route('home') }}" class="logo-wrapper">
             <img src="{{ mix('/images/logo-text-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
-                class="logo" width="160" height="64" />
+                class="logo block dark:hidden" width="160" height="64" />
+            <img src="{{ mix('/images/logo-text-night.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
+                class="logo hidden dark:block" width="160" height="64" />
         </a>
         <div class="navbar__filler"></div>
         <ul class="navbar__nav">

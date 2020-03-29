@@ -23,16 +23,16 @@ $properties = [
     <h1 class="text-3xl font-title mb-4">{{ $bundle->title }}</h1>
 
     {{-- Description --}}
-    <p class="text-gray-600 mb-4">{{ $description }}</p>
+    <p class="text-gray-primary-1 mb-4">{{ $description }}</p>
 
     {{-- Download all --}}
     <a class="@stack('files.download-class')" href="{{ route('files.download', compact('bundle')) }}">Alles downloaden</a>
 
     {{-- Data --}}
-    <dl class="my-8 py-8 border-gray-300 border-t border-b flex flex-row flex-wrap row">
+    <dl class="my-8 py-8 border-gray-secondary-3 border-t border-b flex flex-row flex-wrap row">
         @foreach ($properties as $label => $value)
         <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
-        <dd class="col w-2/3 flex-none mb-2 text-sm font-gray-600">{{ $value }}</dd>
+        <dd class="col w-2/3 flex-none mb-2 text-sm font-gray-primary-1">{{ $value }}</dd>
         @endforeach
     </dl>
 
@@ -45,28 +45,24 @@ $properties = [
 
 {{-- Files --}}
 @section('two-col.left')
+    <div class="file-set file-set--inline">
     {{-- Files --}}
     @forelse ($bundleMedia as $file)
-    <div class="flex flex-row p-4 border-gray-300 hover:shadow hover:border-brand-300 border rounded items-center relative mb-4">
-        {{-- Get icon --}}
-        @include('files.bits.icon', compact('file'))
+        <div class="file-set__item">
+            {{-- Get title --}}
+            <a href="{{ route('files.download-single', ['media' => $file]) }}" class="file-set__item-title">
+                {{ $file->name }}
+            </a>
 
-        {{-- Get title --}}
-        <a href="{{ route('files.download-single', ['media' => $file]) }}" class="flex-grow stretched-link no-underline">
-            {{ $file->name }}
-        </a>
-
-        {{-- File downloads --}}
-        <p class="p-0 ml-4 text-gray-600 flex-none">{{ $file->downloads_count }} downloads</p>
-
-        {{-- Get size --}}
-        <p class="p-0 ml-4 text-gray-600 flex-none">{{ Str::filesize($file->size) }}</p>
-    </div>
-    @empty
-    <div class="p-16 text-center">
-        <h2 class="text-2xl font-title mb-8">Lege bundel</h2>
-        <p class="text-lg text-gray-600">Deze bundel is leeg</p>
-    </div>
-    @endforelse
+            {{-- Get count --}}
+            <p class="file-set__item-meta">{{ $file->downloads_count }} downloads</p>
+            <p class="file-set__item-meta">{{ Str::filesize($file->size) }}</p>
+        </div>
+        @empty
+        <div class="file-set__empty-notice">
+            <h2 class="file-set__empty-notice-title">Lege bundel</h2>
+            <p class="file-set__empty-notice-body">Deze bundel bevat geen bestanden</p>
+        </div>
+        @endforelse
     </div>
 @endsection

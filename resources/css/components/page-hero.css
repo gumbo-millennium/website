@@ -8,11 +8,11 @@
 }
 
 .page-hero__title-fat {
-  @apply font-bold text-brand-700;
+  @apply font-bold text-brand-primary-2;
 }
 
 .page-hero__lead {
-  @apply text-xl text-gray-600 mt-2;
+  @apply text-xl text-gray-primary-2 mt-2;
 }
 
 @screen md {

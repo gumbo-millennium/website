@@ -16,14 +16,14 @@ p, ul, ol, blockquote {
 }
 
 p {
-  @apply text-gray-800;
+  @apply text-gray-primary-3;
   margin-top: 0;
   line-height: 1.5em;
 }
 
 body, .mail, .mail__wrapper {
-  @apply bg-gray-100;
-  @apply text-gray-800;
+  @apply bg-gray-secondary-1;
+  @apply text-gray-primary-3;
   @apply text-base;
 }
 

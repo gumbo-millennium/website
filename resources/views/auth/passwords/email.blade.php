@@ -17,5 +17,5 @@
 {{-- Render form --}}
 {!! form($form, ['class' => 'form']) !!}
 
-<p class="mt-8 text-gray-600">De link die je ontvang is 1 uur lang geldig.</p>
+<p class="mt-8 text-gray-primary-1">De link die je ontvang is 1 uur lang geldig.</p>
 @endsection

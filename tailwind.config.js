@@ -3,7 +3,7 @@
  */
 
 //  Load our settings
-const gumboSettings = require('./tailwind.gumbo')
+const gumboSettings = require('./resources/js-build/branding')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 // Build configs
@@ -17,7 +17,10 @@ module.exports = {
       screens: {
         sm: '640px',
         md: '768px',
-        lg: '1024px'
+        lg: '1024px',
+        dark: {
+          raw: '(prefers-color-scheme: dark)'
+        }
       },
       spacing: {
         0: '0',
