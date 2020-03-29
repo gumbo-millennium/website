@@ -1,7 +1,6 @@
 const _ = require('lodash')
 const path = require('path')
 const postcss = require('postcss')
-const tailwind = require('tailwindcss')
 const tailwindResolve = require('tailwindcss/resolveConfig')
 
 /**
@@ -31,11 +30,7 @@ module.exports = postcss.plugin('esetup-responsive', opts => {
     value => Number.parseInt(value)
   )
 
-  // Get largest screen (default size)
-  const maxSize = _.last(screens)
-
   // Calculate sizes
-  const previous = null
   const imageSizes = _.map(screens, (size, index, arr) => ({
     media: arr[index - 1] || null,
     normal: Number.parseInt(size),
@@ -44,7 +39,6 @@ module.exports = postcss.plugin('esetup-responsive', opts => {
 
   // Get smallest size
   const defaultRes = _.first(imageSizes)
-  const maxRes = _.last(imageSizes)
 
   return css => {
     // Load options
