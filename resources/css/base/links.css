@@ -3,9 +3,18 @@
 */
 
 a {
-  @apply text-gray-800 underline;
+  @apply text-dark underline;
 }
 
 a:hover, a:active {
-  @apply text-gray-700 no-underline;
+  @apply text-gray-primary-3 no-underline;
+}
+
+@screen dark {
+  a {
+    @apply text-gray-primary-2;
+  }
+  a:hover, a:active {
+    @apply text-gray-primary-1;
+  }
 }

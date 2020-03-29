@@ -4,16 +4,16 @@
   @apply px-4 py-2;
   @apply rounded shadow-sm;
   @apply font-bold text-white no-underline;
-  @apply bg-blue-600;
+  @apply bg-blue-primary-1;
 }
 
 .covid-btn:hover, .covid-btn:focus {
-  @apply text-gray-100;
-  @apply bg-blue-700;
+  @apply text-gray-secondary-2;
+  @apply bg-blue-primary-2;
 }
 
 .covid-btn:active {
-  @apply bg-blue-800;
+  @apply bg-blue-primary-3;
 }
 
 .covid-btn-wrapper {
@@ -26,4 +26,13 @@
 
 .covid-btn-wrapper:first-child {
   @apply mt-0;
+}
+
+@screen dark {
+  .covid-btn {
+    @apply bg-blue-secondary-1 text-blue-primary-1;
+  }
+  .covid-btn:hover, .covid-btn:focus, .covid-btn:active {
+    @apply bg-blue-secondary-2 text-dark;
+  }
 }

@@ -9,5 +9,5 @@
 }
 
 .mail-footer__text {
-  @apply text-center text-sm text-gray-500;
+  @apply text-center text-sm text-gray-primary-2;
 }

@@ -1,7 +1,7 @@
 /* Card */
 
 .card {
-  @apply shadow bg-white rounded relative;
+  @apply shadow bg-light rounded relative;
 }
 
 .card--padded {
@@ -13,7 +13,7 @@
 }
 
 .card__figure {
-  @apply h-64 bg-gray-200 relative;
+  @apply h-64 bg-gray-secondary-2 relative rounded-t overflow-hidden;
 }
 
 .card__figure-image {
@@ -33,9 +33,9 @@
 }
 
 .card__figure-badge {
-  @apply px-4 py-2 rounded;
-  @apply bg-white shadow;
-  @apply text-brand-600 font-bold uppercase text-sm;
+  @apply px-4 py-2 rounded overflow-hidden;
+  @apply bg-light shadow;
+  @apply text-brand-primary-1 font-bold uppercase text-sm;
   @apply mr-2;
 }
 
@@ -44,11 +44,11 @@
 }
 
 .card__figure-badge--danger {
-  @apply border-red-600 text-red-600;
+  @apply border-red-primary-1 text-red-primary-1;
 }
 
 .card__figure-badge--warning {
-  @apply border-orange-600 text-orange-600;
+  @apply border-orange-primary-1 text-orange-primary-1;
 }
 
 .card__body {
@@ -56,7 +56,7 @@
 }
 
 .card__body-label {
-  @apply mb-0 uppercase font-bold text-sm text-gray-600 leading-none mb-2;
+  @apply mb-0 uppercase font-bold text-sm text-gray-primary-2 leading-none mb-2;
 }
 
 .card__body-title {
@@ -68,7 +68,7 @@
 }
 
 .card__body-meta {
-  @apply text-right text-gray-600;
+  @apply text-right text-gray-primary-2;
 }
 
 .card__list {
@@ -77,4 +77,14 @@
 
 .card__list-separator {
   @apply mx-2 opacity-75;
+}
+
+@screen dark {
+  .card {
+    @apply bg-gray-secondary-2;
+    /* @apply border border-gray-secondary-2; */
+  }
+  .card__figure {
+    @apply bg-gray-secondary-3;
+  }
 }

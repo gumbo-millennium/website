@@ -1,0 +1,16 @@
+/* Input dark mode */
+
+.form-input, .form-select {
+  @apply border;
+  border-color: theme('colors.source.gray.300');
+}
+
+@screen dark {
+  .form-select, .form-input {
+    @apply bg-light text-dark;
+    border-color: theme('colors.source.gray.800');
+  }
+  .form-input::placeholder {
+    @apply text-gray-secondary-3;
+  }
+}

@@ -7,10 +7,10 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Hallo <strong>{{ $user->first_name }}</strong>,</h1>
-<p class="text-lg text-gray-700 mb-4">Beheer je gegevens, of steek alles in de fik en verwijder je account.</p>
+<p class="text-lg text-gray-primary-2 mb-4">Beheer je gegevens, of steek alles in de fik en verwijder je account.</p>
 
 {{-- Edit account --}}
-<div class="card">
+<div class="card card--padded">
     <h3 class="heading-3 mt-0">Account bewerken</h3>
     <div class="flex flex-row items-center">
         <p class="leading-none m-0 mr-4 flex-grow">Bewerk je alias of e-mail adres</p>
@@ -19,7 +19,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 </div>
 
 {{-- API toegang --}}
-<div class="card">
+<div class="card card--padded">
     <h3 class="heading-3 mt-0">API toegang</h3>
     <div class="flex flex-row items-center">
         <p class="leading-none m-0 mr-4 flex-grow">Hacken op de Gumbo site</p>
@@ -28,7 +28,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 </div>
 
 {{-- Delete account --}}
-<div class="card">
+<div class="card card--padded">
     <h3 class="heading-3 mt-0">Account verwijderen</h3>
     <div class="flex flex-row items-center">
         <p class="leading-none m-0 mr-4 flex-grow">Wis de gegevens van je account.</p>

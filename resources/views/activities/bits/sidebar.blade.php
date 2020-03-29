@@ -92,7 +92,7 @@ if ($hasAnyDiscount) {
 }
 
 // Prep location
-$location = new HtmlString('<span class="text-gray-600">Onbekend</span>');
+$location = new HtmlString('<span class="text-gray-primary-1">Onbekend</span>');
 $locationIcon = null;
 if (!empty($activity->location) && $activity->location_type === Activity::LOCATION_ONLINE) {
     $location = $activity->location;
@@ -148,7 +148,7 @@ $showCovidWarning = Str::contains(
 
 {{-- Members only message, if required --}}
 @if (!$activity->is_public)
-<p class="text-gray-600 text-sm font-bold uppercase mb-4">
+<p class="text-gray-primary-1 text-sm font-bold uppercase mb-4">
     @icon('solid/lock', 'mr-1')
     alleen voor leden
 </p>
@@ -212,7 +212,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 </div>
 @endif
 @if ($showTagline)
-    <p class="text-gray-600 mb-4">{{ $tagline }}</p>
+    <p class="text-gray-primary-1 mb-4">{{ $tagline }}</p>
 @endif
 @endif
 
@@ -230,7 +230,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 
 @if ($showMeta)
 {{-- Make some room --}}
-<hr class="border-gray-300 my-8" />
+<hr class="border-gray-secondary-3 my-8" />
 
 {{-- Data --}}
 <dl class="flex flex-row flex-wrap row">
@@ -246,7 +246,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 </dl>
 
 {{-- Make some more room --}}
-<hr class="border-gray-300 my-8" />
+<hr class="border-gray-secondary-3 my-8" />
 @endif
 
 {{-- Back link --}}

@@ -15,7 +15,7 @@
 
 .mail-body__content--header {
   @apply py-4;
-  @apply bg-brand-600 text-white;
+  @apply bg-brand-primary-1 text-white;
   @apply text-2xl font-bold;
 }
 
@@ -25,10 +25,10 @@
 
 .mail-body__content--subcopy {
   @apply pt-2;
-  @apply bg-gray-100 text-gray-500;
+  @apply bg-gray-secondary-1 text-gray-primary-2;
 }
 
 .mail-body__content--subcopy p, .mail-body__content--subcopy a {
-  @apply text-gray-500;
+  @apply text-gray-primary-2;
   @apply text-sm;
 }

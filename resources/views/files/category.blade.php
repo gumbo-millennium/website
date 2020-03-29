@@ -17,21 +17,21 @@
 </div>
 
 {{-- Categories --}}
-<div class="container">
+<div class="container file-set file-set--inline">
     @forelse ($bundles as $bundle)
-    <div class="flex flex-row p-4 border-gray-300 hover:shadow hover:border-brand-300 border rounded items-center relative mb-4">
+    <div class="file-set__item">
         {{-- Get title --}}
-        <a href="{{ route('files.show', compact('bundle')) }}" class="flex-grow stretched-link no-underline">
+        <a href="{{ route('files.show', compact('bundle')) }}" class="file-set__item-title">
             {{ $bundle->title }}
         </a>
 
         {{-- Get count --}}
-        <p class="p-0 ml-4 text-gray-600 flex-none">{{ $bundle->getMedia()->count() ?? 0 }} bestand(en)</p>
+        <p class="file-set__item-meta">{{ $bundle->getMedia()->count() ?? 0 }} bestand(en)</p>
     </div>
     @empty
-    <div class="p-8 text-center">
-        <h2 class="text-2xl font-title mb-8">Lege categorie</h2>
-        <p class="text-lg text-gray-600">Deze categorie bevat geen bundels</p>
+    <div class="file-set__empty-notice">
+        <h2 class="file-set__empty-notice-title">Lege categorie</h2>
+        <p class="file-set__empty-notice-body">Deze categorie bevat geen bundels</p>
     </div>
     @endforelse
 </div>

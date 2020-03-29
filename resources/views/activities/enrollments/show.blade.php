@@ -8,7 +8,7 @@
 <p>Your enrollment is currently <em>{{ $enrollment->state->title }}</em>.</p>
 
 @if (!$enrollment->state->isStable() && $enrollment->expire)
-<div class="my-2 px-4 py-2 bg-red-100 text-red-800 border rounded border-red-600 inline-block">
+<div class="my-2 px-4 py-2 bg-red-secondary-1 text-red-primary-3 border rounded border-red-primary-1 inline-block">
     <strong>Let op</strong>: Je inschrijving verloopt over {{ $enrollment->expire->diffForHumans(now(), \Carbon\CarbonInterface::DIFF_ABSOLUTE) }}.
 </div>
 @endif

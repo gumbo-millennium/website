@@ -8,6 +8,7 @@ const cssnano = require('cssnano')
 const postcssCalc = require('postcss-calc')
 const postcssImport = require('postcss-import')
 const postcssRem = require('postcss-rem')
+const postcssVariables = require('postcss-css-variables')
 const purgecss = require('@fullhuman/postcss-purgecss')
 const responsiveImages = require('./resources/js-build/postcss-responsive-image')
 const tailwindcss = require('tailwindcss')
@@ -33,6 +34,12 @@ module.exports = ({ file, options, env }) => {
     // cssnano
   ]
 
+  // Inline variables if required
+  if (file.basename === 'mail.css') {
+    plugins.splice(5, 0, postcssVariables())
+  }
+
+  // Add production systems
   if (env === 'production') {
     // Add purgecss as 3rd
     plugins.splice(2, 0, purgecss({

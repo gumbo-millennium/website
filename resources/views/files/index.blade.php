@@ -1,15 +1,5 @@
 @extends('layout.main')
 
-@php
-$variants = [
-    'bg-blue-200',
-    'bg-green-200',
-    'bg-orange-200',
-    'bg-red-200'
-];
-$getVariant = static fn ($index) => $variants[$index % count($variants)];
-@endphp
-
 @section('content')
 {{-- Header --}}
 <div class="container">
@@ -25,33 +15,33 @@ $getVariant = static fn ($index) => $variants[$index % count($variants)];
     @php
     $bundles = $category->bundles()->whereAvailable()->take(3)->get();
     @endphp
-    <div class="mb-12">
+    <div class="file-set">
         {{-- Get label --}}
-        <a href="{{ route('files.category', compact('category')) }}" class="inline-block p-2 px-4 {{ $getVariant($loop->index) }} no-underline mb-4 rounded-full">{{ $category->title }}</a>
+        <a href="{{ route('files.category', compact('category')) }}" class="file-set__title">{{ $category->title }}</a>
 
         {{-- Files --}}
         @if ($bundles)
             @foreach ($bundles as $bundle)
-            <div class="flex flex-row p-4 border-gray-300 hover:shadow hover:border-brand-300 border rounded items-center relative mb-4">
+            <div class="file-set__item">
                 {{-- Get title --}}
-                <a href="{{ route('files.show', compact('bundle')) }}" class="flex-grow stretched-link no-underline">
+                <a href="{{ route('files.show', compact('bundle')) }}" class="file-set__item-title stretched-link">
                     {{ $bundle->title }}
                 </a>
 
                 {{-- Get count --}}
-                <p class="p-0 ml-4 text-gray-600 flex-none">{{ $bundle->getMedia()->count() ?? 0 }} bestand(en)</p>
+                <p class="file-set__item-meta">{{ $bundle->getMedia()->count() ?? 0 }} bestand(en)</p>
             </div>
             @endforeach
 
             {{-- Show all link --}}
-            <a href="{{ route('files.category', compact('category')) }}" class="block flex-grow no-underline p-4">
+            <a href="{{ route('files.category', compact('category')) }}" class="file-set__show-all">
                 Bekijk alle bundels in {{ $category->title }}
                 @icon('chevron-right', 'ml-2')
             </a>
         @else
-        <div class="p-8 text-left">
-            <h2 class="text-xl font-title mb-8">Lege categorie</h2>
-            <p class="text-lg text-gray-600">Deze categorie bevat geen bundels</p>
+        <div class="file-set__empty-notice">
+            <h2 class="file-set__empty-notice-title">Lege categorie</h2>
+            <p class="file-set__empty-notice-body">Deze categorie bevat geen bundels</p>
         </div>
         @endif
     </div>

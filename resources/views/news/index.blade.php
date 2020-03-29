@@ -26,7 +26,8 @@
                 <img class="card__figure-image" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
             @else
                 <div class="card__figure-wrapper">
-                    <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
+                    <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
+                    <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
                 </div>
             @endif
             </div>

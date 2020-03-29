@@ -17,7 +17,7 @@ $statusStyle = '';
 if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
     $statusText = 'Actie vereist';
     $statusIcon = 'solid/exclamation-triangle';
-    $statusStyle = 'text-red-700';
+    $statusStyle = 'text-red-primary-2';
 } elseif ($isEnrolled) {
     $statusText = "Ingeschreven";
     $statusIcon = 'solid/user-check';
@@ -70,7 +70,8 @@ $urlClass = implode(' ', $urlClass);
             srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
         @else
         <div class="card__figure-wrapper">
-            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto">
+            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
+            <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
         </div>
         @endif
 

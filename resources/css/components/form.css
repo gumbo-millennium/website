@@ -23,12 +23,12 @@
 .form__field-input--checkbox {
   @apply m-2;
   @apply h-6 w-6;
-  @apply text-brand-700;
+  @apply text-brand-primary-2;
   @apply float-left;
 }
 
 .form__field-error {
-  @apply mt-2 text-red-700 text-sm;
+  @apply mt-2 text-red-primary-2 text-sm;
 }
 
 .form__field-error strong {
@@ -37,7 +37,7 @@
 }
 
 .form__field-help {
-  @apply mt-2 text-gray-700 text-sm;
+  @apply mt-2 text-gray-primary-2 text-sm;
 }
 
 .form__field--checkbox .form__field-label {

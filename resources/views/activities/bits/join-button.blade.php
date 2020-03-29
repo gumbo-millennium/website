@@ -34,14 +34,14 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     @if ($user && $is_enrolled && $isStable)
     <div class="btn m-0 btn--disabled">Ingeschreven</div>
     @if ($isOpen && $user->can('unenroll', $enrollment))
-    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-secondary-3">Uitschrijven</a>
     @endif
 
     {{-- Instable --}}
     @elseif ($user && $is_enrolled)
     <a href="{{ route('enroll.show', compact('activity')) }}" class="btn m-0 btn--brand">{{ $nextAction }}</a><br />
-    <p class="text-gray-700 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
-    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-500">Uitschrijven</a>
+    <p class="text-gray-primary-2 text-center text-sm">Afronden voor <time datetime="{{ $expireIso }}">{{ $expireText }}</time></p>
+    <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-secondary-3">Uitschrijven</a>
 
     {{-- Fully booked --}}
     @elseif (!$hasRoom)
@@ -51,7 +51,7 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     @elseif (!$isOpen)
     <div class="btn m-0 btn--disabled" disabled>Inschrijvingen gesloten</div>
     @if ($whenOpen)
-    <div class="mt-2 text-gray-500">{{ $whenOpen }}</div>
+    <div class="mt-2 text-gray-secondary-3">{{ $whenOpen }}</div>
     @endif
 
     {{-- Open --}}
@@ -61,7 +61,7 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
         <button type="submit" class="btn m-0 btn--brand">Inschrijven</button>
     </form>
     @if ($whenOpen)
-    <div class="mt-2 text-gray-500">{{ $whenOpen }}</div>
+    <div class="mt-2 text-gray-secondary-3">{{ $whenOpen }}</div>
     @endif
     @endif
 </div>

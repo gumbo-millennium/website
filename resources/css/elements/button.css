@@ -4,30 +4,29 @@
 
 .btn {
   @apply inline-block mx-0 my-4 py-4 px-10;
-  @apply rounded border-2 border-gray-300;
-  @apply bg-gray-200;
-  @apply font-bold text-gray-800 no-underline;
+  @apply rounded border-none;
+  @apply font-bold no-underline;
+  @apply bg-gray-secondary-2 text-gray-primary-3;
 }
 
 .btn:hover, .btn:active {
-  @apply bg-gray-300 border-gray-400;
-  @apply text-gray-900;
+  @apply bg-gray-secondary-2 text-gray-primary-3;
 }
 
 .btn--link {
-  @apply border-0 bg-transparent text-brand-700;
+  @apply border-0 bg-transparent text-brand-primary-2;
 }
 
 .btn--link:hover, .btn--link:active {
-  @apply border-0 bg-transparent text-brand-600;
+  @apply border-0 bg-transparent text-brand-primary-1;
 }
 
 .btn--brand {
-  @apply bg-brand-600 border-brand-700 text-white;
+  @apply bg-brand-primary-1 border-brand-primary-2 text-light;
 }
 
 .btn--brand:hover, .btn--brand:active {
-  @apply bg-brand-700 border-brand-800 text-white shadow-lg;
+  @apply bg-brand-primary-2 border-brand-primary-3 text-white shadow-lg;
 }
 
 .btn--disabled, .btn:disabled {
@@ -37,4 +36,10 @@
 
 .btn--wide {
   @apply block text-center;
+}
+
+@screen dark {
+  .btn--brand {
+    @apply bg-brand-primary-1 text-dark;
+  }
 }

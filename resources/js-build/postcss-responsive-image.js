@@ -35,11 +35,11 @@ module.exports = postcss.plugin('esetup-responsive', opts => {
   const maxSize = _.last(screens)
 
   // Calculate sizes
-  let previous = null
+  const previous = null
   const imageSizes = _.map(screens, (size, index, arr) => ({
-      media: arr[index - 1] || null,
-      normal: Number.parseInt(size),
-      double: Number.parseInt(size) * 2
+    media: arr[index - 1] || null,
+    normal: Number.parseInt(size),
+    double: Number.parseInt(size) * 2
   }))
 
   // Get smallest size
@@ -48,13 +48,13 @@ module.exports = postcss.plugin('esetup-responsive', opts => {
 
   return css => {
     // Load options
-    opts = opts || {};
+    opts = opts || {}
 
     // Iterate background-images
     css.walkDecls('background-image', decl => {
       // Skip if not 'responsive()'
       if (!decl.value || decl.value.indexOf('responsive') === -1) {
-        return;
+        return
       }
 
       // Get container
@@ -88,6 +88,5 @@ module.exports = postcss.plugin('esetup-responsive', opts => {
         insertAfter = newMedia
       })
     })
-  };
-});
-
+  }
+})
