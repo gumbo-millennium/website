@@ -9,7 +9,7 @@ const postcssCalc = require('postcss-calc')
 const postcssImport = require('postcss-import')
 const postcssRem = require('postcss-rem')
 const purgecss = require('@fullhuman/postcss-purgecss')
-const responsiveImages = require('./resources/postcss/responsive-image')
+const responsiveImages = require('./resources/js-build/postcss-responsive-image')
 const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
