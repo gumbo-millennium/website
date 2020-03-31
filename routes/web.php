@@ -147,6 +147,10 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(stati
     // Edit profile
     Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
     Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
+
+    // Quotes
+    Route::get('/wist-je-datjes', 'BotQuoteController@index')->name('quotes');
+    Route::delete('/wist-je-datjes', 'BotQuoteController@destroy')->name('quotes.delete');
 });
 
 // Onboarding URLs
