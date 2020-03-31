@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AppPolicy extends BasePolicy
 {
-    private const IGNORED_PATHS = '/^\/?(nova|telescope|horizon)($|\/)/';
+    private const IGNORED_PATHS = '/^\/?admin($|\/)/';
 
     /**
      * Don't act on Nova paths
