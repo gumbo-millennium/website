@@ -80,8 +80,11 @@ class FileCategory extends SluggableModel
      */
     public function bundles(): Relation
     {
-        return $this->hasMany(FileBundle::class, 'category_id', 'id')
-            ->latest();
+        return $this
+            ->hasMany(FileBundle::class, 'category_id', 'id')
+            ->orderByDesc('published_at')
+            ->orderByDesc('updated_at')
+            ->orderBy('title');
     }
 
     /**
