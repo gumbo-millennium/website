@@ -23,6 +23,6 @@ class LoginPolicy extends BasePolicy
         parent::configure();
 
         // Disable all scripts
-        $this->directives[Directive::SCRIPT] = [Keyword::NONE];
+        $this->directives[Directive::SCRIPT] = [Keyword::SELF];
     }
 }
