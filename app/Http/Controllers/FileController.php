@@ -8,13 +8,14 @@ use App\Helpers\Str;
 use App\Models\FileBundle;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
-use Illuminate\Contracts\Support\Responsable;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use LogicException;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -48,6 +49,7 @@ class FileController extends Controller
             $categoryQuery = FileCategory::query();
         }
 
+        // Get categories with their associated bundles
         $categoryQuery = $categoryQuery
             ->withCount('bundles');
 
@@ -58,6 +60,11 @@ class FileController extends Controller
             ->orderByDesc('updated_at')
             ->orderBy('title')
             ->get();
+
+        // Set title
+        SEOTools::setTitle('Bestanden');
+        SEOTools::setCanonical(route('files.index'));
+
 
         // Show view
         return response()
@@ -78,8 +85,14 @@ class FileController extends Controller
             ->whereAvailable()
             ->paginate(20);
 
+        // Set title
+        SEOTools::setTitle("{$category->title} - Bestanden");
+        SEOTools::setCanonical(route('files.category', compact('category')));
+
         // Render view
-        return view('files.category')->with(compact('category', 'bundles'));
+        return response()
+            ->view('files.category', compact('category', 'bundles'))
+            ->setPrivate();
     }
 
     /**
@@ -94,9 +107,18 @@ class FileController extends Controller
             throw new NotFoundHttpException();
         }
 
+        // Load extras
         $bundle->loadMissing('media', 'category');
         $bundleMedia = $bundle->getMedia();
-        return view('files.show')->with(compact('bundle', 'bundleMedia'));
+
+        // Set title
+        SEOTools::setTitle("{$bundle->title} - {$bundle->category->title} - Bestanden");
+        SEOTools::setCanonical(route('files.show', compact('bundle')));
+
+        // Render view
+        return response()
+            ->view('files.show', compact('bundle', 'bundleMedia'))
+            ->setPrivate();
     }
 
     /**
@@ -129,9 +151,9 @@ class FileController extends Controller
      * Streams a zipfile to the user
      * @param Request $request
      * @param FileBundle $bundle
-     * @return MediaStream
+     * @return SymfonyResponse
      */
-    public function download(Request $request, FileBundle $bundle): Responsable
+    public function download(Request $request, FileBundle $bundle): SymfonyResponse
     {
         // Check permissions
         $this->authorize('download', $bundle);
@@ -146,7 +168,10 @@ class FileController extends Controller
         $media = $bundle->getMedia();
 
         // Stream a zip to the user
-        return MediaStream::create("{$filename}.zip")->addMedia($media);
+        return MediaStream::create("{$filename}.zip")
+            ->addMedia($media)
+            ->toResponse($request)
+            ->setPrivate();
     }
 
     /**
@@ -171,6 +196,8 @@ class FileController extends Controller
         $this->log($request, $bundle, $media);
 
         // Send single file
-        return response()->download($media->getPath(), $media->file_name);
+        return response()
+            ->download($media->getPath(), $media->file_name)
+            ->setPrivate();
     }
 }
