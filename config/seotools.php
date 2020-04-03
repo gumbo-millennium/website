@@ -14,7 +14,7 @@ return [
          * The default configurations to be used by the meta generator.
          */
         'defaults'       => [
-            'title'        => 'Gumbo Millenium', // set false to total remove
+            'title'        => 'Gumbo Millennium', // set false to total remove
             'titleBefore'  => false, // Put defaults.title before page title, like 'It's Over 9000! - Dashboard'
             'description'  => 'Gumbo Millennium staat bekend als de gezelligste studentenvereniging van Zwolle! Bij ons vind je de leukste (studenten-)activiteiten!',
             'separator'    => ' - ',
@@ -41,7 +41,7 @@ return [
          * The default configurations to be used by the opengraph generator.
          */
         'defaults' => [
-            'title'       => 'Gumbo Millenium',
+            'title'       => 'Gumbo Millennium',
             'description' => 'Welkom bij de gezelligste studentenvereniging van Zwolle',
             'url'         => false,
             'type'        => false,
