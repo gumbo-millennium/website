@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "628fd229ed32a355e4a66775f99a251d",
+    "content-hash": "c7e2d6e42472592ad9a3e4d1ddd8b44b",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -227,7 +227,7 @@
                 "model encryption"
             ],
             "support": {
-                "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/master"
+                "source": "https://github.com/gumbo-millennium/laravel-database-encryption/tree/v0.3.0-rc1"
             },
             "time": "2019-12-13T14:03:58+00:00"
         },
@@ -2898,6 +2898,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -2944,6 +2945,7 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
@@ -4007,52 +4009,6 @@
                 "processing"
             ],
             "time": "2019-04-03T23:46:42+00:00"
-        },
-        {
-            "name": "madewithlove/laravel-nova-uuid-support",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/madewithlove/laravel-nova-uuid-support.git",
-                "reference": "2e74aef735bdbb4a2f9f28d75997dfd29d6db23c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/madewithlove/laravel-nova-uuid-support/zipball/2e74aef735bdbb4a2f9f28d75997dfd29d6db23c",
-                "reference": "2e74aef735bdbb4a2f9f28d75997dfd29d6db23c",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^5.7.15 | 5.8.* | ^6.0",
-                "php": "^7.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Madewithlove\\NovaUuidSupport\\NovaUuidSupportServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Madewithlove\\NovaUuidSupport\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Adds uuid and other string identifier support to Laravel Nova",
-            "keywords": [
-                "identifiers",
-                "laravel",
-                "nova",
-                "primary",
-                "string",
-                "uuid"
-            ],
-            "time": "2019-11-22T07:45:38+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
