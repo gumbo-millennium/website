@@ -40,7 +40,7 @@ class SendBotQuotes implements ShouldQueue
         }
 
         // Get e-mail address
-        $recipient = config('gumbo.guote-to', 'pr@gumbo.nu');
+        $recipient = config('gumbo.quote-to');
 
         // Skip if empty
         if (empty($recipient)) {

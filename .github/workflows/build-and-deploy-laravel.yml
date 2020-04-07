@@ -67,6 +67,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check for Gumbo Millennium typos
+        run: .github/find-typos.sh
+
       - name: Cache Composer
         uses: actions/cache@v1
         with:
