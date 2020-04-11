@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-assert($factory instanceof \Illuminate\Database\Eloquent\Factory);
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\FileBundle;
 use Faker\Generator as Faker;

@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Helpers\Str;
 use App\Models\Activity;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
 
-$imageDir = resource_path('assets/images-test');
-$images = scandir($imageDir);
-$imageOptions = $images === false ? collect() : collect($images)
-    ->filter(static fn ($name) => Str::endsWith($name, '.jpg'))
-    ->map(static fn($file) => new SplFileInfo("{$imageDir}/{$file}"));
+$scandir = require __DIR__ . '/../helpers/files.php';
+$imageOptions = $scandir('assets/images-test', 'jpg');
 
 $factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
     $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
