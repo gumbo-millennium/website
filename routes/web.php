@@ -158,6 +158,13 @@ Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(stat
     Route::get('/welcome', 'Auth\\RegisterController@afterRegister')->name('new-account');
 });
 
+// Sponsors
+Route::prefix('sponsoren')->name('sponsors.')->group(static function () {
+    Route::get('/', 'SponsorController@index')->name('index');
+    Route::get('/{sponsor}', 'SponsorController@show')->name('show');
+    Route::get('/{sponsor}/visit', 'SponsorController@redirect')->name('link');
+});
+
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');

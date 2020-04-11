@@ -34,10 +34,23 @@
     @include('layout.header')
     @show
 
+    {{-- Main content --}}
     <main class="main" id="content">
         @yield('content')
     </main>
 
+    {{-- Sponsor --}}
+    @if ($sponsorService->hasSponsor())
+        @php
+        $sponsor = $sponsorService->getSponsor();
+        @endphp
+        <aside>
+            @includeWhen($sponsor->is_classic, 'layout.sponsors.classic', compact('sponsor'))
+            @includeWhen(!$sponsor->is_classic, 'layout.sponsors.modern', compact('sponsor'))
+        </aside>
+    @endif
+
+    {{-- Footer --}}
     @section('main.footer')
     @include('layout.footer')
     @includeWhen($user !== null, 'layout.logout')

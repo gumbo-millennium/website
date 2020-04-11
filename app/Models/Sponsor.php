@@ -10,13 +10,13 @@ use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Storage;
 
 /**
  * Gumbo Millennium sponsors
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @property-read AttachmentInterface $logo
- * @property-read AttachmentInterface $image
+ * @property-read AttachmentInterface $backdrop
  */
 class Sponsor extends SluggableModel implements AttachableInterface
 {
@@ -93,15 +93,65 @@ class Sponsor extends SluggableModel implements AttachableInterface
     public function scopeWhereAvailable(Builder $builder): Builder
     {
         return $builder
-            ->whereNotNull('image_file_name')
+            // Require logos
+            ->whereNotNull('logo_color')
+            ->whereNotNull('logo_gray')
+
+            // Require an URL to be set
+            ->whereNotNull('url')
+
+            // Require to have started, and not ended yet
+            ->where('starts_at', '<', now())
             ->where(static function ($query) {
-                $query->where('starts_at', '>=', now())
-                    ->orWhereNull('starts_at');
-            })
-            ->where(static function ($query) {
-                $query->where('ends_at', '<', now())
+                $query->where('ends_at', '>', now())
                     ->orWhereNull('ends_at');
             });
+    }
+
+    /**
+     * Returns if this should be a classic view
+     * @return bool
+     */
+    public function getIsClassicAttribute(): bool
+    {
+        return !$this->backdrop->exists()
+            || empty($this->caption);
+    }
+
+    /**
+     * Returns if this sponsor is active
+     * @return bool
+     */
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->starts_at < now()
+            && ($this->ends_at === null || $this->ends_at > now());
+    }
+
+    /**
+     * Returns URL to the grayscale (currentColor) logo
+     * @return null|string
+     * @throws InvalidArgumentException
+     */
+    public function getLogoGrayUrlAttribute(): ?string
+    {
+        if (!$this->logo_gray) {
+            return null;
+        }
+        return Storage::disk(self::LOGO_DISK)->url($this->logo_gray);
+    }
+
+    /**
+     * Returns URL to the full color logo
+     * @return null|string
+     * @throws InvalidArgumentException
+     */
+    public function getLogoColorUrlAttribute(): ?string
+    {
+        if (!$this->logo_color) {
+            return null;
+        }
+        return Storage::disk(self::LOGO_DISK)->url($this->logo_color);
     }
 
     /**

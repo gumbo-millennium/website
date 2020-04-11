@@ -1,0 +1,21 @@
+.sponsor {
+  @apply bg-brand-secondary-1;
+  @apply py-8;
+}
+
+.sponsor--backdrop {
+  @apply bg-cover bg-center bg-no-repeat;
+}
+
+.sponsor__container {
+  @apply flex flex-col items-center;
+}
+
+.sponsor__simple-link {
+  @apply inline-block;
+}
+
+.sponsor__simple-logo {
+  @apply h-32;
+  min-width: theme('spacing.32');
+}

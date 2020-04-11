@@ -21,6 +21,7 @@
         "doctrine/dbal": "^2.3",
         "ebess/advanced-nova-media-library": "^2.9",
         "eduardokum/laravel-mail-auto-embed": "dev-master",
+        "enshrined/svg-sanitize": "^0.13.3",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
         "google/apiclient": "^2.4",

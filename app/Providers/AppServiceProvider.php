@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Contracts\ConscriboServiceContract;
+use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Services\ConscriboService;
+use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,8 +25,10 @@ class AppServiceProvider extends ServiceProvider
      * @var array<string>
      */
     public $singletons = [
+        // Sponsor service
+        SponsorServiceContract::class => SponsorService::class,
         // Stripe service
-        StripeServiceContract::class => StripeService::class
+        StripeServiceContract::class => StripeService::class,
     ];
 
     /**
@@ -77,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
+            \assert($this instanceof Blueprint);
             $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
             $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
             $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
@@ -89,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Add Paperclip drop macro to database
         Blueprint::macro('dropPaperclip', function (string $name, ?bool $variants = null) {
+            \assert($this instanceof Blueprint);
             $this->dropColumn(array_filter([
                 "{$name}_file_name",
                 "{$name}_file_size",
@@ -101,6 +107,7 @@ class AppServiceProvider extends ServiceProvider
         // Provide User for all views
         view()->composer('*', static function (View $view) {
             $view->with([
+                'sponsorService' => app(SponsorServiceContract::class),
                 'user' => request()->user()
             ]);
         });
