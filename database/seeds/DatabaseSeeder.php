@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
 
             // Create some news articles
             $this->call(NewsSeeder::class);
+
+            // Add some sponsors
+            $this->call(SponsorSeeder::class);
         }
     }
 }

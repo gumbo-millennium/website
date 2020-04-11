@@ -9,7 +9,7 @@ use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Gumbo Millennium sponsors
@@ -18,22 +18,41 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read AttachmentInterface $logo
  * @property-read AttachmentInterface $image
  */
-class Sponsor extends Model implements AttachableInterface
+class Sponsor extends SluggableModel implements AttachableInterface
 {
-    use PaperclipTrait;
     use HasPaperclip;
     use HasSimplePaperclippedMedia;
+    use PaperclipTrait;
+    use SoftDeletes;
+
+    public const LOGO_DISK = 'public';
+    public const LOGO_PATH = 'sponsors/logos';
 
     /**
-     * The Sponsors default attributes.
+     * The model's attributes.
      * @var array
      */
     protected $attributes = [
-        'description' => null,
-        'image_url' => null,
-        'logo_url' => null,
-        'action' => 'Lees meer',
-        'classic' => false,
+        'contents' => 'null',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     * @var array
+     */
+    protected $casts = [
+        'view_count' => 'int',
+        'click_count' => 'int',
+        'contents' => 'json'
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     * @var array
+     */
+    protected $dates = [
+        'starts_at',
+        'ends_at',
     ];
 
     /**
@@ -43,26 +62,28 @@ class Sponsor extends Model implements AttachableInterface
     protected $fillable = [
         'name',
         'url',
-        'description',
-        'action',
-        'image_url',
-        'logo_url',
-        'classic',
+        'start_at',
+        'ends_at',
+        'caption',
+        'logo_gray',
+        'logo_color',
+        'contents',
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     * @var array
+     * Generate the slug based on the display_title property
+     * @return array
      */
-    protected $casts = [
-        'classic' => 'bool',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'starts_at' => 'datetime',
-        'ends_at' => 'datetime',
-        'view_count' => 'int',
-        'click_count' => 'int'
-    ];
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name',
+                'unique' => true,
+                'onUpdate' => false
+            ]
+        ];
+    }
 
     /**
      * Returns sponsors that are available right now

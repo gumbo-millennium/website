@@ -1,1 +1,3 @@
-
+[submodule "resources/assets/images-test/logos"]
+	path = resources/assets/images-test/logos
+	url = https://github.com/pigment/fake-logos.git
