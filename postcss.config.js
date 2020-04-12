@@ -1,7 +1,4 @@
 /* eslint-disable quote-props */
-// OS-level
-const path = require('path')
-
 // Plugins
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
@@ -11,12 +8,12 @@ const postcssRem = require('postcss-rem')
 const postcssVariables = require('postcss-css-variables')
 const purgecss = require('@fullhuman/postcss-purgecss')
 const responsiveImages = require('./resources/js-build/postcss-responsive-image')
+const removeDarkMode = require('./resources/js-build/postcss-remove-darkmode')
 const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
-  const remConfig = {
-    convert: 'rem'
-  }
+  const isProduction = env === 'production'
+  const remConfig = { convert: 'rem' }
 
   // Mail needs pixels, instead of rem
   if (file.basename === 'mail.css') {
@@ -36,11 +33,14 @@ module.exports = ({ file, options, env }) => {
 
   // Inline variables if required
   if (file.basename === 'mail.css') {
-    plugins.splice(5, 0, postcssVariables())
+    plugins.splice(5, 0, removeDarkMode())
+    if (isProduction) {
+      plugins.splice(6, 0, postcssVariables())
+    }
   }
 
-  // Add production systems
-  if (env === 'production') {
+  if (isProduction) {
+    // Add production systems
     // Add purgecss as 3rd
     plugins.splice(2, 0, purgecss({
       content: [
