@@ -9,7 +9,7 @@
     {!! SEO::generate(config('app.debug') !== true) !!}
 
     {{-- Stylesheet --}}
-    <link rel="stylesheet" href="{{ mix('/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('app.css') }}">
 
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css?family=Poppins:500,700&display=swap" rel="stylesheet">
@@ -19,8 +19,8 @@
 
     {{-- Javascript (deferred) --}}
     @section('main.scripts')
-    <script src="{{ mix('/vendor.js') }}" defer></script>
-    <script src="{{ mix('/app.js') }}" defer></script>
+    <script src="{{ mix('vendor.js') }}" defer></script>
+    <script src="{{ mix('app.js') }}" defer></script>
     @show
 </head>
 

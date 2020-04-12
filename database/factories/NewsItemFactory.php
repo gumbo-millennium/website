@@ -11,7 +11,7 @@ use Faker\Generator as Faker;
 
 $scandir = require __DIR__ . '/../helpers/files.php';
 $fakeEditorJs = require __DIR__ . '/../helpers/editorjs.php';
-$imageOptions = $scandir('assets/images-test', 'jpg');
+$imageOptions = $scandir('test-assets/images', 'jpg');
 
 $factory->define(NewsItem::class, static fn (Faker $faker) => [
         'title' => Str::title($faker->words($faker->numberBetween(2, 8), true)),

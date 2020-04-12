@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
 
 $scandir = require __DIR__ . '/../helpers/files.php';
-$imageOptions = $scandir('assets/images-test', 'jpg');
+$imageOptions = $scandir('test-assets/images', 'jpg');
 
 $factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
     $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));

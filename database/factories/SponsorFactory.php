@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Storage;
 
 // Get sponsor directory
 $scandir = require __DIR__ . '/../helpers/files.php';
-$colorSponsors = $scandir('assets/images-test/logos/src/logos/color', 'svg');
-$grayscaleSponsors = $scandir('assets/images-test/logos/src/logos/grayscale', 'svg');
-$backdropImage = $scandir('assets/images-test', 'jpg');
+$colorSponsors = $scandir('test-assets/images/logos/src/logos/color', 'svg');
+$grayscaleSponsors = $scandir('test-assets/images/logos/src/logos/grayscale', 'svg');
+$backdropImage = $scandir('test-assets/images', 'jpg');
 $editorjs = require __DIR__ . '/../helpers/editorjs.php';
 
 

@@ -18,7 +18,7 @@
                                 <tr>
                                     <td class="mail-header__inner content-cell content-cell--header" align="center">
                                         <a href="{{ url("/") }}" class="mail-header__link">
-                                            <img class="mail-header__logo" height="60" src="{{ mix('/images/mail/logo.png') }}"
+                                            <img class="mail-header__logo" height="60" src="{{ mix('images/mail/logo.png') }}"
                                                 alt="Gumbo Millennium" border="0" data-auto-embed />
                                         </a>
                                     </td>
