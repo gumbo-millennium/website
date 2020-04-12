@@ -1,7 +1,10 @@
-name: "Build and test Laravel"
+name: "Build, test and deploy Laravel"
 
 on:
   pull_request:
+  push:
+    branches:
+    - master
 
 jobs:
   laravel-frontend:
@@ -126,6 +129,27 @@ jobs:
         run: |
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
+
+      - name: Create deployment
+        if: |
+          (
+            github.event_name == 'push'
+          ) || (
+            github.event_name == 'pull_request' &&
+            github.event.action == 'synchronize' &&
+            github.event.pull_request.draft != true &&
+            github.event.pull_request.base.repo.full_name == 'gumbo-millennium/website' &&
+            github.event.pull_request.head.repo.full_name == 'gumbo-millennium/website'
+          )
+        uses: rohit-gohri/deploy-action@v0.1.0
+        env:
+          DEPLOY_ENV: production
+          DEPLOY_REF: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          DEPLOY_ENV: production
+          DEPLOY_REF: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Report test results to CodeClimate
         run: |
