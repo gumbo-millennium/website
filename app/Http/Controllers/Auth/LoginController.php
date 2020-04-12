@@ -34,7 +34,10 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        // Require guests
         $this->middleware('guest')->except('logout');
+
+        // Add meta
         SEOMeta::setTitle('Inloggen');
         SEOMeta::setRobots('noindex,nofollow');
     }

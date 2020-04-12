@@ -126,9 +126,8 @@ Route::prefix('word-lid')->name('join.')->group(static function () {
     Route::get('/welkom', 'JoinController@complete')->name('complete');
 });
 
-
 // Authentication and forgotten passwords
-Route::prefix('auth')->middleware($loginCsp)->group(static function () {
+Route::prefix('auth')->middleware([$loginCsp, 'no-sponsor'])->group(static function () {
     Route::auth(['verify' => true]);
 
     // Register privacy
@@ -159,7 +158,7 @@ Route::prefix('onboarding')->name('onboarding.')->middleware('auth')->group(stat
 });
 
 // Sponsors
-Route::prefix('sponsoren')->name('sponsors.')->group(static function () {
+Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(static function () {
     Route::get('/', 'SponsorController@index')->name('index');
     Route::get('/{sponsor}', 'SponsorController@show')->name('show');
     Route::get('/{sponsor}/visit', 'SponsorController@redirect')->name('link');
