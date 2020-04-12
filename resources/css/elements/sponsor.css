@@ -1,5 +1,5 @@
 .sponsor {
-  @apply bg-brand-secondary-1;
+  @apply bg-gray-secondary-1;
   @apply py-8;
 }
 
@@ -11,6 +11,10 @@
   @apply flex flex-col items-center;
 }
 
+.sponsor__container--modern {
+  @apply items-stretch;
+}
+
 .sponsor__simple-link {
   @apply inline-block;
 }
@@ -18,4 +22,51 @@
 .sponsor__simple-logo {
   @apply h-32;
   min-width: theme('spacing.32');
+}
+
+.sponsor__card-wrapper {
+  @apply pt-32;
+  margin-bottom: calc(0 - theme('spacing.16'));
+}
+
+.sponsor__card {
+  @apply flex flex-row p-4;
+  @apply bg-light shadow;
+}
+
+.sponsor__card-logo {
+  @apply mb-2 h-16;
+}
+
+.sponsor__card-logo-img {
+  @apply h-16 w-auto;
+}
+
+.sponsor__card-text {
+  @apply leading-relaxed mb-4;
+}
+
+.sponsor__text {
+
+}
+
+@screen sm {
+  .sponsor__container--modern {
+    @apply items-end;
+  }
+  .sponsor__card-wrapper {
+    width: 50%;
+  }
+}
+
+@screen md {
+  .sponsor__card-wrapper {
+    width: 41.666%;
+  }
+}
+
+@screen lg {
+  .sponsor__card-wrapper {
+    width: 33.333%;
+  }
 }
