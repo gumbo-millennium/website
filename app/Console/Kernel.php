@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('cloudflare:reload')->dailyAt('04:44');
 
         // Send quotes weekly
-        $schedule->job(SendBotQuotes::class)->weeklyOn('monday', '08:15');
+        $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
     }
 
     /**
