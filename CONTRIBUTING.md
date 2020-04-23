@@ -1,7 +1,7 @@
 # Contribution guide
 
 So, you'd like to help with the Gumbo Millennium website? That's absolutely
-AWESOME :party:!
+AWESOME 🎉!
 
 This guide describes how to get started with developing the website. It should
 be pretty hacktoberfest-proof (and, thusly, easy to use), so please create a
