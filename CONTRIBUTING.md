@@ -1,8 +1,25 @@
 # Contribution guide
 
-The following guide quickly describes how to get started with the project.
+So, you'd like to help with the Gumbo Millennium website? That's absolutely
+AWESOME :party:!
 
-## Required programs
+This guide describes how to get started with developing the website. It should
+be pretty hacktoberfest-proof (and, thusly, easy to use), so please create a
+documentation issue if you can't figure out some parts of this guide.
+
+## Required software
+
+As we work on this site on a wide range of devices, we've decided to use some
+software to ease our work, and to provide a consistent development experience
+for all our users.
+
+Therefore, the requirements for this project are a _tiny bit_ bigger when
+comared to standard Laravel development (the addition of Docker, mainly). This
+is to ensure all our users are able to work in a consistent,
+production-mirroring environment.
+
+These following requirements are for Linux, Mac OS and Windows:
+
 
 - **PHP 7.4 or newer** - [Website][site-php] - We use the new [flexible
   Heredoc][heredoc] and arrow functions on some occasions, which doesn't work in PHP <7.3.
@@ -25,23 +42,58 @@ The following guide quickly describes how to get started with the project.
 [site-docker-compose]: https://docs.docker.com/compose/
 [heredoc]: https://www.php.net/manual/en/migration73.incompatible.php#migration73.incompatible.core.heredoc-nowdoc
 
-## Quick start
+### Larvel Homestead and Laravel Valet
 
-After installing the above dependencies and files, make sure the following
-commands work in your console:
+This project **does __not__ support** Laravel Homestead and Laravel Valet. We
+use Docker in place of these systems, since they represent the server
+environment more closely, work across all supported OS'es and since we don't
+want to restrict easy development to just one (very expensive) platform.
 
-- `composer`
-- `php`
-- `yarn`
+### Windows users
+
+A small note for Window users: We recommend using the [Windows Subsystem
+Linux][wsl] (or at least a Git Bash or something), as our post-install scripts
+are written in Bash, and are likely _not_ to work in PowerShell or CMD.
+
+[wsl]: https://docs.microsoft.com/en-us/windows/wsl/install-win10
+
+## Checking your shell
+
+After installing all software, please make sure all commands that are required
+for installation work. You can easily test this by running the following on the
+command line:
+
+- `composer -v`
+- `php -v`
+- `yarn --version`
+- `docker version` (Windows users an getting errors? [read this][wsl-docker])
 - `docker-compose`
 
-After you've installed these programs, you need to make sure you have access to
-the Laravel Nova repository.  Use the command `composer config
-http-basic.nova.laravel.com <username> <password>` to configure the access
-credentials. Give a shout to @roelofr if you need credentials and are a member.
+<!-- 
+ARCHIVED AT https://web.archive.org/web/20200423125549/https://medium.com/@callback.insanity/using-docker-with-windows-subsystem-for-linux-wsl-on-windows-10-d2deacad491f
+-->
+[wsl-docker]: https://medium.com/@callback.insanity/using-docker-with-windows-subsystem-for-linux-wsl-on-windows-10-d2deacad491f
 
-After that, simply run the following command to quickly configure and
-launch the project.
+## Configuring Laravel Nova repository
+
+This project uses Laravel Nova, a proprietary admin panel developed by the
+Laravel team. This repo is behind authentication, which means you'll need a
+login and password (or token) to login.
+
+If you don't have access via any means, you can poke @roelofr (or mail him),
+and you might be able to get a token.
+
+After you got the token, you need to register it in Composer:
+
+```
+composer config http-basic.nova.laravel.com <username> <password>
+```
+
+### Go live
+
+After all these checks, you can go live with your installation. We've set up a
+command that runs all required steps for installation. It may take about 20
+mins to complete, and only needs to be run once.
 
 ```
 composer run contribute
