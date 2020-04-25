@@ -45,8 +45,8 @@
         $sponsor = $sponsorService->getSponsor();
         @endphp
         <aside>
-            @includeWhen($sponsor->is_classic, 'layout.sponsors.classic', compact('sponsor'))
-            @includeWhen(!$sponsor->is_classic, 'layout.sponsors.modern', compact('sponsor'))
+            @includeWhen($sponsor->is_classic, 'layout.sponsors.classic', compact('sponsor', 'sponsorService'))
+            @includeWhen(!$sponsor->is_classic, 'layout.sponsors.modern', compact('sponsor', 'sponsorService'))
         </aside>
     @endif
 

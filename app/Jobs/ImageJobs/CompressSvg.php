@@ -19,7 +19,13 @@ class CompressSvg extends SvgJob
         $filePath = $file->getPathname();
 
         // Run it through SVGO
-        $process = new Process(['svgo', $filePath]);
+        $process = new Process([
+            'svgo',
+            '--multipass', // leeloo?
+            '--disable=removeViewBox',
+            '--enable=removeDimensions',
+            $filePath
+        ]);
         $process->run();
 
         // Log if SVGO failed

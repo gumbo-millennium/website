@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace App\Jobs\ImageJobs;
 
+use SSNepenthe\ColorUtils\Exceptions\InvalidArgumentException;
+
+use function SSNepenthe\ColorUtils\is_bright;
+
 class RemoveImageColors extends SvgJob
 {
     private const TARGET_COLOR = 'currentColor';
+    private const NO_COLOR = 'transparent';
 
     /**
      * Execute the job.
@@ -45,18 +50,25 @@ class RemoveImageColors extends SvgJob
             }
         }
 
+        $checkElements = ['fill', 'stroke'];
+
         // Check all elements for fill and border
         foreach ($doc->getElementsByTagName('*') as $node) {
             \assert($node instanceof \DOMElement);
 
-            // Replace fill with new color
-            if ($node->hasAttribute('fill')) {
-                $node->setAttribute('fill', self::TARGET_COLOR);
-            }
+            // Replace colors
+            foreach ($checkElements as $type) {
+                if (!$node->hasAttribute($type)) {
+                    continue;
+                }
 
-            // Replace stroke with new color
-            if ($node->hasAttribute('stroke')) {
-                $node->setAttribute('stroke', self::TARGET_COLOR);
+                try {
+                    $isLight = is_bright($node->getAttribute($type), 210);
+                    $node->setAttribute($type, $isLight ? self::NO_COLOR : self::TARGET_COLOR);
+                } catch (InvalidArgumentException $exception) {
+                    // Noop
+                    continue;
+                }
             }
         }
 
