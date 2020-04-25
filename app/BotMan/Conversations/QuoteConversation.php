@@ -8,22 +8,27 @@ use App\BotMan\Traits\HasGroupCheck;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\BotQuote;
+use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use Illuminate\Support\Facades\URL;
 
 class QuoteConversation extends InvokableConversation
 {
     use HasGroupCheck;
 
     private const STR_THANKS = [
-        'Bedankt voor het insturen van je wist-je-datje, :name!',
-        'Whoop, lekker bezig :name, ik stuur \'m door naar de Gumbode',
-        'Bleep bloop, opgeslagen onder "Chantagemateriaal van :name".',
-        'Waarom doe je mij dit aan? Nouja, tijd om dit door te delegeren naar de Gumbode',
-        'Ik weet niet waar je het vandaan haalt, en ik wil het ook niet weten',
-        '<em>I got nothig</em>',
-        'Houd dat wist-je-datje alsjeblieft 1,5 meter bij mij vandaan!',
-        'Oeh, <em>juicy</em>.',
+        ['message' => 'Bedankt voor het insturen van je wist-je-datje, :name!'],
+        ['message' => 'Whoop, lekker bezig :name, ik stuur \'m door naar de Gumbode'],
+        // ['message' => 'Bleep bloop, opgeslagen onder "Chantagemateriaal van :name".'],
+        ['message' => 'Waarom doe je mij dit aan? Nouja, tijd om dit door te delegeren naar de Gumbode'],
+        ['message' => 'Ik weet niet waar je het vandaan haalt, en ik wil het ook niet weten'],
+        ['message' => 'Houd dat wist-je-datje alsjeblieft 1,5 meter bij mij vandaan!'],
+        [
+            'asset' => 'corona.jpg',
+            'message' => 'Weet je wat ik hiermee doe?'
+        ]
     ];
 
     private const STR_ASK = [
@@ -103,8 +108,33 @@ class QuoteConversation extends InvokableConversation
             'quote' => $quote,
         ]);
 
+        // Find a damn quote
+        do {
+            $quote = Arr::random(self::STR_THANKS);
+        } while (empty($quote['message']));
+
+        // If there's an asset, send it along with a message
+        if (!empty($quote['asset'])) {
+            $path = \resource_path("assets/images-internal/bots/{$quote['asset']}");
+
+            // Check file
+            if (\file_exists($path)) {
+                $imageUrl = URL::signedRoute(
+                    'botman.image',
+                    ['image' => $quote['asset']],
+                    now()->addHour()
+                );
+
+                // Add attachment
+                $attachment = new Image($imageUrl);
+                $message = OutgoingMessage::create($quote['message'])->withAttachment($attachment);
+                $this->say($message);
+                return;
+            }
+        }
+
         // Reply about it
-        $joke = str_replace(':name', $this->getName(), Arr::random(self::STR_THANKS));
+        $joke = str_replace(':name', $this->getName(), $quote['message']);
         $this->say("{$joke}\n\n💾 Je wist-je-datje is opgeslagen");
     }
 

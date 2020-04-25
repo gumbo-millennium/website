@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\BotMan\Conversations\QuoteConversation;
 use App\BotMan\Messages\ActivitiesCommand;
+use App\BotMan\Messages\DebugMessage;
 use App\BotMan\Messages\FallbackMessage;
 use App\BotMan\Messages\HelpMessage;
 use App\BotMan\Messages\PlazaCamMessage;
@@ -30,6 +31,12 @@ $botman->hears('/koffiecam', PlazaCamMessage::class);
 $botman->hears('/plazacam', PlazaCamMessage::class);
 $botman->hears('/wjd {text}', QuoteConversation::class);
 $botman->hears('/wjd', QuoteConversation::class);
+
+// Debug commands
+if (config('app.debug')) {
+    $botman->hears('/debug {noise}', DebugMessage::class);
+    $botman->hears('/debug', DebugMessage::class);
+}
 
 // Fallback
 $botman->fallback(FallbackMessage::class);
