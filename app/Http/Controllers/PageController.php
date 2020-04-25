@@ -46,7 +46,7 @@ class PageController extends Controller
 
         // Return view
         return response()
-            ->view('content.home', compact('nextEvents', 'enrollments'))
+            ->view('content.home.layout', compact('nextEvents', 'enrollments'))
             ->setPublic()
             ->setMaxAge(60 * 15); // Cache for 15 min max
     }
