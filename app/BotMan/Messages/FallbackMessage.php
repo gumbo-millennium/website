@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
+use App\BotMan\Traits\HasGroupCheck;
 use App\Helpers\Arr;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 
 class FallbackMessage extends AbstractMessage
 {
+    use HasGroupCheck;
+
     private const DEFAULT_MESSAGE = 'Sorry, dit commando ken ik niet.';
 
     private const QUOTE_LIST = [
@@ -34,6 +37,11 @@ class FallbackMessage extends AbstractMessage
         // Skip if not a command
         $message = $bot->getMessage();
         if (empty($message->getText()) || substr($message->getText(), 0, 1) !== '/') {
+            return;
+        }
+
+        // Skip if in a group and not mentioned
+        if ($this->isInGroup() && !$this->isMentioned()) {
             return;
         }
 
