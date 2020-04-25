@@ -24,4 +24,10 @@ SEOMeta::setCanonical(url('/'));
 
 {{-- Activities --}}
 @include('content.home.activities')
+
+{{-- News --}}
+@include('content.home.news')
+
+{{-- Links (SEO) --}}
+@include('content.home.links')
 @endsection
