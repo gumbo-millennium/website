@@ -9,6 +9,7 @@ use App\Jobs\ImageJobs\RemoveImageColors;
 use App\Jobs\ImageJobs\ValidateSvg;
 use App\Models\Sponsor;
 use GuzzleHttp\Psr7\Uri;
+use Illuminate\Support\Facades\Storage;
 
 class SponsorObserver
 {
@@ -45,6 +46,20 @@ class SponsorObserver
         "/^spm/",
         "/^vn(_[a-zA-Z]*)+/",
     ];
+
+    public function saving(Sponsor $sponsor): void
+    {
+        // Validate logos
+        $logos = ['logo_gray', 'logo_color'];
+        foreach ($logos as $logo) {
+            if (
+                $sponsor->wasChanged($logo) &&
+                !Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->$logo)
+            ) {
+                $sponsor->$logo = null;
+            }
+        }
+    }
 
     /**
      * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs
