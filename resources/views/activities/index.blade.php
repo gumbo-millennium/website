@@ -49,9 +49,8 @@ $firstActivity = $past ? null : $activities->first();
         @endforeach
     </div>
 
-    <div class="container pt-8">
-        {{ $activities->links() }}
-    </div>
+    {{-- Links --}}
+    {{ $activities->links() }}
 @endif
 </div>
 
