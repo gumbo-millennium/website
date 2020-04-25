@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Contracts\SponsorService;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
+use App\Models\Sponsor;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
 use Illuminate\Http\Request;
@@ -24,16 +26,38 @@ class PageController extends Controller
      * Renders the homepage
      * @return Response
      */
-    public function homepage(Request $request)
+    public function homepage(SponsorService $sponsorService, Request $request)
     {
-        $nextEvents = Activity::query()
+        // Get sponsors
+        $homeSponsors = Sponsor::query()
             ->whereAvailable()
-            ->where('start_date', '>', now())
-            ->whereNull('cancelled_at')
-            ->orderBy('start_date')
-            ->take(2)
+            ->inRandomOrder()
+            ->take(4)
             ->get();
 
+        // Mark 4 sponsors as shown
+        $homeSponsors->each->increment('view_count');
+
+        // Hide sponsors on the page if some are present
+        ($homeSponsors->count() == 4) and $sponsorService->hideSponsor();
+
+        // Has existing users
+        $user = $request->user();
+        $member = $user && $user->is_member ? 'member' : 'guest';
+
+        // Get next set of events
+        // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
+        $nextEvents = $this->cache->remember("home.events.{$member}", now()->addMinutes(10), static function () {
+            return Activity::query()
+                ->whereAvailable()
+                ->where('start_date', '>', now())
+                ->whereNull('cancelled_at')
+                ->orderBy('start_date')
+                ->take(2)
+                ->get();
+        });
+
+        // Get enrollments
         $enrollments = [];
         if ($request->user() && $nextEvents) {
             $enrollments = Enrollment::query()
@@ -46,7 +70,7 @@ class PageController extends Controller
 
         // Return view
         return response()
-            ->view('content.home.layout', compact('nextEvents', 'enrollments'))
+            ->view('content.home.layout', compact('homeSponsors', 'nextEvents', 'enrollments'))
             ->setPublic()
             ->setMaxAge(60 * 15); // Cache for 15 min max
     }

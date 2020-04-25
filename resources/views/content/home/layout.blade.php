@@ -16,6 +16,9 @@ SEOMeta::setCanonical(url('/'));
 {{-- Header --}}
 @include('content.home.header')
 
+{{-- Sponsors --}}
+@include('content.home.sponsors')
+
 {{-- Corona message --}}
 @include('content.home.corona')
 

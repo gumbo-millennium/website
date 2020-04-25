@@ -26,6 +26,30 @@
   max-height: theme('spacing.64');
 }
 
+.home-sponsors {
+  @apply bg-gray-secondary-2;
+}
+
+.home-sponsors__container {
+  @apply overflow-y-auto flex flex-row items-center py-8;
+}
+
+.home-sponsors__sponsor {
+  @apply w-1/2 px-4 flex-none;
+}
+
+.home-sponsors__sponsor:nth-child(odd) {
+  @apply hidden;
+}
+
+.home-sponsor__sponsor-link {
+  @apply rounded px-4 py-8 text-gray-primary-1 block;
+}
+
+.home-sponsors__sponsor-image {
+  @apply fill-current w-full h-16;
+}
+
 @screen md {
   .home-hero__text {
     @apply py-32 w-2/3;
@@ -47,6 +71,14 @@
   }
   .home-hero__logo {
     @apply items-center w-1/3 pt-0;
+  }
+
+  .home-sponsors__sponsor {
+    @apply w-1/4;
+  }
+
+  .home-sponsors__sponsor:nth-child(odd) {
+    @apply block;
   }
 }
 
