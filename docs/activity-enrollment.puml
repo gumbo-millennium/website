@@ -1,0 +1,41 @@
+@startuml "Activity onboarding"
+
+skinparam Monochrome true
+
+start
+
+:Click "enroll";
+
+if (Logged in?) then(no)
+    :Ask for login or create account;
+    :log in user;
+    :Send password set link to e-mail;
+else (yes)
+endif
+
+:Create pending enrollment;
+
+if (Form required?) then (yes)
+    :Ask extra questions;
+else (no)
+endif
+
+:Mark as "seeded";
+
+if (Payment required?) then (yes)
+    if (Multiple ticket types?) then (yes)
+        :Choose ticket type;
+    else (no)
+        :Auto-assign ticket;
+    endif
+
+    :Request bank info;
+    :Forward to iDEAL;
+    :Mark as "paid";
+else (no)
+    :Mark as "confirmed";
+endif
+
+stop
+
+@enduml

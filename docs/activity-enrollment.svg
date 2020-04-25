@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1017px" preserveAspectRatio="none" style="width:460px;height:1017px" version="1.1" viewBox="0 0 460 1017" width="460px" zoomAndPan="magnify">
+    <defs>
+        <filter height="300%" id="fbrhkrdlwfo3o" width="300%" x="-1" y="-1">
+            <feGaussianBlur result="blurOut" stdDeviation="2.0"/>
+            <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/>
+            <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/>
+            <feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/>
+        </filter>
+    </defs>
+    <g>
+        <circle cx="265" cy="20" fill="#000000" filter="url(#fbrhkrdlwfo3o)" style="stroke:none;stroke-width:1" r="10"/>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="91" x="219.5" y="50"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="71" x="229.5" y="72.8262">
+            Click &quot;enroll&quot;
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="190" x="170" y="155.8318"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="170" x="180" y="178.658">
+            Ask for login or create account
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="78" x="226" y="212.1736"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="58" x="236" y="234.9998">
+            log in user
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="199" x="165.5" y="268.5154"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="179" x="175.5" y="291.3416">
+            Send password set link to e-mail
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="237,106.3418,293,106.3418,305,118.3418,293,130.3418,237,130.3418,225,118.3418,237,106.3418" style="stroke:#383838;stroke-width:1.5"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="14" x="269" y="142.0991">
+            no
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="56" x="237" y="122.6091">
+            Logged in?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="17" x="305" y="115.1191">
+            yes
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="265,324.8572,277,336.8572,265,348.8572,253,336.8572,265,324.8572" style="stroke:#383838;stroke-width:1.5"/>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="170" x="180" y="368.8572"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="150" x="190" y="391.6833">
+            Create pending enrollment
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="129" x="200.5" y="474.689"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="210.5" y="497.5151">
+            Ask extra questions
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="225.5,425.199,304.5,425.199,316.5,437.199,304.5,449.199,225.5,449.199,213.5,437.199,225.5,425.199" style="stroke:#383838;stroke-width:1.5"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="17" x="269" y="460.9563">
+            yes
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="79" x="225.5" y="441.4663">
+            Form required?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="14" x="316.5" y="433.9763">
+            no
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="265,531.0308,277,543.0308,265,555.0308,253,543.0308,265,531.0308" style="stroke:#383838;stroke-width:1.5"/>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="119" x="205.5" y="575.0308"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="99" x="215.5" y="597.8569">
+            Mark as &quot;seeded&quot;
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="216,631.3726,314,631.3726,326,643.3726,314,655.3726,216,655.3726,204,643.3726,216,631.3726" style="stroke:#383838;stroke-width:1.5"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="98" x="216" y="647.6399">
+            Payment required?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="17" x="187" y="640.1499">
+            yes
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="14" x="326" y="640.1499">
+            no
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="93,665.3726,203,665.3726,215,677.3726,203,689.3726,93,689.3726,81,677.3726,93,665.3726" style="stroke:#383838;stroke-width:1.5"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="110" x="93" y="681.6399">
+            Multiple ticket types?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="17" x="64" y="674.1499">
+            yes
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="14" x="215" y="674.1499">
+            no
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="122" x="10" y="699.3726"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="102" x="20" y="722.1987">
+            Choose ticket type
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="119" x="165.5" y="699.3726"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="99" x="175.5" y="722.1987">
+            Auto-assign ticket
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="148,741.7144,160,753.7144,148,765.7144,136,753.7144,148,741.7144" style="stroke:#383838;stroke-width:1.5"/>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="119" x="88.5" y="785.7144"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="99" x="98.5" y="808.5405">
+            Request bank info
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="116" x="90" y="842.0562"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="96" x="100" y="864.8823">
+            Forward to iDEAL
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="102" x="97" y="898.3979"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="82" x="107" y="921.2241">
+            Mark as &quot;paid&quot;
+        </text>
+        <rect fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" height="36.3418" rx="12.5" ry="12.5" style="stroke:#383838;stroke-width:1.5" width="135" x="314.5" y="665.3726"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="115" x="324.5" y="688.1987">
+            Mark as &quot;confirmed&quot;
+        </text>
+        <polygon fill="#F8F8F8" filter="url(#fbrhkrdlwfo3o)" points="265,940.7397,277,952.7397,265,964.7397,253,952.7397,265,940.7397" style="stroke:#383838;stroke-width:1.5"/>
+        <circle cx="265" cy="995.7397" fill="#FFFFFF" filter="url(#fbrhkrdlwfo3o)" style="stroke:#000;stroke-width:1" r="11"/>
+        <circle cx="265" cy="995.7397" fill="#000000" style="stroke:#7f7f7f;stroke-width:1" r="6"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="30" y2="50"/>
+        <polygon fill="#383838" points="261,40,265,50,269,40,265,44" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="192.1736" y2="212.1736"/>
+        <polygon fill="#383838" points="261,202.1736,265,212.1736,269,202.1736,265,206.1736" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="248.5154" y2="268.5154"/>
+        <polygon fill="#383838" points="261,258.5154,265,268.5154,269,258.5154,265,262.5154" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="130.3418" y2="155.8318"/>
+        <polygon fill="#383838" points="261,145.8318,265,155.8318,269,145.8318,265,149.8318" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="305" x2="374.5" y1="118.3418" y2="118.3418"/>
+        <polygon fill="#383838" points="370.5,220.3445,374.5,230.3445,378.5,220.3445,374.5,224.3445" style="stroke:#383838;stroke-width:1.5"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="374.5" x2="374.5" y1="118.3418" y2="336.8572"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="374.5" x2="277" y1="336.8572" y2="336.8572"/>
+        <polygon fill="#383838" points="287,332.8572,277,336.8572,287,340.8572,283,336.8572" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="304.8572" y2="324.8572"/>
+        <polygon fill="#383838" points="261,314.8572,265,324.8572,269,314.8572,265,318.8572" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="86.3418" y2="106.3418"/>
+        <polygon fill="#383838" points="261,96.3418,265,106.3418,269,96.3418,265,100.3418" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="348.8572" y2="368.8572"/>
+        <polygon fill="#383838" points="261,358.8572,265,368.8572,269,358.8572,265,362.8572" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="449.199" y2="474.689"/>
+        <polygon fill="#383838" points="261,464.689,265,474.689,269,464.689,265,468.689" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="316.5" x2="339.5" y1="437.199" y2="437.199"/>
+        <polygon fill="#383838" points="335.5,482.8599,339.5,492.8599,343.5,482.8599,339.5,486.8599" style="stroke:#383838;stroke-width:1.5"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="339.5" x2="339.5" y1="437.199" y2="543.0308"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="339.5" x2="277" y1="543.0308" y2="543.0308"/>
+        <polygon fill="#383838" points="287,539.0308,277,543.0308,287,547.0308,283,543.0308" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="511.0308" y2="531.0308"/>
+        <polygon fill="#383838" points="261,521.0308,265,531.0308,269,521.0308,265,525.0308" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="405.199" y2="425.199"/>
+        <polygon fill="#383838" points="261,415.199,265,425.199,269,415.199,265,419.199" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="555.0308" y2="575.0308"/>
+        <polygon fill="#383838" points="261,565.0308,265,575.0308,269,565.0308,265,569.0308" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="81" x2="71" y1="677.3726" y2="677.3726"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="71" x2="71" y1="677.3726" y2="699.3726"/>
+        <polygon fill="#383838" points="67,689.3726,71,699.3726,75,689.3726,71,693.3726" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="215" x2="225" y1="677.3726" y2="677.3726"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="225" x2="225" y1="677.3726" y2="699.3726"/>
+        <polygon fill="#383838" points="221,689.3726,225,699.3726,229,689.3726,225,693.3726" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="71" x2="71" y1="735.7144" y2="753.7144"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="71" x2="136" y1="753.7144" y2="753.7144"/>
+        <polygon fill="#383838" points="126,749.7144,136,753.7144,126,757.7144,130,753.7144" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="225" x2="225" y1="735.7144" y2="753.7144"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="225" x2="160" y1="753.7144" y2="753.7144"/>
+        <polygon fill="#383838" points="170,749.7144,160,753.7144,170,757.7144,166,753.7144" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="148" y1="765.7144" y2="785.7144"/>
+        <polygon fill="#383838" points="144,775.7144,148,785.7144,152,775.7144,148,779.7144" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="148" y1="822.0562" y2="842.0562"/>
+        <polygon fill="#383838" points="144,832.0562,148,842.0562,152,832.0562,148,836.0562" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="148" y1="878.3979" y2="898.3979"/>
+        <polygon fill="#383838" points="144,888.3979,148,898.3979,152,888.3979,148,892.3979" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="204" x2="148" y1="643.3726" y2="643.3726"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="148" y1="643.3726" y2="665.3726"/>
+        <polygon fill="#383838" points="144,655.3726,148,665.3726,152,655.3726,148,659.3726" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="326" x2="382" y1="643.3726" y2="643.3726"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="382" x2="382" y1="643.3726" y2="665.3726"/>
+        <polygon fill="#383838" points="378,655.3726,382,665.3726,386,655.3726,382,659.3726" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="148" y1="934.7397" y2="952.7397"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="148" x2="253" y1="952.7397" y2="952.7397"/>
+        <polygon fill="#383838" points="243,948.7397,253,952.7397,243,956.7397,247,952.7397" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="382" x2="382" y1="701.7144" y2="952.7397"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="382" x2="277" y1="952.7397" y2="952.7397"/>
+        <polygon fill="#383838" points="287,948.7397,277,952.7397,287,956.7397,283,952.7397" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="611.3726" y2="631.3726"/>
+        <polygon fill="#383838" points="261,621.3726,265,631.3726,269,621.3726,265,625.3726" style="stroke:#383838;stroke-width:1"/>
+        <line style="stroke:#383838;stroke-width:1.5" x1="265" x2="265" y1="964.7397" y2="984.7397"/>
+        <polygon fill="#383838" points="261,974.7397,265,984.7397,269,974.7397,265,978.7397" style="stroke:#383838;stroke-width:1"/>
+        <!--@startuml "Activity onboarding" skinparam Monochrome true start :Click "enroll"; if (Logged in?) then(no) :Ask for login or create account; :log in user; :Send password set link to e-mail; else (yes) endif :Create pending enrollment; if (Form required?) then (yes) :Ask extra questions; else (no) endif :Mark as "seeded"; if (Payment required?) then (yes) if (Multiple ticket types?) then (yes) :Choose ticket type; else (no) :Auto-assign ticket; endif :Request bank info; :Forward to iDEAL; :Mark as "paid"; else (no) :Mark as "confirmed"; endif stop @enduml PlantUML version 1.2019.05(Sat Apr 20 18:45:36 CEST 2019) (GPL source distribution) Java Runtime: OpenJDK Runtime Environment JVM: OpenJDK 64-Bit Server VM Java Version: 1.8.0_252-8u252-b09-1~19.10-b09 Operating System: Linux OS Version: 5.3.0-46-generic Default Encoding: UTF-8 Language: en Country: GB-->
+    </g>
+</svg>
