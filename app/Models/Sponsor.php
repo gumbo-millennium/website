@@ -9,6 +9,7 @@ use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Storage;
 
@@ -42,7 +43,6 @@ class Sponsor extends SluggableModel implements AttachableInterface
      */
     protected $casts = [
         'view_count' => 'int',
-        'click_count' => 'int',
         'contents' => 'json'
     ];
 
@@ -164,5 +164,19 @@ class Sponsor extends SluggableModel implements AttachableInterface
         $this->createSimplePaperclip('backdrop', [
             'banner' => [1920, 960, true]
         ]);
+    }
+
+    public function clicks(): HasMany
+    {
+        return $this->hasMany(SponsorClick::class);
+    }
+
+    /**
+     * Returns the number of clicks
+     * @return mixed
+     */
+    public function getClickCountAttribute()
+    {
+        return $this->clicks()->sum('count');
     }
 }

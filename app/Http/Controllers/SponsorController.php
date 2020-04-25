@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\SponsorService;
 use App\Models\Sponsor;
+use App\Models\SponsorClick;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Support\Carbon;
 
@@ -108,7 +109,7 @@ class SponsorController extends Controller
         }
 
         // Raise count
-        DB::table('sponsors')->where('id', $sponsor->id)->increment('click_count');
+        SponsorClick::addClick($sponsor);
 
         // Redirect user
         return \redirect()

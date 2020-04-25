@@ -5,6 +5,7 @@ declare(strict_types=1);
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Sponsor;
+use App\Models\SponsorClick;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Storage;
 
@@ -59,4 +60,10 @@ $factory->define(Sponsor::class, static function (Faker $faker) use ($colorSpons
 
     // Done :)
     return $data;
+});
+
+$factory->afterCreating(Sponsor::class, static function (Sponsor $sponsor) {
+    factory(SponsorClick::class, 10)->create([
+        'sponsor_id' => $sponsor->id
+    ]);
 });

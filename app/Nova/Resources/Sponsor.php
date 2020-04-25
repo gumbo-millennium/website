@@ -7,6 +7,7 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Sponsor as SponsorModel;
 use App\Nova\Fields\Logo;
+use App\Nova\Metrics\SponsorClicksPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
@@ -16,6 +17,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Sparkline;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
@@ -95,8 +97,10 @@ class Sponsor extends Resource
             // Counts
             Number::make('Aantal weergaven', 'view_count')
                 ->onlyOnDetail(),
-            Number::make('Aantal kliks', 'click_count')
+            Number::make('Totaal aantal kliks', 'click_count')
                 ->onlyOnDetail(),
+            Sparkline::make('Aantal kliks')
+                ->data(new SponsorClicksPerDay($this->id)),
 
             // Advert info
             new Panel('Contract', [
@@ -146,6 +150,14 @@ class Sponsor extends Resource
                     ->stacked()
                     ->help('Inhoud van detailpagina'),
                 ])
+        ];
+    }
+
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            SponsorClicksPerDay::make()
         ];
     }
 }
