@@ -16,11 +16,6 @@
     // Get branch name
     $branch = array_pop(explode('/', $branch));
 
-    // Check branch name
-    if (!in_array($branch, ['master'])) {
-        throw new Exception("Cannot deploy for branch [{$branch}], since it's not whitelisted");
-    }
-
     // Set env from branch
     $env = $branch === 'master' ? 'production' : 'staging';
 
@@ -232,6 +227,11 @@
     php artisan paperclip:refresh App\\Models\\Activity || true
     php artisan paperclip:refresh App\\Models\\Sponsor || true
     php artisan paperclip:refresh App\\Models\\NewsItem || true
+
+    {{-- Get URL --}}
+    source .env
+    echo -e "\nApplication is live at ${APP_URL}."
+    echo "::set-output webapp-url ${APP_URL}"
 @endtask
 
 @task('deployment_cleanup')

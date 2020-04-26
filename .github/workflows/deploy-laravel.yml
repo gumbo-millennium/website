@@ -1,0 +1,78 @@
+name: "Deploy Application"
+
+on:
+  deployment
+
+jobs:
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "7.4"
+          extensions: exif,json,mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Laravel Envoy
+        run: |
+          composer global require laravel/envoy
+          echo "::add-path::$HOME/.composer/vendor/bin/"
+
+      - name: Configure SSH connection
+        run: |
+          mkdir -p ${HOME}/.ssh
+          echo "$SSH_PRIVATE_KEY" > ${HOME}/.ssh/id_deploy
+          chmod 0600 ${HOME}/.ssh/id_deploy
+          echo "Host *" > ${HOME}/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "Host deploy.local" >> ${HOME}/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
+          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
+          echo "    IdentityFile ${HOME}/.ssh/id_deploy" >> ${HOME}/.ssh/config
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+
+      - name: Determine Git environments
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          echo "::set-env DEPLOY_REMOTE=$( git remote get-url $( git remote | head -n1 ) )"
+          echo "::set-env DEPLOY_SHA=${GITHUB_SHA:-$( git log -1 --format='%H' )}"
+          echo "::set-env DEPLOY_REF=${GITHUB_REF:-${$( git symbolic-ref --quiet HEAD )#refs/heads/}}"
+
+      - name: Start Deployment
+        uses: bobheadxi/deployments@v0.4.0
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deployment_id: ${{ github.event.deployment.id }}
+          env: ${{ github.event.deployment.environment }}
+
+      - name: Run Envoy
+        id: publish
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          envoy run deploy \
+            --branch=${DEPLOY_REF} \
+            --remote=${DEPLOY_REMOTE} \
+            --hash=${DEPLOY_SHA}
+
+      - name: Finish Deployment
+        uses: bobheadxi/deployments@v0.4.0
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env_url: ${{ steps.publish.outputs.webapp-url }}
+          deployment_id: ${{ github.event.deployment.id }}
+          status: ${{ job.status }}
