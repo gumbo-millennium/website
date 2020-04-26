@@ -48,7 +48,7 @@ class BotManController extends Controller
         }
 
         // Validate path
-        if (!preg_match('/^([a-z0-9\-_\]\/)*[a-z0-9\-_\]\.([a-z]{1,5})$/i', $asset)) {
+        if (!preg_match('/^(?:[a-z0-9\-_]\/)*[a-z0-9\-_]+\.([a-z]{3,5})$/i', $asset)) {
             abort(404);
         }
 
@@ -70,7 +70,9 @@ class BotManController extends Controller
                 'Content-Disposition' => "inline; filename=\"{$cleanName}\""
             ])
             ->setAutoEtag()
-            ->setCache(['public', 'no-store', 'no-transform'])
-            ->setExpires(now()->addHour());
+            ->setCache([
+                'public' => true,
+                'max_age' => now()->addHour()->diffInSeconds()
+            ]);
     }
 }
