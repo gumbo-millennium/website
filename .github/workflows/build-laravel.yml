@@ -130,27 +130,6 @@ jobs:
           test -d dist || mkdir dist
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
 
-      - name: Create deployment
-        if: |
-          (
-            github.event_name == 'push'
-          ) || (
-            github.event_name == 'pull_request' &&
-            github.event.action == 'synchronize' &&
-            github.event.pull_request.draft != true &&
-            github.event.pull_request.base.repo.full_name == 'gumbo-millennium/website' &&
-            github.event.pull_request.head.repo.full_name == 'gumbo-millennium/website'
-          )
-        uses: rohit-gohri/deploy-action@v0.1.0
-        env:
-          DEPLOY_ENV: production
-          DEPLOY_REF: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          DEPLOY_ENV: production
-          DEPLOY_REF: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Report test results to CodeClimate
         run: |
           curl -o ./cc-test-reporter -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
@@ -160,3 +139,91 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
+  deploy:
+    name: "Deploy application"
+    needs: [laravel-frontend, laravel-backend]
+    runs-on: ubuntu-latest
+    if: |
+      (
+        github.event_name == 'push'
+      ) || (
+        github.event_name == 'pull_request' &&
+        github.event.action == 'synchronize' &&
+        github.event.pull_request.draft != true &&
+        github.event.pull_request.base.repo.full_name == 'gumbo-millennium/website' &&
+        github.event.pull_request.head.repo.full_name == 'gumbo-millennium/website'
+      )
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "7.4"
+          extensions: exif,json,mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Laravel Envoy
+        run: |
+          composer global require --no-progress laravel/envoy
+          echo "::add-path::$HOME/.composer/vendor/bin/"
+
+      - name: Configure SSH connection
+        run: |
+          mkdir -p ${HOME}/.ssh
+          echo "$SSH_PRIVATE_KEY" > ${HOME}/.ssh/id_deploy
+          chmod 0600 ${HOME}/.ssh/id_deploy
+          echo "Host *" > ${HOME}/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
+          echo "Host deploy.local" >> ${HOME}/.ssh/config
+          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
+          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
+          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
+          echo "    IdentityFile ${HOME}/.ssh/id_deploy" >> ${HOME}/.ssh/config
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+
+      - name: Determine data for environment
+        id: deployment-data
+        run: |
+          export DEPLOY_PR_REF="${{ github.head_ref }}"
+          export DEPLOY_PULL_REF="{{ github.ref }}"
+          export DEPLOY_REF="${DEPLOY_PR_REF:-${DEPLOY_REF}}"
+          export DEPLOY_REF="${DEPLOY_REF#refs/heads/}"
+
+          test "$DEPLOY_REF" = "master" && export DEPLOY_NAME=Production || export DEPLOY_NAME=Staging
+
+          echo "Setting ref to $DEPLOY_REF, deploying as $DEPLOY_NAME"
+          echo "::set-output name=branch::${DEPLOY_REF}"
+          echo "::set-output name=name::${DEPLOY_NAME}"
+          echo "::set-output name=remote::https://github.com/${{ github.repository }}"
+
+      - name: Start Deployment
+        uses: bobheadxi/deployments@v0.4.0
+        id: deployment-start
+        with:
+          step: start
+          env: ${{ steps.deployment-data.outputs.name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Envoy
+        id: publish
+        run: |
+          echo "::set-output name=webapp-url::null"
+          envoy run deploy \
+            --branch="${{ steps.deployment-data.outputs.branch }}" \
+            --remote="${{ steps.deployment-data.outputs.remote }}" \
+            --hash="${{ github.sha }}"
+
+      - name: Finish Deployment
+        uses: bobheadxi/deployments@v0.4.0
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env_url: ${{ steps.publish.outputs.webapp-url }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
