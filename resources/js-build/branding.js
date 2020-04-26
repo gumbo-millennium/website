@@ -17,29 +17,42 @@ const buildNightModeCapable = (color) => {
   }
 }
 
+const grayColors = {
+  50: '#fafafa',
+  100: '#f5f5f5',
+  200: '#eeeeee',
+  300: '#e0e0e0',
+  400: '#bdbdbd',
+  500: '#9e9e9e',
+  600: '#757575',
+  700: '#616161',
+  800: '#424242',
+  900: '#212121'
+}
+
 const brandColors = {
-  50: '#cce5cc',
-  100: '#a3d0a3',
-  200: '#7abb7a',
-  300: '#52a752',
-  400: '#299229',
-  500: '#007d00',
-  600: '#006900',
-  700: '#005f00',
-  800: '#004b00',
-  900: '#003700'
+  50: '#acf097',
+  100: '#86d376',
+  200: '#73c465',
+  300: '#60b554',
+  400: '#4ca643',
+  500: '#268922',
+  600: '#137a11',
+  700: '#006b00',
+  800: '#005200',
+  900: '#003900'
 }
 
 const colors = {
   source: {
     // Default colors
-    gray: defaultTheme.colors.gray,
     red: defaultTheme.colors.red,
     orange: defaultTheme.colors.orange,
     green: defaultTheme.colors.green,
     blue: defaultTheme.colors.blue,
 
     // Our colors
+    gray: grayColors,
     brand: brandColors
   },
 
