@@ -14,7 +14,8 @@
     }
 
     // Get branch name
-    $branch = array_pop(explode('/', $branch));
+    $branchBits = explode('/', $branch);
+    $branch = array_pop($branchBits);
 
     // Set env from branch
     $env = $branch === 'master' ? 'production' : 'staging';
@@ -95,7 +96,7 @@
     echo -e "\nCloning {{ $remote }} and checking out {{ $branch }}."
     git clone \
         --no-checkout \
-        --reference "{{ $livePath }}" \
+        --recursive \
         "{{ $remote }}" \
         "{{ $deployPath }}"
 
@@ -103,7 +104,7 @@
     echo -e "\nRe-packing repo"
     git repack -a
 
-    echo -e "\nChecking out {{ $hash }}"
+    echo -e "\nChecking out {{ $hash }} as 'deployment/{{ $branchSlug }}-{{ $deployName }}'"
     git checkout -b "deployment/{{ $branchSlug }}-{{ $deployName }}" "{{ $hash }}"
 @endtask
 
