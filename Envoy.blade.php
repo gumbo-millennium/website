@@ -2,8 +2,7 @@
     // Check required variables
     $required = [
         'remote' => 'clone URL',
-        'branch' => 'branch',
-        'hash' => 'hash'
+        'branch' => 'branch'
     ];
 
     // Check required vars
@@ -16,6 +15,9 @@
     // Get branch name
     $branchBits = explode('/', $branch);
     $branch = array_pop($branchBits);
+
+    // Get hash if missing
+    $hash ??= trim(`git log -1 --format='%H'`);
 
     // Set env from branch
     $env = $branch === 'master' ? 'production' : 'staging';
@@ -123,7 +125,7 @@
     echo "Currently live: ${OLD_VERSION}"
     echo "Currently deploying: ${NEW_VERSION}"
     echo -e "\nChanges since last version:\n"
-    git log --decorate --graph --format="{{ $logFormat }}" "${OLD_HASH}..${NEW_HASH}"
+    git log --decorate --graph --format="{{ $logFormat }}" "${OLD_HASH}..${NEW_HASH}" 2>dev/null || true
 @endtask
 
 @task('deployment_link')
@@ -232,7 +234,7 @@
     {{-- Get URL --}}
     source .env
     echo -e "\nApplication is live at ${APP_URL}."
-    echo "::set-output webapp-url ${APP_URL}"
+    echo ">>URL = ${APP_URL}"
 @endtask
 
 @task('deployment_cleanup')
