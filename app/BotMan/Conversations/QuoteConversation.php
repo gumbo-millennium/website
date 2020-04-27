@@ -122,7 +122,7 @@ class QuoteConversation extends InvokableConversation
                 $imageUrl = URL::signedRoute(
                     'botman.image',
                     ['image' => $quote['asset']],
-                    now()->addHour()
+                    now()->addMinutes(5)
                 );
 
                 // Add attachment

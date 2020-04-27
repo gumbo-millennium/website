@@ -141,7 +141,7 @@ jobs:
         continue-on-error: true
   deploy:
     name: "Deploy application"
-    needs: [laravel-frontend, laravel-backend]
+    # needs: [laravel-frontend, laravel-backend]
     runs-on: ubuntu-latest
     if: |
       (
@@ -162,6 +162,12 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 5
+
+      - name: Determine data for environment
+        id: deployment-data
+        run: .github/bin/prep-env.sh "${{ github.repository }}" "${{ github.event_name }}" "${{ github.head_ref }}" "${{ github.ref }}"
 
       - name: Install Laravel Envoy
         run: |
@@ -186,21 +192,6 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USER: ${{ secrets.SSH_USER }}
 
-      - name: Determine data for environment
-        id: deployment-data
-        run: |
-          export DEPLOY_PR_REF="${{ github.head_ref }}"
-          export DEPLOY_PULL_REF="{{ github.ref }}"
-          export DEPLOY_REF="${DEPLOY_PR_REF:-${DEPLOY_REF}}"
-          export DEPLOY_REF="${DEPLOY_REF#refs/heads/}"
-
-          test "$DEPLOY_REF" = "master" && export DEPLOY_NAME=Production || export DEPLOY_NAME=Staging
-
-          echo "Setting ref to $DEPLOY_REF, deploying as $DEPLOY_NAME"
-          echo "::set-output name=branch::${DEPLOY_REF}"
-          echo "::set-output name=name::${DEPLOY_NAME}"
-          echo "::set-output name=remote::https://github.com/${{ github.repository }}"
-
       - name: Start Deployment
         uses: bobheadxi/deployments@v0.4.0
         id: deployment-start
@@ -210,20 +201,29 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Envoy
-        id: publish
+        id: deployment-envoy
         run: |
-          echo "::set-output name=webapp-url::null"
           envoy run deploy \
             --branch="${{ steps.deployment-data.outputs.branch }}" \
             --remote="${{ steps.deployment-data.outputs.remote }}" \
-            --hash="${{ github.sha }}"
+            --hash="${{ steps.deployment-data.outputs.hash }}"
 
-      - name: Finish Deployment
+      - name: Finish Deployment (failure)
         uses: bobheadxi/deployments@v0.4.0
-        if: always()
+        if: failure()
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
-          env_url: ${{ steps.publish.outputs.webapp-url }}
+          env_url: "null"
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
+
+      - name: Finish Deployment (success)
+        uses: bobheadxi/deployments@v0.4.0
+        if: success()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env_url: ${{ steps.deployment-data.outputs.app_url }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
