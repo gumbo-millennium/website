@@ -21,7 +21,7 @@ trait HasBlacklistCheck
         // Check banned
         $userStore = $bot->userStorage();
         $bannedState = $userStore->get('banned');
-        if ($bannedState === true || $bannedState < time()) {
+        if ($bannedState === true || $bannedState > time()) {
             // Set timestamp if missing
             if ($bannedState === true) {
                 $expire = now()->addDays(4);
