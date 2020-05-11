@@ -178,7 +178,7 @@ class QuoteConversation extends InvokableConversation
             $payload = $message->getPayload();
 
             // Get text and first name
-            if (Arr::has($payload, ['reply_to_message.text', 'reply_to_message.from.first_name'])) {
+            if (Arr::has($payload, ['reply_to_message', 'reply_to_message.text', 'reply_to_message.from.first_name'])) {
                 $text = trim(Arr::get($payload, 'reply_to_message.text'));
                 $userFirst = Arr::get($payload, 'reply_to_message.from.first_name');
                 $userLast = Arr::get($payload, 'reply_to_message.from.last_name');
@@ -190,10 +190,10 @@ class QuoteConversation extends InvokableConversation
         }
 
         // Get whole message, in case of multi-line
-        $text = $message->getText();
+        $text = trim($message->getText() ?? '');
 
         // Trim "/wjd" and "/wjd@[username]"
-        $text = trim(preg_replace('/^\/wjd(\@\w+)?\s+/i', '', $text));
+        $text = trim(preg_replace('/^\/wjd(\@\w+)?/i', '', $text));
 
         return !empty($text) ? $text : null;
     }
