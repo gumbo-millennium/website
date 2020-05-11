@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\BotMan\Conversations\QuoteConversation;
 use App\BotMan\Messages\ActivitiesCommand;
 use App\BotMan\Messages\DebugMessage;
+use App\BotMan\Messages\DennisMessage;
 use App\BotMan\Messages\FallbackMessage;
 use App\BotMan\Messages\HelpMessage;
 use App\BotMan\Messages\PlazaCamMessage;
@@ -25,6 +26,7 @@ $botman->middleware->sending(new LogsSends(), new TelegramMiddleware());
 $botman->hears('/activiteiten', ActivitiesCommand::class);
 $botman->hears('/help', HelpMessage::class);
 $botman->hears('/start', StartMessage::class);
+$botman->hears('/dennisbier', DennisMessage::class);
 
 // Member-only commands
 $botman->hears('/koffiecam', PlazaCamMessage::class);
