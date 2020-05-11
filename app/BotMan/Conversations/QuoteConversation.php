@@ -166,7 +166,7 @@ class QuoteConversation extends InvokableConversation
      * @param IncomingMessage $message
      * @return null|string
      */
-    private function getQuote(BotMan $bot): ?string
+    private function findQuote(BotMan $bot): ?string
     {
         // Get message
         $message = $bot->getMessage();
