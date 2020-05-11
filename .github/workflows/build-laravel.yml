@@ -141,7 +141,7 @@ jobs:
         continue-on-error: true
   deploy:
     name: "Deploy application"
-    # needs: [laravel-frontend, laravel-backend]
+    needs: [laravel-frontend, laravel-backend]
     runs-on: ubuntu-latest
     if: |
       (
