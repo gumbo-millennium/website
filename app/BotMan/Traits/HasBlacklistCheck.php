@@ -24,12 +24,12 @@ trait HasBlacklistCheck
         if ($bannedState === true || $bannedState < time()) {
             // Set timestamp if missing
             if ($bannedState === true) {
-                $expire = now()->addWeek();
+                $expire = now()->addDays(4);
                 $bot->reply(sprintf(
                     'Je bent geblacklist tot %s.',
                     $expire->format('Y-m-d H:i:s (T)')
                 ));
-                $userStore->save(['save' => $expire->getTimestamp()]);
+                $userStore->save(['banned' => $expire->getTimestamp()]);
             }
             return true;
         }
