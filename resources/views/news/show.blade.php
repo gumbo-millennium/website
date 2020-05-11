@@ -10,6 +10,18 @@ if ($isSponsor) {
 $postTimestamp = $item->published_at ?? $item->created_at;
 $postIso = $postTimestamp->toIso8601String();
 $postDate = $postTimestamp->isoFormat('D MMMM, Y');
+
+// Share links
+$itemUrl = route('news.show' $item);
+$facebookQuery = http_build_query(['u' => $itemUrl]);
+$genericQuery = http_build_query(['text' => $item->title, 'url' => $itemUrl]);
+$whatsappQuery = http_build_query(['text' => "Lees {$item->title}: {$itemUrl}"]);
+
+// Build links
+$facebookLink = "https://www.facebook.com/sharer/sharer.php?{$facebookQuery}";
+$telegramLink = "https://telegram.me/share/url?{$genericQuery}";
+$twitterLink = "http://twitter.com/share?{$genericQuery}";
+$whatsappLink = "whatsapp://send?{$facebookQuery}";
 @endphp
 
 @section('content')
@@ -33,17 +45,17 @@ $postDate = $postTimestamp->isoFormat('D MMMM, Y');
             </div>
             <div class="col md:w-5/12 flex flex-wrap flex-row items-center md:justify-end">
                 <p class="text-sm uppercase font-medium text-gray-primary-1 w-full md:w-auto md:mr-2 mb-0 leading-none">Delen:</p>
-                <a href="#share-facebook" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Facebook">
+                <a href="{{ $facebookLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Facebook">
                     @icon('brands/facebook-f', 'h-4')
                 </a>
-                <a href="#share-twitter" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Twitter">
+                <a href="{{ $twitterLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Twitter">
                     @icon('brands/twitter', 'h-4')
                 </a>
-                <a href="#share-instagram" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Instagram">
-                    @icon('brands/instagram', 'h-4')
-                </a>
-                <a href="#share-telegram" class="p-2 text-gray-primary-1" aria-label="Delen op Telegram">
+                <a href="{{ $telegramLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Telegram">
                     @icon('brands/telegram', 'h-4')
+                </a>
+                <a href="{{ $whatsappLink }}" class="p-2 text-gray-primary-1" aria-label="Delen op Whatsapp">
+                    @icon('brands/whatsapp', 'h-4')
                 </a>
             </div>
         </div>
