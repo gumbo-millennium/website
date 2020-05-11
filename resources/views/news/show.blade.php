@@ -12,7 +12,7 @@ $postIso = $postTimestamp->toIso8601String();
 $postDate = $postTimestamp->isoFormat('D MMMM, Y');
 
 // Share links
-$itemUrl = route('news.show' $item);
+$itemUrl = route('news.show', ['news' => $item]);
 $facebookQuery = http_build_query(['u' => $itemUrl]);
 $genericQuery = http_build_query(['text' => $item->title, 'url' => $itemUrl]);
 $whatsappQuery = http_build_query(['text' => "Lees {$item->title}: {$itemUrl}"]);
