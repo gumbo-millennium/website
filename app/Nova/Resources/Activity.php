@@ -12,6 +12,7 @@ use App\Nova\Actions\RescheduleActivity;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters\RelevantActivitiesFilter;
+use App\Nova\Flexible\Presets\ActivityForm;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
@@ -28,6 +29,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked
@@ -322,9 +324,9 @@ class Activity extends Resource
                 ->rules('nullable', 'numeric', 'min:1')
                 ->help('Beperkt het aantal keer dat de korting wordt verleend.'),
 
-            // Flexible::make('Form', 'enrollment_questions')
-            //     ->confirmRemove('Removing a field does not remove submitted data')
-            //     ->preset(ActivityForm::class)
+            Flexible::make('Form', 'enrollment_questions')
+                ->confirmRemove('Removing a field does not remove submitted data')
+                ->preset(ActivityForm::class)
         ];
     }
 
