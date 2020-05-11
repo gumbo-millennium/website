@@ -33,7 +33,7 @@ class FormPhone extends Layout
             Text::make('Helptekst', 'help')->nullable(),
             Text::make('Standaard land', 'country')
                 ->help('ISO 3166-1 alpha-2 landcode (voorbeeld: NL)')
-                ->rules('required', 'regex:^[A-Z]{2}$'),
+                ->rules('required', 'regex:/^[A-Z]{2}$/'),
             Boolean::make('Verplicht', 'required')
         ];
     }
