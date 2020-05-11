@@ -226,10 +226,10 @@
     php artisan up
 
     {{-- Update attachments --}}
-    echo -e "\nUpdating attachments..."
+    {{-- echo -e "\nUpdating attachments..."
     php artisan paperclip:refresh App\\Models\\Activity || true
     php artisan paperclip:refresh App\\Models\\Sponsor || true
-    php artisan paperclip:refresh App\\Models\\NewsItem || true
+    php artisan paperclip:refresh App\\Models\\NewsItem || true --}}
 
     {{-- Get URL --}}
     source .env

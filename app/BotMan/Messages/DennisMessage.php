@@ -31,6 +31,7 @@ class DennisMessage extends AbstractMessage
         // Allow admin block
         if ($this->isInGroup()) {
             $bot->reply('Sorry, Dennisbieren kan alleen in privéchat');
+            return;
         }
 
         // Get a lock

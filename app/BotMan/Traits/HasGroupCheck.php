@@ -20,7 +20,7 @@ trait HasGroupCheck
     protected function isInGroup(): bool
     {
         // Get bot driver and message
-        $driver = $this->getBot()->getMessage();
+        $driver = $this->getBot()->getDriver();
         $message = $this->getBot()->getMessage();
 
         // Sanity check, and IDE hinting
