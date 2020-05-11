@@ -8,10 +8,12 @@ use App\BotMan\Traits\HasGroupCheck;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\BotQuote;
+use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\Drivers\Telegram\TelegramDriver;
 use Illuminate\Support\Facades\URL;
 
 class QuoteConversation extends InvokableConversation
@@ -146,11 +148,8 @@ class QuoteConversation extends InvokableConversation
         // Check for quote
         $bot = $this->getBot();
 
-        // Get whole message, in case of multi-line
-        $message = $bot->getMessage()->getText();
-
-        // Trim "/wjd" and "/wjd@[username]"
-        $quote = trim(preg_replace('/^\/wjd(\@\w+)?\s+/i', '', $message));
+        // Find the quote
+        $quote = $this->findQuote($bot);
 
         // Ask for the quote
         if (empty($quote)) {
@@ -160,5 +159,42 @@ class QuoteConversation extends InvokableConversation
 
         // Store the quote
         $this->storeQuote($quote);
+    }
+
+    /**
+     * Finds the quote, which may be a reply
+     * @param IncomingMessage $message
+     * @return null|string
+     */
+    private function findQuote(BotMan $bot): ?string
+    {
+        // Get message
+        $message = $bot->getMessage();
+        \assert($message instanceof IncomingMessage);
+
+        // Check for a reply, if Telegram
+        if ($bot->getDriver() instanceof TelegramDriver) {
+            // Payload
+            $payload = $message->getPayload();
+
+            // Get text and first name
+            if (Arr::has($payload, ['reply_to_message.text', 'reply_to_message.from.first_name'])) {
+                $text = trim(Arr::get($payload, 'reply_to_message.text'));
+                $userFirst = Arr::get($payload, 'reply_to_message.from.first_name');
+                $userLast = Arr::get($payload, 'reply_to_message.from.last_name');
+                $userName = Str::ascii("$userFirst $userLast", 'nl');
+                if (!empty($text) && !empty($userName)) {
+                    return "“{$text}” – {$userName}";
+                }
+            }
+        }
+
+        // Get whole message, in case of multi-line
+        $text = $message->getText();
+
+        // Trim "/wjd" and "/wjd@[username]"
+        $text = trim(preg_replace('/^\/wjd(\@\w+)?\s+/i', '', $text));
+
+        return !empty($text) ? $text : null;
     }
 }

@@ -22,6 +22,7 @@ class HelpMessage extends AbstractMessage
         'plazacam' => 'Laat de Plazacam zien.',
         'koffiecam' => 'Laat de koffiecam zien.',
         'wjd' => 'Stuur een wist-je-datje of quote in.',
+        'dennisbier' => 'Dennis bier (alleen in privéchat)',
     ];
 
     /**

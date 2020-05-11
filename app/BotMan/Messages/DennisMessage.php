@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
+use App\BotMan\Traits\HasGroupCheck;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class DennisMessage extends AbstractMessage
 {
+    use HasGroupCheck;
+
     private const BEER_DISK = 'local';
     private const BEER_FILE = 'botman-dennisbier';
 
@@ -25,6 +28,11 @@ class DennisMessage extends AbstractMessage
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function run(BotMan $bot, ?User $user): void
     {
+        // Allow admin block
+        if ($this->isInGroup()) {
+            $bot->reply('Sorry, Dennisbieren kan alleen in privéchat');
+        }
+
         // Get a lock
         $lock = Cache::lock('botman.dennis', 2);
 
