@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\BotMan\Messages;
 
+use App\BotMan\Traits\HasBlacklistCheck;
 use App\Models\BotUserLink;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
  */
 abstract class AbstractMessage
 {
+    use HasBlacklistCheck;
+
     private BotMan $bot;
 
     protected function getBot(): BotMan
@@ -43,6 +46,11 @@ abstract class AbstractMessage
     {
         // Assign bot
         $this->setBot($bot);
+
+        // Check blacklist
+        if ($this->isBlacklisted()) {
+            return;
+        }
 
         // Get message
         $message = $bot->getMessage();

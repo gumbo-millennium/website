@@ -10,7 +10,6 @@ use App\BotMan\Messages\FallbackMessage;
 use App\BotMan\Messages\HelpMessage;
 use App\BotMan\Messages\PlazaCamMessage;
 use App\BotMan\Messages\StartMessage;
-use App\BotMan\Middleware\LogsReceives;
 use App\BotMan\Middleware\LogsSends;
 use App\BotMan\Middleware\TelegramMiddleware;
 use BotMan\BotMan\BotMan;
@@ -19,7 +18,7 @@ $botman = resolve('botman');
 \assert($botman instanceof BotMan);
 
 // Add middlewares
-$botman->middleware->received(new LogsReceives(), new TelegramMiddleware());
+$botman->middleware->received(new TelegramMiddleware());
 $botman->middleware->sending(new LogsSends(), new TelegramMiddleware());
 
 // Generic commands

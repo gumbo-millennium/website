@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\BotMan\Conversations;
 
+use App\BotMan\Traits\HasBlacklistCheck;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 
 abstract class InvokableConversation extends Conversation
 {
+    use HasBlacklistCheck;
+
     private ?User $user = null;
     protected function getUser(): ?User
     {
@@ -41,6 +44,11 @@ abstract class InvokableConversation extends Conversation
     {
         // Assign bot
         $this->setBot($bot);
+
+        // Check blacklist
+        if ($this->isBlacklisted()) {
+            return;
+        }
 
         // Get message
         $message = $bot->getMessage();

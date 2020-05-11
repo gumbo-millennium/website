@@ -7,7 +7,7 @@ namespace App\BotMan\Messages;
 use App\BotMan\Traits\HasGroupCheck;
 use App\Models\User;
 use BotMan\BotMan\BotMan;
-use Illuminate\Contracts\Cache\LockTimeoutException;
+use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -34,21 +34,42 @@ class DennisMessage extends AbstractMessage
             return;
         }
 
-        // Get a lock
-        $lock = Cache::lock('botman.dennis', 2);
+        // Check expire
+        $userStore = $bot->userStorage();
+        $expire = $userStore->get('dennis-expire') ?? 0;
+        if ($expire > time()) {
+            $warns = $userStore->get('dennis-warn') ?? 0;
 
-        try {
-            $lock->block(10);
-            // Got lock
+            // Block above threshold
+            if ($warns >= 10) {
+                $bot->say('Sorry, je account is nu geblokkeerd. Probeer het later nog eens');
+                $userStore->save(['banned' => now()->addDays(2)->getTimestamp()]);
+                return;
+            }
 
-            $this->sendDennisBier($bot);
-        } catch (LockTimeoutException $exception) {
-            // failed to get lock
-            $bot->reply('Ik ben even de tel kwijt 😞');
-        } finally {
-            // Release lock
-            $lock->release();
+            // Reply with ETA
+            $bot->reply(sprintf(
+                'Rustig aan. je mag weer dennisbieren om %s.',
+                Carbon::createFromTimestamp($expire)->format('H:i:s (T)')
+            ));
+
+            // Save new warning count
+            $userStore->save([
+                'dennis-warn' => ($warns + 1)
+            ]);
+            return;
         }
+
+        // Store
+        $userStore->save([
+            'dennis-expire' => now()->addMinutes(2)->getTimestamp(),
+            'dennis-warns' => 0
+        ]);
+
+        // Get a lock
+        Cache::lock('botman.dennis')->get(function () use ($bot) {
+            $this->sendDennisBier($bot);
+        });
     }
 
     private function sendDennisBier(BotMan $bot): void
