@@ -72,7 +72,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'verified'])->group(static function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'verified', 'no-sponsor'])->group(static function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
