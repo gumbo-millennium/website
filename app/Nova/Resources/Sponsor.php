@@ -117,7 +117,7 @@ class Sponsor extends Resource
                 // URL
                 Text::make('URL', 'url')
                     ->required()
-                    ->rules('url', 'active_url')
+                    ->rules('required', 'url')
                     ->hideFromIndex(),
 
                 // Text and backdrop

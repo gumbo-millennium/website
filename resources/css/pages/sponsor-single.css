@@ -1,0 +1,56 @@
+/* Sponsor */
+
+.sponsor-single {
+  @apply py-8;
+  @apply bg-gray-secondary-2;
+}
+
+.sponsor-single__back {
+  @apply block my-8;
+  @apply flex flex-row;
+  @apply items-center leading-none;
+}
+
+.sponsor-single__container {
+  @apply p-8;
+  @apply shadow-md bg-light;
+}
+
+.sponsor-single__header {
+  @apply flex flex-row items-center;
+}
+
+.sponsor-single__header-text {
+  @apply flex-grow mr-4;
+}
+
+.sponsor-single__header-title {
+  @apply font-title font-bold text-2xl;
+}
+
+.sponsor-single__header-subtitle {
+  @apply text-gray-primary-1;
+  @apply flex flex-row items-center;
+}
+
+.sponsor-single__header-button {
+  @apply flex-none;
+}
+
+.sponsor-single__content {
+  @apply leading-relaxed;
+  @apply mb-8;
+}
+
+.sponsor-single__footer {
+  @apply mt-4 border-gray-secondary-2 border-t pt-4;
+  @apply flex flex-row items-center;
+}
+
+.sponsor-single__footer-text {
+  @apply mr-4 flex-grow;
+}
+
+.sponsor-single__footer-button {
+  @apply flex-none;
+}

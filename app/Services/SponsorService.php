@@ -98,17 +98,25 @@ class SponsorService implements SponsorServiceContract
      * @return null|HtmlString
      * @throws InvalidArgumentException
      */
-    public function toSvg(?Sponsor $sponsor, array $attrs): ?HtmlString
+    public function toSvg(?Sponsor $sponsor, array $attrs, string $style = 'gray'): ?HtmlString
     {
+        // Check style
+        if ($style !== 'gray' && $style !== 'color') {
+            return null;
+        }
+
+        // Get style-based property
+        $property = "logo_{$style}";
+
         // Return empty if not found
-        if (!$sponsor || !$sponsor->logo_gray) {
+        if (!$sponsor || !$sponsor->$property) {
             return null;
         }
 
         // Check cache
         $cacheKey = vsprintf('sponsor.%d-%s.%s', [
             $sponsor->id,
-            substr(md5($sponsor->logo_gray), 0, 16),
+            substr(md5($sponsor->$property), 0, 16),
             substr(md5(\http_build_query($attrs)), 0, 16)
         ]);
 
@@ -120,7 +128,7 @@ class SponsorService implements SponsorServiceContract
 
         try {
             // Get SVG
-            $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->logo_gray);
+            $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->$property);
         } catch (FileNotFoundException $exception) {
             // Handle not founds
             report(new RuntimeException(

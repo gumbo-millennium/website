@@ -23,8 +23,8 @@ class SponsorController extends Controller
         $baseQuery = Sponsor::whereAvailable();
 
         // Get branded and simple sponsors
-        $brandedSponsors = (clone $baseQuery)->where('has_page', '1')->get();
-        $simpleSponsors = (clone $baseQuery)->where('has_page', '0')->get();
+        $brandedSponsors = (clone $baseQuery)->where('has_page', 1)->get();
+        $simpleSponsors = (clone $baseQuery)->where('has_page', 0)->get();
 
         // Set SEO
         SEOMeta::setTitle('Sponsoren');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\HasEditorJsContent;
 use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
@@ -11,7 +12,7 @@ use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Gumbo Millennium sponsors
@@ -24,6 +25,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     use HasPaperclip;
     use HasSimplePaperclippedMedia;
     use PaperclipTrait;
+    use HasEditorJsContent;
     use SoftDeletes;
 
     public const LOGO_DISK = 'public';
@@ -42,8 +44,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
      * @var array
      */
     protected $casts = [
-        'view_count' => 'int',
-        'contents' => 'json'
+        'view_count' => 'int'
     ];
 
     /**
@@ -178,5 +179,14 @@ class Sponsor extends SluggableModel implements AttachableInterface
     public function getClickCountAttribute()
     {
         return $this->clicks()->sum('count');
+    }
+
+    /**
+     * Converts contents to HTML
+     * @return string|null
+     */
+    public function getContentHtmlAttribute(): ?string
+    {
+        return $this->convertToHtml($this->contents);
     }
 }
