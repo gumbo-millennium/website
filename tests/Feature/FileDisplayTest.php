@@ -382,7 +382,7 @@ class FileDisplayTest extends TestCase
 
         // Add file
         static::$bundle
-            ->addMedia(\resource_path('assets/pdf/chicken.pdf'))
+            ->addMedia(\resource_path('test-assets/pdf/chicken.pdf'))
             ->preservingOriginal()
             ->toMediaCollection();
 

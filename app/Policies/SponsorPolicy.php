@@ -72,7 +72,7 @@ class SponsorPolicy
     }
 
     /**
-     * Determine whether the user can restore the sponsor.
+     * Disallow restoring deleted items, since a 410 is permanent
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
@@ -80,7 +80,7 @@ class SponsorPolicy
      */
     public function restore(User $user, Sponsor $sponsor)
     {
-        return $user->can('manage', Sponsor::class);
+        return false;
     }
 
     /**
@@ -92,7 +92,7 @@ class SponsorPolicy
      */
     public function forceDelete(User $user, Sponsor $sponsor)
     {
-        return $user->can('manage', Sponsor::class);
+        return false;
     }
 
     /**

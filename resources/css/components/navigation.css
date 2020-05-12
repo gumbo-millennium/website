@@ -1,0 +1,19 @@
+.pagination {
+  @apply flex flex-row flex-no-wrap justify-between;
+  @apply list-none mb-8 mt-4;
+}
+
+.pagination .page-item:first-child {
+  @apply mr-8;
+}
+
+.pagination .page-link {
+  @apply px-8 py-2 inline-block;
+  @apply rounded border-brand-primary-2;
+  @apply bg-brand-primary-1 text-white;
+}
+
+.pagination .disabled .page-link {
+  @apply border-gray-primary-2;
+  @apply bg-gray-primary-1;
+}

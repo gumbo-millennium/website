@@ -6,3 +6,5 @@
 @import 'home.css';
 @import 'login.css';
 @import 'payment-redirect.css';
+@import "sponsors.css";
+@import "sponsor-single.css";

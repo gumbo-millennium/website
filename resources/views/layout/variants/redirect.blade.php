@@ -7,9 +7,9 @@
 @section('content')
 <div class="container container-sm payment-redirect">
     <div class="payment-redirect__logo" role="presentation">
-        <img src="{{ mix('/images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image block dark:hidden"
+        <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image block dark:hidden"
             width="250" height="100" />
-        <img src="{{ mix('/images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image hidden dark:block"
+        <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image hidden dark:block"
             width="250" height="100" />
     </div>
 

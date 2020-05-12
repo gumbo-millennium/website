@@ -3,6 +3,10 @@
   @apply py-8 mb-8;
 }
 
+.page-hero--minor {
+  @apply mb-0;
+}
+
 .page-hero__title {
   @apply text-4xl font-title font-medium;
 }
@@ -15,11 +19,18 @@
   @apply text-xl text-gray-primary-2 mt-2;
 }
 
+.page-hero--minor .page-hero__title {
+  @apply text-2xl;
+}
+
 @screen md {
   .page-hero {
     @apply py-12;
   }
   .page-hero__title {
     @apply text-5xl;
+  }
+  .page-hero--minor .page-hero__title {
+    @apply text-3xl;
   }
 }
