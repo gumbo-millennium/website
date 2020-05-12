@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToSponsors extends Migration
 {
+    private const PAGE_SQL = <<<'SQL'
+        JSON_CONTAINS_PATH(`contents`, 'one', "$.blocks")
+    SQL;
+
     /**
      * Run the migrations.
      * @return void
@@ -23,9 +27,7 @@ class AddFieldsToSponsors extends Migration
             // Add has_page as computed field
             $table->string('contents_title')->nullable()->default(null);
             $table->json('contents')->nullable();
-            $table->boolean('has_page')
-                ->virtualAs('!ISNULL(JSON_EXTRACT(`contents`, \'$.blocks\'))')
-                ->after('ends_at');
+            $table->boolean('has_page')->storedAs(self::PAGE_SQL)->after('ends_at');
 
             // Add soft deletes and slug
             $table->softDeletes()->after('updated_at');
