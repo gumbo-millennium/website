@@ -4,7 +4,7 @@ $logo = $sponsorService->toSvg($sponsor, [
     'title' => $sponsor->name,
     'aria-label' => "Logo van {$sponsor->name}"
 ], 'color');
-$backdrop = $sponsor->backdrop->url('backdrop');
+$backdrop = $sponsor->backdrop->url('banner');
 @endphp
 <article class="partner-block__item">
     <div class="partner-card">
