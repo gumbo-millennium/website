@@ -8,6 +8,7 @@ use App\Http\Controllers\Activities\Traits\HandlesSettingMetadata;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
+use App\Models\User;
 use App\ViewModels\ActivityViewModel;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
@@ -128,5 +129,41 @@ class DisplayController extends Controller
 
         // Redirect to login with a backlink here
         return redirect()->guest(route('login'));
+    }
+
+    /**
+     * Handles re-sending the verification mail on activities
+     * @param Request $request
+     * @param Activity $activity
+     * @return RedirectResponse
+     */
+    public function retryActivate(Request $request, Activity $activity): RedirectResponse
+    {
+        // Get user
+        $user = $request->user();
+
+        // Check if logged in
+        if (!$user) {
+            flash('Je bent niet ingelogd, log eerst in.', 'warning');
+            return redirect()->toRoute('activity.show', compact('activity'));
+        }
+
+        // Sanity and hinting
+        \assert($user instanceof User);
+
+        // Check if verified
+        if ($user->hasVerifiedEmail()) {
+            flash('Je hebt het e-mailadres van je account al geverifiëerd.', 'info');
+            return redirect()->toRoute('activity.show', compact('activity'));
+        }
+
+        // Send mail
+        $user->sendEmailVerificationNotification();
+
+        // Notice user
+        flash('Er is opnieuw een mailtje gestuurd om je e-mailadres mee te bevestigen.', 'success');
+
+        // Back we go
+        return redirect()->toRoute('activity.show', compact('activity'));
     }
 }

@@ -61,8 +61,11 @@ Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // Single view
     Route::get('/{activity}', 'Activities\\DisplayController@show')->name('show');
 
-    // Single view
+    // Login route
     Route::get('/{activity}/login', 'Activities\\DisplayController@login')->name('login');
+
+    // Re-confirm route
+    Route::post('/{activity}/verify-email', 'Activities\\DisplayController@retryActivate')->name('verify-email');
 });
 // Fix sometimes linking to /activities
 Route::permanentRedirect('/activities', '/activiteiten');

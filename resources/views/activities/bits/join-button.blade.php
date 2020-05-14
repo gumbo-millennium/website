@@ -54,6 +54,14 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     <div class="mt-2 text-gray-secondary-3">{{ $whenOpen }}</div>
     @endif
 
+    {{-- No verified e-mail --}}
+    @elseif ($user && !$user->hasVerifiedEmail())
+    <form action="{{ route('activity.verify-email', compact('activity')) }}" method="post">
+        @csrf
+        <p class="mb-2 text-gray-secondary-3">Je moet je e-mailadres eerst bevestigen.</p>
+        <button type="submit" class="btn m-0">Bevestig e-mailadres</button>
+    </form>
+
     {{-- Open --}}
     @else
     <form action="{{ route('enroll.create', compact('activity')) }}" method="post">
