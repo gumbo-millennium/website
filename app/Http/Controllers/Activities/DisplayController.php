@@ -145,7 +145,7 @@ class DisplayController extends Controller
         // Check if logged in
         if (!$user) {
             flash('Je bent niet ingelogd, log eerst in.', 'warning');
-            return redirect()->toRoute('activity.show', compact('activity'));
+            return redirect()->route('activity.show', compact('activity'));
         }
 
         // Sanity and hinting
@@ -154,7 +154,7 @@ class DisplayController extends Controller
         // Check if verified
         if ($user->hasVerifiedEmail()) {
             flash('Je hebt het e-mailadres van je account al geverifiëerd.', 'info');
-            return redirect()->toRoute('activity.show', compact('activity'));
+            return redirect()->route('activity.show', compact('activity'));
         }
 
         // Send mail
@@ -164,6 +164,6 @@ class DisplayController extends Controller
         flash('Er is opnieuw een mailtje gestuurd om je e-mailadres mee te bevestigen.', 'success');
 
         // Back we go
-        return redirect()->toRoute('activity.show', compact('activity'));
+        return redirect()->route('activity.show', compact('activity'));
     }
 }
