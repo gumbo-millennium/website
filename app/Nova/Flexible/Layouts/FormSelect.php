@@ -35,7 +35,6 @@ class FormSelect extends Layout
             Boolean::make('Verplicht', 'required'),
             Boolean::make('Meerkeuze', 'multiple'),
             KeyValue::make('Opties', 'options')
-                ->rules('array', 'min:2')
                 ->keyLabel('Naam')
                 ->valueLabel('Label')
                 ->actionText('Optie toevoegen'),
