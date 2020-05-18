@@ -92,9 +92,6 @@ class Activity extends SluggableModel implements AttachableInterface
         'member_discount' => 'int',
         'discount_count' => 'int',
         'price' => 'int',
-
-        // Extra information
-        'enrollment_questions' => 'collection',
     ];
 
     /**
