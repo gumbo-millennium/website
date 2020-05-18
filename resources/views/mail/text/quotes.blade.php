@@ -25,4 +25,4 @@ De Digitale Commissie
 {{-- Outro Lines --}}
 Dit is een automatisch bericht vanuit de website, reageren is niet mogelijk.
 
-Als je niet snapt hoe je aan dit mailtje komt, dan is dat mooi jouw probleem :)
+Als redactielid van de Gumbode krijg je deze mailtjes, hiervoor kan je je lekker niet afmelden.

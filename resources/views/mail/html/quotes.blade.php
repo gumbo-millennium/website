@@ -7,7 +7,7 @@ Wist-Je-Datjes
 {{-- Subcopy --}}
 @slot('subcopy')
 Dit is een automatisch bericht vanuit de website, reageren is niet mogelijk.\
-Als lid van de PRPG krijg je deze mailtjes, hiervoor kan je je niet afmelden.
+Als redactielid van de Gumbode krijg je deze mailtjes, hiervoor kan je je lekker niet afmelden.
 @endslot
 
 {{-- Intro Lines --}}
