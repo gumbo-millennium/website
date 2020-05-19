@@ -166,11 +166,8 @@ trait HandlesStripeInvoices
         $computed = $this->getComputedInvoiceLines($enrollment);
         $this->createPendingInvoiceItems($customer, $computed);
 
-        // Add discount, if applicable
-        $coupon = null;
-        if ($enrollment->price === $enrollment->activity->discount_price) {
-            $coupon = $this->getCoupon($enrollment->activity);
-        }
+        // Add discount, if any
+        $coupon = $this->getCoupon($enrollment->activity);
         $this->updateCustomerDiscount($customer, $coupon);
 
         // Create the actual invoice
