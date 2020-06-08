@@ -47,7 +47,6 @@
         "spatie/laravel-model-states": "^1.4",
         "spatie/laravel-permission": "^3.3",
         "spatie/laravel-stripe-webhooks": "^2.2",
-        "spatie/laravel-view-models": "^1.2",
         "ssnepenthe/color-utils": "^0.4.2",
         "stripe/stripe-php": "^7.10",
         "symfony/process": "^4.1",

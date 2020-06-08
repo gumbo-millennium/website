@@ -24,7 +24,7 @@ trait HasEnrollments
     public function findActiveEnrollmentOrFail(Request $request, Activity $activity): Enrollment
     {
         // Perform query
-        $enrollment = Enrollment::findActive($request->user(), $activity);
+        $enrollment = $this->findActiveEnrollment($request, $activity);
 
         // Redirect to activity page if there is no enrollment
         if ($enrollment === null) {
@@ -37,5 +37,22 @@ trait HasEnrollments
 
         // Return the enrollment
         return $enrollment;
+    }
+
+    /**
+     * Finds the enrollment for the user making the request
+     * @param Request $request
+     * @param Activity $activity
+     * @return null|Enrollment
+     */
+    public function findActiveEnrollment(Request $request, Activity $activity): ?Enrollment
+    {
+        // Can't find one if not logged in
+        if (!$request->user()) {
+            return null;
+        }
+
+        // Perform query
+        return Enrollment::findActive($request->user(), $activity);
     }
 }

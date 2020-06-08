@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Activities;
 
 use App\Http\Controllers\Activities\Traits\HandlesSettingMetadata;
+use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 class DisplayController extends Controller
 {
     use HandlesSettingMetadata;
+    use HasEnrollments;
 
     /**
      * Display a listing of the resource.
@@ -106,11 +108,28 @@ class DisplayController extends Controller
         // Set meta
         $this->setActivityMeta($activity);
 
+        // Get activity flags
+        $userIsMember = optional($this->user)->is_member;
+        $activityIsPaid = $userIsMember ? $this->activity->is_free_for_members : $this->activity->is_free;
+
+        // Get enrollment and flags
+        $enrollment = $this->findActiveEnrollment($request, $activity);
+        $enrollmentIsPaid = $enrollment ? $enrollment->state->is(Paid::class) : false;
+        $enrollmentIsStable = $enrollment->is_stable;
+
+        // Build data
+        $viewData = [
+            'user' => $request->user(),
+            'activity' => $activity,
+            'enrollment' => $enrollment,
+            'isPaid' => $activityIsPaid,
+            'hasPaid' => $enrollmentIsPaid,
+            'isStable' => $enrollmentIsStable,
+        ];
+
         // Show view
-        return view('activities.show', new ActivityViewModel(
-            $request->user(),
-            $activity
-        ));
+        return \response()
+            ->view('activities.show', $viewData);
     }
 
     /**
