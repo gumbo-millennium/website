@@ -23,7 +23,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
+use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAdded;
 
 class EventServiceProvider extends ServiceProvider
 {

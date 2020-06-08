@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\Models\Media;
 
 /**
@@ -20,7 +20,7 @@ use Spatie\MediaLibrary\Models\Media;
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
     use Searchable;
 
     /**
@@ -128,26 +128,11 @@ class FileBundle extends SluggableModel implements HasMedia
      * Configure the collection to privately store the data
      * @return void
      */
-    public function registerMediaCollections()
+    public function registerMediaCollections(): void
     {
-        $size = [840, 1190];
-        $variants = [
-            'thumb' => 1,
-            'thumb-sm' => 0.5,
-            'thumb-lg' => 2
-        ];
-
         $this
             ->addMediaCollection('default')
-            ->useDisk('local')
-            // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-            ->registerMediaConversions(function (Media $media) use ($variants, $size) {
-                foreach ($variants as $name => $mul) {
-                    $this->addMediaConversion($name)
-                        ->width($size[0] * $mul)
-                        ->height($size[1] * $mul);
-                }
-            });
+            ->useDisk('local');
     }
 
     /**

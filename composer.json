@@ -43,7 +43,7 @@
         "sloveniangooner/searchable-select": "^1.3",
         "smalot/pdfparser": "^0.13",
         "spatie/laravel-csp": "^2.4",
-        "spatie/laravel-medialibrary": "^7.18",
+        "spatie/laravel-medialibrary": "^8.2",
         "spatie/laravel-model-states": "^1.4",
         "spatie/laravel-permission": "^3.3",
         "spatie/laravel-stripe-webhooks": "^2.2",
