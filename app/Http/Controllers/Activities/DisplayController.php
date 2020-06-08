@@ -144,7 +144,7 @@ class DisplayController extends Controller
 
         // Check if logged in
         if (!$user) {
-            flash('Je bent niet ingelogd, log eerst in.', 'warning');
+            flash('Je bent niet ingelogd, log eerst in.')->warning();
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -153,7 +153,7 @@ class DisplayController extends Controller
 
         // Check if verified
         if ($user->hasVerifiedEmail()) {
-            flash('Je hebt het e-mailadres van je account al geverifiëerd.', 'info');
+            flash('Je hebt het e-mailadres van je account al geverifiëerd.')->info();
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -161,7 +161,7 @@ class DisplayController extends Controller
         $user->sendEmailVerificationNotification();
 
         // Notice user
-        flash('Er is opnieuw een mailtje gestuurd om je e-mailadres mee te bevestigen.', 'success');
+        flash('Er is opnieuw een mailtje gestuurd om je e-mailadres mee te bevestigen.')->success();
 
         // Back we go
         return redirect()->route('activity.show', compact('activity'));

@@ -29,7 +29,7 @@ trait HasEnrollments
         // Redirect to activity page if there is no enrollment
         if ($enrollment === null) {
             // Add warning
-            flash('Je bent niet ingeschreven voor deze activiteit', 'warning');
+            flash('Je bent niet ingeschreven voor deze activiteit')->warning();
 
             // Redirect to activity
             throw new EnrollmentNotFoundException('Je bent niet ingeschreven voor deze activiteit');

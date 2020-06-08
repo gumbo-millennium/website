@@ -40,3 +40,25 @@
 .notice--info .notice__icon, .notice--info.notice--large .notice__title {
   @apply text-blue-primary-1;
 }
+
+/* Alert, for Bootstrap warnings */
+
+.alert {
+  @apply notice;
+}
+
+.alert-error, .alert-warning {
+  @apply notice--warning;
+}
+
+.alert-success {
+  @apply notice--brand;
+}
+
+.alert-info {
+  @apply notice--info;
+}
+
+.alert-container .alert {
+  @apply mt-2;
+}

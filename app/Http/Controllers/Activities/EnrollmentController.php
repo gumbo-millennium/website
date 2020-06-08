@@ -240,7 +240,7 @@ class EnrollmentController extends Controller
 
         // Ask policy
         if (!$request->user()->can('unenroll', $enrollment)) {
-            flash('Je kan je niet (meer) uitschrijven voor dit evenement', 'info');
+            flash('Je kan je niet (meer) uitschrijven voor dit evenement')->info();
             return redirect()->route('enroll.show', compact('activity'));
         }
 
@@ -262,7 +262,7 @@ class EnrollmentController extends Controller
 
         // Ask policy
         if (!$user->can('unenroll', $enrollment)) {
-            flash('Je kan je niet meer uitschrijven voor dit evenement', 'info');
+            flash('Je kan je niet meer uitschrijven voor dit evenement')->info();
             return redirect()->route('enroll.show', compact('activity'));
         }
 

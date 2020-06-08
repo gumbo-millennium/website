@@ -60,7 +60,7 @@ class BotQuoteController extends Controller
 
         // Skip if sent
         if ($quote->submitted_at !== null) {
-            flash('Dit wist-je-datje is al verzonden.', 'warning');
+            flash('Dit wist-je-datje is al verzonden.')->warning();
             return response()
                 ->redirectToRoute('account.quotes')
                 ->setPrivate();
@@ -70,7 +70,7 @@ class BotQuoteController extends Controller
         $quote->delete();
 
         // Redirect back
-        flash('Wist-je-datje verwijderd.', 'success');
+        flash('Wist-je-datje verwijderd.')->success();
         return response()
             ->redirectToRoute('account.quotes')
             ->setPrivate();

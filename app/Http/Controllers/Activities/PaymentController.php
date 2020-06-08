@@ -51,7 +51,7 @@ class PaymentController extends Controller
 
         // Redirect to the display view if the user is already enrolled
         if ($enrollment->state->is(Paid::class)) {
-            flash('Je hebt al betaald. Je inschrijving is bevestigd.', 'info');
+            flash('Je hebt al betaald. Je inschrijving is bevestigd.')->info();
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -210,7 +210,7 @@ class PaymentController extends Controller
                 'user' => $enrollment->user,
                 'code' => $enrollment->payment_invoice,
             ]);
-            flash("Er is iets bijzonder fout gegaan, probeer het opnieuw.", 'warning');
+            flash("Er is iets bijzonder fout gegaan, probeer het opnieuw.")->warning();
             return response()
                 ->redirectToRoute('activity.show', compact('activity'))
                 ->setPrivate();
@@ -218,7 +218,7 @@ class PaymentController extends Controller
 
         if (in_array($source->status, [Source::STATUS_CANCELED, Source::STATUS_FAILED])) {
             $result = $source->status === Source::STATUS_CANCELED ? 'geannuleerd' : 'mislukt';
-            flash("De betaling voor {$activity->name} is {$result}.", 'info');
+            flash("De betaling voor {$activity->name} is {$result}.")->info();
 
             // Redirect to activity
             return response()
@@ -241,7 +241,7 @@ class PaymentController extends Controller
                     'user' => $enrollment->user,
                     'code' => $enrollment->payment_invoice,
                 ]);
-                flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
+                flash("Je bent succesvol ingeschreven voor {$activity->name}.")->success();
                 return response()
                     ->redirectToRoute('activity.show', compact('activity'))
                     ->setPrivate();
@@ -255,7 +255,7 @@ class PaymentController extends Controller
                     'user' => $enrollment->user,
                     'code' => $enrollment->payment_invoice,
                 ]);
-                flash("Je staat niet meer ingeschreven voor {$activity->name}.", 'warning');
+                flash("Je staat niet meer ingeschreven voor {$activity->name}.")->warning();
                 return response()
                     ->redirectToRoute('activity.show', compact('activity'))
                     ->setPrivate();
@@ -266,7 +266,7 @@ class PaymentController extends Controller
         } while ($timeout > now());
 
         // Redirect
-        flash("De controle duurt wat lang. Je krijgt een mailtje zodra de betaling is gecontroleerd.", 'info');
+        flash("De controle duurt wat lang. Je krijgt een mailtje zodra de betaling is gecontroleerd.")->info();
         return response()
             ->redirectToRoute('activity.show', compact('activity'))
             ->setPrivate();

@@ -14,7 +14,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
-use Spatie\Flash\Flash;
 use Stripe\Stripe as StripeClient;
 
 class AppServiceProvider extends ServiceProvider
@@ -85,13 +84,5 @@ class AppServiceProvider extends ServiceProvider
                 'user' => request()->user()
             ]);
         });
-
-        // Boot flash settings
-        Flash::levels([
-            'info' => "notice notice--info",
-            'error' => "notice notice--warning",
-            'warning' => "notice notice--warning",
-            'success' => "notice notice--brand",
-        ]);
     }
 }

@@ -189,7 +189,7 @@ class AccountController extends Controller
         }
 
         // Flash oK
-        flash($message, 'success');
+        flash($message)->success();
         return response()
             ->redirectToRoute('account.index');
     }
