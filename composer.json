@@ -7,7 +7,6 @@
         "php": "^7.4 | ^8.0",
         "advoor/nova-editor-js": "^0.6",
         "artesaos/seotools": "^0.16.0",
-        "austinheap/laravel-database-encryption": "^0.3.0-rc1",
         "benjaminhirsch/nova-slug-field": "^1.2",
         "coderello/laravel-nova-lang": "^1.0",
         "cviebrock/eloquent-sluggable": "^6.0",
@@ -172,10 +171,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
-      },
       {
         "type": "vcs",
         "url": "https://github.com/roelofr/laravel-mail-auto-embed"

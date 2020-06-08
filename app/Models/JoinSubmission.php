@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use App\Casts\EncryptedAttribute;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Actions\Actionable;
 
@@ -17,20 +17,6 @@ class JoinSubmission extends Model
 {
     // Use action log and encryption helper
     use Actionable;
-    use HasEncryptedAttributes;
-
-    /**
-     * @inheritDoc
-     */
-    protected $encrypted = [
-        'phone',
-        'date_of_birth',
-        'street',
-        'number',
-        'city',
-        'postal_code',
-        'country',
-    ];
 
     /**
      * @inheritDoc
@@ -70,6 +56,21 @@ class JoinSubmission extends Model
         'postal_code' => null,
         'country' => null,
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'phone' => EncryptedAttribute::class,
+        'date_of_birth' => EncryptedAttribute::class . ':date',
+        'street' => EncryptedAttribute::class,
+        'number' => EncryptedAttribute::class,
+        'city' => EncryptedAttribute::class,
+        'postal_code' => EncryptedAttribute::class,
+        'country' => EncryptedAttribute::class,
+    ]
 
     /**
      * Full name property

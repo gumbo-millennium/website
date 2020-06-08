@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\EncryptedAttribute;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
@@ -11,7 +12,6 @@ use App\Models\States\Enrollment\Paid as PaidState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Enrollment extends UuidModel
 {
-    use HasEncryptedAttributes;
     use HasStates;
     use SoftDeletes;
 
@@ -66,16 +65,9 @@ class Enrollment extends UuidModel
     /**
      * @inheritDoc
      */
-    protected $encrypted = [
-        'data',
-    ];
-
-    /**
-     * @inheritDoc
-     */
     protected $casts = [
-        'data' => 'collection',
-        'paid' => 'bool'
+        'data' => EncryptedAttribute::class . ':collection',
+        'paid' => 'bool',
     ];
 
     /**
