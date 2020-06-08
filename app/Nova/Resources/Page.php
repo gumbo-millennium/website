@@ -9,12 +9,12 @@ use App\Helpers\Str;
 use App\Models\Page as PageModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
@@ -124,19 +124,21 @@ class Page extends Resource
                 ->hideFromIndex()
                 ->help('Wordt getoond op kaarten en in Google / Facebook'),
 
-            PaperclipImage::make('Afbeelding', 'image')
-                ->deletable()
-                ->nullable()
-                ->mimes(['png', 'jpeg', 'jpg'])
-                ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt. Maximaal 2MB')
-                ->minWidth(640)
-                ->minHeight(480)
+            // Image
+            Image::make('Afbeelding', 'image')
+                ->disk(PageModel::FILE_DISK)
+                ->path(PageModel::FILE_PATH)
+                ->help('Afbeelding van de pagina (640x360 - 3840x2160, max 2MB)')
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                    Rule::dimensions()
+                        ->maxWidth(3840)
+                        ->maxHeight(2160)
+                        ->minWidth(640)
+                        ->minHeight(360)
                 ),
 
             // Add type

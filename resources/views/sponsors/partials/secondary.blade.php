@@ -4,7 +4,6 @@ $logo = $sponsorService->toSvg($sponsor, [
     'title' => $sponsor->name,
     'aria-label' => "Logo van {$sponsor->name}"
 ], 'color');
-$backdrop = $sponsor->backdrop->url('backdrop');
 @endphp
 <div class="partner-block__item">
     <a href="{{ route('sponsors.show', compact('sponsor')) }}" class="partner-link">

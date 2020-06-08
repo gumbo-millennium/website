@@ -16,7 +16,8 @@ class AddImagesAndCategoryToNewsItems extends Migration
     {
         Schema::table('news_items', static function (Blueprint $table) {
             $table->string('category', 30)->default('Nieuws')->after('slug');
-            $table->paperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->paperclip('image');
         });
     }
 
@@ -27,7 +28,8 @@ class AddImagesAndCategoryToNewsItems extends Migration
     public function down()
     {
         Schema::table('news_items', static function (Blueprint $table) {
-            $table->dropPaperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->dropPaperclip('image');
             $table->dropColumn('category');
         });
     }

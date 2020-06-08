@@ -16,10 +16,12 @@ class UpdateImagesOnSponsors extends Migration
     {
         Schema::table('sponsors', static function (Blueprint $table) {
             // Remove image
-            $table->dropPaperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->dropPaperclip('image');
 
             // Add backdrop
-            $table->paperclip('backdrop');
+            // REMOVED when paperclip got removed
+            // $table->paperclip('backdrop');
 
             // Add SVG paths
             $table->string('logo_gray')->nullable()->default(null);
@@ -35,10 +37,14 @@ class UpdateImagesOnSponsors extends Migration
     {
         Schema::table('sponsors', static function (Blueprint $table) {
             // Re-add image
-            $table->paperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->paperclip('image');
 
             // Drop backdrop and SVG paths
-            $table->dropPaperclip('backdrop');
+            // REMOVED when paperclip got removed
+            // $table->dropPaperclip('backdrop');
+
+            // Logo's
             $table->dropColumn(['logo_gray', 'logo_color']);
         });
     }

@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,16 +16,15 @@ use Illuminate\Support\Facades\Storage;
  * @license MPL-2.0
  * @property-read AttachmentInterface $backdrop
  */
-class Sponsor extends SluggableModel implements AttachableInterface
+class Sponsor extends SluggableModel
 {
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
     use HasEditorJsContent;
     use SoftDeletes;
 
     public const LOGO_DISK = 'public';
-    public const LOGO_PATH = 'sponsors/logos';
+    public const LOGO_PATH = 'media/sponsors/logos';
+    public const IMAGE_DISK  = 'public';
+    public const IMAGE_PATH = 'media/sponsors';
 
     /**
      * The model's attributes.
@@ -153,18 +148,6 @@ class Sponsor extends SluggableModel implements AttachableInterface
             return null;
         }
         return Storage::disk(self::LOGO_DISK)->url($this->logo_color);
-    }
-
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('backdrop', [
-            'banner' => [1920, 960, true]
-        ]);
     }
 
     public function clicks(): HasMany

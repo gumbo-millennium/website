@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -18,12 +14,12 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
  */
-class NewsItem extends SluggableModel implements AttachableInterface
+class NewsItem extends SluggableModel
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
-    use HasSimplePaperclippedMedia;
+
+    public const FILE_DISK = 'public';
+    public const FILE_PATH = 'media/news';
 
     /**
      * @inheritDoc
@@ -51,19 +47,6 @@ class NewsItem extends SluggableModel implements AttachableInterface
         'updated_at',
         'published_at',
     ];
-
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, false]
-        ]);
-    }
 
     /**
      * Generate the slug based on the title property

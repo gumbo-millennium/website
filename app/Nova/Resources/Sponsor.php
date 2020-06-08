@@ -10,12 +10,12 @@ use App\Nova\Fields\Logo;
 use App\Nova\Metrics\SponsorClicksPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Sparkline;
 use Laravel\Nova\Fields\Text;
@@ -123,26 +123,45 @@ class Sponsor extends Resource
                 // Text and backdrop
                 Heading::make('Site-brede advertentie'),
                 Textarea::make('Advertentietekst', 'caption'),
-                PaperclipImage::make('Achtergrond', 'backdrop')
-                    ->deletable()
-                    ->mimes(['png', 'jpeg', 'jpg'])
-                    ->help('Afbeelding achter de banner, verhouding 2:1, minimaal 640px breed')
-                    ->minWidth(640)
-                    ->minHeight(320)
-                    ->hideFromIndex()
+                Image::make('Achtergrond', 'backdrop')
+                    ->disk(SponsorModel::IMAGE_DISK)
+                    ->path(SponsorModel::IMAGE_PATH)
+                    ->help('Afbeelding achter de advertentie (640x360 - 3840x2160, max 2MB, 4:1 aanbevolen)')
                     ->rules(
                         'nullable',
                         'image',
                         'mimes:jpeg,png',
                         'max:2048',
-                        Rule::dimensions()->ratio(2 / 1)
+                        Rule::dimensions()
+                            ->maxWidth(3840)
+                            ->maxHeight(2160)
+                            ->minWidth(640)
+                            ->minHeight(360)
                     ),
 
+                // Advert
                 Heading::make('Pagina-advertentie'),
                 // Add title
                 Text::make('Titel', 'contents_title')
                     ->help('Titel van de detailpagina')
                     ->hideFromIndex(),
+
+
+                Image::make('Afbeelding', 'contents_image')
+                    ->disk(SponsorModel::IMAGE_DISK)
+                    ->path(SponsorModel::IMAGE_PATH)
+                    ->help('Afbeelding van de pagina (640x360 - 3840x2160, max 2MB, 2:1 aanbevolen)')
+                    ->rules(
+                        'nullable',
+                        'image',
+                        'mimes:jpeg,png',
+                        'max:2048',
+                        Rule::dimensions()
+                            ->maxWidth(3840)
+                            ->maxHeight(2160)
+                            ->minWidth(640)
+                            ->minHeight(360)
+                    ),
 
                 // Add data
                 NovaEditorJs::make('Detailpagina', 'contents')

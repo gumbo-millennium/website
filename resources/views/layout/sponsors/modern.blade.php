@@ -1,10 +1,11 @@
 @php
 $sponsorClass = Str::slug("sponsor--brand-{$sponsor->slug}");
+$sponsorBackdrop = Storage::url(\App\Models\Sponsor::IMAGE_DISK, $item->backdrop);
 @endphp
 @push('main.styles')
 <style nonce="{{ csp_nonce() }}">
 .sponsor--backdrop-brand {
-    background-image: url("{{ $sponsor->backdrop->url('banner') }}");
+    background-image: url("{{ $sponsorBackdrop }}");
 }
 </style>
 @endpush

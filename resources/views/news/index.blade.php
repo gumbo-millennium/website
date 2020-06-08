@@ -22,8 +22,14 @@
     <article class="card-grid__item">
         <div class="card">
             <div class="card__figure" role="presentation">
-            @if ($item->image->exists())
-                <img class="card__figure-image" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
+            @if ($item->image)
+                <img
+                    class="card__figure-image"
+                    src="{{ Storage::url(\App\Models\Page::FILE_DISK, $item->image) }}"
+                    srcset="
+                        {{ Storage::url(\App\Models\Page::FILE_DISK, $item->image) }} 384w,
+                        {{ Storage::url(\App\Models\Page::FILE_DISK, $item->image) }} 768w
+                    ">
             @else
                 <div class="card__figure-wrapper">
                     <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

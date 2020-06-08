@@ -7,10 +7,6 @@ namespace App\Models;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\Permission\Models\Role;
@@ -22,17 +18,20 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
  */
-class Activity extends SluggableModel implements AttachableInterface
+class Activity extends SluggableModel
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
     use HasFlexible;
-    use HasSimplePaperclippedMedia;
 
+    // Storage
+    public const FILE_PATH = 'media/activities';
+    public const FILE_DISK = 'public';
+
+    // Payment types
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
 
+    // Location types
     public const LOCATION_OFFLINE = 'offline';
     public const LOCATION_ONLINE = 'online';
     public const LOCATION_MIXED = 'mixed';
@@ -415,17 +414,5 @@ class Activity extends SluggableModel implements AttachableInterface
             return Str::limit(Str::ascii("Gumbo {$this->statement}", 'nl'), 22, '');
         }
         return 'Gumbo Millennium';
-    }
-
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'cover' => [768, 256, true]
-        ]);
     }
 }

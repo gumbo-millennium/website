@@ -34,7 +34,8 @@ class DropFilesTable extends Migration
             $table->string('slug', 190)->unique();
 
             // The actual file, without 'variants'
-            $table->paperclip('file', false);
+            // REMOVED when paperclip got removed
+            // $table->paperclip('file', false);
 
             // File contents, for full-text search
             $table->mediumText('file_contents')->nullable()->default(null);
@@ -46,7 +47,8 @@ class DropFilesTable extends Migration
             $table->unsignedBigInteger('replacement_id')->nullable()->default(null);
 
             // Extra meta
-            $table->paperclip('thumbnail');
+            // REMOVED when paperclip got removed
+            // $table->paperclip('thumbnail');
 
             // Owner meta
             $table->unsignedBigInteger('owner_id')->nullable()->default(null);

@@ -15,7 +15,8 @@ class AddImageToPages extends Migration
     public function up()
     {
         Schema::table('pages', static function (Blueprint $table) {
-            $table->paperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->paperclip('image');
         });
     }
 
@@ -26,7 +27,8 @@ class AddImageToPages extends Migration
     public function down()
     {
         Schema::table('pages', static function (Blueprint $table) {
-            $table->dropPaperclip('image');
+            // REMOVED when paperclip got removed
+            // $table->dropPaperclip('image');
         });
     }
 }

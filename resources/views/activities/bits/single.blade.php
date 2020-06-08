@@ -63,11 +63,14 @@ $urlClass = implode(' ', $urlClass);
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
-        @if ($activity->image->exists())
+        @if ($activity->image)
         <img
             class="card__figure-image"
-            src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
+            src="{{ Storage::url(\App\Models\Activity::FILE_DISK, $activity->image) }}"
+            srcset="
+                {{ Storage::url(\App\Models\Activity::FILE_DISK, $activity->image) }} 384w,
+                {{ Storage::url(\App\Models\Activity::FILE_DISK, $activity->image) }} 768w
+            ">
         @else
         <div class="card__figure-wrapper">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

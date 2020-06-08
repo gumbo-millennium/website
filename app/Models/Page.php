@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -18,16 +14,16 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
  */
-class Page extends SluggableModel implements AttachableInterface
+class Page extends SluggableModel
 {
     use HasEditorJsContent;
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
 
     public const TYPE_USER = 'user';
     public const TYPE_REQUIRED = 'required';
     public const TYPE_GIT = 'git';
+
+    public const FILE_DISK = 'public';
+    public const FILE_PATH = 'media/pages';
 
     /**
      * Pages required to exist, cannot be deleted or renamed
@@ -104,20 +100,6 @@ class Page extends SluggableModel implements AttachableInterface
     public function getHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
-    }
-
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, true],
-            'poster' => [192, 256, false]
-        ]);
     }
 
     /**
