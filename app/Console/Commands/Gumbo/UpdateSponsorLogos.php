@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Gumbo;
 
 use App\Helpers\Str;
 use App\Models\Sponsor;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ForceSvgValidation extends Command
+class UpdateSponsorLogos extends Command
 {
     /**
      * The name and signature of the console command.
