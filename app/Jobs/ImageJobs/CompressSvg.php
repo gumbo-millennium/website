@@ -23,7 +23,11 @@ class CompressSvg extends SvgJob
             'svgo',
             '--multipass', // leeloo?
             '--disable=removeViewBox',
+            '--enable=convertStyleToAttrs',
             '--enable=removeDimensions',
+            '--enable=removeRasterImages',
+            '--enable=removeScriptElement',
+            '--enable=removeStyleElement',
             $filePath
         ]);
         $process->run();

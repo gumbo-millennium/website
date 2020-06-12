@@ -63,7 +63,7 @@ class RemoveImageColors extends SvgJob
                 }
 
                 try {
-                    $isLight = is_bright($node->getAttribute($type), 210);
+                    $isLight = is_bright($node->getAttribute($type), 230);
                     $node->setAttribute($type, $isLight ? self::NO_COLOR : self::TARGET_COLOR);
                 } catch (InvalidArgumentException $exception) {
                     // Noop
