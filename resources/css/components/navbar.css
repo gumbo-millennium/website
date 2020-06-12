@@ -46,7 +46,7 @@
 }
 
 .navbar__toggle-box:checked+.navbar__nav {
-  @apply flex;
+  @apply flex z-40;
 }
 
 .navbar__nav-link {
@@ -86,7 +86,7 @@
   .navbar__dropdown {
     @apply hidden flex-col items-start;
     @apply py-2 px-4 shadow bg-light;
-    @apply absolute;
+    @apply absolute z-40;
     top: calc(theme('spacing.2') * 2 + 1rem);
     left: 0;
   }
