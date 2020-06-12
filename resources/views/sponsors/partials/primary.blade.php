@@ -21,7 +21,7 @@ $backdrop = $sponsor->backdrop->url('banner');
         </div>
         <div class="partner-card__main">
             {{-- Title --}}
-            {{ $sponsor->contents_title }}
+            <h3 class="partner-card__main-title">{{ $sponsor->contents_title }}</h3>
 
             {{-- Link --}}
             <a href="{{ route('sponsors.show', compact('sponsor')) }}" class="partner-card__link stretched-link">

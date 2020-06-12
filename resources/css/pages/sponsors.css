@@ -55,6 +55,10 @@
   @apply h-8 w-auto mb-4;
 }
 
+.partner-card__main-title {
+  @apply text-xl font-bold mb-2;
+}
+
 .partner-card__body {
   @apply mb-4;
 }
