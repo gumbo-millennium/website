@@ -49,8 +49,8 @@
   @apply flex z-40;
 }
 
-.navbar__nav-link {
-  @apply block py-1;
+.navbar__nav-link, .navbar__dropdown-link {
+  @apply block py-2;
   @apply text-sm uppercase no-underline;
 }
 
@@ -61,8 +61,7 @@
 .navbar__dropdown-item {}
 
 .navbar__dropdown-link {
-  @apply block pl-2 py-1;
-  @apply text-sm uppercase no-underline;
+  @apply pl-2;
 }
 
 @screen md {
