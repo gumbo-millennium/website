@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Contracts\SponsorService;
 use App\Models\NewsItem;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
@@ -111,8 +112,10 @@ class NewsController extends Controller
         JsonLd::addValue('datePublished', $item->published_at);
         JsonLd::addValue('headline', $item->headline);
 
+        // Add JSON sponsor and hide the ad if sponsored
         if ($item->sponsor) {
             JsonLd::addValue('sponsor', $item->sponsor);
+            app(SponsorService::class)->hideSponsor();
         }
 
         // Show item
