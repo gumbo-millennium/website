@@ -44,15 +44,12 @@
 .partner-card__image-logo {
   @apply relative;
   @apply object-contain;
-  @apply h-32 mx-8;
+  @apply h-32 mx-8 w-auto;
+  max-width: calc(100% - theme('spacing.8') * 2);
 }
 
 .partner-card__main {
   @apply bg-light p-8;
-}
-
-.partner-card__logo {
-  @apply h-8 w-auto mb-4;
 }
 
 .partner-card__main-title {
