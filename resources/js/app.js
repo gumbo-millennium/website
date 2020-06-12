@@ -8,6 +8,11 @@ import Vue from 'vue'
 // Load Axios and Components
 import bindComponents from './components'
 
+import initModules from './modules'
+
+// Start app
+document.addEventListener('DOMContentLoaded', initModules, { passive: true, once: true })
+
 // Register components
 bindComponents()
 

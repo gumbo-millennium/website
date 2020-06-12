@@ -10,37 +10,105 @@
 }
 
 .navbar__container {
-  @apply flex flex-col items-center;
+  @apply flex flex-row items-center;
+  @apply relative;
 }
 
-@screen md {
-  .navbar__container {
-    @apply flex-row justify-between;
-  }
-  .navbar__filler {
-    @apply flex-grow;
-  }
+.navbar__filler {
+  @apply flex-grow;
+}
+
+.navbar__toggle-box {
+  @apply hidden;
+}
+
+.navbar__toggle {
+  @apply py-2 px-4;
+  @apply flex flex-col items-center;
+  @apply rounded border border-dark;
+  @apply text-dark cursor-pointer;
+}
+
+.navbar__toggle-icon {
+  @apply h-4;
 }
 
 .navbar__nav {
-  @apply flex flex-row flex-wrap list-none;
-  @apply justify-center;
+  @apply hidden flex-col items-start;
+  @apply list-none rounded bg-light shadow-lg;
+  @apply absolute p-4;
+  top: calc(theme('spacing.16') + theme('spacing.4'));
+  right: theme('spacing.4');
+}
+
+.navbar__nav::before {
+  @apply block h-4 border;
+}
+
+.navbar__toggle-box:checked+.navbar__nav {
+  @apply flex;
 }
 
 .navbar__nav-link {
-  @apply block px-4 py-1;
+  @apply block py-1;
   @apply text-sm uppercase no-underline;
 }
 
-.navbar__nav-item:first-child .navbar__nav-link {
-  @apply pl-0;
+.navbar__dropdown {
+  @apply list-none;
+}
+
+.navbar__dropdown-item {}
+
+.navbar__dropdown-link {
+  @apply block pl-2 py-1;
+  @apply text-sm uppercase no-underline;
 }
 
 @screen md {
+  .navbar__toggle {
+    @apply hidden;
+  }
+  .navbar__nav {
+    @apply bg-transparent shadow-none;
+    @apply static flex p-0;
+    @apply flex-row flex-no-wrap;
+  }
+  .navbar__nav-item {
+    @apply relative px-4;
+  }
+  .navbar__nav-item:first-child .navbar__nav-link {
+    @apply pl-0;
+  }
   .navbar__nav-link {
     @apply py-2;
   }
+  .navbar__dropdown {
+    @apply hidden flex-col items-start;
+    @apply py-2 px-4 shadow bg-light;
+    @apply absolute;
+    top: calc(theme('spacing.2') * 2 + 1rem);
+    left: 0;
+  }
+  .navbar__dropdown-link {
+    @apply px-0 capitalize;
+  }
+  .navbar__nav-item:hover .navbar__dropdown, .navbar__nav-item:active .navbar__dropdown {
+    @apply flex;
+  }
 }
+
+/*
+@screen lg {
+  .navbar__toggle {
+    @apply hidden;
+  }
+  .navbar__nav {
+    @apply flex flex-row static p-0;
+    @apply shadow-none bg-transparent;
+    color: inherit;
+  }
+} */
 
 @screen dark {
   .navbar {

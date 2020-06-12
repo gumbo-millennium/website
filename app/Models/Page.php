@@ -34,8 +34,9 @@ class Page extends SluggableModel implements AttachableInterface
      */
     public const REQUIRED_PAGES = [
         'home' => 'Homepage',
+        'bestuur' => 'Het bestuur van Gumbo Millennium',
         'error-404' => 'Not Found',
-        'about' => 'Over gumbo',
+        'over' => 'Over gumbo',
         'word-lid' => 'Nieuw lid pagina',
     ];
 
