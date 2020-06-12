@@ -74,6 +74,10 @@ class SponsorController extends Controller
             abort(402);
         }
 
+        // Set SEO
+        SEOMeta::setTitle("{$sponsor->contents_title} - {$sponsor->name} - Sponsoren");
+        SEOMeta::setCanonical(route('sponsors.show', compact('sponsor')));
+
         // Return view
         return \response()
             ->view('sponsors.show', compact('sponsor'))
