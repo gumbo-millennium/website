@@ -14,16 +14,37 @@
   @apply rounded shadow-sm overflow-hidden flex flex-col items-stretch;
 }
 
-.partner-card__image-wrapper, .partner-card__image {
+.partner-card__image-wrapper, .partner-card__image-backdrop, .partner-card__image-logo-wrapper {
   @apply h-48 w-full;
 }
 
 .partner-card__image-wrapper {
-  @apply h-48 w-full bg-gray-secondary-3;
+  @apply h-48 w-full bg-gray-secondary-3 relative;
 }
 
-.partner-card__image {
-  @apply object-cover;
+.partner-card__image-backdrop+.partner-card__image-logo-wrapper {
+  @apply relative;
+  top: calc(0 - theme('spacing.48'));
+}
+
+.partner-card__image-logo-wrapper {
+  @apply relative;
+  @apply flex flex-col items-center justify-center;
+}
+
+.partner-card__image-logo-wrapper::before {
+  @apply absolute h-48 block;
+  @apply bg-gray-secondary-1 opacity-50;
+  top: 0;
+  right: 0;
+  left: 0;
+  content: '';
+}
+
+.partner-card__image-logo {
+  @apply relative;
+  @apply object-contain;
+  @apply h-32 mx-8;
 }
 
 .partner-card__main {
