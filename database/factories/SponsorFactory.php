@@ -47,15 +47,15 @@ $factory->define(Sponsor::class, static function (Faker $faker) use ($colorSpons
     ];
 
     // Add backdrop and caption if possible
-    if ($faker->boolean(0.75)) {
+    if ($faker->boolean(75)) {
         $data['caption'] = $faker->sentence;
         $data['backdrop'] = $faker->randomElement($backdropImage);
     }
 
     // Add contents and associated title
-    if ($faker->boolean(0.33)) {
+    if ($faker->boolean(50)) {
         $data['contents_title'] = $faker->sentence;
-        $data['contents'] = $editorjs($faker);
+        $data['contents'] = \json_encode($editorjs($faker));
     }
 
     // Done :)
