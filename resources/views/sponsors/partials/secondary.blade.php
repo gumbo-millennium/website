@@ -7,7 +7,7 @@ $logo = $sponsorService->toSvg($sponsor, [
 $backdrop = $sponsor->backdrop->url('backdrop');
 @endphp
 <div class="partner-block__item">
-    <a href="{{ route('sponsors.show', compact('sponsor')) }}" class="partner-link">
+    <a href="{{ route('sponsors.link', compact('sponsor')) }}" class="partner-link">
         {{ $logo }}
     </a>
 </div>
