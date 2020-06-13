@@ -1,17 +1,28 @@
 @php
 $sponsorClass = Str::slug("sponsor--brand-{$sponsor->slug}");
+$logo = $sponsorService->toSvg($sponsor, [
+    'class' => 'sponsor__card-logo-img',
+    'title' => $sponsor->name,
+    'aria-label' => "Logo van {$sponsor->name}"
+], 'color');
 @endphp
-@push('main.styles')
-<style nonce="{{ csp_nonce() }}">
-.sponsor--backdrop-brand {
-    background-image: url("{{ $sponsor->backdrop->url('banner') }}");
-}
-</style>
-@endpush
-<div class="sponsor sponsor--backdrop sponsor--backdrop-brand">
-    <div class="container sponsor__container">
-        <a href="{{ route('sponsors.link', compact('sponsor')) }}" class="sponsor__simple-link">
-            <img src="{{ $sponsor->logo_color_url }}" alt="{{ $sponsor->title }}" class="sponsor__simple-logo">
-        </a>
+<div class="sponsor sponsor--backdrop sponsor--backdrop-brand" style="background-image: url('{{ $sponsor->backdrop->url('banner') }}');">
+    <div class="container sponsor__container sponsor__container--modern">
+        <div class="sponsor__card">
+            {{-- Image --}}
+            <figure class="sponsor__card-logo">
+                {{ $logo }}
+            </figure>
+
+            {{-- Text --}}
+            <p class="sponsor__card-text">
+                {{ Str::words($sponsor->caption, 40) }}
+            </p>
+
+            {{-- Button --}}
+            <a href="{{ route('sponsors.link', compact('sponsor')) }}" class="btn btn--brand sponsor__card-btn">
+                Bekijk sponsor
+            </a>
+        </div>
     </div>
 </div>

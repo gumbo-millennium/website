@@ -122,7 +122,8 @@ class Sponsor extends Resource
 
                 // Text and backdrop
                 Heading::make('Site-brede advertentie'),
-                Textarea::make('Advertentietekst', 'caption'),
+                Textarea::make('Advertentietekst', 'caption')
+                    ->help('Tekst in de advertentie, maximaal 40 woorden.'),
                 PaperclipImage::make('Achtergrond', 'backdrop')
                     ->deletable()
                     ->mimes(['png', 'jpeg', 'jpg'])
