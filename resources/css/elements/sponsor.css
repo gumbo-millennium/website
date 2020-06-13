@@ -20,8 +20,12 @@
 }
 
 .sponsor__simple-logo {
-  @apply h-32;
+  @apply h-32 text-gray-primary-1;
   min-width: theme('spacing.32');
+}
+
+.sponsor__simple-logo:hover, .sponsor__simple-logo:active, .sponsor__simple-logo:focus {
+  @apply text-gray-primary-2;
 }
 
 .sponsor__card-wrapper {
