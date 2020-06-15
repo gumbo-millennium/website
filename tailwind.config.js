@@ -9,6 +9,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 // Build configs
 module.exports = {
   plugins: gumboSettings.plugins,
+  purge: false,
   theme: {
     container: {
       center: true
@@ -152,5 +153,12 @@ module.exports = {
     width: ['responsive'],
     wordBreak: [],
     zIndex: []
+  },
+  corePlugins: {
+    backgroundOpacity: false,
+    textOpacity: false,
+    borderOpacity: false,
+    placeholderOpacity: false,
+    divideOpacity: false
   }
 }
