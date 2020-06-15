@@ -50,7 +50,10 @@
 .sponsor__text {}
 
 @screen sm {
-  .sponsor__card-wrapper {
+  .sponsor__container--modern {
+    @apply items-end justify-center;
+  }
+  .sponsor__card {
     @apply w-full;
     max-width: 500px;
   }
@@ -58,7 +61,6 @@
 
 @screen md {
   .sponsor__container--modern {
-    @apply items-end justify-center;
     min-height: calc(theme('spacing.64') + theme('spacing.32'));
   }
 }
