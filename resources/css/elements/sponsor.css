@@ -51,7 +51,8 @@
 
 @screen sm {
   .sponsor__card-wrapper {
-    width: 50%;
+    @apply w-full;
+    max-width: 500px;
   }
 }
 
@@ -59,14 +60,5 @@
   .sponsor__container--modern {
     @apply items-end justify-center;
     min-height: calc(theme('spacing.64') + theme('spacing.32'));
-  }
-  .sponsor__card {
-    max-width: calc(theme('screens.md') / 12 * 4);
-  }
-}
-
-@screen lg {
-  .sponsor__card {
-    max-width: calc(100% / 12 * 4);
   }
 }
