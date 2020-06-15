@@ -42,11 +42,14 @@ class Kernel extends ConsoleKernel
         // Update users from API every night
         $schedule->command('gumbo:update-groups --missing')->dailyAt('03:30');
 
+        // Update Sponsor logos nightly (in case some were missed)
+        $schedule->command('gumbo:update-sponsor-logos')->dailyAt('05:00');
+
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
 
         // Daily update the Cloudflare IPs
-        $schedule->command('cloudflare:reload')->dailyAt('04:44');
+        $schedule->command('cloudflare:reload')->dailyAt('04:30');
 
         // Send quotes weekly
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
