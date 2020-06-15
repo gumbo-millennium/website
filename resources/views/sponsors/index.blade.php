@@ -22,12 +22,6 @@
 
 {{-- Second sponsors and list --}}
 <div class="container">
-    {{-- Hero --}}
-    <div class="page-hero page-hero--minor">
-        {{-- <h2 class="page-hero__title">Nog meer awesome bedrijven</h2> --}}
-        <p class="page-hero__lead">But wait, there's more!</p>
-    </div>
-
     {{-- Smaller sponsors --}}
     <div class="partner-block partner-block--secondary">
         @foreach ($simple as $sponsor)
