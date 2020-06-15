@@ -6,7 +6,14 @@ $logo = $sponsorService->toSvg($sponsor, [
     'aria-label' => "Logo van {$sponsor->name}"
 ], 'color');
 @endphp
-<div class="sponsor sponsor--backdrop sponsor--backdrop-brand" style="background-image: url('{{ $sponsor->backdrop->url('banner') }}');">
+{{-- Style for the sponsor --}}
+<style nonce="{{ csp_nonce() }}">
+.sponsor--backdrop-brand {
+    background-image: url('{{ $sponsor->backdrop->url('banner') }}');
+}
+</style>
+{{-- Actual sponsor --}}
+<div class="sponsor sponsor--backdrop sponsor--backdrop-brand">
     <div class="container sponsor__container sponsor__container--modern">
         <div class="sponsor__card">
             {{-- Image --}}
