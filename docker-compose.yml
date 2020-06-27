@@ -15,6 +15,10 @@ x-laravel: &laravel-base
     - .docker/laravel/docker.env
   networks:
     - laravel
+  depends_on:
+    - redis
+    - database
+    - mail
 
 services:
   # Application and webserver
