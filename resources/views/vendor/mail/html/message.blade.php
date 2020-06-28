@@ -15,4 +15,9 @@
             {{ $subcopy }}
         @endslot
     @endif
+
+    {{-- Image --}}
+    @if (!empty($mailImage))
+        @slot('mailImage', $mailImage)
+    @endif
 @endcomponent
