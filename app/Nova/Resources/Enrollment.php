@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use App\Models\Activity;
 use App\Models\Enrollment as EnrollmentModel;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
@@ -85,16 +84,11 @@ class Enrollment extends Resource
             return parent::indexQuery($request, $query);
         }
 
-        // Get IDs of the activities the user hosted
-        $activityIds = $user
-            ->getHostedActivityQuery(Activity::query())
-            ->pluck('id');
-
         // Only return enrollments of the user's events if the user is not
         // allowed to globally manage events.
         return parent::indexQuery(
             $request,
-            $query->whereIn('activity_id', $activityIds)
+            $query->whereIn('activity_id', $user->hosted_activity_ids)
         );
     }
 

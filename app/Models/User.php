@@ -152,6 +152,19 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
+     * Returns a list of IDs that the user hosts
+     * @return Collection
+     */
+    public function getHostedActivityIdsAttribute(?array $attributes = null): iterable
+    {
+        // Run query
+        $query = $this->getHostedActivityQuery(Activity::query());
+
+        // Handle query
+        return $attributes ? $query->only($attributes) : $query->get();
+    }
+
+    /**
      * Returns (sub)query that only returns the Activities this user
      * is a manager of
      * @param  \Illuminate\Database\Eloquent\Builder  $query
