@@ -7,73 +7,40 @@
     <style type="text/css">{{ mix_file('/mail.css') }}</style>
 </head>
 <body>
-    <table class="mail" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        <tr>
-            <td align="center">
-                <table class="mail__content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                    {{-- E-mail header --}}
-                    <tr>
-                        <td>
-                            <table class="mail-header" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                    <td class="mail-header__inner content-cell content-cell--header" align="center">
-                                        <a href="{{ url("/") }}" class="mail-header__link">
-                                            <img class="mail-header__logo" height="60" src="{{ mix('images/mail/logo.png') }}"
-                                                alt="Gumbo Millennium" border="0" data-auto-embed />
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+    {{-- E-mail summary --}}
+    @if (!empty($summary))
+    <div class="mail-hidden mail-meta">
+        {{ $summary }}
+    </div>
 
-                    <!-- Email Body -->
-                    <tr>
-                        <td class="mail-body" width="100%" cellpadding="0" cellspacing="0">
-                            <table class="mail-body__inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                                {{-- Body header --}}
-                                @isset ($header)
-                                <tr>
-                                    <td class="mail-body__content mail-body__content--header">
-                                        {{ $header }}
-                                    </td>
-                                </tr>
-                                @endisset
+    {{-- End of e-mail summary --}}
+    <div class="mail-hidden">
+        &nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;&Atilde;&cent;&Acirc;&#128;&Acirc;&#140;&nbsp;
+    </div>
+    @endif
 
-                                <!-- Body content -->
-                                <tr>
-                                    <td class="mail-body__content mail-body__content--main">
-                                        {{ Illuminate\Mail\Markdown::parse($slot) }}
-                                    </td>
-                                </tr>
+    {{-- Outer table --}}
+    <table width="100%" class="mail-table mail-wrapper" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    {{-- Infobar --}}
+                    @include('mail::parts.infobar')
 
-                                {{-- Body subcopy --}}
-                                @isset ($subcopy)
-                                <tr>
-                                    <td class="mail-body__content mail-body__content--subcopy">
-                                        {{ Illuminate\Mail\Markdown::parse($subcopy) }}
-                                    </td>
-                                </tr>
-                                @endisset
-                            </table>
-                        </td>
-                    </tr>
+                    {{-- Header --}}
+                    @include('mail::parts.header')
 
-                    {{-- Email footer --}}
-                    <tr>
-                        <td>
-                            <table class="mail-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                    <td class="mail-footer__inner content-cell content-cell--footer" align="center">
-                                        <p class="mail-footer__text">© {{ today()->year }} Gumbo Millennium. Alle rechten voorbehouden.</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+                    {{-- Body --}}
+                    @include('mail::parts.body')
+
+                    {{-- subcopy --}}
+                    @includeWhen(!empty($subcopy), 'mail::parts.subcopy')
+
+                    {{-- Footer --}}
+                    @include('mail::parts.footer')
+                </td>
+            </tr>
+        </tbody>
     </table>
 </body>
 </html>

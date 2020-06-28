@@ -1,0 +1,31 @@
+.mail-body {
+  @apply bg-transparent;
+}
+
+.mail-body__inner-cell {
+  @apply py-8;
+}
+
+.mail-body__inner-table {
+  @apply rounded bg-white overflow-hidden;
+}
+
+.mail-body__title-card {
+  min-height: 64px;
+  max-height: 280px;
+}
+
+.mail-body__message {
+  @apply py-4 px-8;
+  @apply border border-gray-secondary-1 border-t-0;
+  @apply rounded-lg rounded-t-none;
+  @apply leading-relaxed;
+}
+
+.mail-body__message--single {
+  @apply border-t rounded-t-lg;
+}
+
+.mail-body__message p {
+  @apply leading-relaxed mb-2;
+}

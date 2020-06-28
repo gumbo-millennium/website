@@ -1,13 +1,9 @@
-/* Mail header */
-
 .mail-header {
-  /* noop */
-}
-
-.mail-header__inner {
-  @apply py-6;
+  @apply py-4 bg-white shadow;
 }
 
 .mail-header__logo {
-  max-height: 64px;
+  @apply my-4;
+  width: 12rem;
+  height: 4rem;
 }

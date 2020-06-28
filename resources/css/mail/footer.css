@@ -1,13 +1,7 @@
-/* Mail footer */
-
 .mail-footer {
-  /* noop */
+  @apply bg-gray-secondary-1;
 }
 
-.mail-footer__inner {
-  @apply py-6;
-}
-
-.mail-footer__text {
-  @apply text-center text-sm text-gray-primary-2;
+.mail-footer__cell {
+  @apply py-4 text-center;
 }

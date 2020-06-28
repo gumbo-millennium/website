@@ -1,0 +1,7 @@
+.mail-subcopy {
+  @apply m-0;
+}
+
+.mail-subcopy__inner-cell {
+  @apply text-gray-secondary-3 p-8 pt-0 text-center text-sm;
+}
