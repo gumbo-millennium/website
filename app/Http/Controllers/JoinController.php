@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Contracts\EnrollmentServiceContract;
 use App\Forms\NewMemberForm;
 use App\Helpers\Str;
 use App\Mail\Join\BoardJoinMail;
@@ -14,12 +15,13 @@ use App\Models\JoinSubmission;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
@@ -131,7 +133,7 @@ class JoinController extends Controller
      * @param SignUpRequest $request
      * @return Response
      */
-    public function submit(Request $request)
+    public function submit(EnrollmentServiceContract $enrollService, Request $request)
     {
         // Get intro activity
         $introActivity = $this->getIntroActivity();
@@ -188,21 +190,69 @@ class JoinController extends Controller
         Session::put(self::SESSION_NAME, $submission);
 
         // Check if the user wants to join the introduction
-        if ($introActivity && $introActivity->enrollment_open && !empty($userValues['join-intro'])) {
-            // Get redirect
-            $redirect = $this->getIntroRedirect($userValues, $request, $introActivity);
-
-            // If we have a redirect, show the 'you're enrolled' message
-            if ($redirect) {
-                \flash("Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.", "success");
-                return $redirect;
-            }
+        if (!$introActivity || !empty($userValues['join-intro'])) {
+            // Send redirect reply
+            return \redirect()
+                ->route('join.complete')
+                ->with('submission', $submission);
         }
 
-        // Send redirect reply
-        return \redirect()
-            ->route('join.complete')
-            ->with('submission', $submission);
+        // Get user
+        $user = $request->user();
+
+        if (!$user) {
+            $user = $this->createJoinUser($userValues);
+
+        // No user means an existing user was found, request login.
+            if (!$user) {
+                // Set next URL
+                \redirect()->setIntendedUrl(
+                    \route('activity.show', ['activity' => $introActivity])
+                );
+
+                    // Flash message
+                    \flash(<<<'EOL'
+                    Je hebt al een account op de site, dus om je in
+                    te schrijven voor de intro moet je even inloggen.
+                    EOL);
+
+                    // Redirect to login
+                    return \redirect()->route('login');
+            }
+
+            Auth::login($user);
+        }
+
+        // Join intro
+        $enrollment = $this->joinIntroActivity(
+            $enrollService,
+            $introActivity,
+            $user,
+        );
+
+        // No enrollment means enrolling was blocked
+        if (!$enrollment) {
+            // Flash failure
+            \flash(
+                'Je aanmelding is ontvangen, maar je kon helaas niet ingeschreven worden op de introductieweek.',
+                'warning'
+            );
+
+            // Redirect to welcome
+
+            return \redirect()
+                ->route('join.complete')
+                ->with('submission', $submission);
+        }
+
+        // Flash OK
+        \flash("Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.", "success");
+
+        // Redirect to proper location
+        if ($enrollment->is_stable) {
+            return \response()
+            ->redirectToAction('activity.show', ['activity' => $introActivity]);
+        }
     }
 
     /**
@@ -229,22 +279,12 @@ class JoinController extends Controller
     }
 
     /**
-     * Returns a redirect for the data supplied
+     * Finds or creates a user that matches the data in this enrollment
      * @param array $data
-     * @param Request $request
-     * @param Activity $activity
-     * @return null|RedirectResponse
+     * @return null|User
      */
-    private function getIntroRedirect(array $data, Request $request, Activity $activity): ?RedirectResponse
+    private function createJoinUser(array $data): ?User
     {
-        // Get URL data
-        $activityUrl = \route('activity.show', compact('activity'));
-
-        // Find a user
-        if ($request->user()) {
-            return redirect()->to($activityUrl);
-        }
-
         // Find or create the user
         $user = User::firstOrCreate([
             'email' => $data['email']
@@ -255,16 +295,9 @@ class JoinController extends Controller
             'password' => Hash::make((string) Str::uuid())
         ]);
 
-        // Redirect to login page if account exists
+        // Return null if the user already exists
         if (!$user->wasRecentlyCreated) {
-            // Set next URL
-            \redirect()->setIntendedUrl($activityUrl);
-
-            // Flash message
-            \flash('Je hebt al een account op de site, dus om je in te schrijven voor de intro moet je even inloggen.');
-
-            // Redirect to login
-            return \redirect()->route('login');
+            return null;
         }
 
         // Dispatch new account event
@@ -275,18 +308,60 @@ class JoinController extends Controller
             'email' => $user->email
         ]);
 
-        // Log in user
-        Auth::guard()->login($user);
+        return $user;
+    }
 
-        // Create enrollment
-        $enrollment = Enrollment::enrollUser($user, $activity);
+    /**
+     * Returns a redirect for the data supplied
+     * @param EnrollmentServiceContract $enrollService
+     * @param Request $request
+     * @param Activity $activity
+     * @param array $data
+     * @return null|RedirectResponse
+     */
+    private function joinIntroActivity(
+        EnrollmentServiceContract $enrollService,
+        Activity $activity,
+        User $user
+    ): ?Enrollment {
+        // Check if we need to lock
+        $lock = $enrollService->useLocks() ? $enrollService->getLock($activity) : null;
 
-        // Created OK, perform rest of the show
-        if ($enrollment->exists()) {
-            return \redirect()->route('enroll.show', compact('activity'));
+        // Get enrollment
+        $enrollment = null;
+
+        try {
+            // Get a lock
+            optional($lock)->block(15);
+
+            // Check if the user can actually enroll
+            if (!$enrollService->canEnroll($activity, $user)) {
+                Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
+                    'user' => $user,
+                    'activity' => $activity
+                ]);
+
+                // Return existing enrollment or null
+                return Enrollment::findActive($user, $activity);
+            }
+
+            // Create the enrollment
+            $enrollment = $enrollService->createEnrollment($activity, $user);
+        } catch (LockTimeoutException $exception) {
+            // Report timeout
+            \report($exception);
+
+            // Return
+            return null;
+        } finally {
+            // Free lock
+            \optional($lock)->release();
         }
 
-        // Forward to activity detail page
-        return \redirect()->to($activityUrl);
+        // Advance the enrollment
+        $enrollService->advanceEnrollment($activity, $enrollment);
+
+        // Return enrollment
+        return $enrollment->exists ? $enrollment : null;
     }
 }

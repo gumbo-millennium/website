@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Jobs\Stripe\CreateInvoiceJob;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
@@ -62,69 +61,6 @@ class Enrollment extends UuidModel
             return $result;
         }
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * Creates a proper enrollment
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment
-     */
-    public static function enrollUser(User $user, Activity $activity): Enrollment
-    {
-        // Create new enrollment
-        $enrollment = new static();
-
-        // Assign activity and user
-        $enrollment->activity()->associate($activity);
-        $enrollment->user()->associate($user);
-
-        // Determine price with and without transfer cost
-        $enrollment->price = $activity->price;
-        $enrollment->total_price = $activity->total_price;
-        if ($user->is_member && $activity->discounts_available !== 0 && $activity->member_discount !== null) {
-            logger()->info('Applying member discount {discount}', ['discount' => $activity->member_discount]);
-            $enrollment->price = $activity->discount_price;
-            $enrollment->total_price = $activity->total_discount_price;
-        }
-
-        // Set to null if the price is empty
-        if (!is_int($enrollment->price) || $enrollment->price <= 0) {
-            logger()->info('Price empty, wiping it.');
-            $enrollment->price = null;
-            $enrollment->total_price = null;
-        }
-
-        // Debug
-        $rawPrice = $enrollment->price;
-        $price = $enrollment->total_price;
-        logger()->debug(
-            'Assigned enrollment price of {price} ({rawPrice}).',
-            compact('user', 'activity', 'rawPrice', 'price')
-        );
-
-        // Save the enrollment
-        $enrollment->save();
-
-        // Debug
-        logger()->info(
-            'Enrolled user {user} on {activity}. ID is {enrollment-id}.',
-            [
-                'user' => $user,
-                'activity' => $activity,
-                'enrollment' => $enrollment,
-                'enrollment-id' => $enrollment->id,
-            ]
-        );
-
-        // Check if the enrollment is paid
-        if ($enrollment->total_price) {
-            // Dispatch a job to create a payment intent and invoice
-            CreateInvoiceJob::dispatch($enrollment);
-        }
-
-        // Return it
-        return $enrollment;
     }
 
     /**

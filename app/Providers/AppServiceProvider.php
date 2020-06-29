@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Contracts\ConscriboServiceContract;
+use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Services\ConscriboService;
+use App\Services\EnrollmentService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
@@ -29,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         SponsorServiceContract::class => SponsorService::class,
         // Stripe service
         StripeServiceContract::class => StripeService::class,
+        // Enrollment service
+        EnrollmentServiceContract::class => EnrollmentService::class,
     ];
 
     /**

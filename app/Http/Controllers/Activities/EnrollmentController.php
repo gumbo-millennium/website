@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
+use App\Contracts\EnrollmentServiceContract;
 use App\Http\Controllers\Activities\Traits\HandlesStripeItems;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
@@ -12,10 +13,11 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
-use App\Models\States\Enrollment\Seeded;
 use App\Models\User;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 
 /**
@@ -30,67 +32,70 @@ class EnrollmentController extends Controller
 
     /**
      * Creates the new enrollment for the activity
+     * @param EnrollmentServiceContract $enrollService
      * @param Request $request
      * @param Activity $activity
      * @return Response
-     *
-     * Does not need refactoring. All log statements are raising the
-     * error thresholds.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function create(Request $request, Activity $activity)
+    public function create(EnrollmentServiceContract $enrollService, Request $request, Activity $activity)
     {
         // Get user
         $user = $request->user();
         \assert($user instanceof User);
 
-        // Redirect to the display view if the user is already enrolled
-        if (Enrollment::findActive($user, $activity)) {
-            logger()->info(
-                'User {user} tried to enroll on {activity}, but is already enrolled.',
-                compact('user', 'activity')
-            );
-            return redirect()->route('enroll.edit', compact('activity'));
+        // Check if we need to lock
+        $lock = $enrollService->useLocks() ? $enrollService->getLock($activity) : null;
+
+        // Get enrollment
+        $enrollment = null;
+
+        try {
+            // Get a lock
+            optional($lock)->block(15);
+
+            // Check if the user can actually enroll
+            if (!$enrollService->canEnroll($activity, $user)) {
+                Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
+                    'user' => $user,
+                    'activity' => $activity
+                ]);
+
+                // Redirect properly
+                $isEnrolled = Enrollment::findActive($user, $activity) !== null;
+                return \redirect()
+                    ->route($isEnrolled ? 'enroll.edit' : 'activity.show', compact('activity'));
+            }
+
+            // Create the enrollment
+            $enrollment = $enrollService->createEnrollment($activity, $user);
+        } catch (LockTimeoutException $exception) {
+            // Report timeout
+            \report($exception);
+
+            // Write message
+            \flash('Sorry, het is erg druk momenteel, probeer het zometeen nogmaals', 'warning');
+
+            // Redirect back
+            return \redirect()->route('activity.show', compact('activity'));
+        } finally {
+            // Free lock
+            \optional($lock)->release();
         }
 
-        // Check policy
-        if (!$user->can('enroll', $activity)) {
-            logger()->info(
-                'User {user} tried to enroll on {activity}, but is not allowed to.',
-                compact('user', 'activity')
-            );
+        // Advance the enrollment
+        $enrollService->advanceEnrollment($activity, $enrollment);
+
+        // Check if completed
+        if ($enrollment->state instanceof Confirmed) {
+            // Flash ok
+            \flash("Je bent ingeschreven voor {$activity->name}", 'success');
+
+            // Redirect to activity
             return redirect()->route('activity.show', compact('activity'));
         }
 
-        // Create new enrollment
-        $enrollment = Enrollment::enrollUser($user, $activity);
-
-        // Redirect to form page if one is present
-        if ($activity->form !== null) {
-            logger()->debug('Form present, redirecting user');
-            return redirect()->route('enroll.show', compact('activity'));
-        }
-
-        // No form present, mutate the state
-        $enrollment->data = [];
-        $enrollment->state->transitionTo(Seeded::class);
-        $enrollment->save();
-
-        // Forward to payment start if required
-        if ($enrollment->price > 0) {
-            logger()->debug('Ticket price non-zero, redirecting user');
-            return redirect()->route('enroll.show', compact('activity'));
-        }
-
-        // Mark as confirmed
-        $enrollment->state->transitionTo(Confirmed::class);
-        $enrollment->save();
-
-        // Redirect back to activity
-        logger()->debug('Event free and no data required, redirecting back');
-        return redirect()->route('activity.show', compact('activity'));
+        // Redirect to tunnel
+        return redirect()->route('enroll.show', compact('activity'));
     }
 
     /**
