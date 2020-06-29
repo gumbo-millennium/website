@@ -6,7 +6,7 @@
                     border="0" align="center">
                     <tbody>
                         <tr>
-                            <td class="mail-header__inner-cell">
+                            <td class="mail-header__inner-cell mail-cell mail-cell--container">
                                 <table class="mail-table">
                                     <tbody>
                                         <tr>

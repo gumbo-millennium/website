@@ -21,6 +21,10 @@
   padding-left: 0;
 }
 
+.mail-cell--container {
+  @apply px-4;
+}
+
 .mail-wrapper {
   width: 100%;
   margin: 0 auto;
