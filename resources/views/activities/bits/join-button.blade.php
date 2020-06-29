@@ -55,7 +55,7 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     @endif
 
     {{-- No verified e-mail --}}
-    @elseif ($user && !$user->hasVerifiedEmail())
+    @elseif ($user && !$user->hasVerifiedEmail() && $activity->is_free)
     <form action="{{ route('activity.verify-email', compact('activity')) }}" method="post">
         @csrf
         <p class="mb-2 text-gray-secondary-3">Je moet je e-mailadres eerst bevestigen.</p>

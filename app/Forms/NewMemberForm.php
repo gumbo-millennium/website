@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Forms\Traits\UseTemplateStrings;
+use App\Helpers\Str;
+use App\Models\Activity;
 use App\Rules\PhoneNumber;
 use Kris\LaravelFormBuilder\Form;
 
@@ -142,6 +144,10 @@ class NewMemberForm extends Form
                 ]
             ]);
 
+        // Intro flags
+        $this
+            ->addIntro();
+
         // Extra fields
         $this
             ->add('is-student', 'checkbox', [
@@ -185,6 +191,43 @@ class NewMemberForm extends Form
         $this
             ->add('submit', 'submit', [
                 'label' => 'Aanmelden'
+            ]);
+    }
+    /**
+     * Adds the intro fields, if possible
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    private function addIntro(): void
+    {
+        // Flags
+        $forced = $this->getFormOption('intro-checked', false);
+        $activity = $this->getFormOption('intro-activity');
+
+        // Skip if no intro
+        if (!$activity instanceof Activity || !$activity->enrollment_open) {
+            return;
+        }
+
+        // Date
+        $sameMonth = $activity->start_date->month == $activity->end_date->month;
+        $startDate = $activity->start_date->isoFormat($sameMonth ? 'D' : 'D MMMM');
+        $endDate = $activity->end_date->isoFormat('D MMMM');
+
+        // Price
+        $price = Str::price($activity->total_price);
+
+        // Add intro checkbox
+        $this
+            ->add('join-intro', 'checkbox', [
+                'label' => "Ik ga mee op de introductieweek van {$startDate} t/m {$endDate}",
+                'help_block' => [
+                    'text' => <<<TEXT
+                    Maak kennis met Gumbo tijdens de introductieweek. Na je inschrijving sturen we je gelijk
+                    door naar het aanmeldproces. De intro kost {$price} (incl. gratis jaar lidmaatschap).
+                    TEXT
+                ],
+                'checked' => $forced ? 'checked' : false
             ]);
     }
 }
