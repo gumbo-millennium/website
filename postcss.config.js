@@ -2,13 +2,14 @@
 // Plugins
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
+const pixrem = require('pixrem')
 const postcssCalc = require('postcss-calc')
 const postcssImport = require('postcss-import')
 const postcssRem = require('postcss-rem')
 const postcssVariables = require('postcss-css-variables')
 const purgecss = require('@fullhuman/postcss-purgecss')
-const responsiveImages = require('./resources/js-build/postcss-responsive-image')
 const removeDarkMode = require('./resources/js-build/postcss-remove-darkmode')
+const responsiveImages = require('./resources/js-build/postcss-responsive-image')
 const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
@@ -33,10 +34,16 @@ module.exports = ({ file, options, env }) => {
 
   // Inline variables if required
   if (file.basename === 'mail.css') {
-    plugins.splice(5, 0, removeDarkMode())
+    // Remove dark
+    plugins.splice(plugins.length - 1, 0, removeDarkMode())
+
+    // Remove unsuported variables
     if (isProduction) {
-      plugins.splice(6, 0, postcssVariables())
+      plugins.splice(plugins.length - 1, 0, postcssVariables())
     }
+
+    // Add rem to px
+    plugins.splice(plugins.length - 1, 0, pixrem({ replace: false }))
   }
 
   if (isProduction) {

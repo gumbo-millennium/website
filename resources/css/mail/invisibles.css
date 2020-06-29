@@ -1,10 +1,10 @@
-.email-intro {
+.mail-intro {
   @apply opacity-0 text-gray-primary-3;
   font-size: 0;
   line-height: 0;
 }
 
-.email-hidden {
+.mail-hidden {
   @apply hidden overflow-hidden;
   max-height: 0;
 }

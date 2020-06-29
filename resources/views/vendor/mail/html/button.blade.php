@@ -4,13 +4,9 @@
             <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                     <td align="center">
-                        <table border="0" cellpadding="0" cellspacing="0" role="presentation">
-                            <tr>
-                                <td>
-                                    <a href="{{ $url }}" class="btn btn--{{ $color ?? 'brand' }}" target="_blank">{{ $slot }}</a>
-                                </td>
-                            </tr>
-                        </table>
+                        <a href="{{ $url }}" class="btn btn--{{ $color ?? 'brand' }} mail-button" target="_blank">
+                            <div class="mail-button__inner">{{ $slot }}</div>
+                        </a>
                     </td>
                 </tr>
             </table>
