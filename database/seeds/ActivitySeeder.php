@@ -70,7 +70,7 @@ class ActivitySeeder extends Seeder
     public function seedBruisweken(): void
     {
         // Bruisweken are one week before start of semester
-        $startDate = $this->getStartOfYear()->sub('P1W');
+        $startDate = $this->getStartOfYear()->subWeek();
         $year = $startDate->year;
 
         // Get slug
@@ -82,8 +82,8 @@ class ActivitySeeder extends Seeder
             'tagline' => 'De Bruisweken zijn de algemene introductieweken voor nieuwe studenten in Zwolle.',
             'start_date' => $startDate->setTime(10, 0, 0, 0),
             'end_date' => $startDate->addDays(2)->setTime(15, 0, 0, 0),
-            'enrollment_start' => null,
-            'enrollment_end' => null,
+            'enrollment_start' => now(),
+            'enrollment_end' => $startDate->subDay(),
         ]);
     }
 
@@ -94,7 +94,9 @@ class ActivitySeeder extends Seeder
     public function seedGumboIntro(): void
     {
         // Bruisweken are one week before start of semester
-        $date = $this->getStartOfYear()->add('P7W');
+        $semesterStamp = $this->getStartOfYear()->addWeeks(7)->timestamp;
+        $startStamp = strtotime("tuesday", $semesterStamp);
+        $date = Carbon::parse("@{$startStamp}")->toImmutable();
         $year = $date->year;
 
         // Get slug
@@ -108,13 +110,14 @@ class ActivitySeeder extends Seeder
             'name' => 'Introductieweek',
             'tagline' =>
             'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
-            'start_date' => $date->setTime(10, 0, 0, 0),
-            'end_date' => $date->addDays(5)->setTime(10, 0, 0, 0),
+            'start_date' => $date->setTime(10, 0, 0),
+            'end_date' => (clone $date)->addDays(5)->setTime(10, 0, 0),
             'seats' => null,
             'price' => $eventPrice * 100, // Price in cents
 
             // Make sure users can enroll until friday
-            'enrollment_end' => $date->sub('P2DT1S'),
+            'enrollment_start' => now()->subWeeks(4),
+            'enrollment_end' => $date->subDays(2),
         ]);
     }
 
