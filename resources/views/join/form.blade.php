@@ -21,7 +21,7 @@
         <a href="{{ url('/privacy-policy') }}">privacybeleid van Gumbo Millennium</a>.
     </p>
     <p class="leading-relaxed text-sm text-gray-primary-1">
-        Omdat jouw inschrijving niet betekend dat je lid wordt, slaan wij deze gegevens versleuteld op.
+        Omdat jouw inschrijving niet automatisch betekent dat je direct lid bent, slaan wij deze gegevens versleuteld op.
         Indien na 90 dagen nog steeds geen positief besluit is genomen over je aanmelding, verwijderen wij je
         gegevens automatisch. Hiervan krijg je bericht.
     </p>
