@@ -33,6 +33,10 @@ body, .mail, .mail__wrapper {
   padding: 0;
 }
 
-table, tr, td, a, img, div, tbody, thead {
-  @apply border-0 border-none;
+table, tbody, thead, tr, td {
+  border: none;
+}
+
+div, img, p, a, span {
+  border: none;
 }

@@ -1,0 +1,8 @@
+.mail-button {
+  @apply p-0;
+}
+
+.mail-button__inner {
+  @apply block;
+  @apply my-4 mx-10;
+}

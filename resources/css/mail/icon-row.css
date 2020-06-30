@@ -1,0 +1,42 @@
+.mail-icon-row {}
+
+.mail-icon-row__cell {
+  @apply px-4 py-8;
+}
+
+.mail-icon-row__cell--icon {
+  @apply pl-8;
+}
+
+.mail-icon-row__cell--body {
+  @apply pr-8;
+}
+
+.mail-icon-row__icon-table {
+  width: 6rem;
+  background: transparent;
+}
+
+.mail-icon-row__icon-cell {
+  @apply p-4;
+  background: transparent;
+}
+
+.mail-icon-row__icon {
+  @apply h-16 border-none;
+  max-width: theme('spacing.24');
+}
+
+.mail-icon-row__body-cell {
+  @apply p-4 pl-0;
+  background: transparent;
+}
+
+.mail-icon-row__body, .mail-icon-row__body p {
+  @apply leading-relaxed;
+}
+
+.mail-icon-row__body-title {
+  @apply text-xl font-title font-bold text-brand-primary-2;
+  @apply mb-4;
+}
