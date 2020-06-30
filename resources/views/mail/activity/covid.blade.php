@@ -25,7 +25,7 @@ houden het kort).
 
 <p>
     Net zoals op straat moet je bij de activiteiten 1,5 meter afstand van
-    elkaar houden. In café's en op terrassen mag je met z'n tweeën aan één
+    elkaar houden. In cafés en op terrassen mag je met z'n tweeën aan één
     tafel zitten, maar laat de stoelen op hun plek staan, zodat de afstand ook
     gegarandeerd blijft.
 </p>
@@ -79,7 +79,7 @@ houden het kort).
 @else
 <p>
     Je kan je voor deze activiteit niet (meer) uitschijven, maar wel je
-    inschrijving overdragen naar een ander persoon.
+    inschrijving overdragen aan een ander persoon.
 </p>
 @if ($enrollment->price > 0)
 <p class="font-bold">
