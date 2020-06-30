@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
@@ -75,7 +76,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'verified', 'no-sponsor'])->group(static function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
@@ -102,6 +103,17 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 
     // Enroll form (do)
     Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
+
+    // Transfer form
+    Route::get('/overdragen', 'Activities\\TransferController@sender')->name('transfer');
+
+    // Transfer actions
+    Route::post('/overdragen', 'Activities\\TransferController@senderUpdate');
+    Route::delete('/overdragen', 'Activities\\TransferController@senderRemove');
+
+    // Transfer acceptance form
+    Route::get('/overnemen/{token}', 'Activities\\TransferController@receiver')->name('transfer-view');
+    Route::post('/overnemen/{token}', 'Activities\\TransferController@receiverTake');
 });
 
 /**
@@ -119,8 +131,9 @@ Route::prefix('nieuws')->name('news.')->group(static function () {
  * Join controller
  */
 Route::prefix('word-lid')->name('join.')->group(static function () {
-    // Join form
+    // Join form (normal and intro)
     Route::get('/', 'JoinController@index')->name('form');
+    Route::get('/intro', 'JoinController@index')->name('form-intro');
 
     // Submit button
     Route::post('/submit', 'JoinController@submit')->name('submit');

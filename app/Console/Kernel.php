@@ -45,6 +45,9 @@ class Kernel extends ConsoleKernel
         // Update Sponsor logos nightly (in case some were missed)
         $schedule->command('gumbo:update-sponsor-logos')->dailyAt('05:00');
 
+        // Send required mails every hour
+        $schedule->command('gumbo:send-activity-covid-mails')->hourly();
+
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
 

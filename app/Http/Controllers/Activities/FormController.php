@@ -88,7 +88,9 @@ class FormController extends Controller
             'value' => 'Versturen'
         ];
 
+        // Build form
         $form = FormBuilder::createByArray($formFields, $options);
+
         // Get form
         \assert($form instanceof Form);
 

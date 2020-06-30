@@ -178,11 +178,11 @@ class Enrollment extends UuidModel
             // Create → Seeded
             ->allowTransition(CreatedState::class, SeededState::class)
 
-            // Seeded → Confirmed
+            // Created, Seeded → Confirmed
             ->allowTransition([CreatedState::class, SeededState::class], ConfirmedState::class)
 
-            // Seeded, Confirmed → Paid
-            ->allowTransition([SeededState::class, ConfirmedState::class], PaidState::class)
+            // Created, Seeded, Confirmed → Paid
+            ->allowTransition([CreatedState::class, SeededState::class, ConfirmedState::class], PaidState::class)
 
             // Created, Seeded, Confirmed, Paid → Cancelled
             ->allowTransition(

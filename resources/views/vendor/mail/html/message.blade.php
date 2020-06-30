@@ -1,18 +1,11 @@
 @component('mail::layout')
-    {{-- Mail lead --}}
-    @if(isset($header) && !empty($header))
-        @slot('header')
-            {{ $header }}
-        @endslot
-    @endif
+    {{-- Forwarded slots --}}
+    @slot('summary', $summary ?? null)
+    @slot('mailImage', $mailImage ?? null)
+    @slot('html', $html ?? null)
+    @slot('greeting', $greeting ?? null)
+    @slot('subcopy', $subcopy ?? null)
 
     {{-- Body --}}
     {{ $slot }}
-
-    {{-- Subcopy --}}
-    @if(isset($subcopy) && !empty($subcopy))
-        @slot('subcopy')
-            {{ $subcopy }}
-        @endslot
-    @endif
 @endcomponent

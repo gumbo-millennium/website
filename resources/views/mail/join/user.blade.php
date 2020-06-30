@@ -11,6 +11,9 @@ $contact = collect([
 Welkom bij Gumbo Millennium!
 @endslot
 
+{{-- Image --}}
+@slot('mailImage', mix('images/mail/header-welcome.png'))
+
 Beste {{ $submission->first_name }},
 
 Bedankt voor je aanmelding voor Gumbo Millennium.

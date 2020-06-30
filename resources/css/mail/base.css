@@ -32,3 +32,11 @@ body, .mail, .mail__wrapper {
   margin: 0;
   padding: 0;
 }
+
+table, tbody, thead, tr, td {
+  border: none;
+}
+
+div, img, p, a, span {
+  border: none;
+}

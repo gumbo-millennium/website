@@ -23,8 +23,20 @@
                                         {{-- Body --}}
                                         <tr>
                                             <td>
-                                                <div class="mail-body__message {{ empty($mailImage) ? 'mail-body__message--single' : '' }}">
+                                                <div class="mail-body__message {{ empty($mailImage) ? '0mail-body__message--single' : '' }}">
+                                                    {{-- Markdown --}}
                                                     {{ Illuminate\Mail\Markdown::parse($slot) }}
+
+                                                    @if ($html ?? null)
+                                                    {{-- Non-markdown --}}
+                                                    {{ $html }}
+                                                    @endif
+
+                                                    {{-- Markdown greeting --}}
+                                                    @if ($greeting ?? null)
+                                                    {{ Illuminate\Mail\Markdown::parse($greeting) }}
+                                                    @endif
+
                                                 </div>
                                             </td>
                                         </tr>

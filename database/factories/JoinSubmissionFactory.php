@@ -42,7 +42,7 @@ $factory->define(JoinSubmission::class, static fn (Faker $faker) => [
         'street' => $faker->streetName,
         'number' => $faker->buildingNumber,
         'city' => $faker->city,
-        'postal_code' => $faker->postalcode,
+        'postal_code' => $faker->postcode,
         'country' => $faker->optional(0.1, 'NL')->countryCode,
 
         // Result

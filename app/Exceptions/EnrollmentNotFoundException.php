@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use App\Models\Activity;
 use Illuminate\Contracts\Support\Responsable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -19,7 +20,13 @@ class EnrollmentNotFoundException extends NotFoundHttpException implements Respo
      */
     public function toResponse($request)
     {
+        $activity = $request['activty'] ?? null;
+        if ($activity instanceof Activity || \is_string($activity)) {
+            return \response()
+                ->redirectToRoute('activity.show', ['activity' => $request['activity']]);
+        }
+
         return \response()
-            ->redirectToRoute('activity.show', ['activity' => $request->get('activity')]);
+            ->redirectToRoute('activity.index');
     }
 }

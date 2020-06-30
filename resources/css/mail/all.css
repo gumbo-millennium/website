@@ -8,3 +8,6 @@
 @import 'body.css';
 @import 'subcopy.css';
 @import 'footer.css';
+
+/* Components */
+@import 'icon-row.css';
