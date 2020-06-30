@@ -48,4 +48,13 @@ interface EnrollmentServiceContract
      * @return void
      */
     public function advanceEnrollment(Activity $activity, Enrollment &$enrollment): void;
+
+
+    /**
+     * Transfers an enrollment to the new user, sending proper mails and invoicing jobs
+     * @param Enrollment $enrollment
+     * @param User $reciever
+     * @return Enrollment
+     */
+    public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment;
 }

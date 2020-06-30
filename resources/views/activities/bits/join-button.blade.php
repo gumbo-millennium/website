@@ -35,6 +35,8 @@ $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
     <div class="btn m-0 btn--disabled">Ingeschreven</div>
     @if ($isOpen && $user->can('unenroll', $enrollment))
     <a href="{{ route('enroll.remove', compact('activity')) }}" class="mt-2 text-gray-secondary-3">Uitschrijven</a>
+    @elseif ($activity->start_date > now())
+    <a href="{{ route('enroll.transfer', compact('activity')) }}" class="mt-2 text-gray-secondary-3">Overdragen</a>
     @endif
 
     {{-- Instable --}}

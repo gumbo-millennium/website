@@ -103,6 +103,17 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 
     // Enroll form (do)
     Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
+
+    // Transfer form
+    Route::get('/overdragen', 'Activities\\TransferController@sender')->name('transfer');
+
+    // Transfer actions
+    Route::post('/overdragen', 'Activities\\TransferController@senderUpdate');
+    Route::delete('/overdragen', 'Activities\\TransferController@senderRemove');
+
+    // Transfer acceptance form
+    Route::get('/overnemen/{token}', 'Activities\\TransferController@receiver')->name('transfer-view');
+    Route::post('/overnemen/{token}', 'Activities\\TransferController@receiverTake');
 });
 
 /**

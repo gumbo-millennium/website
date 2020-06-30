@@ -41,6 +41,7 @@ class ActivityCovidMail extends Mailable
         $cancelUrl = \route('enroll.remove', compact('activity'));
         $cancelType = 'cancel';
         if ($enrollment->price > 0 && $activity->enrollment_open) {
+            $cancelUrl = \route('enroll.transfer', compact('activity'));
             $cancelType = 'transfer';
         }
 
