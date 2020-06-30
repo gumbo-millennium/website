@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\ScheduledMail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SendActivityCovidMails extends Command
 {
@@ -49,12 +50,16 @@ class SendActivityCovidMails extends Command
         // Loop
         foreach ($activities as $activity) {
             // Check it
-            $this->line("Checking {$activity->name}");
+            $this->line(
+                "Sending Covid mail for <comment>{$activity->name}</>.",
+                null,
+                OutputInterface::VERBOSITY_VERBOSE
+            );
 
             // Get mail
             $scheduled = ScheduledMail::findForModelMail($activity, 'covid-mail');
             if ($scheduled->is_sent) {
-                $this->line("Mail already sent");
+                $this->line("Mail for <comment>{$activity->name}</> already sent");
                 continue;
             }
 
@@ -63,7 +68,7 @@ class SendActivityCovidMails extends Command
             $scheduled->save();
 
             // Report
-            $this->line("Mail schedule created");
+            $this->line("Schedule entry created", null, OutputInterface::VERBOSITY_VERBOSE);
 
             // Send
             $this->sendMail($activity);
@@ -73,7 +78,7 @@ class SendActivityCovidMails extends Command
             $scheduled->save();
 
             // Done
-            $this->info("Mails sent");
+            $this->info("Mails for <comment>{$activity->name}</> sent");
         }
     }
 
@@ -86,8 +91,15 @@ class SendActivityCovidMails extends Command
 
         // Iterate
         foreach ($enrollments as $enrollment) {
+            $user = $enrollment->user;
+            $this->line(
+                "Sending to <info>{$user->name}</> (<comment>{$user->id}</>)",
+                null,
+                OutputInterface::VERBOSITY_VERY_VERBOSE
+            );
+
             Mail::to($enrollment->user)
-                ->send(new ActivityCovidMail($enrollment));
+                ->queue(new ActivityCovidMail($enrollment));
         }
     }
 }
