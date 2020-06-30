@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
+use App\Contracts\EnrollmentServiceContract;
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\States\Enrollment\Seeded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Kris\LaravelFormBuilder\Facades\FormBuilder;
 use Kris\LaravelFormBuilder\Form;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Handles forms on activities
@@ -21,11 +25,22 @@ class FormController extends Controller
 {
     use HasEnrollments;
 
+    private const MEDICAL_LABELS = [
+        'huisarts',
+        'nood',
+        'allergieen',
+        'allergie',
+        'medic',
+        'allergy',
+        'allergies',
+        'emergency'
+    ];
+
     /**
      * Shows the Activity's from
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Activity $activity)
+    public function show(EnrollmentServiceContract $enrollService, Request $request, Activity $activity)
     {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
@@ -39,11 +54,36 @@ class FormController extends Controller
 
         // Skip if empty
         if (!$form) {
-            throw new BadRequestHttpException('Why are you seeing this?');
+            // Forward
+            $enrollService->advanceEnrollment($activity, $enrollment);
+
+            // Re-check state
+            if ($enrollment->wanted_state instanceof Seeded) {
+                // Report
+                Log::error("Failed to advance enrollment {enrollment}", compact('enrollment'));
+
+                // Flash
+                \flash('Sorry, er is even iets mis met je aanmelding, probeer het later nogmaals', 'warning');
+
+                // Redirect
+                return \response()
+                    ->redirectToRoute('activity.show', compact('activity'));
+            }
+
+            // State updated, redirect to tunnel
+            return \response()
+                ->redirectToRoute('enroll.show', compact('activity'));
         }
 
-        // TODO
-        abort(501, 'Not yet supported');
+        // Get data about form
+        $isMedical = $this->formIsMedical($activity);
+
+        // Render view
+        return \response()
+            ->view('activities.enrollments.form', compact(
+                'form',
+                'isMedical'
+            ));
     }
 
     /**
@@ -83,6 +123,8 @@ class FormController extends Controller
         }
 
         $formFields = $activity->form;
+
+        // Add submit
         $formFields[] = [
             'type' => 'submit',
             'value' => 'Versturen'
@@ -96,5 +138,32 @@ class FormController extends Controller
 
         // Return
         return $form;
+    }
+
+    /**
+     * Returns true if this form contains medical data
+     * @param Activity $activity
+     * @return bool
+     */
+    private function formIsMedical(Activity $activity): bool
+    {
+        foreach ($activity->form as $formField) {
+            // Get some fields
+            $match = implode(" ", [
+                Arr::get($formField, 'label'),
+                Arr::get($formField, 'name'),
+                Arr::get($formField, 'help'),
+            ]);
+
+            // Convert to simple
+            $match = Str::lower(Str::ascii($match, 'nl'));
+
+            // Test against list
+            if (Str::contains($match, self::MEDICAL_LABELS)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
