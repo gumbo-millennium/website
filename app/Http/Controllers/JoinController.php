@@ -190,7 +190,7 @@ class JoinController extends Controller
         Session::put(self::SESSION_NAME, $submission);
 
         // Check if the user wants to join the introduction
-        if (!$introActivity || !empty($userValues['join-intro'])) {
+        if (!$introActivity || empty($userValues['join-intro'])) {
             // Send redirect reply
             return \redirect()
                 ->route('join.complete')
@@ -249,10 +249,8 @@ class JoinController extends Controller
         \flash("Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.", "success");
 
         // Redirect to proper location
-        if ($enrollment->is_stable) {
-            return \response()
-            ->redirectToAction('activity.show', ['activity' => $introActivity]);
-        }
+        return \response()
+            ->redirectToAction('enroll.show', ['activity' => $introActivity]);
     }
 
     /**
