@@ -250,7 +250,8 @@ class JoinController extends Controller
 
         // Redirect to proper location
         return \response()
-            ->redirectToAction('enroll.show', ['activity' => $introActivity]);
+            ->redirectToRoute('enroll.show', ['activity' => $introActivity])
+            ->setPrivate();
     }
 
     /**
