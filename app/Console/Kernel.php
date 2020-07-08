@@ -54,6 +54,9 @@ class Kernel extends ConsoleKernel
         // Daily update the Cloudflare IPs
         $schedule->command('cloudflare:reload')->dailyAt('04:30');
 
+        // Weekly make a backup of the images
+        $schedule->command('app:backup-images')->weeklyOn(0, '06:30');
+
         // Send quotes weekly
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
     }
