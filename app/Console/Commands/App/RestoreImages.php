@@ -9,12 +9,14 @@ use App\Models\Activity;
 use App\Models\NewsItem;
 use App\Models\Page;
 use App\Models\Sponsor;
+use Czim\FileHandling\Storage\File\SplFileInfoStorableFile;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 class RestoreImages extends Command
 {
@@ -239,8 +241,22 @@ class RestoreImages extends Command
                 // Write contents
                 \file_put_contents($tempFile, $zip->getFromIndex($fileIndex));
 
-                // Assign and save
-                $model->$propertyName = new \SplFileInfo($tempFile);
+                // Determine mime type
+                $mimeTypes = new MimeTypes();
+                $mimeType = $mimeTypes->guessMimeType($tempFile);
+                $extension = $mimeTypes->getExtensions($mimeType)[0] ?? 'bin';
+
+
+                // Build custom file
+                $customFile = new SplFileInfoStorableFile();
+                $customFile->setData(new \SplFileInfo($tempFile));
+                $customFile->setMimeType($mimeType);
+                $customFile->setName(sprintf('%s.%s', \hash_file('sha256', $tempFile), $extension));
+
+                // Assign file
+                $model->$propertyName = $customFile;
+
+                // Save it
                 $model->save([$propertyName]);
 
                 // Report
