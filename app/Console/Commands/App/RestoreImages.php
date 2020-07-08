@@ -1,0 +1,266 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Console\Commands\App;
+
+use App\Helpers\Str;
+use App\Models\Activity;
+use App\Models\NewsItem;
+use App\Models\Page;
+use App\Models\Sponsor;
+use Czim\Paperclip\Contracts\AttachmentInterface;
+use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class RestoreImages extends Command
+{
+    /**
+     * The name and signature of the console command.
+     * @var string
+     */
+    protected $signature = 'app:restore-images {file}';
+
+    /**
+     * The console command description.
+     * @var string
+     */
+    protected $description = 'Restores images for all given activities';
+
+
+    /**
+     * Asks for the backup if none is specified
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        // Check for msising arguments
+        $fileName = $this->argument('file');
+        if (!empty($fileName)) {
+            return;
+        }
+
+        // Get arguments
+        $files = Storage::files(BackupImages::BASE_PATH);
+
+        // Only show zip files
+        $zipFiles = [];
+        foreach ($files as $file) {
+            $file = \basename($file);
+            if (preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
+                $zipFiles[] = $file;
+            }
+        }
+
+        // Add zipfile
+        if (empty($zipFiles)) {
+            $this->warn("There are no backups available");
+            return;
+        }
+
+        // Ask what
+        $file = $this->choice("What backup to apply?", $zipFiles);
+
+        // Save it
+        if ($file) {
+            $input->setArgument('file', $file);
+        }
+    }
+
+    /**
+     * Execute the console command.
+     * @return void
+     */
+    public function handle(): void
+    {
+        // Get filename
+        $filename = $this->argument('file');
+        if (!preg_match('/^[a-z0-9_-]+\.zip$/', $filename)) {
+            $this->error('File does not seem valid');
+        }
+
+        // Fetch file
+        $filePath = sprintf('%s/%s', BackupImages::BASE_PATH, $filename);
+
+        // Log
+        $this->line("Restoring from <info>{$filePath}</>...");
+
+        // Get a tempname
+        $tempFile = \tempnam(\sys_get_temp_dir(), 'zipfile');
+        $tempStream = \fopen($tempFile, 'w');
+        $originalStream = Storage::readStream($filePath);
+
+        // Copy stream
+        \stream_copy_to_stream($originalStream, $tempStream);
+
+        // Close streams
+        \fclose($tempStream);
+        \fclose($originalStream);
+
+        // Get zip handle
+        $zip = new \ZipArchive();
+        $zip->open($tempFile);
+
+        // Arhive
+        $this->line("Fetching map <info>{$filePath}</>...");
+        $map = $this->mapArchive($zip);
+
+        // Get all activities
+        $this->assign($zip, $map, Activity::class);
+
+        // Get all sponsors
+        $this->assign($zip, $map, Sponsor::class);
+
+        // Get all pages
+        $this->assign($zip, $map, Page::class);
+
+        // Get all news items
+        $this->assign($zip, $map, NewsItem::class);
+
+        // Close it
+        $zip->close();
+    }
+
+    /**
+     * Maps the archive to an array
+     * @param ZipArchive $zip
+     * @return array
+     */
+    public function mapArchive(\ZipArchive $zip): array
+    {
+        // Result
+        $result = [];
+
+        // Iterate files
+        for ($index = 0; $index < $zip->numFiles; $index++) {
+            // Get file name
+            $file = $zip->getNameIndex($index);
+
+            // Skip if invalid URL
+            if (!\preg_match('/^\/?([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+)\//', $file)) {
+                continue;
+            }
+
+            // Get parts
+            [$model, $primaryKey, $property] = explode('/', $file, 4);
+
+            // Make model map
+            if (!isset($result[$model])) {
+                $result[$model] = [];
+            }
+
+            // Make primaryKey map
+            if (!isset($result[$primaryKey])) {
+                $result[$model][$primaryKey] = [];
+            }
+
+            // Assign property
+            $result[$model][$primaryKey][$property] = $index;
+        }
+
+        // Sort model names
+        \ksort($result);
+
+        // Sort results per model
+        foreach (\array_keys($result) as $key) {
+            \ksort($result[$key]);
+        }
+
+        // Done
+        return $result;
+    }
+
+    public function assign(\ZipArchive $zip, array $map, string $className): void
+    {
+        // Prep some values
+        $pathName = Str::snake(\class_basename($className), '-');
+        $classDisplay = \ucwords(Str::snake(\class_basename($className), ' '));
+
+        // Skip
+        if (!isset($map[$pathName])) {
+            $this->line(
+                "No items for <info>{$classDisplay}</>.",
+                null,
+                OutputInterface::VERBOSITY_VERBOSE
+            );
+            return;
+        }
+
+        // Prep a base
+        $baseClass = new $className();
+        \assert($baseClass instanceof Model);
+
+
+        // Get affected models
+        $classCursor = $className::query()
+            ->whereIn($baseClass->getKeyName(), array_keys($map[$pathName]))
+            ->cursor();
+
+        // Keep track of updates
+        $this->line(
+            "Updating <info>{$classDisplay}</>...",
+            null,
+            OutputInterface::VERBOSITY_VERY_VERBOSE
+        );
+        $updateCount = 0;
+
+        // Class cursor
+        foreach ($classCursor as $model) {
+            \assert($model instanceof Model);
+            $newValues = $map[$pathName][$model->getKey()];
+
+            // Iterate values
+            foreach ($newValues as $propertyName => $fileIndex) {
+                // Skip if not an attachment
+                if (!$model->$propertyName instanceof AttachmentInterface) {
+                    $this->line(
+                        "Skipping <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
+                        null,
+                        OutputInterface::VERBOSITY_VERY_VERBOSE
+                    );
+                    continue;
+                }
+
+                $this->line(
+                    "Updating <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>...",
+                    null,
+                    OutputInterface::VERBOSITY_DEBUG
+                );
+
+                // Prep a tempfle
+                $tempFile = \tempnam(\sys_get_temp_dir(), 'image');
+
+                // Write contents
+                \file_put_contents($tempFile, $zip->getFromIndex($fileIndex));
+
+                // Assign and save
+                $model->$propertyName = new \SplFileInfo($tempFile);
+                $model->save([$propertyName]);
+
+                // Report
+                $this->line(
+                    "Updated <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
+                    null,
+                    OutputInterface::VERBOSITY_VERBOSE
+                );
+                $updateCount++;
+
+                // Delete temp file
+                \unlink($tempFile);
+            }
+        }
+
+        // Done
+        $this->line(
+            "Updated <info>{$updateCount}</> on <comment>{$classDisplay}</>.",
+            null,
+            OutputInterface::VERBOSITY_NORMAL
+        );
+    }
+}
