@@ -103,7 +103,7 @@ class JoinSubmission extends Resource
                     ->rules(['required', 'string', 'min:2']),
 
                 // Date of Brith
-                Date::make('Geboortedatum', 'date-of-birth')
+                Date::make('Geboortedatum', 'date_of_birth')
                     ->hideFromIndex()
                     ->format('DD-MM-YYYY')
                     ->rules(['required', "before:{$sixteenYears}"]),
