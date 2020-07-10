@@ -6,10 +6,12 @@ namespace Tests\Feature;
 
 use App\Models\Activity;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ActivityDisplayTest extends TestCase
 {
+    use RefreshDatabase;
 
     /**
      * Ensures there are some activities

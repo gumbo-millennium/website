@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\NewsItem;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -19,6 +21,19 @@ use Tests\TestCase;
  */
 class NewsItemTest extends TestCase
 {
+    use RefreshDatabase;
+
+    /**
+     * Returns a freshly created news item
+     * @return NewsItem
+     * @throws BindingResolutionException
+     */
+    protected function getNewsItem(): NewsItem
+    {
+        // Create random item with a unique title
+        return \factory(NewsItem::class, 1)->create()->first();
+    }
+
     /**
      * A basic feature test example.
      * @return void
@@ -34,15 +49,12 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if the newly created news item is shown
-     * @return NewsItem
-     * @depends testIndex
+     * @return void
      */
-    public function testIndexWithItem(): NewsItem
+    public function testIndexWithItem(): void
     {
-        // Create random item with a unique title
-        $item = factory(NewsItem::class, 1)->create([
-            'title' => Str::title(sprintf('Help, op %s kreeg ik tieten', now()->toIso8601String())),
-        ])->first();
+        // Get item
+        $item = $this->getNewsItem();
 
         // Get news index
         $response = $this->get(route('news.index'));
@@ -52,19 +64,17 @@ class NewsItemTest extends TestCase
 
         // Check if we have our article
         $response->assertSeeText($item->title);
-
-        // Return item
-        return $item;
     }
 
     /**
      * Tests if the item can be seen
-     * @param NewsItem $item
      * @return void
-     * @depends testIndexWithItem
      */
-    public function testViewItem(NewsItem $item): void
+    public function testViewItem(): void
     {
+        // Get item
+        $item = $this->getNewsItem();
+
         // Get news index
         $response = $this->get(route('news.show', ['news' => $item]));
 
@@ -77,13 +87,13 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if an item that's deleted, returns a 404
-     * @param NewsItem $item
      * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
      */
-    public function testViewDeletedItem(NewsItem $item): void
+    public function testViewDeletedItem(): void
     {
+        // Get item
+        $item = $this->getNewsItem();
+
         // Delete item
         $item->delete();
 
@@ -96,13 +106,17 @@ class NewsItemTest extends TestCase
 
     /**
      * Tests if an item that's deleted, isn't shown on the cover (of Vogue)
-     * @param NewsItem $item
      * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
      */
-    public function testIndexWithoutDeletedItem(NewsItem $item): void
+    public function testIndexWithoutDeletedItem(): void
     {
+        // Get item
+        $item = $this->getNewsItem();
+        $item2 = $this->getNewsItem();
+
+        // Delete item
+        $item->delete();
+
         // Get news index
         $response = $this->get(route('news.index'));
 
@@ -111,5 +125,6 @@ class NewsItemTest extends TestCase
 
         // Check if we cannot see our article
         $response->assertDontSeeText($item->title);
+        $response->assertSeeText($item2->title);
     }
 }

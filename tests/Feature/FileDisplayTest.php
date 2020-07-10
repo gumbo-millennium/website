@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\FileBundle;
 use App\Models\FileCategory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -31,6 +32,8 @@ use Tests\TestCase;
  */
 class FileDisplayTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @var \App\Models\FileCategory
      */

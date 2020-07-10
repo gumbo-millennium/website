@@ -6,10 +6,13 @@ namespace Tests\Feature;
 
 use App\Helpers\Str;
 use App\Models\Page;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PagesTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test the homepage
      * @return void

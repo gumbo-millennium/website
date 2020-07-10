@@ -46,24 +46,13 @@ jobs:
       matrix:
         php:
           - '7.4'
-    services:
-      database:
-        image: mysql:5
-        ports:
-          - 13306:3306
-        env:
-          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-          MYSQL_DATABASE: laravel
-          MYSQL_USER: laravel
-          MYSQL_PASSWORD: laravel
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd
-          coverage: xdebug
+          extensions: exif, json, mbstring, bcmath, dom, fileinfo, gd, sqlite
+          coverage: pcov
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -106,7 +95,12 @@ jobs:
           php artisan key:generate
 
       - name: Prepare database
-        run: php artisan migrate --seed
+        run: |
+          export DB_DATABASE="$HOME/website.db"
+          touch "$DB_DATABASE"
+          php artisan migrate --seed
+        env:
+          DB_CONNECTION: sqlite
 
       - name: Download front-end
         uses: actions/download-artifact@master

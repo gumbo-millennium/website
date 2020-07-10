@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\TempUserTrait;
 
@@ -15,6 +16,7 @@ use Tests\Traits\TempUserTrait;
 class ViewPlazacamTest extends TestCase
 {
     use TempUserTrait;
+    use RefreshDatabase;
 
     /**
      * Test anonymous image retrieval
