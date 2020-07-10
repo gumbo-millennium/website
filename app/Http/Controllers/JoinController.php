@@ -21,6 +21,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -67,13 +68,18 @@ class JoinController extends Controller
      */
     private function getIntroActivity(): ?Activity
     {
+        $endDateQuery = '`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)';
+        if (DB::getDriverName() === 'sqlite') {
+            $endDateQuery = 'JULIANDAY(`end_date`) > (JULIANDAY(`start_date`) + 2)';
+        }
+
         // Query
         return Activity::query()
             // Find the activity starting with intro
             ->where('slug', 'LIKE', 'intro-%')
 
             // Make sure the activity is AT LEAST 2 days long
-            ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
+            ->whereRaw($endDateQuery)
 
             // Get the one that starts soonest
             ->orderBy('start_date')
