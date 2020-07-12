@@ -6,7 +6,10 @@ namespace Tests\Feature;
 
 use App\Models\FileBundle;
 use App\Models\FileCategory;
+use App\Models\Media as File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -34,6 +37,8 @@ class FileDisplayTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected const PDF_FILE = 'test-assets/pdf/chicken.pdf';
+
     /**
      * @var \App\Models\FileCategory
      */
@@ -45,46 +50,88 @@ class FileDisplayTest extends TestCase
     protected static ?FileBundle $bundle = null;
 
     /**
-     * Ensures there are some bundles and categories to work with
-     * @return void
+     * Creates a random category
+     * @return FileCategory
      */
-    public function seedBefore(): void
+    protected function getRandomCategory(): FileCategory
     {
-        $this->seed('FileSeeder');
+        return \factory(FileCategory::class, 1)->create()->first();
+    }
+
+    /**
+     * Creates a random bundle (in the given $category)
+     * @param null|FileCategory $category
+     * @return FileBundle
+     */
+    protected function getRandomBundle(?FileCategory $category = null): FileBundle
+    {
+        $category ??= $this->getRandomCategory();
+        return \factory(FileBundle::class, 1)
+            ->create(['category_id' => $category->id])
+            ->first();
+    }
+
+    /**
+     * Creates a randomly generated file (in the given $bundle)
+     * @param null|FileBundle $bundle
+     * @return File
+     */
+    protected function getRandomFile(?FileBundle $bundle = null): File
+    {
+        // Get or create bundle
+        $bundle ??= $this->getRandomBundle();
+
+        // Add media if none present
+        if ($bundle->media->isEmpty()) {
+            // Add file
+            $bundle
+                ->addMedia(new HttpFile(\resource_path(self::PDF_FILE)))
+                ->preservingOriginal()
+                ->toMediaCollection();
+
+            // Reload model
+            $bundle->refresh();
+        }
+
+        // Return first media item
+        return $bundle->media->first();
     }
 
     /**
      * Test viewing as logged out user
      * @param string $route
      * @return void
-     * @dataProvider provideTestRoutes
      */
-    public function testViewListAsAnonymous(string $route)
+    public function testViewAsAnonymous()
     {
-        // Request the index
-        $response = $this->get($route);
+        // Test all routes
+        foreach ($this->getTestRoutes() as $route) {
+            // Request the file
+            $response = $this->get($route);
 
-        // Expect 401 redirect on all routes
-        $response->assertRedirect(route('login'));
+            // Expect to be redirected to the login
+            $response->assertRedirect(URL::route('login'));
+        }
     }
 
     /**
      * A basic feature test example.
      * @param string $route
      * @return void
-     * @dataProvider provideTestRoutes
      */
-    public function testViewListAsGuest(string $route)
+    public function testViewAsGuest()
     {
         // Get a guest user
         $user = $this->getGuestUser();
 
-        // Request the index
-        $response = $this->actingAs($user)
-                    ->get($route);
+        // Test all routes
+        foreach ($this->getTestRoutes() as $route) {
+            // Request the file
+            $response = $this->actingAs($user)->get($route);
 
-        // Expect 403 on all routes
-        $response->assertForbidden();
+            // Expect to be shown a 403
+            $response->assertForbidden();
+        }
     }
 
     /**
@@ -93,24 +140,37 @@ class FileDisplayTest extends TestCase
      */
     public function testViewIndex()
     {
-        $routes = $this->getTestRoutes();
-        if (!array_key_exists('home', $routes)) {
-            $this->markTestIncomplete('Cannot find [home] key in route list');
-        }
+        // Get local models
+        $category = $this->getRandomCategory();
+        $category2 = $this->getRandomCategory();
+        $category3 = $this->getRandomCategory();
+        $bundle = $this->getRandomBundle($category);
+        $bundle2 = $this->getRandomBundle($category);
+        $bundle3 = $this->getRandomBundle($category);
+        $bundle4 = $this->getRandomBundle($category2);
 
-        // Get a guest user
+        // Get routes and member
+        $routes = $this->getTestRoutes($category, $bundle);
         $user = $this->getMemberUser();
 
         // Request the index
-        $response = $this->actingAs($user)
-                    ->get($routes['home']);
+        $response = $this->actingAs($user)->get($routes['index']);
 
         // Expect an OK response
         $response->assertOk();
 
-        // Check if we're seeing the first item (they're sorted A-Z)
-        $firstModel = $this->getCategoryModel();
-        $response->assertSeeText($firstModel->title);
+        // Check contents
+        $response->assertSeeText($category->title);
+        $response->assertSeeText($bundle->title);
+        $response->assertSeeText($bundle2->title);
+        $response->assertSeeText($bundle3->title);
+
+        // Test 2nd category
+        $response->assertSeeText($category2->title);
+        $response->assertSeeText($bundle4->title);
+
+        // Test empty category
+        $response->assertDontSeeText($category3->title);
     }
 
     /**
@@ -119,12 +179,14 @@ class FileDisplayTest extends TestCase
      */
     public function testViewExistingCategory()
     {
-        $routes = $this->getTestRoutes();
-        if (!array_key_exists('category', $routes)) {
-            $this->markTestIncomplete('Cannot find [category] key in route list');
-        }
+        // Get local models
+        $category = $this->getRandomCategory();
+        $bundle = $this->getRandomBundle($category);
+        $bundle2 = $this->getRandomBundle($category);
+        $bundle3 = $this->getRandomBundle();
 
-        // Get a guest user
+        // Get routes and member
+        $routes = $this->getTestRoutes($category, $bundle);
         $user = $this->getMemberUser();
 
         // Request the index
@@ -134,12 +196,11 @@ class FileDisplayTest extends TestCase
         // Expect an OK response
         $response->assertOk();
 
-        // Get the bundle
-        $bundleTitle = $this->getBundleModel();
-        \assert($bundleTitle instanceof FileBundle);
-
-        // Check if we're getting the bundles in the same order we're expecting them.
-        $response->assertSeeText($bundleTitle->title);
+        // Check if the bundle title is present
+        $response->assertSeeText($category->title);
+        $response->assertSeeText($bundle->title);
+        $response->assertSeeText($bundle2->title);
+        $response->assertDontSeeText($bundle3->title);
     }
 
     /**
@@ -148,27 +209,24 @@ class FileDisplayTest extends TestCase
      */
     public function testViewBundle()
     {
-        $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle', $routes)) {
-            $this->markTestIncomplete('Cannot find [bundle] key in route list');
-        }
+        // Get local models
+        $bundle = $this->getRandomBundle();
+        $category = $bundle->category;
 
-        // Get a member user
+        // Get routes and member
+        $routes = $this->getTestRoutes($category, $bundle);
         $user = $this->getMemberUser();
 
         // Request the index
         $response = $this->actingAs($user)
-            ->get($routes['bundle']);
+            ->get($routes['show']);
 
         // Expect an OK response
         $response->assertOk();
 
-        // Get the bundle
-        $bundleTitle = $this->getBundleModel();
-        \assert($bundleTitle instanceof FileBundle);
-
-        // Check if we're getting the bundles in the same order we're expecting them.
-        $response->assertSeeText($bundleTitle->title);
+        // Check if the bundle title is present
+        $response->assertSeeText($category->title);
+        $response->assertSeeText($bundle->title);
     }
 
     /**
@@ -177,21 +235,19 @@ class FileDisplayTest extends TestCase
      */
     public function testDownloadBundle()
     {
-        $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle-download', $routes)) {
-            $this->markTestIncomplete('Cannot find [bundle-download] key in route list');
-        }
+        // Get local models
+        $bundle = $this->getRandomBundle();
 
-        // Get a member user
+        // Get routes and member
+        $routes = $this->getTestRoutes($bundle->category, $bundle);
         $user = $this->getMemberUser();
 
         // Request the index
         $response = $this->actingAs($user)
-            ->get($routes['bundle-download']);
+            ->get($routes['download']);
 
-        // Get the bundle
-        $bundle = $this->getBundleModel();
-        \assert($bundle instanceof FileBundle);
+        // Expect an OK response
+        $response->assertOk();
 
         // Expect an OK response
         $response->assertOk();
@@ -207,25 +263,23 @@ class FileDisplayTest extends TestCase
      */
     public function testDownloadBundleFile()
     {
-        $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle-download-single', $routes)) {
-            $this->markTestIncomplete('Cannot find [bundle-download-single] key in route list');
-        }
+        // Get local models
+        $file = $this->getRandomFile();
 
-        // Get a member user
+        // Get routes and member
+        $routes = $this->getTestRoutes(null, null, $file);
         $user = $this->getMemberUser();
 
         // Request the index
         $response = $this->actingAs($user)
-            ->get($routes['bundle-download-single']);
-
-        // Get the bundle file
-        $file = $this->getBundleModel()->media->first();
-        \assert($file instanceof FileBundle);
+            ->get($routes['download-single']);
 
         // Expect an OK response
         $response->assertOk();
-        $response->assertHeader('Content-Disposition', "attachment; filename=chicken.pdf");
+
+        // Expect an OK response
+        $response->assertOk();
+        $response->assertHeader('Content-Disposition', "attachment; filename={$file->file_name}");
         $response->assertHeader('Content-Type', 'application/pdf');
         $response->assertHeaderMissing('Location');
     }
@@ -252,144 +306,56 @@ class FileDisplayTest extends TestCase
         $response->assertNotFound();
     }
 
-
     /**
-     * Provide translated list of test routes
-     * @return array
-     */
-    public function provideTestRoutes(): array
-    {
-        // Get all available routes and a list for the result
-        $routes = $this->getTestRoutes();
-        $result = [];
-
-        // Check all routes for a possible rename
-        foreach ($routes as $name => $route) {
-            // Prep data
-            $data = [$route, Str::endsWith($name, '-missing')];
-
-            // Check for modifiers
-            if (preg_match('/^([a-z]+)\-([a-z]+)$/i', $name, $matches)) {
-                // Rename it to "<name> (<modifier>)"
-                $result["{$matches[1]} ({$matches[2]})"] = $data;
-                continue;
-            }
-
-            // Otherwise, just use the name
-            $result[$name] = $data;
-        }
-
-        // Return the list
-        return $result;
-    }
-
-    /**
-     * Provides routes as a predictable list
+     * Provides a list of routes
+     * @param null|FileCategory $category
+     * @param null|FileBundle $bundle
+     * @param null|File $file
      * @return array<string>
      */
-    public function getTestRoutes(): array
-    {
-        // Make sure we have a router
-        $this->ensureApplicationExists();
+    protected function getTestRoutes(
+        ?FileCategory $category = null,
+        ?FileBundle $bundle = null,
+        ?File $file = null
+    ): array {
+        // Get proper values
+        $category ??= $this->getRandomCategory();
+        $bundle ??= $this->getRandomBundle($category);
+        $file ??= $this->getRandomFile($bundle);
 
-        // Return test cases
+        // Build routes
         return [
-            // Homepage
-            'home' => route('files.index'),
+            'index' => URL::route('files.index'),
 
-            // Categories
-            'category' => route('files.category', [
-                'category' => $this->getCategoryModel()
-            ]),
-            'category-missing' => route('files.category', [
-                'category' => sprintf('test-category-%d', time())
-            ]),
+            'category' => URL::route('files.category', ['category' => $category]),
+            'category-missing' => URL::route('files.category', ['category' => (string) Str::uuid()]),
 
-            // File bundles
-            'bundle' => route('files.show', [
-                'bundle' => $this->getBundleModel()
-            ]),
-            'bundle-download' => route('files.download', [
-                'bundle' => $this->getBundleModel()
-            ]),
-            'bundle-download-single' => route('files.download-single', [
-                'media' => $this->getBundleModel()->getFirstMedia()
-            ]),
-            'bundle-missing' => route('files.show', [
-                'bundle' => sprintf('test-file-%d', time())
-            ]),
+            'show' => URL::route('files.show', ['bundle' => $bundle]),
+            'show-missing' => URL::route('files.show', ['bundle' => (string) Str::uuid()]),
+
+            'download' => URL::route('files.download', ['bundle' => $bundle]),
+            'download-missing' => URL::route('files.download', ['bundle' => (string) Str::uuid()]),
+
+            'download-single' => URL::route('files.download-single', ['media' => $file]),
+            'download-single-missing' => URL::route('files.download-single', ['media' => (string) Str::uuid()])
         ];
     }
 
     /**
-     * Returns most recent category
-     * @return FileCategory|null
+     * Returns list of routes with missing bool as 2nd value
+     * @param null|FileCategory $category
+     * @param null|FileBundle $bundle
+     * @param null|File $file
+     * @return array<array<string,bool>>
      */
-    private function getCategoryModel(): ?FileCategory
-    {
-        // Return local category if set
-        if (static::$category && static::$category->exists) {
-            return static::$category;
-        }
-
-        // Make sure we have a database connection
-        $this->ensureApplicationExists();
-
-        // Create a category
-        $data = [];
-        $data['created_at'] = $data['updated_at'] = now()->addWeek();
-        $data['title'] = sprintf(
-            "Category for test on %s.",
-            now()->format('H:i:s.u (T)')
-        );
-        $data['slug'] = Str::slug($data['title']);
-
-        // Create a category
-        return static::$category = factory(FileCategory::class, 1)
-            ->create($data)
-            ->first();
-    }
-
-    /**
-     * Returns most recent file
-     * @return FileBundle|null
-     */
-    private function getBundleModel(): FileBundle
-    {
-        // Return local file if set
-        if (static::$bundle && static::$bundle->exists) {
-            return static::$bundle;
-        }
-
-        // Make sure we have a database connection
-        $this->ensureApplicationExists();
-
-        // Get the category
-        $category = $this->getCategoryModel();
-
-        // Create a bundle
-        $data = [];
-        $data['created_at'] = $data['updated_at'] = now()->addWeek();
-        $data['published_at'] = now()->subWeek();
-        $data['category_id'] = $category->id;
-        $data['title'] = sprintf(
-            "Bundle for test on %s.",
-            now()->format('H:i:s.u (T)')
-        );
-        $data['slug'] = Str::slug($data['title']);
-
-        // Create a bundle
-        static::$bundle = factory(FileBundle::class, 1)
-            ->create($data)
-            ->first();
-
-        // Add file
-        static::$bundle
-            ->addMedia(\resource_path('test-assets/pdf/chicken.pdf'))
-            ->preservingOriginal()
-            ->toMediaCollection();
-
-        // Return
-        return static::$bundle;
+    protected function getTestRoutesWithMissingFlag(
+        ?FileCategory $category = null,
+        ?FileBundle $bundle = null,
+        ?File $file = null
+    ): array {
+        // Map routes with a 'missing' flag
+        return collect($this->getTestRoutes($category, $bundle, $file))
+            ->map(static fn ($value, $key) => [$value, Str::endsWith($key, '-missing') === false])
+            ->toArray();
     }
 }
