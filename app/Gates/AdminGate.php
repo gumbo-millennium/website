@@ -11,7 +11,6 @@ use App\Models\FileDownload;
 use App\Models\JoinSubmission;
 use App\Models\NewsItem;
 use App\Models\Page;
-use App\Models\Payment;
 use App\Models\Sponsor;
 use App\Models\User;
 
@@ -35,7 +34,6 @@ class AdminGate
             || $user->can('manage', JoinSubmission::class)
             || $user->can('manage', NewsItem::class)
             || $user->can('manage', Page::class)
-            || $user->can('manage', Payment::class)
             || $user->can('manage', Sponsor::class)
             || $user->can('manage', User::class);
     }

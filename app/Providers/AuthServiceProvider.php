@@ -12,7 +12,6 @@ use App\Models\FileDownload;
 use App\Models\JoinSubmission;
 use App\Models\NewsItem;
 use App\Models\Page;
-use App\Models\Payment;
 use App\Models\Sponsor;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -23,7 +22,6 @@ use App\Policies\FileDownloadPolicy;
 use App\Policies\JoinSubmissionPolicy;
 use App\Policies\NewsItemPolicy;
 use App\Policies\PagePolicy;
-use App\Policies\PaymentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\SponsorPolicy;
@@ -49,7 +47,6 @@ class AuthServiceProvider extends ServiceProvider
         JoinSubmission::class => JoinSubmissionPolicy::class,
         NewsItem::class => NewsItemPolicy::class,
         Page::class => PagePolicy::class,
-        Payment::class => PaymentPolicy::class,
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
         Sponsor::class => SponsorPolicy::class,

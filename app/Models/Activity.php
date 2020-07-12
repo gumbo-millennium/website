@@ -129,15 +129,6 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns all made payments for this event
-     * @return HasMany
-     */
-    public function payments(): Relation
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    /**
      * Returns the name of the organiser, either committee or user
      * @return string|null
      */

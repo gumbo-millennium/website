@@ -18,7 +18,7 @@ use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * A user enrollment for an activity. Optionally has payments.
+ * A user enrollment for an activity.
  * @property \App\Models\States\Enrollment\State $state
  */
 class Enrollment extends UuidModel
@@ -87,15 +87,6 @@ class Enrollment extends UuidModel
         'deleted_at',
         'expire',
     ];
-
-    /**
-     * An enrollment can have multiple payments (in case one failed, for example)
-     * @return HasMany
-     */
-    public function payments(): Relation
-    {
-        return $this->hasMany(Payment::class);
-    }
 
     /**
      * The user this enrollment belongs to

@@ -207,8 +207,7 @@ class ActivityPolicy
 
         // Don't allow deletion of activities that have payments within the
         // last 7 years, unless the user can purge
-        return $activity->payments()->where('updated_at', '>', today()->subYears(7))
-            || $user->hasPermissionTo(self::PURGE_PERMISSION);
+        return $user->hasPermissionTo(self::PURGE_PERMISSION);
     }
 
     /**
