@@ -71,15 +71,6 @@ class JoinSubmission extends Model
         'country' => null,
     ];
 
-
-    /**
-     * The attributes that should be mutated to dates.
-     * @var array
-     */
-    protected $dates = [
-        'date_of_birth'
-    ];
-
     /**
      * Full name property
      * @return string

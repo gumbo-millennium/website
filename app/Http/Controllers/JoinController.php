@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -149,6 +150,9 @@ class JoinController extends Controller
         // Get values
         $userValues = $form->getFieldValues();
 
+        // Format user birthday
+        $birthday = Date::createFromFormat('Y-m-d', $userValues['date-of-birth']);
+
         // Get name and e-mail address
         $submission = JoinSubmission::create([
             'first_name' => $userValues['first-name'],
@@ -158,7 +162,7 @@ class JoinController extends Controller
             'email' => $userValues['email'],
             'phone' => $userValues['phone'],
 
-            'date_of_birth' => $userValues['date-of-birth'],
+            'date_of_birth' => $birthday->format('Y-m-d'),
             'gender' => $userValues['gender'],
 
             'street' => $userValues['street'],

@@ -8,7 +8,6 @@ use App\Models\JoinSubmission as JoinSubmissionModel;
 use App\Nova\Actions\HandleJoinSubmission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
@@ -103,10 +102,10 @@ class JoinSubmission extends Resource
                     ->rules(['required', 'string', 'min:2']),
 
                 // Date of Brith
-                Date::make('Geboortedatum', 'date_of_birth')
+                Text::make('Geboortedatum', 'date_of_birth')
                     ->hideFromIndex()
-                    ->format('DD-MM-YYYY')
-                    ->rules(['required', "before:{$sixteenYears}"]),
+                    ->help('Geboortedatum, in ISO 8601 (yyyy-mm-dd)')
+                    ->rules(['required', 'date_format:Y-m-d', "before:{$sixteenYears}"]),
             ]),
             new Panel('Adres informatie', [
                 Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),

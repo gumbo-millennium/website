@@ -77,7 +77,7 @@ class NewMemberForm extends Form
         $this
             ->add('date-of-birth', 'date', [
                 'label' => 'Geboortedatum',
-                'rules' => ['required', sprintf('before:%s', today()->subYear(17)->format('Y-m-d'))],
+                'rules' => ['required', sprintf('before:%s', today()->subYear(17)->addDay()->format('Y-m-d'))],
                 'attr' => [
                     'autocomplete' => 'bday'
                 ],
