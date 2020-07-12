@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -13,6 +14,13 @@ abstract class TestCase extends BaseTestCase
 
     public function setUp(): void
     {
+        // Permissions are super required, so always seed them when using a DB
+        if (\in_array(RefreshDatabase::class, \class_uses_recursive(static::class))) {
+            $this->afterApplicationCreated(function () {
+                $this->artisan('db:seed --class=PermissionSeeder');
+            });
+        }
+
         // Forward
         parent::setUp();
     }

@@ -12,28 +12,6 @@ use App\Models\User;
 trait ProvidesUsers
 {
     /**
-     * All users created during this request
-     * @var array<User>
-     */
-    private $createdUsers = [];
-
-    /**
-     * Delete users after the class is done testing
-     * @return void
-     * @after
-     */
-    public function tearDownUsers(): void
-    {
-        // Edge case when queries are being monitored
-        $this->ensureApplicationExists();
-
-        // Delete users afterwards
-        foreach ($this->createdUsers as $user) {
-            $user->delete();
-        }
-    }
-
-    /**
      * Creates a user with the given roles
      * @param array|null $roles
      * @return User
@@ -48,9 +26,6 @@ trait ProvidesUsers
         if (!empty($roles)) {
             $user->assignRole($roles);
         }
-
-        // Add to deletion queue
-        $this->createdUsers[] = $user;
 
         // Return user
         return $user;
