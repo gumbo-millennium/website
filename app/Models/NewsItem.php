@@ -26,6 +26,17 @@ class NewsItem extends SluggableModel implements AttachableInterface
     use HasSimplePaperclippedMedia;
 
     /**
+     * The "booted" method of the model.
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::saving(static function (NewsItem $newsItem) {
+            $newsItem->published_at ??= now();
+        });
+    }
+
+    /**
      * @inheritDoc
      */
     protected $fillable = [
