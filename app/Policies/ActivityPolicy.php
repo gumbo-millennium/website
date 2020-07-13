@@ -201,7 +201,7 @@ class ActivityPolicy
     public function forceDelete(User $user, Activity $activity): bool
     {
         // Disallow deletion if the user can't manage
-        if ($user->can('manage', $activity)) {
+        if (!$user->can('manage', $activity)) {
             return false;
         }
 

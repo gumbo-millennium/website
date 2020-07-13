@@ -50,12 +50,12 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that's member of the Activiteiten Commissie
+     * Returns a user that's member of a commission, ac by default
      * @return User
      */
-    public function getCommissionUser(): User
+    public function getCommissionUser(string $commission = 'ac'): User
     {
-        return $this->getTemporaryUser(['member', 'ac']);
+        return $this->getTemporaryUser(['member', $commission]);
     }
 
     /**
