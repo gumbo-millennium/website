@@ -92,6 +92,33 @@ class Enrollment extends Resource
         );
     }
 
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        // Get user shorthand
+        $user = $request->user();
+
+        // Return all enrollments if the user can manage them
+        if ($user->can('admin', EnrollmentModel::class)) {
+            return parent::relatableQuery($request, $query);
+        }
+
+        // Only return enrollments of the user's events if the user is not
+        // allowed to globally manage events.
+        return parent::relatableQuery(
+            $request,
+            $query->whereIn('activity_id', $user->hosted_activity_ids)
+        );
+    }
+
     /**
      * Get the fields displayed by the resource.
      * @return array<mixed>
