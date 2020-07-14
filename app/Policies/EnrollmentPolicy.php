@@ -81,6 +81,11 @@ class EnrollmentPolicy
      */
     public function unenroll(User $user, Enrollment $enrollment): bool
     {
+        // Fail if not the owner
+        if ($user->id !== $enrollment->user_id) {
+            return false;
+        }
+
         // Cancelling an already cancelled enrollment?
         if ($enrollment->state->is(Cancelled::class)) {
             logger()->info('Unenroll {enrollment} rejected. Already unenrolled.', compact('enrollment'));
@@ -120,6 +125,23 @@ class EnrollmentPolicy
 
         // Return judgement
         return $judgement;
+    }
+
+    /**
+     * Determine whether the admin can unenroll the given enrollment
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Enrollment  $enrollment
+     * @return bool
+     */
+    public function adminUnenroll(User $user, Enrollment $enrollment)
+    {
+        // Block if cancelled
+        if ($enrollment->state->is(Cancelled::class)) {
+            return false;
+        }
+
+        // Require admin
+        return $user->can('manage', $enrollment->activity);
     }
 
     /**

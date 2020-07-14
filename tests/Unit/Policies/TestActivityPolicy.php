@@ -104,8 +104,8 @@ class TestActivityPolicy extends TestCase
         $this->assertFalse($lhwUser->can('create', Activity::class));
 
         // Get activities
-        $acOwnedActivity = $this->createDummyActivity(Role::findByName('ac'));
-        $lhwOwnedActivity = $this->createDummyActivity(Role::findByName('lhw'));
+        $acOwnedActivity = $this->createDummyActivity('ac');
+        $lhwOwnedActivity = $this->createDummyActivity('lhw');
         $notOwnedActivity = $this->createDummyActivity(null);
 
         // IB now has an activity, so should be able to view but not create
@@ -140,7 +140,7 @@ class TestActivityPolicy extends TestCase
         $acAdminUser->givePermissionTo(ActivityPolicy::PURGE_PERMISSION);
 
         // Get activities
-        $acActivity = $this->createDummyActivity(Role::findByName('ac'));
+        $acActivity = $this->createDummyActivity('ac');
         $notOwnedActivity = $this->createDummyActivity(null);
 
         // Ensure the user cannot purge

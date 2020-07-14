@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Date;
 trait CreatesDummyActivityModels
 {
     public function createDummyActivity(
-        ?Role $role = null,
+        ?string $role = null,
         bool $public = true,
         ?DateTimeInterface $endDate = null
     ): Activity {
@@ -22,7 +22,7 @@ trait CreatesDummyActivityModels
         $startDate = (clone $endDate)->subHours(2);
 
         return \factory(Activity::class, 1)->create([
-            'role_id' => \optional($role)->id,
+            'role_id' => $role ? Role::findByName($role)->id : null,
             'is_public' => $public,
             'seats' => 40,
             'cancelled_at' => null,
@@ -33,7 +33,7 @@ trait CreatesDummyActivityModels
         ])->first();
     }
 
-    public function createDummyEnrollment(User $user, ?Activity $activity): Enrollment
+    public function createDummyEnrollment(User $user, ?Activity $activity = null): Enrollment
     {
         // Ensure activity
         $activity ??= $this->createDummyActivity();
