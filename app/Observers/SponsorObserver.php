@@ -59,30 +59,6 @@ class SponsorObserver
                 $sponsor->$logo = null;
             }
         }
-    }
-
-    /**
-     * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs
-     * @param Sponsor $sponsor
-     * @return void
-     */
-    public function saved(Sponsor $sponsor): void
-    {
-        // Optimize logo and add grayscale
-        if ($sponsor->wasChanged('logo_gray')) {
-            ValidateSvg::withChain([
-                new CompressSvg($sponsor, 'logo_gray'),
-                new RemoveImageColors($sponsor, 'logo_gray'),
-                new CompressSvg($sponsor, 'logo_gray'),
-            ])->dispatch($sponsor, 'logo_gray');
-        }
-
-        // Optimize logo
-        if ($sponsor->wasChanged('logo_color')) {
-            ValidateSvg::withChain([
-                new CompressSvg($sponsor, 'logo_color'),
-            ])->dispatch($sponsor, 'logo_color');
-        }
 
         // Clean URL from trackers
         if ($sponsor->wasChanged('url')) {
@@ -110,6 +86,36 @@ class SponsorObserver
             // Create new URL
             $sponsor->url = (string) $uri;
             $sponsor->withoutEvents(static fn () => $sponsor->save(['url']));
+        }
+    }
+
+    /**
+     * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs
+     * @param Sponsor $sponsor
+     * @return void
+     */
+    public function saved(Sponsor $sponsor): void
+    {
+        // Noop when in CLI (prevents infinite loops)
+        if (app()->runningInConsole()) {
+            return;
+        }
+
+
+        // Optimize logo and add grayscale
+        if ($sponsor->wasChanged('logo_gray')) {
+            ValidateSvg::withChain([
+                new CompressSvg($sponsor, 'logo_gray'),
+                new RemoveImageColors($sponsor, 'logo_gray'),
+                new CompressSvg($sponsor, 'logo_gray'),
+            ])->dispatch($sponsor, 'logo_gray');
+        }
+
+        // Optimize logo
+        if ($sponsor->wasChanged('logo_color')) {
+            ValidateSvg::withChain([
+                new CompressSvg($sponsor, 'logo_color'),
+            ])->dispatch($sponsor, 'logo_color');
         }
     }
 }

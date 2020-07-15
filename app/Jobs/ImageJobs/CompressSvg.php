@@ -30,6 +30,7 @@ class CompressSvg extends SvgJob
             '--enable=removeStyleElement',
             $filePath
         ]);
+        $process->setTimeout(5);
         $process->run();
 
         // Log if SVGO failed

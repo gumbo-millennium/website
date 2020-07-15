@@ -98,9 +98,6 @@ class RemoveImageColors extends SvgJob
         // Check recursively for colors in elements, in a safe method
         $this->recurseColorCheck($doc->documentElement);
 
-
-        // Remove
-
         // Write SVG back to the file
         if ($doc->save($filePath, \LIBXML_NOEMPTYTAG) !== false) {
             // Save attribute
@@ -129,14 +126,15 @@ class RemoveImageColors extends SvgJob
             $hasChildren = $node->hasChildNodes();
             $isEndNode = \in_array($nodeName, self::SVG_END_NODES);
 
-            // We're at the end of the tree, and no color is set, so assign a new one
-            if (($isEndNode || !$hasChildren) && $this->hasNoConfiguredFill($node)) {
-                $node->setAttribute('fill', self::TARGET_COLOR);
-            }
-
             // Replace color
             $this->updateColorAttribute($node, 'fill');
             $this->updateColorAttribute($node, 'stroke');
+
+            // We're at the end of the tree, and no color is set, so assign a new one
+            if (($isEndNode || !$hasChildren) && $this->hasNoConfiguredFill($node)) {
+                $node->setAttribute('fill', self::TARGET_COLOR);
+                continue;
+            }
 
             // Skip if no child nodes
             if (!$hasChildren) {

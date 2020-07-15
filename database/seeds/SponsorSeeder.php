@@ -13,6 +13,12 @@ class SponsorSeeder extends Seeder
      */
     public function run()
     {
-        factory(Sponsor::class, 15)->create();
+        // Create 8 random sponsors
+        \factory(Sponsor::class, 8);
+
+        // Create 15 more without banner
+        \factory(Sponsor::class, 15)->create([
+            'backdrop' => null
+        ]);
     }
 }
