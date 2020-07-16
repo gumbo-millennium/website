@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Contracts\Mail\MailListHandler;
+use App\Services\Mail\GoogleMailListService;
 use Google_Client as GoogleApi;
 use Google_Exception as GoogleException;
-use Google_Service_Directory as GoogleDirectory;
-use Google_Service_Directory_Aliases as GoogleDirectoryAliases;
-use Google_Service_Directory_Groups as GoogleDirectoryGroups;
-use Google_Service_Directory_Members as GoogleDirectoryMembers;
+use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,22 +16,24 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 {
     /**
      * Register services.
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
-        $this->app->singleton(GoogleApi::class, static function ($app) {
+        $this->app->bind(GoogleApi::class, static function ($app) {
             try {
                 // Config
-                $config = $app->get('config');
+                $config = $app['config'];
+                \assert($config instanceof ConfigRepository);
 
                 // Log in client as service worker
                 $client = new GoogleApi();
 
                 // Apply configs
-                $client->setAuthConfig($config->get('gumbo.google.auth.key-file'));
+                $client->setAuthConfig($config->get('services.google.key-file'));
+                $client->setScopes($config->get('services.google.scopes'));
+                $client->setSubject($config->get('services.google.subject'));
                 $client->setApplicationName($config->get('app.name'));
-                $client->setSubject($config->get('gumbo.google.auth.subject'));
-                $client->setScopes($config->get('gumbo.google.auth.scopes'));
 
                 // Return client
                 return $client;
@@ -45,26 +46,19 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
             }
         });
 
-        // phpcs:disable Generic.Files.LineLength.TooLong
-        $this->app->singleton(GoogleDirectory::class, static fn($app) => new GoogleDirectory($app->get(GoogleApi::class)));
-        $this->app->singleton(GoogleDirectoryGroups::class, static fn($app) => new GoogleDirectoryGroups($app->get(GoogleDirectory::class)));
-        $this->app->singleton(GoogleDirectoryAliases::class, static fn($app) => new GoogleDirectoryAliases($app->get(GoogleDirectory::class)));
-        $this->app->singleton(GoogleDirectoryMembers::class, static fn($app) => new GoogleDirectoryMembers($app->get(GoogleDirectory::class)));
-        // phpcs:enable
+        // Mail
+        $this->app->singleton(MailListHandler::class, GoogleMailListService::class);
     }
 
     /**
      * Get the services provided by the provider.
-     * @return array<string>
+     * @return array
      */
-    public function provides(): array
+    public function provides()
     {
         return [
             GoogleApi::class,
-            GoogleDirectory::class,
-            GoogleDirectoryGroups::class,
-            GoogleDirectoryAliases::class,
-            GoogleDirectoryMembers::class,
+            MailListHandler::class,
         ];
     }
 }

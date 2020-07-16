@@ -176,8 +176,10 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\BotManServiceProvider::class,
 
+        // Services
+        App\Providers\BotManServiceProvider::class,
+        App\Providers\GoogleServiceProvider::class,
     ],
 
     /*

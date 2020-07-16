@@ -34,6 +34,31 @@ return [
         ]
     ],
 
+    // Google APIs
+    'google' => [
+        // Key file
+        'key-file' => env('GOOGLE_AUTH_FILE', storage_path('auth/google.json')),
+
+        // Set user who we use to sign in as
+        'subject' => env('GOOGLE_AUTH_USER', 'domain-admin@gumbo-millennium.nl'),
+
+        // Make sure our Service Account logged in using the auth file is granted
+        // domain-wide authority. For more information, read this:
+        // https://github.com/googleapis/google-api-php-client/blob/master/docs/oauth-server.md#delegating-domain-wide-authority-to-the-service-account
+        'scopes' => [
+            \Google_Service_Directory::ADMIN_DIRECTORY_GROUP,
+            \Google_Service_Groupssettings::APPS_GROUPS_SETTINGS
+        ],
+
+        // Allowed domains
+        'domains' => [
+            'gumbo.nu',
+            'gumbo-millennium.nl',
+            'activiteiten.gumbo-millennium.nl',
+            'organen.gumbo-millennium.nl',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Feature flags
