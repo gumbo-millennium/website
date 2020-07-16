@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Activity;
+use App\Models\EmailList;
 use App\Models\Enrollment;
 use App\Models\FileBundle;
 use App\Models\FileCategory;
@@ -15,6 +16,7 @@ use App\Models\Page;
 use App\Models\Sponsor;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
+use App\Policies\EmailListPolicy;
 use App\Policies\EnrollmentPolicy;
 use App\Policies\FileBundlePolicy;
 use App\Policies\FileCategoryPolicy;
@@ -40,6 +42,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Activity::class => ActivityPolicy::class,
+        EmailList::class => EmailListPolicy::class,
         Enrollment::class => EnrollmentPolicy::class,
         FileBundle::class => FileBundlePolicy::class,
         FileCategory::class => FileCategoryPolicy::class,

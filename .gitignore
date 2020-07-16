@@ -124,3 +124,6 @@ storage/debugbar
 
 # Ignore TNTSearch
 /storage/*.index
+
+# Ignore Auth files (Google and such)
+/storage/auth/
