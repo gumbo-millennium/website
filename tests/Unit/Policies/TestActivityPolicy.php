@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Policies;
 
 use App\Models\Activity;
-use App\Models\Role;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Policies\ActivityPolicy;

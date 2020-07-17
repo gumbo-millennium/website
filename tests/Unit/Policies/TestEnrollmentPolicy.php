@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Policies;
 
-use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\Role;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
@@ -255,7 +253,5 @@ class TestEnrollmentPolicy extends TestCase
         $this->assertFalse($guestUser->can('adminUnenroll', $randomEnrollment));
         $this->assertFalse($lhwUser->can('adminUnenroll', $randomEnrollment));
         $this->assertFalse($acUser->can('adminUnenroll', $randomEnrollment));
-
-
     }
 }

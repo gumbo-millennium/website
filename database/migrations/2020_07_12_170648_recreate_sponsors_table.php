@@ -57,7 +57,7 @@ class RecreateSponsorsTable extends Migration
             $table->timestamp('ends_at')->nullable();
 
             // Flags
-            $field =$table->boolean('has_page')->storedAs($hasPageQuery);
+            $field = $table->boolean('has_page')->storedAs($hasPageQuery);
             if ($isSqlite) {
                 $field->default('0');
             }
