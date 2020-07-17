@@ -44,7 +44,7 @@ class Sponsor extends Resource
      * Name of the group
      * @var string
      */
-    public static $group = 'Others';
+    public static $group = 'Bestuurszaken';
 
     /**
      * The columns that should be searched.

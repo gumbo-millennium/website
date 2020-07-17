@@ -35,6 +35,12 @@ class JoinSubmission extends Resource
     public static $title = 'name';
 
     /**
+     * Name of the group
+     * @var string
+     */
+    public static $group = 'Bestuurszaken';
+
+    /**
      * The columns that should be searched.
      * @var array
      */
