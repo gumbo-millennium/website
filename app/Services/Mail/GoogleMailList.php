@@ -7,6 +7,7 @@ namespace App\Services\Mail;
 use App\Contracts\Mail\MailList;
 use App\Helpers\Arr;
 use App\Helpers\Str;
+use App\Services\Mail\Traits\ValidatesEmailRequests;
 use Google_Service_Directory_Group;
 use Google_Service_Directory_Member;
 use Google_Service_Directory_Members;
@@ -17,6 +18,8 @@ use UnderflowException;
 
 class GoogleMailList implements MailList, JsonSerializable
 {
+    use ValidatesEmailRequests;
+
     public const ROLE_NAME_ADMIN = 'MANAGER';
     public const ROLE_NAME_NORMAL = 'MEMBER';
 
@@ -195,6 +198,9 @@ class GoogleMailList implements MailList, JsonSerializable
         // Check if not found
         $this->assertEmailNotExists($email);
 
+        // Check if mutable
+        $this->assertEmailMutable($email);
+
         // Add mutation
         $this->memberChanges[] = [self::CHANGE_ADD, $valid['email'], $valid['role']];
     }
@@ -213,6 +219,9 @@ class GoogleMailList implements MailList, JsonSerializable
         // Check if found
         $this->assertEmailExists($email);
 
+        // Check if mutable
+        $this->assertEmailMutable($email);
+
         // Add mutation
         $this->memberChanges[] = [self::CHANGE_UPDATE, $valid['email'], $valid['role']];
     }
@@ -229,6 +238,9 @@ class GoogleMailList implements MailList, JsonSerializable
 
         // Check if found
         $this->assertEmailExists($email);
+
+        // Check if mutable
+        $this->assertEmailMutable($email);
 
         // Add mutation
         $this->memberChanges[] = [self::CHANGE_DELETE, $valid['email'], null];
@@ -387,6 +399,19 @@ class GoogleMailList implements MailList, JsonSerializable
     {
         if ($this->hasMember($email)) {
             throw new OverflowException("Email address [$email] already exists");
+        }
+    }
+
+    /**
+     * Throws an exception if $email is not mutable
+     * @param string $email
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    protected function assertEmailMutable(string $email): void
+    {
+        if (!$this->canMutate($email)) {
+            throw new InvalidArgumentException("Email address [$email] is not mutable");
         }
     }
 

@@ -9,11 +9,13 @@ use App\Contracts\Mail\MailListHandler;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Services\Mail\Traits\HasGoogleServices;
+use App\Services\Mail\Traits\ValidatesEmailRequests;
 use Google_Service_Directory_Alias as GroupAlias;
 use Google_Service_Directory_Group as Group;
 use Google_Service_Directory_Member as GroupMember;
 use Google_Service_Directory_Members as GroupMembers;
 use Google_Service_Groupssettings_Groups as GroupSettings;
+use Illuminate\Support\Facades\Config;
 use LogicException;
 use RuntimeException;
 
@@ -23,6 +25,7 @@ use RuntimeException;
 class GoogleMailListService implements MailListHandler
 {
     use HasGoogleServices;
+    use ValidatesEmailRequests;
 
     /**
      * Returns all lists
@@ -32,7 +35,7 @@ class GoogleMailListService implements MailListHandler
     public function getAllLists(): array
     {
         // Get all domains
-        $domains = \config('services.google.domains');
+        $domains = Config::get('services.google.domains');
 
         // Get lists per domain
         $lists = [];
@@ -103,7 +106,7 @@ class GoogleMailListService implements MailListHandler
         $domain = Str::after($email, '@');
 
         // Validate domain
-        if (!\in_array($domain, \config('services.google.domains'))) {
+        if (!$this->canProcessList($email)) {
             throw new RuntimeException("Domain {$domain} is not available for modification");
         }
         // Build query
@@ -156,11 +159,16 @@ class GoogleMailListService implements MailListHandler
         // Get API
         $groupsManager = $this->getGoogleGroupManager();
 
+        // Ensure email is valid given the name
+        if (!$this->validateListNameAgainstEmail($name, $email)) {
+            throw new RuntimeException("Email address {$email} does not meet expectations for [{$name}]");
+        }
+
         // Get email and domain name
         $domain = Str::after($email, '@');
 
         // Validate domain
-        if (!\in_array($domain, \config('services.google.domains'))) {
+        if (!$this->canProcessList($email)) {
             throw new RuntimeException("Domain {$domain} is not available for modification");
         }
 
