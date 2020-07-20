@@ -4,77 +4,100 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\Activity;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
+use Tests\Traits\CreatesDummyActivityModels;
+use Tests\Traits\MutatesActivities;
 
 class ActivityDisplayTest extends TestCase
 {
     use RefreshDatabase;
+    use CreatesDummyActivityModels;
+    use MutatesActivities;
 
     /**
-     * Ensures there are some activities
+     * View activity list and detail as guest
      * @return void
      */
-    public function seedBefore(): void
+    public function testViewAnonymous(): void
     {
-        $this->seed('ActivitySeeder');
+        // Prep activities
+        $publicActivity = $this->createDummyActivity(null, true);
+        $privateActivity = $this->createDummyActivity(null, false);
+
+        // Get the views
+        $indexView = $this->get(URL::route('activity.index'));
+        $responsePublic = $this->get(URL::route('activity.show', ['activity' => $publicActivity]));
+        $responsePrivate = $this->get(URL::route('activity.show', ['activity' => $privateActivity]));
+
+        // Check result
+        $indexView->assertOk();
+        $responsePublic->assertOk();
+        $responsePrivate->assertRedirect(URL::route('login'));
+
+        // Check results
+        $indexView->assertSeeText($publicActivity->name);
+        $indexView->assertDontSeeText($privateActivity->name);
+        $responsePublic->assertSeeText($publicActivity->name);
     }
 
     /**
-     * Get test route
-     * @param string $route
-     * @param null|User $user
-     * @param null|Activity $activity
+     * View activity list and detail as normal, unroled user
      * @return void
-     * @dataProvider provideTestRoutes
      */
-    public function testVariousRoutes(string $route, ?User $user, ?Activity $activity): void
+    public function testViewUser(): void
     {
-        // Run proper command
-        $response = $user ? ($this->actingAs($user)->get($route)) : $this->get($route);
+        // Prep activities
+        $publicActivity = $this->createDummyActivity(null, true);
+        $privateActivity = $this->createDummyActivity(null, false);
 
-        // Run user-level command
-        $response->assertStatus(200);
+        // Prep user
+        $user = $this->getGuestUser();
 
-        // Check if a title should be set
-        if ($activity) {
-            $response->assertSeeText($activity->title);
-        }
+        // Get the views
+        $indexView = $this->actingAs($user)->get(URL::route('activity.index'));
+        $responsePublic = $this->actingAs($user)->get(URL::route('activity.show', ['activity' => $publicActivity]));
+        $responsePrivate = $this->actingAs($user)->get(URL::route('activity.show', ['activity' => $privateActivity]));
+
+        // Check result
+        $indexView->assertOk();
+        $responsePublic->assertOk();
+        $responsePrivate->assertForbidden();
+
+        // Check results
+        $indexView->assertSeeText($publicActivity->name);
+        $indexView->assertDontSeeText($privateActivity->name);
+        $responsePublic->assertSeeText($publicActivity->name);
     }
 
     /**
-     * Provides a list of test routes
-     * @return array<array<string>>
+     * View activity list and detail as member
+     * @return void
      */
-    public function provideTestRoutes()
+    public function testViewMember(): void
     {
-        // Ensure theres an app exists
-        $this->ensureApplicationExists();
+        // Prep activities
+        $publicActivity = $this->createDummyActivity(null, true);
+        $privateActivity = $this->createDummyActivity(null, false);
 
-        // Get users
-        $guest = $this->getGuestUser();
-        $member = $this->getMemberUser();
+        // Prep user
+        $user = $this->getMemberUser();
 
-        // get activity
-        $getFirstActivity = static fn ($user) => Activity::getNextActivities($user)->first();
+        // Get the views
+        $indexView = $this->actingAs($user)->get(URL::route('activity.index'));
+        $responsePublic = $this->actingAs($user)->get(URL::route('activity.show', ['activity' => $publicActivity]));
+        $responsePrivate = $this->actingAs($user)->get(URL::route('activity.show', ['activity' => $privateActivity]));
 
-        // Get routes
-        $activityAnon = $getFirstActivity(null);
-        $activityGuest = $getFirstActivity($guest);
-        $activityMember = $getFirstActivity($member);
+        // Check result
+        $indexView->assertOk();
+        $responsePublic->assertOk();
+        $responsePrivate->assertOk();
 
-        return [
-            // Index page
-            'Index (anonymous)' => [route('activity.index'), null, $activityAnon],
-            'Index (guest)' => [route('activity.index'), $guest, $activityGuest],
-            'Index (member)' => [route('activity.index'), $member, $activityMember],
-
-            // Details page
-            'Detail (anonymous)' => [route('activity.show', ['activity' => $activityAnon]), null, null],
-            'Detail (guest)' => [route('activity.show', ['activity' => $activityGuest]), $guest, null],
-            'Detail (member)' => [route('activity.show', ['activity' => $activityMember]), $member, null],
-        ];
+        // Check results
+        $indexView->assertSeeText($publicActivity->name);
+        $indexView->assertSeeText($privateActivity->name);
+        $responsePublic->assertSeeText($publicActivity->name);
+        $responsePrivate->assertSeeText($privateActivity->name);
     }
 }

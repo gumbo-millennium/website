@@ -15,6 +15,8 @@ use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Handles showing activity lists, activities and the schedule route
@@ -97,8 +99,17 @@ class DisplayController extends Controller
      */
     public function show(Request $request, Activity $activity)
     {
-        // Ensure the user can see this
-        $this->authorize('view', $activity);
+        // If the user cannot view this activity
+        if (!Gate::allows('view', $activity)) {
+            // If there is no user, ask to login
+            if ($request->user() === null) {
+                return \redirect()
+                    ->guest(URL::route('login'));
+            }
+
+            // Otherwise, disallow
+            \abort(403);
+        }
 
         // Load enrollments
         $activity->load(['enrollments']);
