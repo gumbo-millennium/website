@@ -64,8 +64,21 @@ class UpdateGoogleList implements ShouldQueue
      */
     public function handle(MailListHandler $handler): void
     {
-        // Get list
-        $list = $this->getEmailList($handler);
+        // Get existing
+        $list = $handler->getList($this->email);
+
+        // If none was found, only create it
+        if (!$list) {
+            // Make new
+            $list = $handler->createList($this->email, $this->name);
+
+            // Log
+            Log::info("Created new {list} via handler, stopping job", compact('list'));
+
+            // Stop job, allow Google to process for some time
+            return;
+        }
+
 
         // Get change flags
         $mailHandle = Str::beforeLast($list->getEmail(), '@');
@@ -111,31 +124,8 @@ class UpdateGoogleList implements ShouldQueue
 
         // Update model
         if ($hasChanges) {
-            $this->updateModel($this->getEmailList($handler));
+            $this->updateModel($handler->getList($this->email));
         }
-    }
-
-    /**
-     * Finds or creates list
-     * @param MailListHandler $handler
-     * @return MailList
-     */
-    public function getEmailList(MailListHandler $handler)
-    {
-        // Get existing
-        $list = $handler->getList($this->email);
-        if ($list) {
-            Log::debug("Retireved {list} from handler", compact('list'));
-            return $list;
-        }
-
-        // Make new
-        $list = $handler->createList($this->email, $this->name);
-
-        // Log
-        Log::info("Created new {list} via handler", compact('list'));
-
-        return $list;
     }
 
     /**

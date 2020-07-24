@@ -58,36 +58,37 @@ class ConstructGoogleActionList implements ShouldQueue
             return $role;
         });
 
-        // Get all unique users on all roles
-        // 1) Get the 'leden' array and collapse the nested array
-        // 2) Remove the duplicates
-        // 3) Cast to array
-        $userIds = $roles
-            ->pluck('leden')
-            ->collapse()
-            ->flip()
-            ->keys()
-            ->toArray();
+        // Fetch all members for each group (due to API limits, I can't fetch all in one go)
+        $users = collect();
+        foreach ($roles as $role) {
+            // Log
+            Log::debug("Retrieving members for {role}", [
+                'role' => $role['naam'],
+                'members' => $role['leden']
+            ]);
 
-        // Log count
-        Log::debug("Will look for {member-count} members", [
-            'member-count' => count($userIds)
-        ]);
+            // Get all members
+            $userResource = $conscribo->getResource(
+                'user',
+                [['selector', '~', $role['leden']]],
+                ['selector', 'email']
+            );
 
-        // Get users from Conscribo
-        $userResource = $conscribo->getResource(
-            'user',
-            [['selector', '~', $userIds]],
-            ['selector', 'email']
-        );
+            // Log result
+            Log::debug("Retrieving members for {role}", [
+                'role' => $role['naam'],
+                'members' => $userResource
+                    ->map(static fn ($row) => $row + ['email' => '[REDACTED]'])
+                    ->toArray()
+            ]);
 
-        // Log count
-        Log::debug("Received {member-count} members from Conscribo", [
-            'member-count' => count($userResource)
-        ]);
+            // Add all users
+            $users->push($userResource->keyBy('selector')->toArray());
+        }
 
         // Map emails by selector, remove empties and lowercase email
-        $emails = $userResource
+        $emails = $users
+            ->collapse()
             ->pluck('email', 'selector')
             ->filter()
             ->map(static fn ($val) => Str::lower(trim($val)));
@@ -96,7 +97,6 @@ class ConstructGoogleActionList implements ShouldQueue
         Log::info("After filter, got left with {email-count} email addresses from Conscribo", [
             'email-count' => count($emails),
             'query-count' => count($userResource),
-            'search-count' => count($userIds)
         ]);
 
         // Map new models
@@ -146,11 +146,6 @@ class ConstructGoogleActionList implements ShouldQueue
                     'email' => $job['email'],
                     'safe-domains' => $validDomains
                 ]);
-                continue;
-            }
-
-            // DEBUG
-            if ($job['email'] !== 'dc@gumbo-millennium.nl') {
                 continue;
             }
 
