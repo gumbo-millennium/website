@@ -36,7 +36,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
         return new static(
             $group->getEmail(),
-            $group->getId(),
+            $group->getId() ?? $group->getEmail(),
             $users,
             $group->getAliases() ?? [],
             $group->getNonEditableAliases() ?? []
