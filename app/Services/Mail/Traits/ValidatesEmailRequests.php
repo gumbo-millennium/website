@@ -14,15 +14,13 @@ trait ValidatesEmailRequests
 {
     /**
      * Valid committee handles
-     * @var string
+     * @var array<string>
      */
-    private string $validCommitteeEmails = '/^(?:[a-z]{1,4}c|[a-z]{2,20}cie|[a-z]+commissie)$/';
-
-    /**
-     * Valid project group handles
-     * @var string
-     */
-    private string $validProjectGroupEmails = '/^[a-z]+(?<!pg)$/';
+    private array $validEmails = [
+        'commissie' => '/^(?:[a-z]{1,4}c|[a-z]{2,20}cie|[a-z]+commissie)$/',
+        'projectgroep' => '/^[a-z]+(?<!pg)$/',
+        'intro' => '/^intro-[a-z]+$/'
+    ];
 
     /**
      * Checks if the given email is mutatable, which is true unless the
@@ -84,13 +82,31 @@ trait ValidatesEmailRequests
         $name = Str::lower(Str::ascii($name));
         $emailName = Str::before($email, '@');
 
-        // If the email is for a committee, expect it to be short and end with a "C"
-        if (Str::contains($name, 'commissie') && !\preg_match($this->validCommitteeEmails, $emailName)) {
-            return false;
+        // Check what to match
+        $validEmailPairs = [
+            // Intro is `intro commissie`, so match this first!
+            'intro' => ['intro'],
+
+            // Rest
+            'commissie' => ['commissie'],
+            'projectgroep' => ['projectgroep', 'pg'],
+        ];
+
+        // Regex to use
+        $matchedRegex = null;
+        foreach ($validEmailPairs as $validRegex => $matches) {
+            // Test if the string contians the given match
+            if (!Str::contains($name, $matches)) {
+                continue;
+            }
+
+            // Assign and stop looping
+            $matchedRegex = $this->validEmails[$validRegex];
+            break;
         }
 
-        // If the email is for a projectgroep, ensure it does not end in 'pg'
-        if (Str::contains($name, ['projectgroep', 'pg']) && !\preg_match($this->validProjectGroupEmails, $emailName)) {
+        // Apply regex if it matches
+        if ($matchedRegex && !\preg_match($matchedRegex, $emailName)) {
             return false;
         }
 
