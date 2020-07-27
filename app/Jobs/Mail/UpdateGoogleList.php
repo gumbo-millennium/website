@@ -16,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
 use Log;
 
 class UpdateGoogleList implements ShouldQueue
@@ -216,6 +217,8 @@ class UpdateGoogleList implements ShouldQueue
     {
         $wantedMembers = \array_combine(Arr::pluck($this->members, 0), $this->members);
         $existingMembers = [];
+        $localDomains = Config::get('services.google.domains');
+        $localSubdomains = \array_map(static fn ($row) => ".{$row}", $localDomains);
 
         // Remove extra aliases
         foreach ($list->listEmails() as [$email, $role]) {
@@ -228,7 +231,7 @@ class UpdateGoogleList implements ShouldQueue
 
             // Don't remove internal members
             $domain = Str::afterLast($email, '@');
-            if (\in_array($domain, \config('services.google.domains'))) {
+            if (\in_array($domain, $localDomains) || Str::endsWith($domain, $localSubdomains)) {
                 Log::info('Found internal member {email}, whitelisting it', compact('email'));
                 $existingMembers[$email] = $role;
                 continue;
