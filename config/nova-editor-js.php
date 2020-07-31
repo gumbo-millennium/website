@@ -33,8 +33,8 @@ return [
             'disk' => 'public',
             'alterations' => [
                 'resize' => [
-                    'width' => false, // integer
-                    'height' => false, // integer
+                    'width' => 1280, // integer
+                    'height' => 1280, // integer
                 ],
                 'optimize' => true, // true or false
                 'adjustments' => [
