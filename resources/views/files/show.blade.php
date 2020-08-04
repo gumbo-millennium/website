@@ -48,21 +48,12 @@ $properties = [
     <div class="file-set file-set--inline">
     {{-- Files --}}
     @forelse ($bundleMedia as $file)
-        <div class="file-set__item">
-            {{-- Get title --}}
-            <a href="{{ route('files.download-single', ['media' => $file]) }}" class="file-set__item-title">
-                {{ $file->name }}
-            </a>
-
-            {{-- Get count --}}
-            <p class="file-set__item-meta">{{ $file->downloads_count }} downloads</p>
-            <p class="file-set__item-meta">{{ Str::filesize($file->size) }}</p>
-        </div>
-        @empty
+        @include('files.bits.file-item', compact('file'))
+    @empty
         <div class="file-set__empty-notice">
             <h2 class="file-set__empty-notice-title">Lege bundel</h2>
             <p class="file-set__empty-notice-body">Deze bundel bevat geen bestanden</p>
         </div>
-        @endforelse
+    @endforelse
     </div>
 @endsection
