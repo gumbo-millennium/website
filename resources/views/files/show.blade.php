@@ -37,7 +37,7 @@ $properties = [
     </dl>
 
     {{-- Back link --}}
-    <a href="{{ route('files.category', ['category' => $bundle->category]) }}" class="inline-block p-4 mb-4 no-underline p-4 text-sm">
+    <a href="{{ route('files.category', ['category' => $bundle->category]) }}" class="inline-block mb-4 no-underline p-4 text-sm">
         @icon('chevron-left', 'mr-2')
         Terug naar {{ $bundle->category->title }}
     </a>
