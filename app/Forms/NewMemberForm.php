@@ -144,6 +144,16 @@ class NewMemberForm extends Form
                 ]
             ]);
 
+        // Referer
+        $this
+            ->add('referrer', 'text', [
+                'label' => 'Hoe ken je Gumbo? (optioneel)',
+                'rules' => 'nullable|string',
+                'help_block' => [
+                    'text' => 'Indien een lid je heeft verwezen, vul hier de naam in, dan krijgt diegene een bedankje.'
+                ]
+            ]);
+
         // Intro flags
         $this
             ->addIntro();

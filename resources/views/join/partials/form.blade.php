@@ -22,10 +22,17 @@
 </div>
 {!! form_until($form, 'country') !!}
 
-{{-- Part 3: Address --}}
+{{-- Part 4: Referrer --}}
 <div class="mb-4 mt-8">
-    <h3 class="text-xl font-normal">Almost there...</h3>
-    <p>Je bent er bíjna, nog een paar korte vraagjes...</p>
+    <h3 class="text-xl font-normal">How did you get here?</h3>
+    <p>Om een beetje een beeld te krijgen van hoe goed (of slecht) onze marketing is, kan je aangeven hoe je bij Gumbo terecht bent gekomen?</p>
+</div>
+{!! form_until($form, 'referrer') !!}
+
+{{-- Part 5: Last checks --}}
+<div class="mb-4 mt-8">
+    <h3 class="text-xl font-normal">Aller-, aller-, állerlaatste vraagjes...</h3>
+    <p>Nog een paar keer klikken en you're done!</p>
 </div>
 {!! form_rest($form) !!}
 

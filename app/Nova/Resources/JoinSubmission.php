@@ -151,6 +151,8 @@ class JoinSubmission extends Resource
                 Boolean::make('Windesheim Student', 'windesheim_student')
                     ->hideFromIndex(),
                 Boolean::make('Aanmelding Gumbode', 'newsletter')
+                    ->hideFromIndex(),
+                Text::make('Referentie', 'referrer')
                     ->hideFromIndex()
             ]),
 

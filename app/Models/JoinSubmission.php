@@ -50,6 +50,7 @@ class JoinSubmission extends Model
         'country',
         'windesheim_student',
         'newsletter',
+        'referrer',
     ];
 
     /**

@@ -172,7 +172,9 @@ class JoinController extends Controller
             'country' => $userValues['country'],
 
             'windesheim_student' => $userValues['is-student'] ? '1' : '0',
-            'newsletter' => $userValues['is-newsletter'] ? '1' : '0'
+            'newsletter' => $userValues['is-newsletter'] ? '1' : '0',
+
+            'referrer' => $userValues['referrer']
         ]);
 
         // Validate the submission was created
