@@ -28,6 +28,9 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         // Optionally cancel it
         'cancelled_at' => $faker->optional(0.05)->dateTimeBetween('-2 years', '-6 hours'),
 
+        // Sometimes add a publish date
+        'published_at' => $faker->optional()->dateTimeBetween('-1 year', '-5 minutes'),
+
         // Labels
         'name' => $faker->words(4, true),
         'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
@@ -98,3 +101,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
 
     return $factoryData;
 });
+
+$factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
+    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks')
+]);

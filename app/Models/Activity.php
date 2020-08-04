@@ -60,6 +60,7 @@ class Activity extends SluggableModel implements AttachableInterface
         'created_at',
         'updated_at',
         'deleted_at',
+        'published_at',
         'cancelled_at',
 
         // Start date
@@ -373,6 +374,16 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
+     * Returns if the activity is published
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsPublishedAttribute(): bool
+    {
+        return $this->published_at === null || $this->published_at < \now();
+    }
+
+    /**
      * Only return activities available to this user
      * @param Builder $query
      * @param User $user
@@ -384,7 +395,25 @@ class Activity extends SluggableModel implements AttachableInterface
         \assert($user instanceof User);
 
         // Add public-only when not a member
-        return $user && $user->is_member ? $query : $query->whereIsPublic(true);
+        if (!$user || !$user->is_member) {
+            $query = $query->whereIsPublic(true);
+        }
+
+        // Only return published
+        return $query->wherePublished();
+    }
+
+    /**
+     * Only return published activities
+     * @param Builder $query
+     * @param User $user
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWherePublished(Builder $query): Builder
+    {
+        return $query->where(static fn (Builder $query) => $query
+                ->whereNull('published_at')
+                ->orWhere('published_at', '<', \now()));
     }
 
     /**

@@ -337,6 +337,13 @@ class Activity extends Resource
     public function enrollmentFields(): array
     {
         return [
+            DateTime::make('Publiceren op', 'published_at')
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                ->help('Indien je de activiteit nog even wilt verbergen. Dit werkt hetzelfde als een ‘unlisted’ video op YouTube')
+                ->rules('nullable', 'date', 'before:start_date')
+                ->nullable()
+                ->hideFromIndex(),
+
             DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
@@ -366,7 +373,12 @@ class Activity extends Resource
                 ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:0'),
 
+            // Public
             Boolean::make('Openbare activiteit', 'is_public'),
+
+            // Computed published flag
+            Boolean::make('Gepubliceerd', 'is_published')
+                ->onlyOnIndex(),
         ];
     }
 

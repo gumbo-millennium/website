@@ -49,6 +49,13 @@ $discountWarning = (object) [
         @endif
     </div>
 
+    {{-- Unlisted --}}
+    @if (!$activity->is_published)
+    <div class="notice notice--warning">
+        Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
+    </div>
+    @endif
+
     {{-- Discount banner --}}
     @if ($discountWarning->show)
     <div class="notice notice--brand">

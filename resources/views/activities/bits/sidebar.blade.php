@@ -147,11 +147,21 @@ $showCovidWarning = Str::contains(
 @endif
 
 {{-- Members only message, if required --}}
-@if (!$activity->is_public)
-<p class="text-gray-primary-1 text-sm font-bold uppercase mb-4">
-    @icon('solid/lock', 'mr-1')
-    alleen voor leden
-</p>
+@if (!$activity->is_public || !$activity->is_published)
+<div class="text-gray-primary-1 text-sm font-bold uppercase mb-4 flex flex-row items-center">
+    @if (!$activity->is_published)
+    <p class="mr-4">
+        @icon('solid/eye-slash', 'mr-1')
+        verborgen
+    </p>
+    @endif
+    @if (!$activity->is_public)
+    <p class="mr-4">
+        @icon('solid/lock', 'mr-1')
+        alleen voor leden
+    </p>
+    @endif
+</div>
 @endif
 
 {{-- Show cancellation prompt if cancelled --}}
