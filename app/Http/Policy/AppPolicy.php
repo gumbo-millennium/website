@@ -46,6 +46,9 @@ class AppPolicy extends BasePolicy
         // Allow Service Worker
         $this->addDirective(Directive::WORKER, Keyword::SELF);
 
+        // Allow data: images
+        $this->addDirective(Directive::IMG, 'data:');
+
         // Allow Stripe endpoints
         $this->addDirective(Directive::CONNECT, 'https://api.stripe.com');
 
