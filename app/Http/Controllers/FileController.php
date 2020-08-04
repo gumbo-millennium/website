@@ -109,7 +109,9 @@ class FileController extends Controller
 
         // Load extras
         $bundle->loadMissing('media', 'category');
-        $bundleMedia = $bundle->getMedia();
+        $bundleMedia = $bundle
+            ->getMedia()
+            ->sortByDesc('name');
 
         // Set title
         SEOTools::setTitle("{$bundle->title} - {$bundle->category->title} - Bestanden");
