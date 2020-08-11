@@ -191,10 +191,6 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
 
-// Botman front-end
-Route::get('/bots/tinker', 'BotManController@tinker')->name('botman');
-Route::get('/bots/images/{image}', 'BotManController@image')->where('image', '.*')->name('botman.image');
-
 // Styling pages
 if (app()->isLocal()) {
     Route::view('/test/colors', 'tests.colors');

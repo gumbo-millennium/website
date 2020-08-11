@@ -180,7 +180,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // Services
-        App\Providers\BotManServiceProvider::class,
         App\Providers\GoogleServiceProvider::class,
     ],
 
