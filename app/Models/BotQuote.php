@@ -31,6 +31,12 @@ class BotQuote extends Model
     ];
 
     /**
+     * The attributes that should be visible in arrays.
+     * @var array
+     */
+    protected $visible = ['created_at', 'submitted_at', 'display_name', 'quote', 'user.name'];
+
+    /**
      * Returns owning user
      */
     public function user(): BelongsTo
@@ -49,7 +55,7 @@ class BotQuote extends Model
     }
 
     /**
-     * Scope by unsubmitted quotes
+     * Scope to expired quotes
      * @param Builder $query
      * @return Builder
      */
@@ -57,7 +63,20 @@ class BotQuote extends Model
     {
         return $query->where(static function ($query) {
             $query->whereNotNull('submitted_at')
-                ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS));
+            ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS));
+        });
+    }
+
+    /**
+     * Scope to non-expired quotes
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotOutdated(Builder $query): Builder
+    {
+        return $query->where(static function ($query) {
+            $query->whereNull('submitted_at')
+                ->orWhere('submitted_at', '>=', now()->subDays(self::KEEP_DAYS));
         });
     }
 }

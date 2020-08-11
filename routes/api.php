@@ -32,3 +32,15 @@ Route::stripeWebhooks('payments/stripe/handle');
 
 // Register Botman
 Route::match(['get', 'post'], '/botman', 'BotManController@handle')->name('botman');
+
+// Register bot routes
+Route::name('bots.')->prefix('/bots/')->group(static function () {
+    // Register quotes API (SIGNED URLS!)
+    Route::name('quotes.')->prefix('/quotes/')->group(static function () {
+        // Submits a new quote
+        Route::post('/', 'Api\\BotQuoteController@submit')->name('submit');
+
+        // Retrieves quotes for the given user
+        Route::get('/{user}', 'Api\\BotQuoteController@list')->name('show');
+    });
+});
