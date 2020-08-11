@@ -58,7 +58,7 @@ class SendMail extends Command
 
         if (!$user) {
             $this->line("Cannot find a user with the email address <info>$email</>.");
-            return false;
+            return 1;
         }
 
         $this->line("Recieved user <info>{$user->name}</>.");
@@ -105,5 +105,7 @@ class SendMail extends Command
                 Mail::to($user)->send($instance);
             }
         }
+
+        return 0;
     }
 }

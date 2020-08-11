@@ -38,7 +38,7 @@ class RecreateNewsItemsTable extends Migration
             $table->json('contents')->nullable();
 
             // Art and meta
-            $table->paperclip('image');
+            $table->string('image')->nullable()->default(null);
             $table->string('read_time', 15)->nullable()->default(null);
             $table->unsignedBigInteger('author_id')->nullable()->index();
 

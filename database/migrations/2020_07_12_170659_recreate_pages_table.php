@@ -35,7 +35,7 @@ class RecreatePagesTable extends Migration
             $table->json('contents')->nullable();
 
             // Art and meta
-            $table->paperclip('image');
+            $table->string('image')->nullable()->default(null);
             $table->string('type', 10)->default('user');
 
             // User who last edited the page

@@ -53,7 +53,7 @@ class GetPlazacam extends Command
 
         if (!$user) {
             $this->error('Cannot find an eligible user to generate URLs');
-            return false;
+            return 255;
         }
 
         // Print

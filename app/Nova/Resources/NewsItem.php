@@ -8,12 +8,12 @@ use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\NewsItem as NewsItemModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
@@ -113,19 +113,20 @@ class NewsItem extends Resource
                 ->hideFromIndex(),
 
             // Image
-            PaperclipImage::make('Afbeelding', 'image')
-                ->deletable()
+            Image::make('Afbeelding', 'image')
+                ->disk('public')
+                ->path('image-assets/news-items')
                 ->nullable()
                 ->mimes(['png', 'jpeg', 'jpg'])
-                ->help('Afbeelding die bij het artikel en op Social Media getoond wordt. Maximaal 2MB')
-                ->minWidth(640)
-                ->minHeight(480)
+                ->help('Afbeelding die bij het item en op Social Media getoond wordt')
+                ->maxWidth(1920)
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
-                    'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                    Rule::dimensions()
+                        ->maxWidth(1920)
+                        ->maxHeight(1080)
                 ),
 
             // Add data

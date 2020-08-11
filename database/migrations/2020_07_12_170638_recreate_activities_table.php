@@ -69,7 +69,7 @@ class RecreateActivitiesTable extends Migration
             $table->string('postponed_reason')->nullable()->default(null);
 
             // Artwork
-            $table->paperclip('image');
+            $table->string('image')->nullable()->default(null);
 
             // Add owning role and user
             $table->unsignedBigInteger('role_id')->nullable()->default(null);

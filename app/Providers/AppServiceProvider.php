@@ -13,7 +13,6 @@ use App\Services\EnrollmentService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -41,9 +40,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Bind Guzzle client
-        $this->app->bind(GuzzleClient::class, static fn () => new GuzzleClient(config('gumbo.guzzle-config', [])));
-
         // Handle Horizon auth
         Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
     }
@@ -83,31 +79,6 @@ class AppServiceProvider extends ServiceProvider
             return $service;
         });
 
-        // Add Paperclip macro to the database helper
-        Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
-            \assert($this instanceof Blueprint);
-            $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
-            $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
-            $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
-            $this->timestamp("{$name}_updated_at")->comment("{$name} update timestamp")->nullable();
-
-            if ($variants !== false) {
-                $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
-            }
-        });
-
-        // Add Paperclip drop macro to database
-        Blueprint::macro('dropPaperclip', function (string $name, ?bool $variants = null) {
-            \assert($this instanceof Blueprint);
-            $this->dropColumn(array_filter([
-                "{$name}_file_name",
-                "{$name}_file_size",
-                "{$name}_content_type",
-                "{$name}_updated_at",
-                $variants !== false ? "{$name}_variants" : null
-            ]));
-        });
-
         // Provide User for all views
         view()->composer('*', static function (View $view) {
             $view->with([
@@ -123,5 +94,8 @@ class AppServiceProvider extends ServiceProvider
             'warning' => "notice notice--warning",
             'success' => "notice notice--brand",
         ]);
+
+        // Bind Guzzle client (DEPRECATED)
+        $this->app->bind(GuzzleClient::class, static fn () => new GuzzleClient(config('gumbo.guzzle-config', [])));
     }
 }

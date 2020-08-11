@@ -10,11 +10,9 @@ use Spatie\ImageOptimizer\Optimizers\Jpegoptim;
 use Spatie\ImageOptimizer\Optimizers\Optipng;
 use Spatie\ImageOptimizer\Optimizers\Pngquant;
 use Spatie\ImageOptimizer\Optimizers\Svgo;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Image;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Pdf;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Svg;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Video;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Webp;
+use Spatie\MediaLibrary\Conversions\ImageGenerators\Image;
+use Spatie\MediaLibrary\Conversions\ImageGenerators\Svg;
+use Spatie\MediaLibrary\Conversions\ImageGenerators\Webp;
 use Spatie\MediaLibrary\ResponsiveImages\TinyPlaceholderGenerator\Blurred;
 use Spatie\MediaLibrary\ResponsiveImages\WidthCalculator\FileSizeOptimizedWidthCalculator;
 
@@ -43,13 +41,6 @@ return [
      */
     'media_model' => Media::class,
 
-    's3' => [
-        /*
-         * The domain that should be prepended when generating urls.
-         */
-        'domain' => 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com',
-    ],
-
     'remote' => [
         /*
          * Any extra headers that should be included when uploading media to
@@ -71,7 +62,7 @@ return [
          * images. By default we optimize for filesize and create variations that each are 20%
          * smaller than the previous one. More info in the documentation.
          *
-         * https://docs.spatie.be/laravel-medialibrary/v7/advanced-usage/generating-responsive-images
+         * https://docs.spatie.be/laravel-medialibrary/v8/advanced-usage/generating-responsive-images
          */
         'width_calculator' => FileSizeOptimizedWidthCalculator::class,
 
@@ -89,6 +80,28 @@ return [
     ],
 
     /*
+     * When converting Media instances to response the medialibrary will add
+     * a `loading` attribute to the `img` tag. Here you can set the default
+     * value of that attribute.
+     *
+     * Possible values: 'auto', 'lazy' and 'eager,
+     *
+     * More info: https://css-tricks.com/native-lazy-loading/
+     */
+    'default_loading_attribute_value' => 'auto',
+
+    /*
+     * This is the class that is responsible for naming conversion files. By default,
+     * it will use the filename of the original and concatenate the conversion name to it.
+     */
+    'conversion_file_namer' => \Spatie\MediaLibrary\Conversions\DefaultConversionFileNamer::class,
+
+    /*
+     * The class that contains the strategy for determining a media file's path.
+     */
+    'path_generator' => LocalPathGenerator::class,
+
+    /*
      * When urls to files get generated, this class will be called. Leave empty
      * if your files are stored locally above the site root or on s3.
      */
@@ -101,12 +114,7 @@ return [
     'version_urls' => false,
 
     /*
-     * The class that contains the strategy for determining a media file's path.
-     */
-    'path_generator' => LocalPathGenerator::class,
-
-    /*
-     * Medialibrary will try to optimize all converted images by removing
+     * MediaLibrary will try to optimize all converted images by removing
      * metadata and applying a little bit of compression. These are
      * the optimizers that will be used by default.
      */
@@ -138,9 +146,7 @@ return [
     'image_generators' => [
         Image::class,
         Webp::class,
-        Pdf::class,
         Svg::class,
-        Video::class,
     ],
 
     /*

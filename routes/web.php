@@ -197,6 +197,9 @@ if (app()->isLocal()) {
     Route::view('/test/loading', 'tests.loading');
 }
 
+// Images
+Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
+
 // Page groups
 $groupRegex = sprintf(
     '^(%s)$',

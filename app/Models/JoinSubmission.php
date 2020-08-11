@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Actions\Actionable;
+use Roelofr\EncryptionCast\Casts\Compat\AustinHeapEncryptedAttribute as EncryptedAttribute;
 
 /**
  * Encrypted submission to Gumbo
@@ -15,21 +15,20 @@ use Laravel\Nova\Actions\Actionable;
  */
 class JoinSubmission extends Model
 {
-    // Use action log and encryption helper
+    // Use action log
     use Actionable;
-    use HasEncryptedAttributes;
 
     /**
      * @inheritDoc
      */
-    protected $encrypted = [
-        'phone',
-        'date_of_birth',
-        'street',
-        'number',
-        'city',
-        'postal_code',
-        'country',
+    protected $casts = [
+        'phone' => EncryptedAttribute::class,
+        'date_of_birth' => EncryptedAttribute::class,
+        'street' => EncryptedAttribute::class,
+        'number' => EncryptedAttribute::class,
+        'city' => EncryptedAttribute::class,
+        'postal_code' => EncryptedAttribute::class,
+        'country' => EncryptedAttribute::class,
     ];
 
     /**

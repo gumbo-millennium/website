@@ -18,7 +18,6 @@ use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Validation\Rule;
@@ -27,6 +26,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -237,23 +237,20 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->stacked(),
 
-            PaperclipImage::make('Afbeelding', 'image')
-                ->deletable()
+            Image::make('Afbeelding', 'image')
+                ->disk('public')
+                ->path('image-assets/activities')
                 ->nullable()
                 ->mimes(['png', 'jpeg', 'jpg'])
-                ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt, in 3:1 verhouding')
-                ->minWidth(640)
-                ->minHeight(480)
+                ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt')
+                ->maxWidth(1920)
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
-                    'max:2048',
                     Rule::dimensions()
-                        ->maxWidth(3072)
-                        ->maxHeight(1024)
-                        ->minWidth(768)
-                        ->minHeight(256)
+                        ->maxWidth(1920)
+                        ->maxHeight(1080)
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')

@@ -7,6 +7,7 @@ declare(strict_types=1);
 use App\Models\Activity;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 $scandir = require __DIR__ . '/../helpers/files.php';
 $imageOptions = $scandir('test-assets/images', 'jpg');
@@ -62,6 +63,11 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         // Image
         'image' => $faker->optional(0.2)->passthrough($imageOptions->random())
     ];
+
+    // Assign image if present
+    if ($factoryData['image']) {
+        $factoryData['image'] = Storage::disk('public')->putFile('tests/activities', $factoryData['image']);
+    }
 
     // Does this activity has a price?
     if ($faker->boolean(80)) {

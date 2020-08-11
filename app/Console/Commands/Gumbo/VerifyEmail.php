@@ -48,7 +48,7 @@ class VerifyEmail extends Command
 
         if (!$user) {
             $this->error('Cannot find user');
-            return false;
+            return 1;
         }
 
         $sendUrl = $this->option('send');
@@ -60,7 +60,7 @@ class VerifyEmail extends Command
         $this->line("");
         if (!$this->confirm('Is this the correct user', false)) {
             $this->warn('User aborted');
-            return false;
+            return 255;
         }
 
         // Print URL
@@ -71,6 +71,8 @@ class VerifyEmail extends Command
             $user->sendEmailVerificationNotification();
             $this->info('Verification mail re-sent');
         }
+
+        return 0;
     }
 
     /**

@@ -5,25 +5,18 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * A news article
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @property-read AttachmentInterface $image
  */
-class NewsItem extends SluggableModel implements AttachableInterface
+class NewsItem extends SluggableModel
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
-    use HasSimplePaperclippedMedia;
 
     /**
      * The "booted" method of the model.
@@ -62,19 +55,6 @@ class NewsItem extends SluggableModel implements AttachableInterface
         'updated_at',
         'published_at',
     ];
-
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, false]
-        ]);
-    }
 
     /**
      * Generate the slug based on the title property
@@ -122,5 +102,14 @@ class NewsItem extends SluggableModel implements AttachableInterface
                 $query->where('published_at', '<', now())
                     ->orWhereNull('published_at');
             });
+    }
+
+    /**
+     * URL to the image's original size
+     * @return null|string
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
     }
 }

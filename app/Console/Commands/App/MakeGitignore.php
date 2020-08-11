@@ -72,7 +72,7 @@ class MakeGitignore extends Command
                 $data->getStatusCode(),
                 $data->getReasonPhrase()
             ));
-            return false;
+            return 1;
         }
 
         $ignoreContent = $data->getBody() . <<<'IGNORE'
@@ -103,10 +103,10 @@ IGNORE;
 
         if (md5_file($ignoreFile) === md5($ignoreContent)) {
             $this->info('Updated ok!');
-            return true;
+            return 0;
         }
 
         $this->warn('Failed to update, hashes don\'t match');
-        return false;
+        return 1;
     }
 }

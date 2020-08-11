@@ -48,7 +48,7 @@ class RecreateSponsorsTable extends Migration
             $table->json('contents')->nullable();
 
             // Artwork
-            $table->paperclip('backdrop');
+            $table->string('backdrop')->nullable()->default(null);
             $table->string('logo_gray')->nullable()->default(null);
             $table->string('logo_color')->nullable()->default(null);
 

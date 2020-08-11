@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use Illuminate\Support\Str as SupportStr;
-use Spatie\MediaLibrary\Helpers\File;
+use Spatie\MediaLibrary\Support\File;
 
 /**
  * String extensions
@@ -27,7 +27,12 @@ class Str extends SupportStr
         return ($value === null) ? null :  number_format($value, $decimals, ',', '.');
     }
 
-    // Price formatting
+    /**
+     * Price formatting
+     * @param mixed $value
+     * @param null|bool $decimals
+     * @return null|string
+     */
     public static function price($value, ?bool $decimals = null): ?string
     {
         // Validate number and return null if empty

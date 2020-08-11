@@ -12,11 +12,8 @@ max_line_length = 80
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{js,jsx,json,css,scss,xml,yaml,yml}]
+[*.{js,vue,json,css,xml,yaml,yml,blade.php}]
 indent_style = space
-indent_size = 2
-
-[resources/assets/**.json]
 indent_size = 2
 
 [makefile]

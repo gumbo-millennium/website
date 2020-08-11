@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * A bundle of uploaded files
@@ -20,7 +19,7 @@ use Spatie\MediaLibrary\Models\Media;
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
     use Searchable;
 
     /**
@@ -128,7 +127,7 @@ class FileBundle extends SluggableModel implements HasMedia
      * Configure the collection to privately store the data
      * @return void
      */
-    public function registerMediaCollections()
+    public function registerMediaCollections(): void
     {
         $size = [840, 1190];
         $variants = [

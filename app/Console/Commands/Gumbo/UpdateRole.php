@@ -49,7 +49,7 @@ class UpdateRole extends Command
 
         if (!$user) {
             $this->error('Cannot find user');
-            return false;
+            return 1;
         }
 
         $roleName = $this->argument('role');
@@ -57,7 +57,7 @@ class UpdateRole extends Command
             $role = Role::findByName($roleName);
         } catch (RoleDoesNotExist $e) {
             $this->error("Cannot find role named \"{$roleName}\"");
-            return false;
+            return 2;
         }
 
         $force = $this->option('force');
@@ -75,7 +75,7 @@ class UpdateRole extends Command
         $this->line("");
         if (!$force && !$this->confirm('Is this the correct user')) {
             $this->warn('User aborted');
-            return false;
+            return 255;
         }
 
         if ($revoke) {
@@ -89,7 +89,7 @@ class UpdateRole extends Command
                 $user->name
             ));
 
-            return true;
+            return 0;
         }
 
         $user->assignRole($role);
@@ -102,6 +102,6 @@ class UpdateRole extends Command
             $user->name
         ));
 
-        return true;
+        return 0;
     }
 }

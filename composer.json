@@ -1,190 +1,174 @@
 {
-    "name": "gumbo-millennium/website",
-    "description": "The Gumbo Millennium website.",
-    "license": "MIT",
-    "type": "project",
-    "require": {
-        "php": "^7.4 | ^8.0",
-        "advoor/nova-editor-js": "^0.6",
-        "artesaos/seotools": "^0.16.0",
-        "austinheap/laravel-database-encryption": "^0.3.0-rc1",
-        "benjaminhirsch/nova-slug-field": "^1.2",
-        "coderello/laravel-nova-lang": "^1.0",
-        "cviebrock/eloquent-sluggable": "^6.0",
-        "czim/laravel-paperclip": "^2.7",
-        "daniel-de-wit/nova-paperclip": "^0.1",
-        "doctrine/dbal": "^2.3",
-        "ebess/advanced-nova-media-library": "^2.9",
-        "eduardokum/laravel-mail-auto-embed": "dev-master",
-        "enshrined/svg-sanitize": "^0.13.3",
-        "fideloper/proxy": "^4.0",
-        "giggsey/libphonenumber-for-php": "^8.10",
-        "google/apiclient": "^2.4",
-        "gregoriohc/laravel-nova-theme-responsive": "^0.8",
-        "guzzlehttp/guzzle": "^6.3",
-        "html2text/html2text": "^4.2",
-        "kabbouchi/nova-impersonate": "^1.1",
-        "kris/laravel-form-builder": "^1.22",
-        "laktak/hjson": "^2.1",
-        "laravel/framework": "^6.7",
-        "laravel/horizon": "^3.3",
-        "laravel/nova": "^2.0",
-        "laravel/scout": "^7.2",
-        "laravel/telescope": "^2.1",
-        "laravel/tinker": "^2.0",
-        "laravelium/sitemap": "^6.0",
-        "mischiefcollective/colorjizz": "^1.0",
-        "monicahq/laravel-cloudflare": "^1.4",
-        "mtownsend/read-time": "^1.1",
-        "nothingworks/blade-svg": "^0.3.2",
-        "overtrue/laravel-lang": "^3.0",
-        "phpoffice/phpspreadsheet": "^1.11",
-        "predis/predis": "^1.1",
-        "ramsey/uuid": "^3.8",
-        "sebdesign/artisan-cloudflare": "^2.2",
-        "sloveniangooner/searchable-select": "^1.3",
-        "smalot/pdfparser": "^0.13",
-        "spatie/laravel-csp": "^2.4",
-        "spatie/laravel-flash": "^1.3",
-        "spatie/laravel-medialibrary": "^7.18",
-        "spatie/laravel-model-states": "^1.4",
-        "spatie/laravel-permission": "^3.3",
-        "spatie/laravel-stripe-webhooks": "^2.2",
-        "spatie/laravel-view-models": "^1.2",
-        "ssnepenthe/color-utils": "^0.4.2",
-        "stripe/stripe-php": "^7.10",
-        "symfony/process": "^4.1",
-        "symfony/yaml": "^5.0",
-        "teamtnt/laravel-scout-tntsearch-driver": "^7.2",
-        "vyuldashev/nova-permission": "^2.4",
-        "whitecube/nova-flexible-content": "^0.1.12"
-    },
-    "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.5",
-        "facade/ignition": "^1.16",
-        "fzaninotto/faker": "^1.9",
-        "jakub-onderka/php-console-highlighter": "^0.4.0",
-        "jakub-onderka/php-parallel-lint": "^1.0",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpmd/phpmd": "^2.8.1",
-        "phpunit/phpunit": "^8.0",
-        "sempro/phpunit-pretty-print": "^1.2",
-        "slevomat/coding-standard": "^6.1",
-        "squizlabs/php_codesniffer": "^3.3"
-    },
-    "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
-        "files": [
-          "app/Helpers/helpers.php"
-        ],
-        "psr-4": {
-            "App\\": "app/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-            ]
-        }
-    },
-    "scripts": {
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate"
-        ],
-        "post-install-cmd": [
-          "@php artisan vendor:publish --tag=nova-assets",
-          "@php artisan horizon:assets",
-          "@php artisan telescope:publish",
-          "@php artisan nova-lang:publish nl --force"
-        ],
-        "post-update-cmd": [
-          "Illuminate\\Foundation\\ComposerScripts::postUpdate"
-        ],
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
-        ],
-        "contribute": [
-          "@composer install --dev --no-scripts",
-          "@php artisan app:env",
-          "docker-compose pull",
-          "docker-compose up -d",
-          "@composer install --dev",
-          "yarn install --dev",
-          "yarn run build",
-          "@php artisan vendor:publish --tag=horizon-assets",
-          "@php artisan telescope:publish",
-          "docker-compose up -d",
-          "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-          "@php artisan migrate:fresh --seed --force"
-        ],
-        "symlink": [
-          "ln -fs node_modules/bootstrap/scss ./@bootstrap",
-          "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-          "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
-        ],
-        "ide": [
-          "@php artisan clear-compiled",
-          "@php artisan ide-helper:generate",
-          "@php artisan ide-helper:models"
-        ],
-        "server": [
-          "@php artisan telescope:publish",
-          "@php artisan horizon:assets"
-        ],
-        "lint": [
-          "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
-          "phpcs"
-        ],
-        "test": [
-          "phpunit"
-        ],
-        "nova-testing": [
-          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-          "cd ./vendor/laravel/nova && yarn install",
-          "cd ./vendor/laravel/nova && yarn run dev",
-          "cd ./vendor/laravel/nova && rm -rf node_modules",
-          "@php artisan nova:publish"
-        ],
-        "nova-production": [
-          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-          "cd ./vendor/laravel/nova && yarn install",
-          "cd ./vendor/laravel/nova && yarn run prod",
-          "cd ./vendor/laravel/nova && rm -rf node_modules",
-          "@php artisan nova:publish"
-        ]
-    },
-    "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
-      },
-      {
-        "type": "vcs",
-        "url": "https://github.com/roelofr/laravel-mail-auto-embed"
-      },
-      {
-        "type": "composer",
-        "url": "https://nova.laravel.com"
-      }
+  "name": "gumbo-millennium/website",
+  "description": "The Gumbo Millennium website.",
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "ext-redis": "*",
+    "advoor/nova-editor-js": "^2.0",
+    "artesaos/seotools": "^0.18",
+    "benjaminhirsch/nova-slug-field": "^1.2",
+    "blade-ui-kit/blade-icons": "^0.4",
+    "coderello/laravel-nova-lang": "^1.4",
+    "cviebrock/eloquent-sluggable": "^7.0",
+    "doctrine/dbal": "^2.10",
+    "ebess/advanced-nova-media-library": "^3.2",
+    "eduardokum/laravel-mail-auto-embed": "^1.0",
+    "enshrined/svg-sanitize": "^0.13",
+    "fideloper/proxy": "^4.4",
+    "fruitcake/laravel-cors": "^2.0",
+    "giggsey/libphonenumber-for-php": "^8.12",
+    "google/apiclient": "^2.7",
+    "guzzlehttp/guzzle": "^7.0",
+    "kris/laravel-form-builder": "^1.30",
+    "laktak/hjson": "^2.1",
+    "laravel/framework": "^7.25",
+    "laravel/horizon": "^4.3",
+    "laravel/nova": "^3.8",
+    "laravel/scout": "^8.2",
+    "laravel/telescope": "^3.5",
+    "laravel/tinker": "^2.4",
+    "laravel/ui": "^2.1",
+    "laravelium/sitemap": "^7.0",
+    "league/glide-laravel": "^1.0",
+    "mischiefcollective/colorjizz": "^1.0",
+    "overtrue/laravel-lang": "^4.0",
+    "phpoffice/phpspreadsheet": "^1.14",
+    "ramsey/uuid": "^4.1",
+    "roelofr/laravel-encryption-cast": "^1.0",
+    "sloveniangooner/searchable-select": "^1.3",
+    "smalot/pdfparser": "^0.16",
+    "spatie/laravel-csp": "^2.6",
+    "spatie/laravel-flash": "^1.6",
+    "spatie/laravel-medialibrary": "^8.5",
+    "spatie/laravel-model-states": "^1.6",
+    "spatie/laravel-permission": "^3.13",
+    "spatie/laravel-stripe-webhooks": "^2.3",
+    "spatie/laravel-view-models": "^1.3",
+    "ssnepenthe/color-utils": "^0.4",
+    "stripe/stripe-php": "^7.46",
+    "symfony/process": "^5.1",
+    "symfony/yaml": "^5.1",
+    "teamtnt/laravel-scout-tntsearch-driver": "^9.0",
+    "vyuldashev/nova-permission": "^2.9",
+    "whitecube/nova-flexible-content": "^0.2"
+  },
+  "require-dev": {
+    "barryvdh/laravel-ide-helper": "^2.8",
+    "facade/ignition": "^2.3",
+    "fzaninotto/faker": "^1.9",
+    "mockery/mockery": "^1.4",
+    "nunomaduro/collision": "^4.2",
+    "php-parallel-lint/php-console-highlighter": "^0.5",
+    "php-parallel-lint/php-parallel-lint": "^1.2",
+    "phpunit/phpunit": "^9.3",
+    "slevomat/coding-standard": "^6.3",
+    "squizlabs/php_codesniffer": "^3.5"
+  },
+  "autoload": {
+    "classmap": [
+      "database/seeds",
+      "database/factories"
+    ],
+    "files": [
+      "app/Helpers/helpers.php"
+    ],
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "scripts": {
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate"
+    ],
+    "post-install-cmd": [
+      "@php artisan vendor:publish --tag=nova-assets",
+      "@php artisan horizon:publish",
+      "@php artisan telescope:publish",
+      "@php artisan nova-lang:publish nl --force"
+    ],
+    "post-update-cmd": [
+      "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+    ],
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover"
+    ],
+    "contribute": [
+      "@composer install --dev --no-scripts",
+      "@php artisan app:env",
+      "docker-compose pull",
+      "docker-compose up -d",
+      "@composer install --dev",
+      "yarn install --dev",
+      "yarn run build",
+      "@php artisan vendor:publish --tag=horizon-assets",
+      "@php artisan telescope:publish",
+      "docker-compose up -d",
+      "echo \"Waiting for MySQL to get ready\" && sleep 10s",
+      "@php artisan migrate:fresh --seed --force"
+    ],
+    "symlink": [
+      "ln -fs node_modules/bootstrap/scss ./@bootstrap",
+      "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
+      "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
+    ],
+    "ide": [
+      "@php artisan clear-compiled",
+      "@php artisan ide-helper:generate",
+      "@php artisan ide-helper:models"
+    ],
+    "server": [
+      "@php artisan telescope:publish",
+      "@php artisan horizon:publish"
+    ],
+    "lint": [
+      "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
+      "phpcs"
+    ],
+    "test": [
+      "phpunit"
+    ],
+    "nova-testing": [
+      "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+      "cd ./vendor/laravel/nova && yarn install",
+      "cd ./vendor/laravel/nova && yarn run dev",
+      "cd ./vendor/laravel/nova && rm -rf node_modules",
+      "@php artisan nova:publish"
+    ],
+    "nova-production": [
+      "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+      "cd ./vendor/laravel/nova && yarn install",
+      "cd ./vendor/laravel/nova && yarn run prod",
+      "cd ./vendor/laravel/nova && rm -rf node_modules",
+      "@php artisan nova:publish"
     ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://nova.laravel.com"
+    }
+  ]
 }

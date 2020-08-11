@@ -5,25 +5,18 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * A user-generated page
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @property-read AttachmentInterface $image
  */
-class Page extends SluggableModel implements AttachableInterface
+class Page extends SluggableModel
 {
     use HasEditorJsContent;
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
 
     public const TYPE_USER = 'user';
     public const TYPE_REQUIRED = 'required';
@@ -108,20 +101,6 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, true],
-            'poster' => [192, 256, false]
-        ]);
-    }
-
-    /**
      * Returns the URL to this page
      * @return string
      * @throws LogicException
@@ -133,5 +112,14 @@ class Page extends SluggableModel implements AttachableInterface
         }
 
         return url("/{$this->slug}");
+    }
+
+    /**
+     * URL to the image's original size
+     * @return null|string
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
     }
 }

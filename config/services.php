@@ -56,4 +56,22 @@ return [
             'activiteiten.gumbo-millennium.nl'
         ],
     ],
+
+    // Glide (images)
+    'glide' => [
+        'cache-path' => null,
+        'presets' => [
+            'social' => [
+                'w' => 1200,
+                'h' => 630,
+                'fit' => 'crop'
+            ],
+            'social-webp' => [
+                'w' => 1200,
+                'h' => 630,
+                'fit' => 'crop',
+                'fm' => 'webp'
+            ]
+        ]
+    ]
 ];

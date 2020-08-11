@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,13 +14,9 @@ use Illuminate\Support\Facades\Storage;
  * Gumbo Millennium sponsors
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @property-read AttachmentInterface $backdrop
  */
-class Sponsor extends SluggableModel implements AttachableInterface
+class Sponsor extends SluggableModel
 {
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
     use HasEditorJsContent;
     use SoftDeletes;
 
@@ -155,18 +147,6 @@ class Sponsor extends SluggableModel implements AttachableInterface
         return Storage::disk(self::LOGO_DISK)->url($this->logo_color);
     }
 
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('backdrop', [
-            'banner' => [1920, 960, true]
-        ]);
-    }
-
     public function clicks(): HasMany
     {
         return $this->hasMany(SponsorClick::class);
@@ -188,5 +168,14 @@ class Sponsor extends SluggableModel implements AttachableInterface
     public function getContentHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
+    }
+
+    /**
+     * URL to the backdrop's original size
+     * @return null|string
+     */
+    public function getBackdropUrlAttribute(): ?string
+    {
+        return $this->backdrop ? Storage::disk('public')->url($this->backdrop) : null;
     }
 }

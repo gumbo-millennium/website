@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Contracts\Mail\MailList;
 use App\Helpers\Str;
 use App\Models\EmailList;
 use App\Services\Mail\GoogleMailList;

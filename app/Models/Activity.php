@@ -8,12 +8,9 @@ use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
@@ -21,15 +18,11 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * A hosted activity
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @property-read AttachmentInterface $image
  */
-class Activity extends SluggableModel implements AttachableInterface
+class Activity extends SluggableModel
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
     use HasFlexible;
-    use HasSimplePaperclippedMedia;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
     public const PAYMENT_TYPE_BILLING = 'billing';
@@ -438,14 +431,11 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     * @return void
+     * URL to the image's original size
+     * @return null|string
      */
-    protected function bindPaperclip(): void
+    public function getImageUrlAttribute(): ?string
     {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'cover' => [768, 256, true]
-        ]);
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
     }
 }

@@ -7,7 +7,7 @@ namespace App\Models;
 use App\Helpers\Arr;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\Models\Media as BaseMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
 {

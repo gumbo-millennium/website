@@ -48,7 +48,7 @@ class SetAdmin extends Command
 
         if (!$user) {
             $this->error('Cannot find user');
-            return false;
+            return 255;
         }
 
         $demote = $this->option('revoke');
@@ -69,7 +69,7 @@ class SetAdmin extends Command
         $this->line("");
         if (!$this->confirm('Is this the correct user', false)) {
             $this->warn('User aborted');
-            return false;
+            return 255;
         }
 
         if ($demote) {
@@ -81,7 +81,7 @@ class SetAdmin extends Command
                 $user->name
             ));
 
-            return true;
+            return 0;
         }
 
         $user->givePermissionTo('super-admin');
@@ -92,6 +92,6 @@ class SetAdmin extends Command
             $user->name
         ));
 
-        return true;
+        return 0;
     }
 }
