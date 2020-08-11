@@ -166,6 +166,13 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(stati
     // Quotes
     Route::get('/wist-je-datjes', 'BotQuoteController@index')->name('quotes');
     Route::delete('/wist-je-datjes', 'BotQuoteController@destroy')->name('quotes.delete');
+
+    // Bot links
+    Route::get('/accounts', 'BotUserController@index')->name('bot-users');
+    Route::get('/accounts/link/{link}', 'BotUserController@showLink')->name('bot-users.link');
+    Route::post('/accounts/link/{link}', 'BotUserController@link');
+    Route::get('/accounts/unlink/{link}', 'BotUserController@showUnlink')->name('bot-users.unlink');
+    Route::post('/accounts/unlink/{link}', 'BotUserController@unlink');
 });
 
 // Onboarding URLs

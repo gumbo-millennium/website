@@ -12,6 +12,14 @@ class BotUserLink extends UuidModel
     public const TYPE_USER = 'user';
     public const TYPE_CHANNEL = 'list';
 
+    private const DEFAULT_ICON = 'robot';
+
+    private const DRIVER_ICONS = [
+        'default' => 'robot',
+        'telegram' => 'brands/telegram',
+        'discord' => 'brands/discord'
+    ];
+
     /**
      * Shorthand to create a link, optionally connected to a user
      * @param string $driver
@@ -31,27 +39,20 @@ class BotUserLink extends UuidModel
     }
 
     /**
-     * Scopes to a driver and it's ID
-     * @param Builder $query
-     * @param string $driver
-     * @param string $driverId
-     * @return Builder
-     * @throws InvalidArgumentException
-     */
-    public function scopeWhereDriverId(Builder $query, string $driver, string $driverId): Builder
-    {
-        return $query->where([
-            'driver' => $driver,
-            'driver_id' => $driverId,
-        ]);
-    }
-
-    /**
      * Returns the owning user
      * @returns BelongsTo<App\Models\User>
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Returns the icon name
+     * @return string
+     */
+    public function getIconAttribute(): string
+    {
+        return self::DRIVER_ICONS[$this->driver] ?? self::DRIVER_ICONS['default'];
     }
 }
