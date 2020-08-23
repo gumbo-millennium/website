@@ -77,14 +77,14 @@ class NewMemberForm extends Form
         $this
             ->add('date-of-birth', 'date', [
                 'label' => 'Geboortedatum',
-                'rules' => ['required', sprintf('before:%s', today()->subYear(17)->addDay()->format('Y-m-d'))],
+                'rules' => ['required', sprintf('before:%s', today()->subYear(16)->addDay()->format('Y-m-d'))],
                 'attr' => [
                     'autocomplete' => 'bday'
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
                     Om je aan te melden voor Gumbo Millennium via de website
-                    moet je minimaal 17 jaar oud zijn.
+                    moet je minimaal 16 jaar oud zijn.
                     TEXT
                 ],
             ])
