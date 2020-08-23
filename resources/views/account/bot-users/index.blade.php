@@ -16,7 +16,7 @@
 {{-- Pending quotes --}}
 @forelse ($links as $link)
     <div class="p-4 rounded border-brand-secondary-1 flex flex-row items-center">
-        @icon("brands/{$link->icon}.svg", "h-16 mr-8 text-brand-primary-1")
+        @svg("brands/{$link->icon}.svg", "h-16 mr-8 text-brand-primary-1")
         <div class="flex-grow">
             <h3 class="font-bold mb-4 text-brand-primary-1">{{ $link->name }} ({{ $link->driver }})</h3>
             <p>

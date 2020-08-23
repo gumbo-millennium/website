@@ -31,7 +31,7 @@ $hasDelete = (bool) ($delete ?? false);
             @if ($hasDelete)
             <td>
                 <button type="submit" form="quote-delete" class="appearance-none text-danger p-2" name="quote-id" value="{{ $quote->id }}">
-                    @icon('solid/trash-alt', ['class' => 'icon', 'aria-label' => 'Verwijder wist-je-datje'])
+                    @svg('solid/trash-alt', ['class' => 'icon', 'aria-label' => 'Verwijder wist-je-datje'])
                 </button>
             </td>
             @endif

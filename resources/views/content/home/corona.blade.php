@@ -2,7 +2,7 @@
     <div class="container container--sm py-20 text-center">
         {{-- Title --}}
         <div class="flex flex-row justify-center items-center mb-4">
-            @icon('solid/virus', 'h-8 w-8 text-blue-primary-1 mr-4')
+            @svg('solid/virus', 'h-8 w-8 text-blue-primary-1 mr-4')
             <strong class="mb-2 md:mb-0 md:mr-4">Coronavirus informatie</strong>
         </div>
 

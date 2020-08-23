@@ -151,13 +151,13 @@ $showCovidWarning = Str::contains(
 <div class="text-gray-primary-1 text-sm font-bold uppercase mb-4 flex flex-row items-center">
     @if (!$activity->is_published)
     <p class="mr-4">
-        @icon('solid/eye-slash', 'mr-1')
+        @svg('solid/eye-slash', 'mr-1')
         verborgen
     </p>
     @endif
     @if (!$activity->is_public)
     <p class="mr-4">
-        @icon('solid/lock', 'mr-1')
+        @svg('solid/lock', 'mr-1')
         alleen voor leden
     </p>
     @endif
@@ -248,7 +248,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
     <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
     <dd class="col w-2/3 flex-none mb-2 text-sm">
         @if ($icon)
-            @icon($icon, 'mr-2')
+            @svg($icon, 'mr-2')
         @endif
         {{ $value }}
     </dd>
@@ -263,13 +263,13 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 @if ($nextLink === 'activity')
 <a href="{{ route('activity.show', compact('activity')) }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @svg('chevron-left', 'mr-2')
     Terug naar details
 </a>
 @elseif ($activity === 'list')
 <a href="{{ route('activity.index') }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @svg('chevron-left', 'mr-2')
     Terug naar overzicht
 </a>
 @endif

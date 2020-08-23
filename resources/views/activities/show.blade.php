@@ -59,7 +59,7 @@ $discountWarning = (object) [
     {{-- Discount banner --}}
     @if ($discountWarning->show)
     <div class="notice notice--brand">
-        @icon('solid/percentage', 'notice__icon')
+        @svg('solid/percentage', 'notice__icon')
         <p>
             @if ($discountWarning->soldout)
             De inschrijvingen met korting zijn allemaal vergeven, je betaald nu het normale tarief.

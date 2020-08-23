@@ -7,13 +7,13 @@
             <!--sse-->
             <li class="userbar__links-link">
                 <a href="tel:+31388450100" class="userbar__links-item userbar__links-item--flex">
-                    @icon('solid/phone', ['aria-label' => 'Telefoon symbool'])
+                    @svg('solid/phone', ['aria-label' => 'Telefoon symbool'])
                     <span>038 845 0100</span>
                 </a>
             </li>
             <li class="userbar__links-link">
                 <a href="mailto:bestuur@gumbo-millennium.nl" class="userbar__links-item userbar__links-item--flex">
-                    @icon('solid/envelope', ['aria-label' => 'E-mail symbool'])
+                    @svg('solid/envelope', ['aria-label' => 'E-mail symbool'])
                     <span>bestuur@gumbo-millennium.nl</span>
                 </a>
             </li>
@@ -26,7 +26,7 @@
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
                 <a href="{{ route('account.index') }}" class="userbar__links-item">
-                    @icon('solid/user', ['aria-label' => 'Gebruiker symbool'])
+                    @svg('solid/user', ['aria-label' => 'Gebruiker symbool'])
                     <span>{{ $user->name }}</span>
                 </a>
             </li>
@@ -78,7 +78,7 @@
         {{-- Toggle --}}
         <label for="navbar-toggle" class="navbar__toggle">
             <span class="sr-only">Toon navigatie</span>
-            @icon('bars', 'navbar__toggle-icon')
+            @svg('bars', 'navbar__toggle-icon')
         </label>
 
         {{-- The actual toggle (without JS) --}}

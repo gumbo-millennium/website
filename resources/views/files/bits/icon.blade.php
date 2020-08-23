@@ -24,4 +24,4 @@ $map = [
 $extension = Str::afterLast($file->name, '.');
 $icon = $map[$extension] ?? 'file';
 @endphp
-@icon("regular/{$icon}", 'mr-2 flex-none icon block mt-1')
+@svg("regular/{$icon}", 'mr-2 flex-none icon block mt-1')

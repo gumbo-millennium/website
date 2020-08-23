@@ -38,7 +38,7 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
                 <p class="mb-0 font-bold">
                     {{ $authorName }}
                     @if ($isSponsor)
-                    @icon('solid/ad', 'ml-2')
+                    @svg('solid/ad', 'ml-2')
                     @endif
                 </p>
                 <time timestamp="{{ $postIso }}" class="mb-0 text-gray-primary-1">{{ $postDate }}</time>
@@ -46,16 +46,16 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
             <div class="col md:w-5/12 flex flex-wrap flex-row items-center md:justify-end">
                 <p class="text-sm uppercase font-medium text-gray-primary-1 w-full md:w-auto md:mr-2 mb-0 leading-none">Delen:</p>
                 <a href="{{ $facebookLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Facebook">
-                    @icon('brands/facebook-f', 'h-4')
+                    @svg('brands/facebook-f', 'h-4')
                 </a>
                 <a href="{{ $twitterLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Twitter">
-                    @icon('brands/twitter', 'h-4')
+                    @svg('brands/twitter', 'h-4')
                 </a>
                 <a href="{{ $telegramLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Telegram">
-                    @icon('brands/telegram', 'h-4')
+                    @svg('brands/telegram', 'h-4')
                 </a>
                 <a href="{{ $whatsappLink }}" class="p-2 text-gray-primary-1" aria-label="Delen op Whatsapp">
-                    @icon('brands/whatsapp', 'h-4')
+                    @svg('brands/whatsapp', 'h-4')
                 </a>
             </div>
         </div>

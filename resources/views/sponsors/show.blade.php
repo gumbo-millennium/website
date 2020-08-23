@@ -4,7 +4,7 @@
 <div class="sponsor-single">
     <div class="container container--md">
         <a href="{{ route('sponsors.index') }}" class="sponsor-single__back" rel="parent">
-            @icon('chevron-left', 'h-4 mr-2')
+            @svg('chevron-left', 'h-4 mr-2')
             <span>Terug naar sponsoren</span>
         </a>
 
@@ -17,7 +17,7 @@
                 <div class="sponsor-single__header-text">
                     <h1 class="sponsor-single__header-title">{{ $sponsor->contents_title ?? $sponsor->name }}</h1>
                     <p class="sponsor-single__header-subtitle">
-                        @icon('ad', 'h-4 mr-2')
+                        @svg('ad', 'h-4 mr-2')
                         <span>Gesponsord door {{ $sponsor->name }}</span>
                     </p>
                 </div>

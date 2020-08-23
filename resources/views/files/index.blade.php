@@ -36,7 +36,7 @@
             {{-- Show all link --}}
             <a href="{{ route('files.category', compact('category')) }}" class="file-set__show-all">
                 Bekijk alle bundels in {{ $category->title }}
-                @icon('chevron-right', 'ml-2')
+                @svg('chevron-right', 'ml-2')
             </a>
         @else
         <div class="file-set__empty-notice">
