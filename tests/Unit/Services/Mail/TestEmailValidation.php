@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Services\Mail;
 
 use App\Services\Mail\Traits\ValidatesEmailRequests;
 use Illuminate\Support\Facades\Config;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class TestEmailValidation extends TestCase
