@@ -5,27 +5,35 @@ declare(strict_types=1);
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Activity;
+use Carbon\CarbonImmutable;
 use Faker\Generator as Faker;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 $scandir = require __DIR__ . '/../helpers/files.php';
 $imageOptions = $scandir('test-assets/images', 'jpg');
 
-$factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
-    $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
-    $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
+$factory->define(Activity::class, static function (Faker $faker) {
+    $eventStart = CarbonImmutable::instance($faker->dateTimeBetween(
+        today()->subMonths(3),
+        today()->addYear(1)
+    ));
 
-    $eventEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(2), $eventStartCarbon->addHours(8));
-    $eventEndCarbon = Carbon::instance($eventEnd)->toImmutable();
+    $eventEnd = CarbonImmutable::instance($faker->dateTimeBetween(
+        $eventStart->addHours(2),
+        $eventStart->addHours(8)
+    ));
 
-    $enrollStart = $faker->dateTimeBetween($eventStartCarbon->subWeeks(4), $eventStartCarbon);
-    $enrollStartCarbon = Carbon::instance($enrollStart)->toImmutable();
+    $enrollStart = CarbonImmutable::instance($faker->dateTimeBetween(
+        $eventStart->subWeeks(4),
+        $eventStart
+    ));
 
-    $enrollEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
-    $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
+    $enrollEnd = CarbonImmutable::instance($faker->dateTimeBetween(
+        $eventStart->addHours(1),
+        $eventEnd
+    ));
 
-    $factoryData = [
+    return [
         // Optionally cancel it
         'cancelled_at' => $faker->optional(0.05)->dateTimeBetween('-2 years', '-6 hours'),
 
@@ -37,10 +45,10 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
 
         // Dates
-        'start_date' => $eventStartCarbon,
-        'end_date' => $eventEndCarbon,
-        'enrollment_start' => $enrollStartCarbon,
-        'enrollment_end' => $enrollEndCarbon,
+        'start_date' => $eventStart,
+        'end_date' => $eventEnd,
+        'enrollment_start' => $enrollStart,
+        'enrollment_end' => $enrollEnd,
 
         // Location
         'location' => $faker->company,
@@ -52,61 +60,45 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         ]),
 
         // Seats
-        'seats' => $faker->optional(0.2)->numberBetween(4, 60),
+        'seats' => $seats = $faker->optional(0.2)->numberBetween(4, 60),
+        'discount_count' => $seats ? $faker->optional(0.5)->numberBetween(2, $seats) : null,
         'is_public' => $faker->boolean(90),
 
         // Pricing
         'price' => null,
         'member_discount' => null,
         'discount_count' => null,
-
-        // Image
-        'image' => $faker->optional(0.2)->passthrough($imageOptions->random())
     ];
-
-    // Assign image if present
-    if ($factoryData['image']) {
-        $factoryData['image'] = Storage::disk('public')->putFile('tests/activities', $factoryData['image']);
-    }
-
-    // Does this activity has a price?
-    if ($faker->boolean(80)) {
-        $price = $faker->numberBetween(500, $faker->numberBetween(500, 6000) * 1.25);
-        $price = ($price - ($price % 25));
-        $factoryData['price'] = $price;
-
-        if ($faker->boolean(10)) {
-            // Full discount for members
-            $factoryData['member_discount'] = $price;
-        } elseif ($faker->boolean(35)) {
-            // Partial discount
-            $factoryData['member_discount'] = $faker->numberBetween(0, $price);
-            $factoryData['member_discount'] -= $factoryData['member_discount'] % 25;
-        }
-
-        // Restrict discount
-        if ($factoryData['member_discount'] && $faker->boolean(25)) {
-            $factoryData['discount_count'] = $faker->numberBetween(1, $factoryData['seats']);
-        }
-    }
-
-    // Postpone or reschedule 20% of the activity
-    if ($faker->boolean(20)) {
-        // Postpone activity
-        if ($faker->boolean) {
-            $factoryData['postponed_at'] = $faker->dateTimeBetween('-2 weeks', '+2 weeks');
-            $factoryData['postponed_reason'] = $faker->optional(0.80)->sentence;
-        } else {
-            $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
-                (clone $factoryData['start_date'])->subMonth(),
-                $factoryData['start_date']
-            );
-            $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
-        }
-    }
-
-    return $factoryData;
 });
+
+$factory->state(Activity::class, 'image', [
+    'image' => Storage::disk('public')->putFile('tests/activities', $imageOptions->random())
+]);
+
+$factory->state(Activity::class, 'paid', static fn ($faker) => [
+    'price' => $faker->numberBetween(5_00, 60_00)
+]);
+
+$factory->state(Activity::class, 'member-free', static fn ($faker, $activity) => [
+    'member_discount' => $activity->price
+]);
+
+$factory->state(Activity::class, 'member-discount', static fn ($faker, $activity) => [
+    'member_discount' => intdiv($faker->numberBetween(0, $activity->price), 25) * 25
+]);
+
+$factory->state(Activity::class, 'postponed', static fn ($faker) => [
+    'postponed_at' => $faker->dateTimeBetween('-2 weeks', '+2 weeks'),
+    'postponed_reason' => $faker->optional(0.80)->sentence,
+]);
+
+$factory->state(Activity::class, 'rescheduled', static fn ($faker, $activity) => [
+    'rescheduled_from' => $faker->dateTimeBetween(
+        (clone $activity->start_date)->subMonth(),
+        $activity->start_date
+    ),
+    'rescheduled_reason' => $faker->optional(0.80)->sentence
+]);
 
 $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
     'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks')

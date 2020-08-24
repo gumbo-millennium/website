@@ -128,7 +128,7 @@ class ActivitySeeder extends Seeder
     public function seedChristmasEvents(): void
     {
         // Find christmas
-        $christmasDate = Carbon::parse('December 25th', 'UTC')->toImmutable();
+        $christmasDate = CarbonImmutable::parse('December 25th', 'UTC');
 
         // Make sure it's in the future
         if ($christmasDate > now()) {
@@ -158,7 +158,7 @@ class ActivitySeeder extends Seeder
             return null;
         }
 
-        $activity = factory(Activity::class, 1)->create(array_merge(
+        $activity = factory(Activity::class, 1)->states('image')->create(array_merge(
             ['slug' => $slug],
             $args
         ))->first();
