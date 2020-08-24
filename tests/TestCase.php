@@ -10,16 +10,15 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use RefreshDatabase;
     use ProvidesUsers;
 
     public function setUp(): void
     {
         // Permissions are super required, so always seed them when using a DB
-        if (\in_array(RefreshDatabase::class, \class_uses_recursive(static::class))) {
-            $this->afterApplicationCreated(function () {
-                $this->artisan('db:seed --class=PermissionSeeder');
-            });
-        }
+        $this->afterApplicationCreated(function () {
+            $this->artisan('db:seed --class=PermissionSeeder');
+        });
 
         // Forward
         parent::setUp();

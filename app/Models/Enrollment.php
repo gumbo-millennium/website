@@ -179,4 +179,20 @@ class Enrollment extends UuidModel
                 RefundedState::class
             );
     }
+
+    /**
+     * Returns true if this enrollment still needs payment
+     * @return bool
+     */
+    public function getCanBePaidAttribute(): bool
+    {
+        // Can't be paid if total price is null or zero
+        if (!$this->total_price) {
+            return false;
+        }
+
+        // Check if Paid is one of the goal statuses
+        $options = $this->state->transitionableStates();
+        return \in_array(PaidState::$name, $options);
+    }
 }

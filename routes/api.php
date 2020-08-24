@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +31,7 @@ Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
 
 // Register API for Stripe endpoints
 Route::stripeWebhooks('payments/stripe/handle');
+Route::post('/payments/mollie/handle', 'MollieController@receive')->name('mollie.webhook');
 
 // Register bot routes
 Route::name('bots.')->prefix('/bots/')->group(static function () {

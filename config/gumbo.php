@@ -9,6 +9,9 @@ return [
     // Cost of a single payment transaction via Stripe, in cents!
     'transfer-fee' => 29,
 
+    // VAT
+    'vat-rate' => 0.21,
+
     // Google config
     'google' => [
         // Allowed domains

@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     protected $hidden = [
         'stripe_id',
         'conscribo_id',
+        'vendor_ids',
         'password',
         'remember_token',
         'phone',
@@ -65,6 +66,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      * @var array
      */
     protected $attributes = [
+        'vendor_ids' => '[]',
         'insert' => null,
         'alias' => null,
     ];
@@ -75,6 +77,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     protected $casts = [
         'conscribo_id' => 'int',
+        'vendor_ids' => 'json',
         'address' => EncryptedAttribute::class . 'json',
         'phone' => EncryptedAttribute::class,
     ];
@@ -222,5 +225,50 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
         // Return new data
         return $data;
+    }
+
+    /**
+     * Updates a vendor ID, while allowing for chaining
+     * @param string $vendor
+     * @param mixed $id
+     * @return User
+     */
+    public function setVendorId(string $vendor, $id): self
+    {
+        // Ensure scalar or null
+        if ($id !== null && !\is_scalar($id)) {
+            throw new InvalidArgumentException("The ID for $vendor isn't a safe value");
+        }
+
+        // Get IDs
+        $vendors = $this->vendor_ids ?? [];
+
+        // Update it
+        $vendors[$vendor] = $id;
+
+        // Or delete if required
+        if ($id === null) {
+            unset($vendors[$vendor]);
+        }
+
+        // Re-set the entire group
+        $this->vendor_ids = $vendors;
+
+        // Chain
+        return $this;
+    }
+
+    /**
+     * Returns a stored vendor ID
+     * @param string $vendor
+     * @return null|scalar
+     */
+    public function getVendorId(string $vendor)
+    {
+        // Get IDs
+        $vendors = $this->vendor_ids ?? [];
+
+        // Get if found
+        return \array_key_exists($vendor, $vendors) ? $vendors[$vendor] : null;
     }
 }

@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $enrollment_id
- * @property string $platform
- * @property string $platform_id
+ * @property string $provider
+ * @property string $provider_id
  * @property int $amount
  * @property bool $paid
  * @property bool $refunded
@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Invoice extends UuidModel
 {
     /**
-     * Returns the invoice for the given enrollment on the given platform
-     * @param string $platform
+     * Returns the invoice for the given enrollment on the given provider
+     * @param string $provider
      * @param Enrollment $enrollment
      * @return null|Invoice
      */
-    public static function findEnrollmentInvoiceByProvider(string $platform, Enrollment $enrollment): ?self
+    public static function findEnrollmentInvoiceByProvider(string $provider, Enrollment $enrollment): ?self
     {
         // Always return null if enrollment is not yet created
         if (!$enrollment->exists()) {
@@ -33,25 +33,56 @@ class Invoice extends UuidModel
         // Run query
         return self::query()
             ->where([
-                'platform' => $platform,
+                'provider' => $provider,
                 'enrollment_id' => $enrollment->id
             ])
             ->first();
     }
 
     /**
-     * Finds the invoice with the given $id on the platform
-     * @param string $platform
+     * Finds the invoice with the given $id on the provider
+     * @param string $provider
      * @param string $id
      * @return null|Invoice
      */
-    public static function findInvoiceIdByProvider(string $platform, string $id): ?self
+    public static function findInvoiceIdByProvider(string $provider, string $id): ?self
     {
         return self::query()->where([
-            'platform' => $platform,
-            'platform_id' => $id
+            'provider' => $provider,
+            'provider_id' => $id
         ])->first();
     }
+
+    /**
+     * Creates an invoice for the given ID on the provider
+     * @param string $provider
+     * @param string $id
+     * @param Enrollment $enrollment
+     * @param array $props additional properties, like 'amount'
+     * @return Invoice
+     * @throws InvalidArgumentException
+     */
+    public static function createSupplied(string $provider, string $id, Enrollment $enrollment, array $props = []): self
+    {
+        $invoice = new self($props);
+        $invoice->provider = $provider;
+        $invoice->provider_id = $id;
+        $invoice->enrollment_id = $enrollment->id;
+        $invoice->amount = $enrollment->total_price;
+        $invoice->save();
+
+        return $invoice;
+    }
+
+    /**
+     * The attributes that are mass assignable.
+     * @var array
+     */
+    protected $fillable = [
+        'amount',
+        'paid',
+        'refunded'
+    ];
 
     /**
      * Indicates if the model should be timestamped.

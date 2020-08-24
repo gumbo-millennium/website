@@ -23,6 +23,20 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    // Mollie API
+    'mollie' => [
+        'test-mode' => env('MOLLIE_TEST_MODE', false),
+        'api-key' => env('MOLLIE_API_KEY')
+    ],
+
+    // Payments in general
+    'payments' => [
+        'default-provider' => env('PAYMENT_PROVIDER', 'mollie'),
+        'providers' => [
+            'mollie' => App\Services\Payments\MolliePaymentService::class,
+        ]
+    ],
+
     // Conscribo API
     'conscribo' => [
         'account-name' => env('CONSCRIBO_ACCOUNT_NAME'),

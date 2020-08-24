@@ -15,13 +15,28 @@ class CreateInvoicesTable extends Migration
     public function up()
     {
         Schema::create('invoices', static function (Blueprint $table) {
-            $table->string('platform', 10);
-            $table->string('platform_id', 64);
+            // Use UUIDs
+            $table->uuid('id')->primary();
+
+            // Basically a composite key, but Laravel is iffey about it
+            $table->string('provider', 10);
+            $table->string('provider_id', 64);
+
+            // Enrollment this invoice is for
             $table->foreignUuid('enrollment_id');
+
+            // Amount to get
             $table->smallInteger('amount');
+
+            // Flags
             $table->boolean('paid')->default(0);
             $table->boolean('refunded')->default(0);
+
+            // Blob
             $table->json('meta');
+
+            // One invoice per, well, invoice
+            $table->unique(['provider', 'provider_id']);
         });
     }
 
