@@ -9,7 +9,7 @@ $logo = $sponsorService->toSvg($sponsor, [
 {{-- Style for the sponsor --}}
 <style nonce="{{ csp_nonce() }}">
 .sponsor--backdrop-brand {
-    background-image: url('{{ $sponsor->backdrop->url('banner') }}');
+    background-image: url('@image($sponsor->backdrop, 'banner')');
 }
 </style>
 {{-- Actual sponsor --}}

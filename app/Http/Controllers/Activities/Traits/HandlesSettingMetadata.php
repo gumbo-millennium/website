@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities\Traits;
 
+use App\Facades\Glide;
 use App\Helpers\Arr;
 use App\Models\Activity;
 use Artesaos\SEOTools\Facades\JsonLd;
@@ -36,13 +37,15 @@ trait HandlesSettingMetadata
         SEOTools::setTitle($activity->name);
         SEOTools::setDescription($activity->tagline);
         SEOTools::setCanonical($this->getCanonical($activity));
-        SEOTools::addImages([$activity->image->url('social')]);
+        SEOTools::addImages([
+            Glide::url($activity->image, 'social')
+        ]);
 
         // Set Open Graph
         OpenGraph::setUrl($url);
         OpenGraph::addImages([
-            $activity->image->url('social'),
-            $activity->image->url('social-2x')
+            Glide::url($activity->image, 'social'),
+            Glide::url($activity->image, 'social-2x')
         ]);
 
         // Build JSON
@@ -92,7 +95,7 @@ trait HandlesSettingMetadata
             'identifier' => $url,
             'name' => $activity->name,
             'description' => $activity->tagline,
-            'image' => $activity->image->url('social'),
+            'image' => Glide::url($activity->image, 'social'),
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
             'organizer' => $performer,

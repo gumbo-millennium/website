@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\SponsorService;
+use App\Facades\Glide;
 use App\Models\NewsItem;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
@@ -96,7 +97,7 @@ class NewsController extends Controller
         SEOTools::setDescription($description);
         SEOTools::setCanonical($url);
         SEOTools::addImages([
-            $item->image->url('social')
+            Glide::url($item->image, 'social')
         ]);
 
         // Set Open Graph

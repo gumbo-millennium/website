@@ -4,16 +4,15 @@ $logo = $sponsorService->toSvg($sponsor, [
     'title' => $sponsor->name,
     'aria-label' => "Logo van {$sponsor->name}"
 ], 'color');
-$backdrop = $sponsor->backdrop->url('banner');
 @endphp
 <article class="partner-block__item">
     <div class="partner-card">
         <div class="partner-card__image-wrapper">
-            @if ($backdrop)
+            @if ($sponsor->backdrop)
             <img
                 role="presentation"
                 class="partner-card__image-backdrop"
-                src="{{ $backdrop }}" />
+                src="@image($sponsor->backdrop)" />
             @endif
             <div class="partner-card__image-logo-wrapper">
                 {{ $logo }}

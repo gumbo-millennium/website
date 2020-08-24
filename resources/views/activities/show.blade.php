@@ -38,9 +38,9 @@ $discountWarning = (object) [
 @section('two-col.left')
     {{-- Image --}}
     <div class="h-64 bg-gray-secondary-2 rounded mb-4 overflow-hidden" role="presentation">
-        @if ($activity->image->exists())
-        <img class="w-full h-64 object-cover" src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w,{{ $activity->image->url('cover-2x') }} 768w">
+        @if ($activity->image)
+        <img class="w-full h-64 object-cover" src="@image($activity->image, 'cover')"
+            srcset="@image($activity->image, 'cover') 384w, @image($activity->image, 'cover') 768w">
         @else
         <div class="w-full h-64 flex items-center">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block dark:hidden">

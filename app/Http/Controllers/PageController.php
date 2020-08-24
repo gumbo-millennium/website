@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\SponsorService;
+use App\Facades\Glide;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
@@ -148,7 +149,7 @@ class PageController extends Controller
         SEOTools::setCanonical($page->url);
         SEOTools::setTitle($page->title);
         SEOTools::setDescription($page->description);
-        SEOTools::addImages([$page->image->url('social')]);
+        SEOTools::addImages([Glide::url($page->image, 'social')]);
 
         // Show view
         return response()

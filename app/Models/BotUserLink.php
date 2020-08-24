@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BotUserLink extends UuidModel
@@ -15,7 +14,6 @@ class BotUserLink extends UuidModel
     private const DEFAULT_ICON = 'robot';
 
     private const DRIVER_ICONS = [
-        'default' => 'robot',
         'telegram' => 'brands/telegram',
         'discord' => 'brands/discord'
     ];

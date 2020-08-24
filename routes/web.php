@@ -198,7 +198,7 @@ if (app()->isLocal()) {
 }
 
 // Images
-Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
+Route::get('/img/{signature}/{path}', 'ImageController@show')->where('path', '.*')->name('glide-image');
 
 // Page groups
 $groupRegex = sprintf(
