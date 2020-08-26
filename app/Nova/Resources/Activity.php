@@ -366,7 +366,7 @@ class Activity extends Resource
                 }
 
                 // Label
-                return $this->enrollment_status ? 'Geopend' : 'Gesloten';
+                return $this->enrollment_open ? 'Geopend' : 'Gesloten';
             })->onlyOnIndex(),
 
             Seats::make('Aantal plekken', 'seats')
