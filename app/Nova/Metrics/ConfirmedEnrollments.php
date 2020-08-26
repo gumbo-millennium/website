@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\Nova\Metrics;
 
-use App\Models\Sponsor;
-use App\Models\SponsorClick;
+use App\Models\Enrollment;
+use App\Models\States\Enrollment\Confirmed;
+use App\Models\States\Enrollment\Paid;
+use App\Nova\Metrics\Traits\HasOnlyHostedEnrollments;
 use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Trend;
 
-class SponsorClicksPerDay extends Trend
+class ConfirmedEnrollments extends Trend
 {
+    use HasOnlyHostedEnrollments;
+
     /**
      * The displayable name of the metric.
      * @var string
      */
-    public $name = 'Doorkliks naar sponsoren';
+    public $name = 'Succesvolle inschrijvingen';
 
     /**
      * Calculate the value of the metric.
@@ -25,7 +29,14 @@ class SponsorClicksPerDay extends Trend
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->sumByDays($request, SponsorClick::class, 'count', 'date');
+        return $this->countByDays(
+            $request,
+            $this->getHostedEnrollmentsQuery($request)->whereState(
+                'state',
+                [Paid::class, Confirmed::class]
+            ),
+            'updated_at'
+        );
     }
 
     /**
@@ -35,10 +46,9 @@ class SponsorClicksPerDay extends Trend
     public function ranges()
     {
         return [
+            7 => '7 dagen',
             14 => '14 dagen',
             30 => '30 dagen',
-            60 => '60 dagen',
-            90 => '90 dagen',
             'TODAY' => 'vandaag'
         ];
     }
@@ -58,7 +68,7 @@ class SponsorClicksPerDay extends Trend
      */
     public function uriKey()
     {
-        return 'sponsor-clicks-per-day';
+        return 'confirmed-enrollments';
     }
 
     /**
@@ -66,6 +76,6 @@ class SponsorClicksPerDay extends Trend
      */
     public function authorizedToSee(Request $request)
     {
-        return $request->user()->can('viewAny', Sponsor::class) && parent::authorizedToSee($request);
+        return $request->user()->can('viewAny', Enrollment::class) && parent::authorizedToSee($request);
     }
 }

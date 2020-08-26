@@ -4,26 +4,34 @@ declare(strict_types=1);
 
 namespace App\Nova\Metrics;
 
-use App\Models\User;
+use App\Models\Enrollment;
+use App\Nova\Metrics\Traits\HasOnlyHostedEnrollments;
 use Illuminate\Http\Request;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class NewUsers extends Value
+class NewEnrollments extends Value
 {
+    use HasOnlyHostedEnrollments;
+
     /**
      * The displayable name of the metric.
      * @var string
      */
-    public $name = 'Nieuwe gebruikers';
+    public $name = 'Nieuwe inschrijvingen';
 
     /**
      * Calculate the value of the metric.
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
-    public function calculate(Request $request)
+    public function calculate(NovaRequest $request)
     {
-        return $this->count($request, User::class);
+        return $this->count(
+            $request,
+            $this->getHostedEnrollmentsQuery($request),
+            'updated_at'
+        )->allowZeroResult();
     }
 
     /**
@@ -47,7 +55,7 @@ class NewUsers extends Value
      */
     public function cacheFor()
     {
-        // return now()->addMinutes(5);
+        return now()->addMinutes(15);
     }
 
     /**
@@ -56,7 +64,7 @@ class NewUsers extends Value
      */
     public function uriKey()
     {
-        return 'new-users';
+        return 'new-enrollments';
     }
 
     /**
@@ -64,6 +72,6 @@ class NewUsers extends Value
      */
     public function authorizedToSee(Request $request)
     {
-        return $request->user()->can('viewAny', User::class) && parent::authorizedToSee($request);
+        return $request->user()->can('viewAny', Enrollment::class) && parent::authorizedToSee($request);
     }
 }

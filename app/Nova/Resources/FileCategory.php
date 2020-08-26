@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use App\Models\FileCategory as FileCategoryModel;
+use App\Nova\Metrics\DownloadsPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
@@ -98,6 +99,17 @@ class FileCategory extends Resource
                 // phpcs:enable
                 Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
                 ])
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            new DownloadsPerDay(),
         ];
     }
 }

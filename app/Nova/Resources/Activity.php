@@ -13,6 +13,9 @@ use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters\RelevantActivitiesFilter;
 use App\Nova\Flexible\Presets\ActivityForm;
+use App\Nova\Metrics\ConfirmedEnrollments;
+use App\Nova\Metrics\NewEnrollments;
+use App\Nova\Metrics\PendingEnrollments;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
@@ -406,6 +409,19 @@ class Activity extends Resource
     {
         return [
             new RelevantActivitiesFilter()
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            new NewEnrollments(),
+            new PendingEnrollments(),
+            new ConfirmedEnrollments(),
         ];
     }
 }

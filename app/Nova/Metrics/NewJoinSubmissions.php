@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Nova\Metrics;
 
-use App\Models\User;
+use App\Models\JoinSubmission;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
 
-class NewUsers extends Value
+class NewJoinSubmissions extends Value
 {
     /**
      * The displayable name of the metric.
      * @var string
      */
-    public $name = 'Nieuwe gebruikers';
+    public $name = 'Nieuwe lidmaatschapsverzoeken';
 
     /**
      * Calculate the value of the metric.
@@ -23,7 +23,7 @@ class NewUsers extends Value
      */
     public function calculate(Request $request)
     {
-        return $this->count($request, User::class);
+        return $this->count($request, JoinSubmission::class);
     }
 
     /**
@@ -47,7 +47,7 @@ class NewUsers extends Value
      */
     public function cacheFor()
     {
-        // return now()->addMinutes(5);
+        return now()->addMinutes(5);
     }
 
     /**
@@ -56,7 +56,7 @@ class NewUsers extends Value
      */
     public function uriKey()
     {
-        return 'new-users';
+        return 'new-join-submissions';
     }
 
     /**
@@ -64,6 +64,6 @@ class NewUsers extends Value
      */
     public function authorizedToSee(Request $request)
     {
-        return $request->user()->can('viewAny', User::class) && parent::authorizedToSee($request);
+        return $request->user()->can('viewAny', JoinSubmission::class) && parent::authorizedToSee($request);
     }
 }

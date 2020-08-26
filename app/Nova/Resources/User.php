@@ -6,6 +6,7 @@ namespace App\Nova\Resources;
 
 use App\Models\User as UserModel;
 use App\Nova\Filters\UserRoleFilter;
+use App\Nova\Metrics\NewUsers;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
@@ -123,6 +124,17 @@ class User extends Resource
     {
         return [
             new UserRoleFilter(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            new NewUsers()
         ];
     }
 }

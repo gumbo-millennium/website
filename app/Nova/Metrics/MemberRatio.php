@@ -11,6 +11,12 @@ use Laravel\Nova\Metrics\Partition;
 class MemberRatio extends Partition
 {
     /**
+     * The displayable name of the metric.
+     * @var string
+     */
+    public $name = 'Leden naar groep';
+
+    /**
      * Calculate the value of the metric.
      * @param Request $request
      * @return mixed
@@ -45,5 +51,13 @@ class MemberRatio extends Partition
     public function uriKey()
     {
         return 'member-ratio';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function authorizedToSee(Request $request)
+    {
+        return $request->user()->can('viewAny', User::class) && parent::authorizedToSee($request);
     }
 }

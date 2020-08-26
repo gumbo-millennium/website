@@ -10,6 +10,9 @@ use App\Models\States\Enrollment\Paid;
 use App\Nova\Actions\CancelEnrollment;
 use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Fields\Price;
+use App\Nova\Metrics\ConfirmedEnrollments;
+use App\Nova\Metrics\NewEnrollments;
+use App\Nova\Metrics\PendingEnrollments;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -218,6 +221,19 @@ class Enrollment extends Resource
                     };
                     return $request->user()->can('manage', $enrollment);
                 })
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            new NewEnrollments(),
+            new PendingEnrollments(),
+            new ConfirmedEnrollments(),
         ];
     }
 }

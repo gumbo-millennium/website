@@ -6,6 +6,7 @@ namespace App\Nova\Resources;
 
 use App\Models\JoinSubmission as JoinSubmissionModel;
 use App\Nova\Actions\HandleJoinSubmission;
+use App\Nova\Metrics\NewJoinSubmissions;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -175,6 +176,17 @@ class JoinSubmission extends Resource
     {
         return [
             new HandleJoinSubmission(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function cards(Request $request)
+    {
+        return [
+            new NewJoinSubmissions()
         ];
     }
 }

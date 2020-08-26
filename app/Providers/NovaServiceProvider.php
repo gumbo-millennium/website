@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Nova\Metrics\MemberRatio;
+use App\Nova\Metrics\NewEnrollments;
+use App\Nova\Metrics\NewUsers;
 use App\Nova\Resources\Permission;
 use App\Nova\Resources\Role;
 use Illuminate\Support\Facades\Gate;
@@ -85,7 +86,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new MemberRatio()
+            new NewUsers(),
+            new NewEnrollments()
         ];
     }
 }

@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace App\Nova\Metrics;
 
+use App\Models\FileBundle;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Trend;
 
 class DownloadsPerDay extends Trend
 {
+    /**
+     * The displayable name of the metric.
+     * @var string
+     */
+    public $name = 'Downloads';
+
     /**
      * Calculate the value of the metric.
      * @param  \Illuminate\Http\Request  $request
@@ -26,9 +33,11 @@ class DownloadsPerDay extends Trend
     public function ranges()
     {
         return [
-            30 => '30 Days',
-            60 => '60 Days',
-            90 => '90 Days',
+            14 => '14 dagen',
+            30 => '30 dagen',
+            60 => '60 dagen',
+            90 => '90 dagen',
+            'TODAY' => 'vandaag'
         ];
     }
 
@@ -48,5 +57,13 @@ class DownloadsPerDay extends Trend
     public function uriKey()
     {
         return 'downloads-per-day';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function authorizedToSee(Request $request)
+    {
+        return $request->user()->can('viewAny', FileBundle::class) && parent::authorizedToSee($request);
     }
 }
