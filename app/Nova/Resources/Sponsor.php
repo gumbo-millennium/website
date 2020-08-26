@@ -100,7 +100,7 @@ class Sponsor extends Resource
             Number::make('Totaal aantal kliks', 'click_count')
                 ->onlyOnDetail(),
             Sparkline::make('Aantal kliks')
-                ->data(new SponsorClicksPerDay($this->id)),
+                ->data(new SponsorClicksPerDay(null, $this->model())),
 
             // Advert info
             new Panel('Contract', [

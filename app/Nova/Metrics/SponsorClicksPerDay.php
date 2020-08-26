@@ -18,6 +18,15 @@ class SponsorClicksPerDay extends Trend
      */
     public $name = 'Doorkliks naar sponsoren';
 
+    private ?Sponsor $sponsor;
+
+    public function __construct($component = null, ?Sponsor $sponsor = null)
+    {
+        parent::__construct($component);
+
+        $this->sponsor = $sponsor;
+    }
+
     /**
      * Calculate the value of the metric.
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
@@ -25,7 +34,12 @@ class SponsorClicksPerDay extends Trend
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->sumByDays($request, SponsorClick::class, 'count', 'date');
+        $query = SponsorClick::query();
+        if ($this->sponsor) {
+            $query->whereSponsorId($this->sponsor->id);
+        }
+
+        return $this->sumByDays($request, $query, 'count', 'date');
     }
 
     /**
