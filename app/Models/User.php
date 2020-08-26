@@ -166,19 +166,35 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns (sub)query that only returns the Activities this user
-     * is a manager of
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * is a manager of.
+     * @param null|Builder $query
+     * @return Builder
+     * @throws InvalidArgumentException
      */
-    public function getHostedActivityQuery(Builder $query): Builder
+    public function getHostedActivityQuery(?Builder $query = null): Builder
     {
-        // Save $this as $user for child
-        $user = $this;
+        // Ensure a query is present
+        $query ??= Activity::query();
+
+        // Return all if the user can do anything
+        if ($this->can('admin', Activity::class)) {
+            return $query;
+        }
 
         // Return data as a subquery
-        return $query->where(static function ($query) use ($user) {
-            $query->whereIn('role_id', $user->roles()->pluck('id'));
+        return $query->where(function ($query) {
+            $query->whereIn('role_id', $this->roles()->pluck('id'));
         });
+    }
+
+    /**
+     * Returns a subquery to select all activity IDs this user can manage
+     * @return Builder
+     * @throws InvalidArgumentException
+     */
+    public function getHostedActivityIdQuery(): Builder
+    {
+        return $this->getHostedActivityQuery()->select('id');
     }
 
     /**

@@ -7,6 +7,7 @@ namespace App\Nova\Resources;
 use App\Models\Enrollment as EnrollmentModel;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
+use App\Models\User as UserModel;
 use App\Nova\Actions\CancelEnrollment;
 use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Fields\Price;
@@ -81,6 +82,7 @@ class Enrollment extends Resource
     {
         // Get user shorthand
         $user = $request->user();
+        \assert($user instanceof UserModel);
 
         // Return all enrollments if the user can manage them
         if ($user->can('admin', EnrollmentModel::class)) {
@@ -89,10 +91,10 @@ class Enrollment extends Resource
 
         // Only return enrollments of the user's events if the user is not
         // allowed to globally manage events.
-        return parent::indexQuery(
-            $request,
-            $query->whereIn('activity_id', $user->hosted_activity_ids)
-        );
+        return parent::indexQuery($request, $query->whereIn(
+            'activity_id',
+            $user->getHostedActivityIdQuery()
+        ));
     }
 
 
@@ -108,6 +110,7 @@ class Enrollment extends Resource
     {
         // Get user shorthand
         $user = $request->user();
+        \assert($user instanceof UserModel);
 
         // Return all enrollments if the user can manage them
         if ($user->can('admin', EnrollmentModel::class)) {
@@ -116,10 +119,10 @@ class Enrollment extends Resource
 
         // Only return enrollments of the user's events if the user is not
         // allowed to globally manage events.
-        return parent::relatableQuery(
-            $request,
-            $query->whereIn('activity_id', $user->hosted_activity_ids)
-        );
+        return parent::relatableQuery($request, $query->whereIn(
+            'activity_id',
+            $user->getHostedActivityIdQuery()
+        ));
     }
 
     /**

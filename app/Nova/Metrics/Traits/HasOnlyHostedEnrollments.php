@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Nova\Metrics\Traits;
 
-use App\Models\Activity;
 use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -30,7 +29,7 @@ trait HasOnlyHostedEnrollments
         }
 
         // User only has a subset of queries, filter it
-        return $query->whereIn('activity_id', $user->getHostedActivityQuery(Activity::query())->select('id'));
+        return $query->whereIn('activity_id', $user->getHostedActivityIdQuery());
     }
 
     /**
