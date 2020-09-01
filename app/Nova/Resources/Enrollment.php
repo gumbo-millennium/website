@@ -11,6 +11,7 @@ use App\Models\User as UserModel;
 use App\Nova\Actions\CancelEnrollment;
 use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Fields\Price;
+use App\Nova\Filters\EnrollmentStateFilter;
 use App\Nova\Metrics\ConfirmedEnrollments;
 use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
@@ -237,6 +238,19 @@ class Enrollment extends Resource
             new NewEnrollments(),
             new PendingEnrollments(),
             new ConfirmedEnrollments(),
+        ];
+    }
+
+    /**
+     * Get the filters available on the entity.
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function filters(Request $request)
+    {
+        return [
+            new EnrollmentStateFilter()
         ];
     }
 }

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
+use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
 use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Traits\HasPaperclip;
@@ -124,8 +125,7 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function enrollments(): Relation
     {
-        return $this->hasMany(Enrollment::class)
-            ->whereNotState('state', CancelledState::class);
+        return $this->hasMany(Enrollment::class);
     }
 
     /**
@@ -159,7 +159,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Get enrollment count
         $occupied = $this->enrollments()
-            ->whereNotState('state', CancelledState::class)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
             ->count();
 
         // Subtract active enrollments from active seats
@@ -278,7 +278,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
         // Count them
         $usedEnrollments = $this->enrollments()
-            ->whereNotState('state', CancelledState::class)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
             ->where('user_type', 'member')
             ->count();
 
