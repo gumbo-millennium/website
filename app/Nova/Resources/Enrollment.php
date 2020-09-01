@@ -167,6 +167,8 @@ class Enrollment extends Resource
                 ->onlyOnDetail(),
             Text::make('Reden verwijdering', 'deleted_reason')
                 ->onlyOnDetail(),
+            DateTime::make('Afloopdatum', 'expire')
+                ->onlyOnDetail(),
 
             // Pricing
             Price::make('Prijs netto', 'price')
