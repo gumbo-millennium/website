@@ -43,7 +43,7 @@ class PruneExpiredEnrollments implements ShouldQueue
 
             // Cancel enrollment
             $enrollment->state->transitionTo(Cancelled::class);
-            $enrollment->deleted_reason = 'deleted_reason';
+            $enrollment->deleted_reason = 'timeout';
 
             // Save changes
             $enrollment->save();
