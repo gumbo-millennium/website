@@ -10,10 +10,15 @@ namespace App\Models\States\Enrollment;
 class Refunded extends Cancelled
 {
     /**
+     * Name of the state
+     */
+    public const NAME = 'refunded';
+
+    /**
      * Name of the state, as human-readable version
      * @var string
      */
-    public static $name = 'refunded';
+    public static $name = self::NAME;
 
     /**
      * @inheritDoc

@@ -10,10 +10,15 @@ namespace App\Models\States\Enrollment;
 class Confirmed extends State
 {
     /**
+     * Name of the state
+     */
+    public const NAME = 'confirmed';
+
+    /**
      * Name of the state, as human-readable version
      * @var string
      */
-    public static $name = 'confirmed';
+    public static $name = self::NAME;
 
     /**
      * @inheritDoc

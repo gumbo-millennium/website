@@ -15,6 +15,11 @@ abstract class State extends BaseState
     use HasAttributes;
 
     /**
+     * Name of the state
+     */
+    public const NAME = '_state';
+
+    /**
      * States that are not eligible for automatic deletion
      */
     private const STABLE_STATES = [
@@ -29,7 +34,7 @@ abstract class State extends BaseState
      */
     public function getNameAttribute(): string
     {
-        return class_basename($this);
+        return static::NAME;
     }
 
     /**

@@ -10,16 +10,21 @@ namespace App\Models\States\Enrollment;
 class Seeded extends State
 {
     /**
+     * Name of the state
+     */
+    public const NAME = 'seeded';
+
+    /**
      * Name of the state, as human-readable version
      * @var string
      */
-    public static $name = 'seeded';
+    public static $name = self::NAME;
 
     /**
      * @inheritDoc
      */
     public function getTitleAttribute(): string
     {
-        return 'Formulier ingevuld';
+        return 'Wachtend op betaling';
     }
 }
