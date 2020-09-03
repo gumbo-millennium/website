@@ -197,7 +197,8 @@
 
     {{-- Migrate database --}}
     echo -e "\nMigrating database"
-    php artisan migrate --force --seed
+    php artisan migrate --force
+    php artisan db:seed --force || true
 @endtask
 
 @task('deployment_cache')
