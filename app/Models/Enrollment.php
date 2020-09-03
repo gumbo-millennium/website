@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Helpers\Arr;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
 use App\Models\States\Enrollment\Paid as PaidState;
+use App\Models\States\Enrollment\PolicyAccepted as PolicyAcceptedState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
@@ -127,14 +129,28 @@ class Enrollment extends UuidModel
     {
         // First check for any transition
         $options = $this->state->transitionableStates();
+
+        // Policy is mandatory
+        if (\in_array(PolicyAcceptedState::$name, $options)) {
+            return new PolicyAcceptedState($this);
+        }
+
+        // Require seeding if a form is present
         if (in_array(SeededState::$name, $options) && $this->activity->form) {
             return new SeededState($this);
-        } elseif (in_array(PaidState::$name, $options) && $this->price) {
+        }
+
+        // Require payment if a price is set
+        if (in_array(PaidState::$name, $options) && $this->price) {
             return new PaidState($this);
-        } elseif (in_array(ConfirmedState::$name, $options)) {
+        }
+
+        // We can confirm, so do that
+        if (in_array(ConfirmedState::$name, $options)) {
             return new ConfirmedState($this);
         }
 
+        // The fact that we can cancel doesn't mean we want to, so return null
         return null;
     }
 
@@ -158,18 +174,21 @@ class Enrollment extends UuidModel
             // Default to Created
             ->default(CreatedState::class)
 
-            // Create → Seeded
-            ->allowTransition(CreatedState::class, SeededState::class)
+            // Create → Covid
+            ->allowTransition(CreatedState::class, PolicyAcceptedState::class)
 
-            // Created, Seeded → Confirmed
-            ->allowTransition([CreatedState::class, SeededState::class], ConfirmedState::class)
+            // Covid → Seeded
+            ->allowTransition(PolicyAcceptedState::class, SeededState::class)
 
-            // Created, Seeded, Confirmed → Paid
-            ->allowTransition([CreatedState::class, SeededState::class, ConfirmedState::class], PaidState::class)
+            // Covid, Seeded → Confirmed
+            ->allowTransition([PolicyAcceptedState::class, SeededState::class], ConfirmedState::class)
 
-            // Created, Seeded, Confirmed, Paid → Cancelled
+            // Covid, Seeded, Confirmed → Paid
+            ->allowTransition([PolicyAcceptedState::class, SeededState::class, ConfirmedState::class], PaidState::class)
+
+            // Covid, Seeded, Confirmed, Paid → Cancelled
             ->allowTransition(
-                [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
+                [PolicyAcceptedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
                 CancelledState::class
             )
 
@@ -194,5 +213,30 @@ class Enrollment extends UuidModel
         // Check if Paid is one of the goal statuses
         $options = $this->state->transitionableStates();
         return \in_array(PaidState::$name, $options);
+    }
+
+    /**
+     * Sets the given key on the data
+     * @param string $key Key to the data, supports dot notation
+     * @param mixed $value Any value
+     * @return Enrollment
+     */
+    public function setData(string $key, $value): self
+    {
+        $data = $this->data;
+        Arr::set($data, $key, $value);
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Returns the key from the data
+     * @param string $key Key to the data, supports dot notation
+     * @return null|mixed
+     */
+    public function getData(string $key)
+    {
+        $data = $this->data;
+        return Arr::get($data, $key);
     }
 }
