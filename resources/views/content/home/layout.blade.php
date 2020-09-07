@@ -22,6 +22,8 @@ SEOMeta::setCanonical(url('/'));
 {{-- Sponsors --}}
 @include('content.home.sponsors')
 
+{{-- Grote Clubactie --}}
+@includeWhen(now() < Carbon::parse('2020-12-10T00:00:00'), 'content.home.clubactie')
 
 {{-- Activities --}}
 @include('content.home.activities')
