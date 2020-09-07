@@ -221,7 +221,7 @@ module.exports = {
     // Copy images
     new CopyPlugin([
       {
-        test: /\.(png|svg|jpg)$/,
+        test: /\.(png|svg|jpg|webp)$/,
         from: 'resources/assets/{images,svg}/**/*',
         to: withHash('images/[name].[ext]'),
         toType: 'template',
@@ -238,6 +238,7 @@ module.exports = {
 
     // Minify images
     new ImageminPlugin({
+      test: /\.(png|svg|jpg)$/,
       disable: !inProduction,
       plugins: imageMinPlugins
     }),
