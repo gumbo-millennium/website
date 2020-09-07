@@ -13,14 +13,15 @@ SEOMeta::setCanonical(url('/'));
 @push('header.navbar-class', ' navbar--no-shadow ')
 
 @section('content')
+{{-- Covid --}}
+@include('content.home.corona')
+
 {{-- Header --}}
 @include('content.home.header')
 
 {{-- Sponsors --}}
 @include('content.home.sponsors')
 
-{{-- Corona message --}}
-@include('content.home.corona')
 
 {{-- Activities --}}
 @include('content.home.activities')

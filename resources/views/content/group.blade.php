@@ -19,20 +19,6 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
         </div>
     </div>
 
-    @if ($group === 'coronavirus')
-    <div class="container">
-        <div class="notice notice--large notice--info">
-            <strong class="notice__title">Alleen officiële informatie</strong>
-            <p class="m-0 w-full">
-                De informatie in dit artikel is een uitspraak van ons als vereniging.
-                Voor actuele informatie, adviezen en cijfers raden wij je altijd aan
-                om te kijken naar de officiële instanties.
-            </p>
-            @include('covid19.block')
-        </div>
-    </div>
-    @endif
-
     {{-- Contents --}}
     <div class="container">
         <div class="plain-content">
@@ -46,6 +32,10 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
 {{-- Content --}}
 <div class="container">
     <div class="flex flex-row flex-wrap row">
+    {{-- Add disclaimer --}}
+    @includeWhen($group === 'coronavirus', 'covid19.disclaimer-card')
+
+    {{-- Add all pages --}}
     @foreach ($pages as $item)
     <article class="col w-full flex-none md:w-1/2 mb-8">
     <div class="card">

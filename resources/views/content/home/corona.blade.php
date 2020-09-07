@@ -1,16 +1,17 @@
-<div class="bg-blue-secondary-1 text-lg font-normal">
-    <div class="container container--sm py-20 text-center">
-        {{-- Title --}}
-        <div class="flex flex-row justify-center items-center mb-4">
-            @icon('solid/virus', 'h-8 w-8 text-blue-primary-1 mr-4')
-            <strong class="mb-2 md:mb-0 md:mr-4">Coronavirus informatie</strong>
-        </div>
+<div class="bg-brand-primary-2 text-lg font-normal text-light">
+    <div class="container py-1 flex flex-row items-center">
+      {{-- Icon --}}
+      @svg('solid/shield-virus', 'h-4 mr-4 my-1')
 
-        <p class="mb-2">
-            De coronacrisis laat Gumbo Millennium ook niet ongeroerd. Ook wij hebben annuleringen, verplaatsingen
-            en regelwijzigingen doorgevoerd aan de hand van de Covid-19 uitbraak.
-        </p>
+      {{-- Title --}}
+      <h3 class="mr-4 flex-grow my-1">
+        <span class="hidden md:block">Vragen over Gumbo en het coronavirus?</span>
+        <span class="block md:hidden">Coronavirus info</span>
+      </h3>
 
-        <a href="/coronavirus" class="text-lg text-blue-primary-1 no-underline">Lees hier meer</a>
+      {{-- Link --}}
+      <a href="/coronavirus" class="no-underline bg-brand-primary-3 px-4 py-1 rounded text-light hover:text-light hover:bg-brand-secondary-3 border border-light">
+        Lees meer
+      </a>
     </div>
 </div>
