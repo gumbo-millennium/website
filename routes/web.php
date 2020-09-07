@@ -211,5 +211,9 @@ $groupRegex = sprintf(
 Route::get("{group}", 'PageController@group')->where('group', $groupRegex)->name('group.index');
 Route::get("{group}/{slug}", 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
 
+// Redirects
+Route::redirect('corona', '/coronavirus');
+Route::redirect('covid', '/coronavirus');
+
 // Page fallback
 Route::fallback('PageController@fallback');
