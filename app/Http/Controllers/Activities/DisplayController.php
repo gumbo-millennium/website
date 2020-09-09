@@ -97,6 +97,12 @@ class DisplayController extends Controller
      */
     public function show(Request $request, Activity $activity)
     {
+        // Redirect if not public and not logged in
+        if (!$activity->is_public && !$request->user()) {
+            return \redirect()
+                ->guest(route('login'));
+        }
+
         // Ensure the user can see this
         $this->authorize('view', $activity);
 
