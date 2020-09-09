@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -17,28 +18,29 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register()
     {
-        // Disable night mode
+        // Don't run when testing
         if ($this->app->environment('testing')) {
             return;
         }
 
+        // Enable the night mode
         Telescope::night();
 
+        // Ensure special values are hidden
         $this->hideSensitiveRequestDetails();
 
-        Telescope::filter(function (IncomingEntry $entry) {
-            if (
-                $this->app->isLocal() ||
-                $this->app->get('config')->get('gumbo.beta')
-            ) {
-                return true;
-            }
+        // Allow logging everything on local and beta
+        if ($this->app->isLocal() || Config::get('gumbo.beta')) {
+            return true;
+        }
 
-            return $entry->isReportableException() ||
-                   $entry->isFailedJob() ||
-                   $entry->isScheduledTask() ||
-                   $entry->hasMonitoredTag();
-        });
+        // Filter batches
+        Telescope::filterBatch(static fn (IncomingEntry $entry) =>
+            $entry->isReportableException() ||
+            $entry->isFailedRequest() ||
+            $entry->isFailedJob() ||
+            $entry->isScheduledTask() ||
+            $entry->hasMonitoredTag());
     }
 
     /**
@@ -47,12 +49,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function hideSensitiveRequestDetails()
     {
-        if ($this->app->isLocal() || $this->app->environment('testing')) {
-            return;
-        }
+        // Hiden tokens
+        Telescope::hideRequestParameters(['_token', 'password']);
 
-        Telescope::hideRequestParameters(['_token']);
-
+        // Hide cookies and CSRF tokens
         Telescope::hideRequestHeaders([
             'cookie',
             'x-csrf-token',
@@ -68,6 +68,6 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewTelescope', static fn ($user) => $user && $user->hasPermission('devops'));
+        Gate::define('viewTelescope', static fn ($user) => $user && $user->hasPermissionTo('devops'));
     }
 }
