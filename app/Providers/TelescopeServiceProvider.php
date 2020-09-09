@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
@@ -35,12 +36,17 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         }
 
         // Filter batches
-        Telescope::filterBatch(static fn (IncomingEntry $entry) =>
-            $entry->isReportableException() ||
-            $entry->isFailedRequest() ||
-            $entry->isFailedJob() ||
-            $entry->isScheduledTask() ||
-            $entry->hasMonitoredTag());
+        Telescope::filterBatch(static function (Collection $entries) {
+            // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
+            $entries->contains(static function (IncomingEntry $entry) {
+                return
+                    $entry->isReportableException() ||
+                    $entry->isFailedRequest() ||
+                    $entry->isFailedJob() ||
+                    $entry->isScheduledTask() ||
+                    $entry->hasMonitoredTag();
+            });
+        });
     }
 
     /**
