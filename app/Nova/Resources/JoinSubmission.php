@@ -113,6 +113,10 @@ class JoinSubmission extends Resource
                     ->hideFromIndex()
                     ->help('Geboortedatum, in ISO 8601 (yyyy-mm-dd)')
                     ->rules(['required', 'date_format:Y-m-d', "before:{$sixteenYears}"]),
+                Text::make('Geslacht', 'gender')
+                    ->hideFromIndex()
+                    ->help('Geslacht, in vrije vorm')
+                    ->rules(['required'])
             ]),
             new Panel('Adres informatie', [
                 Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),
