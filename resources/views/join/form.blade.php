@@ -22,6 +22,13 @@
     @include('join.partials.data-safety')
 </div>
 
+{{-- Add gender suggestions --}}
+<datalist id="join-gender">
+    <option value="Man">
+    <option value="Vrouw">
+    <option value="-">
+</datalist>
+
 {{-- Add form --}}
 @include('join.partials.form')
 

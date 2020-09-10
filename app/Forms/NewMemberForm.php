@@ -88,17 +88,15 @@ class NewMemberForm extends Form
                     TEXT
                 ],
             ])
-            ->add('gender', 'choice', [
+            ->add('gender', 'text', [
                 'label' => 'Geslacht',
                 'rules' => 'required',
-                'choices' => [
-                    'man' => 'Man',
-                    'vrouw' => 'Vrouw'
+                'attr' => [
+                    'list' => 'join-gender'
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Wil je liever een andere notatie vast laten leggen? Stuur
-                    dan even een mailtje naar bestuur@gumbo-millennium.nl.
+                    Indien niet van toepassing, zet dan een streepje neer.
                     TEXT
                 ],
             ]);
