@@ -114,6 +114,7 @@ class EnrollmentService implements EnrollmentServiceContract
             logger()->info('Applying member discount {discount}', ['discount' => $activity->member_discount]);
             $enrollment->price = $activity->discount_price;
             $enrollment->total_price = $activity->total_discount_price;
+            $enrollment->user_type = 'member';
         }
 
         // Set to null if the price is empty
