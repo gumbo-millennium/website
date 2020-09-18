@@ -392,7 +392,7 @@ class Activity extends SluggableModel implements AttachableInterface
     public function scopeWhereAvailable(Builder $query, ?User $user = null): Builder
     {
         $user ??= request()->user();
-        \assert($user instanceof User);
+        \assert($user === null || $user instanceof User);
 
         // Add public-only when not a member
         if (!$user || !$user->is_member) {
