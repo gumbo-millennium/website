@@ -25,7 +25,7 @@
 
     {{-- Count --}}
     <p class="mt-2 px-1">
-        <strong>{{ $files->count() }}</strong> resultaten voor “{{ $searchQuery }}”.
+        <strong>{{ $files->total() }}</strong> resultaten voor “{{ $searchQuery }}”.
     </p>
 </div>
 

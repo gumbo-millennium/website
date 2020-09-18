@@ -257,7 +257,7 @@ class FileController extends Controller
         $files = Media::search($searchQuery)->constrain($constraint);
 
         // Order by date and paginate results
-        $results = $files->orderBy('created_at', 'desc')->paginate(30);
+        $results = $files->paginate(30);
 
         // Return result
         return \response()
