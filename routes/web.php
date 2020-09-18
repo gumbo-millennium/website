@@ -40,6 +40,9 @@ Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->grou
     // Main route
     Route::get('/', 'FileController@index')->name('index');
 
+    // Search
+    Route::get('/zoeken', 'FileController@search')->name('search');
+
     // Subcategory route
     Route::get('/{category}', 'FileController@category')->name('category');
 

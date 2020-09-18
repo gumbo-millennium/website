@@ -21,11 +21,11 @@
   @apply p-8 text-left;
 }
 
-.file-set__empty-notice__title {
+.file-set__empty-notice-title {
   @apply text-xl font-title mb-8;
 }
 
-.file-set__empty-notice__body {
+.file-set__empty-notice-body {
   @apply text-lg text-gray-primary-2;
 }
 

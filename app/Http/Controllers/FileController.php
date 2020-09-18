@@ -8,12 +8,15 @@ use App\Helpers\Str;
 use App\Models\FileBundle;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
+use App\Models\Media;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use LogicException;
 use Spatie\MediaLibrary\MediaStream;
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\Models\Media as SpatieMedia;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,6 +36,23 @@ class FileController extends Controller
     {
         // Ensure users are logged in
         $this->middleware(['auth', 'permission:file-view']);
+
+        // Ensure all responses are private
+        $this->middleware(static function ($request, \Closure $next) {
+            // Forward
+            $response = $next($request);
+
+            // Add cache headers if possible
+            if ($response instanceof Response) {
+                $response->setCache([
+                    'max_age' => 0,
+                    'private' => true,
+                ]);
+            }
+
+            // Return response
+            return $response;
+        });
     }
 
     /**
@@ -132,7 +152,7 @@ class FileController extends Controller
      * @throws LogicException
      * @throws ConflictingHeadersException
      */
-    private function log(Request $request, ?FileBundle $bundle, ?Media $media): void
+    private function log(Request $request, ?FileBundle $bundle, ?SpatieMedia $media): void
     {
         // Fail
         if (empty($bundle) && empty($media)) {
@@ -184,7 +204,7 @@ class FileController extends Controller
      * @throws InvalidUrlGenerator
      * @throws InvalidConversion
      */
-    public function downloadSingle(Request $request, Media $media): BinaryFileResponse
+    public function downloadSingle(Request $request, SpatieMedia $media): BinaryFileResponse
     {
         $bundle = $media->model;
         if (!$bundle instanceof FileBundle) {
@@ -201,5 +221,49 @@ class FileController extends Controller
         return response()
             ->download($media->getPath(), $media->file_name)
             ->setPrivate();
+    }
+
+    /**
+     * Finds files
+     * @param Request $request
+     * @param string $searchQuery
+     * @return Response
+     */
+    public function search(Request $request)
+    {
+        // Require a search query
+        $searchQuery = $request->get('q');
+        if (empty($searchQuery)) {
+            return \response()
+                ->redirectToRoute('files.index');
+        }
+
+        // Set title
+        SEOTools::setTitle("{$searchQuery} - Zoeken - Bestanden");
+        SEOTools::setCanonical(route('files.search', ['q' => $searchQuery]));
+
+
+        // Only return files in available bundles
+        $constraint = Media::query()
+            ->with('model')
+            ->whereModelType(FileBundle::class)
+            ->whereIn('model_id', Cache::remember(
+                'files.search.file-ids',
+                Date::now()->addHour(),
+                static fn () => FileBundle::whereAvailable()->pluck('id')
+            ));
+
+        // Perform the search query
+        $files = Media::search($searchQuery)->constrain($constraint);
+
+        // Order by date and paginate results
+        $results = $files->orderBy('created_at', 'desc')->paginate(30);
+
+        // Return result
+        return \response()
+            ->view('files.search', [
+                'files' => $results,
+                'searchQuery' => $searchQuery
+            ]);
     }
 }

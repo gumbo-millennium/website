@@ -123,4 +123,4 @@ storage/debugbar
 /storage/medialibrary
 
 # Ignore TNTSearch
-/storage/*.index
+/storage/tnt/*.index

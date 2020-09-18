@@ -31,13 +31,22 @@ class Media extends BaseMedia
     }
 
     /**
+     * Returns the file bundle this media file belongs to
+     * @return null|FileBundle
+     */
+    public function getBundleAttribute(): ?FileBundle
+    {
+        return $this->model instanceof FileBundle ? $this->model : null;
+    }
+
+    /**
      * Get the indexable data array for the model.
      * @return array
      */
     public function toSearchableArray()
     {
         // Get basic data
-        $data = Arr::only($this->toArray(), ['name', 'file_name']);
+        $data = Arr::only($this->toArray(), ['id', 'name', 'file_name']);
 
         // Add contents, if applicable
         $data['content'] = $this->getCustomProperty('file-content');
