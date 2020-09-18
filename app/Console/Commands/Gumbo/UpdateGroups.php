@@ -89,16 +89,23 @@ class UpdateGroups extends Command
         }
     }
 
+    /**
+     * Match existing groups that don't have a conscribo_id yet.
+     * @param Collection $systemRoles
+     * @param Collection $adminRoles
+     * @return void
+     */
     private function matchExistingGroups(Collection $systemRoles, Collection $adminRoles): void
     {
 
         // Find roles without a Conscribo ID
-        foreach ($systemRoles->where('conscribo_id', null) as $role) {
+        foreach ($systemRoles->whereNull('conscribo_id') as $role) {
+            // Skip if the role is required
             if (\in_array($role->name, Role::REQUIRED_GROUPS)) {
-                $role->delete();
                 continue;
             }
 
+            // Check all roles from Concribo for the role we're looking for
             foreach ($adminRoles as $adminRole) {
                 if (
                     $this->named($adminRole) !== $this->slugged($role->name) &&
@@ -134,20 +141,41 @@ class UpdateGroups extends Command
         }
     }
 
+    /**
+     * Update the titles of groups that are linked to a Conscribo group
+     * @param Collection $systemRoles
+     * @param Collection $adminRoles
+     * @return void
+     */
     private function updateGroupTitles(Collection $systemRoles, Collection $adminRoles): void
     {
+        // Only show a 'should prune' notice once.
+        $shownPrune = false;
+
         // Update titles of existing commissions
-        foreach ($systemRoles->where('conscribo_id', '!=', null) as $role) {
+        foreach ($systemRoles->whereNotNull('conscribo_id') as $role) {
             $adminRole = $adminRoles->where('code', $role->conscribo_id)->first();
 
+            // If a role no longer exists, warn and ignore
+            if ($adminRole === null) {
+                if (!$shownPrune) {
+                    $this->line('<question>Roles exist that are no longer in Conscribo, consider pruning.</>');
+                    $shownPrune = true;
+                }
+                continue;
+            }
+
+            // Skip if the title already matches
             if ($role->title === $adminRole['naam']) {
                 continue;
             }
 
+            // Update the title and save the old one for logging
             $oldTitle = $role->title;
             $role->title = $adminRole['naam'];
             $role->save(['title']);
 
+            // Report result
             $this->line(sprintf(
                 'Changed name of <comment>%s</> from <info>%s</> to <info>%s</>',
                 $role->name,
@@ -156,19 +184,34 @@ class UpdateGroups extends Command
             ), null, OutputInterface::VERBOSITY_VERBOSE);
         }
     }
+
+    /**
+     * Create roles for all Conscribo groups that don't yet exist.
+     * @param Collection $systemRoles
+     * @param Collection $adminRoles
+     * @return void
+     * @throws RoleAlreadyExists
+     */
     private function createMissingGroups(Collection $systemRoles, Collection $adminRoles): void
     {
-
-            $missingRoles = $adminRoles->whereNotIn('code', $systemRoles->pluck('conscribo_id'));
-            $created = 0;
+        $missingRoles = $adminRoles->whereNotIn('code', $systemRoles->pluck('conscribo_id'));
+        $created = 0;
         foreach ($missingRoles as $adminRole) {
             $groupName = Str::beforeLast($adminRole['e_mailadres'], '@');
+
+            // In case there's no email address
+            if (empty($groupName)) {
+                $groupName = $adminRole['naam'];
+            }
+
+            // Create the role
             $role = Role::create([
-                'name' => $groupName,
+                'name' => Str::slug($groupName), // always slug in case of anomalies
                 'title' => $adminRole['naam'],
                 'conscribo_id' => $adminRole['code']
             ]);
 
+            // Raise count and report
             $created++;
 
             $this->line(sprintf(
@@ -180,21 +223,32 @@ class UpdateGroups extends Command
             ), null, OutputInterface::VERBOSITY_VERBOSE);
         }
 
-            // Log
-            $this->info("Created <comment>{$created}</> groups from Conscribo.");
+        // Log
+        $this->info("Created <comment>{$created}</> groups from Conscribo.");
     }
 
+    /**
+     * Remove groups whose code is no longer in Conscribo and which aren't essential
+     * @param Collection $systemRoles
+     * @param Collection $adminRoles
+     * @return void
+     */
     private function pruneGroups(Collection $systemRoles, Collection $adminRoles): void
     {
+        // Only match roles that have a Conscribo ID but no longer exist.
+        // never remove required roles
         $excessRoles = $systemRoles
-            ->whereNotIn('code', $adminRoles->pluck('code'))
+            ->whereNotIn('conscribo_id', $adminRoles->pluck('code'))
+            ->whereNotNull('conscribo_id')
             ->whereNotIn('name', Role::REQUIRED_GROUPS);
 
         $deleted = 0;
         foreach ($excessRoles as $role) {
+            // Delete the role
             $role->delete();
-            $deleted++;
 
+            // Increment and log
+            $deleted++;
             $this->line(sprintf(
                 'Deleted <info>%s</> (<comment>%s</>).',
                 $role->title,
@@ -202,7 +256,7 @@ class UpdateGroups extends Command
             ), null, OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        // Log
+        // Show the result
         $this->info("Deleted <comment>{$deleted}</> groups from database.");
     }
 }

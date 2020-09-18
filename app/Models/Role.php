@@ -21,11 +21,12 @@ class Role extends SpatieRole
     public const REQUIRED_GROUPS = [
         'guest',
         'member',
-        'verified'
+        'verified',
+        'board'
     ];
 
     /**
-     * Prevent deleting of a required model
+     * Prevent deleting of a required model, as a safety net
      * @param Role $role
      * @return void
      * @throws LogicException
