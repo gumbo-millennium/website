@@ -232,7 +232,7 @@ class FileController extends Controller
     public function search(Request $request)
     {
         // Require a search query
-        $searchQuery = $request->get('q');
+        $searchQuery = $request->get('query');
         if (empty($searchQuery)) {
             return \response()
                 ->redirectToRoute('files.index');
@@ -240,7 +240,7 @@ class FileController extends Controller
 
         // Set title
         SEOTools::setTitle("{$searchQuery} - Zoeken - Bestanden");
-        SEOTools::setCanonical(route('files.search', ['q' => $searchQuery]));
+        SEOTools::setCanonical(route('files.search', ['query' => $searchQuery]));
 
 
         // Only return files in available bundles

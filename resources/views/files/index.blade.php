@@ -12,7 +12,7 @@
     <div class="container container--md mb-8">
         <form action="{{ route('files.search') }}" method="GET" class="flex flex-col md:flex-row">
             {{-- Search --}}
-            <input type="search" name="q" id="q" placeholder="Doorzoek de bestanden"
+            <input type="search" name="query" placeholder="Doorzoek de bestanden"
                 class="form-input px-6 py-4 md:mr-4 md:flex-grow md:w-full">
 
             {{-- Submit --}}
