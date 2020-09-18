@@ -22,16 +22,22 @@
 
     {{-- Spacer --}}
     <div class="container my-8 border-b border-gray-secondary-2"></div>
-
-    {{-- Count --}}
-    <p class="mt-2 px-1">
-        <strong>{{ $files->total() }}</strong> resultaten voor “{{ $searchQuery }}”.
-    </p>
 </div>
 
 {{-- Categories --}}
 <div class="container file-set file-set--inline">
-    @forelse ($files as $file)
+    @if ($files->isEmpty())
+    <div class="file-set__empty-notice">
+        <h2 class="file-set__empty-notice-title">Geen resultaten</h2>
+        <p class="file-set__empty-notice-body">Sorry, je zoekopdracht leverde geen resultaten op.</p>
+    </div>
+    @else
+    {{-- Count --}}
+    <p class="mt-2 px-1">
+        <strong>{{ $files->total() }}</strong> resultaten voor “{{ $searchQuery }}”.
+    </p>
+
+    @foreach ($files as $file)
     <div class="file-set__item">
         {{-- Get title --}}
         <a href="{{ route('files.show', ['bundle' => $file->bundle]) }}" class="file-set__item-title">
@@ -43,12 +49,7 @@
             {{ $file->bundle->category->title }}
         </p>
     </div>
-    @empty
-    <div class="file-set__empty-notice">
-        <h2 class="file-set__empty-notice-title">Geen resultaten</h2>
-        <p class="file-set__empty-notice-body">Sorry, je zoekopdracht leverde geen resultaten op.</p>
-    </div>
-    @endforelse
+    @endforeach
 
     {{-- Spacer --}}
     <div class="my-8 border-b border-gray-secondary-2"></div>
@@ -67,5 +68,6 @@
             <a href="{{ $files->nextPageUrl() }}" class="btn btn--brand">Volgende</a>
         @endif
     </div>
+    @endif
 </div>
 @endsection
