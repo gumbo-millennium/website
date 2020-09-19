@@ -225,10 +225,6 @@
     echo -e "\nGoing live"
     php artisan up
 
-    {{-- Update search indexes --}}
-    echo -e "\nUpdating search indexes"
-    php artisan tntsearch:import 'App\Models\Media' || true
-
     {{-- Update attachments --}}
     {{-- echo -e "\nUpdating attachments..."
     php artisan paperclip:refresh App\\Models\\Activity || true
