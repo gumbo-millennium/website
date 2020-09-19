@@ -62,7 +62,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
-          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd
+          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: xdebug
 
       - name: Checkout code
