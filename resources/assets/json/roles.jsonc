@@ -74,6 +74,14 @@
         ]
     },
 
+    // Intro group, can create their own events but not modify others
+    "ic": {
+        "title": "Introductie commissie",
+        "permissions": [
+            "activity-create"
+        ]
+    },
+
     // Board
     "board": {
         "title": "Bestuur",

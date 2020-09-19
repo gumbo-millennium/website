@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
+use App\Models\Activity;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -13,6 +15,7 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
 use Spatie\Permission\Models\Role as RoleModel;
@@ -73,6 +76,33 @@ class Role extends Resource
     {
         return app(PermissionRegistrar::class)->getRoleClass();
     }
+
+    /**
+     * Build a "relatable" query for the given resource.
+     *
+     * This query determines which instances of the model may be attached to other resources.
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        // Get user shorthand
+        $user = $request->user();
+        \assert($user instanceof User);
+
+        // Return all roles if the user is allowed to admin events
+        if ($user->can('admin', Activity::class) || $user->can('manage', RoleModel::class)) {
+            return parent::relatableQuery($request, $query);
+        }
+
+        // Only return own roles in
+        return parent::relatableQuery($request, $query->whereIn(
+            'id',
+            $user->roles->pluck('id')
+        ));
+    }
+
 
     /**
      * Get the fields displayed by the resource.

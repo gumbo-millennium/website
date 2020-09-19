@@ -99,7 +99,6 @@ class Enrollment extends Resource
         ));
     }
 
-
     /**
      * Build a "relatable" query for the given resource.
      *

@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
         $this->makeUser('ac', 'AC', ['member', 'ac']);
         $this->makeUser('dc', 'DC', ['member', 'dc']);
         $this->makeUser('lhw', 'LHW', ['member', 'lhw']);
+        $this->makeUser('ic', 'Intro Commissie', ['member', 'ic']);
         $this->makeUser('gumbo', 'Lid', ['member']);
         $this->makeUser('guest', 'Gast', ['guest']);
         $this->makeUser('event-owner', 'Event Owner', ['member']);

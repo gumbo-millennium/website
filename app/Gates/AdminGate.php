@@ -28,7 +28,8 @@ class AdminGate
      */
     public function nova(User $user): bool
     {
-        return $user->can('manage', Activity::class)
+        return $user->can('create', Activity::class)
+            || $user->can('manage', Activity::class)
             || $user->can('manage', File::class)
             || $user->can('manage', FileCategory::class)
             || $user->can('manage', FileDownload::class)

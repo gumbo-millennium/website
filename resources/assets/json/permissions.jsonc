@@ -13,6 +13,7 @@
     // Create event permissions
     "activity-enroll": "Inschrijven op evenementen",
     "activity-private": "Privé-evenementen bekijken",
+    "activity-create": "Nieuwe evenementen aanmaken voor eigen commissies",
     "activity-admin": "Evenementen en inschrijvingen beheren",
     "activity-purge": "Evenementen en inschrijvingen verwijderen",
 

@@ -18,6 +18,7 @@ class ActivityPolicy
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
+    public const CREATE_PERMISSION = 'activity-create';
     public const ADMIN_PERMISSION = 'activity-admin';
     public const PURGE_PERMISSION = 'activity-purge';
 
@@ -50,7 +51,7 @@ class ActivityPolicy
     public function viewAny(User $user): bool
     {
         // Anyone can view activities
-        return $user->can('manage', Activity::class);
+        return $user->can('manage', Activity::class) || $user->can('create', Activity::class);
     }
 
     /**
@@ -101,7 +102,7 @@ class ActivityPolicy
     public function create(User $user): bool
     {
         // Check creation
-        return $user->can('admin', Activity::class);
+        return $user->can('admin', Activity::class) || $user->hasPermissionTo(self::CREATE_PERMISSION);
     }
 
     /**

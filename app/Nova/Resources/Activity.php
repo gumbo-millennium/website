@@ -177,7 +177,7 @@ class Activity extends Resource
     public function fields(Request $request)
     {
         return [
-            $this->mainFields(),
+            $this->mainFields($request),
             new Panel('Datum en prijs-instellingen', $this->pricingFields()),
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
@@ -185,8 +185,11 @@ class Activity extends Resource
         ];
     }
 
-    public function mainFields(): MergeValue
+    public function mainFields(Request $request): MergeValue
     {
+        $user = $request->user();
+        $groupRules = $user->can('admin', Activity::class) ? 'nullable' : 'required';
+
         return $this->merge([
             ID::make()->sortable(),
 
@@ -275,6 +278,7 @@ class Activity extends Resource
 
             BelongsTo::make('Groep', 'role', Role::class)
                 ->help('Groep of commissie die deze activiteit beheert')
+                ->rules($groupRules)
                 ->hideFromIndex()
                 ->nullable(),
         ]);
