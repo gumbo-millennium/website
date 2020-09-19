@@ -72,6 +72,12 @@ class ActivityObserver
             $activity->enrollment_end = $activity->start_date;
         }
 
+        // Require a statement if non-free
+        if ($activity->price !== null && empty($activity->statement)) {
+            $statement = Str::limit(Str::slug($activity->name), 16, '');
+            $activity->statement = trim($statement, '-');
+        }
+
         // Make sure statements are valid statements (ASCII uppercase)
         if ($activity->statement !== null) {
             $activity->statement = Str::limit(Str::ascii($activity->statement), 16, '');

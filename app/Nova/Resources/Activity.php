@@ -230,7 +230,8 @@ class Activity extends Resource
                     ActivityModel::LOCATION_ONLINE => 'Geheel online',
                     ActivityModel::LOCATION_MIXED => 'Gemixt',
                 ])
-                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?'),
+                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
+                ->rules('required'),
 
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
