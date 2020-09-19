@@ -37,6 +37,10 @@
 
     RewriteEngine On
 
+    # Handle forbidden spiders
+    RewriteCond %{HTTP_USER_AGENT} Sogou [NC]
+    RewriteRule .* - [F,END]
+
     # Handle HTTPS redirect
     RewriteCond %{HTTPS} off
     RewriteCond %{ENV:DOCKER_LOCAL} !=yes

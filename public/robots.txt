@@ -1,3 +1,12 @@
+# Block Barbar, no need for it
+User-agent: Barkrowler
+Disallow: /
+
+# Block Baidu, it's outside of our website's scope
+User-agent: Baiduspider
+Disallow: /
+
+# Allow others, but avoid some areas
 User-agent: *
 Disallow: /admin
 Disallow: /auth
