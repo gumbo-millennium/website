@@ -9,6 +9,7 @@ use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Paid;
 use App\Models\User as UserModel;
 use App\Nova\Actions\CancelEnrollment;
+use App\Nova\Actions\ConfirmEnrollment;
 use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Fields\Price;
 use App\Nova\Filters\EnrollmentStateFilter;
@@ -226,7 +227,8 @@ class Enrollment extends Resource
                         return false;
                     };
                     return $request->user()->can('manage', $enrollment);
-                })
+                }),
+            ConfirmEnrollment::make($this->model(), $request->user())
         ];
     }
 
