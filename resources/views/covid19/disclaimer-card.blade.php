@@ -1,6 +1,6 @@
 <article class="col w-full flex items-stretch flex-none md:w-1/2 mb-8">
   <div class="card">
-    <div class="card__figure card__figure--alleen-samen" role="none">
+    <div class="card__figure card__figure--alleen-samen hidden md:block" role="none">
       <div class="card__figure-wrapper">
         <img src="{{ mix('images/alleen-samen.png') }}"
           srcset="{{ mix('images/alleen-samen.webp') }}, {{ mix('images/alleen-samen@2x.webp') }} 2x, {{ mix('images/alleen-samen@4x.webp') }} 4x"
