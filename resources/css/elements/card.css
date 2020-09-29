@@ -91,4 +91,7 @@
   .card__figure {
     @apply bg-gray-secondary-3;
   }
+  .card__figure--alleen-samen {
+    background-color: #ffb604;
+  }
 }
