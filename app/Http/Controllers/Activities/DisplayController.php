@@ -104,7 +104,9 @@ class DisplayController extends Controller
         }
 
         // Ensure the user can see this
-        $this->authorize('view', $activity);
+        if (!$request->user()->can('view', $activity)) {
+            abort(403, 'activities.errors.no-access');
+        }
 
         // Load enrollments
         $activity->load(['enrollments']);
