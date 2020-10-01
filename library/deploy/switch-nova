@@ -1,0 +1,60 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Get mode
+$mode = $argv[1] ?? 'dev';
+if ($mode !== 'prod' && $mode !== 'dev') {
+    echo "Invalid usage.\n";
+    echo "./switch-nova [{prod|dev}]\n";
+    exit(255);
+}
+
+// Get file
+$composerFile = __DIR__ . '/../../composer.json';
+if (!file_exists($composerFile) || !is_file($composerFile)) {
+    echo "Cannot find {$composerFile}\n";
+    exit(1);
+}
+
+// Get configs
+$prodRep = [
+    'type' => 'composer',
+    'url' => 'https://nova.laravel.com'
+];
+$devRep  = [
+    "type" => "path",
+    "url" => "./library/composer/nova"
+];
+
+// Get clean URL
+$composerFile = realpath($composerFile);
+
+// Get clean set of repositories
+$contents = json_decode(file_get_contents($composerFile), true);
+$reps = $contents['repositories'] ?? [];
+$cleanReps = [];
+
+// Remove nova VSC and package
+foreach ($reps as $repository) {
+    // Strip Nova Composer repo
+    if ($repository === $prodRep || $repository === $devRep) {
+        continue;
+    }
+
+    $cleanReps[] = $repository;
+}
+
+// Re-add proper nova repo
+$cleanReps[] = ($mode === 'prod') ? $prodRep : $devRep;
+
+// Update repos
+$contents['repositories'] = $cleanReps;
+
+// Write contents as JSON
+$jsonContents = json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+file_put_contents($composerFile, trim($jsonContents) . PHP_EOL);
+
+echo "Updated file\n";
+exit(0);

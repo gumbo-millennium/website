@@ -146,6 +146,18 @@
 @task('deployment_install')
     cd "{{ $deployPath }}"
 
+    echo -e "\nSwapping Laravel Nova for the real deal"
+    ./library/deploy/switch-nova prod
+    composer update
+        --apcu-autoloader \
+        --classmap-authoritative \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --no-scripts \
+        --no-suggest \
+        laravel/nova
+
     echo -e "\nInstalling Yarn dependencies"
     yarn \
         --cache-folder="{{ $root }}/cache/node" \

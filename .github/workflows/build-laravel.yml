@@ -91,12 +91,6 @@ jobs:
             node-build-${{ env.cache-name }}-
             node-build-
 
-      - name: Login for Laravel Nova
-        run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_PASSWORD}
-        env:
-          NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
-          NOVA_PASSWORD: ${{ secrets.NOVA_PASSWORD }}
-
       - name: Copy environment config
         run: cp .github/actions.env .env
 

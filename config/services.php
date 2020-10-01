@@ -34,4 +34,17 @@ return [
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Feature flags
+    |--------------------------------------------------------------------------
+    |
+    | These flags indicate if a certain feature is available for this platform.
+    | These features might be disabled by choice or if a certain dependency
+    | is not available (which is the case with Laravel Nova)
+     */
+    'features' => [
+        // Only enable Laravel Nova if installed and not disabled by the user
+        'enable-nova' => class_exists(Laravel\Nova\NovaServiceProvider::class) && (env('FEATURE_DISABLE_NOVA', false) === true)
+    ]
 ];

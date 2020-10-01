@@ -14,6 +14,7 @@ use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -123,5 +124,10 @@ class AppServiceProvider extends ServiceProvider
             'warning' => "notice notice--warning",
             'success' => "notice notice--brand",
         ]);
+
+        // Bind Laravel Nova if it's available
+        if (Config::get('services.features.enable-nova')) {
+            $this->app->register(NovaServiceProvider::class);
+        }
     }
 }

@@ -47,7 +47,29 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function register()
     {
-        //
+        // Register advoor/nova-editor-js
+        $this->app->register(\Advoor\NovaEditorJs\FieldServiceProvider::class);
+
+        // Register benjaminhirsch/nova-slug-field
+        $this->app->register(\Benjaminhirsch\NovaSlugField\FieldServiceProvider::class);
+
+        // Register coderello/laravel-nova-lang
+        $this->app->register(\Coderello\LaravelNovaLang\Providers\LaravelNovaLangServiceProvider::class);
+
+        // Register ebess/advanced-nova-media-library
+        $this->app->register(\Ebess\AdvancedNovaMediaLibrary\AdvancedNovaMediaLibraryServiceProvider::class);
+
+        // Register gregoriohc/laravel-nova-theme-responsive
+        $this->app->register(\Gregoriohc\LaravelNovaThemeResponsive\ThemeServiceProvider::class);
+
+        // Register kabbouchi/nova-impersonate
+        $this->app->register(\KABBOUCHI\NovaImpersonate\ToolServiceProvider::class);
+
+        // Register vyuldashev/nova-permission
+        $this->app->register(\Vyuldashev\NovaPermission\ToolServiceProvider::class);
+
+        // Register whitecube/nova-flexible-content
+        $this->app->register(\Whitecube\NovaFlexibleContent\FieldServiceProvider::class);
     }
 
     /**

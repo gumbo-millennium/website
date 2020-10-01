@@ -107,10 +107,10 @@
         ],
         "post-install-cmd": [
             "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
-            "@php artisan vendor:publish --tag=nova-assets",
+            "@php artisan vendor:publish --tag=nova-assets || true",
             "@php artisan horizon:assets",
             "@php artisan telescope:publish",
-            "@php artisan nova-lang:publish nl --force"
+            "@php artisan nova-lang:publish nl --force || true"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
@@ -187,8 +187,8 @@
             "url": "https://github.com/roelofr/laravel-mail-auto-embed"
         },
         {
-            "type": "composer",
-            "url": "https://nova.laravel.com"
+            "type": "path",
+            "url": "./library/composer/nova"
         }
     ]
 }
