@@ -2,7 +2,7 @@
 
 @php
 $message = __($exception->getMessage());
-if (!empty($message)) {
+if (empty($message)) {
     $message = 'Sorry, jouw account heeft niet de benodigde rechten om deze pagina te zien.';
 }
 @endphp

@@ -13,6 +13,7 @@ use App\ViewModels\ActivityViewModel;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -104,7 +105,11 @@ class DisplayController extends Controller
         }
 
         // Ensure the user can see this
-        $this->authorize('view', $activity);
+        try {
+            $this->authorize('view', $activity);
+        } catch (AuthorizationException $e) {
+            abort(403, 'activities.errors.no-access');
+        }
 
         // Load enrollments
         $activity->load(['enrollments']);
