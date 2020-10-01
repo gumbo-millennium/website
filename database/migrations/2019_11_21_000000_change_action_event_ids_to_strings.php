@@ -14,6 +14,12 @@ class ChangeActionEventIdsToStrings extends Migration
      */
     public function up()
     {
+        // Only run when Nova is actually installed
+        if (!Schema::hasTable('action_events')) {
+            return;
+        }
+
+        // Mutate
         Schema::table('action_events', static function (Blueprint $table) {
             $table->string('actionable_id', 36)->change();
             $table->string('model_id', 36)->change();
@@ -28,6 +34,12 @@ class ChangeActionEventIdsToStrings extends Migration
      */
     public function down()
     {
+        // Only run when Nova is actually installed
+        if (!Schema::hasTable('action_events')) {
+            return;
+        }
+
+        // Mutate
         Schema::table('action_events', static function (Blueprint $table) {
             $table->integer('actionable_id')->unsigned()->change();
             $table->integer('model_id')->unsigned()->change();

@@ -13,6 +13,12 @@ class ChangeNovaActionEventsIdsToStrings extends Migration
      */
     public function up()
     {
+        // Only run when Nova is actually installed
+        if (!Schema::hasTable('action_events')) {
+            return;
+        }
+
+        // Mutate
         Schema::table('action_events', static function ($table) {
             $table->string('actionable_id', 36)->change();
             $table->string('model_id', 36)->change();
