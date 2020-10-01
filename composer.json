@@ -82,7 +82,7 @@
             "database/factories"
         ],
         "files": [
-          "app/Helpers/helpers.php"
+            "app/Helpers/helpers.php"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -95,8 +95,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {
@@ -107,68 +106,68 @@
             "@php artisan key:generate"
         ],
         "post-install-cmd": [
-          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
-          "@php artisan vendor:publish --tag=nova-assets",
-          "@php artisan horizon:assets",
-          "@php artisan telescope:publish",
-          "@php artisan nova-lang:publish nl --force"
+            "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
+            "@php artisan vendor:publish --tag=nova-assets",
+            "@php artisan horizon:assets",
+            "@php artisan telescope:publish",
+            "@php artisan nova-lang:publish nl --force"
         ],
         "post-update-cmd": [
-          "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-          "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
         ],
         "contribute": [
-          "@composer install --dev --no-scripts",
-          "@php artisan app:env",
-          "docker-compose pull",
-          "docker-compose up -d",
-          "@composer install --dev",
-          "yarn install --dev",
-          "yarn run build",
-          "@php artisan vendor:publish --tag=horizon-assets",
-          "@php artisan telescope:publish",
-          "docker-compose up -d",
-          "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-          "@php artisan migrate:fresh --seed --force"
+            "@composer install --dev --no-scripts",
+            "@php artisan app:env",
+            "docker-compose pull",
+            "docker-compose up -d",
+            "@composer install --dev",
+            "yarn install --dev",
+            "yarn run build",
+            "@php artisan vendor:publish --tag=horizon-assets",
+            "@php artisan telescope:publish",
+            "docker-compose up -d",
+            "echo \"Waiting for MySQL to get ready\" && sleep 10s",
+            "@php artisan migrate:fresh --seed --force"
         ],
         "symlink": [
-          "ln -fs node_modules/bootstrap/scss ./@bootstrap",
-          "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-          "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
+            "ln -fs node_modules/bootstrap/scss ./@bootstrap",
+            "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
+            "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
         ],
         "ide": [
-          "@php artisan clear-compiled",
-          "@php artisan ide-helper:generate",
-          "@php artisan ide-helper:models"
+            "@php artisan clear-compiled",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models"
         ],
         "server": [
-          "@php artisan telescope:publish",
-          "@php artisan horizon:assets"
+            "@php artisan telescope:publish",
+            "@php artisan horizon:assets"
         ],
         "lint": [
-          "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
-          "phpcs"
+            "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
+            "phpcs"
         ],
         "test": [
-          "phpunit"
+            "phpunit"
         ],
         "nova-testing": [
-          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-          "cd ./vendor/laravel/nova && yarn install",
-          "cd ./vendor/laravel/nova && yarn run dev",
-          "cd ./vendor/laravel/nova && rm -rf node_modules",
-          "@php artisan nova:publish"
+            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+            "cd ./vendor/laravel/nova && yarn install",
+            "cd ./vendor/laravel/nova && yarn run dev",
+            "cd ./vendor/laravel/nova && rm -rf node_modules",
+            "@php artisan nova:publish"
         ],
         "nova-production": [
-          "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-          "cd ./vendor/laravel/nova && yarn install",
-          "cd ./vendor/laravel/nova && yarn run prod",
-          "cd ./vendor/laravel/nova && rm -rf node_modules",
-          "@php artisan nova:publish"
+            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
+            "cd ./vendor/laravel/nova && yarn install",
+            "cd ./vendor/laravel/nova && yarn run prod",
+            "cd ./vendor/laravel/nova && rm -rf node_modules",
+            "@php artisan nova:publish"
         ]
     },
     "config": {
@@ -179,17 +178,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
-      },
-      {
-        "type": "vcs",
-        "url": "https://github.com/roelofr/laravel-mail-auto-embed"
-      },
-      {
-        "type": "composer",
-        "url": "https://nova.laravel.com"
-      }
+        {
+            "type": "vcs",
+            "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/roelofr/laravel-mail-auto-embed"
+        },
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
     ]
 }
