@@ -69,7 +69,7 @@ command line:
 - `docker version` (Windows users an getting errors? [read this][wsl-docker])
 - `docker-compose`
 
-<!-- 
+<!--
 ARCHIVED AT https://web.archive.org/web/20200423125549/https://medium.com/@callback.insanity/using-docker-with-windows-subsystem-for-linux-wsl-on-windows-10-d2deacad491f
 -->
 [wsl-docker]: https://medium.com/@callback.insanity/using-docker-with-windows-subsystem-for-linux-wsl-on-windows-10-d2deacad491f
@@ -80,10 +80,19 @@ This project uses Laravel Nova, a proprietary admin panel developed by the
 Laravel team. This repo is behind authentication, which means you'll need a
 login and password (or token) to login.
 
-If you don't have access via any means, you can poke @roelofr (or mail him),
-and you might be able to get a token.
+**A token is not required for most of the work.** The website will work just
+fine locally and when you run the seeders (`php artisan migrate --seed` or `php
+artisan db:seed`) all the required roles, users, activities and other content
+will be created for you.
 
-After you got the token, you need to register it in Composer:
+As the access token for Nova is under license, it's sadly not possible for
+contributors outside of the Gumbo Millennium student community to receive this
+token. You'll either have to provide your own or simply not work with the admin
+panel. You can still manage stuff using Tinker (`php artisan tinker`), or the
+built-in phpMyAdmin present in the Docker configuration
+(`localhost:13370/phpmyadmin`).
+
+If you did get a hold of a Nova token, you can register it in Composer:
 
 ```
 composer config http-basic.nova.laravel.com <username> <password>
