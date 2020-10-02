@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Setup PHP
         uses: shivammathur/setup-php@master
