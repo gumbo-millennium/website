@@ -45,6 +45,11 @@ jobs:
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: none
 
+      - name: Log in to GitHub Packages
+        run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin <<< "${DOCKER_PASSWORD}"
+        env:
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run Contribute command
         run: composer run contribute
 
