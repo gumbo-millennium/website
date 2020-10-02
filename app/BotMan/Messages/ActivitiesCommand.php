@@ -55,10 +55,17 @@ class ActivitiesCommand extends AbstractMessage
             if ($activity->is_cancelled) {
                 $line .= " (GEANNULEERD)";
             } elseif ($activity->available_seats > 0 && $activity->price > 0) {
-                $line .= " ($activity->price_label)";
+                $line .= sprintf(
+                    ' (%s, %s / %s %s)',
+                    $activity->price_label,
+                    $activity->available_seats,
+                    $activity->seats,
+                    $activity->available_seats === 1 ? 'plek' : 'plekken'
+                );
             } elseif ($activity->available_seats === 0) {
                 $line .= " (uitverkocht)";
             }
+
 
             // Add line
             $lines[] = $line;
