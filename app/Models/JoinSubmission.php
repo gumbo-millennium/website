@@ -6,7 +6,6 @@ namespace App\Models;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Nova\Actions\Actionable;
 
 /**
  * Encrypted submission to Gumbo
@@ -16,7 +15,6 @@ use Laravel\Nova\Actions\Actionable;
 class JoinSubmission extends Model
 {
     // Use action log and encryption helper
-    use Actionable;
     use HasEncryptedAttributes;
 
     /**
