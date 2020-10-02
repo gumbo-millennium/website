@@ -14,6 +14,8 @@ use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
@@ -227,6 +229,12 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getFlexibleContentAttribute()
     {
+        // Return empty collection if Nova is disabled
+        if (!Config::get('services.features.enable-nova')) {
+            return new Collection();
+        }
+
+        // Return flexible content
         return $this->flexible('enrollment_questions');
     }
 

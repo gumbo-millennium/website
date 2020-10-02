@@ -121,15 +121,15 @@
             "@php artisan package:discover"
         ],
         "contribute": [
-            "@composer install --dev --no-scripts",
-            "@php artisan app:env",
+            "Composer\\Config::disableProcessTimeout",
+            "test -f .env || cp .env.dev .env",
             "docker-compose pull",
             "docker-compose up -d",
             "@composer install --dev",
+            "@php artisan app:env --force",
+            "@php artisan key:generate",
             "yarn install --dev",
             "yarn run build",
-            "@php artisan vendor:publish --tag=horizon-assets",
-            "@php artisan telescope:publish",
             "docker-compose up -d",
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
             "@php artisan migrate:fresh --seed --force"
