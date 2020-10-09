@@ -2,7 +2,8 @@
 
 namespace Laravel\Nova;
 
-class Nova {
+class Nova
+{
     public static function __callStatic($method, $args)
     {
         // no-op

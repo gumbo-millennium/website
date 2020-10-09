@@ -54,6 +54,7 @@
     deployment_clone
     deployment_describe
     deployment_link
+    deployment_swap_nova
     deployment_install
     deployment_build
     deployment_down
@@ -143,21 +144,38 @@
     ln -s "{{ $envPath }}" "{{ $deployPath }}/.env"
 @endtask
 
+@task('deployment_swap_nova')
+    {{-- Report status --}}
+    echo -e "\nReplacing Nova dummy with actual installation"
+
+    {{-- Ensure file exists --}}
+    if [ -f "$HOME/nova.zip" ]; then
+        {{-- Remove existing install --}}
+        echo -e "\nRemoving dummy package..."
+        rm -rf "{{ $deployPath }}/library/composer/nova"
+
+        {{-- Unzip archive --}}
+        echo -e "\nExtracing archive..."
+        cd "{{ $deployPath }}/library/composer"
+        unzip "$HOME/nova.zip"
+
+        {{-- Move to right location --}}
+        echo -e "\nMoving extracted contents..."
+        mv laravel-nova-* nova
+
+        echo -e "\nLaravel Nova extracted in library"
+    else
+        {{-- Report missing --}}
+        echo "Nova archive file not found."
+        echo "*** NOVA WILL NOT BE INSTALLED ***"
+    fi
+@endtask
+
 @task('deployment_install')
+    {{-- Go to root dir --}}
     cd "{{ $deployPath }}"
 
-    echo -e "\nSwapping Laravel Nova for the real deal"
-    ./library/deploy/switch-nova prod
-    composer update
-        --apcu-autoloader \
-        --classmap-authoritative \
-        --no-dev \
-        --no-interaction \
-        --no-progress \
-        --no-scripts \
-        --no-suggest \
-        laravel/nova
-
+    {{-- Install Yarn files --}}
     echo -e "\nInstalling Yarn dependencies"
     yarn \
         --cache-folder="{{ $root }}/cache/node" \
@@ -167,6 +185,7 @@
         --prefer-offline \
         install
 
+    {{-- Install Composer deps --}}
     echo -e "\nInstalling Composer dependencies"
     composer \
         --apcu-autoloader \
