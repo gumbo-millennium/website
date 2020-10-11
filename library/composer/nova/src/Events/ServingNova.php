@@ -2,4 +2,7 @@
 
 namespace Laravel\Nova\Events;
 
-class ServingNova {}
+class ServingNova
+{
+    // no op
+}
