@@ -125,9 +125,27 @@ class AppServiceProvider extends ServiceProvider
             'success' => "notice notice--brand",
         ]);
 
-        // Bind Laravel Nova if it's available
-        if (Config::get('services.features.enable-nova')) {
-            $this->app->register(NovaServiceProvider::class);
+        // Registrer Laravel Nova
+        $this->registerNova();
+    }
+
+    /**
+     * Safely registers Nova if it's enabled and available
+     */
+    private function registerNova(): void
+    {
+        // Check if Nova is enabled to begin with
+        if (!Config::get('services.features.enable-nova')) {
+            return;
         }
+
+        // Check if Nova is available, disable if not
+        if (!class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
+            Config::set('services.features.enable-nova', false);
+            return;
+        }
+
+        // Load Nova service provider
+        $this->app->register(NovaServiceProvider::class);
     }
 }

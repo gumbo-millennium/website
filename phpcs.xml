@@ -10,6 +10,7 @@
   <file>database/</file>
   <file>routes/</file>
   <file>tests/</file>
+  <file>library/composer/</file>
 
   <!-- Ignore some dependency paths -->
   <exclude-pattern type="relative">^/vendor/</exclude-pattern>

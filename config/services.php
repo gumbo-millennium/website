@@ -45,8 +45,6 @@ return [
      */
     'features' => [
         // Only enable Laravel Nova if installed and not disabled by the user
-        'enable-nova' =>
-            class_exists(\Laravel\Nova\NovaServiceProvider::class) &&
-            env('FEATURE_DISABLE_NOVA', false) === true
+        'enable-nova' => env('FEATURE_DISABLE_NOVA', false) !== true
     ]
 ];
