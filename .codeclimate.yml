@@ -1,0 +1,6 @@
+version: "2"
+
+plugins:
+  # Disable codesniffer, it's run via CI
+  phpcodesniffer:
+    enabled: false
