@@ -1,0 +1,13 @@
+{
+  "whoCanViewMembership": "ALL_MANAGERS_CAN_VIEW",
+  "whoCanViewGroup": "ALL_MEMBERS_CAN_VIEW",
+  "whoCanPostMessage": "ALL_MANAGERS_CAN_POST",
+  "replyTo": "REPLY_TO_MANAGERS",
+  "includeCustomFooter": true,
+  "customFooterText": "Deze mail ontvang je omdat je bent ingeschreven op deze activiteit. Je bent via dit e-mailadres bereikbaar tot 30 dagen na afloop van de activiteit.",
+  "sendMessageDenyNotification": true,
+  "membersCanPostAsTheGroup": false,
+  "includeInGlobalAddressList": false,
+  "enableCollaborativeInbox": false,
+  "whoCanDiscoverGroup": "ALL_MEMBERS_CAN_DISCOVER"
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use App\Jobs\Mail\ConstructGoogleActionList;
 use App\Jobs\PruneExpiredEnrollments;
 use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
@@ -47,6 +48,9 @@ class Kernel extends ConsoleKernel
 
         // Send required mails every hour
         // $schedule->command('gumbo:send-activity-covid-mails')->hourly();
+
+        // Updated maillists every other night
+        $schedule->job(ConstructGoogleActionList::class)->days(1, 3, 5)->dailyAt('06:00');
 
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
