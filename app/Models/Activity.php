@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
@@ -49,8 +50,16 @@ class Activity extends SluggableModel implements AttachableInterface
     public static function getNextActivities(?User $user): Builder
     {
         return self::query()
-            ->where(static fn (Builder $query) => $query->where('end_date', '>', now())
-                        ->orWhereNotNull('postponed_at'))
+            ->where(static function (Builder $query) {
+                $query
+                    // Get non-ended activities...
+                    ->where('end_date', '>', Date::now())
+                    // ... or where the event is postponed, but only postponed
+                    ->orWhere(static fn (Builder $query) => $query
+                        ->whereNotNull('postponed_at')
+                        ->whereNull('cancelled_at')
+                        ->whereNull('rescheduled_from'));
+            })
             ->orderBy('start_date')
             ->whereAvailable($user);
     }
@@ -181,7 +190,7 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         // Don't re-create a timestamp every time
-        $now = now();
+        $now = Date::now();
 
         // Cannot sell tickets after activity end
         if ($this->end_date < $now) {
