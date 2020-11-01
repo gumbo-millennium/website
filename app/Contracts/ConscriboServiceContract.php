@@ -6,7 +6,7 @@ namespace App\Contracts;
 
 use Illuminate\Support\Collection;
 
-interface ConscriboService
+interface ConscriboServiceContract
 {
     /**
      * Creates a new Conscribo service, which will log in to the given account using the provided
@@ -18,11 +18,17 @@ interface ConscriboService
     public function __construct(string $account, string $username, string $password);
 
     /**
+     * Returns if the API is configured for use.
+     * @return bool
+     */
+    public function isAvailable(): bool;
+
+    /**
      * Attempts login with the API
      * @return void
      * @throws ServiceException
      */
-    public function authenticate(): void;
+    public function authorise(): void;
 
     /**
      * Runs the given command on the API
@@ -32,15 +38,6 @@ interface ConscriboService
      * @throws HttpExceptionInterface on API failure
      */
     public function runCommand(string $command, array $args): array;
-
-    /**
-     * Identical to runCommand, but will raise a `offset` parameter to get all results
-     * @param string $command
-     * @param array $args
-     * @return array
-     * @throws HttpExceptionInterface on API failure
-     */
-    public function runPaginatedCommand(string $command, array $args): array;
 
     /**
      * Returns types of resources available for this administration

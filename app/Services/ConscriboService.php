@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\ConscriboService as ConscriboServiceContract;
+use App\Contracts\ConscriboServiceContract;
+use App\Exceptions\ServiceException;
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use DateTimeInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Arr;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use JsonException;
+use JsonSchema\Exception\JsonDecodingException;
+use LogicException;
 use RuntimeException;
-
-use function GuzzleHttp\Psr7\stream_for;
+use Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Communicates with the Conscribo API
@@ -36,7 +39,8 @@ final class ConscriboService implements ConscriboServiceContract
     private const CACHE_TYPES = 'conscribo.api.types';
     private const CACHE_TYPE_FIELDS = 'conscribo.api.fields.%s';
 
-    private const TTL_VALID = 60 * 15; // Cache session ID for 15 minutes
+    private const TTL_VALID = 60 * 25; // Cache session ID for 25 minutes
+    private const TTL_INVALID = 60 * 60 * 6;// Cache flag of invalid creds for 6 hours
 
     private const FILTER_OPERATOR_MAP = [
         '=' => ['text', 'textarea', 'mailadres', 'number', 'checkbox', 'multicheckbox', 'enum'],
@@ -53,31 +57,33 @@ final class ConscriboService implements ConscriboServiceContract
         '<>' => ['multicheckbox'],
     ];
 
+    // Session IDs to tell software somethings wrong
+    private const SESSION_ID_INVALID = "\0invalid";
+
     /**
-     * Returns a service from data in the config. Throws a fit
-     * if the config is missing
-     * @return ConscriboService
-     * @throws RuntimeException
+     * Messages about expired tokens. They might change in the future
      */
-    public static function fromConfig(): self
-    {
-        $account = Config::get('services.conscribo.account');
-        $username = Config::get('services.conscribo.username');
-        $password = Config::get('services.conscribo.password');
+    private const SESSION_EXPIRED_ERRORS = [
+        'sessie is verlopen',
+    ];
 
-        if (empty($account) || empty($username) || empty($password)) {
-            throw new RuntimeException('Conscribo not configured');
-        }
+    /**
+     * The shared HTTP client
+     * @var Client $httpClient
+     */
+    private Client $httpClient;
 
-        return new self($account, $username, $password);
-    }
+    /**
+     * Flags if we've ever burned the session ID, which can only
+     * happen once.
+     * @var bool
+     */
+    private bool $burned = false;
 
     /**
      * Base URL, or null if no account is known
      */
-    private ?string $endpoint;
-
-    private bool $retry = false;
+    private ?string $baseUrl;
 
     /**
      * Session ID obtained from the API or cache
@@ -97,47 +103,32 @@ final class ConscriboService implements ConscriboServiceContract
     private string $password;
 
     /**
-     * Guzzle client
-     * @var HttpClient
-     */
-    private HttpClient $http;
-
-    /**
      * Creates service
-     * @param null|string $account
-     * @param null|string $username
-     * @param null|string $password
-     * @param null|HttpClient $client
+     * @param string $account
+     * @param string $username
+     * @param string $password
+     * @param null|Client $httpClient
      */
-    public function __construct(
-        ?string $account = null,
-        ?string $username = null,
-        ?string $password = null,
-        ?HttpClient $http = null
-    ) {
-        // Get data from config
-        $account ??= Config::get('services.conscribo.account');
-        $username ??= Config::get('services.conscribo.username');
-        $password ??= Config::get('services.conscribo.password');
-        // Check
-        if (!$account || empty($username) || empty($password)) {
-            throw new InvalidArgumentException('Expected a username, password and account.');
-        }
-
+    public function __construct(string $account, string $username, string $password, ?Client $httpClient = null)
+    {
         // Assign credentials
         $this->username = $username;
         $this->password = $password;
 
+        // Assign HTTP client
+        $this->httpClient = $httpClient;
+
         // Assign URL
-        $this->endpoint = $account ? "https://secure.conscribo.nl/{$account}/request.json" : null;
+        $this->baseUrl = $account ? "https://secure.conscribo.nl/{$account}/request.json" : null;
+    }
 
-        // Load key from cache
-        $this->sessionId = Cache::get(self::CACHE_KEY);
-
-        // Assign client
-        $this->http = $http ?? new HttpClient([
-            RequestOptions::HTTP_ERRORS => false
-        ]);
+    /**
+     * Returns if the API is configured for use.
+     * @return bool
+     */
+    public function isAvailable(): bool
+    {
+        return $this->baseUrl && !empty($this->username) && !empty($this->password);
     }
 
     /**
@@ -145,43 +136,64 @@ final class ConscriboService implements ConscriboServiceContract
      * @return void
      * @throws ServiceException
      */
-    public function authenticate(): void
+    public function authorise(): void
     {
-        // Prep body
-        $body = $this->buildBody('authenticateWithUserAndPass', [
-            'userName' => $this->username,
-            'passPhrase' => $this->password,
-        ]);
+        // Check cache key
+        $cachedKey = Cache::get(self::CACHE_KEY);
 
-        // Get headers
-        $headers = $this->buildHeaders(null);
+        // Throw exception on cache item
+        if ($cachedKey === self::SESSION_ID_INVALID) {
+            throw new ServiceException(ServiceException::SERVICE_CONSCRIBO, 'Failed to obtain session');
+        }
 
-        // Send request
-        $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
-            'headers' => $headers
-        ]);
+        // Assign from cache
+        if ($cachedKey) {
+            $this->sessionId = $cachedKey;
+            return;
+        }
 
-        // Decode body
+        // Get session id
         try {
-            $response = json_decode($psrResponse->getBody()->getContents(), true, 512, \JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $response = [];
+            // Prep a login request
+            $request = $this->buildRequest('authenticateWithUserAndPass', [
+                'userName' => $this->username,
+                'passPhrase' => $this->password,
+            ]);
+
+            // Make the call
+            $response = $this->sendRequest($request);
+
+            // Get session ID
+            $sessionId = Arr::get($response, 'sessionId');
+
+            // Get response
+            logger()->debug('Recieved session ID form request: {session-id}', [
+                'response' => $response,
+                'session-id' => $sessionId
+            ]);
+
+            // Assign and store for 25 minutes
+            $this->sessionId = $sessionId;
+            Cache::put(self::CACHE_KEY, $sessionId, now()->addSeconds(self::TTL_VALID));
+        } catch (HttpException $exception) {
+            // Cache invalid credentials
+            $sessionId = self::SESSION_ID_INVALID;
+            Cache::put(self::CACHE_KEY, $sessionId, now()->addSeconds(self::TTL_INVALID));
+
+            // Build service exception
+            $exception = new ServiceException(
+                ServiceException::SERVICE_CONSCRIBO,
+                'Failed to get session',
+                $exception->getStatusCode(),
+                $exception
+            );
+
+            // Report new exception
+            \report($exception);
+
+            // Throw it too,
+            throw $exception;
         }
-
-        // Throw a fit
-        if ($psrResponse->getStatusCode() !== 200 || !Arr::has($response, 'result.sessionId')) {
-            throw new RuntimeException('Failed to authenticate against Conscribo API');
-        }
-
-        // Get session ID
-        $sessionId = Arr::get($response, 'result.sessionId');
-
-        // Cache new ID
-        Cache::put(self::CACHE_KEY, $sessionId, now()->addSeconds(self::TTL_VALID));
-
-        // Assign and store for 25 minutes
-        $this->sessionId = $sessionId;
     }
 
     /**
@@ -193,110 +205,34 @@ final class ConscriboService implements ConscriboServiceContract
      */
     public function runCommand(string $command, array $args): array
     {
-        // Make first session ID request
-        if (!$this->sessionId || $this->retry) {
-            $this->authenticate();
+        // Stop if unavailable
+        if (!$this->isAvailable()) {
+            throw new LogicException('Service is not configured.', self::ERR_BAD_REQUEST);
+        }
+
+        // Throw error if ID is missing
+        if (!$this->sessionId) {
+            throw new RuntimeException('Cannot determine client ID', self::ERR_NO_SESSION);
+        }
+
+        try {
+            // Attempt request
+            $request = $this->buildRequest($command, $args, $this->sessionId);
+            return $this->sendRequest($request);
+        } catch (HttpException $e) {
+            // Retry request if client token has expired
+            if (in_array(Str::lower($e->getMessage()), self::SESSION_EXPIRED_ERRORS) && !$this->retry) {
+                // Flag for retry and re-send own command
+                $this->retry = true;
+                return $this->runCommand($command, $args);
+            }
+
+            // Otherwise, bubble error
+            throw $e;
+        } finally {
+            // Remove retry flag
             $this->retry = false;
         }
-
-        // Prep fields
-        $body = $this->buildBody($command, $args);
-        $headers = $this->buildHeaders($this->sessionId);
-
-        // Send request
-        $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
-            'headers' => $headers
-        ]);
-
-        // Decode body
-        try {
-            $response = json_decode($psrResponse->getBody()->getContents(), true, 512, \JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $response = [];
-        }
-
-        // Skip server failures
-        if ($psrResponse->getStatusCode() >= 500) {
-            throw new RuntimeException('Service seems unavailable');
-        }
-
-        // Get Ok
-        $result = Arr::get($response, 'result', []);
-        $ok = Arr::get($result, 'success');
-        if ($ok) {
-            return $result;
-        }
-
-        // Get error
-        $error = Str::lower(Arr::get($result, 'notifications.notification.0', 'unknown error'));
-        if (Str::contains($error, ['not authenticated', 'session is verlopen']) && !$this->retry) {
-            $this->retry = true;
-            return $this->runCommand($command, $args);
-        }
-
-        // Throw an exception
-        throw new RuntimeException("Command failed: {$error}");
-    }
-
-    /**
-     * Identical to runCommand, but will raise a `offset` parameter to get all results
-     * @param string $command
-     * @param array $args
-     * @return array
-     */
-    public function runPaginatedCommand(string $command, array $args): array
-    {
-        // Output
-        $results = [];
-
-        // Pagination
-        $limit = 25;
-        $offset = 0;
-
-        // Smart discovery
-        $totalResults = null;
-        $resultKey = null;
-        do {
-            $response = $this->runCommand($command, array_merge($args, [
-                'limit' => $limit,
-                'offset' => $offset
-            ]));
-
-            // Skip if failed
-            if (!$response) {
-                break;
-            }
-
-            // Determine total
-            if ($totalResults === null) {
-                $totalResults = Arr::get($response, 'resultCount') ?? $limit * 2;
-            }
-
-            // Find key if no key yet
-            if ($resultKey === null) {
-                foreach ($response as $row => $value) {
-                    if (is_array($value)) {
-                        $resultKey = $row;
-                        break;
-                    }
-                }
-
-                // Fail if no key was found
-                if (!$resultKey) {
-                    break;
-                }
-            }
-
-            // Get result in key
-            $results[] = Arr::get($response, $resultKey);
-
-            // Raise offset
-            $offset += $limit;
-        } while ($offset < $totalResults);
-
-        // Collapse and return
-        return Arr::collapse($results);
     }
 
     /**
@@ -426,75 +362,10 @@ final class ConscriboService implements ConscriboServiceContract
         }
 
         // Run request
-        $result = $this->runPaginatedCommand('listRelations', $arguments);
+        $response = $this->runCommand('listRelations', $arguments);
+        $result = Arr::get($response, 'relations', []);
 
-        // Map to model
-        $out = $this->buildModels($resourceFields, $result);
-
-        // Map members if a 'leden' item is present
-        foreach ($out as $key => $row) {
-            if (!Arr::has($row, 'leden')) {
-                continue;
-            }
-
-            // Map members to IDs
-            $row['members'] = collect(explode(',', $row['leden']))
-                ->map('trim')
-                ->map(static fn ($val) => explode(':', $val, 2)[0])
-                ->map(static fn ($val) => filter_var($val, \FILTER_VALIDATE_INT))
-                ->values()
-                ->all();
-
-            // Re-assign value
-            $out->put($key, $row);
-        }
-
-        // Done for real
-        return $out;
-    }
-
-    /**
-     * Returns an array of groups with
-     * @param string $resourceType
-     * @return array
-     */
-    public function getResourceGroups(string $resourceType): array
-    {
-        // Run command
-        $response = $this->runPaginatedCommand('ListEntityGroups', []);
-
-        // Check all groups
-        if (empty($response)) {
-            return [];
-        }
-
-        $groups = [];
-        foreach ($response as $group) {
-            // Get props
-            $id = Arr::get($group, 'id');
-            $type = Arr::get($group, 'type');
-            $name = Arr::get($group, 'name');
-            $slug = Str::slug($name);
-
-            // Skip non-processable
-            if (empty($slug) || $type === 'archive') {
-                continue;
-            }
-
-            // Map members
-            $members = [];
-            foreach (Arr::get($group, 'members', []) as $member) {
-                if ($member['entityType'] === $resourceType) {
-                    $members[] = filter_var($member['entityId'], \FILTER_VALIDATE_INT);
-                }
-            }
-
-            // Map to array
-            $groups[$slug] = compact('id', 'name', 'members');
-        }
-
-        // Return groups
-        return $groups;
+        return $this->buildModels($resourceFields, $result);
     }
 
     /**
@@ -586,33 +457,17 @@ final class ConscriboService implements ConscriboServiceContract
 
                 // Mutate data according to format
                 $fieldType = $fields[$field]['type'] ?? 'string';
-
-                // Treat dates as immutable
                 if ($fieldType === 'date' && $value !== '0000-00-00' && !empty($value)) {
-                    $newRow[$field] = Date::createFromFormat('Y-m-d', $value)->setTime(0, 0)->toImmutable();
-                    continue;
+                    $value = Carbon::createFromFormat('Y-m-d', $value)->setTime(0, 0)->toImmutable();
+                } elseif ($fieldType === 'date') {
+                    $value = null;
+                } elseif ($fieldType === 'checkbox') {
+                    $value = "{$value}" === '1';
+                } elseif ($fieldType  === 'number') {
+                    $value = \floatval($value);
                 }
 
-                // Date '0000-00-00' is just null
-                if ($fieldType === 'date') {
-                    $newRow[$field] = null;
-                    continue;
-                }
-
-                // Checkboxes are stored as 0 or 1
-                if ($fieldType === 'checkbox') {
-                    $newRow[$field] = "{$value}" === '1';
-                    continue;
-                }
-
-                // Just parse the numbers
-                if ($fieldType === 'number' && strlen($fieldType) < 7) {
-                    $isFloat = \strpos($value, '.');
-                    $newRow[$field] = \filter_var($value, $isFloat ? \FILTER_VALIDATE_FLOAT : \FILTER_VALIDATE_INT);
-                    continue;
-                }
-
-                // Something else, just write it down
+                // Assign new row
                 $newRow[$field] = $value;
             }
 
@@ -625,32 +480,145 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Converts params to a JSON body
-     * @param string $command command to run
-     * @param array $params params for the command
-     * @return string
+     * Re-authorize
+     * @return void
+     * @throws ServiceException
      */
-    private function buildBody(string $command, array $params): string
+    protected function forceReauth()
     {
-        return \json_encode([
-            'request' => array_merge(['command' => $command], $params)
-        ]);
+        // Only allow burning once.-m-24
+        if ($this->burned) {
+            throw new ServiceException(
+                ServiceException::SERVICE_CONSCRIBO,
+                'Cannot renew session token',
+                409
+            );
+        }
+
+        // Trash ID
+        $this->sessionId = null;
+        $this->burned = true;
+        Cache::forget(self::CACHE_KEY);
+
+        // Re-auth
+        return $this->authorise();
     }
 
     /**
-     * Returns headers
-     * @param null|string $sessionId
-     * @return array<string>
+     * Performs the request and returns payload
+     * @param Request $request
+     * @return array
+     * @throws HttpException
      */
-    private function buildHeaders(?string $sessionId): array
+    protected function sendRequest(Request $request): array
     {
-        $headers = [
-            'X-Conscribo-API-Version' => self::API_VERSION,
-            'Content-Type' => 'application/json; charset=utf-8',
-        ];
-        if ($sessionId) {
-            $headers['X-Conscribo-SessionId'] = $sessionId;
+        try {
+            // Send request. The Conscribo API returns 200 on errors too, so allow
+            // for HTTP errors to cause exceptions
+            $response = $this->httpClient->send($request, ['http_errors' => true]);
+
+            // Get body and decode JSON
+            $body = $response->getBody()->getContents();
+            $json = json_decode($body, true, 16, JSON_THROW_ON_ERROR);
+            $json = $json['result'] ?? $json;
+
+            // Check the 'success' flag
+            if (Arr::get($json, 'success', 0)) {
+                return $json;
+            }
+
+            // Get error messages
+            $errors = Arr::get($json, 'notifications.notification', []);
+            $error = Arr::first($errors, null, 'Unknown error');
+
+            // Re-auth if it's an auth error
+            if ($error === 'Not authenticated') {
+                echo "Re-autorising.\n\n";
+
+                // Retry auth, can only be called once
+                $this->forceReauth();
+
+                // Rewind body
+                $request->getBody()->rewind();
+
+                // Re-send request
+                return $this->sendRequest($request);
+            }
+
+            // Debug
+            $message = (new MessageFormatter(MessageFormatter::DEBUG))->format($request, $response);
+            print("\n\n$message\n\n");
+
+            // Throw exception
+            throw new HttpException(400, $error, null, $response->getHeaders(), self::ERR_API_FAILURE);
+        } catch (JsonDecodingException $exception) {
+            // Log error
+            logger()->warning('Failed to decode JSON from Conscribo API.', [
+                'request' => $request,
+                'response' => $response,
+                'exception' => $exception
+            ]);
+
+            // Throw exception
+            throw new HttpException(500, 'Failed to parse response from API', $exception, [], self::ERR_HTTP_FAILURE);
+        } catch (ConnectException | RequestExceptionInterface $exception) {
+            // Log system error
+            logger()->warning('HTTP call failed.', [
+                'request' => $request,
+                'response' => $response,
+                'exception' => $exception
+            ]);
+
+            // Prep variables
+            $errorCode = 504; // default to a gateway timeout
+            $errorHeaders = []; // default to empty header set
+            if ($exception->hasResponse()) {
+                $errorCode = $exception->getResponse()->getStatusCode();
+                $errorHeaders = $exception->getResponse()->getHeaders();
+            }
+
+            // Throw exception
+            throw new HttpException(
+                $errorCode,
+                "HTTP Request failed: {$exception->getMessage()}",
+                $exception,
+                $errorHeaders,
+                self::ERR_HTTP_FAILURE
+            );
+        } finally {
+            $this->retry = false;
         }
-        return $headers;
+
+        // This never gets reached.
+        Log::error('Unreachable code has been reached!', ['service' => $this]);
+    }
+
+    /**
+     * Adds headers to the given request
+     * @param string $payload
+     * @param string|null $sessionId
+     * @return Request
+     */
+    private function buildRequest(string $command, array $payload, ?string $sessionId = null): Request
+    {
+        // Build request
+        $requestData = array_merge(
+            ['command' => $command],
+            $payload
+        );
+
+        // Build response
+        $payloadJson = json_encode(['request' => $requestData], \JSON_PRETTY_PRINT);
+
+        // Add headers, trimming empty ones
+        $headers = array_filter([
+            'X-Conscribo-API-Version' => self::API_VERSION,
+            'X-Conscribo-SessionId' => $sessionId,
+            'Content-Type' => 'application/json; charset=utf-8',
+            'Content-Length' => strlen($payloadJson)
+        ]);
+
+        // Build request
+        return new Request('POST', $this->baseUrl, $headers, $payloadJson);
     }
 }

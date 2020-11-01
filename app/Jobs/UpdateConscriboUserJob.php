@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Contracts\ConscriboService;
+use App\Contracts\ConscriboServiceContract;
 use App\Helpers\Arr;
 use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Role;
@@ -55,7 +55,7 @@ class UpdateConscriboUserJob implements ShouldQueue
      * Execute the job.
      * @return void
      */
-    public function handle(ConscriboService $service)
+    public function handle(ConscriboServiceContract $service)
     {
         // Get user
         $user = $this->user;
@@ -125,11 +125,11 @@ class UpdateConscriboUserJob implements ShouldQueue
 
     /**
      * Returns user information from Conscribo
-     * @param ConscriboService $service
+     * @param ConscriboServiceContract $service
      * @param string $email
      * @return null|array
      */
-    private function getConscriboUser(ConscriboService $service, User $dbUser): ?array
+    private function getConscriboUser(ConscriboServiceContract $service, User $dbUser): ?array
     {
         $user = null;
         $groups = null;

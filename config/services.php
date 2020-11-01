@@ -25,9 +25,9 @@ return [
 
     // Conscribo API
     'conscribo' => [
-        'account' => env('CONSCRIBO_ACCOUNT_NAME'),
+        'account-name' => env('CONSCRIBO_ACCOUNT_NAME'),
         'username' => env('CONSCRIBO_USERNAME'),
-        'password' => env('CONSCRIBO_PASSPHRASE'),
+        'passphrase' => env('CONSCRIBO_PASSPHRASE'),
         'resources' => [
             'user' => env('CONSCRIBO_RESOURCE_USERS', 'persoon'),
             'role' => env('CONSCRIBO_RESOURCE_ROLE', 'commissie')
