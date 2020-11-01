@@ -12,6 +12,12 @@
                 </a>
             </li>
             <li class="userbar__links-link">
+                <a href="https://wa.me/31388450100" target="_blank" rel="nofollow noopener noreferer"
+                    class="userbar__links-item userbar__links-item--flex">
+                    @icon('brands/whatsapp', ['aria-label' => 'WhatsApp Gumbo'])
+                </a>
+            </li>
+            <li class="userbar__links-link">
                 <a href="mailto:bestuur@gumbo-millennium.nl" class="userbar__links-item userbar__links-item--flex">
                     @icon('solid/envelope', ['aria-label' => 'E-mail symbool'])
                     <span>bestuur@gumbo-millennium.nl</span>
