@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Contracts\ConscriboServiceContract;
+use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
@@ -69,20 +69,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Conscribo API
-        $this->app->singleton(ConscriboServiceContract::class, static function ($app) {
-            // make service
-            $service = $app->make(ConscriboService::class, [
-                'account' => $app->get('config')->get('services.conscribo.account-name'),
-                'username' => $app->get('config')->get('services.conscribo.username'),
-                'password' => $app->get('config')->get('services.conscribo.passphrase')
-            ]);
-
-            // authenticate
-            $service->authorise();
-
-            // return
-            return $service;
-        });
+        $this->app->singleton(ConscriboServiceContract::class, static fn () => ConscriboService::fromConfig());
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {

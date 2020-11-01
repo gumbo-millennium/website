@@ -64,6 +64,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: xdebug
+          tools: composer:v1
 
       - name: Checkout code
         uses: actions/checkout@v2

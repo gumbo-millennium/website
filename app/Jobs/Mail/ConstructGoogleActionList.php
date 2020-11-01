@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Mail;
 
-use App\Contracts\ConscriboServiceContract;
+use App\Contracts\ConscriboService;
 use App\Contracts\Mail\MailList;
 use App\Helpers\Arr;
 use App\Helpers\Str;
@@ -36,7 +36,7 @@ class ConstructGoogleActionList implements ShouldQueue
      * Execute the job.
      * @return void
      */
-    public function handle(ConscriboServiceContract $conscribo)
+    public function handle(ConscriboService $conscribo)
     {
         // Get all roles, removing those without email
         $roles = $conscribo
