@@ -51,9 +51,22 @@ want to restrict easy development to just one (very expensive) platform.
 
 ### Windows users
 
-A small note for Window users: We recommend using the [Windows Subsystem
-Linux][wsl] (or at least a Git Bash or something), as our post-install scripts
-are written in Bash, and are likely _not_ to work in PowerShell or CMD.
+**Turn off auto-CRLF**: We're expecting you to use a proper IDE (not Notepad).
+Since CRLF and LF line-endings cause nothing more than trouble. `core.autocrlf`
+needs to be set to `false`.
+
+If you don't want to make this change locally, clone the repository like so:
+
+```
+git clone -o core.autocrlf=false https://github.com/gumbo-millennium/website.git
+```
+
+Lastly, the repository uses Docker to provide it's environment requirements,
+like MySQL and Redis. We recommend to use the  [Windows Subsystem Linux][wsl]
+for most of your work, as IDEs like Visual Studio Code support this natively
+and it allows you to run the various shell scripts that exists in the
+repository. All scripts are to be written in Bash, Powershell scripts won't be
+accepted.
 
 [wsl]: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
