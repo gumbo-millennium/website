@@ -169,6 +169,12 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(stati
     // Quotes
     Route::get('/wist-je-datjes', 'BotQuoteController@index')->name('quotes');
     Route::delete('/wist-je-datjes', 'BotQuoteController@destroy')->name('quotes.delete');
+
+    // Telegram
+    Route::get('/telegram', 'TelegramController@index')->name('tg');
+    Route::get('/telegram/connect', 'TelegramController@create')->name('tg.link');
+    Route::post('/telegram/connect', 'TelegramController@store');
+    Route::post('/telegram/disconnect', 'TelegramController@delete')->name('tg.unlink');
 });
 
 // Onboarding URLs
@@ -186,10 +192,6 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
-
-// Botman front-end
-Route::get('/bots/tinker', 'BotManController@tinker')->name('botman');
-Route::get('/bots/images/{image}', 'BotManController@image')->where('image', '.*')->name('botman.image');
 
 // Styling pages
 if (app()->isLocal()) {

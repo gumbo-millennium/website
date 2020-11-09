@@ -9,25 +9,35 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BotUserLink extends UuidModel
 {
-    public const TYPE_USER = 'user';
-    public const TYPE_CHANNEL = 'list';
+    /**
+     * Sets the name of the ID on the given driver
+     * @param string $platform
+     * @param string $platformId
+     * @param null|string $name
+     * @return void
+     */
+    public static function setName(string $platform, string $platformId, ?string $name): void
+    {
+        self::updateorCreate([
+            'driver' => $platform,
+            'driver_id' => $platformId,
+        ], [
+            'name' => $name
+        ]);
+    }
 
     /**
-     * Shorthand to create a link, optionally connected to a user
-     * @param string $driver
-     * @param string $driverId
-     * @param string $type
-     * @param null|User $user
-     * @return BotUserLink
+     * Returns the stored name
+     * @param string $platform
+     * @param string $platformId
+     * @return null|string
      */
-    public static function createForDriver(string $driver, string $driverId, string $type, ?User $user = null): self
+    public static function getName(string $platform, string $platformId): ?string
     {
-        return self::create([
-            'user_id' => optional($user)->id,
-            'driver' => $driver,
-            'driver_id' => $driverId,
-            'type' => $type
-        ]);
+        return self::where([
+            'driver' => $platform,
+            'driver_id' => $platformId,
+        ])->pluck('name')->first();
     }
 
     /**
