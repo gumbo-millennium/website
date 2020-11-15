@@ -122,8 +122,8 @@
             "@composer install --dev",
             "@php artisan app:env --force",
             "@php artisan key:generate",
-            "yarn install --dev",
-            "yarn run build",
+            "npm install --dev",
+            "npm run build",
             "docker-compose up -d",
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
             "@php artisan migrate:fresh --seed --force"

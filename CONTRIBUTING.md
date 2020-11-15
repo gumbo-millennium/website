@@ -25,8 +25,6 @@ These following requirements are for Linux, Mac OS and Windows:
   Heredoc][heredoc] and arrow functions on some occasions, which doesn't work in PHP <7.3.
 - **NodeJS** - [Website][site-nodejs] - We use Webpack for linting, compiling
   and optimizing the code, which runs in NodeJS
-- **Yarn** - [Website][site-yarn] - Yarn has a significant speed gain on npm,
-  and some more predictiable script handling.
 - **Composer** - [Website][site-composer] - We need a lot of dependencies
   (Laravel, to begin with) and Composer handles them.
 - **Docker** - [Website][site-docker] - We use Docker to present an environment
@@ -36,7 +34,6 @@ These following requirements are for Linux, Mac OS and Windows:
 
 [site-php]: https://php.net/
 [site-nodejs]: https://nodejs.org/
-[site-yarn]: https://yarnpkg.org/
 [site-composer]: https://getcomposer.org/
 [site-docker]: https://www.docker.com/products/docker-desktop
 [site-docker-compose]: https://docs.docker.com/compose/
@@ -78,7 +75,6 @@ command line:
 
 - `composer -v`
 - `php -v`
-- `yarn --version`
 - `docker version` (Windows users an getting errors? [read this][wsl-docker])
 - `docker-compose`
 
@@ -141,8 +137,8 @@ When creating a policy file, please keep the following in mind:
 
 1. Describe your changes, and if any tests are affected. If there's a relevant
    issue, mention that too.
-2. When changing dependencies, also add their lockfiles (composer.lock for
-   Composer, yarn.lock for Node)
+2. When changing dependencies, also add their lockfiles (`composer.lock` for
+   Composer, `package-lock.json` for Node)
 3. Don't commit IDE-specific files (like the `.idea` folder), they often
    contain absolute paths, which won't work across systems.
 
