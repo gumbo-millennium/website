@@ -1,7 +1,6 @@
 {
     "extends": [
-        "standard",
-        "plugin:vue/recommended"
+        "standard"
     ],
     "env": {
         "browser": true

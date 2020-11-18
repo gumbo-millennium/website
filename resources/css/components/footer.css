@@ -3,5 +3,5 @@
 */
 
 .footer {
-  @apply py-8 text-gray text-sm;
+  @apply py-8 text-gray-primary-1 text-sm;
 }

@@ -9,7 +9,14 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 // Build configs
 module.exports = {
   plugins: gumboSettings.plugins,
-  purge: false,
+  purge: {
+    mode: 'layers',
+    content: [
+    './resources/assets/html/**/*.html',
+    './resources/views/**/*.blade.php'
+
+  ]
+},
   theme: {
     container: {
       center: true
