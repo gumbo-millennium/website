@@ -58,10 +58,9 @@ abstract class Command extends TelegramCommand
             return null;
         }
 
-        // Look for a link between the TG user and our code
-        $link = BotUserLink::query()
-            ->whereDriverId('telegram', "{$chatUser->id}")
-            ->with('user')
+        // Find a link between the Telegram user and the user list
+        $link = User::query()
+            ->whereTelegramId((string) $chatUser->id)
             ->first();
 
         // Return result from link
