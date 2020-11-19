@@ -61,11 +61,11 @@ class PlazaCamController extends Controller
             return true;
         }
 
-        $camPath = self::VALID_IMAGES[$cam];
+        $camPath = self::VALID_IMAGES[$cam] ?? null;
 
         // Check if the cam
         if (!Storage::exists($camPath)) {
-            return false;
+            return true;
         }
 
         // Check the modified date
@@ -82,16 +82,7 @@ class PlazaCamController extends Controller
     public static function getPlazacamPath(string $name): ?string
     {
         // Get proper cam
-        switch ($name) {
-            case 'plaza':
-                $image = self::IMAGE_PLAZA;
-                break;
-            case 'coffee':
-                $image = self::IMAGE_COFFEE;
-                break;
-            default:
-                $image = null;
-        }
+        $image = self::VALID_IMAGES[$name] ?? null;
 
         // Throw unknown exception
         if (!$image) {

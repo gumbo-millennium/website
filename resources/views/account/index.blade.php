@@ -36,12 +36,20 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
-{{-- Delete account --}}
+{{-- API toegang --}}
 <div class="card card--padded">
-    <h3 class="heading-3 mt-0">Account verwijderen</h3>
+    <h3 class="heading-3 mt-0">Telegram account</h3>
+    @if ($telegramName)
+    <form action="{{ route('account.tg.unlink') }}" method="POST" class="flex flex-row items-center">
+        @csrf
+        @method('DELETE')
+        <p class="leading-none m-0 mr-4 flex-grow">Gekoppeld aan <strong>{{ $telegramName }}</strong>.</p>
+        <button type="submit" class="btn my-0">Loskoppelen</button>
+    </form>
+    @else
     <div class="flex flex-row items-center">
-        <p class="leading-none m-0 mr-4 flex-grow">Wis de gegevens van je account.</p>
-        <button class="btn btn--brand btn--disabled my-0" disabled>Account verwijderen</button>
+        <p class="leading-none m-0 mr-4 flex-grow">Je hebt geen Telegram account gekoppeld.</p>
     </div>
+    @endif
 </div>
 @endsection

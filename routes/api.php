@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,5 +32,5 @@ Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
 // Register API for Stripe endpoints
 Route::stripeWebhooks('payments/stripe/handle');
 
-// Register Botman
-Route::match(['get', 'post'], '/botman', 'BotManController@handle')->name('botman');
+// Register Telegram webhooks
+Route::post('/bots/telegram', 'TelegramBotController@handle')->name('bots.telegram');

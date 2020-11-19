@@ -18,21 +18,13 @@ class CreateBotUserLinksTable extends Migration
             // Key
             $table->uuid('id')->primary();
 
-            // Indexes
-            $table->unsignedBigInteger('user_id')->nullable();
+            // Data
             $table->string('driver', 16);
             $table->string('driver_id', 128);
-
-            // Timestamps
-            $table->timestamps();
-
-            // Driver type and name
-            $table->string('type', 8);
             $table->string('name', 180)->nullable()->default(null);
 
             // Indexes
             $table->unique(['driver', 'driver_id']);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

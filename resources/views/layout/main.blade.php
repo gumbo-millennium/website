@@ -19,7 +19,8 @@
 
     {{-- Javascript (deferred) --}}
     @section('main.scripts')
-    <script src="{{ mix('vendor.js') }}" defer></script>
+    <script src="{{ mix('manifest.js') }}" defer></script>
+    {{-- <script src="{{ mix('vendor.js') }}" defer></script> --}}
     <script src="{{ mix('app.js') }}" defer></script>
     @show
 </head>

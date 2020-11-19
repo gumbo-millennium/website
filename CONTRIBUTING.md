@@ -25,8 +25,6 @@ These following requirements are for Linux, Mac OS and Windows:
   Heredoc][heredoc] and arrow functions on some occasions, which doesn't work in PHP <7.3.
 - **NodeJS** - [Website][site-nodejs] - We use Webpack for linting, compiling
   and optimizing the code, which runs in NodeJS
-- **Yarn** - [Website][site-yarn] - Yarn has a significant speed gain on npm,
-  and some more predictiable script handling.
 - **Composer** - [Website][site-composer] - We need a lot of dependencies
   (Laravel, to begin with) and Composer handles them.
 - **Docker** - [Website][site-docker] - We use Docker to present an environment
@@ -36,7 +34,6 @@ These following requirements are for Linux, Mac OS and Windows:
 
 [site-php]: https://php.net/
 [site-nodejs]: https://nodejs.org/
-[site-yarn]: https://yarnpkg.org/
 [site-composer]: https://getcomposer.org/
 [site-docker]: https://www.docker.com/products/docker-desktop
 [site-docker-compose]: https://docs.docker.com/compose/
@@ -51,9 +48,22 @@ want to restrict easy development to just one (very expensive) platform.
 
 ### Windows users
 
-A small note for Window users: We recommend using the [Windows Subsystem
-Linux][wsl] (or at least a Git Bash or something), as our post-install scripts
-are written in Bash, and are likely _not_ to work in PowerShell or CMD.
+**Turn off auto-CRLF**: We're expecting you to use a proper IDE (not Notepad).
+Since CRLF and LF line-endings cause nothing more than trouble. `core.autocrlf`
+needs to be set to `false`.
+
+If you don't want to make this change locally, clone the repository like so:
+
+```
+git clone -o core.autocrlf=false https://github.com/gumbo-millennium/website.git
+```
+
+Lastly, the repository uses Docker to provide it's environment requirements,
+like MySQL and Redis. We recommend to use the  [Windows Subsystem Linux][wsl]
+for most of your work, as IDEs like Visual Studio Code support this natively
+and it allows you to run the various shell scripts that exists in the
+repository. All scripts are to be written in Bash, Powershell scripts won't be
+accepted.
 
 [wsl]: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
@@ -65,7 +75,6 @@ command line:
 
 - `composer -v`
 - `php -v`
-- `yarn --version`
 - `docker version` (Windows users an getting errors? [read this][wsl-docker])
 - `docker-compose`
 
@@ -128,8 +137,8 @@ When creating a policy file, please keep the following in mind:
 
 1. Describe your changes, and if any tests are affected. If there's a relevant
    issue, mention that too.
-2. When changing dependencies, also add their lockfiles (composer.lock for
-   Composer, yarn.lock for Node)
+2. When changing dependencies, also add their lockfiles (`composer.lock` for
+   Composer, `package-lock.json` for Node)
 3. Don't commit IDE-specific files (like the `.idea` folder), they often
    contain absolute paths, which won't work across systems.
 

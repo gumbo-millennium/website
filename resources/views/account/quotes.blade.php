@@ -17,7 +17,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 </p>
 
 {{-- Deletion form --}}
-<form name="quote-delete" id="quote-delete" class="hidden" aria-hidden="true" action="{{ route('account.quotes.delete') }}">
+<form name="quote-delete" id="quote-delete" class="hidden" aria-hidden="true" action="{{ route('account.quotes.delete') }}" method="POST">
     @csrf
     @method('DELETE')
 </form>
