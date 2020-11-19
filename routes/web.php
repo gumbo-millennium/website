@@ -171,10 +171,9 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(stati
     Route::delete('/wist-je-datjes', 'BotQuoteController@destroy')->name('quotes.delete');
 
     // Telegram
-    Route::get('/telegram', 'TelegramController@index')->name('tg');
     Route::get('/telegram/connect', 'TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'TelegramController@store');
-    Route::post('/telegram/disconnect', 'TelegramController@delete')->name('tg.unlink');
+    Route::delete('/telegram/disconnect', 'TelegramController@delete')->name('tg.unlink');
 });
 
 // Onboarding URLs

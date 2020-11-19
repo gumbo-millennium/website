@@ -39,7 +39,12 @@ return [
             'token' => env('TELEGRAM_BOT_TOKEN'),
             'webhook_url' => env('TELEGRAM_WEBHOOK_URL', 'api/bots/telegram'),
             'commands' => [
+                App\Bots\Commands\StartCommand::class,
                 App\Bots\Commands\ActivitiesCommand::class,
+                App\Bots\Commands\LoginCommand::class,
+                App\Bots\Commands\LogoutCommand::class,
+                App\Bots\Commands\PlazaCamCommand::class,
+                App\Bots\Commands\QuoteCommand::class,
             ],
         ],
     ],
@@ -112,6 +117,6 @@ return [
     |
     */
     'commands' => [
-        Telegram\Bot\Commands\HelpCommand::class,
+        App\Bots\Commands\HelpCommand::class,
     ],
 ];

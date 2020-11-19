@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use App;
 use App\Models\Activity;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\TransferStats;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
+use Telegram\Bot\Keyboard\Keyboard;
 
 class ActivitiesCommand extends Command
 {
+    private const ACTIVITY_URL = 'https://gumbo.nu/acpublicaties';
+
     private const USER_MESSAGE = <<<'MARKDOWN'
     Activiteiten 🎯
 
     %s
 
-    Voor meer info, check <a href="%s">de site</a> of het <a
-    href="https://t.me/joinchat/AAAAAFOnLOIW0Tt-Ag-eKA">activiteitenkanaal</a>.
+    Voor meer info, check de site of het activiteitenkanaal.
 
     %s
     MARKDOWN;
@@ -33,13 +39,13 @@ class ActivitiesCommand extends Command
      * The name of the Telegram command.
      * @var string
      */
-    protected $name = 'activities';
+    protected $name = 'activiteiten';
 
     /**
      * The Telegram command description.
      * @var string
      */
-    protected $description = 'Toont de activiteiten';
+    protected $description = 'Toon de (besloten) activiteiten';
 
     /**
      * Handle the activity
@@ -130,11 +136,58 @@ class ActivitiesCommand extends Command
         // Add debug
         Log::info('Build string {message}', compact('message', 'lines'));
 
+        // Prep a keyboard
+        $keyboard = (new Keyboard())->inline();
+        $keyboard->row(
+            Keyboard::inlineButton([
+                'text' => 'Check de site',
+                'url' => route('activity.index')
+            ]),
+            Keyboard::inlineButton([
+                'text' => 'Activiteitenkanaal',
+                'url' => $this->getActivityChannelUrl()
+            ])
+        );
+
         // Return message
         $this->replyWithMessage([
             'text' => $message,
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
+            'reply_markup' => $keyboard
         ]);
+    }
+
+    /**
+     * Retursn the effective URL to the activity channel, or the URL as-is
+     * @return string
+     */
+    private function getActivityChannelUrl(): string
+    {
+        // Get URL from cache
+        $effectiveUrl = Cache::get('telegram.bot.activities.url');
+        if ($effectiveUrl) {
+            return $effectiveUrl;
+        }
+
+        // Get HTTP driver
+        $http = App::make(GuzzleClient::class);
+        \assert($http instanceof GuzzleClient);
+
+        // Get URL
+        $response = $http->get(self::ACTIVITY_URL, [
+            'on_stats' => static function (TransferStats $stats) use (&$effectiveUrl) {
+                $effectiveUrl = (string) $stats->getEffectiveUri();
+            }
+        ]);
+
+        // Fail if not valid
+        if ($response->getStatusCode() !== 200) {
+            return self::ACTIVITY_URL;
+        }
+
+        // Cache and return
+        Cache::put('telegram.bot.activities.url', $effectiveUrl, now()->addDay());
+        return $effectiveUrl;
     }
 }

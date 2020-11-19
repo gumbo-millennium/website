@@ -30,15 +30,31 @@ class BotUserLink extends UuidModel
      * Returns the stored name
      * @param string $platform
      * @param string $platformId
-     * @return null|string
+     * @return string
      */
-    public static function getName(string $platform, string $platformId): ?string
+    public static function getName(string $platform, string $platformId): string
     {
         return self::where([
             'driver' => $platform,
             'driver_id' => $platformId,
-        ])->pluck('name')->first();
+        ])->pluck('name')->first() ?? "#{$platformId}";
     }
+
+    /**
+     * The attributes that are mass assignable.
+     * @var array
+     */
+    protected $fillable = [
+        'driver',
+        'driver_id',
+        'name'
+    ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * Scopes to a driver and it's ID

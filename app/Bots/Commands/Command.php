@@ -4,48 +4,19 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App\Models\BotUserLink;
 use App\Models\User;
 use Telegram\Bot\Commands\Command as TelegramCommand;
 use Telegram\Bot\Objects\Message;
-use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Objects\User as TelegramUser;
 
 abstract class Command extends TelegramCommand
 {
     /**
-     * Inherited update
-     * @var null|Update
+     * Returns Telegram User
+     * @return null|TelegramUser
      */
-    protected ?Update $update;
-
-    /**
-     * True if checked before, only checked once per request
-     * @var bool
-     */
-    private bool $lookedForUser = false;
-
-    /**
-     * Found user, if any
-     * @var null|User
-     */
-    private ?User $foundUser;
-
-    /**
-     * Get the user based on the update
-     * @return null|User
-     */
-    protected function getUser(): ?User
+    protected function getTelegramUser(): ?TelegramUser
     {
-        // Check for a user
-        if ($this->lookedForUser) {
-            return $this->foundUser;
-        }
-
-        // Set defaults
-        $this->lookedForUser = true;
-        $this->foundUser = null;
-
         // Look for a message
         $message = $this->update->getMessage();
         if (!$message || !$message instanceof Message) {
@@ -58,22 +29,38 @@ abstract class Command extends TelegramCommand
             return null;
         }
 
-        // Find a link between the Telegram user and the user list
-        $link = User::query()
-            ->whereTelegramId((string) $chatUser->id)
-            ->first();
+        // Return user
+        return $chatUser;
+    }
 
-        // Return result from link
-        if ($link) {
-            return $this->foundUser = $link->user;
+    /**
+     * Get the user based on the update
+     * @return null|User
+     */
+    protected function getUser(): ?User
+    {
+        $chatUser = $this->getTelegramUser();
+
+        // Skip if empty
+        if (!$chatUser) {
+            return null;
         }
 
-        // Create link and return null
-        $link = BotUserLink::createForDriver('telegram', "{$chatUser->id}", BotUserLink::TYPE_USER);
-        $link->name = trim("{$chatUser->firstName} {$chatUser->lastName}") ?: null;
-        $link->save();
+        // Find the user that has this telegram ID
+        return User::query()
+            ->whereTelegramId((string) $chatUser->id)
+            ->first();
+    }
 
-        // Return null through
-        return null;
+    /**
+     * Runs a string through sprintf, and unwraps single newlines
+     * @param string $text
+     * @param mixed $arg
+     * @return string
+     */
+    public function formatText(string $text, ...$args): string
+    {
+        $out = sprintf($text, ...$args);
+        return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
     }
 }

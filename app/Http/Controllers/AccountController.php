@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Forms\AccountEditForm;
 use App\Helpers\Str;
+use App\Models\BotUserLink;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -24,9 +25,13 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $telegramName = null;
+        if ($user->telegram_id) {
+            $telegramName = BotUserLink::getName('telegram', $user->telegram_id);
+        }
 
         return response()
-            ->view('account.index', compact('user'))
+            ->view('account.index', compact('user', 'telegramName'))
             ->setPrivate();
     }
 

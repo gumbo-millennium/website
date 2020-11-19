@@ -17,8 +17,8 @@ class DropUserIdAndTypeFromBotUserLinks extends Migration
         // Remove user ID with relation
         if (Schema::hasColumn('bot_user_links', 'user_id')) {
             Schema::table('bot_user_links', static function (Blueprint $table) {
-                $table->dropColumn('user_id');
                 $table->dropForeign(['user_id']);
+                $table->dropColumn('user_id');
             });
         }
 
