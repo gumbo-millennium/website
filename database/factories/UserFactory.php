@@ -18,7 +18,6 @@ $randomGenders = [
 
 $factory->define(User::class, static fn (Faker $faker) => [
         'telegram_id' => $faker->optional(0.8)->numerify(str_repeat('#', 31)),
-        'conscribo_id' => $faker->optional(0.6)->unique()->numberBetween(1, 250),
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
