@@ -175,15 +175,9 @@
     {{-- Go to root dir --}}
     cd "{{ $deployPath }}"
 
-    {{-- Install Yarn files --}}
-    echo -e "\nInstalling Yarn dependencies"
-    yarn \
-        --cache-folder="{{ $root }}/cache/node" \
-        --frozen-lockfile \
-        --link-duplicates \
-        --link-folder "{{ $root }}/cache/node-duplicates" \
-        --prefer-offline \
-        install
+    {{-- Install NodeJS files --}}
+    echo -e "\nInstalling NodeJS dependencies"
+    npm install --also=dev
 
     {{-- Install Composer deps --}}
     echo -e "\nInstalling Composer dependencies"
@@ -205,7 +199,7 @@
     cd "{{ $deployPath }}"
 
     echo -e "\nBuilding front-end"
-    yarn build --no-progress
+    npm run build
 @endtask
 
 @task('deployment_down')
