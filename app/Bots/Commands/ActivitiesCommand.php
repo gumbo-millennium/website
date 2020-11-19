@@ -31,7 +31,7 @@ class ActivitiesCommand extends Command
      * Message shown for users to login with
      */
     private const REGISTER_MESSAGE = <<<'TEXT'
-    Je bent niet ingelogd op de bot, log in door een prive-bericht met '/login' te sturen.
+    Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
     TEXT;
 
 
@@ -81,7 +81,7 @@ class ActivitiesCommand extends Command
 
             // Prep a default line
             $line = sprintf(
-                '%s | <a href="%s>%s</a>',
+                '%s | <a href="%s">%s</a>',
                 $activity->start_date->isoFormat('DD-MM'),
                 route('activity.show', compact('activity')),
                 $activityName,
@@ -110,7 +110,7 @@ class ActivitiesCommand extends Command
                 $suffixes[] = 'ingeschreven';
             } elseif ($activity->seats > 0) {
                 $suffixes[] = sprintf(
-                    '%d van %d plekken beschikbaar',
+                    '%d / %d beschikbaar',
                     $activity->available_seats,
                     $activity->seats
                 );
@@ -129,7 +129,6 @@ class ActivitiesCommand extends Command
         $message = trim(sprintf(
             self::USER_MESSAGE,
             implode("  \n", $lines),
-            route('activity.index'),
             $user === null ? self::REGISTER_MESSAGE : null
         ));
 
