@@ -77,7 +77,8 @@ class QuoteCommand extends Command
 
         if (empty($quoteText)) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_INVALID)
+                'text' => $this->formatText(self::REPLY_INVALID),
+                'parse_mode' => 'HTML'
             ]);
             return;
         }
