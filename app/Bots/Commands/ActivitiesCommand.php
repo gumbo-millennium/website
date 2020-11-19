@@ -34,7 +34,6 @@ class ActivitiesCommand extends Command
     Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
     TEXT;
 
-
     /**
      * The name of the Telegram command.
      * @var string
