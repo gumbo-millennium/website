@@ -167,7 +167,7 @@ jobs:
       - name: Install Laravel Envoy
         run: |
           composer global require --no-progress laravel/envoy
-          echo "::add-path::$HOME/.composer/vendor/bin/"
+          echo "$HOME/.composer/vendor/bin/" >> $GITHUB_PATH
 
       - name: Configure SSH connection
         run: |
