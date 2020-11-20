@@ -146,7 +146,7 @@ Route::prefix('word-lid')->name('join.')->group(static function () {
 });
 
 // Authentication and forgotten passwords
-Route::prefix('auth')->middleware([$loginCsp, 'no-sponsor'])->group(static function () {
+Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(static function () {
     Route::auth(['verify' => true]);
 
     // Register privacy

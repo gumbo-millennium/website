@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'no-cache' => \App\Http\Middleware\NoCacheMiddleware::class
     ];
 
     /**
@@ -83,5 +84,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\MembersOnlyMiddleware::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
+        \App\Http\Middleware\AddSecurityHeaders::class,
+        \App\Http\Middleware\NoCacheMiddleware::class
     ];
 }
