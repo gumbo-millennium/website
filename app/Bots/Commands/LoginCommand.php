@@ -6,6 +6,7 @@ namespace App\Bots\Commands;
 
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Keyboard\Keyboard;
 
 class LoginCommand extends Command
@@ -27,6 +28,13 @@ class LoginCommand extends Command
     'm naar je op als DM.
 
     Klik hieronder om je accounts te koppelen.
+    TEXT;
+
+    private const LOGIN_MSG_FAIL = <<<'TEXT'
+    ⚠ Inloggen niet mogelijk
+
+    Het is helaas niet mogelijk de benodigde gegevens naar Telegram te sturen,
+    neem even contact op met de DC.
     TEXT;
 
     /**
@@ -80,10 +88,17 @@ class LoginCommand extends Command
         );
 
         // Return message
-        $this->replyWithMessage([
-            'text' => $this->formatText(self::LOGIN_MSG),
-            'parse_mode' => 'HTML',
-            'reply_markup' => $keyboard
-        ]);
+        try {
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::LOGIN_MSG),
+                'parse_mode' => 'HTML',
+                'reply_markup' => $keyboard
+            ]);
+        } catch (TelegramSDKException $e) {
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::LOGIN_MSG_FAIL),
+                'parse_mode' => 'HTML'
+            ]);
+        }
     }
 }
