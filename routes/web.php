@@ -79,7 +79,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
     // Actioon view
     Route::get('/', 'Activities\\TunnelController@get')->name('show');
 
@@ -155,7 +155,7 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 });
 
 // My account
-Route::prefix('mijn-account')->name('account.')->middleware('auth')->group(static function () {
+Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
     Route::get('/', 'AccountController@index')->name('index');
 
