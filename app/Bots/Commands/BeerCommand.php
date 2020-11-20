@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Cache;
 
 class BeerCommand extends Command
 {
+    // phpcs:disable Generic.Files.LineLength.TooLong
     private const BEER_OPTIONS = [
         ['Bakken', 'Cylinders', 'Knuppels', 'Halve liters', 'Pitchers', 'Blikken', 'Groene palen', 'Pretcilinders', 'Pils', 'Lager', 'Tarwe-smoothies', 'Containers', 'Goude rakkers', 'Pintekes', 'Borrels', 'Gerstenat', 'Bier', "BVO'tjes", 'Spa geel', 'Vloeibaar brood', 'Koude kletsers', 'Pijpjes', 'Natte halzen'],
         ['vouwen', 'badkuipen', 'draaikolken', 'absorberen', 'soldaat maken', 'slempen', "neem'n", 'spoelen', 'heffen', 'zuipen', 'kantelen', 'drukken', 'strepen', 'klappen', 'zuigen', 'achterover slaan', 'takelen', 'tikken', 'gieten', 'wegkolken', 'kiepen', 'wegzetten', 'kegelen', 'ontdoppen', 'harken', 'nakken', 'adten', 'rietadten', 'leegtrekken'],
         ['illustere', 'Bavarische', 'Germaanse', 'statiegeld verzamelende', 'koloniale', 'dorstige', 'uitgedroogde', '19e eeuwse', 'grootverdienende', 'prominente', 'corporale', 'Ierse', 'drooggebekte', 'gruizige', 'overwinnende', 'industriele', 'op vervroegd pensioen gestelde', 'clandestine', 'koninklijke', 'in de order van Oranje-Nassau geridderde', 'aan lager wal geraakte', 'blauwgebloede', 'royale', 'Russische', 'gelauwerde', 'welvarende'],
         ['pilsbazen', 'pikkebazen', 'zuidasridders', 'leden met woestijnkeeltjes', 'grootgrondbezitters', 'bodemloze putten', 'emballagekoningen', 'pilsrupsen', 'stuko-bazen', 'borrelaars', 'pintermannen', 'grootverdieners', 'gozergasten', 'eindbazen', 'monniken', 'heersers', 'bazen', 'megalomanen', 'drukfeuten', 'fabrieksarbeiders', 'directeuren', 'oliemagnaten', 'cowboys', 'koningen', 'tzaaren', 'eindbazen', 'monarchen', 'Iluminati', 'graaiers', 'leden', 'hockeymoeders', 'bakfietsvaders', 'labradors', 'brouwers', 'prinsen', 'landheren', 'manegehouders', 'paardjes', 'makkers', 'amices']
     ];
+    // phpcs:enable
 
     /**
      * The name of the Telegram command.
