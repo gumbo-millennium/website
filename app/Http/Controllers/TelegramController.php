@@ -134,13 +134,11 @@ class TelegramController extends Controller
             throw new ServiceUnavailableHttpException('Validation system is not available');
         }
 
-        // Hash the bot token
+        // Compute expected content hash
         $botSecret = hash('sha256', $botToken, true);
-
-        // Get hash of the data
         $signed = hash_hmac('sha256', $dataList, $botSecret);
 
-        // Get hash
+        // Compare using a timing-safe function
         if (!hash_equals($signed, $hash)) {
             throw new BadRequestHttpException('The data signature is invalid');
         }
