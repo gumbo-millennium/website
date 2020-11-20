@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Facades\Response;
 use Psr\Http\Message\ResponseInterface;
 
 class AddSecurityHeaders
@@ -21,9 +23,11 @@ class AddSecurityHeaders
         // Forward first
         $response = $next($request);
 
-        // Check if the request is responsable
+        // See if we can convert it to a Response object
         if ($response instanceof Responsable) {
             $response = $response->toResponse($request);
+        } elseif ($response instanceof Renderable) {
+            $response = Response::make($response);
         }
 
         // Check if the response is one we can add headers to
