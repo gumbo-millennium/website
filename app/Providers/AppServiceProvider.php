@@ -10,6 +10,7 @@ use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
+use App\Services\PaymentService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
@@ -67,6 +68,11 @@ class AppServiceProvider extends ServiceProvider
             // Allow Telemetry (only includes response times)
             StripeClient::setEnableTelemetry(true);
         }
+
+        // Configure Payment provider
+        $this->app->singleton(PaymentService::class, static function () {
+            return new PaymentService(Config::get('gumbo.payments.default'));
+        })
 
         // Conscribo API
         $this->app->singleton(ConscriboServiceContract::class, static fn () => ConscriboService::fromConfig());
