@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Invoicable;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Confirmed as ConfirmedState;
 use App\Models\States\Enrollment\Created as CreatedState;
@@ -11,6 +12,7 @@ use App\Models\States\Enrollment\Paid as PaidState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use App\Models\Traits\HasInvoices;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,8 +23,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * A user enrollment for an activity. Optionally has payments.
  * @property \App\Models\States\Enrollment\State $state
  */
-class Enrollment extends UuidModel
+class Enrollment extends UuidModel implements Invoicable
 {
+    use HasInvoices;
     use HasEncryptedAttributes;
     use HasStates;
     use SoftDeletes;
@@ -160,6 +163,36 @@ class Enrollment extends UuidModel
         return $this->exists &&
             $this->total_price &&
             !($this->state instanceof CancelledState);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getInvoiceLines(): array
+    {
+        // Free events get no items
+        if (!$this->price) {
+            return [];
+        }
+
+        $out = [];
+
+        // Add default price
+        $normalPrice = $this->activity->price;
+        $out[] = InvoiceLine::make(
+            "Inschrijving voor {$this->activity->name}",
+            $this->activity->price
+        );
+
+        // Add discount or surcharge
+        if ($this->price !== $normalPrice) {
+            $out[] = InvoiceLine::make(
+                $normalPrice > $this->price ? 'Korting' : 'Toeslag',
+                abs($this->price - $normalPrice)
+            );
+        }
+
+        return $out;
     }
 
     /**
