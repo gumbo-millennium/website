@@ -9,6 +9,11 @@ return [
     // Cost of a single payment transaction via Stripe, in cents!
     'transfer-fee' => 29,
 
+    // Payments
+    'payments' => [
+        'default' => 'mollie',
+    ],
+
     // Google config
     'google' => [
         // Allowed domains
