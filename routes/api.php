@@ -29,8 +29,9 @@ Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
     ->middleware('signed')
     ->name('plazacam.view');
 
-// Register API for Stripe endpoints
+// Register API for payment endpoints
 Route::stripeWebhooks('payments/stripe/handle');
+Route::post('payments/mollie/handle', 'MollieWebhookController@handle')->name('mollie.webhook');
 
 // Register Telegram webhooks
 Route::post('/bots/telegram', 'TelegramBotController@handle')->name('bots.telegram');
