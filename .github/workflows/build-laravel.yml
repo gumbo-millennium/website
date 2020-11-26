@@ -46,6 +46,7 @@ jobs:
       matrix:
         php:
           - '7.4'
+          - '8.0'
     services:
       database:
         image: mysql:5
@@ -64,7 +65,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: xdebug
-          tools: composer:v1
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -97,7 +97,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer install --no-suggest --no-progress --no-interaction
+          composer install --no-suggest --no-progress --no-interaction -ignore-platform-req=php
           php artisan key:generate
 
       - name: Prepare database
@@ -126,6 +126,7 @@ jobs:
           vendor/bin/phpunit --coverage-clover ./dist/coverage-clover.xml
 
       - name: Report test results to CodeClimate
+        if: matrix.php == '7.4'
         run: |
           curl -o ./cc-test-reporter -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
           chmod +x ./cc-test-reporter
@@ -152,7 +153,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
         with:
-          php-version: "7.4"
+          php-version: '7.4'
           extensions: exif,json,mbstring
 
       - name: Checkout code
