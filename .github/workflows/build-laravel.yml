@@ -78,9 +78,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: vendor
-          key: composer-build-${{ hashFiles('**/composer.lock') }}
+          key: composer-build-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            composer-build-${{ env.cache-name }}-
+            composer-build-${{ matrix.php }}-
             composer-build-
 
       - name: Cache node_modules
@@ -97,7 +97,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer install --no-suggest --no-progress --no-interaction -ignore-platform-req=php
+          composer install --no-suggest --no-progress --no-interaction --ignore-platform-req=php
           php artisan key:generate
 
       - name: Prepare database
