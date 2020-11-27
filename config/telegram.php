@@ -45,6 +45,7 @@ return [
                 App\Bots\Commands\LogoutCommand::class,
                 App\Bots\Commands\PlazaCamCommand::class,
                 App\Bots\Commands\QuoteCommand::class,
+                App\Bots\Commands\SackCommand::class,
                 App\Bots\Commands\StartCommand::class,
             ],
         ],
