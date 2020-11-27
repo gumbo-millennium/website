@@ -63,4 +63,35 @@ abstract class Command extends TelegramCommand
         $out = sprintf($text, ...$args);
         return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
     }
+
+    /**
+     * Require the user to be logged in and a member
+     * @param null|User $user
+     * @return bool
+     */
+    protected function ensureIsMember(?User $user): bool
+    {
+        $message = null;
+        if (!$user) {
+            $message = <<<'EOL'
+            🛂 Je moet ingelogd zijn om dit commando te gebruiken.
+
+            Log in door /login in een PM te sturen.
+            EOL;
+        } elseif (!$user->is_member) {
+            $message = <<<'EOL'
+            ⛔ Dit commando is alleen voor leden.
+            EOL;
+        }
+
+        // Pass
+        if (!$message) {
+            return true;
+        }
+
+        // Reply with the error
+        $this->replyWithMessage([
+            'text' => $message
+        ]);
+    }
 }

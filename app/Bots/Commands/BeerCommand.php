@@ -56,14 +56,9 @@ class BeerCommand extends Command
         // Prep rate limit
         Cache::put($cacheKey, now()->addMinute(), now()->addMinutes(5));
 
-        // Get user
+        // Get user and check member rights
         $user = $this->getUser();
-
-        // Only members
-        if (!$user || !$user->is_member) {
-            $this->replyWithMessage([
-                'text' => '🚷 Dit commando is alleen voor leden'
-            ]);
+        if (!$this->ensureIsMember($user)) {
             return;
         }
 
