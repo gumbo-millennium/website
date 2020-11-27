@@ -6,17 +6,12 @@ namespace App\Bots\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class BeerCommand extends Command
 {
-    // phpcs:disable Generic.Files.LineLength.TooLong
-    private const BEER_OPTIONS = [
-        ['Bakken', 'Cylinders', 'Knuppels', 'Halve liters', 'Pitchers', 'Blikken', 'Groene palen', 'Pretcilinders', 'Pils', 'Lager', 'Tarwe-smoothies', 'Containers', 'Goude rakkers', 'Pintekes', 'Borrels', 'Gerstenat', 'Bier', "BVO'tjes", 'Spa geel', 'Vloeibaar brood', 'Koude kletsers', 'Pijpjes', 'Natte halzen', 'Ad Hemels', 'Ad Dakgoten', 'Ad Kippen', 'Ad Schurften', 'Ad Fusten', 'Ad Blikken', 'Klokjes', 'Ad Trechters', 'Holtlandjes', 'Powerpils', '5 Liter kannen', 'Prosecco' , 'VrijMiBos'],
-        ['vouwen', 'badkuipen', 'draaikolken', 'absorberen', 'soldaat maken', 'slempen', "neem'n", 'spoelen', 'heffen', 'zuipen', 'kantelen', 'drukken', 'strepen', 'klappen', 'zuigen', 'achterover slaan', 'takelen', 'tikken', 'gieten', 'wegkolken', 'kiepen', 'wegzetten', 'kegelen', 'ontdoppen', 'harken', 'nakken', 'adten', 'rietadten', 'leegtrekken', 'slurpen', 'dasdrinken', 'verorberen', 'bloempotten', 'borrelen'],
-        ['illustere', 'Bavarische', 'Germaanse', 'statiegeld verzamelende', 'koloniale', 'dorstige', 'uitgedroogde', '19e eeuwse', 'grootverdienende', 'prominente', 'corporale', 'Ierse', 'drooggebekte', 'gruizige', 'overwinnende', 'industriele', 'op vervroegd pensioen gestelde', 'clandestine', 'koninklijke', 'in de order van Oranje-Nassau geridderde', 'aan lager wal geraakte', 'blauwgebloede', 'royale', 'Russische', 'gelauwerde', 'welvarende', 'afgestudeerde', 'gedechargeerde', 'twijfelachtige', 'robuuste', 'lallende', 'onsamenhangende', 'recalcitrante'],
-        ['pilsbazen', 'pikkebazen', 'zuidasridders', 'leden met woestijnkeeltjes', 'grootgrondbezitters', 'bodemloze putten', 'emballagekoningen', 'pilsrupsen', 'stuko-bazen', 'borrelaars', 'pintermannen', 'grootverdieners', 'gozergasten', 'eindbazen', 'monniken', 'heersers', 'bazen', 'megalomanen', 'drukfeuten', 'fabrieksarbeiders', 'directeuren', 'oliemagnaten', 'cowboys', 'koningen', 'tzaaren', 'eindbazen', 'monarchen', 'Iluminati', 'graaiers', 'leden', 'hockeymoeders', 'bakfietsvaders', 'labradors', 'brouwers', 'prinsen', 'landheren', 'manegehouders', 'paardjes', 'makkers', 'amices', 'Gumboërs', 'sjaarsen', 'brokkelfeuten', 'schuinsmarcheerders', 'M-Power leden','Aliquandoërs','Amicae','Proximi','LHW-gangers', 'bestuursleden', 'tempeliers', 'CoBo genodigden', 'Kandidaat-bestuursleden', 'Rabarbers', 'Ereleden']
-    ];
-    // phpcs:enable
+    private const BEER_CONFIG_FILE = 'assets/yaml/beer-command.yaml';
 
     /**
      * The name of the Telegram command.
@@ -56,13 +51,27 @@ class BeerCommand extends Command
         // Prep rate limit
         Cache::put($cacheKey, now()->addMinute(), now()->addMinutes(5));
 
-        // Get user
+        // Get user and check member rights
         $user = $this->getUser();
+        if (!$this->ensureIsMember($user)) {
+            return;
+        }
 
-        // Only members
-        if (!$user || !$user->is_member) {
+        // Get config
+        $configPath = resource_path(self::BEER_CONFIG_FILE);
+        if (!file_exists($configPath) || !is_file($configPath)) {
             $this->replyWithMessage([
-                'text' => '🚷 Dit commando is alleen voor leden'
+                'text' => 'Dit commando is helaas kapot 😢'
+            ]);
+            return;
+        }
+
+        // Get config
+        try {
+            $config = Yaml::parseFile($configPath);
+        } catch (ParseException $e) {
+            $this->replyWithMessage([
+                'text' => 'Dit commando is helaas kapot 😢'
             ]);
             return;
         }
@@ -70,10 +79,10 @@ class BeerCommand extends Command
         // Get random lines
         $format = sprintf(
             '%s %s als %s %s!',
-            Arr::random(self::BEER_OPTIONS[0]),
-            Arr::random(self::BEER_OPTIONS[1]),
-            Arr::random(self::BEER_OPTIONS[2]),
-            Arr::random(self::BEER_OPTIONS[3])
+            Arr::random($config['targets']),
+            Arr::random($config['methods']),
+            Arr::random($config['adjectives']),
+            Arr::random($config['subjects'])
         );
 
         // Send as-is
