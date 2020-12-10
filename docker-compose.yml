@@ -12,7 +12,7 @@ x-laravel: &laravel-base
     - ./:/var/www
   env_file:
     - .env
-    - .docker/laravel/docker.env
+    - .docker/laravel.env
   networks:
     - laravel
   depends_on:
@@ -26,8 +26,8 @@ services:
     << : *laravel-base
     image: docker.pkg.github.com/gumbo-millennium/website/laravel
     build:
-      context: .docker/laravel
-      target: laravel
+      context: .docker/
+      target: laravel-dev
     ports:
       - 127.0.0.1:13370:80
 
@@ -36,16 +36,15 @@ services:
     << : *laravel-base
     image: docker.pkg.github.com/gumbo-millennium/website/horizon
     build:
-      context: .docker/laravel
-      target: horizon
+      context: .docker/
+      target: horizon-dev
 
   # mysql database
   database:
-    image: docker.pkg.github.com/gumbo-millennium/website/database
-    build:
-      context: .docker/database
+    image: mysql:8
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./.docker/database:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: laravel
       MYSQL_ONETIME_PASSWORD: 'true'
