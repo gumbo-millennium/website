@@ -6,12 +6,19 @@ namespace App\Bots\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class BeerCommand extends Command
 {
-    private const BEER_CONFIG_FILE = 'assets/yaml/beer-command.yaml';
+    private const BEER_CONFIG_TEMPLATE = 'assets/yaml/%s.yaml';
+
+    private const BEER_CONFIG_DEFAULT = 'beer-command';
+
+    private const BEER_CONFIG_VARIANTS = [
+        ['06-12', '31-12', 'beer-command.christmas']
+    ];
 
     /**
      * The name of the Telegram command.
@@ -57,8 +64,21 @@ class BeerCommand extends Command
             return;
         }
 
+        // Get file
+        $configFile = self::BEER_CONFIG_DEFAULT;
+        $nowDate = Date::now()->setTime(0, 0);
+        foreach (self::BEER_CONFIG_VARIANTS as [$start, $end, $file]) {
+            $startDate = Date::createFromFormat('d-m', $start)->setTime(0, 0);
+            $endDate = Date::createFromFormat('d-m', $end)->setTime(0, 0);
+
+            if ($startDate <= $nowDate && $endDate >= $nowDate) {
+                $configFile = $file;
+                break;
+            }
+        }
+
         // Get config
-        $configPath = resource_path(self::BEER_CONFIG_FILE);
+        $configPath = resource_path(sprintf(self::BEER_CONFIG_TEMPLATE, $configFile));
         if (!file_exists($configPath) || !is_file($configPath)) {
             $this->replyWithMessage([
                 'text' => 'Dit commando is helaas kapot 😢'
