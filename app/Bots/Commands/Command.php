@@ -93,5 +93,7 @@ abstract class Command extends TelegramCommand
         $this->replyWithMessage([
             'text' => $message
         ]);
+
+        return false;
     }
 }
