@@ -16,7 +16,7 @@
         "daniel-de-wit/nova-paperclip": "^0.1",
         "doctrine/dbal": "^2.3",
         "ebess/advanced-nova-media-library": "^2.9",
-        "eduardokum/laravel-mail-auto-embed": "dev-master",
+        "eduardokum/laravel-mail-auto-embed": "^1.0",
         "enshrined/svg-sanitize": "^0.13.3",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
@@ -38,8 +38,6 @@
         "mischiefcollective/colorjizz": "^1.0",
         "mtownsend/read-time": "^1.1",
         "overtrue/laravel-lang": "^3.0",
-        "php-parallel-lint/php-console-highlighter": "^0.5.0",
-        "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpoffice/phpspreadsheet": "^1.11",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
@@ -68,6 +66,8 @@
         "nunomaduro/collision": "^3.0",
         "phpmd/phpmd": "^2.8.1",
         "phpunit/phpunit": "^8.0",
+        "php-parallel-lint/php-console-highlighter": "^0.5.0",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
         "sempro/phpunit-pretty-print": "^1.2",
         "slevomat/coding-standard": "^6.1",
         "squizlabs/php_codesniffer": "^3.3"
@@ -117,21 +117,17 @@
         "contribute": [
             "Composer\\Config::disableProcessTimeout",
             "@php -r \"file_exists('.env') || copy('.env.local', '.env');\"",
+            "git submodule update --init",
             "docker-compose pull",
             "docker-compose up -d",
             "@composer install --dev",
             "@php artisan app:env --force",
             "@php artisan key:generate",
-            "npm install --dev",
+            "npm clean-install",
             "npm run build",
             "docker-compose up -d",
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
             "@php artisan migrate:fresh --seed --force"
-        ],
-        "symlink": [
-            "ln -fs node_modules/bootstrap/scss ./@bootstrap",
-            "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-            "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
         ],
         "ide": [
             "@php artisan clear-compiled",
@@ -147,21 +143,7 @@
             "phpcs"
         ],
         "test": [
-            "phpunit"
-        ],
-        "nova-testing": [
-            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-            "cd ./vendor/laravel/nova && yarn install",
-            "cd ./vendor/laravel/nova && yarn run dev",
-            "cd ./vendor/laravel/nova && rm -rf node_modules",
-            "@php artisan nova:publish"
-        ],
-        "nova-production": [
-            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-            "cd ./vendor/laravel/nova && yarn install",
-            "cd ./vendor/laravel/nova && yarn run prod",
-            "cd ./vendor/laravel/nova && rm -rf node_modules",
-            "@php artisan nova:publish"
+            "vendor/bin/phpunit"
         ]
     },
     "config": {
@@ -175,10 +157,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/roelofr/laravel-mail-auto-embed"
         },
         {
             "type": "path",
