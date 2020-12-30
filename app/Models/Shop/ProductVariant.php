@@ -6,17 +6,15 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Models\Traits\IsSluggable;
 use App\Models\UuidModel;
-use Cviebrock\EloquentSluggable\Sluggable;
-use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductVariant extends UuidModel
 {
-    use Sluggable;
-    use SluggableScopeHelpers;
+    use IsSluggable;
 
     protected $table = 'shop_product_variants';
 
