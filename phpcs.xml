@@ -21,14 +21,9 @@
   <exclude-pattern>/library/</exclude-pattern>
   <exclude-pattern type="relative">^/storage/</exclude-pattern>
 
-  <!-- We just use PSR-2, but need to modify two rules to work with Laravel -->
+  <!-- We just use PSR-12, with a fix for migrations not having namespaces -->
   <rule ref="PSR12">
-    <!-- <exclude name="PSR12.Classes.ClassInstantiation" /> -->
     <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
-    <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
-
-    <!-- Use After Brace is currently bugged when using comments in class start -->
-    <exclude name="PSR12.Traits.UseDeclaration.UseAfterBrace" />
   </rule>
 
   <!-- Database files don't have a namespace. -->
@@ -36,17 +31,15 @@
     <exclude-pattern type="relative">^/database/</exclude-pattern>
   </rule>
 
-  <!-- Database files have classes with side effects, that's normal. -->
-  <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-    <exclude-pattern type="relative">^/database/seeds/</exclude-pattern>
-  </rule>
-
   <!-- Never use "else if". -->
   <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
     <type>error</type>
   </rule>
 
-  <!-- Other types -->
+  <!-- Slevomatic Coding Standard: Functional -->
+  <!-- <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint" /> -->
+  <!-- <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" /> -->
+  <!-- <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" /> -->
   <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint" />
   <rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly" />
   <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
@@ -55,59 +48,143 @@
       <property name="spacesCountAroundEqualsSign" type="int" value="0" />
     </properties>
   </rule>
+  <rule ref="SlevomatCodingStandard.Arrays.DisallowImplicitArrayCreation" />
   <rule ref="SlevomatCodingStandard.Classes.ClassStructure">
     <properties>
       <property name="groups" type="array">
         <element value="uses"/>
+
         <element value="public constants"/>
         <element value="protected constants"/>
         <element value="private constants"/>
-        <element value="public static properties, protected static properties, private static properties"/>
+
+        <element value="public static properties"/>
+        <element value="protected static properties"/>
+        <element value="private static properties"/>
+
         <element value="static constructors"/>
-        <element value="public static methods, protected static methods, private static methods"/>
-        <element value="public static abstract methods, protected static abstract methods"/>
-        <element value="public properties, protected properties, private properties"/>
+        <element value="public static methods"/>
+        <element value="protected static methods"/>
+        <element value="private static methods"/>
+
+        <element value="public static abstract methods"/>
+        <element value="protected static abstract methods"/>
+
+        <element value="public properties"/>
+        <element value="protected properties"/>
+        <element value="private properties"/>
+
         <element value="constructor"/>
         <element value="destructor"/>
-        <element value="public methods, protected methods, private methods"/>
-        <element value="public abstract methods, protected abstract methods"/>
+
+        <element value="public methods"/>
+        <element value="protected methods"/>
+        <element value="private methods"/>
+
+        <element value="public abstract methods"/>
+        <element value="protected abstract methods"/>
+
         <element value="magic methods"/>
       </property>
     </properties>
   </rule>
+  <rule ref="SlevomatCodingStandard.Classes.UselessLateStaticBinding" />
   <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
   <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
+  <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
   <rule ref="SlevomatCodingStandard.Functions.StaticClosure" />
+  <rule ref="SlevomatCodingStandard.PHP.DisallowDirectMagicInvokeCall" />
+  <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
 
-  <!-- Clean code -->
-  <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements" />
+  <!-- Slevomatic Coding Standard: Cleaning -->
   <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
   <rule ref="SlevomatCodingStandard.Functions.UnusedParameter" />
   <rule ref="SlevomatCodingStandard.Functions.UselessParameterDefaultValue" />
-  <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
+  <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+    <properties>
+      <property name="searchAnnotations" type="bool" value="true" />
+    </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace" />
   <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias" />
+  <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
+    <properties>
+        <property name="forbiddenClasses" type="array">
+            <element key="Carbon directly" value="Carbon\Carbon"/>
+            <element key="Carbon alias" value="Carbon"/>
+        </property>
+    </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion" />
   <rule ref="SlevomatCodingStandard.PHP.RequireNowdoc" />
-  <rule ref="SlevomatCodingStandard.Variables.UnusedVariable" />
+  <rule ref="SlevomatCodingStandard.PHP.UselessParentheses">
+    <properties>
+        <property name="ignoreComplexTernaryConditions" type="bool" value="true" />
+    </properties>
+  </rule>
+  <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon" />
+  <rule ref="SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable" />
+  <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+    <properties>
+        <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" type="bool" value="true" />
+    </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.Variables.UselessVariable" />
   <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch" />
 
-  <!-- Formatting -->
+  <!-- Slevomatic Coding Standard: Formatting -->
+  <rule ref="SlevomatCodingStandard.Arrays.MultiLineArrayEndBracketPlacement" />
+  <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace" />
+  <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma" />
+  <rule ref="SlevomatCodingStandard.Classes.ClassMemberSpacing">
+    <properties>
+        <property name="linesCountBetweenMembers" type="int" value="1" />
+    </properties>
+  </rule>
+  <rule ref="SlevomatCodingStandard.Classes.DisallowMultiConstantDefinition" />
   <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference" />
+  <rule ref="SlevomatCodingStandard.Classes.RequireMultiLineMethodSignature">
+    <properties>
+      <property name="minLineLength" type="int" value="100" />
+    </properties>
+  </rule>
+  <rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration" />
+  <rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
+    <properties>
+      <property name="linesCountBeforeFirstUseWhenFirstInClass" type="int" value="0" />
+      <property name="linesCountBetweenUses" type="int" value="0" />
+      <property name="linesCountAfterLastUse" type="int" value="1" />
+      <property name="linesCountAfterLastUseWhenLastInClass" type="int" value="0" />
+    </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses" />
   <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison" />
+  <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration">
+    <properties>
+      <property name="spacesCountAfterKeyword" type="int" value="1" />
+      <property name="spacesCountBeforeArrow" type="int" value="1" />
+      <property name="spacesCountAfterArrow" type="int" value="1" />
+      <property name="allowMultiLine" type="bool" value="true" />
+    </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.Functions.DisallowEmptyFunction" />
-  <rule ref="SlevomatCodingStandard.Functions.RequireArrowFunction" />
+  <!-- <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall" /> -->
   <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
   <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile" />
-  <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax" />
+  <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration" />
+  <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax">
+    <properties>
+      <property name="traversableTypeHints" type="array">
+        <element key="cake" value="Illuminate\Support\Collection"/>
+        <element key="cake2" value="Illuminate\Database\Eloquent\Collection"/>
+      </property>
+    </properties>
+  </rule>
+  <!-- <rule ref="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint" /> -->
+  <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints" />
+  <rule ref="SlevomatCodingStandard.TypeHints.NullTypeHintOnLastPosition" />
   <rule ref="SlevomatCodingStandard.PHP.ShortList" />
   <rule ref="SlevomatCodingStandard.PHP.TypeCast" />
-  <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
-  <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
-  <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse" />
-  <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash" />
   <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
     <!-- Exclude directories -->
     <include-pattern type="relative">^/app/</include-pattern>
@@ -121,6 +198,14 @@
       </property>
     </properties>
   </rule>
+  <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
+  <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing" />
+  <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+  <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing" />
+  <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHintSpacing" />
+  <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse" />
+  <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine" />
+  <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash" />
   <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
     <properties>
       <property name="forbiddenAnnotations" type="array">
@@ -136,7 +221,7 @@
   <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
     <properties>
       <property name="linesCountBeforeFirstContent" type="int" value="0" />
-      <property name="linesCountBetweenDescriptionAndAnnotations" type="int" value="0" />
+      <property name="linesCountBetweenDescriptionAndAnnotations" type="int" value="1" />
       <property name="linesCountBetweenDifferentAnnotationsTypes" type="int" value="0" />
       <property name="linesCountAfterLastContent" type="int" value="0" />
     </properties>
