@@ -30,4 +30,13 @@ class Order extends Model
         return $this->belongsToMany(ProductVariant::class, 'shop_order_product_variant')
             ->using(OrderProduct::class);
     }
+
+    public function getStatusAttribute(): string
+    {
+        if ($this->shipped_at) {
+            return 'sent';
+        }
+
+         return $this->paid_at ? 'paid' : 'pending';
+    }
 }
