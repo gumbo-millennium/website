@@ -36,7 +36,6 @@
         "laravel/tinker": "^2.0",
         "laravelium/sitemap": "^6.0",
         "mischiefcollective/colorjizz": "^1.0",
-        "mtownsend/read-time": "^1.1",
         "overtrue/laravel-lang": "^3.0",
         "phpoffice/phpspreadsheet": "^1.11",
         "predis/predis": "^1.1",
