@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Console\OutputStyle;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 /**
  * Adds or updates the default user
