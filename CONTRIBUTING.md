@@ -107,6 +107,28 @@ If you did get a hold of a Nova token, you can register it in Composer:
 composer config http-basic.nova.laravel.com <username> <password>
 ```
 
+## Clone the repository
+
+Let's get you started by cloning the respository locally. As we're using some
+repositories for creating dummy content, you're adviced to clone resursively:
+
+```
+git clone --recursive https://github.com/gumbo-millennium/website.git
+```
+
+or, if you're using the GitHub CLI:
+
+```
+gh repo clone gumbo-millennium/website -- --recursive
+```
+
+If you ran a normal, non-recursive clone, you can retroactively import the
+missing test-components using `git submodule`:
+
+```
+git submodule update --init
+```
+
 ### Go live
 
 After all these checks, you can go live with your installation. We've set up a
