@@ -123,7 +123,7 @@ storage/debugbar
 /storage/medialibrary
 
 # Ignore TNTSearch
-/storage/tnt/*.index
+/storage/tnt/
 
 # Ignore Auth files (Google and such)
 /storage/auth/
