@@ -22,6 +22,7 @@ use Stripe\Exception\ApiErrorException;
 
 /**
  * Handles creating enrollments, changes in the enrollment form and unenrollment
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -32,13 +33,17 @@ class EnrollmentController extends Controller
 
     /**
      * Creates the new enrollment for the activity
+     *
      * @param EnrollmentServiceContract $enrollService
      * @param Request $request
      * @param Activity $activity
      * @return Response
      */
-    public function create(EnrollmentServiceContract $enrollService, Request $request, Activity $activity)
-    {
+    public function create(
+        EnrollmentServiceContract $enrollService,
+        Request $request,
+        Activity $activity
+    ) {
         // Get user
         $user = $request->user();
         \assert($user instanceof User);
@@ -57,7 +62,7 @@ class EnrollmentController extends Controller
             if (!$enrollService->canEnroll($activity, $user)) {
                 Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
                     'user' => $user,
-                    'activity' => $activity
+                    'activity' => $activity,
                 ]);
 
                 // Redirect properly
@@ -100,6 +105,7 @@ class EnrollmentController extends Controller
 
     /**
      * Shows the form to update the enrollment details
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -125,6 +131,7 @@ class EnrollmentController extends Controller
 
     /**
      * Creates the new enrollment for the activity
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -156,6 +163,7 @@ class EnrollmentController extends Controller
     /**
      * Redirects users to the proper route. Note that this route might redirect
      * to the payments, even if the activity has ended.
+     *
      * @param Enrollment $enrollment
      * @return RedirectResponse
      */
@@ -186,6 +194,7 @@ class EnrollmentController extends Controller
 
     /**
      * Unenroll form
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -207,6 +216,7 @@ class EnrollmentController extends Controller
 
     /**
      * Confirmed unenroll requst
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -225,7 +235,7 @@ class EnrollmentController extends Controller
 
         // Check for an "agree" thing
         $this->validate($request, [
-            'accept' => 'required|accepted'
+            'accept' => 'required|accepted',
         ]);
 
         // Log
@@ -242,6 +252,7 @@ class EnrollmentController extends Controller
 
     /**
      * Adds a Stripe Payment Intent or Stripe Invoice to the enrollment, if required.
+     *
      * @param Enrollment $enrollment
      * @return void
      */
@@ -263,7 +274,7 @@ class EnrollmentController extends Controller
 
                 // Log result
                 logger()->info('Created Stripe payment intent {intent}.', [
-                    'intent' => $intent
+                    'intent' => $intent,
                 ]);
 
                 // Assign
@@ -277,7 +288,7 @@ class EnrollmentController extends Controller
 
                 // Log result
                 logger()->info('Created Stripe invoice {invoice}.', [
-                    'invoice' => $invoice
+                    'invoice' => $invoice,
                 ]);
 
                 // Assign
@@ -290,7 +301,7 @@ class EnrollmentController extends Controller
             // Log error
             logger()->error("Recieved API error whilst creating intent for {enrollment}", [
                 'exception' => $e,
-                'enrollment' => $enrollment
+                'enrollment' => $enrollment,
             ]);
             // Don't push error
         }

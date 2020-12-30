@@ -10,6 +10,7 @@ class DropUserIdAndTypeFromBotUserLinks extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -30,10 +31,12 @@ class DropUserIdAndTypeFromBotUserLinks extends Migration
         }
 
         // Remove timestamps
-        if (Schema::hasColumn('bot_user_links', 'created_at')) {
-            Schema::table('bot_user_links', static function (Blueprint $table) {
-                $table->dropTimestamps();
-            });
+        if (!Schema::hasColumn('bot_user_links', 'created_at')) {
+            return;
         }
+
+        Schema::table('bot_user_links', static function (Blueprint $table) {
+            $table->dropTimestamps();
+        });
     }
 }

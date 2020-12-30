@@ -60,13 +60,13 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         'discount_count' => null,
 
         // Image
-        'image' => $faker->optional(0.2)->passthrough($imageOptions->random())
+        'image' => $faker->optional(0.2)->passthrough($imageOptions->random()),
     ];
 
     // Does this activity has a price?
     if ($faker->boolean(80)) {
         $price = $faker->numberBetween(500, $faker->numberBetween(500, 6000) * 1.25);
-        $price = ($price - ($price % 25));
+        $price = $price - ($price % 25);
         $factoryData['price'] = $price;
 
         if ($faker->boolean(10)) {
@@ -103,5 +103,5 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
 });
 
 $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
-    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks')
+    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
 ]);

@@ -26,6 +26,7 @@ class ConfirmEnrollment extends Action
 
     /**
      * Makes a new Confirm Enrollment configured to this model
+     *
      * @param Enrollment $enrollment
      * @param User $user
      * @return ConfirmEnrollment
@@ -48,28 +49,25 @@ class ConfirmEnrollment extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = "Bevestig inschrijving"; // contains non-breaking space (U+00A0)
 
     /**
      * The text to be used for the action's confirm button.
+     *
      * @var string
      */
     public $confirmButtonText = 'Inschrijving bevestigen';
 
     /**
      * The text to be used for the action's cancel button.
+     *
      * @var string
      */
     public $cancelButtonText = 'Annuleren';
 
-    /**
-     * Perform the action on the given models.
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function handle(ActionFields $fields, Collection $models)
     {

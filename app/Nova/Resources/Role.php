@@ -22,24 +22,28 @@ use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Roles, for the Permission Framework
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Role extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = RoleModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -49,6 +53,7 @@ class Role extends Resource
 
     /**
      * Hide the item in the navbar
+     *
      * @var bool
      */
     public static $displayInNavigation = false;
@@ -62,6 +67,7 @@ class Role extends Resource
      * Build a "relatable" query for the given resource.
      *
      * This query determines which instances of the model may be attached to other resources.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -87,6 +93,7 @@ class Role extends Resource
 
     /**
      * Get the fields displayed by the resource.
+     *
      * @param  \Illuminate\Http\Request $request
      * @return array
      */

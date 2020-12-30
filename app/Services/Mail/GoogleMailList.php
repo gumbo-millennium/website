@@ -32,7 +32,7 @@ class GoogleMailList implements MailList, JsonSerializable
             \assert($member instanceof Google_Service_Directory_Member);
             $users[] = [
                 $member->getEmail(),
-                $member->getRole()
+                $member->getRole(),
             ];
         }
 
@@ -56,6 +56,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Creates a new Google mail list
+     *
      * @param string $email
      * @param string $serviceId
      * @param array<array<string>> $members
@@ -64,8 +65,13 @@ class GoogleMailList implements MailList, JsonSerializable
      * @return void
      * @throws InvalidArgumentException
      */
-    public function __construct(string $email, string $serviceId, array $members, array $aliases, array $lockedAliases)
-    {
+    public function __construct(
+        string $email,
+        string $serviceId,
+        array $members,
+        array $aliases,
+        array $lockedAliases
+    ) {
         // Check email
         if (\filter_var($email, \FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("List email [{$email}] is invalid");
@@ -122,6 +128,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Group email address
+     *
      * @return string
      */
     public function getEmail(): string
@@ -131,6 +138,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * The ID the mail service will recognize this service by
+     *
      * @return string
      */
     public function getServiceId(): string
@@ -140,6 +148,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Returns a list of email addresses
+     *
      * @return array<string>
      */
     public function listEmails(): array
@@ -148,46 +157,15 @@ class GoogleMailList implements MailList, JsonSerializable
         foreach ($this->members as [$email, $role]) {
             $out[] = [
                 $email,
-                $role === self::ROLE_NAME_ADMIN ? self::ROLE_ADMIN : self::ROLE_NORMAL
+                $role === self::ROLE_NAME_ADMIN ? self::ROLE_ADMIN : self::ROLE_NORMAL,
             ];
         }
         return $out;
     }
 
     /**
-     * Validates email and role if given
-     * @param string $email
-     * @param null|int $role
-     * @return array
-     * @throws InvalidArgumentException
-     */
-    protected function normalizeItem(string $email, ?int $role): array
-    {
-        // Check email
-        if (empty($email) || \filter_var($email, \FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException('Email address invalid');
-        }
-
-        // Map
-        $validRoles = [
-            self::ROLE_ADMIN => 'MANAGER',
-            self::ROLE_NORMAL => 'MEMBER'
-        ];
-
-        // Check against map
-        if ($role !== null && !\array_key_exists($role, $validRoles)) {
-            throw new InvalidArgumentException('Role invalid');
-        }
-
-        // Add mutation
-        return [
-            'email' => Str::lower($email),
-            'role' => $validRoles[$role ?? self::ROLE_NORMAL]
-        ];
-    }
-
-    /**
      * Adds the given email address with the given role
+     *
      * @param string $email
      * @param int $role
      * @return void
@@ -209,6 +187,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Updates the given email address to have the given role
+     *
      * @param string $email
      * @param int $role
      * @return void
@@ -230,6 +209,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Removes the given email address from the list
+     *
      * @param string $email
      * @return void
      */
@@ -250,6 +230,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * List aliases of this mail list
+     *
      * @return array<string>
      */
     public function listAliases(): array
@@ -259,6 +240,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Adds a mailing list alias
+     *
      * @param string $email
      * @return void
      */
@@ -278,6 +260,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Deletes mailing list alias
+     *
      * @param string $email
      * @return void
      */
@@ -302,6 +285,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Returns a sequential array with changed emails, as [(add|update|remove), email]
+     *
      * @return array<array<string>>
      */
     public function getChangedEmails(): array
@@ -311,6 +295,7 @@ class GoogleMailList implements MailList, JsonSerializable
 
     /**
      * Returns a sequential array with changed aliases, as [(add|remove), alias]
+     *
      * @return array<array<string>>
      */
     public function getChangedAliases(): array
@@ -319,7 +304,128 @@ class GoogleMailList implements MailList, JsonSerializable
     }
 
     /**
+     * Tests if a member is present
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function hasMember(string $email): bool
+    {
+        return $this->checkEmailInList(
+            Arr::pluck($this->members, 0),
+            $this->memberChanges,
+            $email
+        );
+    }
+
+    /**
+     * Tests if an alias is present
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function hasAlias(string $email): bool
+    {
+        return $this->checkEmailInList(
+            $this->aliases,
+            $this->aliasChanges,
+            $email
+        );
+    }
+
+    /**
+     * Converts item to array
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'email' => $this->getEmail(),
+            'service-id' =>  $this->getServiceId(),
+            'aliases' => $this->listAliases(),
+            'members' => sprintf('[REDACTED (%d items)]', count($this->listEmails())),
+        ];
+    }
+
+    /**
+     * Validates email and role if given
+     *
+     * @param string $email
+     * @param int|null $role
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    protected function normalizeItem(string $email, ?int $role): array
+    {
+        // Check email
+        if (empty($email) || \filter_var($email, \FILTER_VALIDATE_EMAIL) === false) {
+            throw new InvalidArgumentException('Email address invalid');
+        }
+
+        // Map
+        $validRoles = [
+            self::ROLE_ADMIN => 'MANAGER',
+            self::ROLE_NORMAL => 'MEMBER',
+        ];
+
+        // Check against map
+        if ($role !== null && !\array_key_exists($role, $validRoles)) {
+            throw new InvalidArgumentException('Role invalid');
+        }
+
+        // Add mutation
+        return [
+            'email' => Str::lower($email),
+            'role' => $validRoles[$role ?? self::ROLE_NORMAL],
+        ];
+    }
+
+    /**
+     * Throws an exception if $email already exists
+     *
+     * @param string $email
+     * @return void
+     * @throws OverflowException
+     */
+    protected function assertEmailExists(string $email): void
+    {
+        if (!$this->hasMember($email)) {
+            throw new UnderflowException("Email address [$email] does not exist");
+        }
+    }
+
+    /**
+     * Throws an exception if $email already exists
+     *
+     * @param string $email
+     * @return void
+     * @throws OverflowException
+     */
+    protected function assertEmailNotExists(string $email): void
+    {
+        if ($this->hasMember($email)) {
+            throw new OverflowException("Email address [$email] already exists");
+        }
+    }
+
+    /**
+     * Throws an exception if $email is not mutable
+     *
+     * @param string $email
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    protected function assertEmailMutable(string $email): void
+    {
+        if (!$this->canMutate($email)) {
+            throw new InvalidArgumentException("Email address [$email] is not mutable");
+        }
+    }
+
+    /**
      * Tests if an email address exists, taking mutations into account
+     *
      * @param array $master
      * @param array $mutations
      * @param string $email
@@ -339,7 +445,9 @@ class GoogleMailList implements MailList, JsonSerializable
         foreach ($mutations as [$action, $mutationEmail]) {
             if ($mutationEmail !== $email) {
                 continue;
-            } elseif ($action === self::CHANGE_ADD) {
+            }
+
+            if ($action === self::CHANGE_ADD) {
                 $found = true;
             } elseif ($action === self::CHANGE_DELETE) {
                 $found = false;
@@ -348,86 +456,5 @@ class GoogleMailList implements MailList, JsonSerializable
 
         // Return result
         return $found;
-    }
-
-    /**
-     * Tests if a member is present
-     * @param string $email
-     * @return bool
-     */
-    public function hasMember(string $email): bool
-    {
-        return $this->checkEmailInList(
-            Arr::pluck($this->members, 0),
-            $this->memberChanges,
-            $email
-        );
-    }
-
-    /**
-     * Tests if an alias is present
-     * @param string $email
-     * @return bool
-     */
-    public function hasAlias(string $email): bool
-    {
-        return $this->checkEmailInList(
-            $this->aliases,
-            $this->aliasChanges,
-            $email
-        );
-    }
-
-    /**
-     * Throws an exception if $email already exists
-     * @param string $email
-     * @return void
-     * @throws OverflowException
-     */
-    protected function assertEmailExists(string $email): void
-    {
-        if (!$this->hasMember($email)) {
-            throw new UnderflowException("Email address [$email] does not exist");
-        }
-    }
-
-    /**
-     * Throws an exception if $email already exists
-     * @param string $email
-     * @return void
-     * @throws OverflowException
-     */
-    protected function assertEmailNotExists(string $email): void
-    {
-        if ($this->hasMember($email)) {
-            throw new OverflowException("Email address [$email] already exists");
-        }
-    }
-
-    /**
-     * Throws an exception if $email is not mutable
-     * @param string $email
-     * @return void
-     * @throws InvalidArgumentException
-     */
-    protected function assertEmailMutable(string $email): void
-    {
-        if (!$this->canMutate($email)) {
-            throw new InvalidArgumentException("Email address [$email] is not mutable");
-        }
-    }
-
-    /**
-     * Converts item to array
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'email' => $this->getEmail(),
-            'service-id' =>  $this->getServiceId(),
-            'aliases' => $this->listAliases(),
-            'members' => sprintf('[REDACTED (%d items)]', count($this->listEmails()))
-        ];
     }
 }

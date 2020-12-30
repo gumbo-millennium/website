@@ -16,6 +16,7 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
+     *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
@@ -35,6 +36,7 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
 
     /**
      * User is creating a new account
+     *
      * @param User $user
      * @param string $url
      * @return MailMessage
@@ -65,6 +67,7 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
 
     /**
      * User has changed e-mailadres
+     *
      * @param User $user
      * @param string $url
      * @return MailMessage

@@ -17,6 +17,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can view any pages.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -27,6 +28,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can view the page.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
@@ -38,6 +40,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can create pages.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -48,6 +51,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can update the page.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
@@ -59,6 +63,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can delete the page.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
@@ -70,6 +75,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can restore the page.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
@@ -81,6 +87,7 @@ class PagePolicy
 
     /**
      * Determine whether the user can permanently delete the page.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Page  $page
      * @return mixed
@@ -92,6 +99,7 @@ class PagePolicy
 
     /**
      * Returns if the user is allowed to edit pages and news articles.
+     *
      * @param User $user
      * @return bool
      */

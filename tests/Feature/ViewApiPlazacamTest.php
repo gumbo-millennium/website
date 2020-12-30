@@ -10,6 +10,7 @@ use Tests\Traits\TempUserTrait;
 
 /**
  * Tests API access to the plazacam
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -19,6 +20,7 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadAnonymous(): void
@@ -26,7 +28,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => 29839,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         //  Retrieve plazacam
@@ -38,6 +40,7 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadUser(): void
@@ -48,7 +51,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         //  Retrieve plazacam
@@ -60,6 +63,7 @@ class ViewApiPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadMember(): void
@@ -70,7 +74,7 @@ class ViewApiPlazacamTest extends TestCase
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         //  Retrieve plazacam

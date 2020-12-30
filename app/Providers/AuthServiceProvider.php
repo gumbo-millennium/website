@@ -40,6 +40,7 @@ class AuthServiceProvider extends ServiceProvider
 {
     /**
      * The policy mappings for the application.
+     *
      * @var array
      */
     protected $policies = [
@@ -56,11 +57,12 @@ class AuthServiceProvider extends ServiceProvider
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
         Sponsor::class => SponsorPolicy::class,
-        User::class => UserPolicy::class
+        User::class => UserPolicy::class,
     ];
 
     /**
      * Register any authentication / authorization services.
+     *
      * @return void
      */
     public function boot(GateContract $gate)
@@ -77,6 +79,7 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Check if a user has permission to be super admin. Cannot be inherited from roles.
+     *
      * @param User $user User to authenticate
      * @return bool|null
      */

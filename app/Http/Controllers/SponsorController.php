@@ -14,6 +14,7 @@ class SponsorController extends Controller
 {
     /**
      * Return index of sponsors
+     *
      * @param Request $request
      * @return string
      */
@@ -34,18 +35,19 @@ class SponsorController extends Controller
         return \response()
             ->view('sponsors.index', [
                 'branded' => $brandedSponsors,
-                'simple' => $simpleSponsors
+                'simple' => $simpleSponsors,
             ])
             ->setCache([
                 'public' => true,
                 'max_age' => 60 * 15,
                 's_maxage' => 60 * 5,
-                'last_modified' => Carbon::parse((clone $baseQuery)->max('updated_at'))
+                'last_modified' => Carbon::parse((clone $baseQuery)->max('updated_at')),
             ]);
     }
 
     /**
      * Returns single sponsor, if they have a detail page
+     *
      * @param SponsorService $service
      * @param string $sponsor
      * @return Response
@@ -86,6 +88,7 @@ class SponsorController extends Controller
 
     /**
      * Redirects a user to the sponsor, if found.
+     *
      * @param string $sponsor
      * @return RedirectResponse
      * @throws HttpResponseException

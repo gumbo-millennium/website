@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Generates sitemaps for activities,
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -27,6 +28,7 @@ class SitemapController extends Controller
 
     /**
      * Make sure the request has a valid type before sending it
+     *
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -41,6 +43,7 @@ class SitemapController extends Controller
 
     /**
      * Present index sitemap on homepage
+     *
      * @param Request $request
      * @return Response
      */
@@ -88,8 +91,12 @@ class SitemapController extends Controller
         }
     }
 
-    private function addModelRoute(Sitemap &$sitemap, string $base, string $field, Builder $query): void
-    {
+    private function addModelRoute(
+        Sitemap &$sitemap,
+        string $base,
+        string $field,
+        Builder $query
+    ): void {
         // Get the most recent item
         $mostRecent = (clone $query)->max('updated_at');
 

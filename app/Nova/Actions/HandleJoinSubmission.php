@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\Select;
 /**
  * Handles join submission completions, which have either a positive or negative
  * response.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -28,6 +29,7 @@ class HandleJoinSubmission extends Action
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -50,9 +52,11 @@ class HandleJoinSubmission extends Action
 
         // Iterate through each model
         foreach ($models as $model) {
-            if ($this->handleSubmission($model, $accepted)) {
-                $updatedCount++;
+            if (!$this->handleSubmission($model, $accepted)) {
+                continue;
             }
+
+            $updatedCount++;
         }
 
         $failCount = $totalCount - $updatedCount;
@@ -69,6 +73,7 @@ class HandleJoinSubmission extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()
@@ -84,6 +89,7 @@ class HandleJoinSubmission extends Action
 
     /**
      * Handles a single submission
+     *
      * @param JoinSubmission $submission
      * @param bool $accepted
      * @return bool

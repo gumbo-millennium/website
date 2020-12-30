@@ -12,12 +12,14 @@ class DownloadsPerDay extends Trend
 {
     /**
      * The displayable name of the metric.
+     *
      * @var string
      */
     public $name = 'Downloads';
 
     /**
      * Calculate the value of the metric.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
@@ -28,6 +30,7 @@ class DownloadsPerDay extends Trend
 
     /**
      * Get the ranges available for the metric.
+     *
      * @return array
      */
     public function ranges()
@@ -37,12 +40,13 @@ class DownloadsPerDay extends Trend
             30 => '30 dagen',
             60 => '60 dagen',
             90 => '90 dagen',
-            'TODAY' => 'vandaag'
+            'TODAY' => 'vandaag',
         ];
     }
 
     /**
      * Determine for how many minutes the metric should be cached.
+     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -52,6 +56,7 @@ class DownloadsPerDay extends Trend
 
     /**
      * Get the URI key for the metric.
+     *
      * @return string
      */
     public function uriKey()

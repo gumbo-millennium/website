@@ -30,18 +30,21 @@ class IndexFileContents implements ShouldQueue
 
     /**
      * Try job 3 times
+     *
      * @var int
      */
     protected $tries = 3;
 
     /**
      * Allow 1 minute to get metadata
+     *
      * @var int
      */
     protected $timeout = 60;
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(Media $media)
@@ -52,6 +55,7 @@ class IndexFileContents implements ShouldQueue
 
     /**
      * Get the tags that should be assigned to the job.
+     *
      * @return array
      */
     public function tags(): array
@@ -61,6 +65,7 @@ class IndexFileContents implements ShouldQueue
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(Filesystem $filesystem)
@@ -153,7 +158,7 @@ class IndexFileContents implements ShouldQueue
         $requestList = collect([
             'PDF:all',
             'XMP-pdfaid:all',
-            'XMP-pdf:all'
+            'XMP-pdf:all',
         ])->map(static fn ($value) => Str::start($value, '-'));
 
         // Build command. The structure is [exittool + commands] + [fields] + [filename].

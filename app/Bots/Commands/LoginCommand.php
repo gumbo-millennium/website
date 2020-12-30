@@ -39,12 +39,14 @@ class LoginCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'login';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Koppel je Telegram account';
@@ -67,7 +69,7 @@ class LoginCommand extends Command
             // Send already logged in
             $this->replyWithMessage([
                 'text' => sprintf(self::LOGOUT_MSG, $user->alias ?? $user->first_name),
-                'parse_mode' => 'HTML'
+                'parse_mode' => 'HTML',
             ]);
             return;
         }
@@ -82,8 +84,8 @@ class LoginCommand extends Command
                 'text' => 'Inloggen',
                 'login_url' => [
                     'url' => route('account.tg.link'),
-                    'request_write_access' => false
-                ]
+                    'request_write_access' => false,
+                ],
             ])
         );
 
@@ -92,12 +94,12 @@ class LoginCommand extends Command
             $this->replyWithMessage([
                 'text' => $this->formatText(self::LOGIN_MSG),
                 'parse_mode' => 'HTML',
-                'reply_markup' => $keyboard
+                'reply_markup' => $keyboard,
             ]);
         } catch (TelegramSDKException $e) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::LOGIN_MSG_FAIL),
-                'parse_mode' => 'HTML'
+                'parse_mode' => 'HTML',
             ]);
         }
     }

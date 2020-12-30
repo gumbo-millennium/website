@@ -26,23 +26,12 @@ trait HasGoogleServices
     private ?GoogleGroupsSettingsService $googleGroupsSettingsService = null;
 
     /**
-     * Returns a Google client
-     * @return null|Google_Client
-     * @throws InvalidArgumentException
-     * @throws LogicException
-     */
-    private function getGoogleClient(): ?GoogleApi
-    {
-        // Get from container
-        return \app(GoogleApi::class);
-    }
-
-    /**
      * Safely calls a Google service, handling any errors as they come up
+     *
      * @param Closure $method
      * @param string $action For logging, action performed
      * @param string $subject For logging, subject performed on
-     * @return null|mixed
+     * @return mixed|null
      * @throws InvalidArgumentException
      */
     public function callGoogleService(Closure $method, string $action, string $subject)
@@ -90,6 +79,7 @@ trait HasGoogleServices
 
     /**
      * Returns a Google Directory Groups manager
+     *
      * @return GoogleDirectoryGroupsResource
      * @throws InvalidArgumentException
      * @internal
@@ -101,6 +91,7 @@ trait HasGoogleServices
 
     /**
      * Returns a Google Directory Group Alias manager
+     *
      * @return GoogleDirectoryAliasesResource
      * @throws InvalidArgumentException
      */
@@ -111,6 +102,7 @@ trait HasGoogleServices
 
     /**
      * Returns Google Directory Group Members manager
+     *
      * @return GoogleDirectoryMembersResource
      * @throws InvalidArgumentException
      */
@@ -121,6 +113,7 @@ trait HasGoogleServices
 
     /**
      * Returns Google Groups Settings manager
+     *
      * @return GoogleGroupsSettingsResource
      * @throws InvalidArgumentException
      */
@@ -130,7 +123,21 @@ trait HasGoogleServices
     }
 
     /**
+     * Returns a Google client
+     *
+     * @return Google_Client|null
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     */
+    private function getGoogleClient(): ?GoogleApi
+    {
+        // Get from container
+        return \app(GoogleApi::class);
+    }
+
+    /**
      * Returns Google directory service
+     *
      * @return GoogleDirectoryService
      * @throws InvalidArgumentException
      * @internal
@@ -148,6 +155,7 @@ trait HasGoogleServices
 
     /**
      * Returns Google Groups Settings client
+     *
      * @return GoogleGroupsSettingsService
      * @throws InvalidArgumentException
      * @internal

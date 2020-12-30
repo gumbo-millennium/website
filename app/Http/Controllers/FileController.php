@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -30,6 +31,7 @@ class FileController extends Controller
 {
     /**
      * Makes sure the user is allowed to handle files.
+     *
      * @return void
      */
     public function __construct()
@@ -57,6 +59,7 @@ class FileController extends Controller
 
     /**
      * Homepage
+     *
      * @return Response
      */
     public function index(): Response
@@ -94,6 +97,7 @@ class FileController extends Controller
 
     /**
      * Shows all the files in a given category, ordered by newest
+     *
      * @param FileCategory $category
      * @return Response
      */
@@ -117,6 +121,7 @@ class FileController extends Controller
 
     /**
      * Returns a single file's detail page
+     *
      * @param Request $request
      * @param FileBundle $bundle
      * @return Response
@@ -144,33 +149,8 @@ class FileController extends Controller
     }
 
     /**
-     * Logs a download
-     * @param Request $request
-     * @param null|FileBundle $bundle
-     * @param null|Media $media
-     * @return void
-     * @throws LogicException
-     * @throws ConflictingHeadersException
-     */
-    private function log(Request $request, ?FileBundle $bundle, ?SpatieMedia $media): void
-    {
-        // Fail
-        if (empty($bundle) && empty($media)) {
-            throw new LogicException('Cannot log when neither bundle nor media is present');
-        }
-
-        // Log download
-        FileDownload::create([
-            'user_id' => $request->user()->id,
-            'bundle_id' => $bundle ? $bundle->id : $media->model->id,
-            'media_id' => optional($media)->id,
-            'ip' => $request->ip(),
-            'user_agent' => $request->userAgent()
-        ]);
-    }
-
-    /**
      * Streams a zipfile to the user
+     *
      * @param Request $request
      * @param FileBundle $bundle
      * @return SymfonyResponse
@@ -198,6 +178,7 @@ class FileController extends Controller
 
     /**
      * Returns a single file download
+     *
      * @param Request $request
      * @param Media $media
      * @return BinaryFileResponse
@@ -225,6 +206,7 @@ class FileController extends Controller
 
     /**
      * Finds files
+     *
      * @param Request $request
      * @param string $searchQuery
      * @return Response
@@ -263,7 +245,34 @@ class FileController extends Controller
         return \response()
             ->view('files.search', [
                 'files' => $results,
-                'searchQuery' => $searchQuery
+                'searchQuery' => $searchQuery,
             ]);
+    }
+
+    /**
+     * Logs a download
+     *
+     * @param Request $request
+     * @param FileBundle|null $bundle
+     * @param Media|null $media
+     * @return void
+     * @throws LogicException
+     * @throws ConflictingHeadersException
+     */
+    private function log(Request $request, ?FileBundle $bundle, ?SpatieMedia $media): void
+    {
+        // Fail
+        if (empty($bundle) && empty($media)) {
+            throw new LogicException('Cannot log when neither bundle nor media is present');
+        }
+
+        // Log download
+        FileDownload::create([
+            'user_id' => $request->user()->id,
+            'bundle_id' => $bundle ? $bundle->id : $media->model->id,
+            'media_id' => optional($media)->id,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
     }
 }

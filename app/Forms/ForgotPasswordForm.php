@@ -22,11 +22,11 @@ class ForgotPasswordForm extends Form
                 'rules' => 'required|email',
                 'attr' => [
                     'autocomplete' => 'email',
-                    'autofocus' => true
+                    'autofocus' => true,
                 ],
             ])
             ->add('submit', 'submit', [
-                'label' => __('Send Password Reset Link')
+                'label' => __('Send Password Reset Link'),
             ]);
     }
 }

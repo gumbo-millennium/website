@@ -15,6 +15,7 @@ class AddFieldsToSponsors extends Migration
 
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -51,6 +52,7 @@ class AddFieldsToSponsors extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

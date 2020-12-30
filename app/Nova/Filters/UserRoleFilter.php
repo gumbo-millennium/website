@@ -15,7 +15,7 @@ class UserRoleFilter extends Filter
 {
     private const AVAILABLE_ROLES = [
         'verified',
-        'member'
+        'member',
     ];
 
     /**
@@ -25,6 +25,7 @@ class UserRoleFilter extends Filter
 
     /**
      * Apply the filter to the given query.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
@@ -43,13 +44,14 @@ class UserRoleFilter extends Filter
 
     /**
      * Get the filter's available options.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
     {
         $options = [
-            'Alles' => 'all'
+            'Alles' => 'all',
         ];
         return $options + Role::whereIn('name', self::AVAILABLE_ROLES)->pluck('name', 'title')->toArray();
     }

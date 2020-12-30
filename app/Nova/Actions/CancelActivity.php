@@ -24,24 +24,28 @@ class CancelActivity extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = 'Annuleer activiteit';
 
     /**
      * The text to be used for the action's confirm button.
+     *
      * @var string
      */
     public $confirmButtonText = 'Annuleer activiteit';
 
     /**
      * The text to be used for the action's cancel button.
+     *
      * @var string
      */
     public $cancelButtonText = 'Niet annuleren';
 
     /**
      * The text to be used for the action's confirmation text.
+     *
      * @var string
      */
     public $confirmText = <<<'TEXT'
@@ -50,6 +54,7 @@ class CancelActivity extends Action
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -79,14 +84,16 @@ class CancelActivity extends Action
             $activity->save();
 
             // Refund all, if requested
-            if ($cancelRefund) {
-                foreach ($activity->enrollments as $enrollment) {
-                    // Transition to cancellation
-                    $enrollment->state->transitionTo(Cancelled::class);
+            if (!$cancelRefund) {
+                continue;
+            }
 
-                    // Save the enrollment
-                    $enrollment->save();
-                }
+            foreach ($activity->enrollments as $enrollment) {
+                // Transition to cancellation
+                $enrollment->state->transitionTo(Cancelled::class);
+
+                // Save the enrollment
+                $enrollment->save();
             }
         }
 
@@ -96,7 +103,9 @@ class CancelActivity extends Action
         // Basic results
         if ($skipCount === 0) {
             return Action::message('De activiteiten zijn geannuleerd');
-        } elseif ($skipCount === $totalCount) {
+        }
+
+        if ($skipCount === $totalCount) {
             return Action::danger('Geen van de activiteiten zijn geannuleerd');
         }
 
@@ -110,6 +119,7 @@ class CancelActivity extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()
@@ -120,7 +130,7 @@ class CancelActivity extends Action
                 ->rows(4)
                 ->help('De reden voor annulering, max 190 tekens'),
             Boolean::make('Betalingen terugboeken', 'refund_all')
-                ->help('Alle uitgevoerde betalingen terugboeken')
+                ->help('Alle uitgevoerde betalingen terugboeken'),
         ];
     }
 }

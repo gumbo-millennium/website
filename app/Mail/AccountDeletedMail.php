@@ -15,6 +15,7 @@ class AccountDeletedMail extends Mailable
 
     /**
      * Create a new message instance.
+     *
      * @return void
      */
     public function __construct()
@@ -24,6 +25,7 @@ class AccountDeletedMail extends Mailable
 
     /**
      * Build the message.
+     *
      * @return $this
      */
     public function build()

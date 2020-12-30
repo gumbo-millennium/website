@@ -10,6 +10,7 @@ use JsonException;
 
 /**
  * Provides banks for iDEAL
+ *
  * @author Roelof Roos <github@roelof.io>
  */
 class IdealBankService
@@ -27,6 +28,7 @@ class IdealBankService
 
     /**
      * Returns all banks
+     *
      * @return array
      */
     public function getAll(): array
@@ -36,6 +38,7 @@ class IdealBankService
 
     /**
      * Returns all bank names
+     *
      * @return array
      */
     public function names(): array
@@ -45,6 +48,7 @@ class IdealBankService
 
     /**
      * Returns all Stripe bank codes
+     *
      * @return array
      */
     public function codes(): array
@@ -54,8 +58,9 @@ class IdealBankService
 
     /**
      * Returns the name of the bank with the given code
+     *
      * @param string $code
-     * @return null|string
+     * @return string|null
      */
     public function getName(string $code): ?string
     {
@@ -64,6 +69,7 @@ class IdealBankService
 
     /**
      * Returns the bank list
+     *
      * @return Illuminate\Support\Collection
      */
     private function getList(): Collection

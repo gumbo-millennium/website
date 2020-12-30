@@ -14,12 +14,14 @@ class StartCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'start';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Toont het welkomstbericht';
@@ -31,7 +33,7 @@ class StartCommand extends Command
     {
         // Send as-is
         $this->replyWithMessage([
-            'text' => $this->formatText(self::MSG)
+            'text' => $this->formatText(self::MSG),
         ]);
     }
 }

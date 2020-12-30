@@ -12,6 +12,7 @@ class ListUser extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'permissions:user
@@ -20,12 +21,14 @@ class ListUser extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Finds user permissions';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -73,7 +76,7 @@ class ListUser extends Command
             $hasPerms->push([
                 $perm->$view,
                 $user->hasPermissionTo($perm) ? '<info>✔</>' : '',
-                $why->implode(', ')
+                $why->implode(', '),
             ]);
         }
 

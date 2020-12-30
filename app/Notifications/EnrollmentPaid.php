@@ -28,6 +28,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -37,6 +38,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     *
      * @return array
      */
     public function via()
@@ -46,6 +48,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
+     *
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail()
@@ -105,8 +108,9 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Returns link to Stripe's receipt page
+     *
      * @param Enrollment $enrollment
-     * @return null|string
+     * @return string|null
      * @throws BindingResolutionException
      */
     public function getReceiptLink(Enrollment $enrollment): ?string
@@ -127,8 +131,9 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
     /**
      * Returns path to the PDF, or null if missing
+     *
      * @param Enrollment $enrollment
-     * @return null|string
+     * @return string|null
      * @throws BindingResolutionException
      */
     private function getInvoicePdf(Enrollment $enrollment): ?string
@@ -163,7 +168,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
                 // this API connects quickly, but generates PDFs on the fly, which is slow.
                 RequestOptions::CONNECT_TIMEOUT => 15.00,
                 RequestOptions::READ_TIMEOUT => 30.00,
-                RequestOptions::TIMEOUT => 45.00
+                RequestOptions::TIMEOUT => 45.00,
             ]);
 
             // Return if non-200

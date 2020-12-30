@@ -12,6 +12,7 @@ class MediaUploadListener
 {
     /**
      * Handle the event.
+     *
      * @param  object  $event
      * @return void
      */

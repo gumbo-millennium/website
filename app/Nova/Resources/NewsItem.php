@@ -19,30 +19,35 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * News Items
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NewsItem extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = NewsItemModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Content';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -50,11 +55,6 @@ class NewsItem extends Resource
         'slug',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {

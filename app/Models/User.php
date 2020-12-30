@@ -31,11 +31,12 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      */
     protected $encrypted = [
         'address',
-        'phone'
+        'phone',
     ];
 
     /**
      * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -49,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be hidden for arrays.
+     *
      * @var array
      */
     protected $hidden = [
@@ -62,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be mutated to dates.
+     *
      * @var array
      */
     protected $dates = [
@@ -71,6 +74,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The model's default values for attributes.
+     *
      * @var array
      */
     protected $attributes = [
@@ -80,15 +84,17 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * The attributes that should be cast to native types.
+     *
      * @var array
      */
     protected $casts = [
         'conscribo_id' => 'int',
-        'address' => 'json'
+        'address' => 'json',
     ];
 
     /**
      * Returns files the user has uploaded
+     *
      * @return HasMany
      */
     public function files(): HasMany
@@ -98,6 +104,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns downloads the user has performed
+     *
      * @return BelongsToMany
      */
     public function downloads(): Relation
@@ -107,6 +114,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns enrollments the user has performed
+     *
      * @return HasMany
      */
     public function enrollments(): HasMany
@@ -116,6 +124,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns the activities the user is enrolled in
+     *
      * @return HasManyThrough
      */
     public function activities(): Relation
@@ -125,6 +134,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns activities the user can manage
+     *
      * @return HasMany
      */
     public function hostedActivities(): Relation
@@ -134,6 +144,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns the public name of the user
+     *
      * @return string|null
      */
     public function getPublicNameAttribute(): ?string
@@ -143,6 +154,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns if this user is a member
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -153,6 +165,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns a list of IDs that the user hosts
+     *
      * @return Collection
      */
     public function getHostedActivityIdsAttribute(?array $attributes = null): iterable
@@ -167,7 +180,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     /**
      * Returns (sub)query that only returns the Activities this user
      * is a manager of.
-     * @param null|Builder $query
+     *
+     * @param Builder|null $query
      * @return Builder
      * @throws InvalidArgumentException
      */
@@ -189,6 +203,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns a subquery to select all activity IDs this user can manage
+     *
      * @return Builder
      * @throws InvalidArgumentException
      */
@@ -199,6 +214,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Send the email verification notification.
+     *
      * @return void
      */
     public function sendEmailVerificationNotification()
@@ -208,6 +224,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns Stripe-ready array
+     *
      * @return array
      */
     public function toStripeCustomer(): array
@@ -217,7 +234,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'address' => $this->address
+            'address' => $this->address,
         ];
 
         // Add shipping with subset of data

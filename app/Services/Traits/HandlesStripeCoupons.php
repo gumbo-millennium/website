@@ -15,14 +15,16 @@ trait HandlesStripeCoupons
 {
     /**
      * Coupons retrieved from API
+     *
      * @var array<Coupon>
      */
     private array $couponCache = [];
 
     /**
      * Returns the computed coupon for this activity.
+     *
      * @param Activity $activity
-     * @return null|Collection
+     * @return Collection|null
      */
     public function getComputedCoupon(Activity $activity): ?Collection
     {
@@ -42,15 +44,16 @@ trait HandlesStripeCoupons
         return collect([
             'label' => $couponName,
             'discount' => $activity->member_discount,
-            'due-date' => $dueDate
+            'due-date' => $dueDate,
         ]);
     }
 
     /**
      * Returns the coupon for this activity, to apply the discount on the activity
+     *
      * @param Activity $activity
      * @param int $options Bitwise options, see OPT_ constants
-     * @return null|Stripe\Coupon
+     * @return Stripe\Coupon|null
      */
     public function getCoupon(Activity $activity, int $options = 0): ?Coupon
     {

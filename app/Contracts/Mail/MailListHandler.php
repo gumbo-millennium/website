@@ -8,20 +8,23 @@ interface MailListHandler
 {
     /**
      * Returns all mailing lists
+     *
      * @return array<MailList>
      */
     public function getAllLists(): array;
 
     /**
      * Returns the list with the given email address
+     *
      * @param string $email
-     * @return null|MailList
+     * @return MailList|null
      */
     public function getList(string $email): ?MailList;
 
     /**
      * Returns a new list with the given email address. Will probably
      * throw an exception if it already exists
+     *
      * @param string $email
      * @param string $name
      * @return MailList
@@ -30,6 +33,7 @@ interface MailListHandler
 
     /**
      * Saves changes to the given MailList
+     *
      * @param MailList $list
      * @return void
      */
@@ -37,6 +41,7 @@ interface MailListHandler
 
     /**
      * Deletes the given maillist
+     *
      * @param MailList $list
      * @return void
      */

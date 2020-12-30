@@ -14,6 +14,7 @@ class SponsorClicksPerDay extends Trend
 {
     /**
      * The displayable name of the metric.
+     *
      * @var string
      */
     public $name = 'Doorkliks naar sponsoren';
@@ -29,6 +30,7 @@ class SponsorClicksPerDay extends Trend
 
     /**
      * Calculate the value of the metric.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
@@ -44,6 +46,7 @@ class SponsorClicksPerDay extends Trend
 
     /**
      * Get the ranges available for the metric.
+     *
      * @return array
      */
     public function ranges()
@@ -53,12 +56,13 @@ class SponsorClicksPerDay extends Trend
             30 => '30 dagen',
             60 => '60 dagen',
             90 => '90 dagen',
-            'TODAY' => 'vandaag'
+            'TODAY' => 'vandaag',
         ];
     }
 
     /**
      * Determine for how many minutes the metric should be cached.
+     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -68,6 +72,7 @@ class SponsorClicksPerDay extends Trend
 
     /**
      * Get the URI key for the metric.
+     *
      * @return string
      */
     public function uriKey()

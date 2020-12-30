@@ -11,6 +11,7 @@ class CreateInvoiceJob extends StripeJob
 {
     /**
      * Enrollment
+     *
      * @var \App\Models\Enrollment
      */
     protected $enrollment;
@@ -25,6 +26,7 @@ class CreateInvoiceJob extends StripeJob
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(StripeServiceContract $service)

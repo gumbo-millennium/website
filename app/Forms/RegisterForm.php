@@ -10,6 +10,7 @@ use Kris\LaravelFormBuilder\Form;
 
 /**
  * Registration form
+ *
  * @package App\Forms
  */
 class RegisterForm extends Form
@@ -32,7 +33,7 @@ class RegisterForm extends Form
                 'attr' => [
                     'placeholder' => $dummyName[0],
                     'autocomplete' => 'given-name',
-                    'autofocus' => true
+                    'autofocus' => true,
                 ],
             ])
             ->add('insert', 'text', [
@@ -40,7 +41,7 @@ class RegisterForm extends Form
                 'rules' => 'nullable|string|min:2',
                 'attr' => [
                     'placeholder' => $dummyName[1],
-                    'autocomplete' => 'additional-name'
+                    'autocomplete' => 'additional-name',
                 ],
             ])
             ->add('last_name', 'text', [
@@ -48,7 +49,7 @@ class RegisterForm extends Form
                 'rules' => 'required|string|min:2',
                 'attr' => [
                     'placeholder' => $dummyName[2],
-                    'autocomplete' => 'family-name'
+                    'autocomplete' => 'family-name',
                 ],
             ])
             ->addEmail(null, [
@@ -59,22 +60,22 @@ class RegisterForm extends Form
                 'rules' => [
                     'required',
                     'string',
-                    'min:10'
+                    'min:10',
                 ],
                 'attr' => [
                     'placeholder' => $passwordPlaceholder,
                     'autocomplete' => 'new-password',
-                    'minlength' => '10'
+                    'minlength' => '10',
                 ],
                 'help_block' => [
                     // phpcs:disable Generic.Files.LineLength.TooLong
-                    'text' => '<strong>Minimaal 10 tekens</strong>. Probeer een beetje origineel te zijn (gebruik niet je Google wachtwoord, bijvoorbeeld)'
+                    'text' => '<strong>Minimaal 10 tekens</strong>. Probeer een beetje origineel te zijn (gebruik niet je Google wachtwoord, bijvoorbeeld)',
                     // phpcs:enable Generic.Files.LineLength.TooLong
                 ],
             ])
             ->addAlias()
             ->add('submit', 'submit', [
-                'label' => 'Verder'
+                'label' => 'Verder',
             ]);
     }
 }

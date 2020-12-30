@@ -11,6 +11,7 @@ use Laravel\Nova\Nova;
 
 /**
  * Email sent to the board concerning the new member
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,6 +19,7 @@ class BoardJoinMail extends BaseJoinMail
 {
     /**
      * Board should not reply to these mails.
+     *
      * @var array
      */
     public $replyTo = [];
@@ -36,7 +38,7 @@ class BoardJoinMail extends BaseJoinMail
                 secure_url(Nova::path()),
                 'resources',
                 NovaJoinSubmission::uriKey(),
-                $this->submission->id
+                $this->submission->id,
             ]);
         }
 

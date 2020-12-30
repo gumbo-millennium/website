@@ -17,23 +17,26 @@ class BeerCommand extends Command
     private const BEER_CONFIG_DEFAULT = 'beer-command';
 
     private const BEER_CONFIG_VARIANTS = [
-        ['06-12', '31-12', 'beer-command.christmas']
+        ['06-12', '31-12', 'beer-command.christmas'],
     ];
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'bier';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Bedenkt een goed excuus om bier te drinken';
 
     /**
      * Command Aliases - Helpful when you want to trigger command with more than one name.
+     *
      * @var array<string>
      */
     protected $aliases = ['beer'];
@@ -50,7 +53,7 @@ class BeerCommand extends Command
         $cacheKey = sprintf('tg.beer.%s', $tgUser->id);
         if (Cache::get($cacheKey) > now()) {
             $this->replyWithMessage([
-                'text' => '⏸ Rate limited (1x per min)'
+                'text' => '⏸ Rate limited (1x per min)',
             ]);
             return;
         }
@@ -81,7 +84,7 @@ class BeerCommand extends Command
         $configPath = resource_path(sprintf(self::BEER_CONFIG_TEMPLATE, $configFile));
         if (!file_exists($configPath) || !is_file($configPath)) {
             $this->replyWithMessage([
-                'text' => 'Dit commando is helaas kapot 😢'
+                'text' => 'Dit commando is helaas kapot 😢',
             ]);
             return;
         }
@@ -91,7 +94,7 @@ class BeerCommand extends Command
             $config = Yaml::parseFile($configPath);
         } catch (ParseException $e) {
             $this->replyWithMessage([
-                'text' => 'Dit commando is helaas kapot 😢'
+                'text' => 'Dit commando is helaas kapot 😢',
             ]);
             return;
         }
@@ -107,7 +110,7 @@ class BeerCommand extends Command
 
         // Send as-is
         $this->replyWithMessage([
-            'text' => "🍻 $format"
+            'text' => "🍻 $format",
         ]);
     }
 }

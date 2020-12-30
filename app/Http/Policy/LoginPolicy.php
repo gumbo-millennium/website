@@ -15,6 +15,7 @@ class LoginPolicy extends BasePolicy
 {
     /**
      * Configure CSP directives
+     *
      * @return void
      */
     public function configure()

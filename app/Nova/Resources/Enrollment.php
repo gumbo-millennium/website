@@ -27,30 +27,35 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * User enrollment
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Enrollment extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = EnrollmentModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'id';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Activiteiten';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -58,6 +63,7 @@ class Enrollment extends Resource
 
     /**
      * Make sure the user can only see enrollments he/she is allowed to see
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -85,6 +91,7 @@ class Enrollment extends Resource
      * Build a "relatable" query for the given resource.
      *
      * This query determines which instances of the model may be attached to other resources.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -110,6 +117,7 @@ class Enrollment extends Resource
 
     /**
      * Get the fields displayed by the resource.
+     *
      * @return array<mixed>
      */
     public function fields(Request $request)
@@ -177,6 +185,7 @@ class Enrollment extends Resource
 
     /**
      * Get the actions available on the entity.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -206,10 +215,10 @@ class Enrollment extends Resource
                 ->canRun(static function ($request, $enrollment) {
                     if ($enrollment->state->isOneOf([Cancelled::class])) {
                         return false;
-                    };
+                    }
                     return $request->user()->can('manage', $enrollment);
                 }),
-            ConfirmEnrollment::make($this->model(), $request->user())
+            ConfirmEnrollment::make($this->model(), $request->user()),
         ];
     }
 
@@ -228,6 +237,7 @@ class Enrollment extends Resource
 
     /**
      * Get the filters available on the entity.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -235,7 +245,7 @@ class Enrollment extends Resource
     public function filters(Request $request)
     {
         return [
-            new EnrollmentStateFilter()
+            new EnrollmentStateFilter(),
         ];
     }
 }

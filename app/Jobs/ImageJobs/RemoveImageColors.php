@@ -25,7 +25,7 @@ class RemoveImageColors extends SvgJob
         'polyline',
         'text',
         'textPath',
-        'line'
+        'line',
     ];
 
     /**
@@ -38,6 +38,7 @@ class RemoveImageColors extends SvgJob
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle()
@@ -68,9 +69,11 @@ class RemoveImageColors extends SvgJob
 
         // Remove doctype element (again)
         foreach ($doc->childNodes as $child) {
-            if ($child->nodeType === \XML_DOCUMENT_TYPE_NODE) {
-                $child->parentNode->removeChild($child);
+            if ($child->nodeType !== \XML_DOCUMENT_TYPE_NODE) {
+                continue;
             }
+
+            $child->parentNode->removeChild($child);
         }
 
         // Remove non-whitelisted nodes
@@ -102,16 +105,19 @@ class RemoveImageColors extends SvgJob
         // Remove
 
         // Write SVG back to the file
-        if ($doc->save($filePath, \LIBXML_NOEMPTYTAG) !== false) {
-            // Save attribute
-            $this->updateAttribute($file);
+        if ($doc->save($filePath, \LIBXML_NOEMPTYTAG) === false) {
+            return;
         }
+
+        // Save attribute
+        $this->updateAttribute($file);
     }
 
     /**
      * Recurses into nodes
+     *
      * @param DOMElement $root The root element we're inspecting
-     * @param null|string $currentColor The active color, if any
+     * @param string|null $currentColor The active color, if any
      * @return void
      */
     private function recurseColorCheck(\DOMElement $root): void
@@ -155,6 +161,7 @@ class RemoveImageColors extends SvgJob
 
     /**
      * Returns the color this element should recieve (currentColor or transparent)
+     *
      * @param string $color
      * @return string
      */
@@ -178,6 +185,7 @@ class RemoveImageColors extends SvgJob
 
     /**
      * Determines attribute value for $attributeName
+     *
      * @param DOMElement $element
      * @param string $attributeName
      * @return void
@@ -196,6 +204,7 @@ class RemoveImageColors extends SvgJob
 
     /**
      * Returns true if this element has no fill
+     *
      * @param DOMElement $element
      * @return bool
      */

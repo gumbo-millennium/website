@@ -23,6 +23,7 @@ class AdminGate
 {
     /**
      * Returns if the user can enter Nova
+     *
      * @param User $user
      * @return bool
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

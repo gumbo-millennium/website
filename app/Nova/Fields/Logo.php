@@ -12,6 +12,7 @@ class Logo extends Image
 {
     /**
      * Creates a logo
+     *
      * @return static
      */
     public static function make(...$arguments)

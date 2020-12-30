@@ -44,9 +44,10 @@ class UpdateGoogleList implements ShouldQueue
 
     /**
      * Prepare a mutation on the given list
+     *
      * @param string $email
      * @param string $name
-     * @param null|array $aliases
+     * @param array|null $aliases
      * @param array $members
      */
     public function __construct(string $email, string $name, ?array $aliases, array $members)
@@ -59,6 +60,7 @@ class UpdateGoogleList implements ShouldQueue
 
     /**
      * Updates the mailing list
+     *
      * @param MailListHandler $handler
      * @return void
      */
@@ -102,7 +104,7 @@ class UpdateGoogleList implements ShouldQueue
             // Log changes
             Log::info('Applying new lpolicy to {list}', [
                 'list' => $list,
-                'policy' => $perms
+                'policy' => $perms,
             ]);
 
             // Commit permissions
@@ -110,13 +112,16 @@ class UpdateGoogleList implements ShouldQueue
         }
 
         // Update model
-        if ($hasChanges) {
-            $this->updateModel($this->getEmailList($handler));
+        if (!$hasChanges) {
+            return;
         }
+
+        $this->updateModel($this->getEmailList($handler));
     }
 
     /**
      * Finds or creates list
+     *
      * @param MailListHandler $handler
      * @return MailList
      */
@@ -140,6 +145,7 @@ class UpdateGoogleList implements ShouldQueue
 
     /**
      * Applies updates to the model
+     *
      * @param MailList $list
      * @return void
      */
@@ -159,7 +165,7 @@ class UpdateGoogleList implements ShouldQueue
         $members = collect($list->listEmails())
             ->map(static fn ($val) => [
                 'email' => $val[0],
-                'role' => $val[1] === MailList::ROLE_ADMIN ? 'admin' : 'user'
+                'role' => $val[1] === MailList::ROLE_ADMIN ? 'admin' : 'user',
             ])
             ->toArray();
 
@@ -178,6 +184,7 @@ class UpdateGoogleList implements ShouldQueue
 
     /**
      * Updates the aliases on the list
+     *
      * @param MailList $list
      * @return void
      */
@@ -218,6 +225,7 @@ class UpdateGoogleList implements ShouldQueue
 
     /**
      * Updates all users on this list, except those who appear to be forwarders
+     *
      * @param MailList $list
      * @return void
      * @throws BindingResolutionException

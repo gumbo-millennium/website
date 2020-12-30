@@ -17,6 +17,7 @@ use UnderflowException;
 /**
  * Handles receiving, storing and publishing of the plazacam.
  * Requires a valid user with 'member' status.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -38,19 +39,8 @@ class PlazaCamController extends Controller
     ];
 
     /**
-     * Prevent the images from being updated on weekends and between 22.00 - 07.00.
-     * @return bool
-     */
-    protected static function isAvailable(): bool
-    {
-        $time = now();
-        $hour = $time->hour;
-
-        return $time->isWeekday() && ($hour >= 7 && $hour < 22);
-    }
-
-    /**
      * Return if the cam is still valid (up to 90 minutes after creation)
+     *
      * @param string $cam
      * @return bool
      */
@@ -74,8 +64,9 @@ class PlazaCamController extends Controller
 
     /**
      * Returns the path to the file of the given cam.
+     *
      * @param string $name
-     * @return null|string
+     * @return string|null
      * @throws InvalidArgumentException
      * @throws UnderflowException
      */
@@ -99,7 +90,21 @@ class PlazaCamController extends Controller
     }
 
     /**
+     * Prevent the images from being updated on weekends and between 22.00 - 07.00.
+     *
+     * @return bool
+     */
+    protected static function isAvailable(): bool
+    {
+        $time = now();
+        $hour = $time->hour;
+
+        return $time->isWeekday() && ($hour >= 7 && $hour < 22);
+    }
+
+    /**
      * Gets an image from the web endpoint
+     *
      * @param string $location Location to retrieve
      * @return Response
      * @throws BadRequestHttpException
@@ -117,6 +122,7 @@ class PlazaCamController extends Controller
 
     /**
      * Responds with images from API calls
+     *
      * @param Request $request
      * @return Response
      * @throws BadRequestHttpException if something is wrong
@@ -139,6 +145,7 @@ class PlazaCamController extends Controller
 
     /**
      * Stores images of the plaza- and coffeecam. Requires a user that's a member
+     *
      * @param Request $request
      * @param User $user Issuing user
      * @param string $image Image location
@@ -185,6 +192,7 @@ class PlazaCamController extends Controller
 
     /**
      * Actually retrieves images
+     *
      * @param string $image
      * @return Response
      */
@@ -200,7 +208,7 @@ class PlazaCamController extends Controller
             // Send file, with an expiration of 5 minutes or the first monday at 07.00.
             return Storage::response($path, "{$name}.jpg", [
                 'Expire' => $expiresAt->toRfc7231String(),
-                'Cache-Control' => sprintf('private, max-age=%d', $expiresAt->diffInSeconds(now()))
+                'Cache-Control' => sprintf('private, max-age=%d', $expiresAt->diffInSeconds(now())),
             ]);
         } catch (InvalidArgumentException $exception) {
             throw new NotFoundHttpException('Deze webcam is niet beschikbaar', $exception);

@@ -11,6 +11,7 @@ use Tests\Traits\TempUserTrait;
 
 /**
  * Tests updating the plazacam
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -20,6 +21,7 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test assignment by guest
+     *
      * @return void
      */
     public function testWriteUser(): void
@@ -30,7 +32,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         // Get a dummy file
@@ -39,7 +41,7 @@ class UpdatePlazacamTest extends TestCase
         //  Retrieve plazacam
         $request = $this->actingAs($user)
             ->json('PUT', $url, [
-                'file' => $file
+                'file' => $file,
             ]);
 
         // Expect a forbidden response
@@ -48,6 +50,7 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test assignment by member
+     *
      * @return void
      */
     public function testWriteMember(): void
@@ -58,7 +61,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         // Get a dummy file
@@ -67,7 +70,7 @@ class UpdatePlazacamTest extends TestCase
         //  Retrieve plazacam
         $request = $this->actingAs($user)
             ->json('PUT', $url, [
-                'file' => $file
+                'file' => $file,
             ]);
 
         // Expect an OK
@@ -76,6 +79,7 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test assignment by PC
+     *
      * @return void
      */
     public function testWritePlazaCommittee(): void
@@ -86,7 +90,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         // Get a dummy file
@@ -95,7 +99,7 @@ class UpdatePlazacamTest extends TestCase
         //  Retrieve plazacam
         $request = $this->actingAs($user)
             ->json('PUT', $url, [
-                'file' => $file
+                'file' => $file,
             ]);
 
         // Expect an OK
@@ -104,6 +108,7 @@ class UpdatePlazacamTest extends TestCase
 
     /**
      * Test assignment by board
+     *
      * @return void
      */
     public function testWriteBoard(): void
@@ -114,7 +119,7 @@ class UpdatePlazacamTest extends TestCase
         // Get the url
         $url = URL::signedRoute('api.plazacam.store', [
             'user' => $user->id,
-            'image' => 'plaza'
+            'image' => 'plaza',
         ]);
 
         // Get a dummy file
@@ -123,7 +128,7 @@ class UpdatePlazacamTest extends TestCase
         //  Retrieve plazacam
         $request = $this->actingAs($user)
             ->json('PUT', $url, [
-                'file' => $file
+                'file' => $file,
             ]);
 
         // Expect an OK

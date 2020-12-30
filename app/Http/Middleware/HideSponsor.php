@@ -16,6 +16,7 @@ class HideSponsor
 
     /**
      * Requires a sponsor
+     *
      * @param SponsorService $sponsorService
      * @return void
      */
@@ -26,6 +27,7 @@ class HideSponsor
 
     /**
      * Handle an incoming request.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @param SponsorService $sponsorService

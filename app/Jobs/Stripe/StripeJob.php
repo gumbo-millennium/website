@@ -23,6 +23,7 @@ abstract class StripeJob implements ShouldQueue
 
     /**
      * Makes sure a Stripe key is present
+     *
      * @return array
      */
     public function middleware()

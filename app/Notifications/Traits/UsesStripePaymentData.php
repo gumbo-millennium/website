@@ -19,6 +19,7 @@ trait UsesStripePaymentData
 
     /**
      * Returns data for the enrollment
+     *
      * @param Enrollment $enrollment
      * @return array
      */

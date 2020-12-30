@@ -14,6 +14,7 @@ trait UserDataForm
 {
     /**
      * Add email field
+     *
      * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
@@ -38,10 +39,10 @@ trait UserDataForm
                 ],
                 'error_messages' => [
                     // phpcs:ignore Generic.Files.LineLength.TooLong
-                    'alias.unique' => 'Er bestaat al een account met dit e-mailadres.'
+                    'alias.unique' => 'Er bestaat al een account met dit e-mailadres.',
                 ],
                 'attr' => [
-                    'autocomplete' => 'email'
+                    'autocomplete' => 'email',
                 ],
             ];
 
@@ -50,6 +51,7 @@ trait UserDataForm
 
     /**
      * Add alias
+     *
      * @param int|null $user
      * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
@@ -77,7 +79,7 @@ trait UserDataForm
                 // phpcs:disable Generic.Files.LineLength.TooLong
                 'alias.min' => 'Je alias moet minimaal 4 tekens lang zijn',
                 'alias.regex' => 'Je alias mag alleen bestaan uit letters, cijfers en eventueel streepjes in het midden',
-                'alias.unique' => 'Deze alias is al in gebruik door een andere gebruiker.'
+                'alias.unique' => 'Deze alias is al in gebruik door een andere gebruiker.',
                 // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'help_block' => [
@@ -89,7 +91,7 @@ trait UserDataForm
                 // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'attr' => [
-                'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]'
+                'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]',
             ],
         ];
 
@@ -99,6 +101,7 @@ trait UserDataForm
 
     /**
      * Adds names to the field
+     *
      * @param bool $disabled
      * @return $this
      */
@@ -148,6 +151,7 @@ trait UserDataForm
 
     /**
      * Builsd merged array from dot notation
+     *
      * @param array $source
      * @param array $merges
      * @return array

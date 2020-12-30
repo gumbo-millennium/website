@@ -8,6 +8,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * Runs command line commands and returns the output and exit codes.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -15,6 +16,7 @@ trait RunsCliCommands
 {
     /**
      * Tries to run the given command
+     *
      * @param array $command Command to run
      * @param string|null $stdout
      * @param string|null $stderr
@@ -43,7 +45,7 @@ trait RunsCliCommands
                 'executable' => $command[0],
                 'command' => $command,
                 'stdout' => $stdout,
-                'stderr' => $stderr
+                'stderr' => $stderr,
             ]);
             return 255;
         }

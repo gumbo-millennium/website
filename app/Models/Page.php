@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * A user-generated page
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
@@ -45,6 +46,7 @@ class Page extends SluggableModel implements AttachableInterface
 
     /**
      * Returns pages required by the system, all in the main group
+     *
      * @return array
      */
     public static function getRequiredPages(): array
@@ -59,7 +61,7 @@ class Page extends SluggableModel implements AttachableInterface
         'slug',
         'title',
         'contents',
-        'type'
+        'type',
     ];
 
     /**
@@ -72,6 +74,7 @@ class Page extends SluggableModel implements AttachableInterface
 
     /**
      * Generate the slug based on the title property
+     *
      * @return array
      */
     public function sluggable(): array
@@ -79,8 +82,8 @@ class Page extends SluggableModel implements AttachableInterface
         return [
             'slug' => [
                 'source' => 'title',
-                'unique' => true
-            ]
+                'unique' => true,
+            ],
         ];
     }
 
@@ -91,6 +94,7 @@ class Page extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the owning user, if present
+     *
      * @return BelongsTo
      */
     public function author(): Relation
@@ -100,6 +104,7 @@ class Page extends SluggableModel implements AttachableInterface
 
     /**
      * Converts contents to HTML
+     *
      * @return string|null
      */
     public function getHtmlAttribute(): ?string
@@ -108,21 +113,8 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, true],
-            'poster' => [192, 256, false]
-        ]);
-    }
-
-    /**
      * Returns the URL to this page
+     *
      * @return string
      * @throws LogicException
      */
@@ -133,5 +125,20 @@ class Page extends SluggableModel implements AttachableInterface
         }
 
         return url("/{$this->slug}");
+    }
+
+    /**
+     * Binds paperclip files
+     *
+     * @return void
+     */
+    protected function bindPaperclip(): void
+    {
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'article' => [1440, 960, false],
+            'cover' => [384, 256, true],
+            'poster' => [192, 256, false],
+        ]);
     }
 }

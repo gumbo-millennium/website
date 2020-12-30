@@ -15,7 +15,7 @@ return [
         'domains' => [
             'gumbo-millennium.nl',
             'activiteiten.gumbo-millennium.nl',
-            'gumbo.nu'
+            'gumbo.nu',
         ],
     ],
 
@@ -24,7 +24,7 @@ return [
         'commissies' => 'Commissies',
         'disputen' => 'Disputen',
         'projectgroepen' => 'Projectgroepen',
-        'coronavirus' => 'Gumbo en de Coronacrisis'
+        'coronavirus' => 'Gumbo en de Coronacrisis',
     ],
 
     // Guzzle config
@@ -36,14 +36,14 @@ return [
                 'gumbo-millennium.nl/1.0 (incompatible; curl/%s; php/%s; https://www.gumbo-millennium.nl);',
                 curl_version()['version'],
                 PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION
-            )
+            ),
         ],
 
         // Be snappy with declining the connection
         'connect_timeout' => 0.50,
 
         // Don't throw exceptions on response codes ≥ 400.
-        'http_errors' => false
+        'http_errors' => false,
     ],
 
     // News categories
@@ -52,9 +52,9 @@ return [
         'Aankondiging',
         'Persbericht',
         'Advertorial',
-        'Vacature'
+        'Vacature',
     ],
 
     // Quote e-mail address
-    'quote-to' => env('GUMBO_QUOTE_EMAIL')
+    'quote-to' => env('GUMBO_QUOTE_EMAIL'),
 ];

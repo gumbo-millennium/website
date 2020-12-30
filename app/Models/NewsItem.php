@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * A news article
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
@@ -31,7 +32,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     protected $fillable = [
         'slug',
         'title',
-        'contents'
+        'contents',
     ];
 
     /**
@@ -44,6 +45,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
 
     /**
      * The attributes that should be mutated to dates.
+     *
      * @var array
      */
     protected $dates = [
@@ -53,20 +55,8 @@ class NewsItem extends SluggableModel implements AttachableInterface
     ];
 
     /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, false]
-        ]);
-    }
-
-    /**
      * Generate the slug based on the title property
+     *
      * @return array
      */
     public function sluggable(): array
@@ -74,13 +64,14 @@ class NewsItem extends SluggableModel implements AttachableInterface
         return [
             'slug' => [
                 'source' => 'title',
-                'unique' => true
-            ]
+                'unique' => true,
+            ],
         ];
     }
 
     /**
      * Returns the owning user, if present
+     *
      * @return BelongsTo
      */
     public function author(): Relation
@@ -90,6 +81,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
 
     /**
      * Converts contents to HTML
+     *
      * @return string|null
      */
     public function getHtmlAttribute(): ?string
@@ -99,6 +91,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
 
     /**
      * Scope to available posts
+     *
      * @param Builder $query
      * @return Illuminate\Database\Eloquent\Builder
      * @throws InvalidArgumentException
@@ -111,5 +104,19 @@ class NewsItem extends SluggableModel implements AttachableInterface
                 $query->where('published_at', '<', now())
                     ->orWhereNull('published_at');
             });
+    }
+
+    /**
+     * Binds paperclip files
+     *
+     * @return void
+     */
+    protected function bindPaperclip(): void
+    {
+        // Sizes
+        $this->createSimplePaperclip('image', [
+            'article' => [1440, 960, false],
+            'cover' => [384, 256, false],
+        ]);
     }
 }

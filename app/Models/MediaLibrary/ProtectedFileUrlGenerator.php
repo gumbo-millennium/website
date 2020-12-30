@@ -12,6 +12,7 @@ class ProtectedFileUrlGenerator extends LocalUrlGenerator implements UrlGenerato
 {
      /**
       * Get the URL for the profile of a media item.
+      *
       * @return string
       * @throws UrlCouldNotBeDeterminedException
       */

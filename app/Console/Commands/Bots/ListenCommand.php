@@ -12,6 +12,7 @@ class ListenCommand extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = <<<'CMD'
@@ -21,12 +22,14 @@ class ListenCommand extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Listen for changes';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

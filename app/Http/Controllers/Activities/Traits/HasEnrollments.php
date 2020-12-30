@@ -16,6 +16,7 @@ trait HasEnrollments
 {
     /**
      * Finds an active enrollment for the requesting user and activity.
+     *
      * @param Request $request
      * @param Activity $activity
      * @return App\Models\Enrollment

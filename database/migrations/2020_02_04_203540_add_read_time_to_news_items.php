@@ -12,6 +12,7 @@ class AddReadTimeToNewsItems extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -32,6 +33,7 @@ class AddReadTimeToNewsItems extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

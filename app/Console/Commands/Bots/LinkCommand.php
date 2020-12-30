@@ -14,6 +14,7 @@ class LinkCommand extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = <<<'CMD'
@@ -24,12 +25,14 @@ class LinkCommand extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Registers the webhook, unless it\'s already set';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -67,7 +70,7 @@ class LinkCommand extends Command
             'max_connections' => 5,
             'allowed_updates' => [
                 'message',
-            ]
+            ],
         ];
 
         try {

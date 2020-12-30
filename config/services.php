@@ -30,8 +30,8 @@ return [
         'password' => env('CONSCRIBO_PASSPHRASE'),
         'resources' => [
             'user' => env('CONSCRIBO_RESOURCE_USERS', 'persoon'),
-            'role' => env('CONSCRIBO_RESOURCE_ROLE', 'commissie')
-        ]
+            'role' => env('CONSCRIBO_RESOURCE_ROLE', 'commissie'),
+        ],
     ],
 
     // Google APIs
@@ -47,7 +47,7 @@ return [
         // https://github.com/googleapis/google-api-php-client/blob/master/docs/oauth-server.md#delegating-domain-wide-authority-to-the-service-account
         'scopes' => [
             \Google_Service_Directory::ADMIN_DIRECTORY_GROUP,
-            \Google_Service_Groupssettings::APPS_GROUPS_SETTINGS
+            \Google_Service_Groupssettings::APPS_GROUPS_SETTINGS,
         ],
 
         // Allowed domains
@@ -70,6 +70,6 @@ return [
      */
     'features' => [
         // Only enable Laravel Nova if installed and not disabled by the user
-        'enable-nova' => env('FEATURE_DISABLE_NOVA', false) !== true
-    ]
+        'enable-nova' => env('FEATURE_DISABLE_NOVA', false) !== true,
+    ],
 ];

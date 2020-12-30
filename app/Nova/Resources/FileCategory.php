@@ -19,24 +19,28 @@ class FileCategory extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = FileCategoryModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -44,11 +48,6 @@ class FileCategory extends Resource
         'slug',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
@@ -80,7 +79,7 @@ class FileCategory extends Resource
                 Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
                 // phpcs:enable
                 Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
-                ])
+                ]),
         ];
     }
 

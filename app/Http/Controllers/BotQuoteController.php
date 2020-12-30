@@ -19,6 +19,7 @@ class BotQuoteController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -35,7 +36,7 @@ class BotQuoteController extends Controller
         return response()
             ->view('account.quotes', [
                 'unsent' => $unsentQuotes,
-                'sent' => $sentQuotes
+                'sent' => $sentQuotes,
             ])
             ->setPrivate()
             ->setExpires(now()->subYear());
@@ -43,6 +44,7 @@ class BotQuoteController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
      * @param  \App\Models\BotQuote  $quote
      * @return \Illuminate\Http\Response
      */
@@ -55,7 +57,7 @@ class BotQuoteController extends Controller
         // Get quote
         $quote = BotQuote::where([
             'id' => $quoteId,
-            'user_id' => $userId
+            'user_id' => $userId,
         ])->firstOrFail(['id', 'submitted_at']);
 
         // Skip if sent

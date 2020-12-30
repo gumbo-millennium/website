@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Singleton bindings
+     *
      * @var array<string>
      */
     public $singletons = [
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     *
      * @return void
      */
     public function boot()
@@ -51,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
+     *
      * @return void
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -79,9 +82,11 @@ class AppServiceProvider extends ServiceProvider
             $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
             $this->timestamp("{$name}_updated_at")->comment("{$name} update timestamp")->nullable();
 
-            if ($variants !== false) {
-                $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
+            if ($variants === false) {
+                return;
             }
+
+            $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
         });
 
         // Add Paperclip drop macro to database
@@ -92,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
                 "{$name}_file_size",
                 "{$name}_content_type",
                 "{$name}_updated_at",
-                $variants !== false ? "{$name}_variants" : null
+                $variants !== false ? "{$name}_variants" : null,
             ]));
         });
 
@@ -100,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', static function (View $view) {
             $view->with([
                 'sponsorService' => app(SponsorServiceContract::class),
-                'user' => request()->user()
+                'user' => request()->user(),
             ]);
         });
 

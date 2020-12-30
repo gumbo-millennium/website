@@ -12,6 +12,7 @@ class RequiresSignedTelegramData
 {
     /**
      * Handle an incoming request.
+     *
      * @param  Request  $request
      * @param  Closure  $next
      * @return mixed
@@ -40,7 +41,7 @@ class RequiresSignedTelegramData
 
         // Validate expiration
         $date = $request->get('auth_date');
-        if ((time() - $date) > (60 * 60)) {
+        if (time() - $date > 60 * 60) {
             throw new BadRequestHttpException('The data signature is no longer valid');
         }
 

@@ -22,7 +22,6 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
-
     use AuthenticatesUsers {
         logout as private doLogout;
     }
@@ -30,6 +29,7 @@ class LoginController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @return void
      */
     public function __construct()
@@ -44,13 +44,14 @@ class LoginController extends Controller
 
     /**
      * Log the user out of the application.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
         return $this->doLogout($request)->withHeaders([
-            'Clear-Site-Data' => ['"cache"', '"cookies"']
+            'Clear-Site-Data' => ['"cache"', '"cookies"'],
         ]);
     }
 }

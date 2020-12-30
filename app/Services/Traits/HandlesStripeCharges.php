@@ -12,14 +12,16 @@ trait HandlesStripeCharges
 {
     /**
      * Charges retrieved from API
+     *
      * @var array<Charge>
      */
     private array $chargeCache = [];
 
     /**
      * Returns the charge for this paid Enrollement
+     *
      * @param Enrollment $enrollment
-     * @return null|Stripe\Charge
+     * @return Stripe\Charge|null
      */
     public function getCharge(Enrollment $enrollment): ?Charge
     {

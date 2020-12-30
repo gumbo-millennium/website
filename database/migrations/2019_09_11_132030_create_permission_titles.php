@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Adds titles to permissions and roles, and adds a 'default' flag to roles.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -15,6 +16,7 @@ class CreatePermissionTitles extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -42,6 +44,7 @@ class CreatePermissionTitles extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

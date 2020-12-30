@@ -19,6 +19,7 @@ trait HandlesPaymentIntents
 {
     /**
      * Builds a redirect to Stripe, if applicable. Returns null otherwise.
+     *
      * @param PaymentIntent $intent
      * @return RedirectResponse|null
      */
@@ -48,6 +49,7 @@ trait HandlesPaymentIntents
     /**
      * Creates a Payment Intent at Stripe and returns it
      * Returns null if $enrollment is a free activity (for this user)
+     *
      * @param Enrollment $enrollment
      * @return PaymentIntent|null
      */
@@ -81,6 +83,7 @@ trait HandlesPaymentIntents
     /**
      * Creates a Payment Intent at Stripe, returns the ID.
      * Returns null if $enrollment is a free activity (for this user)
+     *
      * @param Enrollment $enrollment
      * @return string|null
      */
@@ -117,6 +120,7 @@ trait HandlesPaymentIntents
 
     /**
      * Confirms the intent, returnin the user to the corresponding Enrollment
+     *
      * @param Enrollment $enrollment The enrollment, required for return URL
      * @param PaymentIntent $intent The intent to verify
      * @param Source $method Source to charge

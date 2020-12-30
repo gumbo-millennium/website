@@ -19,6 +19,7 @@ class AccountController extends Controller
 {
     /**
      * Index page
+     *
      * @param Request $request
      * @return Illuminate\Http\Response
      */
@@ -52,7 +53,7 @@ class AccountController extends Controller
                 'url' => URL::signedRoute('api.plazacam.view', [
                     'user' => $user->id,
                     'image' => 'plaza',
-                ], $urlExpire)
+                ], $urlExpire),
             ]);
 
             // Coffeecam
@@ -62,7 +63,7 @@ class AccountController extends Controller
                 'url' => URL::signedRoute('api.plazacam.view', [
                     'user' => $user->id,
                     'image' => 'coffee',
-                ], $urlExpire)
+                ], $urlExpire),
             ]);
         }
 
@@ -75,7 +76,7 @@ class AccountController extends Controller
                 'url' => URL::signedRoute('api.plazacam.store', [
                     'user' => $user->id,
                     'image' => 'plaza',
-                ], $urlExpire)
+                ], $urlExpire),
             ]);
 
             // Coffeecam
@@ -85,7 +86,7 @@ class AccountController extends Controller
                 'url' => URL::signedRoute('api.plazacam.store', [
                     'user' => $user->id,
                     'image' => 'coffee',
-                ], $urlExpire)
+                ], $urlExpire),
             ]);
         }
 
@@ -97,6 +98,7 @@ class AccountController extends Controller
 
     /**
      * Edit form
+     *
      * @param FormBuilder $formBuilder
      * @param Request $request
      * @return Illuminate\Http\Response
@@ -115,7 +117,7 @@ class AccountController extends Controller
             'url' => route('account.update'),
             'model' => $user,
             'user-id' => $user->id,
-            'is-linked' => $isLinked
+            'is-linked' => $isLinked,
         ]);
         // Create form
         \assert($form instanceof AccountEditForm);
@@ -124,13 +126,14 @@ class AccountController extends Controller
             ->view('account.edit', [
                 'user' => $user,
                 'form' => $form,
-                'isLinked' => $isLinked
+                'isLinked' => $isLinked,
             ])
             ->setPrivate();
     }
 
     /**
      * Applying the changes
+     *
      * @param FormBuilder $formBuilder
      * @param Request $request
      * @return void
@@ -147,7 +150,7 @@ class AccountController extends Controller
         $form = $formBuilder->create(AccountEditForm::class, [
             'model' => $user,
             'user-id' => $user->id,
-            'is-linked' => $isLinked
+            'is-linked' => $isLinked,
         ]);
         // Get form
         \assert($form instanceof AccountEditForm);

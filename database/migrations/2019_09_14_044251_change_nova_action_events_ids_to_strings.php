@@ -9,6 +9,7 @@ class ChangeNovaActionEventsIdsToStrings extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -28,6 +29,7 @@ class ChangeNovaActionEventsIdsToStrings extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

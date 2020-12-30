@@ -31,6 +31,7 @@ use Kris\LaravelFormBuilder\FormBuilder;
 /**
  * Handles sign ups to the student community. Presents a whole form and
  * isn't very user-friendly.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -46,7 +47,6 @@ class JoinController extends Controller
         'email' => 'bestuur@gumbo-millennium.nl',
     ]];
 
-
     /**
      * A useful form builder
      */
@@ -54,6 +54,7 @@ class JoinController extends Controller
 
     /**
      * Creates a new controller with form builder
+     *
      * @param FormBuilder $builder
      */
     public function __construct(FormBuilder $builder)
@@ -63,27 +64,8 @@ class JoinController extends Controller
     }
 
     /**
-     * Returns the introduction week, matching by slug
-     */
-    private function getIntroActivity(): ?Activity
-    {
-        // Query
-        return Activity::query()
-            // Find the activity starting with intro
-            ->where('slug', 'LIKE', 'intro-%')
-
-            // Make sure the activity is AT LEAST 2 days long
-            ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
-
-            // Get the one that starts soonest
-            ->orderBy('start_date')
-
-            // Return first
-            ->first();
-    }
-
-    /**
      * Shows the registration form
+     *
      * @param SessionStore $session
      * @param Router $router
      * @return Response
@@ -99,7 +81,7 @@ class JoinController extends Controller
             'method' => 'POST',
             'url' => route('join.submit'),
             'intro-checked' => $isIntro,
-            'intro-activity' => $introActivity
+            'intro-activity' => $introActivity,
         ]);
 
         // Get content data
@@ -125,12 +107,13 @@ class JoinController extends Controller
         // Show form
         return response()
             ->view($pageTemplate, compact('form', 'page', 'isIntro') + [
-                'intro' => $introActivity
+                'intro' => $introActivity,
             ]);
     }
 
     /**
      * Handle registration
+     *
      * @param SignUpRequest $request
      * @return Response
      */
@@ -141,7 +124,7 @@ class JoinController extends Controller
 
         // Get form
         $form = $this->formBuilder->create(NewMemberForm::class, [
-            'intro-activity' => $introActivity
+            'intro-activity' => $introActivity,
         ]);
 
         // Or automatically redirect on error. This will throw an HttpResponseException with redirect
@@ -174,7 +157,7 @@ class JoinController extends Controller
             'windesheim_student' => $userValues['is-student'] ? '1' : '0',
             'newsletter' => $userValues['is-newsletter'] ? '1' : '0',
 
-            'referrer' => $userValues['referrer']
+            'referrer' => $userValues['referrer'],
         ]);
 
         // Validate the submission was created
@@ -262,6 +245,7 @@ class JoinController extends Controller
 
     /**
      * Request completed
+     *
      * @param Request $request
      * @return View
      */
@@ -284,20 +268,41 @@ class JoinController extends Controller
     }
 
     /**
+     * Returns the introduction week, matching by slug
+     */
+    private function getIntroActivity(): ?Activity
+    {
+        // Query
+        return Activity::query()
+            // Find the activity starting with intro
+            ->where('slug', 'LIKE', 'intro-%')
+
+            // Make sure the activity is AT LEAST 2 days long
+            ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
+
+            // Get the one that starts soonest
+            ->orderBy('start_date')
+
+            // Return first
+            ->first();
+    }
+
+    /**
      * Finds or creates a user that matches the data in this enrollment
+     *
      * @param array $data
-     * @return null|User
+     * @return User|null
      */
     private function createJoinUser(array $data): ?User
     {
         // Find or create the user
         $user = User::firstOrCreate([
-            'email' => $data['email']
+            'email' => $data['email'],
         ], [
             'first_name' => $data['first-name'],
             'insert' => $data['insert'],
             'last_name' => $data['last-name'],
-            'password' => Hash::make((string) Str::uuid())
+            'password' => Hash::make((string) Str::uuid()),
         ]);
 
         // Return null if the user already exists
@@ -310,7 +315,7 @@ class JoinController extends Controller
 
         // Send a password reset
         Password::broker()->sendResetLink([
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         return $user;
@@ -318,11 +323,12 @@ class JoinController extends Controller
 
     /**
      * Returns a redirect for the data supplied
+     *
      * @param EnrollmentServiceContract $enrollService
      * @param Request $request
      * @param Activity $activity
      * @param array $data
-     * @return null|RedirectResponse
+     * @return RedirectResponse|null
      */
     private function joinIntroActivity(
         EnrollmentServiceContract $enrollService,
@@ -343,7 +349,7 @@ class JoinController extends Controller
             if (!$enrollService->canEnroll($activity, $user)) {
                 Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
                     'user' => $user,
-                    'activity' => $activity
+                    'activity' => $activity,
                 ]);
 
                 // Return existing enrollment or null

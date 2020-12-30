@@ -12,6 +12,7 @@ trait HasOnlyHostedEnrollments
 {
     /**
      * Returns a query for all enrollments this user can see
+     *
      * @param NovaRequest $request
      * @return Builder
      */

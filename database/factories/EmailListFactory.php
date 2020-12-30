@@ -15,7 +15,7 @@ $factory->define(EmailList::class, static function (Faker $faker) {
     for ($i = 0; $i < $faker->numberBetween(1, 20); $i++) {
         $emails[] = [
             'email' => $faker->safeEmail,
-            'role' => $faker->boolean(95) ? GoogleMailList::ROLE_NAME_NORMAL : GoogleMailList::ROLE_NAME_ADMIN
+            'role' => $faker->boolean(95) ? GoogleMailList::ROLE_NAME_NORMAL : GoogleMailList::ROLE_NAME_ADMIN,
         ];
     }
 
@@ -31,6 +31,6 @@ $factory->define(EmailList::class, static function (Faker $faker) {
         'email' => $faker->safeEmail,
         'service_id' => Str::random(16),
         'aliases' => $aliases,
-        'members' => $emails
+        'members' => $emails,
     ];
 });

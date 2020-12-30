@@ -13,12 +13,14 @@ interface EnrollmentServiceContract
 {
     /**
      * Returns true if the service uses locks and apps should support it
+     *
      * @return bool
      */
     public function useLocks(): bool;
 
     /**
      * Returns a lock to enroll the given user
+     *
      * @param Activity $activity
      * @return Lock
      * @throws \LogicException if locsk are not supported
@@ -27,14 +29,16 @@ interface EnrollmentServiceContract
 
     /**
      * Returns true if the activity allows new enrollments and the user is allowed to enroll (if given)
+     *
      * @param Activity $activity
-     * @param null|User $user
+     * @param User|null $user
      * @return bool
      */
     public function canEnroll(Activity $activity, ?User $user): bool;
 
     /**
      * Creates a new enrollment on the activity for the given user
+     *
      * @param Activity $activity
      * @param User $user
      * @return Enrollment
@@ -43,6 +47,7 @@ interface EnrollmentServiceContract
 
     /**
      * Transitions states where possible
+     *
      * @param Activity $activity
      * @param Enrollment $enrollment
      * @return void
@@ -52,6 +57,7 @@ interface EnrollmentServiceContract
 
     /**
      * Transfers an enrollment to the new user, sending proper mails and invoicing jobs
+     *
      * @param Enrollment $enrollment
      * @param User $reciever
      * @return Enrollment

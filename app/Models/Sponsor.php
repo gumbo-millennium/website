@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * Gumbo Millennium sponsors
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @property-read AttachmentInterface $backdrop
@@ -33,6 +34,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * The model's attributes.
+     *
      * @var array
      */
     protected $attributes = [
@@ -41,14 +43,16 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * The attributes that should be cast to native types.
+     *
      * @var array
      */
     protected $casts = [
-        'view_count' => 'int'
+        'view_count' => 'int',
     ];
 
     /**
      * The attributes that should be mutated to dates.
+     *
      * @var array
      */
     protected $dates = [
@@ -58,6 +62,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -73,6 +78,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Generate the slug based on the display_title property
+     *
      * @return array
      */
     public function sluggable(): array
@@ -81,13 +87,14 @@ class Sponsor extends SluggableModel implements AttachableInterface
             'slug' => [
                 'source' => 'name',
                 'unique' => true,
-                'onUpdate' => false
-            ]
+                'onUpdate' => false,
+            ],
         ];
     }
 
     /**
      * Returns sponsors that are available right now
+     *
      * @param Builder $builder
      * @return Builder
      */
@@ -111,6 +118,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if this should be a classic view
+     *
      * @return bool
      */
     public function getIsClassicAttribute(): bool
@@ -121,6 +129,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if this sponsor is active
+     *
      * @return bool
      */
     public function getIsActiveAttribute(): bool
@@ -131,7 +140,8 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Returns URL to the grayscale (currentColor) logo
-     * @return null|string
+     *
+     * @return string|null
      * @throws InvalidArgumentException
      */
     public function getLogoGrayUrlAttribute(): ?string
@@ -144,7 +154,8 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Returns URL to the full color logo
-     * @return null|string
+     *
+     * @return string|null
      * @throws InvalidArgumentException
      */
     public function getLogoColorUrlAttribute(): ?string
@@ -155,18 +166,6 @@ class Sponsor extends SluggableModel implements AttachableInterface
         return Storage::disk(self::LOGO_DISK)->url($this->logo_color);
     }
 
-    /**
-     * Binds paperclip files
-     * @return void
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('backdrop', [
-            'banner' => [1920, 960, true]
-        ]);
-    }
-
     public function clicks(): HasMany
     {
         return $this->hasMany(SponsorClick::class);
@@ -174,6 +173,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the number of clicks
+     *
      * @return mixed
      */
     public function getClickCountAttribute()
@@ -183,10 +183,24 @@ class Sponsor extends SluggableModel implements AttachableInterface
 
     /**
      * Converts contents to HTML
+     *
      * @return string|null
      */
     public function getContentHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
+    }
+
+    /**
+     * Binds paperclip files
+     *
+     * @return void
+     */
+    protected function bindPaperclip(): void
+    {
+        // Sizes
+        $this->createSimplePaperclip('backdrop', [
+            'banner' => [1920, 960, true],
+        ]);
     }
 }

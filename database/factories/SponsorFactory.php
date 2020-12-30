@@ -64,6 +64,6 @@ $factory->define(Sponsor::class, static function (Faker $faker) use ($colorSpons
 
 $factory->afterCreating(Sponsor::class, static function (Sponsor $sponsor) {
     factory(SponsorClick::class, 10)->create([
-        'sponsor_id' => $sponsor->id
+        'sponsor_id' => $sponsor->id,
     ]);
 });

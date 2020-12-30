@@ -18,6 +18,6 @@ $factory->define(BotQuote::class, static function (Faker $faker) {
         'submitted_at' => $submittedAt,
         'user_id' => $faker->optional(0.4)->passthrough(User::inRandomOrder()->first(['id'])->id),
         'display_name' => $faker->name,
-        'quote' => $faker->sentence
+        'quote' => $faker->sentence,
     ];
 });

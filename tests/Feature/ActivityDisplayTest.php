@@ -13,6 +13,7 @@ class ActivityDisplayTest extends TestCase
 
     /**
      * Ensures there are some activities
+     *
      * @return void
      */
     public function seedBefore(): void
@@ -22,9 +23,10 @@ class ActivityDisplayTest extends TestCase
 
     /**
      * Get test route
+     *
      * @param string $route
-     * @param null|User $user
-     * @param null|Activity $activity
+     * @param User|null $user
+     * @param Activity|null $activity
      * @return void
      * @dataProvider provideTestRoutes
      */
@@ -37,13 +39,16 @@ class ActivityDisplayTest extends TestCase
         $response->assertStatus(200);
 
         // Check if a title should be set
-        if ($activity) {
-            $response->assertSeeText($activity->title);
+        if (!$activity) {
+            return;
         }
+
+        $response->assertSeeText($activity->title);
     }
 
     /**
      * Provides a list of test routes
+     *
      * @return array<array<string>>
      */
     public function provideTestRoutes()

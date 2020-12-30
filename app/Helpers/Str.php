@@ -14,6 +14,7 @@ class Str extends SupportStr
 {
     /**
      * Formats as Dutch number
+     *
      * @param mixed $value
      * @param int $decimals
      * @return void
@@ -24,7 +25,7 @@ class Str extends SupportStr
         $value = self::getValidNumber($value);
 
         // Return formatted number, if set
-        return ($value === null) ? null :  number_format($value, $decimals, ',', '.');
+        return $value === null ? null :  number_format($value, $decimals, ',', '.');
     }
 
     // Price formatting
@@ -37,7 +38,7 @@ class Str extends SupportStr
         }
 
         $value /= 100;
-        $prefix = ($value < 0) ? '-' : '';
+        $prefix = $value < 0 ? '-' : '';
 
         // Handle round value value
         if ($decimals === false || (($value * 100) % 100 === 0 && $decimals !== true)) {
@@ -50,6 +51,7 @@ class Str extends SupportStr
 
     /**
      * Returns file size
+     *
      * @param mixed $size
      * @return string
      */
@@ -60,6 +62,7 @@ class Str extends SupportStr
 
     /**
      * Returns singular if value is one, plurarl otherwise.
+     *
      * @param string $singular
      * @param string $plural
      * @param int $value
@@ -72,8 +75,9 @@ class Str extends SupportStr
 
     /**
      * Validates given number
+     *
      * @param mixed $value
-     * @return null|float
+     * @return float|null
      */
     private static function getValidNumber($value): ?float
     {
@@ -81,6 +85,6 @@ class Str extends SupportStr
         $number = filter_var($value, FILTER_VALIDATE_FLOAT);
 
         // Skip if empty
-        return ($number === false) ? null : $number;
+        return $number === false ? null : $number;
     }
 }

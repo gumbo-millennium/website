@@ -12,12 +12,16 @@ trait HasSimplePaperclippedMedia
     /**
      * Quickly creates a paperclip with given variants on the property.
      * The $values should be string => [int, int, bool].
+     *
      * @param string $property
      * @param array $values
      * @return void
      */
-    protected function createSimplePaperclip(string $property, array $values, string $disk = 'paperclip-public'): void
-    {
+    protected function createSimplePaperclip(
+        string $property,
+        array $values,
+        string $disk = 'paperclip-public'
+    ): void {
         // Build simple steps
         $variants = [];
         foreach ($values as $name => [$width, $height, $crop]) {
@@ -30,7 +34,7 @@ trait HasSimplePaperclippedMedia
         // The actual attachment
         $this->hasAttachedFile($property, [
             'storage' => $disk,
-            'variants' => $variants
+            'variants' => $variants,
         ]);
     }
 }

@@ -10,6 +10,7 @@ class AddEnrollmentPaymentData extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -28,6 +29,7 @@ class AddEnrollmentPaymentData extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()
