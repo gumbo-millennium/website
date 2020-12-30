@@ -123,7 +123,7 @@
             "@composer install --dev",
             "@php artisan app:env --force",
             "@php artisan key:generate",
-            "npm install --dev",
+            "npm clean-install",
             "npm run build",
             "docker-compose up -d",
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
