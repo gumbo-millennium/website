@@ -16,11 +16,7 @@ trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
 
-[resources/assets/**.json]
+[resources/**.json]
 indent_size = 2
-
-[resources/lang/**.json]
-indent_size = 2
-
 [makefile]
 indent_style = tab
