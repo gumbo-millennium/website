@@ -16,7 +16,7 @@
         "daniel-de-wit/nova-paperclip": "^0.1",
         "doctrine/dbal": "^2.3",
         "ebess/advanced-nova-media-library": "^2.9",
-        "eduardokum/laravel-mail-auto-embed": "dev-master",
+        "eduardokum/laravel-mail-auto-embed": "^1.0",
         "enshrined/svg-sanitize": "^0.13.3",
         "fideloper/proxy": "^4.0",
         "giggsey/libphonenumber-for-php": "^8.10",
@@ -157,10 +157,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/gumbo-millennium/laravel-database-encryption"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/roelofr/laravel-mail-auto-embed"
         },
         {
             "type": "path",

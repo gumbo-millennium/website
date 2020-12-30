@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2dfdbd53b2c3b616c7cc613551050aee",
+    "content-hash": "973492c37daae827f80d057fa66163c1",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -1583,32 +1583,32 @@
         },
         {
             "name": "eduardokum/laravel-mail-auto-embed",
-            "version": "dev-master",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/roelofr/laravel-mail-auto-embed.git",
-                "reference": "8b23d3ae809bfea7886b3b7f2f7d10ae380d2e21"
+                "url": "https://github.com/eduardokum/laravel-mail-auto-embed.git",
+                "reference": "83349a6a35560edb1c95e31205e2a848d73196ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/roelofr/laravel-mail-auto-embed/zipball/8b23d3ae809bfea7886b3b7f2f7d10ae380d2e21",
-                "reference": "8b23d3ae809bfea7886b3b7f2f7d10ae380d2e21",
+                "url": "https://api.github.com/repos/eduardokum/laravel-mail-auto-embed/zipball/83349a6a35560edb1c95e31205e2a848d73196ef",
+                "reference": "83349a6a35560edb1c95e31205e2a848d73196ef",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "illuminate/contracts": "^5.3 | ^6.0",
-                "illuminate/mail": "^5.3 | ^6.0",
-                "illuminate/support": "^5.3 | ^6.0",
+                "illuminate/contracts": "^5.3 | ^6.0 | ^7.0",
+                "illuminate/mail": "^5.3 | ^6.0 | ^7.0 | ^8.0",
+                "illuminate/support": "^5.3 | ^6.0 | ^7.0",
+                "masterminds/html5": "^2.0",
                 "php": ">=5.6",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.4 | ^4.0",
+                "orchestra/testbench": "^3.4 | ^4.0 | ^5.0",
                 "php": ">=7.0",
                 "phpunit/phpunit": "^6.0 | ^7.0 | ^8.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -1622,19 +1622,7 @@
                     "Eduardokum\\LaravelMailAutoEmbed\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Eduardokum\\LaravelMailAutoEmbed\\Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ],
-                "lint": [
-                    "phpcs"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1651,9 +1639,10 @@
                 "laravel-mail-auto-embed"
             ],
             "support": {
-                "source": "https://github.com/roelofr/laravel-mail-auto-embed/tree/master"
+                "issues": "https://github.com/eduardokum/laravel-mail-auto-embed/issues",
+                "source": "https://github.com/eduardokum/laravel-mail-auto-embed/tree/1.0.5"
             },
-            "time": "2020-02-10T16:44:05+00:00"
+            "time": "2020-04-13T17:47:22+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -4286,6 +4275,75 @@
                 "source": "https://github.com/MarkBaker/PHPMatrix/tree/PHP8"
             },
             "time": "2020-08-28T17:11:00+00:00"
+        },
+        {
+            "name": "masterminds/html5",
+            "version": "2.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "9227822783c75406cfe400984b2f095cdf03d417"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/9227822783c75406cfe400984b2f095cdf03d417",
+                "reference": "9227822783c75406cfe400984b2f095cdf03d417",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/Masterminds/html5-php/issues",
+                "source": "https://github.com/Masterminds/html5-php/tree/2.7.4"
+            },
+            "time": "2020-10-01T13:52:52+00:00"
         },
         {
             "name": "mischiefcollective/colorjizz",
@@ -13521,9 +13579,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "eduardokum/laravel-mail-auto-embed": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
