@@ -10,13 +10,15 @@ use Laravel\Nova\Resource as NovaResource;
 
 /**
  * Generic resource
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 abstract class Resource extends NovaResource
 {
     /**
      * Column to sort by
-     * @var null|string
+     *
+     * @var string|null
      */
     public static $defaultSort = null;
 
@@ -42,6 +44,7 @@ abstract class Resource extends NovaResource
 
     /**
      * Build an "index" query for the given resource.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -58,6 +61,7 @@ abstract class Resource extends NovaResource
 
     /**
      * Build a Scout search query for the given resource.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Scout\Builder  $query
      * @return \Laravel\Scout\Builder
@@ -70,6 +74,7 @@ abstract class Resource extends NovaResource
 
     /**
      * Build a "detail" query for the given resource.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -83,6 +88,7 @@ abstract class Resource extends NovaResource
      * Build a "relatable" query for the given resource.
      *
      * This query determines which instances of the model may be attached to other resources.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder

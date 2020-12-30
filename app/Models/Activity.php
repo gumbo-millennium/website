@@ -22,6 +22,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
  * A hosted activity
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @property-read AttachmentInterface $image
@@ -43,7 +44,8 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Lists the next up activities
-     * @param null|User $user
+     *
+     * @param User|null $user
      * @return Builder
      * @throws InvalidArgumentException
      */
@@ -109,6 +111,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Generate the slug based on the title property
+     *
      * @return array
      */
     public function sluggable(): array
@@ -117,12 +120,13 @@ class Activity extends SluggableModel implements AttachableInterface
             'slug' => [
                 'source' => 'name',
                 'unique' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Returns the associated role, if any
+     *
      * @return BelongsTo
      */
     public function role(): Relation
@@ -132,6 +136,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns all enrollments (both pending and active)
+     *
      * @return HasMany
      */
     public function enrollments(): Relation
@@ -141,6 +146,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns all made payments for this event
+     *
      * @return HasMany
      */
     public function payments(): Relation
@@ -150,6 +156,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the name of the organiser, either committee or user
+     *
      * @return string|null
      */
     public function getOrganiserAttribute(): ?string
@@ -159,6 +166,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the number of remaining seats
+     *
      * @return int
      */
     public function getAvailableSeatsAttribute(): int
@@ -179,6 +187,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if the enrollment is still open
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -225,6 +234,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Converts contents to HTML
+     *
      * @return string|null
      */
     public function getDescriptionHtmlAttribute(): ?string
@@ -234,6 +244,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Enrollment form
+     *
      * @return Whitecube\NovaFlexibleContent\Layouts\Collection
      */
     public function getFlexibleContentAttribute()
@@ -249,7 +260,8 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the price for people with discounts
-     * @return null|int
+     *
+     * @return int|null
      */
     public function getDiscountPriceAttribute(): ?int
     {
@@ -264,6 +276,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns member price with transfer costs
+     *
      * @return int|null
      */
     public function getTotalDiscountPriceAttribute(): ?int
@@ -284,7 +297,8 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns the number of discounts available, if any
-     * @return null|int
+     *
+     * @return int|null
      */
     public function getDiscountsAvailableAttribute(): ?int
     {
@@ -305,6 +319,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns guest price with transfer cost
+     *
      * @return int|null
      */
     public function getTotalPriceAttribute(): ?int
@@ -314,6 +329,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns human-readable summary of the ticket price.
+     *
      * @return string
      */
     public function getPriceLabelAttribute(): string
@@ -341,6 +357,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if members can go for free
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -352,6 +369,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns true if the activity is free
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -362,6 +380,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if the activity has been cancelled
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -372,6 +391,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if the activity was rescheduled to a different date
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -382,6 +402,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if the activity was postponed to an as-of-yet unknown date
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -392,6 +413,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns if the activity is published
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -402,6 +424,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Only return activities available to this user
+     *
      * @param Builder $query
      * @param User $user
      * @return Illuminate\Database\Eloquent\Builder
@@ -422,6 +445,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Only return published activities
+     *
      * @param Builder $query
      * @param User $user
      * @return Illuminate\Database\Eloquent\Builder
@@ -435,7 +459,8 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns url to map provider for the given address
-     * @return null|string
+     *
+     * @return string|null
      */
     public function getLocationUrlAttribute(): ?string
     {
@@ -453,6 +478,7 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns a complete statement, up to 22 characters long
+     *
      * @return string
      */
     public function getFullStatementAttribute(): string
@@ -465,13 +491,14 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Binds paperclip files
+     *
      * @return void
      */
     protected function bindPaperclip(): void
     {
         // Sizes
         $this->createSimplePaperclip('image', [
-            'cover' => [768, 256, true]
+            'cover' => [768, 256, true],
         ]);
     }
 }

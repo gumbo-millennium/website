@@ -22,6 +22,7 @@ class SponsorClick extends Model
 
     /**
      * Increments the number of clicks for this sponsor for today
+     *
      * @param Sponsor $sponsor
      * @return void
      * @throws QueryException
@@ -42,6 +43,7 @@ class SponsorClick extends Model
 
     /**
      * Ensure a date is always set
+     *
      * @param Closure|string $callback
      * @return void
      */
@@ -50,36 +52,42 @@ class SponsorClick extends Model
         parent::boot();
 
         static::saving(static function ($click) {
-            if ($click->date === null) {
-                $click->date = now();
+            if ($click->date !== null) {
+                return;
             }
+
+            $click->date = now();
         });
     }
 
     /**
-     * The attributes that should be cast to native types.
-     * @var array
-     */
-    protected $casts = [
-        'count' => 'int'
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     * @var array
-     */
-    protected $dates = [
-        'date'
-    ];
-
-    /**
      * Indicates if the model should be timestamped.
+     *
      * @var bool
      */
     public $timestamps = false;
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'count' => 'int',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'date',
+    ];
+
+    /**
      * Returns owning sponsor
+     *
      * @return BelongsTo
      */
     public function sponsor(): BelongsTo

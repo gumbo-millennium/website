@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 
 /**
  * Adds or updates the default user
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -15,6 +16,7 @@ abstract class VerboseSeeder extends Seeder
 {
     /**
      * Prints a line
+     *
      * @param string|array $message Message to print, array to pass to sprintf
      * @param int $options
      * @return void
@@ -30,6 +32,7 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line
+     *
      * @param mixed ...$args
      * @return void
      */
@@ -40,6 +43,7 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line
+     *
      * @param mixed ...$args
      * @return void
      */
@@ -50,6 +54,7 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line
+     *
      * @param mixed ...$args
      * @return void
      */

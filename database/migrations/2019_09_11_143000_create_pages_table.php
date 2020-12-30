@@ -11,6 +11,7 @@ class CreatePagesTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -37,16 +38,17 @@ class CreatePagesTable extends Migration
         // Ensure some pages exist
         foreach (Page::REQUIRED_PAGES as $slug => $title) {
             Page::firstOrCreate([
-                'slug' => $slug
+                'slug' => $slug,
             ], [
                 'title' => $title,
-                'contents' => null
+                'contents' => null,
             ]);
         }
     }
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

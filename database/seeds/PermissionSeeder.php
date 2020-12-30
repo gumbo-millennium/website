@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Creates all roles required for ranks that users can have.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -28,6 +29,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * A human-friendly json parser
+     *
      * @var HumanJsonParser
      */
     public HumanJsonParser $jsonParser;
@@ -42,6 +44,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Run the database seeds.
+     *
      * @return bool
      */
     public function run()
@@ -76,6 +79,7 @@ class PermissionSeeder extends VerboseSeeder
     /**
      * Creates all permissions in the $permissions collection, and returns a
      * collection filled with Permission elements, based on name
+     *
      * @param Collection $permissionMap
      * @return Collection
      */
@@ -102,13 +106,17 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creates a map with permissons to assign to roles
+     *
      * @param Collection $permissions
      * @param Collection $roles
      * @param Collection $roleMap
      * @return Collection
      */
-    public function mapRolePermissions(Collection $permissions, Collection $roles, Collection $roleMap): Collection
-    {
+    public function mapRolePermissions(
+        Collection $permissions,
+        Collection $roles,
+        Collection $roleMap
+    ): Collection {
         // Intermediate map
         $rolePermissionMap = collect();
 
@@ -125,7 +133,7 @@ class PermissionSeeder extends VerboseSeeder
                     "Updated [role] with wildcard, it now has [count] permissions.",
                     [
                     'role' => $roles->get($name) ?? $name,
-                    'count' => count($rolePermissionMap->get($name))
+                    'count' => count($rolePermissionMap->get($name)),
                     ]
                 );
                 continue;
@@ -137,7 +145,7 @@ class PermissionSeeder extends VerboseSeeder
                 "Updated [role], it now has [count] permissions.",
                 [
                     'role' => $roles->get($name) ?? $name,
-                    'count' => count($rolePermissionMap->get($name))
+                    'count' => count($rolePermissionMap->get($name)),
                 ]
             );
         }
@@ -161,7 +169,7 @@ class PermissionSeeder extends VerboseSeeder
                 [
                 'role' => $roles->get($name) ?? $name,
                 'source-role' => $roles->get($extendName) ?? $extendName,
-                'count' => $updatedPermissions->count()
+                'count' => $updatedPermissions->count(),
                 ]
             );
         }
@@ -172,6 +180,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creats all roles and assings permissions
+     *
      * @param Collection $permissions
      * @param Collection $roleMap
      * @return Collection
@@ -209,22 +218,24 @@ class PermissionSeeder extends VerboseSeeder
 
         // Link rolePermissionMap to the Role
         foreach ($roles as $name => $role) {
-            if ($rolePermissionMap->has($name)) {
-                // Update permissions
-                $role->syncPermissions($rolePermissionMap->get($name));
-
-                // Refresh model (for updated counts)
-                $role->refresh();
-
-                // Log result
-                logger()->info(
-                    'Role [role] was updated, now has [count] permissions',
-                    [
-                    'role' => $roles->get($name) ?? $name,
-                    'count' => $role->permissions()->count()
-                    ]
-                );
+            if (!$rolePermissionMap->has($name)) {
+                continue;
             }
+
+            // Update permissions
+            $role->syncPermissions($rolePermissionMap->get($name));
+
+            // Refresh model (for updated counts)
+            $role->refresh();
+
+            // Log result
+            logger()->info(
+                'Role [role] was updated, now has [count] permissions',
+                [
+                'role' => $roles->get($name) ?? $name,
+                'count' => $role->permissions()->count(),
+                ]
+            );
         }
 
         // Return roles
@@ -233,6 +244,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Returns JSON from file, as Collection
+     *
      * @param string $path
      * @return Collection|null
      */
@@ -250,7 +262,7 @@ class PermissionSeeder extends VerboseSeeder
         // Convert contents to collection
         try {
             return collect($this->jsonParser->parse($contents, [
-                'assoc' => true
+                'assoc' => true,
             ]));
         } catch (HumanJsonException $e) {
             return null;

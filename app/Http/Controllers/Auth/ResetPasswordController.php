@@ -25,12 +25,12 @@ class ResetPasswordController extends Controller
     | explore this trait and override any methods you wish to tweak.
     |
     */
-
     use ResetsPasswords;
     use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.
+     *
      * @return void
      */
     public function __construct()
@@ -43,15 +43,18 @@ class ResetPasswordController extends Controller
     /**
      * Display the form to request a password reset link.
      */
-    public function showResetForm(Request $request, FormBuilder $formBuilder, $token = null): Response
-    {
+    public function showResetForm(
+        Request $request,
+        FormBuilder $formBuilder,
+        $token = null
+    ): Response {
         $form = $formBuilder->create(ResetPasswordForm::class, [
             'method' => 'POST',
             'url' => route('password.update'),
             'model' => [
                 'token' => $token,
-                'email' => $request->email
-            ]
+                'email' => $request->email,
+            ],
         ]);
 
         return response()

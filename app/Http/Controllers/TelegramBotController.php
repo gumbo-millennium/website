@@ -19,6 +19,7 @@ class TelegramBotController extends Controller
     }
     /**
      * Handles requests from Telegram
+     *
      * @return Response
      */
     public function handle(): Response

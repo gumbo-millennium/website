@@ -26,12 +26,14 @@ class TransferEnrollment extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = 'Overschrijven';
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -74,6 +76,7 @@ class TransferEnrollment extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()
@@ -83,7 +86,7 @@ class TransferEnrollment extends Action
             SearchableSelect::make('Nieuwe deelnemer', 'user_id')
                 ->rules('required')
                 ->resource(User::class)
-                ->max(5)
+                ->max(5),
         ];
     }
 }

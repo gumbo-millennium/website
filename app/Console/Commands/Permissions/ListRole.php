@@ -13,6 +13,7 @@ class ListRole extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'permissions:role
@@ -21,12 +22,14 @@ class ListRole extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Lists permissions';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -68,12 +71,12 @@ class ListRole extends Command
             ->concat($allRoles->map(static fn ($role) => $role->$view));
 
         // Check if scopedList is empty
-        if ($scopedList->count() == 0) {
+        if ($scopedList->count() === 0) {
             $scopedList->push([
                 new TableCell(
                     '<comment>No results found.</>',
                     ['colspan' => $headers->count()]
-                )
+                ),
             ]);
         }
 

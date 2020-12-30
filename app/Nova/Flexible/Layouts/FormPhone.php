@@ -12,18 +12,21 @@ class FormPhone extends Layout
 {
     /**
      * The layout's unique identifier
+     *
      * @var string
      */
     protected $name = 'phone';
 
     /**
      * The displayed title
+     *
      * @var string
      */
     protected $title = 'Phone number';
 
     /**
      * Get the fields displayed by the layout.
+     *
      * @return array
      */
     public function fields()
@@ -34,7 +37,7 @@ class FormPhone extends Layout
             Text::make('Standaard land', 'country')
                 ->help('ISO 3166-1 alpha-2 landcode (voorbeeld: NL)')
                 ->rules('required', 'regex:/^[A-Z]{2}$/'),
-            Boolean::make('Verplicht', 'required')
+            Boolean::make('Verplicht', 'required'),
         ];
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Permission policy of the Activity model
+ *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ActivityPolicy
@@ -24,6 +25,7 @@ class ActivityPolicy
 
     /**
      * Returns if the user is the owner of the given activity.
+     *
      * @param User $user
      * @param Activity $activity
      * @return bool
@@ -35,6 +37,7 @@ class ActivityPolicy
 
     /**
      * Returns if the user is the owner of any activity.
+     *
      * @param User $user
      * @return bool
      */
@@ -45,6 +48,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can view any activities.
+     *
      * @param  User  $user
      * @return bool
      */
@@ -56,6 +60,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can view the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -69,6 +74,7 @@ class ActivityPolicy
 
     /**
      * Can this user enroll
+     *
      * @param User $user
      * @param Activity $activity
      * @return bool
@@ -96,6 +102,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can create activities.
+     *
      * @param  User  $user
      * @return bool
      */
@@ -107,6 +114,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can update the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -124,6 +132,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can delete the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -141,6 +150,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can delete the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -178,6 +188,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can restore the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -195,6 +206,7 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can permanently delete the activity.
+     *
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
@@ -214,6 +226,7 @@ class ActivityPolicy
 
     /**
      * Allow linking an enrollment if the user is a manager of the event
+     *
      * @param User $user
      * @param Activity $activity
      * @return bool
@@ -225,6 +238,7 @@ class ActivityPolicy
 
     /**
      * Can the given user manage the given activities or activities in general
+     *
      * @param User $user
      * @param Activity|null $activity
      * @return bool
@@ -237,6 +251,7 @@ class ActivityPolicy
 
     /**
      * Can the user perform admin actions on this object
+     *
      * @param User $user
      * @return bool
      */

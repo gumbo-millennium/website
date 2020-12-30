@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Number;
 
 /**
  * A seat availability field
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -15,6 +16,7 @@ class Seats extends Number
 {
     /**
      * Resolve the field's value for display.
+     *
      * @param  mixed  $resource
      * @param  string|null  $attribute
      * @return void
@@ -25,8 +27,10 @@ class Seats extends Number
         parent::resolveForDisplay($resource, $attribute);
 
         // Show infinity if value is null
-        if ($this->value === null) {
-            $this->value = '∞';
+        if ($this->value !== null) {
+            return;
         }
+
+        $this->value = '∞';
     }
 }

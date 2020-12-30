@@ -16,6 +16,7 @@ class ActivitySeeder extends Seeder
 {
     /**
      * Returns start of semester, as immutable element
+     *
      * @return \DateTimeImmutable
      */
     protected static function getStartOfYear(): CarbonImmutable
@@ -40,6 +41,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Run the database seeds.
+     *
      * @return void
      */
     public function run()
@@ -65,6 +67,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Adds a Bruisweken event
+     *
      * @return void
      */
     public function seedBruisweken(): void
@@ -89,6 +92,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Adds an introduction week event
+     *
      * @return void
      */
     public function seedGumboIntro(): void
@@ -122,6 +126,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Adds Christmas drinks and Christmas dinner
+     *
      * @return void
      */
     public function seedChristmasEvents(): void
@@ -142,6 +147,7 @@ class ActivitySeeder extends Seeder
     }
     /**
      * Creates an activity if it's not already there yet
+     *
      * @param string $slug
      * @param array $args
      * @param bool $withEnrollments Automatically register some users?
@@ -185,7 +191,7 @@ class ActivitySeeder extends Seeder
         foreach ($users as $user) {
             factory(Enrollment::class, 1)->create([
                 'activity_id' => $activity->id,
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
         }
 
@@ -194,6 +200,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Creates all christmas events for this given date.
+     *
      * @param DateTimeImmutable $date
      */
     private function createChristmasEvents(DateTimeImmutable $date): void
@@ -217,7 +224,7 @@ class ActivitySeeder extends Seeder
         ]);
 
         // Determine estimate activity price, raised € 0.50 each year since '17
-        $memberPrice = (12 + ($fridayBefore->year - 2017) / 2.0);
+        $memberPrice = 12 + ($fridayBefore->year - 2017) / 2.0;
         $guestPrice = ceil($memberPrice * 1.15);
         $memberDiscount = max(0, $guestPrice - $memberPrice);
 
@@ -229,20 +236,21 @@ class ActivitySeeder extends Seeder
             'start_date' => $fridayBefore->setTime(17, 30, 0, 0),
             'end_date' => $fridayBefore->setTime(21, 0, 0, 0),
             'member_discount' => $memberDiscount * 100,
-            'price' => $guestPrice * 100
+            'price' => $guestPrice * 100,
         ]);
     }
 
     /**
      * Creates an event on the lhw role, to test role-level
      * access
+     *
      * @return void
      */
     private function seedBasicAccessEvent(): void
     {
         // 3rd week of april
-        $aprilWeek = (Carbon::parse('First Friday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
-        $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear() : $aprilWeek;
+        $aprilWeek = Carbon::parse('First Friday of April')->addWeeks(3)->setTime(19, 0)->toImmutable();
+        $startDate = $aprilWeek < today() ? $aprilWeek->addYear() : $aprilWeek;
         $endDate = $startDate->addDays(2)->setTime(12, 00);
 
         // LHW event
@@ -250,12 +258,13 @@ class ActivitySeeder extends Seeder
             'name' => 'Landhuisweekend',
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'role_id' => Role::findByName('lhw')->id
+            'role_id' => Role::findByName('lhw')->id,
         ]);
     }
 
     /**
      * Seeds a bunch of events that start soon
+     *
      * @return void
      */
     private function seedPaymentTest(): void
@@ -267,7 +276,7 @@ class ActivitySeeder extends Seeder
             'public-member' => [true, 1500, 1500, null],
             'public-paid' => [true, 1500, null, null],
             'public-short-discount' => [true, 3000, 1500, 15],
-            'public-discount' => [true, 3000, 1500, null]
+            'public-discount' => [true, 3000, 1500, null],
         ];
 
         // Date
@@ -289,7 +298,7 @@ class ActivitySeeder extends Seeder
                 'member_discount' => max(0, $discount),
                 'discount_count' => $discountCount,
                 'price' => $price,
-                'seats' => 15
+                'seats' => 15,
             ]);
 
             // Increase both
@@ -325,7 +334,7 @@ class ActivitySeeder extends Seeder
                 'is_public' => true,
                 'member_discount' => null,
                 'price' => null,
-                'seats' => $seats
+                'seats' => $seats,
             ], false);
 
             // Skip if not created
@@ -336,7 +345,7 @@ class ActivitySeeder extends Seeder
             // Add member enrollments
             if ($memberEnroll) {
                 $enrollments = factory(Enrollment::class, $memberEnroll)->create([
-                    'activity_id' => $activity->id
+                    'activity_id' => $activity->id,
                 ]);
 
                 // Make all users member
@@ -348,7 +357,7 @@ class ActivitySeeder extends Seeder
             // Add guest enrollments
             if ($guestEnroll) {
                 $enrollments = factory(Enrollment::class, $guestEnroll)->create([
-                    'activity_id' => $activity->id
+                    'activity_id' => $activity->id,
                 ]);
 
                 // Make all users member

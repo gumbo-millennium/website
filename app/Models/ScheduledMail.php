@@ -12,6 +12,7 @@ class ScheduledMail extends Model
 {
     /**
      * Returns a ScheduledMail with the given name
+     *
      * @param Model $model
      * @param string $name
      * @return ScheduledMail
@@ -21,21 +22,30 @@ class ScheduledMail extends Model
         $objectName = sprintf("%s:%s", \class_basename($model), $model->{$model->primaryKey});
         return static::firstOrNew([
             'group' => $objectName,
-            'name' => Str::slug($name)
+            'name' => Str::slug($name),
         ]);
     }
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that should be cast to native types.
+     *
      * @var array
      */
     protected $casts = [
         'group' => 'string',
-        'name' => 'string'
+        'name' => 'string',
     ];
 
     /**
      * The attributes that should be mutated to dates.
+     *
      * @var array
      */
     protected $dates = [
@@ -44,20 +54,15 @@ class ScheduledMail extends Model
     ];
 
     /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
         'group',
         'name',
         'scheduled_for',
-        'sent_at'
+        'sent_at',
     ];
 
     public function scopeWhereSent(Builder $query): Builder

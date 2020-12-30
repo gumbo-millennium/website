@@ -10,6 +10,7 @@ class CreateSponsorClicksTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -34,6 +35,7 @@ class CreateSponsorClicksTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

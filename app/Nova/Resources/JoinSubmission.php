@@ -17,6 +17,7 @@ use Laravel\Nova\Panel;
 
 /**
  * Returns join requests
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -25,24 +26,28 @@ class JoinSubmission extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = JoinSubmissionModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'name';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Bestuurszaken';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -54,11 +59,6 @@ class JoinSubmission extends Resource
         'phone',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
@@ -98,7 +98,7 @@ class JoinSubmission extends Resource
                 Text::make('Geslacht', 'gender')
                     ->hideFromIndex()
                     ->help('Geslacht, in vrije vorm')
-                    ->rules(['required'])
+                    ->rules(['required']),
             ]),
             new Panel('Adres informatie', [
                 Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),
@@ -146,7 +146,7 @@ class JoinSubmission extends Resource
                 Boolean::make('Aanmelding Gumbode', 'newsletter')
                     ->hideFromIndex(),
                 Text::make('Referentie', 'referrer')
-                    ->hideFromIndex()
+                    ->hideFromIndex(),
             ]),
 
         ];
@@ -154,6 +154,7 @@ class JoinSubmission extends Resource
 
     /**
      * Get the actions available for the resource.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -172,7 +173,7 @@ class JoinSubmission extends Resource
     public function cards(Request $request)
     {
         return [
-            new NewJoinSubmissions()
+            new NewJoinSubmissions(),
         ];
     }
 }

@@ -11,6 +11,7 @@ interface ConscriboService
     /**
      * Creates a new Conscribo service, which will log in to the given account using the provided
      * username and password.
+     *
      * @param string $account
      * @param string $username
      * @param string $password
@@ -19,6 +20,7 @@ interface ConscriboService
 
     /**
      * Attempts login with the API
+     *
      * @return void
      * @throws ServiceException
      */
@@ -26,6 +28,7 @@ interface ConscriboService
 
     /**
      * Runs the given command on the API
+     *
      * @param string $command
      * @param array $args
      * @return array|null
@@ -35,6 +38,7 @@ interface ConscriboService
 
     /**
      * Identical to runCommand, but will raise a `offset` parameter to get all results
+     *
      * @param string $command
      * @param array $args
      * @return array
@@ -44,6 +48,7 @@ interface ConscriboService
 
     /**
      * Returns types of resources available for this administration
+     *
      * @return array
      * @throws HttpExceptionInterface
      */
@@ -51,6 +56,7 @@ interface ConscriboService
 
     /**
      * Returns fields available for the given resource type
+     *
      * @return array
      * @throws HttpExceptionInterface
      */
@@ -59,6 +65,7 @@ interface ConscriboService
     /**
      * Returns the resources of the given type, after applying the
      * filters and optional params
+     *
      * @param string $type
      * @param array<array> $filters
      * @param array<string> $fields
@@ -67,5 +74,10 @@ interface ConscriboService
      * @throws HttpExceptionInterface
      * @throws InvalidArgumentException
      */
-    public function getResource(string $type, array $filters = [], array $fields = [], array $options = []): Collection;
+    public function getResource(
+        string $type,
+        array $filters = [],
+        array $fields = [],
+        array $options = []
+    ): Collection;
 }

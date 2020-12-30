@@ -19,12 +19,14 @@ class LogoutCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'logout';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Ontkoppel je Telegram account';
@@ -44,7 +46,7 @@ class LogoutCommand extends Command
             // Not logged in
             $this->replyWithMessage([
                 'text' => self::LOGOUT_FAIL,
-                'parse_mode' => 'HTML'
+                'parse_mode' => 'HTML',
             ]);
             return;
         }
@@ -59,7 +61,7 @@ class LogoutCommand extends Command
         // Send OK
         $this->replyWithMessage([
             'text' => self::LOGOUT_OK,
-            'parse_mode' => 'HTML'
+            'parse_mode' => 'HTML',
         ]);
         return;
     }

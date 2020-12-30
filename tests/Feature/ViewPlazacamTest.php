@@ -9,6 +9,7 @@ use Tests\Traits\TempUserTrait;
 
 /**
  * Tests viewing the plazacam
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,13 +19,14 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadAnonymous(): void
     {
         // Get URL
         $url = route('plazacam', [
-            'image' => 'plaza'
+            'image' => 'plaza',
         ], false);
 
         //  Retrieve plazacam
@@ -36,6 +38,7 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadUser(): void
@@ -45,7 +48,7 @@ class ViewPlazacamTest extends TestCase
 
         // Get URL
         $url = route('plazacam', [
-            'image' => 'plaza'
+            'image' => 'plaza',
         ], false);
 
         //  Retrieve plazacam
@@ -57,6 +60,7 @@ class ViewPlazacamTest extends TestCase
 
     /**
      * Test anonymous image retrieval
+     *
      * @return void
      */
     public function testReadMember(): void
@@ -66,7 +70,7 @@ class ViewPlazacamTest extends TestCase
 
         // Get URL
         $url = route('plazacam', [
-            'image' => 'plaza'
+            'image' => 'plaza',
         ], false);
 
         //  Retrieve plazacam

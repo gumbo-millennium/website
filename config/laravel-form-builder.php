@@ -17,7 +17,7 @@ return [
         // Override a class from a field.
         'checkbox' => [
             'wrapper_class' => 'form__field form__field--checkbox',
-            'field_class'   => 'form__field-input form__field-input--checkbox form-checkbox'
+            'field_class'   => 'form__field-input form__field-input--checkbox form-checkbox',
         ],
         //'text'                => [
         //    'wrapper_class'   => 'form-field-text',
@@ -53,5 +53,5 @@ return [
 
     'custom_fields' => [
 //        'datetime' => App\Forms\Fields\Datetime::class
-    ]
+    ],
 ];

@@ -115,7 +115,7 @@ return [
         // variant definitions will be used.
         'default' => [
             // Always add social step
-            'social' => '1200x650#'
+            'social' => '1200x650#',
         ],
     ],
 

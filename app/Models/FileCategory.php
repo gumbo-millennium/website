@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * A file category, containing file bundles
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -31,6 +32,7 @@ class FileCategory extends SluggableModel
 
     /**
      * Find the default category
+     *
      * @param array $columns
      * @return Model|Collection
      */
@@ -38,29 +40,32 @@ class FileCategory extends SluggableModel
     {
         // Find first default category, or create one
         return static::firstOrCreate(['default' => true], [
-            'title' => 'Overig'
+            'title' => 'Overig',
         ]);
     }
 
     /**
      * Categories don't have timestamps.
+     *
      * @var bool
      */
     public $timestamps = false;
 
     /**
      * Title and default are fillable
+     *
      * @var array
      */
     protected $fillable = ['title'];
 
     // Always auto-load files
     protected $with = [
-        'bundles'
+        'bundles',
     ];
 
     /**
      * Slug on the category title
+     *
      * @return array
      */
     public function sluggable(): array
@@ -69,13 +74,14 @@ class FileCategory extends SluggableModel
             'slug' => [
                 'source' => 'title',
                 'unique' => true,
-                'reserved' => ['add', 'edit', 'remove']
-            ]
+                'reserved' => ['add', 'edit', 'remove'],
+            ],
         ];
     }
 
     /**
      * The files that belong to this category
+     *
      * @return HasMany
      */
     public function bundles(): Relation
@@ -89,6 +95,7 @@ class FileCategory extends SluggableModel
 
     /**
      * Returns download counts
+     *
      * @return HasManyThrough
      */
     public function downloads(): HasManyThrough
@@ -103,6 +110,7 @@ class FileCategory extends SluggableModel
 
     /**
      * Hide categories that are empty or only have non-released bundles.
+     *
      * @param Builder $query
      * @return Builder
      * @throws InvalidArgumentException
@@ -117,6 +125,7 @@ class FileCategory extends SluggableModel
 
     /**
      * Attach all available scopes
+     *
      * @param Builder $query
      * @return Builder
      */

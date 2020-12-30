@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Handles forms on activities
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -23,6 +24,7 @@ class FormController extends Controller
 
     /**
      * Shows the Activity's from
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Activity $activity)
@@ -34,7 +36,7 @@ class FormController extends Controller
         $form = $this->getForm($activity, [
             'method' => 'PATCH',
             'route' => route('enroll.edit', compact('activity')),
-            'model' => $enrollment->form
+            'model' => $enrollment->form,
         ]);
 
         // Skip if empty
@@ -48,6 +50,7 @@ class FormController extends Controller
 
     /**
      * Stores changes to the activity
+     *
      * @param  Request  $request
      * @return Response
      */
@@ -68,6 +71,7 @@ class FormController extends Controller
 
     /**
      * Returns form for this activity
+     *
      * @param Activity $activity
      * @param array $options
      * @return Kris\LaravelFormBuilder\Form
@@ -85,7 +89,7 @@ class FormController extends Controller
         $formFields = $activity->form;
         $formFields[] = [
             'type' => 'submit',
-            'value' => 'Versturen'
+            'value' => 'Versturen',
         ];
 
         // Build form

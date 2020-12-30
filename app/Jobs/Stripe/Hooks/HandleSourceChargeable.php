@@ -14,6 +14,7 @@ use Stripe\Source;
  * Handles paid invoices, in case people pay out-of-band (via SEPA transfer or something).
  *
  * Called on source.chargeable
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -21,6 +22,7 @@ class HandleSourceChargeable extends StripeWebhookJob
 {
     /**
      * Execute the job.
+     *
      * @param Invoice $invoice
      * @return void
      */

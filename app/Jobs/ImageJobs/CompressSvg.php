@@ -10,6 +10,7 @@ class CompressSvg extends SvgJob
 {
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle()
@@ -28,7 +29,7 @@ class CompressSvg extends SvgJob
             '--enable=removeRasterImages',
             '--enable=removeScriptElement',
             '--enable=removeStyleElement',
-            $filePath
+            $filePath,
         ]);
         $process->run();
 

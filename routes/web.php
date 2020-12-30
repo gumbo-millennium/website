@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
-    App\Http\Policy\LoginPolicy::class
+    App\Http\Policy\LoginPolicy::class,
 ]);
 
 // Home

@@ -34,6 +34,7 @@ class ConstructGoogleActionList implements ShouldQueue
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(ConscriboService $conscribo)
@@ -71,7 +72,7 @@ class ConstructGoogleActionList implements ShouldQueue
 
         // Log count
         Log::debug("Will look for {member-count} members", [
-            'member-count' => count($userIds)
+            'member-count' => count($userIds),
         ]);
 
         // Get users from Conscribo
@@ -83,7 +84,7 @@ class ConstructGoogleActionList implements ShouldQueue
 
         // Log count
         Log::debug("Received {member-count} members from Conscribo", [
-            'member-count' => count($userResource)
+            'member-count' => count($userResource),
         ]);
 
         // Map emails by selector, remove empties and lowercase email
@@ -96,7 +97,7 @@ class ConstructGoogleActionList implements ShouldQueue
         Log::info("After filter, got left with {email-count} email addresses from Conscribo", [
             'email-count' => count($emails),
             'query-count' => count($userResource),
-            'search-count' => count($userIds)
+            'search-count' => count($userIds),
         ]);
 
         // Map new models
@@ -114,7 +115,7 @@ class ConstructGoogleActionList implements ShouldQueue
                 'email' => Str::lower($role['e_mailadres']),
                 'name' => $role['naam'],
                 'aliases' => null,
-                'members' => $jobMembers
+                'members' => $jobMembers,
             ];
 
             // Allow for alias changing
@@ -122,13 +123,13 @@ class ConstructGoogleActionList implements ShouldQueue
                 Log::debug('Remapping job {job} to use {new-email} instead of {old-email}', [
                     'job' => Arr::except($job, 'members'),
                     'old-email' => $job['email'],
-                    'new-email' => self::EMAIL_REMAP[$job['email']]
+                    'new-email' => self::EMAIL_REMAP[$job['email']],
                 ]);
                 $job['email'] = self::EMAIL_REMAP[$job['email']];
             }
 
             Log::info('Created job {job}, adding to list', [
-                'job' => Arr::except($job, 'members')
+                'job' => Arr::except($job, 'members'),
             ]);
 
             // Add job
@@ -144,7 +145,7 @@ class ConstructGoogleActionList implements ShouldQueue
             if (!\in_array($domain, $validDomains)) {
                 Log::warning('Tried to start job for {email}, which isn\'t in the safe domain list', [
                     'email' => $job['email'],
-                    'safe-domains' => $validDomains
+                    'safe-domains' => $validDomains,
                 ]);
                 continue;
             }
@@ -152,8 +153,8 @@ class ConstructGoogleActionList implements ShouldQueue
             Log::info("Dispatching new Update job for {email}", [
                 'email' => $job['email'],
                 'job' => array_merge($job, [
-                    'members' => sprintf('[REDACTED %d EMAILS]', count($job['members']))
-                ])
+                    'members' => sprintf('[REDACTED %d EMAILS]', count($job['members'])),
+                ]),
             ]);
 
             UpdateGoogleList::dispatch(

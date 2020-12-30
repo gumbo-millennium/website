@@ -29,7 +29,7 @@ class NewMemberForm extends Form
                 'attr' => [
                     'autocomplete' => 'given-name',
                     'autofocus' => true,
-                    'placeholder' => $dummyName[0]
+                    'placeholder' => $dummyName[0],
                 ],
             ])
             ->add('insert', 'text', [
@@ -37,7 +37,7 @@ class NewMemberForm extends Form
                 'rules' => 'nullable|string|min:2',
                 'attr' => [
                     'autocomplete' => 'additional-name',
-                    'placeholder' => $dummyName[1]
+                    'placeholder' => $dummyName[1],
                 ],
             ])
             ->add('last-name', 'text', [
@@ -45,7 +45,7 @@ class NewMemberForm extends Form
                 'rules' => 'required|string|min:2',
                 'attr' => [
                     'autocomplete' => 'family-name',
-                    'placeholder' => $dummyName[2]
+                    'placeholder' => $dummyName[2],
                 ],
             ]);
 
@@ -56,7 +56,7 @@ class NewMemberForm extends Form
                 'rules' => 'required|email',
                 'attr' => [
                     'autocomplete' => 'email',
-                    'placeholder' => $dummyName[3]
+                    'placeholder' => $dummyName[3],
                 ],
             ])
             ->add('phone', 'tel', [
@@ -64,12 +64,12 @@ class NewMemberForm extends Form
                 'rules' => ['required', new PhoneNumber('NL')],
                 'attr' => [
                     'autocomplete' => 'tel',
-                    'placeholder' => '038 845 0100'
+                    'placeholder' => '038 845 0100',
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
                     Geen Nederlands nummer? Typ dan een internationaal nummer in (zoals +49 201 567 890).
-                    TEXT
+                    TEXT,
                 ],
             ]);
 
@@ -79,25 +79,25 @@ class NewMemberForm extends Form
                 'label' => 'Geboortedatum',
                 'rules' => ['required', sprintf('before:%s', today()->subYear(16)->addDay()->format('Y-m-d'))],
                 'attr' => [
-                    'autocomplete' => 'bday'
+                    'autocomplete' => 'bday',
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
                     Om je aan te melden voor Gumbo Millennium via de website
                     moet je minimaal 16 jaar oud zijn.
-                    TEXT
+                    TEXT,
                 ],
             ])
             ->add('gender', 'text', [
                 'label' => 'Geslacht',
                 'rules' => 'required',
                 'attr' => [
-                    'list' => 'join-gender'
+                    'list' => 'join-gender',
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
                     Indien niet van toepassing, zet dan een streepje neer.
-                    TEXT
+                    TEXT,
                 ],
             ]);
 
@@ -108,38 +108,38 @@ class NewMemberForm extends Form
                 'rules' => 'required',
                 'attr' => [
                     'placeholder' => 'Campus',
-                ]
+                ],
             ])
             ->add('number', 'text', [
                 'label' => 'Huisnummer',
                 'rules' => 'required',
                 'attr' => [
                     'placeholder' => '2-6',
-                ]
+                ],
             ])
             ->add('postal-code', 'text', [
                 'label' => 'Postcode',
                 'rules' => 'required',
                 'attr' => [
                     'autocomplete' => 'postal-code',
-                    'placeholder' => '8017 CA'
-                ]
+                    'placeholder' => '8017 CA',
+                ],
             ])
             ->add('city', 'text', [
                 'label' => 'Plaats',
                 'rules' => 'required',
                 'attr' => [
                     'autocomplete' => 'address-level2',
-                    'placeholder' => 'Zwolle'
-                ]
+                    'placeholder' => 'Zwolle',
+                ],
             ])
             ->add('country', 'text', [
                 'label' => 'Land',
                 'default_value' => 'Nederland',
                 'attr' => [
                     'autocomplete' => 'country-name',
-                    'placeholder' => 'Indien niet Nederland'
-                ]
+                    'placeholder' => 'Indien niet Nederland',
+                ],
             ]);
 
         // Referer
@@ -148,8 +148,8 @@ class NewMemberForm extends Form
                 'label' => 'Hoe ken je Gumbo? (optioneel)',
                 'rules' => 'nullable|string',
                 'help_block' => [
-                    'text' => 'Indien een lid je heeft verwezen, vul hier de naam in, dan krijgt diegene een bedankje.'
-                ]
+                    'text' => 'Indien een lid je heeft verwezen, vul hier de naam in, dan krijgt diegene een bedankje.',
+                ],
             ]);
 
         // Intro flags
@@ -165,8 +165,8 @@ class NewMemberForm extends Form
                     Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en
                     begunstigers. Om te bepalen welke vorm voor jou mogelijk
                     is, moeten we weten of je op Windesheim studeert.
-                    TEXT
-                ]
+                    TEXT,
+                ],
             ])
             ->add('is-newsletter', 'checkbox', [
                 'label' => 'Nieuwsbrief',
@@ -175,8 +175,8 @@ class NewMemberForm extends Form
                     Als je dat wilt, kan je elke maand de Gumbode ontvangen,
                     met daarin een samenvatting van de maand, leuke verhaaltjes
                     en de gekste uitspraken van onze leden.
-                    TEXT
-                ]
+                    TEXT,
+                ],
             ]);
 
         // Terms
@@ -191,18 +191,19 @@ class NewMemberForm extends Form
                         (opent in een nieuw tabblad).
                         HTML,
                         url('/privacy-policy')
-                    )
-                ]
+                    ),
+                ],
             ]);
 
         // Submit button
         $this
             ->add('submit', 'submit', [
-                'label' => 'Aanmelden'
+                'label' => 'Aanmelden',
             ]);
     }
     /**
      * Adds the intro fields, if possible
+     *
      * @return void
      * @throws InvalidArgumentException
      */
@@ -218,7 +219,7 @@ class NewMemberForm extends Form
         }
 
         // Date
-        $sameMonth = $activity->start_date->month == $activity->end_date->month;
+        $sameMonth = $activity->start_date->month === $activity->end_date->month;
         $startDate = $activity->start_date->isoFormat($sameMonth ? 'D' : 'D MMMM');
         $endDate = $activity->end_date->isoFormat('D MMMM');
 
@@ -233,9 +234,9 @@ class NewMemberForm extends Form
                     'text' => <<<TEXT
                     Maak kennis met Gumbo tijdens de introductieweek. Na je inschrijving sturen we je gelijk
                     door naar het aanmeldproces. De intro kost {$price} (incl. gratis jaar lidmaatschap).
-                    TEXT
+                    TEXT,
                 ],
-                'checked' => $forced ? 'checked' : false
+                'checked' => $forced ? 'checked' : false,
             ]);
     }
 }

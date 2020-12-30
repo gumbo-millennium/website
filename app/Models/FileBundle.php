@@ -15,6 +15,7 @@ use Spatie\MediaLibrary\Models\Media;
 
 /**
  * A bundle of uploaded files
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -27,7 +28,7 @@ class FileBundle extends SluggableModel implements HasMedia
      * {@inheritDoc}
      */
     protected $appends = [
-        'url'
+        'url',
     ];
 
     /**
@@ -53,14 +54,16 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * The relationship counts that should be eager loaded on every query.
+     *
      * @var array
      */
     protected $withCount = [
-        'downloads'
+        'downloads',
     ];
 
     /**
      * Hide non-released bundles
+     *
      * @param Builder $query
      * @return Builder
      * @throws InvalidArgumentException
@@ -78,6 +81,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Generate the slug based on the display_title property
+     *
      * @return array
      */
     public function sluggable(): array
@@ -86,13 +90,14 @@ class FileBundle extends SluggableModel implements HasMedia
             'slug' => [
                 'source' => 'title',
                 'unique' => true,
-                'onUpdate' => false
-            ]
+                'onUpdate' => false,
+            ],
         ];
     }
 
     /**
      * The roles that belong to the user.
+     *
      * @return BelongsTo
      */
     public function category(): BelongsTo
@@ -102,6 +107,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * A file has an owner
+     *
      * @return BelongsTo
      */
     public function owner(): Relation
@@ -111,6 +117,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Returns the absolute URL to the file
+     *
      * @return string|null
      */
     public function getUrlAttribute(): ?string
@@ -126,6 +133,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Configure the collection to privately store the data
+     *
      * @return void
      */
     public function registerMediaCollections()
@@ -134,7 +142,7 @@ class FileBundle extends SluggableModel implements HasMedia
         $variants = [
             'thumb' => 1,
             'thumb-sm' => 0.5,
-            'thumb-lg' => 2
+            'thumb-lg' => 2,
         ];
 
         $this
@@ -152,6 +160,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Returns the downloads
+     *
      * @return HasMany
      */
     public function downloads(): HasMany
@@ -161,6 +170,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Returns if the bundle is available
+     *
      * @return bool
      */
     public function getIsAvailableAttribute(): bool
@@ -170,6 +180,7 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * Prevent searching non-published files
+     *
      * @return bool
      */
     public function shouldBeSearchable()

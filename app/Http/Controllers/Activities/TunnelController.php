@@ -19,12 +19,14 @@ use Illuminate\Http\Request;
  * This is used instead of multiple routes, so we can use
  * the /activity/<slug>/enroll route for GET requests and some
  * POST requests.
+ *
  * @package App\Http\Controllers\Activities
  */
 class TunnelController extends Controller
 {
     /**
      * Handles get requests on the /activity/<activity>/enroll route
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Illuminate\Http\RedirectResponse|Illuminate\Http\Response
@@ -67,7 +69,7 @@ class TunnelController extends Controller
         logger()->debug('{enrollment} wants unknown {wanted}, redirecting back', [
             'enrollment' => $enrollment,
             'activity' => $activity,
-            'wanted' => $enrollment->wanted_state
+            'wanted' => $enrollment->wanted_state,
         ]);
         return redirect()->route('activity.show', compact('activity'));
     }

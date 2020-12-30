@@ -12,6 +12,7 @@ class PagesTest extends TestCase
 {
     /**
      * Test the homepage
+     *
      * @return void
      * @dataProvider provideTestUrls
      */
@@ -32,6 +33,7 @@ class PagesTest extends TestCase
 
     /**
      * Returns test strings
+     *
      * @return array<string,int>
      * @throws InvalidArgumentException
      */
@@ -45,7 +47,7 @@ class PagesTest extends TestCase
             'homepage' => ['/', 200],
             'privacy-policy' => ['/privacy-policy', 200],
             'not-found' => [sprintf('/url%s', Str::uuid()), 404],
-            'first-page' => [$firstPage ? "/{$firstPage->slug}" : null, 200]
+            'first-page' => [$firstPage ? "/{$firstPage->slug}" : null, 200],
         ];
     }
 }

@@ -34,6 +34,7 @@ class OptimizeUserSvg implements ShouldQueue
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(string $path, string $target)
@@ -48,6 +49,7 @@ class OptimizeUserSvg implements ShouldQueue
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle()
@@ -58,7 +60,7 @@ class OptimizeUserSvg implements ShouldQueue
         }
 
         // Don't process over 1MB
-        if (Storage::size($this->path) > (1024 * 1024)) {
+        if (Storage::size($this->path) > 1024 * 1024) {
             return false;
         }
 
@@ -87,8 +89,9 @@ class OptimizeUserSvg implements ShouldQueue
 
     /**
      * Minifies the SVG using `svgo`
+     *
      * @param string $contents
-     * @return null|string
+     * @return string|null
      */
     private function minifySvg(string $contents): ?string
     {
@@ -128,6 +131,7 @@ class OptimizeUserSvg implements ShouldQueue
 
     /**
      * Replaces all colors with the 'currentColor' property
+     *
      * @param string $contents
      * @return string
      */

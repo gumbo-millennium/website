@@ -19,13 +19,16 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Creates an application if one isn't set
+     *
      * @return void
      */
     public function ensureApplicationExists(): void
     {
         // Create app if one hasn't been created yet
-        if ($this->app === null) {
-            $this->refreshApplication();
+        if ($this->app !== null) {
+            return;
         }
+
+        $this->refreshApplication();
     }
 }

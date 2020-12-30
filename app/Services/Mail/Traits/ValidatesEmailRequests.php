@@ -14,12 +14,14 @@ trait ValidatesEmailRequests
 {
     /**
      * Valid committee handles
+     *
      * @var string
      */
     private string $validCommitteeEmails = '/^(?:[a-z]{1,4}c|[a-z]{2,20}cie|[a-z]+commissie)$/';
 
     /**
      * Valid project group handles
+     *
      * @var string
      */
     private string $validProjectGroupEmails = '/^[a-z]+(?<!pg)$/';
@@ -28,6 +30,7 @@ trait ValidatesEmailRequests
      * Checks if the given email is mutatable, which is true unless the
      * email domain ends with one of the domains listed in the `services.google.domains`
      * config directory, or a subdomain of one of those.
+     *
      * @param string $email
      * @return bool
      */
@@ -59,6 +62,7 @@ trait ValidatesEmailRequests
 
     /**
      * Returns true if the given email is likely a mailing list we can modify via API
+     *
      * @param string $email
      * @return bool
      */
@@ -74,6 +78,7 @@ trait ValidatesEmailRequests
 
     /**
      * Checks if the email address for the given mailing list matches the expectations
+     *
      * @param string $name
      * @param string $email
      * @return bool

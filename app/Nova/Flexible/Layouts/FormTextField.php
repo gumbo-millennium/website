@@ -12,18 +12,21 @@ class FormTextField extends Layout
 {
     /**
      * The layout's unique identifier
+     *
      * @var string
      */
     protected $name = 'text-field';
 
     /**
      * The displayed title
+     *
      * @var string
      */
     protected $title = 'Text Field';
 
     /**
      * Get the fields displayed by the layout.
+     *
      * @return array
      */
     public function fields()
@@ -31,7 +34,7 @@ class FormTextField extends Layout
         return [
             Text::make('Label', 'label')->rules('required'),
             Text::make('Helptekst', 'help')->nullable(),
-            Boolean::make('Verplicht', 'required')
+            Boolean::make('Verplicht', 'required'),
         ];
     }
 }

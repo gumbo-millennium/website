@@ -19,5 +19,5 @@ $factory->define(NewsItem::class, static fn (Faker $faker) => [
         'author_id' => optional(User::inRandomOrder()->first())->id,
         'sponsor' => $faker->optional(0.1)->company,
         'category' => $faker->randomElement(config('gumbo.news-categories')),
-        'image' => $faker->optional(0.95)->passthrough($imageOptions->random())
+        'image' => $faker->optional(0.95)->passthrough($imageOptions->random()),
     ]);

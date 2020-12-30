@@ -23,6 +23,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Registation controller
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RegisterController extends Controller
@@ -42,6 +43,7 @@ class RegisterController extends Controller
 
     /**
      * Create a new controller instance.
+     *
      * @return void
      */
     public function __construct(FormBuilder $formBuilder)
@@ -56,6 +58,7 @@ class RegisterController extends Controller
 
     /**
      * Show the application registration form.
+     *
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
@@ -63,7 +66,7 @@ class RegisterController extends Controller
         // Create form
         $form = $this->formBuilder->create(RegisterForm::class, [
             'method' => 'POST',
-            'url' => route('register')
+            'url' => route('register'),
         ]);
 
         // Title
@@ -76,6 +79,7 @@ class RegisterController extends Controller
 
     /**
      * Registers a new user in the system
+     *
      * @param Request $request
      * @param FormBuilder $formBuilder
      * @return Illuminate\Http\RedirectResponse
@@ -105,6 +109,7 @@ class RegisterController extends Controller
 
     /**
      * Shows the 'what we steal from your privé' message
+     *
      * @param Request $request
      * @return Illuminate\Http\RedirectResponse
      */
@@ -122,7 +127,7 @@ class RegisterController extends Controller
         // Create form
         $form = $this->formBuilder->create(RegisterPrivacyForm::class, [
             'method' => 'POST',
-            'url' => route('register.register-privacy')
+            'url' => route('register.register-privacy'),
         ]);
 
         // Check cache
@@ -153,6 +158,7 @@ class RegisterController extends Controller
 
     /**
      * Confirms privacy policy and creates account
+     *
      * @param Request $request
      * @return Illuminate\Http\RedirectResponse
      * @throws RuntimeException
@@ -192,6 +198,7 @@ class RegisterController extends Controller
 
     /**
      * Show welcome response
+     *
      * @param Request $request
      * @return Response
      * @throws RuntimeException
@@ -216,7 +223,7 @@ class RegisterController extends Controller
 
         // Show onboarding
         return view('onboarding.new-account', [
-            'nextUrl' => route('onboarding.new-account', ['continue' => true])
+            'nextUrl' => route('onboarding.new-account', ['continue' => true]),
         ]);
     }
 }

@@ -11,9 +11,10 @@ class BotUserLink extends UuidModel
 {
     /**
      * Sets the name of the ID on the given driver
+     *
      * @param string $platform
      * @param string $platformId
-     * @param null|string $name
+     * @param string|null $name
      * @return void
      */
     public static function setName(string $platform, string $platformId, ?string $name): void
@@ -22,12 +23,13 @@ class BotUserLink extends UuidModel
             'driver' => $platform,
             'driver_id' => $platformId,
         ], [
-            'name' => $name
+            'name' => $name,
         ]);
     }
 
     /**
      * Returns the stored name
+     *
      * @param string $platform
      * @param string $platformId
      * @return string
@@ -41,23 +43,26 @@ class BotUserLink extends UuidModel
     }
 
     /**
-     * The attributes that are mass assignable.
-     * @var array
-     */
-    protected $fillable = [
-        'driver',
-        'driver_id',
-        'name'
-    ];
-
-    /**
      * Indicates if the model should be timestamped.
+     *
      * @var bool
      */
     public $timestamps = false;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'driver',
+        'driver_id',
+        'name',
+    ];
+
+    /**
      * Scopes to a driver and it's ID
+     *
      * @param Builder $query
      * @param string $driver
      * @param string $driverId
@@ -74,6 +79,7 @@ class BotUserLink extends UuidModel
 
     /**
      * Returns the owning user
+     *
      * @returns BelongsTo<App\Models\User>
      */
     public function user(): BelongsTo

@@ -15,6 +15,7 @@ class NewsItemObserver
 
     /**
      * Try to make sure a news article has an author
+     *
      * @param NewsItem $newsArticle
      * @return void
      */
@@ -46,7 +47,7 @@ class NewsItemObserver
         $readTime = $readFinished->diffForHumans([
             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
             'options' => CarbonInterface::CEIL,
-            'parts' => 1
+            'parts' => 1,
         ]);
 
         // Assign read time

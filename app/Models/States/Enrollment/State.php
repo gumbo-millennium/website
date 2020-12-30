@@ -30,6 +30,7 @@ abstract class State extends BaseState
 
     /**
      * Returns a nice name for this object
+     *
      * @return string
      */
     public function getNameAttribute(): string
@@ -39,6 +40,7 @@ abstract class State extends BaseState
 
     /**
      * Returns if the enrollment is able to expire in this state
+     *
      * @return bool
      */
     public function isStable(): bool
@@ -48,6 +50,7 @@ abstract class State extends BaseState
 
     /**
      * Get the title of this status.
+     *
      * @return string
      */
     abstract public function getTitleAttribute(): string;

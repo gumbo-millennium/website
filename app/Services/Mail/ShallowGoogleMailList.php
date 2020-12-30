@@ -51,6 +51,7 @@ class ShallowGoogleMailList extends GoogleMailList
 
     /**
      * Returns the full mail list
+     *
      * @return MailList|GoogleMailList
      * @throws BindingResolutionException
      */

@@ -10,6 +10,7 @@ class AddActivityStatementDescription extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -24,6 +25,7 @@ class AddActivityStatementDescription extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

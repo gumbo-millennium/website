@@ -18,12 +18,14 @@ class ConfirmedEnrollments extends Trend
 
     /**
      * The displayable name of the metric.
+     *
      * @var string
      */
     public $name = 'Succesvolle inschrijvingen';
 
     /**
      * Calculate the value of the metric.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
@@ -41,6 +43,7 @@ class ConfirmedEnrollments extends Trend
 
     /**
      * Get the ranges available for the metric.
+     *
      * @return array
      */
     public function ranges()
@@ -49,12 +52,13 @@ class ConfirmedEnrollments extends Trend
             7 => '7 dagen',
             14 => '14 dagen',
             30 => '30 dagen',
-            'TODAY' => 'vandaag'
+            'TODAY' => 'vandaag',
         ];
     }
 
     /**
      * Determine for how many minutes the metric should be cached.
+     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -64,6 +68,7 @@ class ConfirmedEnrollments extends Trend
 
     /**
      * Get the URI key for the metric.
+     *
      * @return string
      */
     public function uriKey()

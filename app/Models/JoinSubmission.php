@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Encrypted submission to Gumbo
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -53,6 +54,7 @@ class JoinSubmission extends Model
 
     /**
      * Default values
+     *
      * @var array
      */
     protected $attributes = [
@@ -72,6 +74,7 @@ class JoinSubmission extends Model
 
     /**
      * Full name property
+     *
      * @return string
      */
     public function getNameAttribute(): string
@@ -79,7 +82,7 @@ class JoinSubmission extends Model
         return collect([
             $this->first_name,
             $this->insert,
-            $this->last_name
+            $this->last_name,
         ])->reject('empty')->implode(' ');
     }
 }

@@ -18,6 +18,7 @@ class VoidInvoice extends StripeJob
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -74,7 +75,7 @@ class VoidInvoice extends StripeJob
         if ($invoice->status === Invoice::STATUS_DRAFT) {
             logger()->info('Deleting draft-invoice {invoice}', [
                 'enrollment' => $enrollment,
-                'invoice' => $invoice
+                'invoice' => $invoice,
             ]);
 
             // Delete the invoice
@@ -96,7 +97,7 @@ class VoidInvoice extends StripeJob
         // Void invoice
         logger()->info('Voiding invoice {invoice}', [
             'enrollment' => $enrollment,
-            'invoice' => $invoice
+            'invoice' => $invoice,
         ]);
         $invoice->voidInvoice();
 

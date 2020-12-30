@@ -10,6 +10,7 @@ use Kris\LaravelFormBuilder\Form;
 
 /**
  * Account info update form
+ *
  * @package App\Forms
  */
 class AccountEditForm extends Form
@@ -20,6 +21,7 @@ class AccountEditForm extends Form
 
     /**
      * Overrides user
+     *
      * @param User $user
      * @return void
      */
@@ -37,17 +39,18 @@ class AccountEditForm extends Form
             ->addNames($this->formOptions['is-linked'] ?? false)
             ->addEmail($this->getUser(), [
                 // phpcs:ignore Generic.Files.LineLength.TooLong
-                'help_block.text' => 'Je moet je e-mailadres na wijziging opnieuw verifiëren.'
+                'help_block.text' => 'Je moet je e-mailadres na wijziging opnieuw verifiëren.',
             ])
             ->addAlias($this->getUser())
             ->add('submit', 'submit', [
-                'label' => 'Opslaan'
+                'label' => 'Opslaan',
             ]);
     }
 
     /**
      * Returns a proper user id
-     * @return null|int
+     *
+     * @return int|null
      */
     protected function getUser(): ?int
     {

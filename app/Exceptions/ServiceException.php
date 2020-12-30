@@ -18,26 +18,33 @@ class ServiceException extends RuntimeException
 
     /**
      * Service that did boom
+     *
      * @var string
      */
     protected string $service;
 
     /**
      * Creates a new service error
+     *
      * @param string $service
      * @param string $message
      * @param int $code
      * @param Throwable|null $previous
      * @return void
      */
-    public function __construct(string $service, string $message = "", int $code = 0, ?Throwable $previous = null)
-    {
+    public function __construct(
+        string $service,
+        string $message = "",
+        int $code = 0,
+        ?Throwable $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->service = $service;
     }
 
     /**
      * Returns guilty service
+     *
      * @return string
      */
     public function getService(): string
@@ -47,6 +54,7 @@ class ServiceException extends RuntimeException
 
     /**
      * Create an HTTP response that represents the object.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

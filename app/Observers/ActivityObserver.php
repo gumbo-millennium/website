@@ -10,6 +10,7 @@ use App\Models\Activity;
 
 /**
  * Ensures values on the activity model are up to snuff.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,6 +18,7 @@ class ActivityObserver
 {
     /**
      * Validates values of an Activity. Has a high complexity but isn't run too often
+     *
      * @param  \App\App\Models\Activity  $activity
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -79,13 +81,16 @@ class ActivityObserver
         }
 
         // Make sure statements are valid statements (ASCII uppercase)
-        if ($activity->statement !== null) {
-            $activity->statement = Str::limit(Str::ascii($activity->statement), 16, '');
+        if ($activity->statement === null) {
+            return;
         }
+
+        $activity->statement = Str::limit(Str::ascii($activity->statement), 16, '');
     }
 
     /**
      * Update the coupon
+     *
      * @param Activity $activity
      * @return void
      */

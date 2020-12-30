@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Auth\Traits;
 
 /**
  * Redirects users to the homepage.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */

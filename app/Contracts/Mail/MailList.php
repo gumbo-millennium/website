@@ -15,24 +15,28 @@ interface MailList
 
     /**
      * Group email address
+     *
      * @return string
      */
     public function getEmail(): string;
 
     /**
      * The ID the mail service will recognize this service by
+     *
      * @return string
      */
     public function getServiceId(): string;
 
     /**
      * Returns a list of email addresses
+     *
      * @return array<array<string>>
      */
     public function listEmails(): array;
 
     /**
      * Adds the given email address with the given role
+     *
      * @param string $email
      * @param int $role
      * @return void
@@ -41,6 +45,7 @@ interface MailList
 
     /**
      * Updates the given email address to have the given role
+     *
      * @param string $email
      * @param int $role
      * @return void
@@ -49,6 +54,7 @@ interface MailList
 
     /**
      * Removes the given email address from the list
+     *
      * @param string $email
      * @return void
      */
@@ -56,12 +62,14 @@ interface MailList
 
     /**
      * List aliases of this mail list
+     *
      * @return array<string>
      */
     public function listAliases(): array;
 
     /**
      * Adds a mailing list alias
+     *
      * @param string $email
      * @return void
      */
@@ -69,6 +77,7 @@ interface MailList
 
     /**
      * Deletes mailing list alias
+     *
      * @param string $email
      * @return void
      */
@@ -76,12 +85,14 @@ interface MailList
 
     /**
      * Returns a sequential array with changed emails, as [MailList::CHANGE_*, email]
+     *
      * @return array<array<string>>
      */
     public function getChangedEmails(): array;
 
     /**
      * Returns a sequential array with changed aliases, as [MailList::CHANGE_*, alias]
+     *
      * @return array<array<string>>
      */
     public function getChangedAliases(): array;

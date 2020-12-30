@@ -11,5 +11,5 @@ return static function ($path, $extension): Collection {
     $images = scandir($imageDir);
     return $images === false ? collect() : collect($images)
         ->filter(static fn ($name) => Str::endsWith($name, ".{$extension}"))
-        ->map(static fn($file) => new File("{$imageDir}/{$file}"));
+        ->map(static fn ($file) => new File("{$imageDir}/{$file}"));
 };

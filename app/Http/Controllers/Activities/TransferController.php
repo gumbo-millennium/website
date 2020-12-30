@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 
 /**
  * Handles transferring enrollments
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -30,6 +31,7 @@ class TransferController extends Controller
 
     /**
      * Shows enrollment transfer view
+     *
      * @param EnrollmentServiceContract $enrollService
      * @param Request $request
      * @param Activity $activity
@@ -49,7 +51,7 @@ class TransferController extends Controller
         if ($enrollment->transfer_secret) {
             $transferLink = \route('enroll.transfer-view', [
                 'activity' => $activity,
-                'token' => $enrollment->transfer_secret
+                'token' => $enrollment->transfer_secret,
             ]);
         }
 
@@ -61,6 +63,7 @@ class TransferController extends Controller
 
     /**
      * Enables or replaces the transfer code
+     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse
@@ -93,6 +96,7 @@ class TransferController extends Controller
 
     /**
      * Disables the transfer code
+     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse
@@ -120,6 +124,7 @@ class TransferController extends Controller
 
     /**
      * Displays the enrollment with the given transfer code
+     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse
@@ -176,7 +181,19 @@ class TransferController extends Controller
     }
 
     /**
+     * Returns true if this activity is still able to transfer enrollments
+     *
+     * @param Activity $activity
+     * @return bool
+     */
+    public function ensureOpenForTransfer(Activity $activity): bool
+    {
+        return $activity->start_date > now();
+    }
+
+    /**
      * Throws a fuss when the user cannot accept another enrollment
+     *
      * @param User $user
      * @param Activity $activity
      * @return void
@@ -203,6 +220,7 @@ class TransferController extends Controller
 
     /**
      * Returns the enrollment that belongs to the tranfer code
+     *
      * @param Activity $activity
      * @param string $token
      * @return Enrollment
@@ -228,15 +246,5 @@ class TransferController extends Controller
         }
 
         return $enrollment;
-    }
-
-    /**
-     * Returns true if this activity is still able to transfer enrollments
-     * @param Activity $activity
-     * @return bool
-     */
-    public function ensureOpenForTransfer(Activity $activity): bool
-    {
-        return $activity->start_date > now();
     }
 }

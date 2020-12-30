@@ -21,30 +21,35 @@ use Laravel\Nova\Panel;
 
 /**
  * File resource, highly linked.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FileBundle extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = FileBundleModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Documentensysteem';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -52,18 +57,13 @@ class FileBundle extends Resource
         'slug',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
         $maxSize = Cache::remember(
             'nova.filebundle.maxsize',
             now()->addDay(),
-            static fn() => Str::filesize(config('medialibrary.max_file_size'))
+            static fn () => Str::filesize(config('medialibrary.max_file_size'))
         );
         return [
             ID::make()->sortable(),
@@ -102,11 +102,11 @@ class FileBundle extends Resource
 
             // Read-only metadata
             new Panel('Metadata', [
-                Text::make('Totale bestandsgrootte', fn() => Str::filesize($this->total_size))
+                Text::make('Totale bestandsgrootte', fn () => Str::filesize($this->total_size))
                     ->onlyOnDetail(),
                 Number::make('Aantal downloads', 'downloads_count')
-                    ->onlyOnDetail()
-                ])
+                    ->onlyOnDetail(),
+                ]),
         ];
     }
 }

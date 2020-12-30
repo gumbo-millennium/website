@@ -16,6 +16,7 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 {
     /**
      * Register services.
+     *
      * @return void
      */
     public function register()
@@ -52,6 +53,7 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 
     /**
      * Get the services provided by the provider.
+     *
      * @return array
      */
     public function provides()

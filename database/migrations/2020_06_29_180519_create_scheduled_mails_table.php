@@ -10,6 +10,7 @@ class CreateScheduledMailsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -33,6 +34,7 @@ class CreateScheduledMailsTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

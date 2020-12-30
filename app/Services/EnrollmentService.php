@@ -33,6 +33,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
     /**
      * Returns true if the cache can be locked
+     *
      * @return bool
      */
     public function useLocks(): bool
@@ -93,6 +94,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
     /**
      * Enrolls a user, /DOES NOT PERFORM CHECKS
+     *
      * @param Activity $activity
      * @param User $user
      * @return Enrollment
@@ -158,6 +160,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
     /**
      * Transitions states where possible
+     *
      * @param Activity $activity
      * @param Enrollment $enrollment
      * @return void
@@ -187,11 +190,13 @@ class EnrollmentService implements EnrollmentServiceContract
         }
 
         // Check if we can confirm
-        if (\in_array(Confirmed::$name, $options)) {
-            logger()->debug('Data provided and no payment needed, confirming enrollment');
-            $enrollment->state->transitionTo(Confirmed::class);
-            $enrollment->save();
+        if (!\in_array(Confirmed::$name, $options)) {
+            return;
         }
+
+        logger()->debug('Data provided and no payment needed, confirming enrollment');
+        $enrollment->state->transitionTo(Confirmed::class);
+        $enrollment->save();
     }
 
     /**
@@ -230,7 +235,7 @@ class EnrollmentService implements EnrollmentServiceContract
         // If not yet paid, make a new invoice
         if (!$enrollment->state instanceof Paid && $enrollment->price > 0) {
             VoidInvoice::withChain([
-                new CreateInvoiceJob($enrollment)
+                new CreateInvoiceJob($enrollment),
             ])->dispatch($enrollment);
         }
 

@@ -10,6 +10,7 @@ class AddPostponedFieldToActivities extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -22,6 +23,7 @@ class AddPostponedFieldToActivities extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

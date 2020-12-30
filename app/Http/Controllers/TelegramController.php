@@ -28,6 +28,7 @@ class TelegramController extends Controller
     /**
      * Connects a Telegram account to a user, often called from the Telegram
      * Login API
+     *
      * @param Request $request
      * @return RedirectResponse|HttpResponse
      * @throws BadRequestHttpException
@@ -50,12 +51,13 @@ class TelegramController extends Controller
         // Render the view
         return Response::view('account.telegram-connect', [
             'telegramName' => $username,
-            'telegramId' => $telegramId
+            'telegramId' => $telegramId,
         ])->setPrivate()->setMaxAge(30);
     }
 
     /**
      * Save the new connection
+     *
      * @param Request $request
      * @return RedirectResponse
      * @throws BadRequestHttpException
@@ -87,6 +89,7 @@ class TelegramController extends Controller
 
     /**
      * Submit a deletion request
+     *
      * @param Request $request
      * @return void
      */
@@ -105,6 +108,7 @@ class TelegramController extends Controller
 
     /**
      * Validates that the request came from Telegram
+     *
      * @param Request $request
      * @return void
      * @throws BadRequestHttpException if the request is invalid
@@ -145,7 +149,7 @@ class TelegramController extends Controller
 
         // Validate expiration
         $date = $request->get('auth_date');
-        if ((time() - $date) > (60 * 60)) {
+        if (time() - $date > 60 * 60) {
             throw new BadRequestHttpException('The data signature is no longer valid');
         }
     }
@@ -154,8 +158,9 @@ class TelegramController extends Controller
      * Returns the Telegram ID retrieved from the request (if it's valid) or from
      * the cache if that's still valid. Will only validate Telegram responses if
      * $request is a GET-request
+     *
      * @param Request $request
-     * @return null|string
+     * @return string|null
      * @throws RuntimeException if key val
      * @throws BadRequestHttpException
      */

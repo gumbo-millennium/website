@@ -22,12 +22,14 @@ trait HandlesStripeInvoices
 {
     /**
      * Invoices retrieved from API
+     *
      * @var array<Invoice>
      */
     private array $invoiceCache = [];
 
     /**
      * Returns the invoice lines for this enrollment
+     *
      * @param Enrollment $enrollment
      * @return Illuminate\Support\Collection
      */
@@ -64,6 +66,7 @@ trait HandlesStripeInvoices
 
     /**
      * Returns a single invoice for the given Enrollment
+     *
      * @param Enrollment $enrollment
      * @param int $options Bitwise options, see OPT_ constants
      * @return Stripe\Invoice
@@ -120,6 +123,7 @@ trait HandlesStripeInvoices
 
     /**
      * Pays the invoice for the enrollment using the given source
+     *
      * @param Enrollment $enrollment
      * @param App\Contracts\Source $source
      * @return Stripe\Invoice
@@ -136,7 +140,7 @@ trait HandlesStripeInvoices
 
             // Pay invoice
             return $this->invoiceCache[$enrollment->payment_invoice] = $invoice->pay([
-                'source' => $source->id
+                'source' => $source->id,
                 ]);
         } catch (ApiErrorException $exception) {
             // Bubble all
@@ -147,6 +151,7 @@ trait HandlesStripeInvoices
     /**
      * Creates an Enrollment by purging the account of line items, creating
      * new ones, applying a coupon if present and finalising it.
+     *
      * @param Enrollment $enrollment
      * @return Invoice
      * @throws RuntimeException
@@ -186,6 +191,7 @@ trait HandlesStripeInvoices
 
     /**
      * Clears pending invoice items off the account
+     *
      * @param Customer $customer
      * @return void
      * @throws UnexpectedValueException
@@ -198,7 +204,7 @@ trait HandlesStripeInvoices
             $existing = InvoiceItem::all([
                 'pending' => true,
                 'customer' => $customer->id,
-                'limit' => 100
+                'limit' => 100,
             ])->all();
 
             foreach ($existing as $existingItem) {
@@ -217,6 +223,7 @@ trait HandlesStripeInvoices
 
     /**
      * Creates a new set of invoice items, for the new invoice
+     *
      * @param Customer $customer
      * @param Collection $items
      * @return void
@@ -248,7 +255,7 @@ trait HandlesStripeInvoices
                     'currency' => 'eur',
                     'amount' => $linePrice,
                     'description' => $lineDesc,
-                    'discountable' => $lineDiscount
+                    'discountable' => $lineDiscount,
                 ]);
             }
         } catch (ApiErrorException $exception) {
@@ -259,8 +266,9 @@ trait HandlesStripeInvoices
 
     /**
      * Assign new discount to the user, removing the old one
+     *
      * @param Customer $customer
-     * @param null|Coupon $coupon
+     * @param Coupon|null $coupon
      * @return void
      * @throws UnexpectedValueException
      * @throws InvalidArgumentException
@@ -294,6 +302,7 @@ trait HandlesStripeInvoices
 
     /**
      * Creates the actual invoice model on the stripe API
+     *
      * @param Customer $customer
      * @param Enrollment $enrollment
      * @return Invoice
@@ -308,7 +317,7 @@ trait HandlesStripeInvoices
             // Create invoice
             $invoice = Invoice::create([
                 'customer' => $customer->id,
-                'statement_descriptor' => Str::ascii($enrollment->activity->statement)
+                'statement_descriptor' => Str::ascii($enrollment->activity->statement),
             ]);
 
             // Verifiy price

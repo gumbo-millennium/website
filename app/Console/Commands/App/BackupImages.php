@@ -18,20 +18,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BackupImages extends Command
 {
     public const BASE_PATH = 'backup/images/';
+
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'app:backup-images';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Creates a backup of the images on activities, sponsors, pages and news';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -79,6 +83,7 @@ class BackupImages extends Command
 
     /**
      * Stores images on the $propeties on $className in $zip
+     *
      * @param ZipArchive $zip
      * @param string $className
      * @param array $properties

@@ -11,6 +11,7 @@ use libphonenumber\PhoneNumberUtil;
 
 /**
  * Validates phone numbers using libphonenumber
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,18 +19,21 @@ class PhoneNumber implements Rule
 {
     /**
      * The region to validate the number for
+     *
      * @var string|null
      */
     private $region;
 
     /**
      * The current validator instance
+     *
      * @var PhoneNumberUtil
      */
     private $util;
 
     /**
      * Create a new rule instance.
+     *
      * @return void
      */
     public function __construct(?string $region = null)
@@ -40,6 +44,7 @@ class PhoneNumber implements Rule
 
     /**
      * Determine if the validation rule passes.
+     *
      * @param  string  $attribute
      * @param  mixed  $value
      * @return bool
@@ -69,6 +74,7 @@ class PhoneNumber implements Rule
 
     /**
      * Get the validation error message.
+     *
      * @return string
      */
     public function message()
@@ -78,6 +84,7 @@ class PhoneNumber implements Rule
 
     /**
      * Formats phone numbers to a standardised form
+     *
      * @param string $value Phone number to parse
      * @return string|null Returns null if parsing failed
      */

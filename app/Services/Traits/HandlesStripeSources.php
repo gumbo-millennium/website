@@ -15,6 +15,7 @@ trait HandlesStripeSources
 {
     /**
      * Sources retrieved from API
+     *
      * @var array<Source>
      */
     private array $sourceCache = [];
@@ -22,8 +23,9 @@ trait HandlesStripeSources
     /**
      * Returns a single source for the given enrollment, as long as it has the
      * same bank.
+     *
      * @param Enrollment $enrollment
-     * @param null|string $bank
+     * @param string|null $bank
      * @param int $options Bitwise options, see OPT_ constants
      * @return App\Contracts\Source
      */
@@ -47,7 +49,7 @@ trait HandlesStripeSources
                 if (
                     $bank &&
                     object_get($source, 'ideal.bank') === $bank &&
-                    $source->status == Source::STATUS_PENDING
+                    $source->status === Source::STATUS_PENDING
                 ) {
                     return $source;
                 }
@@ -75,12 +77,12 @@ trait HandlesStripeSources
                     'user-id' => $enrollment->user->id,
                 ],
                 'redirect' => [
-                    'return_url' => route('enroll.pay-return', ['activity' => $enrollment->activity])
+                    'return_url' => route('enroll.pay-return', ['activity' => $enrollment->activity]),
                 ],
                 'ideal' => [
-                    'bank' => $bank
+                    'bank' => $bank,
                 ],
-                'statement_descriptor' => $enrollment->activity->full_statement
+                'statement_descriptor' => $enrollment->activity->full_statement,
             ]);
 
             // Bind to customer
@@ -106,8 +108,9 @@ trait HandlesStripeSources
 
     /**
      * Builds a redirect to fulfill the Source's payment, if applicable.
+     *
      * @param Source $source
-     * @return null|RedirectResponse
+     * @return RedirectResponse|null
      */
     public function getSourceRedirect(Source $source): ?RedirectResponse
     {

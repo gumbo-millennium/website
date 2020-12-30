@@ -9,6 +9,7 @@ use App\Models\States\Enrollment\Cancelled;
 
 /**
  * Utility methods for Charge objects
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -16,6 +17,7 @@ trait HandlesEnrollments
 {
     /**
      * Cancels the given enrollment. A refund will be automatically generated
+     *
      * @param Enrollment $enrollment
      * @return void
      * @throws InvalidConfig

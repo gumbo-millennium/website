@@ -19,6 +19,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can view any email lists.
+     *
      * @param User $user
      * @return mixed
      */
@@ -29,6 +30,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can view the email list.
+     *
      * @param User $user
      * @param EmailList $emailList
      * @return mixed
@@ -40,6 +42,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can create email lists.
+     *
      * @param User $user
      * @return mixed
      */
@@ -50,6 +53,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can update the email list.
+     *
      * @param User $user
      * @param EmailList $emailList
      * @return mixed
@@ -61,6 +65,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can delete the email list.
+     *
      * @param User $user
      * @param EmailList $emailList
      * @return mixed
@@ -72,6 +77,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can restore the email list.
+     *
      * @param User $user
      * @param EmailList $emailList
      * @return mixed
@@ -83,6 +89,7 @@ class EmailListPolicy
 
     /**
      * Determine whether the user can permanently delete the email list.
+     *
      * @param User $user
      * @param EmailList $emailList
      * @return mixed

@@ -23,6 +23,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -32,6 +33,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     *
      * @return array
      */
     public function via()
@@ -41,6 +43,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
+     *
      * @return \Illuminate\Notifications\Messages\MailMessage
      * @SuppressWarnings(PHPMD.ElseExpression)
      */

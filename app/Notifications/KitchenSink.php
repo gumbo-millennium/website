@@ -15,6 +15,7 @@ class KitchenSink extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     *
      * @return array
      */
     public function via()
@@ -24,6 +25,7 @@ class KitchenSink extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
+     *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
@@ -32,7 +34,7 @@ class KitchenSink extends Notification implements ShouldQueue
         // Otherwise, they're updating
         return (new MailMessage())
             ->markdown('mail::kitchen-sink', [
-                'recipient' => $notifiable
+                'recipient' => $notifiable,
             ]);
     }
 }

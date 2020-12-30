@@ -19,6 +19,7 @@ class AppPolicy extends BasePolicy
 
     /**
      * Don't act on Nova paths
+     *
      * @param Request $request
      * @param Response $response
      * @return bool
@@ -36,6 +37,7 @@ class AppPolicy extends BasePolicy
 
     /**
      * Configure CSP directives
+     *
      * @return void
      */
     public function configure()
@@ -53,13 +55,16 @@ class AppPolicy extends BasePolicy
         $this->addDirective(Directive::CONNECT, 'https://api.stripe.com');
 
         // Load local stuff, if local
-        if (app()->isLocal()) {
-            $this->configureLocal();
+        if (!app()->isLocal()) {
+            return;
         }
+
+        $this->configureLocal();
     }
 
     /**
      * Configure local directives
+     *
      * @return void
      */
     public function configureLocal(): void

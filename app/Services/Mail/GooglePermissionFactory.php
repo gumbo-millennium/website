@@ -43,6 +43,7 @@ class GooglePermissionFactory
     /**
      * Handles fetching a config in a safe manner.
      * Validates config name, config existence, config data and returns an array on success
+     *
      * @param string $configName Config name
      * @return array<string|int> Settings
      * @throws InvalidArgumentException
@@ -81,18 +82,21 @@ class GooglePermissionFactory
 
     /**
      * Foundational config
+     *
      * @var array
      */
     private array $baseConfig;
 
     /**
      * Configs added via `append()`
+     *
      * @var array
      */
     private array $additionalConfigs = [];
 
     /**
      * User-level changes
+     *
      * @var array
      */
     private array $userConfig = [];
@@ -104,6 +108,7 @@ class GooglePermissionFactory
 
     /**
      * Adds a set of configs
+     *
      * @param string $configName
      * @return exit
      * @throws InvalidArgumentException
@@ -119,6 +124,7 @@ class GooglePermissionFactory
 
     /**
      * Appends raw settings
+     *
      * @param array $options
      * @return GooglePermissionFactory
      * @throws InvalidArgumentException
@@ -144,8 +150,9 @@ class GooglePermissionFactory
 
     /**
      * Sets how users reply to this list
+     *
      * @param string $policy
-     * @param null|string $replyTo
+     * @param string|null $replyTo
      * @return void
      */
     public function setReplyPolicy(string $policy, ?string $replyTo = null): self
@@ -186,7 +193,8 @@ class GooglePermissionFactory
 
     /**
      * Sets footer on all inbound mail
-     * @param null|string $footer
+     *
+     * @param string|null $footer
      * @return GooglePermissionFactory
      */
     public function setFooter(?string $footer): self
@@ -204,7 +212,8 @@ class GooglePermissionFactory
 
     /**
      * Sets message sent when an e-mail is bounced
-     * @param null|string $reply
+     *
+     * @param string|null $reply
      * @return GooglePermissionFactory
      */
     public function setDenyReply(?string $reply): self
@@ -222,6 +231,7 @@ class GooglePermissionFactory
 
     /**
      * Builds settings as Google object
+     *
      * @return GroupSettings
      * @throws LogicException
      */
@@ -232,6 +242,7 @@ class GooglePermissionFactory
 
     /**
      * Constructs the settings
+     *
      * @return array
      */
     public function toArray(): array

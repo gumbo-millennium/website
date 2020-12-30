@@ -13,6 +13,7 @@ class OptimizeCommand extends BaseOptimizeCommand
 {
     /**
      * Execute the console command.
+     *
      * @return void
      */
     public function handle()

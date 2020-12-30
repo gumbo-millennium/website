@@ -36,12 +36,14 @@ class ActivitiesCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'activiteiten';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Toon de (besloten) activiteiten';
@@ -139,11 +141,11 @@ class ActivitiesCommand extends Command
         $keyboard->row(
             Keyboard::inlineButton([
                 'text' => 'Check de site',
-                'url' => route('activity.index')
+                'url' => route('activity.index'),
             ]),
             Keyboard::inlineButton([
                 'text' => 'Activiteitenkanaal',
-                'url' => $this->getActivityChannelUrl()
+                'url' => $this->getActivityChannelUrl(),
             ])
         );
 
@@ -152,12 +154,13 @@ class ActivitiesCommand extends Command
             'text' => $message,
             'parse_mode' => 'HTML',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard
+            'reply_markup' => $keyboard,
         ]);
     }
 
     /**
      * Retursn the effective URL to the activity channel, or the URL as-is
+     *
      * @return string
      */
     private function getActivityChannelUrl(): string
@@ -176,7 +179,7 @@ class ActivitiesCommand extends Command
         $response = $http->get(self::ACTIVITY_URL, [
             'on_stats' => static function (TransferStats $stats) use (&$effectiveUrl) {
                 $effectiveUrl = (string) $stats->getEffectiveUri();
-            }
+            },
         ]);
 
         // Fail if not valid

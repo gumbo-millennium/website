@@ -11,6 +11,7 @@ class RequiresStripeKey
 {
     /**
      * Process the queued job.
+     *
      * @param  mixed  $job
      * @param  callable  $next
      * @return mixed

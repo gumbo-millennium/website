@@ -20,6 +20,7 @@ trait HandlesInvoices
     /**
      * Creates a Billing Invoice at Stripe and returns it.
      * Returns null if $enrollment is a free activity (for this user)
+     *
      * @param Enrollment $enrollment
      * @return Invoice|null
      */
@@ -65,8 +66,8 @@ trait HandlesInvoices
             [
                 'amount' => $enrollment->total_price - $enrollment->price,
                 'description' => 'Transactiekosten',
-                'discountable' => false
-            ]
+                'discountable' => false,
+            ],
         ];
 
         try {
@@ -79,16 +80,18 @@ trait HandlesInvoices
                 $createdLines[] = InvoiceItem::create(array_merge([
                     'currency' => 'EUR',
                     'customer' => $invoice->customer,
-                    'invoice' => $invoice->id
+                    'invoice' => $invoice->id,
                 ], $item))->id;
             }
 
             // Delete lines not supposed to be on this invoice
             $invoiceLines = $invoice->lines->all(['limit' => 20]);
             foreach ($invoiceLines as $line) {
-                if (!in_array($line->id, $createdLines)) {
-                    $line->delete();
+                if (in_array($line->id, $createdLines)) {
+                    continue;
                 }
+
+                $line->delete();
             }
 
             // Return invoice
@@ -100,8 +103,9 @@ trait HandlesInvoices
     /**
      * Retrieves or creates invoice for the given enrollment.
      * Returns null if this user need not pay.
+     *
      * @param Enrollment $enrollment
-     * @return null|Stripe\Invoice
+     * @return Stripe\Invoice|null
      * @throws BindingResolutionException
      * @throws ExceptionInvalidArgumentException
      */

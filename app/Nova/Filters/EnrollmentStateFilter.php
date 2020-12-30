@@ -38,17 +38,19 @@ class EnrollmentStateFilter extends BooleanFilter
         Created::NAME,
         Seeded::NAME,
         Confirmed::NAME,
-        Paid::NAME
+        Paid::NAME,
     ];
 
     /**
      * The displayable name of the filter.
+     *
      * @var string
      */
     public $name = 'Status';
 
     /**
      * Apply the filter to the given query.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
@@ -70,6 +72,7 @@ class EnrollmentStateFilter extends BooleanFilter
 
     /**
      * Get the filter's available options.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -86,6 +89,7 @@ class EnrollmentStateFilter extends BooleanFilter
 
     /**
      * Set the default options for the filter.
+     *
      * @return array
      */
     public function default()

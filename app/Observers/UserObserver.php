@@ -11,6 +11,7 @@ class UserObserver
 {
     /**
      * Handle any kind of changes to the user
+     *
      * @param User $user
      * @return void
      */
@@ -22,9 +23,11 @@ class UserObserver
         }
 
         // Trigger update if the user was created, or if the name or email address was changed
-        if ($user->wasRecentlyCreated || $user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
-            // Create or update the customer on Stripe
-            dispatch(new CustomerUpdateJob($user));
+        if (!$user->wasRecentlyCreated && !$user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
+            return;
         }
+
+        // Create or update the customer on Stripe
+        dispatch(new CustomerUpdateJob($user));
     }
 }

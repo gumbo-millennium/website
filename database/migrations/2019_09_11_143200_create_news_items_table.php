@@ -10,6 +10,7 @@ class CreateNewsItemsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -36,6 +37,7 @@ class CreateNewsItemsTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

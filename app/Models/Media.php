@@ -15,14 +15,16 @@ class Media extends BaseMedia
 
     /**
      * The relationship counts that should be eager loaded on every query.
+     *
      * @var array
      */
     protected $withCount = [
-        'downloads'
+        'downloads',
     ];
 
     /**
      * Returns the downloads
+     *
      * @return HasMany
      */
     public function downloads(): HasMany
@@ -32,7 +34,8 @@ class Media extends BaseMedia
 
     /**
      * Returns the file bundle this media file belongs to
-     * @return null|FileBundle
+     *
+     * @return FileBundle|null
      */
     public function getBundleAttribute(): ?FileBundle
     {
@@ -41,6 +44,7 @@ class Media extends BaseMedia
 
     /**
      * Get the indexable data array for the model.
+     *
      * @return array
      */
     public function toSearchableArray()
@@ -57,6 +61,7 @@ class Media extends BaseMedia
 
     /**
      * Prevent searching non-published files
+     *
      * @return bool
      */
     public function shouldBeSearchable()

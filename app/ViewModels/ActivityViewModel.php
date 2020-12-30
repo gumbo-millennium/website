@@ -29,6 +29,7 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Creates a new Activity Model for the given user
+     *
      * @param Activity $activity
      */
     public function __construct(?User $user, Activity $activity)
@@ -40,6 +41,7 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns the user's enrollment. Should be just one
+     *
      * @return Enrollment|null
      */
     protected function getEnrollment(): ?Enrollment
@@ -64,6 +66,7 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Handles checking if a user is enrolled
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -74,6 +77,7 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Handles checking if a user paid for this enrollment
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -85,6 +89,7 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns if the user needs to pay for this enrollment
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
@@ -94,11 +99,12 @@ class ActivityViewModel extends GumboViewModel
         $member = optional($this->user)->is_member;
 
         // Check if true-ish (non-zero and not null)
-        return ($member ? $this->activity->is_free_for_members : $this->activity->is_free) == true;
+        return ($member ? $this->activity->is_free_for_members : $this->activity->is_free) === true;
     }
 
     /**
      * Returns if the user is enrolled and the enrollment is in a non-volatile state.
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */

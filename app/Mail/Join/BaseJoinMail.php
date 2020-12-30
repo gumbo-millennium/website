@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Shared elements for the join mail
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -21,23 +22,26 @@ abstract class BaseJoinMail extends Mailable
 
     /**
      * The "reply to" recipients of the message.
+     *
      * @var array
      */
     public $replyTo = [
         [
             'name' => 'Bestuur Gumbo Millennium',
-            'address' => 'bestuur@gumbo-millennium.nl'
-        ]
+            'address' => 'bestuur@gumbo-millennium.nl',
+        ],
     ];
 
     /**
      * Registry submission
+     *
      * @var JoinSubmission
      */
     public $submission;
 
     /**
      * Create a new message instance.
+     *
      * @param JoinSubmission $submission Submission to send
      * @return void
      */
@@ -49,12 +53,14 @@ abstract class BaseJoinMail extends Mailable
 
     /**
      * Build the message.
+     *
      * @return $this
      */
     abstract public function build();
 
     /**
      * Returns the subject
+     *
      * @param JoinSubmission $submission
      * @return string
      */

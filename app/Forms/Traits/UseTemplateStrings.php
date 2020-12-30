@@ -19,6 +19,7 @@ trait UseTemplateStrings
 
     /**
      * Returns a placeholder name
+     *
      * @return array
      */
     protected function getTemplateName(): array

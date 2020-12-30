@@ -22,6 +22,7 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can view any payments.
+     *
      * @param  User  $user
      * @return bool
      */
@@ -32,6 +33,7 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can view the payment.
+     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -44,6 +46,7 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can create payments.
+     *
      * @param  User  $user
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -55,6 +58,7 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can update the payment.
+     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -67,6 +71,7 @@ class PaymentPolicy
 
     /**
      * Determine whether the user can delete the payment.
+     *
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
@@ -78,6 +83,7 @@ class PaymentPolicy
 
     /**
      * Returns if the user is allowed to view payments
+     *
      * @param User $user
      * @return bool
      */
@@ -85,12 +91,13 @@ class PaymentPolicy
     {
         return $user->hasAnyPermission([
             self::ADMIN_PERMISSION,
-            self::PURGE_PERMISSION
+            self::PURGE_PERMISSION,
         ]);
     }
 
     /**
      * Returns if the user is allowed to modify payments
+     *
      * @param User $user
      * @return bool
      */

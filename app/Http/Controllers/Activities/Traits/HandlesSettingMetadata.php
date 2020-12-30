@@ -13,17 +13,8 @@ use Artesaos\SEOTools\Facades\SEOTools;
 trait HandlesSettingMetadata
 {
     /**
-     * Get activity URL
-     * @param Activity $activity
-     * @return string
-     */
-    private function getCanonical(Activity $activity): string
-    {
-        return route('activity.show', compact('activity'));
-    }
-
-    /**
      * Assigns active meta
+     *
      * @param Activity $activity
      * @return void
      */
@@ -42,7 +33,7 @@ trait HandlesSettingMetadata
         OpenGraph::setUrl($url);
         OpenGraph::addImages([
             $activity->image->url('social'),
-            $activity->image->url('social-2x')
+            $activity->image->url('social-2x'),
         ]);
 
         // Build JSON
@@ -66,7 +57,53 @@ trait HandlesSettingMetadata
     }
 
     /**
+     * Location meta
+     *
+     * @param Activity $activity
+     * @return array<string>|string|null
+     */
+    public function buildLocationMeta(Activity $activity)
+    {
+        // Return null if there's no location
+        if (!$activity->location) {
+            return null;
+        }
+
+        // Online-only
+        if ($activity->location_type === Activity::LOCATION_ONLINE) {
+            return [
+                '@type' => 'VirtualLocation',
+                'name' => $activity->location,
+                'url' => \secure_url('/'),
+            ];
+        }
+
+        // Add proper location
+        if ($activity->location_address) {
+            return [
+                '@type' => 'Place',
+                'name' => $activity->location,
+                'address' => $activity->location_address,
+            ];
+        }
+
+        return $activity->location;
+    }
+
+    /**
+     * Get activity URL
+     *
+     * @param Activity $activity
+     * @return string
+     */
+    private function getCanonical(Activity $activity): string
+    {
+        return route('activity.show', compact('activity'));
+    }
+
+    /**
      * Returns metadata for this activity
+     *
      * @param Activity $activity
      * @return array
      */
@@ -82,7 +119,7 @@ trait HandlesSettingMetadata
             'department' => [
                 '@type' => 'Organization',
                 'name' => $activity->organiser,
-            ]
+            ],
         ];
 
         // Build JSON+LD
@@ -139,6 +176,7 @@ trait HandlesSettingMetadata
 
     /**
      * Adds pricing info
+     *
      * @param Activity $activity
      * @return void
      */
@@ -151,7 +189,7 @@ trait HandlesSettingMetadata
         // Add regular ticket
         $url = $this->getCanonical($activity);
         $offers = [
-            ["{$url}/regular", $activity->total_price, $activity->available_seats > 0]
+            ["{$url}/regular", $activity->total_price, $activity->available_seats > 0],
         ];
 
         // Add discounted ticket
@@ -173,7 +211,7 @@ trait HandlesSettingMetadata
         $gumboOrg = [
             '@type' => 'Organization',
             'name' => 'Gumbo Millennium',
-            'url' => url('/')
+            'url' => url('/'),
         ];
 
         // A default offer
@@ -190,7 +228,7 @@ trait HandlesSettingMetadata
             'availability' => null,
             'acceptedPaymentMethod' => 'http://purl.org/goodrelations/v1#ByInvoice',
             'availableDeliveryMethod' => 'http://purl.org/goodrelations/v1#DeliveryModeDirectDownload',
-            'offeredBy' => $gumboOrg
+            'offeredBy' => $gumboOrg,
         ];
 
         // Add offers
@@ -199,7 +237,7 @@ trait HandlesSettingMetadata
                 'identifier' => $id,
                 'url' => $url,
                 'price' => $price ? $price / 100 : '0.00',
-                'availability' => $available ? 'https://schema.org/OnlineOnly' : 'https://schema.org/SoldOut'
+                'availability' => $available ? 'https://schema.org/OnlineOnly' : 'https://schema.org/SoldOut',
             ]);
         }
 
@@ -210,38 +248,5 @@ trait HandlesSettingMetadata
 
         // Add offers
         return $offerList;
-    }
-
-    /**
-     * Location meta
-     * @param Activity $activity
-     * @return null|array<string>|string
-     */
-    public function buildLocationMeta(Activity $activity)
-    {
-        // Return null if there's no location
-        if (!$activity->location) {
-            return null;
-        }
-
-        // Online-only
-        if ($activity->location_type === Activity::LOCATION_ONLINE) {
-            return [
-                '@type' => 'VirtualLocation',
-                'name' => $activity->location,
-                'url' => \secure_url('/')
-            ];
-        }
-
-        // Add proper location
-        if ($activity->location_address) {
-            return [
-                '@type' => 'Place',
-                'name' => $activity->location,
-                'address' => $activity->location_address
-            ];
-        }
-
-        return $activity->location;
     }
 }
