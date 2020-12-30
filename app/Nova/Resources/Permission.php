@@ -14,7 +14,6 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Nova;
-use Laravel\Nova\Resource;
 use Spatie\Permission\Models\Permission as PermissionModel;
 use Spatie\Permission\PermissionRegistrar;
 use Vyuldashev\NovaPermission\AttachToRole;
@@ -52,24 +51,6 @@ class Permission extends Resource
      * @var bool
      */
     public static $displayInNavigation = false;
-
-    /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Toestemmingen';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Toestemming';
-    }
 
     /**
      * Returns the model for the permission

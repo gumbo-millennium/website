@@ -57,24 +57,6 @@ class Enrollment extends Resource
     ];
 
     /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Inschrijvingen';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Inschrijving';
-    }
-
-    /**
      * Make sure the user can only see enrollments he/she is allowed to see
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
