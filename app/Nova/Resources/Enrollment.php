@@ -27,8 +27,6 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * User enrollment
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Enrollment extends Resource
 {

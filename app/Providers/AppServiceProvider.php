@@ -55,7 +55,6 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      *
      * @return void
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function register()
     {

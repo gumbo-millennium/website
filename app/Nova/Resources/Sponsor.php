@@ -24,8 +24,6 @@ use Laravel\Nova\Panel;
 
 /**
  * Add sponsor
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Sponsor extends Resource
 {

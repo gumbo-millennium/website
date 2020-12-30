@@ -13,8 +13,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Handles allowing mutations on enrollments
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class EnrollmentPolicy
 {

@@ -31,7 +31,6 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, User $model)
     {
@@ -55,7 +54,6 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, User $model)
     {
@@ -68,7 +66,6 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, User $model)
     {
@@ -81,7 +78,6 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, User $model)
     {
@@ -94,7 +90,6 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, User $model)
     {

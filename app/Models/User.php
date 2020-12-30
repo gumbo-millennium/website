@@ -156,7 +156,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      * Returns if this user is a member
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsMemberAttribute(): bool
     {

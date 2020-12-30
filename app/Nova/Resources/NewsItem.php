@@ -19,8 +19,6 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * News Items
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NewsItem extends Resource
 {

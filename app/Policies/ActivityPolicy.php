@@ -11,8 +11,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Permission policy of the Activity model
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ActivityPolicy
 {
@@ -64,7 +62,6 @@ class ActivityPolicy
      * @param  User  $user
      * @param  Activity  $activity
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(?User $user, Activity $activity): bool
     {

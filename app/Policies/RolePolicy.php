@@ -10,8 +10,6 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Handle Role modifications
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RolePolicy
 {
@@ -109,7 +107,6 @@ class RolePolicy
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function attachPermission(User $user, Role $role, Permission $permission)
     {
@@ -123,7 +120,6 @@ class RolePolicy
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function attachUser(User $user, Role $role, User $model)
     {
@@ -137,7 +133,6 @@ class RolePolicy
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function detachUser(User $user, Role $role, User $model)
     {

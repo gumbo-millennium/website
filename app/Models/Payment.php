@@ -35,7 +35,6 @@ class Payment extends UuidModel
      * Returns if the payment was refunded
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsCompletedAttribute(): bool
     {
@@ -46,7 +45,6 @@ class Payment extends UuidModel
      * Returns if the payment was refunded
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsRefundedAttribute(): bool
     {

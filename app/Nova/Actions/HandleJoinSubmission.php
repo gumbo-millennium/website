@@ -33,8 +33,6 @@ class HandleJoinSubmission extends Action
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function handle(ActionFields $fields, Collection $models)
     {

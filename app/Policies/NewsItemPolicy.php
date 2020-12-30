@@ -32,7 +32,6 @@ class NewsItemPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsItem  $newsItem
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, NewsItem $newsItem)
     {
@@ -56,7 +55,6 @@ class NewsItemPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsItem  $newsItem
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, NewsItem $newsItem)
     {
@@ -69,7 +67,6 @@ class NewsItemPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsItem  $newsItem
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, NewsItem $newsItem)
     {
@@ -82,7 +79,6 @@ class NewsItemPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsItem  $newsItem
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, NewsItem $newsItem)
     {
@@ -95,7 +91,6 @@ class NewsItemPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsItem  $newsItem
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, NewsItem $newsItem)
     {

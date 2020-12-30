@@ -33,7 +33,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, FileBundle $file)
     {
@@ -57,7 +56,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function download(User $user, FileBundle $file)
     {
@@ -81,7 +79,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, FileBundle $file)
     {
@@ -94,7 +91,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, FileBundle $file)
     {
@@ -107,7 +103,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, FileBundle $file)
     {
@@ -120,7 +115,6 @@ class FileBundlePolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, FileBundle $file)
     {

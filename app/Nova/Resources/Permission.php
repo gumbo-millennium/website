@@ -20,8 +20,6 @@ use Vyuldashev\NovaPermission\AttachToRole;
 
 /**
  * Permissions, for the Permission Framework
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Permission extends Resource
 {
