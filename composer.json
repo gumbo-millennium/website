@@ -129,11 +129,6 @@
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
             "@php artisan migrate:fresh --seed --force"
         ],
-        "symlink": [
-            "ln -fs node_modules/bootstrap/scss ./@bootstrap",
-            "ln -fs node_modules/@gumbo/theme-spacial/sass ./@gumbo",
-            "ls ./ | grep -E '^@' | tee --append .git/info/exclude"
-        ],
         "ide": [
             "@php artisan clear-compiled",
             "@php artisan ide-helper:generate",
@@ -148,21 +143,7 @@
             "phpcs"
         ],
         "test": [
-            "phpunit"
-        ],
-        "nova-testing": [
-            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-            "cd ./vendor/laravel/nova && yarn install",
-            "cd ./vendor/laravel/nova && yarn run dev",
-            "cd ./vendor/laravel/nova && rm -rf node_modules",
-            "@php artisan nova:publish"
-        ],
-        "nova-production": [
-            "cd ./vendor/laravel/nova && mv webpack.mix.js.dist webpack.mix.js",
-            "cd ./vendor/laravel/nova && yarn install",
-            "cd ./vendor/laravel/nova && yarn run prod",
-            "cd ./vendor/laravel/nova && rm -rf node_modules",
-            "@php artisan nova:publish"
+            "vendor/bin/phpunit"
         ]
     },
     "config": {
