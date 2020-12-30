@@ -12,7 +12,6 @@ module.exports = {
   purge: {
     mode: 'layers',
     content: [
-    './resources/assets/html/**/*.html',
     './resources/views/**/*.blade.php'
 
   ]
