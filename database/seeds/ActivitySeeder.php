@@ -108,10 +108,9 @@ class ActivitySeeder extends Seeder
         // Find or create Activity
         $this->safeCreate($slug, [
             'name' => 'Introductieweek',
-            'tagline' =>
-            'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
+            'tagline' => 'Maak kennis met je mede eerstejaars Gumbo leden tijdens onze spectaculaire introductieweek.',
             'start_date' => $date->setTime(10, 0, 0),
-            'end_date' => (clone $date)->addDays(5)->setTime(10, 0, 0),
+            'end_date' => $date->addDays(5)->setTime(10, 0, 0),
             'seats' => null,
             'price' => $eventPrice * 100, // Price in cents
 
@@ -139,7 +138,7 @@ class ActivitySeeder extends Seeder
         $this->createChristmasEvents($christmasDate);
 
         // Create events already happened
-        $this->createChristmasEvents($christmasDate->subYear(1));
+        $this->createChristmasEvents($christmasDate->subYear());
     }
     /**
      * Creates an activity if it's not already there yet
@@ -154,14 +153,13 @@ class ActivitySeeder extends Seeder
     private function safeCreate(string $slug, array $args, bool $withEnrollments = true): ?Activity
     {
         // Lookup slug
-        if (Activity::whereSlug($slug)->exists()) {
+        if (Activity::query()->where('slug', $slug)->exists()) {
             return null;
         }
 
-        $activity = factory(Activity::class, 1)->create(array_merge(
-            ['slug' => $slug],
-            $args
-        ))->first();
+        $activity = factory(Activity::class)->create(
+            array_merge(['slug' => $slug], $args)
+        );
 
         // Don't register users if we don't want to
         if (!$withEnrollments) {
@@ -169,14 +167,14 @@ class ActivitySeeder extends Seeder
         }
 
         // Get a random number of users in a random order
-        $count = app(Faker::class)->numberBetween(2, User::count());
+        $count = app(Faker::class)->numberBetween(2, User::query()->count());
 
         // make sure we don't overpopulate the event
         if ($activity->seats && ($activity->seats * 0.8) < $count) {
             $count = (int) $activity->seats * 0.8;
         }
 
-        // Find the $count numebr of users
+        // Find the $count number of users.
         $users = User::query()
             ->where('email', 'NOT LIKE', '%@example.gumbo-millennium.nl')
             ->inRandomOrder()
@@ -193,8 +191,10 @@ class ActivitySeeder extends Seeder
 
         return $activity;
     }
+
     /**
-     * Creates all christmas events for this given date
+     * Creates all christmas events for this given date.
+     * @param DateTimeImmutable $date
      */
     private function createChristmasEvents(DateTimeImmutable $date): void
     {
@@ -242,7 +242,7 @@ class ActivitySeeder extends Seeder
     {
         // 3rd week of april
         $aprilWeek = (Carbon::parse('First Friday of April'))->addWeeks(3)->setTime(19, 0)->toImmutable();
-        $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear(1) : $aprilWeek;
+        $startDate = ($aprilWeek < today()) ? $aprilWeek->addYear() : $aprilWeek;
         $endDate = $startDate->addDays(2)->setTime(12, 00);
 
         // LHW event
@@ -260,7 +260,6 @@ class ActivitySeeder extends Seeder
      */
     private function seedPaymentTest(): void
     {
-        // [     slug     ] => [public, price, discount, discount-slots]
         $sets = [
             'private-free' => [false, null, null, null],
             'private-paid' => [false, 1500, null, null],
@@ -272,8 +271,8 @@ class ActivitySeeder extends Seeder
         ];
 
         // Date
-        $startDate = today()->addWeek(1)->setTime(20, 0, 0);
-        $endDate = (clone $startDate)->addHour(3);
+        $startDate = today()->addWeek()->setHour(20)->toImmutable();
+        $endDate = $startDate->addHours(3);
 
         // Iterate
         foreach ($sets as $slug => [$paid, $price, $discount, $discountCount]) {
@@ -301,7 +300,6 @@ class ActivitySeeder extends Seeder
 
     private function seedSeatTest(): void
     {
-        // [     slug     ] => [seats, taken-member, taken-guest]
         $sets = [
             'popstar-event' => [100, 60, 40],
             'private-popstar-event' => [100, 75, 0],
@@ -309,7 +307,7 @@ class ActivitySeeder extends Seeder
         ];
 
         // Date
-        $date = today()->addWeek(3)->setTime(20, 0, 0)->toImmutable();
+        $date = today()->addWeeks(3)->setHour(20)->toImmutable();
 
         // Iterate
         foreach ($sets as $slug => [$seats, $memberEnroll, $guestEnroll]) {
@@ -322,8 +320,8 @@ class ActivitySeeder extends Seeder
                 'statement' => Str::limit($name, 16, ''),
                 'start_date' => $date,
                 'enrollment_start' => today(),
-                'enrollment_end' => $date->subHour(3),
-                'end_date' => $date->addHour(2),
+                'enrollment_end' => $date->subHours(3),
+                'end_date' => $date->addHours(2),
                 'is_public' => true,
                 'member_discount' => null,
                 'price' => null,

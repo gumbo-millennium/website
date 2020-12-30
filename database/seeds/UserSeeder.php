@@ -34,15 +34,16 @@ class UserSeeder extends Seeder
     }
 
     /**
-     * Creates a user
-     * @param string $email
+     * Creates a user.
+     * @param string $slug
+     * @param string $name
      * @param array $roles
      * @return void
      */
     private function makeUser(string $slug, string $name, array $roles): void
     {
         $user = User::withTrashed()->updateOrCreate([
-            'email' => "{$slug}@example.gumbo-millennium.nl"
+            'email' => "{$slug}@example.gumbo-millennium.nl",
         ], [
             'first_name' => $name,
             'last_name' => 'Gumbo (test)',
