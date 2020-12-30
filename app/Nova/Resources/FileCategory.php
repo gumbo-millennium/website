@@ -45,24 +45,6 @@ class FileCategory extends Resource
     ];
 
     /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Categorieën';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Categorie';
-    }
-
-    /**
      * Get the fields displayed by the resource.
      * @param  \Illuminate\Http\Request  $request
      * @return array
