@@ -192,7 +192,7 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 /**
  * Webshop
  */
-Route::prefix('shop')->name('shop.')->group(function() {
+Route::prefix('shop')->name('shop.')->group(static function () {
     Route::get('/', [ShopController::class, 'index'])->name('home');
 
     Route::get('/item/{product}', [ShopController::class, 'showProduct'])->name('product');

@@ -7,11 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Response;
-use Spatie\Csp\Directive;
-use Spatie\Csp\Exceptions\InvalidDirective;
-use Spatie\Csp\Exceptions\InvalidValueSet;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShopController extends Controller
@@ -33,7 +29,7 @@ class ShopController extends Controller
 
         // Add to CSP
         $images = $categories
-            ->map(fn (Category $category) => $category->products()->first())
+            ->map(static fn (Category $category) => $category->products()->first())
             ->pluck('image_url');
         $this->addImageUrlsToCspPolicy($images);
 
