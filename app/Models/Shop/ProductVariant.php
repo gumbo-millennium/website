@@ -7,13 +7,15 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Models\Traits\IsSluggable;
-use App\Models\UuidModel;
+use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class ProductVariant extends UuidModel
+class ProductVariant extends Model
 {
+    use IsUuidModel;
     use IsSluggable;
 
     protected $table = 'shop_product_variants';
