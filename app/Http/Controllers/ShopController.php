@@ -31,6 +31,12 @@ class ShopController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Add to CSP
+        $images = $categories
+            ->map(fn (Category $category) => $category->products()->first())
+            ->pluck('image_url');
+        $this->addImageUrlsToCspPolicy($images);
+
         return Response::view('shop.index', [
             'categories' => $categories,
         ]);
@@ -70,13 +76,6 @@ class ShopController extends Controller
             ->where('product_id', $product->id)
             ->firstOrFail();
 
-        // Add to CSP
-        $this->addImageUrlsToCspPolicy([
-            $product->image_url,
-            $variant->image_url,
-        ]);
-
-
         return Response::redirectToRoute('shop.product-variant', [
             'product' => $product,
             'variant' => $variant->slug,
@@ -94,7 +93,13 @@ class ShopController extends Controller
             ->where('slug', $variant)
             ->firstOrFail();
 
-        // TODO: Show product
+        // Add to CSP
+        $this->addImageUrlsToCspPolicy([
+            $product->image_url,
+            $variant->image_url,
+        ]);
+
+        // Show product
         return Response::view('shop.product', [
             'category' => $product->category,
             'product' => $product,
