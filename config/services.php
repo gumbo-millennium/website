@@ -34,6 +34,12 @@ return [
         ],
     ],
 
+    // iZettle API
+    'izettle' => [
+        'client-id' => env('IZETTLE_CLIENT_ID'),
+        'client-assertion' => env('IZETTLE_CLIENT_ASSERTION'),
+    ],
+
     // Google APIs
     'google' => [
         // Key file
