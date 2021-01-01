@@ -7,7 +7,11 @@ namespace App\Http\Controllers;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Response;
+use Spatie\Csp\Directive;
+use Spatie\Csp\Exceptions\InvalidDirective;
+use Spatie\Csp\Exceptions\InvalidValueSet;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShopController extends Controller
@@ -41,7 +45,12 @@ class ShopController extends Controller
         $products = $category->products()
             ->where('visible', '1')
             ->orderBy('name')
+            ->with('variants')
+            ->withCount('variants')
             ->get();
+
+        // Add to CSP
+        $this->addImageUrlsToCspPolicy($products->pluck('image_url'));
 
         // TODO: show category
         return Response::view('shop.category', [
@@ -60,6 +69,13 @@ class ShopController extends Controller
         $variant = ProductVariant::query()
             ->where('product_id', $product->id)
             ->firstOrFail();
+
+        // Add to CSP
+        $this->addImageUrlsToCspPolicy([
+            $product->image_url,
+            $variant->image_url,
+        ]);
+
 
         return Response::redirectToRoute('shop.product-variant', [
             'product' => $product,
