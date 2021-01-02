@@ -105,6 +105,7 @@
             "rm -rf library/composer/nova/",
             "unzip nova.zip",
             "mv laravel-nova-* library/composer/nova",
+            "touch library/composer/nova/src/aliases.php",
             "composer install"
         ],
         "post-install-cmd": [
@@ -157,6 +158,9 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
+    },
+    "scripts-descriptions": {
+        "install-nova-zip": "Installs Laravel Nova from a nova.zip file in the project root"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
