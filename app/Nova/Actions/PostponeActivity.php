@@ -22,24 +22,28 @@ class PostponeActivity extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = 'Stel activiteit uit';
 
     /**
      * The text to be used for the action's confirm button.
+     *
      * @var string
      */
     public $confirmButtonText = 'Uitstellen';
 
     /**
      * The text to be used for the action's cancel button.
+     *
      * @var string
      */
     public $cancelButtonText = 'Niet uitstellen';
 
     /**
      * The text to be used for the action's confirmation text.
+     *
      * @var string
      */
     public $confirmText = <<<'HTML'
@@ -50,6 +54,7 @@ class PostponeActivity extends Action
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -87,6 +92,7 @@ class PostponeActivity extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()
@@ -94,7 +100,7 @@ class PostponeActivity extends Action
         return [
             Text::make('Reden', 'reason')
                 ->rules('required')
-                ->help('De reden voor uitstelling')
+                ->help('De reden voor uitstelling'),
         ];
     }
 }

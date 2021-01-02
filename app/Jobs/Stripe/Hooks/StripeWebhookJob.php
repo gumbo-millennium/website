@@ -17,18 +17,21 @@ abstract class StripeWebhookJob extends StripeJob
 {
     /**
      * Provided webhook
+     *
      * @var WebhookCall
      */
     protected WebhookCall $webhook;
 
     /**
      * The event we're processing
-     * @var null|Event
+     *
+     * @var Event|null
      */
     protected ?Event $event = null;
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(WebhookCall $webhook)
@@ -39,6 +42,7 @@ abstract class StripeWebhookJob extends StripeJob
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     final public function handle(): void
@@ -48,12 +52,12 @@ abstract class StripeWebhookJob extends StripeJob
 
         // Ensure that the application is in the same mode as the source of the event.
         // This ensures that test data is never read by systems in production
-        $appInLiveMode = ((bool) config('stripe.test_mode', true)) === false;
+        $appInLiveMode = (bool) config('stripe.test_mode', true) === false;
         if ($event->livemode !== $appInLiveMode) {
             logger()->warning('Mismatch on event mode, got {request-mode}, but want {set-mode}', [
                 'request-mode' => $event->livemode,
                 'set-mode' => config('stripe.test_mode', true),
-                'event' => $event
+                'event' => $event,
             ]);
             abort(403, "Event's origin mode is mismatching with the website mode.");
         }
@@ -61,7 +65,7 @@ abstract class StripeWebhookJob extends StripeJob
         // Log
         logger()->debug('Handling event on {class} with data {event}.', [
             'class' => static::class,
-            'event-data' => $event->data
+            'event-data' => $event->data,
         ]);
 
         // Get payload
@@ -74,8 +78,10 @@ abstract class StripeWebhookJob extends StripeJob
         }
 
         // Call process if it exists
-        if (\method_exists($this, 'process')) {
-            $this->process($stripeObject);
+        if (!\method_exists($this, 'process')) {
+            return;
         }
+
+        $this->process($stripeObject);
     }
 }

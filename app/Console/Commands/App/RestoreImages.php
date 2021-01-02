@@ -22,61 +22,21 @@ class RestoreImages extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'app:restore-images {file}';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Restores images for all given activities';
 
-
-    /**
-     * Asks for the backup if none is specified
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return void
-     */
-    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        // Check for msising arguments
-        $fileName = $this->argument('file');
-        if (!empty($fileName)) {
-            return;
-        }
-
-        // Get arguments
-        $files = Storage::files(BackupImages::BASE_PATH);
-
-        // Only show zip files
-        $zipFiles = [];
-        foreach ($files as $file) {
-            $file = \basename($file);
-            if (preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
-                $zipFiles[] = $file;
-            }
-        }
-
-        // Add zipfile
-        if (empty($zipFiles)) {
-            $this->warn("There are no backups available");
-            return;
-        }
-
-        // Ask what
-        $file = $this->choice("What backup to apply?", $zipFiles);
-
-        // Save it
-        if ($file) {
-            $input->setArgument('file', $file);
-        }
-    }
-
     /**
      * Execute the console command.
+     *
      * @return void
      */
     public function handle(): void
@@ -131,6 +91,7 @@ class RestoreImages extends Command
 
     /**
      * Maps the archive to an array
+     *
      * @param ZipArchive $zip
      * @return array
      */
@@ -278,5 +239,52 @@ class RestoreImages extends Command
             null,
             OutputInterface::VERBOSITY_NORMAL
         );
+    }
+
+    /**
+     * Asks for the backup if none is specified
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
+    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        // Check for msising arguments
+        $fileName = $this->argument('file');
+        if (!empty($fileName)) {
+            return;
+        }
+
+        // Get arguments
+        $files = Storage::files(BackupImages::BASE_PATH);
+
+        // Only show zip files
+        $zipFiles = [];
+        foreach ($files as $file) {
+            $file = \basename($file);
+            if (!preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
+                continue;
+            }
+
+            $zipFiles[] = $file;
+        }
+
+        // Add zipfile
+        if (empty($zipFiles)) {
+            $this->warn("There are no backups available");
+            return;
+        }
+
+        // Ask what
+        $file = $this->choice("What backup to apply?", $zipFiles);
+
+        // Save it
+        if (!$file) {
+            return;
+        }
+
+        $input->setArgument('file', $file);
     }
 }

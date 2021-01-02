@@ -18,6 +18,7 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can view any files.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -28,10 +29,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can view the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, FileBundle $file)
     {
@@ -40,6 +41,7 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can view the file.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -50,10 +52,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can download the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function download(User $user, FileBundle $file)
     {
@@ -62,6 +64,7 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can create files.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -72,10 +75,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can update the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, FileBundle $file)
     {
@@ -84,10 +87,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can delete the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, FileBundle $file)
     {
@@ -96,10 +99,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can restore the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, FileBundle $file)
     {
@@ -108,10 +111,10 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can permanently delete the file.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\File  $file
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, FileBundle $file)
     {
@@ -120,6 +123,7 @@ class FileBundlePolicy
 
     /**
      * Can the given user manage the given activities or activities in general
+     *
      * @param User $user
      * @return bool
      */

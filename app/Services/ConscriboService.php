@@ -55,6 +55,7 @@ final class ConscriboService implements ConscriboServiceContract
     /**
      * Returns a service from data in the config. Throws a fit
      * if the config is missing
+     *
      * @return ConscriboService
      * @throws RuntimeException
      */
@@ -85,28 +86,32 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Login username
+     *
      * @var string
      */
     private string $username;
 
     /**
      * Login password
+     *
      * @var string
      */
     private string $password;
 
     /**
      * Guzzle client
+     *
      * @var HttpClient
      */
     private HttpClient $http;
 
     /**
      * Creates service
-     * @param null|string $account
-     * @param null|string $username
-     * @param null|string $password
-     * @param null|HttpClient $client
+     *
+     * @param string|null $account
+     * @param string|null $username
+     * @param string|null $password
+     * @param HttpClient|null $client
      */
     public function __construct(
         ?string $account = null,
@@ -135,12 +140,13 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Assign client
         $this->http = $http ?? new HttpClient([
-            RequestOptions::HTTP_ERRORS => false
+            RequestOptions::HTTP_ERRORS => false,
         ]);
     }
 
     /**
      * Attempts login with the API
+     *
      * @return void
      * @throws ServiceException
      */
@@ -158,7 +164,7 @@ final class ConscriboService implements ConscriboServiceContract
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
             'body' => stream_for($body),
-            'headers' => $headers
+            'headers' => $headers,
         ]);
 
         // Decode body
@@ -185,6 +191,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Sends the given command to the Conscribo API.
+     *
      * @param string $command
      * @param array $args
      * @return array
@@ -205,7 +212,7 @@ final class ConscriboService implements ConscriboServiceContract
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
             'body' => stream_for($body),
-            'headers' => $headers
+            'headers' => $headers,
         ]);
 
         // Decode body
@@ -240,6 +247,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Identical to runCommand, but will raise a `offset` parameter to get all results
+     *
      * @param string $command
      * @param array $args
      * @return array
@@ -259,7 +267,7 @@ final class ConscriboService implements ConscriboServiceContract
         do {
             $response = $this->runCommand($command, array_merge($args, [
                 'limit' => $limit,
-                'offset' => $offset
+                'offset' => $offset,
             ]));
 
             // Skip if failed
@@ -300,6 +308,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Returns types available
+     *
      * @return array
      * @throws HttpExceptionInterface
      */
@@ -325,6 +334,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Returns fields for the given type
+     *
      * @param string $type
      * @return array
      * @throws HttpExceptionInterface
@@ -350,7 +360,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Run command
         $response = $this->runCommand('ListFieldDefinitions', [
-            'entityType' => $type
+            'entityType' => $type,
         ]);
 
         // Key the stuff by field name
@@ -367,6 +377,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Returns a list of resources of the specified type
+     *
      * @param string $type
      * @param array<array> $filters
      * @param array<string> $fields
@@ -375,8 +386,12 @@ final class ConscriboService implements ConscriboServiceContract
      * @throws HttpExceptionInterface
      * @throws InvalidArgumentException
      */
-    public function getResource(string $type, array $filters = [], array $fields = [], array $options = []): Collection
-    {
+    public function getResource(
+        string $type,
+        array $filters = [],
+        array $fields = [],
+        array $options = []
+    ): Collection {
         // Check config for an override
         $configType = config("services.conscribo.resources.{$type}");
         if (!empty($configType)) {
@@ -406,9 +421,9 @@ final class ConscriboService implements ConscriboServiceContract
         $arguments = [
             'entityType' => $type,
             'requestedFields' => [
-                'fieldName' => Arr::pluck($requestedFields, 'fieldName')
+                'fieldName' => Arr::pluck($requestedFields, 'fieldName'),
             ],
-            'limit' => 100
+            'limit' => 100,
         ];
 
         // Merge options
@@ -420,7 +435,7 @@ final class ConscriboService implements ConscriboServiceContract
         // Add filters to request
         if (!empty($safeFilters)) {
             $arguments['filters'] = [
-                'filter' => $safeFilters
+                'filter' => $safeFilters,
             ];
         }
 
@@ -454,6 +469,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Returns an array of groups with
+     *
      * @param string $resourceType
      * @return array
      */
@@ -483,9 +499,11 @@ final class ConscriboService implements ConscriboServiceContract
             // Map members
             $members = [];
             foreach (Arr::get($group, 'members', []) as $member) {
-                if ($member['entityType'] === $resourceType) {
-                    $members[] = filter_var($member['entityId'], \FILTER_VALIDATE_INT);
+                if ($member['entityType'] !== $resourceType) {
+                    continue;
                 }
+
+                $members[] = filter_var($member['entityId'], \FILTER_VALIDATE_INT);
             }
 
             // Map to array
@@ -500,6 +518,7 @@ final class ConscriboService implements ConscriboServiceContract
      * Validates filters and converts them to something the API can handle with.
      * Allowed formats:
      * ['field' => 'value'], [0 => ['field', 'value']], [0 => ['field', 'operator', 'value']]
+     *
      * @param array $fields
      * @param array $filters
      * @return array
@@ -562,6 +581,7 @@ final class ConscriboService implements ConscriboServiceContract
     /**
      * Convert a collection of raw API data to a collection of data formatted to be
      * easy to use in PHP (dates as \DateTimeInterface, and such). Complexity: O(n²)
+     *
      * @param array<array> $fields
      * @param array<array> $data
      * @return Collection<array>
@@ -625,6 +645,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Converts params to a JSON body
+     *
      * @param string $command command to run
      * @param array $params params for the command
      * @return string
@@ -632,13 +653,14 @@ final class ConscriboService implements ConscriboServiceContract
     private function buildBody(string $command, array $params): string
     {
         return \json_encode([
-            'request' => array_merge(['command' => $command], $params)
+            'request' => array_merge(['command' => $command], $params),
         ]);
     }
 
     /**
      * Returns headers
-     * @param null|string $sessionId
+     *
+     * @param string|null $sessionId
      * @return array<string>
      */
     private function buildHeaders(?string $sessionId): array

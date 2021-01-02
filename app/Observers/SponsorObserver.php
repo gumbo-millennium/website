@@ -53,16 +53,19 @@ class SponsorObserver
         $logos = ['logo_gray', 'logo_color'];
         foreach ($logos as $logo) {
             if (
-                $sponsor->wasChanged($logo) &&
-                !Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->$logo)
+                !$sponsor->wasChanged($logo) ||
+                Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->$logo)
             ) {
-                $sponsor->$logo = null;
+                continue;
             }
+
+            $sponsor->$logo = null;
         }
     }
 
     /**
      * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs
+     *
      * @param Sponsor $sponsor
      * @return void
      */
@@ -85,31 +88,33 @@ class SponsorObserver
         }
 
         // Clean URL from trackers
-        if ($sponsor->wasChanged('url')) {
-            // Get URI
-            $uri = new Uri($sponsor->url);
+        if (!$sponsor->wasChanged('url')) {
+            return;
+        }
 
-            // Get a list of query params
-            parse_str($uri->getQuery(), $oldParams);
+        // Get URI
+        $uri = new Uri($sponsor->url);
 
-            // Iterate all nodes
-            foreach (array_keys($oldParams) as $key) {
-                // Match against all params
-                foreach (self::TRACKING_QUERY_PARAMS as $regex) {
-                    // If it matches against the regex, skip it
-                    if (preg_match($regex, $key)) {
-                        // Remove the value
-                        $uri = Uri::withoutQueryValue($uri, $key);
+        // Get a list of query params
+        parse_str($uri->getQuery(), $oldParams);
 
-                        // Skip the query-loop
-                        continue 2;
-                    }
+        // Iterate all nodes
+        foreach (array_keys($oldParams) as $key) {
+            // Match against all params
+            foreach (self::TRACKING_QUERY_PARAMS as $regex) {
+                // If it matches against the regex, skip it
+                if (preg_match($regex, $key)) {
+                    // Remove the value
+                    $uri = Uri::withoutQueryValue($uri, $key);
+
+                    // Skip the query-loop
+                    continue 2;
                 }
             }
-
-            // Create new URL
-            $sponsor->url = (string) $uri;
-            $sponsor->withoutEvents(static fn () => $sponsor->save(['url']));
         }
+
+        // Create new URL
+        $sponsor->url = (string) $uri;
+        $sponsor->withoutEvents(static fn () => $sponsor->save(['url']));
     }
 }

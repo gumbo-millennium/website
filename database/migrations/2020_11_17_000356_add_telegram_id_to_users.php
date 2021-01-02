@@ -10,6 +10,7 @@ class AddTelegramIdToUsers extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -21,6 +22,7 @@ class AddTelegramIdToUsers extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Adds a role via CLI
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -23,6 +24,7 @@ class UpdateGroups extends Command
 
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:update-groups
@@ -32,6 +34,7 @@ class UpdateGroups extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = <<<'DESC'
@@ -40,6 +43,7 @@ class UpdateGroups extends Command
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -48,26 +52,8 @@ class UpdateGroups extends Command
     }
 
     /**
-     * Converts a value to a slugged value we can compare
-     * @param string $value
-     * @return string
-     */
-    private function slugged(string $value): string
-    {
-        return Str::slug($value, '');
-    }
-
-    /**
-     * Returns a group name
-     * @return string
-     */
-    private function named(array $role): string
-    {
-        return Str::beforeLast($role['e_mailadres'], '@');
-    }
-
-    /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle(ConscriboServiceContract $service)
@@ -84,13 +70,37 @@ class UpdateGroups extends Command
         }
 
         // Prune excess groups
-        if ($this->option('prune')) {
-            $this->pruneGroups($systemRoles, $adminRoles);
+        if (!$this->option('prune')) {
+            return;
         }
+
+        $this->pruneGroups($systemRoles, $adminRoles);
+    }
+
+    /**
+     * Converts a value to a slugged value we can compare
+     *
+     * @param string $value
+     * @return string
+     */
+    private function slugged(string $value): string
+    {
+        return Str::slug($value, '');
+    }
+
+    /**
+     * Returns a group name
+     *
+     * @return string
+     */
+    private function named(array $role): string
+    {
+        return Str::beforeLast($role['e_mailadres'], '@');
     }
 
     /**
      * Match existing groups that don't have a conscribo_id yet.
+     *
      * @param Collection $systemRoles
      * @param Collection $adminRoles
      * @return void
@@ -143,6 +153,7 @@ class UpdateGroups extends Command
 
     /**
      * Update the titles of groups that are linked to a Conscribo group
+     *
      * @param Collection $systemRoles
      * @param Collection $adminRoles
      * @return void
@@ -187,6 +198,7 @@ class UpdateGroups extends Command
 
     /**
      * Create roles for all Conscribo groups that don't yet exist.
+     *
      * @param Collection $systemRoles
      * @param Collection $adminRoles
      * @return void
@@ -208,7 +220,7 @@ class UpdateGroups extends Command
             $role = Role::create([
                 'name' => Str::slug($groupName), // always slug in case of anomalies
                 'title' => $adminRole['naam'],
-                'conscribo_id' => $adminRole['code']
+                'conscribo_id' => $adminRole['code'],
             ]);
 
             // Raise count and report
@@ -229,6 +241,7 @@ class UpdateGroups extends Command
 
     /**
      * Remove groups whose code is no longer in Conscribo and which aren't essential
+     *
      * @param Collection $systemRoles
      * @param Collection $adminRoles
      * @return void

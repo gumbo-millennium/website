@@ -25,20 +25,24 @@ class SendMail extends Command
         EnrollmentPaid::class,
         VerifyEmail::class,
     ];
+
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'test:mail {email : e-mail address of the user} {--all : Send all mails}';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Sends a test e-mail to the user';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -48,6 +52,7 @@ class SendMail extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

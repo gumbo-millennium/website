@@ -89,22 +89,31 @@ This project uses Laravel Nova, a proprietary admin panel developed by the
 Laravel team. This repo is behind authentication, which means you'll need a
 login and password (or token) to login.
 
-**A token is not required for most of the work.** The website will work just
-fine locally and when you run the seeders (`php artisan migrate --seed` or `php
-artisan db:seed`) all the required roles, users, activities and other content
-will be created for you.
+As the license only allows one developer, we cannot easily share the license.
+If you have a zip file of nova, and want to test if something works, you can
+put the Laravel Nova download (`^2.0`) as `nova.zip` in the root of the project,
+and then run `composer install-nova-zip`.
 
-As the access token for Nova is under license, it's sadly not possible for
-contributors outside of the Gumbo Millennium student community to receive this
-token. You'll either have to provide your own or simply not work with the admin
-panel. You can still manage stuff using Tinker (`php artisan tinker`), or the
-built-in phpMyAdmin present in the Docker configuration
-(`localhost:13370/phpmyadmin`).
+## Clone the repository
 
-If you did get a hold of a Nova token, you can register it in Composer:
+Let's get you started by cloning the respository locally. As we're using some
+repositories for creating dummy content, you're adviced to clone resursively:
 
 ```
-composer config http-basic.nova.laravel.com <username> <password>
+git clone --recursive https://github.com/gumbo-millennium/website.git
+```
+
+or, if you're using the GitHub CLI:
+
+```
+gh repo clone gumbo-millennium/website -- --recursive
+```
+
+If you ran a normal, non-recursive clone, you can retroactively import the
+missing test-components using `git submodule`:
+
+```
+git submodule update --init
 ```
 
 ### Go live

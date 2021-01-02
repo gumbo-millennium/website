@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Element has a parent
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -16,6 +17,7 @@ trait HasParent
 {
     /**
      * Returns te
+     *
      * @return Relation
      */
     public function parent(): Relation

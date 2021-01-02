@@ -14,6 +14,7 @@ trait FormatsStripeData
     /**
      * Returns common data, such as a price, currency and statement
      * description.
+     *
      * @param Enrollment $enrollment Enrollment to apply
      * @return array|null
      */
@@ -47,8 +48,8 @@ trait FormatsStripeData
                 'user-id' => $user->id,
                 'activity-id' => $activity->id,
                 'enrollment-id' => $enrollment->id,
-                'transfer-fee' => $enrollment->total_price - $enrollment->price
-            ]
+                'transfer-fee' => $enrollment->total_price - $enrollment->price,
+            ],
         ];
     }
 }

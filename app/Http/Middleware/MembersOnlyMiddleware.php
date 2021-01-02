@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Only allow members here
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,6 +19,7 @@ class MembersOnlyMiddleware
 {
     /**
      * Handle an incoming request.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed

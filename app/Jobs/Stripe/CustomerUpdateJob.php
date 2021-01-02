@@ -16,6 +16,7 @@ class CustomerUpdateJob extends StripeJob
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(User $user)
@@ -25,6 +26,7 @@ class CustomerUpdateJob extends StripeJob
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(StripeServiceContract $service)
@@ -44,7 +46,7 @@ class CustomerUpdateJob extends StripeJob
         // Check for customer
         \logger()->info('Updating user {user} with id {stripe-id}', [
             'user' => $this->user,
-            'stripe-id' => $customer->id
+            'stripe-id' => $customer->id,
         ]);
 
         // Update customer

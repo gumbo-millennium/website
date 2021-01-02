@@ -19,6 +19,7 @@ class ActivityCovidMail extends Mailable
 
     /**
      * Create a new message instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -28,6 +29,7 @@ class ActivityCovidMail extends Mailable
 
     /**
      * Build the message.
+     *
      * @return $this
      */
     public function build()
@@ -51,7 +53,7 @@ class ActivityCovidMail extends Mailable
         // Add unsubscribe header
         $this->withSwiftMessage(
             // phpcs:ignore PSR2.Methods.FunctionCallSignature.MultipleArguments
-            static fn(Swift_Message $message) => $message->getHeaders()->addTextHeader("List-Unsubscribe", $cancelUrl)
+            static fn (Swift_Message $message) => $message->getHeaders()->addTextHeader("List-Unsubscribe", $cancelUrl)
         );
 
         // Render
@@ -60,7 +62,7 @@ class ActivityCovidMail extends Mailable
             'enrollment' => $enrollment,
             'cancelUrl' => $cancelUrl,
             'cancelType' => $cancelType,
-            'participant' => $user
+            'participant' => $user,
         ]);
     }
 }

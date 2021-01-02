@@ -15,18 +15,21 @@ class SendActivityCovidMails extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:send-activity-covid-mails';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Sends all covid mails that are due';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -36,6 +39,7 @@ class SendActivityCovidMails extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

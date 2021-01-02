@@ -22,24 +22,24 @@ class ResetPasswordForm extends Form
                 'label' => 'E-mailadres',
                 'rules' => 'required|email',
                 'attr' => [
-                    'autocomplete' => 'email'
+                    'autocomplete' => 'email',
                 ],
             ])
             ->add('password', 'password', [
                 'label' => 'Nieuw wachtwoord',
                 'rules' => 'required|min:10|confirmed',
                 'attr' => [
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
                 ],
             ])
             ->add('password_confirmation', 'password', [
                 'label' => 'Bevestig wachtwoord',
                 'attr' => [
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
                 ],
             ])
             ->add('submit', 'submit', [
-                'label' => __('Reset Password')
+                'label' => __('Reset Password'),
             ]);
     }
 }

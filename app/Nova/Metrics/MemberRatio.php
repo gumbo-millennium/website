@@ -12,12 +12,14 @@ class MemberRatio extends Partition
 {
     /**
      * The displayable name of the metric.
+     *
      * @var string
      */
     public $name = 'Leden naar groep';
 
     /**
      * Calculate the value of the metric.
+     *
      * @param Request $request
      * @return mixed
      */
@@ -36,6 +38,7 @@ class MemberRatio extends Partition
 
     /**
      * Determine for how many minutes the metric should be cached.
+     *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
@@ -46,6 +49,7 @@ class MemberRatio extends Partition
 
     /**
      * Get the URI key for the metric.
+     *
      * @return string
      */
     public function uriKey()

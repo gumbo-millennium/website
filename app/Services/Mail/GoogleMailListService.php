@@ -30,6 +30,7 @@ class GoogleMailListService implements MailListHandler
 
     /**
      * Returns all lists
+     *
      * @return array
      * @throws Google_Exception
      */
@@ -61,44 +62,6 @@ class GoogleMailListService implements MailListHandler
     }
 
     /**
-     * Gets all mailing lists for each domain
-     * @param string $domain
-     * @return array
-     * @throws Google_Exception
-     */
-    protected function getAllListsForDomain(string $domain): array
-    {
-        // Get mananger
-        $groupsManager = $this->getGoogleGroupManager();
-
-        // List groups, recursing pages
-        $groups = [];
-        $pageToken = null;
-        do {
-            // Prep args
-            $args = array_filter(compact('domain', 'pageToken'));
-
-            // Get groups
-            $groupItem = $this->callGoogleService(
-                static fn() => $groupsManager->listGroups($args),
-                'list groups',
-                $domain
-            );
-
-            // Add each item from result set
-            $groups[] = $groupItem->getGroups();
-
-            // Get next token
-            $pageToken = $groupItem->getNextPageToken();
-
-            // Loop while we have results and there's a next page token
-        } while ($groupItem->count() > 0 && !empty($pageToken));
-
-        // Join
-        return Arr::collapse($groups);
-    }
-
-    /**
      * @inheritdoc
      */
     public function getList(string $email): ?MailList
@@ -114,7 +77,7 @@ class GoogleMailListService implements MailListHandler
         $query = [
             'domain' => $domain,
             'query' => sprintf("email='%s'", str_replace("'", "\\'", $email)),
-            'maxResults' => 1
+            'maxResults' => 1,
         ];
 
         // Get group manager JIT
@@ -181,7 +144,7 @@ class GoogleMailListService implements MailListHandler
         // Build group model
         $group = new Group([
             'email' => $email,
-            'name' => !empty($name) ? $name : null
+            'name' => !empty($name) ? $name : null,
         ]);
 
         // Insert it
@@ -202,6 +165,7 @@ class GoogleMailListService implements MailListHandler
 
     /**
      * Applies permissions to the given list
+     *
      * @param MailList $list
      * @param GroupSettings $permissions
      * @return void
@@ -227,6 +191,7 @@ class GoogleMailListService implements MailListHandler
 
     /**
      * Updates group
+     *
      * @param MailList $list
      * @return void
      * @throws Google_Exception
@@ -258,7 +223,7 @@ class GoogleMailListService implements MailListHandler
 
             // Make object
             $aliasObj = new GroupAlias([
-                'alias' => $alias
+                'alias' => $alias,
             ]);
 
             // Add
@@ -315,6 +280,7 @@ class GoogleMailListService implements MailListHandler
 
     /**
      * Deletes the given maillist
+     *
      * @param MailList $list
      * @return void
      */
@@ -334,5 +300,44 @@ class GoogleMailListService implements MailListHandler
         if ($res === null) {
             throw new RuntimeException('Failed to delete group');
         }
+    }
+
+    /**
+     * Gets all mailing lists for each domain
+     *
+     * @param string $domain
+     * @return array
+     * @throws Google_Exception
+     */
+    protected function getAllListsForDomain(string $domain): array
+    {
+        // Get mananger
+        $groupsManager = $this->getGoogleGroupManager();
+
+        // List groups, recursing pages
+        $groups = [];
+        $pageToken = null;
+        do {
+            // Prep args
+            $args = array_filter(compact('domain', 'pageToken'));
+
+            // Get groups
+            $groupItem = $this->callGoogleService(
+                static fn () => $groupsManager->listGroups($args),
+                'list groups',
+                $domain
+            );
+
+            // Add each item from result set
+            $groups[] = $groupItem->getGroups();
+
+            // Get next token
+            $pageToken = $groupItem->getNextPageToken();
+
+            // Loop while we have results and there's a next page token
+        } while ($groupItem->count() > 0 && !empty($pageToken));
+
+        // Join
+        return Arr::collapse($groups);
     }
 }

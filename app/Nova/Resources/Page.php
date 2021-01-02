@@ -20,30 +20,33 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * Add page
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Page extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = PageModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'title';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Content';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -51,29 +54,6 @@ class Page extends Resource
         'slug',
     ];
 
-    /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Pagina\'s';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Pagina';
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
@@ -94,7 +74,7 @@ class Page extends Resource
                             return $query->whereNull('group');
                         }
                         return $query->where('group', $this->group);
-                    })
+                    }),
                 ]),
 
             // Group
@@ -140,7 +120,7 @@ class Page extends Resource
                 ),
 
             // Add type
-            Text::make('Type')->onlyOnDetail()->displayUsing(static fn($value) => Str::title($value)),
+            Text::make('Type')->onlyOnDetail()->displayUsing(static fn ($value) => Str::title($value)),
 
             // Add data
             NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),

@@ -24,6 +24,7 @@ class PageController extends Controller
 
     /**
      * Renders the homepage
+     *
      * @return Response
      */
     public function homepage(SponsorService $sponsorService, Request $request)
@@ -39,7 +40,7 @@ class PageController extends Controller
         $homeSponsors->each->increment('view_count');
 
         // Hide sponsors on the page if some are present
-        ($homeSponsors->count() == 4) and $sponsorService->hideSponsor();
+        ($homeSponsors->count() === 4) and $sponsorService->hideSponsor();
 
         // Has existing users
         $user = $request->user();
@@ -77,6 +78,7 @@ class PageController extends Controller
 
     /**
      * Handles fallback routes
+     *
      * @return Response
      */
     public function fallback(Request $request)
@@ -86,6 +88,7 @@ class PageController extends Controller
 
     /**
      * Group overview page
+     *
      * @param string $group
      * @return JsonResponse
      * @throws InvalidArgumentException
@@ -96,7 +99,7 @@ class PageController extends Controller
         $lastModified = $pages->max('updated_at');
         $page = Page::where([
             'group' => null,
-            'slug' => $group
+            'slug' => $group,
         ])->first();
 
         return response()
@@ -109,6 +112,7 @@ class PageController extends Controller
 
     /**
      * Group detail page
+     *
      * @param string $group
      * @param string $slug
      * @return App\Http\Controllers\Response
@@ -121,6 +125,7 @@ class PageController extends Controller
 
     /**
      * Renders a single page, if possible
+     *
      * @param string $slug
      * @return Response
      */

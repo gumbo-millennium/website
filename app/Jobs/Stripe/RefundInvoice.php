@@ -19,6 +19,7 @@ class RefundInvoice extends StripeJob
 
     /**
      * Create a new job instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment)
@@ -60,7 +61,7 @@ class RefundInvoice extends StripeJob
         } catch (UnderflowException $exception) {
             // Log warning
             logger()->warning('Trying to refund already-refunded payment', [
-                'exception' => $exception
+                'exception' => $exception,
             ]);
 
             // Complete the job
@@ -68,7 +69,7 @@ class RefundInvoice extends StripeJob
         } catch (InvalidArgumentException $exception) {
             // Log warning
             logger()->warning('Something went wrong  when refunding the enrollment', [
-                'exception' => $exception
+                'exception' => $exception,
             ]);
 
             // Complete the job

@@ -11,6 +11,7 @@ class UpdateCouponJob extends StripeJob
 {
     /**
      * Activity
+     *
      * @var \App\Models\Activity
      */
     protected Activity $activity;
@@ -25,6 +26,7 @@ class UpdateCouponJob extends StripeJob
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(StripeServiceContract $service)

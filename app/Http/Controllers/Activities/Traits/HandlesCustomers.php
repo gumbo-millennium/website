@@ -16,6 +16,7 @@ trait HandlesCustomers
 {
     /**
      * Makes sure a Stripe customer is present for this user. Reloads the $enrollment if required
+     *
      * @param Enrollment $enrollment
      */
     protected function ensureCustomerExists(Enrollment &$enrollment): void

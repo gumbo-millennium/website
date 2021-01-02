@@ -36,24 +36,26 @@ use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Activity extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = ActivityModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'name';
 
     /**
      * Name of the group
+     *
      * @var string
      */
     public static $group = 'Activiteiten';
@@ -66,6 +68,7 @@ class Activity extends Resource
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -76,25 +79,8 @@ class Activity extends Resource
     ];
 
     /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Activiteiten';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Activiteit';
-    }
-
-    /**
      * Make sure the user can only see enrollments he/she is allowed to see
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -108,6 +94,7 @@ class Activity extends Resource
      * Build a "relatable" query for the given resource.
      *
      * This query determines which instances of the model may be attached to other resources.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -119,6 +106,7 @@ class Activity extends Resource
 
     /**
      * Build a Scout search query for the given resource.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Scout\Builder  $query
      * @return \Laravel\Scout\Builder
@@ -131,6 +119,7 @@ class Activity extends Resource
     /**
      * Return query that is filtered on allowed activities, IF the user is
      * not allowed to view them all
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -148,6 +137,7 @@ class Activity extends Resource
 
     /**
      * Get the search result subtitle for the resource.
+     *
      * @return string
      */
     public function subtitle()
@@ -170,6 +160,7 @@ class Activity extends Resource
 
     /**
      * Get the fields displayed by the resource.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -286,6 +277,7 @@ class Activity extends Resource
 
     /**
      * Pricing fields
+     *
      * @return array
      */
     public function pricingFields(): array
@@ -338,7 +330,7 @@ class Activity extends Resource
 
             Flexible::make('Form', 'enrollment_questions')
                 ->confirmRemove('Removing a field does not remove submitted data')
-                ->preset(ActivityForm::class)
+                ->preset(ActivityForm::class),
         ];
     }
 
@@ -392,6 +384,7 @@ class Activity extends Resource
 
     /**
      * Get the actions available on the entity.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -401,19 +394,20 @@ class Activity extends Resource
         return [
             new CancelActivity(),
             new PostponeActivity(),
-            new RescheduleActivity()
+            new RescheduleActivity(),
         ];
     }
 
     /**
      * Get the filters available on the entity.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
     {
         return [
-            new RelevantActivitiesFilter()
+            new RelevantActivitiesFilter(),
         ];
     }
 

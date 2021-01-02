@@ -13,6 +13,7 @@ class UpdateCommand extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = <<<'CMD'
@@ -22,12 +23,14 @@ class UpdateCommand extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Informs Telegram about the commands registered';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -52,7 +55,7 @@ class UpdateCommand extends Command
             \assert($command instanceof CommandInterface);
             $template = [
                 'command' => $command->getName(),
-                'description' => $command->getDescription()
+                'description' => $command->getDescription(),
             ];
             $mapping[] = $template;
             foreach ($command->getAliases() as $alias) {
@@ -67,7 +70,7 @@ class UpdateCommand extends Command
         try {
             // Save
             $bot->setMyCommands([
-                'commands' => $mapping
+                'commands' => $mapping,
             ]);
 
             // And report OK

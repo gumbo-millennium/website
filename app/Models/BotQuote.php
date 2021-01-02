@@ -14,20 +14,22 @@ class BotQuote extends Model
 
     /**
      * The attributes that should be mutated to dates.
+     *
      * @var array
      */
     protected $dates = [
-        'submitted_at'
+        'submitted_at',
     ];
 
     /**
      * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
         'user_id',
         'display_name',
-        'quote'
+        'quote',
     ];
 
     /**
@@ -40,6 +42,7 @@ class BotQuote extends Model
 
     /**
      * Scope by unsubmitted quotes
+     *
      * @param Builder $query
      * @return Builder
      */
@@ -50,6 +53,7 @@ class BotQuote extends Model
 
     /**
      * Scope by unsubmitted quotes
+     *
      * @param Builder $query
      * @return Builder
      */

@@ -9,6 +9,7 @@ use Stripe\Charge;
 
 /**
  * Utility methods for Charge objects
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */

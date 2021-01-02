@@ -116,14 +116,11 @@ storage/debugbar
 # Allow vendored views
 !/resources/views/vendor
 
-# Ignore Botman discovery
-/.discovery/
-
 # Ignore medialibrary temp
 /storage/medialibrary
 
 # Ignore TNTSearch
-/storage/tnt/*.index
+/storage/tnt/
 
 # Ignore Auth files (Google and such)
 /storage/auth/

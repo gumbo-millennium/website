@@ -38,28 +38,32 @@ class QuoteCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'wjd';
 
     /**
      * Command Aliases - Helpful when you want to trigger command with more than one name.
+     *
      * @var array<string>
      */
     protected $aliases = [
         'quote',
         'wistjedat',
-        'wistjedatje'
+        'wistjedatje',
     ];
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Stuur een wist-je-datje of quote in.';
 
     /**
      * Command Argument Pattern
+     *
      * @var string
      */
     protected $pattern = '.+';
@@ -78,7 +82,7 @@ class QuoteCommand extends Command
         if (empty($quoteText)) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_INVALID),
-                'parse_mode' => 'HTML'
+                'parse_mode' => 'HTML',
             ]);
             return;
         }
@@ -92,7 +96,7 @@ class QuoteCommand extends Command
         // Reject if rate-limited
         if (!$user && Cache::get($cacheToken) > now()) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST_THROTTLED)
+                'text' => $this->formatText(self::REPLY_GUEST_THROTTLED),
             ]);
             return;
         }
@@ -109,7 +113,7 @@ class QuoteCommand extends Command
         if (!$user) {
             Cache::put($cacheToken, now()->addDay()->setTime(6, 0));
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST)
+                'text' => $this->formatText(self::REPLY_GUEST),
             ]);
             return;
         }
@@ -119,14 +123,14 @@ class QuoteCommand extends Command
         $keyboard->row(
             Keyboard::inlineButton([
                 'text' => 'Bekijk mijn wist-je-datjes',
-                'url' => route('account.quotes')
+                'url' => route('account.quotes'),
             ])
         );
 
         // Return message
         $this->replyWithMessage([
             'text' => $this->formatText(self::REPLY_USER),
-            'reply_markup' => $keyboard
+            'reply_markup' => $keyboard,
         ]);
     }
 }

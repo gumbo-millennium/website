@@ -14,12 +14,14 @@ class RelevantActivitiesFilter extends BooleanFilter
 {
     /**
      * The displayable name of the filter.
+     *
      * @var string
      */
     public $name = 'Status';
 
     /**
      * Apply the filter to the given query.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
@@ -40,6 +42,7 @@ class RelevantActivitiesFilter extends BooleanFilter
 
     /**
      * Get the filter's available options.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -47,7 +50,7 @@ class RelevantActivitiesFilter extends BooleanFilter
     {
         return [
             'Afgelopen' => 'show_past',
-            'Geannuleerd' => 'show_cancelled'
+            'Geannuleerd' => 'show_cancelled',
         ];
     }
 }

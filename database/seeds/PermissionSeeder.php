@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 use HJSON\HJSONException as HumanJsonException;
 use HJSON\HJSONParser as HumanJsonParser;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 /**
  * Creates all roles required for ranks that users can have.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -27,9 +29,10 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * A human-friendly json parser
+     *
      * @var HumanJsonParser
      */
-    public $jsonParser;
+    public HumanJsonParser $jsonParser;
 
     /**
      * Preps a HumanJsonParser
@@ -41,7 +44,8 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Run the database seeds.
-     * @return void
+     *
+     * @return bool
      */
     public function run()
     {
@@ -68,11 +72,14 @@ class PermissionSeeder extends VerboseSeeder
 
         // Load roles file
         $this->seedRoles($permissions, $roleMap);
+
+        return true;
     }
 
     /**
      * Creates all permissions in the $permissions collection, and returns a
      * collection filled with Permission elements, based on name
+     *
      * @param Collection $permissionMap
      * @return Collection
      */
@@ -84,7 +91,7 @@ class PermissionSeeder extends VerboseSeeder
         // Loop through permission
         foreach ($permissionMap as $name => $title) {
             // Creates or updates the given permission
-            $perm = Permission::updateOrCreate(
+            $perm = Permission::query()->updateOrCreate(
                 compact('name'),
                 compact('title')
             );
@@ -99,49 +106,53 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creates a map with permissons to assign to roles
+     *
      * @param Collection $permissions
      * @param Collection $roles
      * @param Collection $roleMap
      * @return Collection
      */
-    public function mapRolePermissions(Collection $permissions, Collection $roles, Collection $roleMap): Collection
-    {
+    public function mapRolePermissions(
+        Collection $permissions,
+        Collection $roles,
+        Collection $roleMap
+    ): Collection {
         // Intermediate map
         $rolePermissionMap = collect();
 
         // Map first-party permissions to the name
         foreach ($roleMap as $name => $roleData) {
             // Get title and permissions
-            $wantedPermissons = Arr::get($roleData, 'permissions', []);
+            $wantedPermissions = Arr::get($roleData, 'permissions', []);
 
             // Add all permissions, if requested
-            if (count($wantedPermissons) === 1 && Arr::first($wantedPermissons) === '*') {
+            if (count($wantedPermissions) === 1 && Arr::first($wantedPermissions) === '*') {
                 $rolePermissionMap->put($name, $permissions);
 
                 logger()->info(
                     "Updated [role] with wildcard, it now has [count] permissions.",
                     [
                     'role' => $roles->get($name) ?? $name,
-                    'count' => count($rolePermissionMap->get($name))
+                    'count' => count($rolePermissionMap->get($name)),
                     ]
                 );
                 continue;
             }
 
-            $rolePermissionMap->put($name, $permissions->only($wantedPermissons));
+            $rolePermissionMap->put($name, $permissions->only($wantedPermissions));
 
             logger()->info(
                 "Updated [role], it now has [count] permissions.",
                 [
                     'role' => $roles->get($name) ?? $name,
-                    'count' => count($rolePermissionMap->get($name))
+                    'count' => count($rolePermissionMap->get($name)),
                 ]
             );
         }
 
         // Map extended permissions to the name too
         foreach ($roleMap as $name => $data) {
-            $extendName = Arr::get($data, 'extends', null);
+            $extendName = Arr::get($data, 'extends');
             // Skip if there's no extension
             if (empty($extendName)) {
                 continue;
@@ -158,7 +169,7 @@ class PermissionSeeder extends VerboseSeeder
                 [
                 'role' => $roles->get($name) ?? $name,
                 'source-role' => $roles->get($extendName) ?? $extendName,
-                'count' => $updatedPermissions->count()
+                'count' => $updatedPermissions->count(),
                 ]
             );
         }
@@ -169,6 +180,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creats all roles and assings permissions
+     *
      * @param Collection $permissions
      * @param Collection $roleMap
      * @return Collection
@@ -187,7 +199,7 @@ class PermissionSeeder extends VerboseSeeder
             $default = Arr::get($roleData, 'default') ? 1 : 0;
 
             // Add to the role queue, by either updating or creating the role
-            $roles->put($name, $role = Role::updateOrCreate(
+            $roles->put($name, $role = Role::query()->updateOrCreate(
                 compact('name'),
                 compact('title', 'default')
             ));
@@ -206,22 +218,24 @@ class PermissionSeeder extends VerboseSeeder
 
         // Link rolePermissionMap to the Role
         foreach ($roles as $name => $role) {
-            if ($rolePermissionMap->has($name)) {
-                // Update permissions
-                $role->syncPermissions($rolePermissionMap->get($name));
-
-                // Refresh model (for updated counts)
-                $role->refresh();
-
-                // Log result
-                logger()->info(
-                    "Role [role] was updated, now has [count] permissions",
-                    [
-                    'role' => $roles->get($name) ?? $name,
-                    'count' => $role->permissions()->count()
-                    ]
-                );
+            if (!$rolePermissionMap->has($name)) {
+                continue;
             }
+
+            // Update permissions
+            $role->syncPermissions($rolePermissionMap->get($name));
+
+            // Refresh model (for updated counts)
+            $role->refresh();
+
+            // Log result
+            logger()->info(
+                'Role [role] was updated, now has [count] permissions',
+                [
+                'role' => $roles->get($name) ?? $name,
+                'count' => $role->permissions()->count(),
+                ]
+            );
         }
 
         // Return roles
@@ -230,6 +244,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Returns JSON from file, as Collection
+     *
      * @param string $path
      * @return Collection|null
      */
@@ -247,7 +262,7 @@ class PermissionSeeder extends VerboseSeeder
         // Convert contents to collection
         try {
             return collect($this->jsonParser->parse($contents, [
-                'assoc' => true
+                'assoc' => true,
             ]));
         } catch (HumanJsonException $e) {
             return null;

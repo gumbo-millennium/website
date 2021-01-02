@@ -11,20 +11,24 @@ use Illuminate\Support\Facades\URL;
 class GetPlazacam extends Command
 {
     private const CAMERA_NAMES = ['plaza', 'coffee'];
+
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'plazacam:get-plazacam {--U|user= : User ID or email}';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Gets a URL for the different webcams';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -34,6 +38,7 @@ class GetPlazacam extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -64,7 +69,7 @@ class GetPlazacam extends Command
         foreach (self::CAMERA_NAMES as $cam) {
             $this->line(sprintf('<info>%s</>: (PUT) <comment>%s</>', $cam, URL::signedRoute('api.plazacam.store', [
                 'image' => $cam,
-                'user' => $user
+                'user' => $user,
             ])));
         }
 
@@ -73,7 +78,7 @@ class GetPlazacam extends Command
         foreach (self::CAMERA_NAMES as $cam) {
             $this->line(sprintf('<info>%s</>: (GET) <comment>%s</>', $cam, URL::signedRoute('api.plazacam.view', [
                 'image' => $cam,
-                'user' => $user
+                'user' => $user,
             ])));
         }
     }

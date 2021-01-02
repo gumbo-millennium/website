@@ -10,6 +10,7 @@ class SponsorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @return void
      */
     public function run()
@@ -19,7 +20,7 @@ class SponsorSeeder extends Seeder
 
         // Make sponsor
         factory(Sponsor::class, 15)->create([
-            'slug' => static fn () => (string) Str::uuid()
+            'slug' => static fn () => (string) Str::uuid(),
         ]);
     }
 }

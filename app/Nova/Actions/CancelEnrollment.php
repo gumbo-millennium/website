@@ -24,12 +24,14 @@ class CancelEnrollment extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = 'Uitschrijven';
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -72,6 +74,7 @@ class CancelEnrollment extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()

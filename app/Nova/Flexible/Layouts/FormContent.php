@@ -11,24 +11,27 @@ class FormContent extends Layout
 {
     /**
      * The layout's unique identifier
+     *
      * @var string
      */
     protected $name = 'content';
 
     /**
      * The displayed title
+     *
      * @var string
      */
     protected $title = 'Arbitrary content';
 
     /**
      * Get the fields displayed by the layout.
+     *
      * @return array
      */
     public function fields()
     {
         return [
-            Trix::make('Content', 'content')->stacked()
+            Trix::make('Content', 'content')->stacked(),
         ];
     }
 }

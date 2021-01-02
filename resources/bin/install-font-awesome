@@ -37,13 +37,10 @@ function copy_node() {
     fi
 
     # Copy files
-    cp -fu ${SOURCE_PATH}/*.svg "$DEST_PATH"
+    cp -fn ${SOURCE_PATH}/*.svg "$DEST_PATH"
 }
 
 # Make directories
 copy_node free brands brands
-copy_node free solid solid
 copy_node free regular regular
-
-# Link all files in solid to root
-( cd "$FA_DIR" && cp -fus ./solid/*.svg ./ )
+copy_node free solid .

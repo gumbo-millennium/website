@@ -16,17 +16,19 @@ class HelpCommand extends Command
 
     private const HIDDEN_CMDS = [
         'help',
-        'start'
+        'start',
     ];
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'help';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Toont de beschikbare commando\'s';
@@ -59,7 +61,7 @@ class HelpCommand extends Command
 
         // Send as-is
         $this->replyWithMessage([
-            'text' => sprintf(self::MSG, implode(\PHP_EOL, $texts))
+            'text' => sprintf(self::MSG, implode(\PHP_EOL, $texts)),
         ]);
     }
 }

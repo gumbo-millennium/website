@@ -12,8 +12,22 @@ use Telegram\Bot\Objects\User as TelegramUser;
 abstract class Command extends TelegramCommand
 {
     /**
+     * Runs a string through sprintf, and unwraps single newlines
+     *
+     * @param string $text
+     * @param mixed $arg
+     * @return string
+     */
+    public function formatText(string $text, ...$args): string
+    {
+        $out = sprintf($text, ...$args);
+        return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
+    }
+
+    /**
      * Returns Telegram User
-     * @return null|TelegramUser
+     *
+     * @return TelegramUser|null
      */
     protected function getTelegramUser(): ?TelegramUser
     {
@@ -35,7 +49,8 @@ abstract class Command extends TelegramCommand
 
     /**
      * Get the user based on the update
-     * @return null|User
+     *
+     * @return User|null
      */
     protected function getUser(): ?User
     {
@@ -53,20 +68,9 @@ abstract class Command extends TelegramCommand
     }
 
     /**
-     * Runs a string through sprintf, and unwraps single newlines
-     * @param string $text
-     * @param mixed $arg
-     * @return string
-     */
-    public function formatText(string $text, ...$args): string
-    {
-        $out = sprintf($text, ...$args);
-        return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
-    }
-
-    /**
      * Require the user to be logged in and a member
-     * @param null|User $user
+     *
+     * @param User|null $user
      * @return bool
      */
     protected function ensureIsMember(?User $user): bool
@@ -91,7 +95,7 @@ abstract class Command extends TelegramCommand
 
         // Reply with the error
         $this->replyWithMessage([
-            'text' => $message
+            'text' => $message,
         ]);
 
         return false;

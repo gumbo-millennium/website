@@ -20,6 +20,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can view any join submissions.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -30,6 +31,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can view the join submission.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -40,6 +42,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can create join submissions.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -50,6 +53,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can update the join submission.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -60,6 +64,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can delete the join submission.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -70,6 +75,7 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can manage join submission.
+     *
      * @param  \App\Models\User  $user
      * @return bool
      */

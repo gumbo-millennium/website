@@ -29,23 +29,25 @@ class EventServiceProvider extends ServiceProvider
 {
     /**
      * The event listener mappings for the application.
+     *
      * @var array
      */
     protected $listen = [
         MediaHasBeenAdded::class => [
-            MediaUploadListener::class
+            MediaUploadListener::class,
         ],
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
         Verified::class => [
             CheckConscriboWhenVerified::class,
-            AddVerifiedPermission::class
-        ]
+            AddVerifiedPermission::class,
+        ],
     ];
 
     /**
      * Register any events for your application.
+     *
      * @return void
      */
     public function boot()
@@ -63,6 +65,7 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Auto-discover events
+     *
      * @return true
      */
     public function shouldDiscoverEvents()

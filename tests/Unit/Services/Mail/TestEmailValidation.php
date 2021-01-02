@@ -12,6 +12,7 @@ class TestEmailValidation extends TestCase
 {
     /**
      * Returns the trait
+     *
      * @return MockObject|ValidatesEmailRequests
      */
     public function getValidationMock()
@@ -19,7 +20,7 @@ class TestEmailValidation extends TestCase
         // Be predictable
         Config::set('services.google.domains', [
             'example.com',
-            'example.eu'
+            'example.eu',
         ]);
 
         // Mock
@@ -28,6 +29,7 @@ class TestEmailValidation extends TestCase
 
     /**
      * Tests if mutating emails restricts to non-org emails
+     *
      * @return void
      */
     public function testAllowEmailMutation(): void
@@ -48,6 +50,7 @@ class TestEmailValidation extends TestCase
 
     /**
      * Tests if processing is limited to top-level domains
+     *
      * @return void
      */
     public function testProcessList(): void
@@ -68,6 +71,7 @@ class TestEmailValidation extends TestCase
 
     /**
      * Tests if names match the expected form
+     *
      * @return void
      */
     public function testValidateName(): void

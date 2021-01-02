@@ -13,15 +13,17 @@ trait HandlesStripeCustomers
 {
     /**
      * Customers retrieved from API
+     *
      * @var array<Customer>
      */
     private array $customerCache = [];
 
     /**
      * Returns the customer for this user
+     *
      * @param User $user
      * @param int $options Bitwise options, see OPT_ constants
-     * @return null|Stripe\Customer
+     * @return Stripe\Customer|null
      */
     public function getCustomer(User $user, int $options = 0): ?Customer
     {

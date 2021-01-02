@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 
 /**
  * A role, with some modifications
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -22,11 +23,12 @@ class Role extends SpatieRole
         'guest',
         'member',
         'verified',
-        'board'
+        'board',
     ];
 
     /**
      * Prevent deleting of a required model, as a safety net
+     *
      * @param Role $role
      * @return void
      * @throws LogicException
@@ -50,6 +52,7 @@ class Role extends SpatieRole
 
     /**
      * Filter on default value
+     *
      * @param Builder $query
      * @return Builder
      */

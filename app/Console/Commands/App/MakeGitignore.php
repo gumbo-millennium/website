@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 
 /**
  * Auto download an ignore file for this project.
+ *
  * @author Roelof Roos
  * @license MPL-2.0
  */
@@ -16,18 +17,21 @@ class MakeGitignore extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'app:gitignore';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Updates the .gitignore file';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -37,6 +41,7 @@ class MakeGitignore extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

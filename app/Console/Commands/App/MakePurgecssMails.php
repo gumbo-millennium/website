@@ -25,17 +25,19 @@ class MakePurgecssMails extends Command
         ActivityCovidMail::class,
         UserJoinMail::class,
         BoardJoinMail::class,
-        UserJoinMail::class
+        UserJoinMail::class,
     ];
 
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'app:purgecss';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Generates e-mail templates for PurgeCSS to not ignore';
@@ -44,6 +46,7 @@ class MakePurgecssMails extends Command
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct(Container $container)
@@ -54,6 +57,7 @@ class MakePurgecssMails extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -105,9 +109,11 @@ class MakePurgecssMails extends Command
 
             // Now delete everything
             foreach ($models as $model) {
-                if ($model->exists) {
-                    $model->delete();
+                if (!$model->exists) {
+                    continue;
                 }
+
+                $model->delete();
             }
 
             $this->info("Models removed");
@@ -116,6 +122,7 @@ class MakePurgecssMails extends Command
 
     /**
      * Returns a list of models
+     *
      * @return array<\Illuminate\Database\Eloquent\Model>
      * @throws BindingResolutionException
      */
@@ -130,7 +137,7 @@ class MakePurgecssMails extends Command
         // Enroll user into activity
         $enrollment = \factory(Enrollment::class, 1)->create([
             'activity_id' => $activity->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ])->first();
 
         // Get a join submission

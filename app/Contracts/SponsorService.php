@@ -14,13 +14,15 @@ interface SponsorService
     /**
      * Returns if the current page still needs a sponsor.
      * Result might change mid-page, if a sponsor is present earlier.
+     *
      * @return bool
      */
     public function hasSponsor(): bool;
 
     /**
      * Returns the sponsor for this page, if any.
-     * @return null|Sponsor
+     *
+     * @return Sponsor|null
      */
     public function getSponsor(): ?Sponsor;
 

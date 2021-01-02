@@ -10,6 +10,7 @@ use Kris\LaravelFormBuilder\Form;
 
 /**
  * Payment start form
+ *
  * @package App\Forms
  */
 class PaymentStartForm extends Form
@@ -34,11 +35,11 @@ class PaymentStartForm extends Form
                 'rules' => ['required', Rule::in(array_keys($banks))],
                 'choices' => $banks,
                 'attr' => [
-                    'autofocus' => true
+                    'autofocus' => true,
                 ],
             ])
             ->add('submit', 'submit', [
-                'label' => 'Start betaling'
+                'label' => 'Start betaling',
             ]);
     }
 }

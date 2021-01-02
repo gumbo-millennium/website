@@ -10,6 +10,7 @@ class AddLocationAndAddressToActivities extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -22,6 +23,7 @@ class AddLocationAndAddressToActivities extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()
@@ -29,7 +31,7 @@ class AddLocationAndAddressToActivities extends Migration
         Schema::table('activities', static function (Blueprint $table) {
             $table->dropColumn([
                 'location',
-                'location_address'
+                'location_address',
             ]);
         });
     }

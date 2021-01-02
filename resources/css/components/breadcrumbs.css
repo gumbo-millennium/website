@@ -1,0 +1,8 @@
+.breadcrumbs {
+  margin-right: calc(0 - theme('spacing.2'));
+  margin-left: calc(0 - theme('spacing.2'));
+}
+
+.breadcrumbs__item {
+  @apply px-2;
+}

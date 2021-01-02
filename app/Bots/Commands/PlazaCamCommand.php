@@ -37,21 +37,24 @@ class PlazaCamCommand extends Command
 
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'plazacam';
 
     /**
      * Command Aliases - Helpful when you want to trigger command with more than one name.
+     *
      * @var array<string>
      */
     protected $aliases = [
         'koffiecam',
-        'coffeecam'
+        'coffeecam',
     ];
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Toont de plaza of koffiecam';
@@ -71,7 +74,7 @@ class PlazaCamCommand extends Command
         // Reject if rate-limited
         if (!$user) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST, $imageName)
+                'text' => $this->formatText(self::REPLY_GUEST, $imageName),
             ]);
             return;
         }
@@ -79,7 +82,7 @@ class PlazaCamCommand extends Command
         // Check if expired
         if (PlazaCamController::isExpired($image)) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_EXPIRED, $imageName)
+                'text' => $this->formatText(self::REPLY_EXPIRED, $imageName),
             ]);
             return;
         }

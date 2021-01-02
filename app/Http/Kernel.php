@@ -12,6 +12,7 @@ class Kernel extends HttpKernel
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
+     *
      * @var array
      */
     protected $middleware = [
@@ -24,6 +25,7 @@ class Kernel extends HttpKernel
 
     /**
      * The application's route middleware groups.
+     *
      * @var array
      */
     protected $middlewareGroups = [
@@ -49,6 +51,7 @@ class Kernel extends HttpKernel
      * The application's route middleware.
      *
      * These middleware may be assigned to groups or used individually.
+     *
      * @var array
      */
     protected $routeMiddleware = [
@@ -66,13 +69,14 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'no-cache' => \App\Http\Middleware\NoCacheMiddleware::class
+        'no-cache' => \App\Http\Middleware\NoCacheMiddleware::class,
     ];
 
     /**
      * The priority-sorted list of middleware.
      *
      * This forces non-global middleware to always be in the given order.
+     *
      * @var array
      */
     protected $middlewarePriority = [
@@ -85,6 +89,6 @@ class Kernel extends HttpKernel
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
         \App\Http\Middleware\AddSecurityHeaders::class,
-        \App\Http\Middleware\NoCacheMiddleware::class
+        \App\Http\Middleware\NoCacheMiddleware::class,
     ];
 }

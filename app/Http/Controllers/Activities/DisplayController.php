@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 
 /**
  * Handles showing activity lists, activities and the schedule route
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -28,6 +29,7 @@ class DisplayController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
      * @param Request $request
      * @return Response
      */
@@ -87,12 +89,13 @@ class DisplayController extends Controller
         return view('activities.index', [
             'activities' => $activities,
             'enrollments' => $enrollments,
-            'past' => $request->has('past')
+            'past' => $request->has('past'),
         ]);
     }
 
     /**
      * Display the specified resource.
+     *
      * @param  Activity  $activity
      * @return Response
      */
@@ -126,6 +129,7 @@ class DisplayController extends Controller
 
     /**
      * Handle "please login to enroll" buttons
+     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse
@@ -144,6 +148,7 @@ class DisplayController extends Controller
 
     /**
      * Handles re-sending the verification mail on activities
+     *
      * @param Request $request
      * @param Activity $activity
      * @return RedirectResponse

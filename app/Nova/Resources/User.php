@@ -16,24 +16,26 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * Users of our system
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class User extends Resource
 {
     /**
      * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = UserModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'name';
 
     /**
      * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -44,29 +46,6 @@ class User extends Resource
         'alias',
     ];
 
-    /**
-     * Get the displayable label of the resource.
-     * @return string
-     */
-    public static function label()
-    {
-        return 'Gebruikers';
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return 'Gebruiker';
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
@@ -110,12 +89,13 @@ class User extends Resource
             MorphToMany::make('Permissies', 'permissions', Permission::class),
 
             // Enrollments
-            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class)
+            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
         ];
     }
 
     /**
      * Get the filters available for the resource.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -134,7 +114,7 @@ class User extends Resource
     public function cards(Request $request)
     {
         return [
-            new NewUsers()
+            new NewUsers(),
         ];
     }
 }

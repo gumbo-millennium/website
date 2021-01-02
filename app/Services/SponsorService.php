@@ -23,38 +23,10 @@ class SponsorService implements SponsorServiceContract
     private bool $shown = false;
     private ?Sponsor $sponsor = null;
 
-    private function querySponsor(): ?Sponsor
-    {
-        // Don't query if hidden
-        if ($this->shown) {
-            return null;
-        }
-
-        // Return sponsor if set
-        if ($this->sponsor) {
-            return $this->sponsor;
-        }
-
-        // Get sponsor from DB
-        $this->sponsor = Sponsor::query()
-            ->whereAvailable()
-            ->inRandomOrder()
-            ->limit(1)
-            ->get()
-            ->first();
-
-        // Mark as hidden if no sponsor is available
-        if (!$this->sponsor) {
-            $this->shown = true;
-        }
-
-        // Return sponsor
-        return $this->sponsor;
-    }
-
     /**
      * Returns if the current page still needs a sponsor.
      * Result might change mid-page, if a sponsor is present earlier.
+     *
      * @return bool
      */
     public function hasSponsor(): bool
@@ -66,7 +38,8 @@ class SponsorService implements SponsorServiceContract
 
     /**
      * Returns the sponsor for this page, if any.
-     * @return null|Sponsor
+     *
+     * @return Sponsor|null
      */
     public function getSponsor(): ?Sponsor
     {
@@ -93,9 +66,10 @@ class SponsorService implements SponsorServiceContract
 
     /**
      * Converts a sponsor to inline SVG
-     * @param null|Sponsor $sponsor
+     *
+     * @param Sponsor|null $sponsor
      * @param array $attrs
-     * @return null|HtmlString
+     * @return HtmlString|null
      * @throws InvalidArgumentException
      */
     public function toSvg(?Sponsor $sponsor, array $attrs, string $style = 'gray'): ?HtmlString
@@ -117,7 +91,7 @@ class SponsorService implements SponsorServiceContract
         $cacheKey = vsprintf('sponsor.%d-%s.%s', [
             $sponsor->id,
             substr(md5($sponsor->$property), 0, 16),
-            substr(md5(\http_build_query($attrs)), 0, 16)
+            substr(md5(\http_build_query($attrs)), 0, 16),
         ]);
 
         // Load from cache
@@ -180,5 +154,34 @@ class SponsorService implements SponsorServiceContract
     {
         // Just flag the sponsor as shown
         $this->shown = true;
+    }
+
+    private function querySponsor(): ?Sponsor
+    {
+        // Don't query if hidden
+        if ($this->shown) {
+            return null;
+        }
+
+        // Return sponsor if set
+        if ($this->sponsor) {
+            return $this->sponsor;
+        }
+
+        // Get sponsor from DB
+        $this->sponsor = Sponsor::query()
+            ->whereAvailable()
+            ->inRandomOrder()
+            ->limit(1)
+            ->get()
+            ->first();
+
+        // Mark as hidden if no sponsor is available
+        if (!$this->sponsor) {
+            $this->shown = true;
+        }
+
+        // Return sponsor
+        return $this->sponsor;
     }
 }

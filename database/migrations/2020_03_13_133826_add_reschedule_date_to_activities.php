@@ -10,6 +10,7 @@ class AddRescheduleDateToActivities extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -22,6 +23,7 @@ class AddRescheduleDateToActivities extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

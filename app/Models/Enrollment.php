@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * A user enrollment for an activity. Optionally has payments.
+ *
  * @property \App\Models\States\Enrollment\State $state
  */
 class Enrollment extends UuidModel
@@ -32,6 +33,7 @@ class Enrollment extends UuidModel
 
     /**
      * Finds the active enrollment for this activity
+     *
      * @param User $user
      * @param Activity $activity
      * @return Enrollment|null
@@ -49,6 +51,7 @@ class Enrollment extends UuidModel
 
     /**
      * Finds the active enrollment for this activity, or throws a 404 HTTP exception
+     *
      * @param User $user
      * @param Activity $activity
      * @return Enrollment
@@ -75,7 +78,7 @@ class Enrollment extends UuidModel
      */
     protected $casts = [
         'data' => 'collection',
-        'paid' => 'bool'
+        'paid' => 'bool',
     ];
 
     /**
@@ -90,6 +93,7 @@ class Enrollment extends UuidModel
 
     /**
      * An enrollment can have multiple payments (in case one failed, for example)
+     *
      * @return HasMany
      */
     public function payments(): Relation
@@ -99,6 +103,7 @@ class Enrollment extends UuidModel
 
     /**
      * The user this enrollment belongs to
+     *
      * @return BelongsTo
      */
     public function user(): Relation
@@ -108,6 +113,7 @@ class Enrollment extends UuidModel
 
     /**
      * The activity this enrollment belongs to
+     *
      * @return BelongsTo
      */
     public function activity(): Relation
@@ -117,8 +123,8 @@ class Enrollment extends UuidModel
 
     /**
      * Returns true if the state is stable and will not auto-delete
+     *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsStableAttribute(): bool
     {
@@ -127,8 +133,8 @@ class Enrollment extends UuidModel
 
     /**
      * Returns if the enrollment is discounted.
+     *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsDiscountedAttribute(): bool
     {
@@ -138,6 +144,7 @@ class Enrollment extends UuidModel
     /**
      * Returns state we want to go to, depending on Enrollment's own attributes.
      * Returns null if it can't figure it out.
+     *
      * @return App\Models\States\Enrollment\State|null
      */
     public function getWantedStateAttribute(): ?EnrollmentState
@@ -146,9 +153,13 @@ class Enrollment extends UuidModel
         $options = $this->state->transitionableStates();
         if (in_array(SeededState::$name, $options) && $this->activity->form) {
             return new SeededState($this);
-        } elseif (in_array(PaidState::$name, $options) && $this->price) {
+        }
+
+        if (in_array(PaidState::$name, $options) && $this->price) {
             return new PaidState($this);
-        } elseif (in_array(ConfirmedState::$name, $options)) {
+        }
+
+        if (in_array(ConfirmedState::$name, $options)) {
             return new ConfirmedState($this);
         }
 
@@ -164,6 +175,7 @@ class Enrollment extends UuidModel
 
     /**
      * Register the states an enrollment can have
+     *
      * @return void
      */
     protected function registerStates(): void

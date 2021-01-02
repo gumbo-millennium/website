@@ -24,18 +24,21 @@ class UpdateContent extends Command
 
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:update-content';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Updates the pages created from Git-based files';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -54,6 +57,7 @@ class UpdateContent extends Command
     }
     /**
      * Returns a title from a slug
+     *
      * @param string $slug
      * @return string
      */
@@ -66,6 +70,7 @@ class UpdateContent extends Command
 
     /**
      * Creates or updates all pages in the list, marking them as non-mutable
+     *
      * @param array $pages
      * @return void
      */
@@ -85,7 +90,7 @@ class UpdateContent extends Command
             // Assign data
             $page->created_at = $data['created_at'];
             $page->updated_at = $data['updated_at'];
-            $page->contents = json_encode($data['content']);
+            $page->contents = $data['content'];
             $page->title = $data['title'] ?? $this->buildTitle($slug);
             $page->summary = $data['summary'] ?? $data['tagline'] ?? null;
 
@@ -113,6 +118,7 @@ class UpdateContent extends Command
 
     /**
      * Removes 'git' flag from pages no longer in version index
+     *
      * @param array<string> $pageSlugs
      * @return void
      */
@@ -157,6 +163,7 @@ class UpdateContent extends Command
 
     /**
      * Returns list of pages versioned in the code
+     *
      * @return array<array<mixed>>
      */
     private function getVersionedFiles(): array
@@ -237,6 +244,7 @@ class UpdateContent extends Command
 
     /**
      * Processes the data from the file
+     *
      * @param array $data
      * @param string $key
      * @param string $path

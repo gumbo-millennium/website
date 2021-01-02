@@ -14,6 +14,7 @@ class UnlinkCommand extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = <<<'CMD'
@@ -24,12 +25,14 @@ class UnlinkCommand extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Disables the webhook, checks if the webhook URL matches our expected URL';
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

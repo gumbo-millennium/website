@@ -24,24 +24,28 @@ class RescheduleActivity extends Action
 
     /**
      * The displayable name of the action.
+     *
      * @var string
      */
     public $name = 'Verplaats activiteit';
 
     /**
      * The text to be used for the action's confirm button.
+     *
      * @var string
      */
     public $confirmButtonText = 'Verplaatsen';
 
     /**
      * The text to be used for the action's cancel button.
+     *
      * @var string
      */
     public $cancelButtonText = 'Niet verplaatsen';
 
     /**
      * The text to be used for the action's confirmation text.
+     *
      * @var string
      */
     public $confirmText = <<<'TEXT'
@@ -51,6 +55,7 @@ class RescheduleActivity extends Action
 
     /**
      * Perform the action on the given models.
+     *
      * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
@@ -78,7 +83,9 @@ class RescheduleActivity extends Action
         // Ensure values are right
         if ($startDate === $activity->start_date) {
             return Action::message('Geen verandering uitgevoerd');
-        } elseif ($startDate < $activity->start_date) {
+        }
+
+        if ($startDate < $activity->start_date) {
             return Action::danger('Kan activiteit niet uitstellen voor de oorspronkelijke start datum');
         }
 
@@ -109,6 +116,7 @@ class RescheduleActivity extends Action
 
     /**
      * Get the fields available on the action.
+     *
      * @return array
      */
     public function fields()

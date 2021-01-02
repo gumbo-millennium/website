@@ -18,6 +18,7 @@ class FixStatementFields extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -32,6 +33,7 @@ class FixStatementFields extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

@@ -13,7 +13,7 @@ $inserts = [
     'van het',
     'van \'t',
     'ter',
-    'van de'
+    'van de',
 ];
 
 $genders = array_merge(
@@ -46,6 +46,6 @@ $factory->define(JoinSubmission::class, static fn (Faker $faker) => [
         'country' => $faker->optional(0.1, 'NL')->countryCode,
 
         // Result
-        'granted' => $faker->optional(0.15)->boolean()
+        'granted' => $faker->optional(0.15)->boolean(),
 
     ]);

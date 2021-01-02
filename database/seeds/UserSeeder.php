@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Adds or updates the default user
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -15,6 +16,7 @@ class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @return void
      */
     public function run()
@@ -34,15 +36,17 @@ class UserSeeder extends Seeder
     }
 
     /**
-     * Creates a user
-     * @param string $email
+     * Creates a user.
+     *
+     * @param string $slug
+     * @param string $name
      * @param array $roles
      * @return void
      */
     private function makeUser(string $slug, string $name, array $roles): void
     {
         $user = User::withTrashed()->updateOrCreate([
-            'email' => "{$slug}@example.gumbo-millennium.nl"
+            'email' => "{$slug}@example.gumbo-millennium.nl",
         ], [
             'first_name' => $name,
             'last_name' => 'Gumbo (test)',
@@ -51,8 +55,10 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole($roles);
 
-        if ($user->trashed()) {
-            $user->restore();
+        if (!$user->trashed()) {
+            return;
         }
+
+        $user->restore();
     }
 }

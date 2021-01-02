@@ -13,7 +13,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Handles allowing mutations on enrollments
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class EnrollmentPolicy
 {
@@ -22,6 +21,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can view any enrollments.
+     *
      * @param  \App\Models\User  $user
      * @return bool
      */
@@ -32,6 +32,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can view the enrollment.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -43,6 +44,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can create enrollments.
+     *
      * @param  \App\Models\User  $user
      * @return bool
      */
@@ -53,6 +55,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can update the enrollment.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -64,6 +67,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can refund the money paid for the enrollment.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Enrollment  $enrollment
      * @return bool
@@ -75,6 +79,7 @@ class EnrollmentPolicy
 
     /**
      * Returns if the user can unenroll
+     *
      * @param User $user
      * @param Enrollment $enrollment
      * @return bool
@@ -115,7 +120,7 @@ class EnrollmentPolicy
             'enrollment' => $enrollment,
             'judgement' => $judgement,
             'has-expiration' => $hasExpiration,
-            'is-stable' => $isStable
+            'is-stable' => $isStable,
         ]);
 
         // Return judgement
@@ -124,6 +129,7 @@ class EnrollmentPolicy
 
     /**
      * Determine whether the user can delete the enrollment.
+     *
      * @return false
      */
     public function delete()
@@ -134,6 +140,7 @@ class EnrollmentPolicy
 
     /**
      * Can the given user manage the given enrollment or enrollments in general
+     *
      * @param User $user
      * @param Enrollment $enrollment
      * @return bool
@@ -154,6 +161,7 @@ class EnrollmentPolicy
 
     /**
      * Can the given user admin enrollments
+     *
      * @param User $user
      * @return bool
      */

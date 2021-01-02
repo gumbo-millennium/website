@@ -10,18 +10,21 @@ class SackCommand extends Command
 {
     /**
      * The name of the Telegram command.
+     *
      * @var string
      */
     protected $name = 'royatieverzoek';
 
     /**
      * The Telegram command description.
+     *
      * @var string
      */
     protected $description = 'Stuurt iemand De Laan uit';
 
     /**
      * Command Argument Pattern
+     *
      * @var string
      */
     protected $pattern = '[^\s].+';
@@ -38,7 +41,7 @@ class SackCommand extends Command
         $cacheKey = sprintf('tg.sack.%s', $tgUser->id);
         if (Cache::get($cacheKey) > now()) {
             $this->replyWithMessage([
-                'text' => '⏸ Rate limited (1x per ALV)'
+                'text' => '⏸ Rate limited (1x per ALV)',
             ]);
             return;
         }
@@ -64,7 +67,7 @@ class SackCommand extends Command
 
         // Send as-is
         $this->replyWithMessage([
-            'text' => $format
+            'text' => $format,
         ]);
     }
 }

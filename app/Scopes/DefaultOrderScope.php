@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Scope;
 
 /**
  * A default ordering scope, used to add a sort order if no order is specified yet
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -17,18 +18,21 @@ class DefaultOrderScope implements Scope
 {
     /**
      * Order column
+     *
      * @var string
      */
     private $column;
 
     /**
      * Order direction
+     *
      * @var string
      */
     private $direction;
 
     /**
      * Add a default sorting order
+     *
      * @param string $column
      * @param string $direction
      */
@@ -40,6 +44,7 @@ class DefaultOrderScope implements Scope
 
     /**
      * Apply the default sort order
+     *
      * @param Builder $builder
      * @param Model $model
      * @return void
@@ -48,9 +53,11 @@ class DefaultOrderScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         // Check if no orders are set yet
-        if (empty($builder->getQuery()->orders)) {
-            // Add our order
-            $builder->orderBy($this->column, $this->direction);
+        if (!empty($builder->getQuery()->orders)) {
+            return;
         }
+
+        // Add our order
+        $builder->orderBy($this->column, $this->direction);
     }
 }

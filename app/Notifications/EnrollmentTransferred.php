@@ -27,6 +27,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
+     *
      * @return void
      */
     public function __construct(Enrollment $enrollment, User $old)
@@ -37,6 +38,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     *
      * @return array
      */
     public function via()
@@ -46,9 +48,9 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
 
     /**
      * Get the mail representation of the notification.
+     *
      * @param User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function toMail($notifiable)
     {

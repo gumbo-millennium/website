@@ -10,6 +10,7 @@ class CreateBotUserLinksTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -30,6 +31,7 @@ class CreateBotUserLinksTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

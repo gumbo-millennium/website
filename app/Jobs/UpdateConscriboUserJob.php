@@ -31,17 +31,19 @@ class UpdateConscriboUserJob implements ShouldQueue
     private const RESERVED_ROLE = [
         'member',
         'verified',
-        'restricted'
+        'restricted',
     ];
 
     /**
      * The user we're updating
+     *
      * @var User
      */
     protected User $user;
 
     /**
      * Create a new job instance.
+     *
      * @param User $user
      * @return void
      */
@@ -53,6 +55,7 @@ class UpdateConscriboUserJob implements ShouldQueue
 
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle(ConscriboService $service)
@@ -110,24 +113,69 @@ class UpdateConscriboUserJob implements ShouldQueue
     }
 
     /**
+     * Assign the member role
+     *
+     * @param User $user
+     * @param array $accountingUser
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public function assignMemberRole(User $user, array $accountingUser): void
+    {
+        // Check dates
+        $memberStarted = $accountingUser['startdatum_lid'] !== null && $accountingUser['startdatum_lid'] < now();
+        $memberEnded = $accountingUser['einddatum_lid'] !== null && $accountingUser['einddatum_lid'] < now();
+
+        // Check member state
+        $isMember = $memberStarted && !$memberEnded;
+
+        // Remove member if member without permission
+        if ($isMember !== $user->is_member && !$isMember) {
+            logger()->info("Removing member role from user.", compact('user'));
+            $user->removeRole('member');
+            return;
+        }
+
+        // Add member if not member yet
+        if ($isMember !== $user->is_member && $isMember) {
+            logger()->info("Adding member role to user.", compact('user'));
+            $user->assignRole('member');
+        }
+
+        // No change
+        logger()->info("User's member-state is already up-to-date.", [
+            'user' => $user,
+            'checks' => [
+                'is-member' => $isMember,
+                'member-started' => $memberStarted,
+                'member-ended' => $memberEnded,
+            ],
+        ]);
+    }
+
+    /**
      * Issues an update on Stripe if any visible data was changed
+     *
      * @param User $user
      * @return void
      */
     private function maybeIssueStripeUpdate(User $user): void
     {
         // Check for changes
-        if (!empty($user->wasChanged(['first_name', 'insert', 'last_name', 'phone', 'address']))) {
-            // Issue a Stripe customer update
-            CustomerUpdateJob::dispatch($user);
+        if (empty($user->wasChanged(['first_name', 'insert', 'last_name', 'phone', 'address']))) {
+            return;
         }
+
+        // Issue a Stripe customer update
+        CustomerUpdateJob::dispatch($user);
     }
 
     /**
      * Returns user information from Conscribo
+     *
      * @param ConscriboService $service
      * @param string $email
-     * @return null|array
+     * @return array|null
      */
     private function getConscriboUser(ConscriboService $service, User $dbUser): ?array
     {
@@ -176,7 +224,7 @@ class UpdateConscriboUserJob implements ShouldQueue
                     'code' => Arr::get($user, 'code'),
                     'name' => Arr::get($user, 'name'),
                 ],
-                'query' => $query
+                'query' => $query,
             ]);
         } catch (HttpExceptionInterface $exception) {
             report(new RuntimeException('Failed to get user from API', 0, $exception));
@@ -186,7 +234,7 @@ class UpdateConscriboUserJob implements ShouldQueue
         try {
             // Get group info from API
             $groups = $service->getResource('role', [
-                ['leden', '~', $user['selector']]
+                ['leden', '~', $user['selector']],
             ], ['code', 'naam', 'leden'], ['limit' => 100]);
 
             // Print result
@@ -198,7 +246,7 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Return user with groups as element
         return array_merge($user, [
-            'groups' => $groups->pluck('naam', 'code')->toArray()
+            'groups' => $groups->pluck('naam', 'code')->toArray(),
         ]);
     }
 
@@ -228,7 +276,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             'line2' => null,
             'postal_code' => $notEmptyGet('postcode'),
             'city' =>  $notEmptyGet('plaats'),
-            'country' => 'nl'
+            'country' => 'nl',
         ];
 
         if ($user->address !== $newAddress) {
@@ -244,11 +292,11 @@ class UpdateConscriboUserJob implements ShouldQueue
 
     /**
      * Assigns roles to the user, as a transaction
+     *
      * @param User $user
      * @param array $accountingUser
      * @return void
      * @throws \InvalidArgumentException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function assignRoles(User $user, array $accountingUser): void
     {
@@ -295,45 +343,5 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Add new role to list
             $addedRoles[] = $role->name;
         }
-    }
-
-    /**
-     * Assign the member role
-     * @param User $user
-     * @param array $accountingUser
-     * @return void
-     * @throws InvalidArgumentException
-     */
-    public function assignMemberRole(User $user, array $accountingUser): void
-    {
-        // Check dates
-        $memberStarted = $accountingUser['startdatum_lid'] !== null && $accountingUser['startdatum_lid'] < now();
-        $memberEnded = $accountingUser['einddatum_lid'] !== null && $accountingUser['einddatum_lid'] < now();
-
-        // Check member state
-        $isMember = $memberStarted && !$memberEnded;
-
-        // Remove member if member without permission
-        if ($isMember !== $user->is_member && !$isMember) {
-            logger()->info("Removing member role from user.", compact('user'));
-            $user->removeRole('member');
-            return;
-        }
-
-        // Add member if not member yet
-        if ($isMember !== $user->is_member && $isMember) {
-            logger()->info("Adding member role to user.", compact('user'));
-            $user->assignRole('member');
-        }
-
-        // No change
-        logger()->info("User's member-state is already up-to-date.", [
-            'user' => $user,
-            'checks' => [
-                'is-member' => $isMember,
-                'member-started' => $memberStarted,
-                'member-ended' => $memberEnded
-            ]
-        ]);
     }
 }

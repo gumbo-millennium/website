@@ -9,12 +9,13 @@ class PageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @return void
      */
     public function run()
     {
         foreach (Page::getRequiredPages() as $slug => $title) {
-            Page::updateOrCreate(
+            Page::query()->updateOrCreate(
                 ['slug' => $slug, 'group' => null],
                 ['title' => $title, 'type' => Page::TYPE_REQUIRED]
             );

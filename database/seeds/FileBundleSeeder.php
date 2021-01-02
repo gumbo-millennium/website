@@ -10,7 +10,9 @@ class FileBundleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @return void
+     * @throws Exception
      */
     public function run()
     {
@@ -22,7 +24,7 @@ class FileBundleSeeder extends Seeder
         foreach ($categories as $category) {
             // Create a bunch of files in this category
             factory(FileBundle::class, random_int(2, 12))->create([
-                'category_id' => $category->id
+                'category_id' => $category->id,
             ]);
         }
     }

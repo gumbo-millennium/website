@@ -43,6 +43,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Ensures there are some bundles and categories to work with
+     *
      * @return void
      */
     public function seedBefore(): void
@@ -52,6 +53,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test viewing as logged out user
+     *
      * @param string $route
      * @return void
      * @dataProvider provideTestRoutes
@@ -67,6 +69,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * A basic feature test example.
+     *
      * @param string $route
      * @return void
      * @dataProvider provideTestRoutes
@@ -86,6 +89,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing our first category when looking at the file index
+     *
      * @return void
      */
     public function testViewIndex()
@@ -112,6 +116,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
+     *
      * @return void
      */
     public function testViewExistingCategory()
@@ -141,6 +146,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
+     *
      * @return void
      */
     public function testViewBundle()
@@ -170,6 +176,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
+     *
      * @return void
      */
     public function testDownloadBundle()
@@ -200,6 +207,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
+     *
      * @return void
      */
     public function testDownloadBundleFile()
@@ -229,6 +237,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're getting a 404 when requesting a non-existing category
+     *
      * @return void
      */
     public function testViewNonExistingCategory()
@@ -252,6 +261,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Provide translated list of test routes
+     *
      * @return array
      */
     public function provideTestRoutes(): array
@@ -282,6 +292,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Provides routes as a predictable list
+     *
      * @return array<string>
      */
     public function getTestRoutes(): array
@@ -296,30 +307,31 @@ class FileDisplayTest extends TestCase
 
             // Categories
             'category' => route('files.category', [
-                'category' => $this->getCategoryModel()
+                'category' => $this->getCategoryModel(),
             ]),
             'category-missing' => route('files.category', [
-                'category' => sprintf('test-category-%d', time())
+                'category' => sprintf('test-category-%d', time()),
             ]),
 
             // File bundles
             'bundle' => route('files.show', [
-                'bundle' => $this->getBundleModel()
+                'bundle' => $this->getBundleModel(),
             ]),
             'bundle-download' => route('files.download', [
-                'bundle' => $this->getBundleModel()
+                'bundle' => $this->getBundleModel(),
             ]),
             'bundle-download-single' => route('files.download-single', [
-                'media' => $this->getBundleModel()->getFirstMedia()
+                'media' => $this->getBundleModel()->getFirstMedia(),
             ]),
             'bundle-missing' => route('files.show', [
-                'bundle' => sprintf('test-file-%d', time())
+                'bundle' => sprintf('test-file-%d', time()),
             ]),
         ];
     }
 
     /**
      * Returns most recent category
+     *
      * @return FileCategory|null
      */
     private function getCategoryModel(): ?FileCategory
@@ -349,6 +361,7 @@ class FileDisplayTest extends TestCase
 
     /**
      * Returns most recent file
+     *
      * @return FileBundle|null
      */
     private function getBundleModel(): FileBundle

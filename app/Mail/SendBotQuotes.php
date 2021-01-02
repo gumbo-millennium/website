@@ -28,6 +28,7 @@ class SendBotQuotes extends Mailable
 
     /**
      * Create a new message instance.
+     *
      * @return void
      */
     public function __construct(Collection $quotes)
@@ -37,6 +38,7 @@ class SendBotQuotes extends Mailable
 
     /**
      * Build the message.
+     *
      * @return $this
      */
     public function build()
@@ -54,7 +56,7 @@ class SendBotQuotes extends Mailable
         foreach ($attachments as $attachment) {
             $this->attach($attachment['path'], [
                 'as' => $attachment['filename'],
-                'mime' => $attachment['mimetype']
+                'mime' => $attachment['mimetype'],
             ]);
         }
 
@@ -63,71 +65,11 @@ class SendBotQuotes extends Mailable
 
         // Return mail
         return $this->markdown('mail::quotes', compact('quotesList'));
-        ;
-    }
-
-    private function formatQuotes(Collection $quotes): array
-    {
-        $quotesList = [];
-        foreach ($quotes as $quote) {
-            // Prep key
-            $quoteDate = $quote->created_at;
-            $quoteKey = $quoteDate->format('Y-m-d');
-
-            // Create entry if missing
-            if (!isset($quotesList[$quoteKey])) {
-                $quotesList[$quoteKey] = [
-                    'title' => $quoteDate->isoFormat('ddd DD MMMM'),
-                    'quotes' => []
-                ];
-            }
-
-            $quotesList[$quoteKey]['quotes'][] = $quote;
-        }
-
-        // Convert to list()-able format
-        $quotesList = array_map(static fn($row) => [$row['title'], $row['quotes']], $quotesList);
-
-        // Sort entries by key
-        \ksort($quotesList);
-
-        // Return it
-        return $quotesList;
-    }
-
-    private function setSubject(DateTimeInterface $start, DateTimeInterface $end): string
-    {
-        // Ensure carbon objects
-        $start = Carbon::parse($start);
-        $end = Carbon::parse($end);
-
-        // Update subject according to scope
-        $startLabel = $start->isoFormat('MMMM');
-        $endLabel = $end->isoFormat('MMMM');
-        $isoLabel = $start->format('Y-m');
-
-        // Prep a basename
-        $baseName = "wist-je-datjes {$isoLabel}";
-
-        // Return just one month if it is just one month
-        if ($start->month === $end->month) {
-            $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel}");
-            return "{$baseName} - {$startLabel}";
-        }
-
-        // Return "en"-separated if two months
-        if (($start->month + 1) === $end->month) {
-            $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} en {$endLabel}");
-            return "{$baseName} - {$startLabel} en {$endLabel}";
-        }
-
-        // Return range otherwise
-        $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} t/m {$endLabel}");
-        return "{$baseName} - {$startLabel} tm {$endLabel}";
     }
 
     /**
      * Creates a list of quotes in XSLX, ODT and CSV format
+     *
      * @param Collection $quotes
      * @return array<string>
      */
@@ -135,7 +77,7 @@ class SendBotQuotes extends Mailable
     {
         // Add header row
         $data = [
-            ['Datum', 'Weergavenaam', 'Bekende naam', 'Quote']
+            ['Datum', 'Weergavenaam', 'Bekende naam', 'Quote'],
         ];
 
         // Create dataset
@@ -145,7 +87,7 @@ class SendBotQuotes extends Mailable
                 $row->created_at,
                 $row->display_name,
                 optional($row->user)->name,
-                $row->quote
+                $row->quote,
             ];
         }
 
@@ -184,11 +126,71 @@ class SendBotQuotes extends Mailable
             $files[] = [
                 'path' => $path,
                 'filename' => $filename,
-                'mimetype' => $mime
+                'mimetype' => $mime,
             ];
         }
 
         // Return files
         return $files;
+    }
+
+    private function formatQuotes(Collection $quotes): array
+    {
+        $quotesList = [];
+        foreach ($quotes as $quote) {
+            // Prep key
+            $quoteDate = $quote->created_at;
+            $quoteKey = $quoteDate->format('Y-m-d');
+
+            // Create entry if missing
+            if (!isset($quotesList[$quoteKey])) {
+                $quotesList[$quoteKey] = [
+                    'title' => $quoteDate->isoFormat('ddd DD MMMM'),
+                    'quotes' => [],
+                ];
+            }
+
+            $quotesList[$quoteKey]['quotes'][] = $quote;
+        }
+
+        // Convert to list()-able format
+        $quotesList = array_map(static fn ($row) => [$row['title'], $row['quotes']], $quotesList);
+
+        // Sort entries by key
+        \ksort($quotesList);
+
+        // Return it
+        return $quotesList;
+    }
+
+    private function setSubject(DateTimeInterface $start, DateTimeInterface $end): string
+    {
+        // Ensure carbon objects
+        $start = Carbon::parse($start);
+        $end = Carbon::parse($end);
+
+        // Update subject according to scope
+        $startLabel = $start->isoFormat('MMMM');
+        $endLabel = $end->isoFormat('MMMM');
+        $isoLabel = $start->format('Y-m');
+
+        // Prep a basename
+        $baseName = "wist-je-datjes {$isoLabel}";
+
+        // Return just one month if it is just one month
+        if ($start->month === $end->month) {
+            $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel}");
+            return "{$baseName} - {$startLabel}";
+        }
+
+        // Return "en"-separated if two months
+        if ($start->month + 1 === $end->month) {
+            $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} en {$endLabel}");
+            return "{$baseName} - {$startLabel} en {$endLabel}";
+        }
+
+        // Return range otherwise
+        $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} t/m {$endLabel}");
+        return "{$baseName} - {$startLabel} tm {$endLabel}";
     }
 }

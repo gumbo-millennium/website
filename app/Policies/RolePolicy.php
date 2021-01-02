@@ -10,7 +10,6 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Handle Role modifications
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RolePolicy
 {
@@ -22,6 +21,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can view any models.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -32,6 +32,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can view the model.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -43,6 +44,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can create models.
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -53,6 +55,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can update the model.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -64,6 +67,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can delete the model.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -75,6 +79,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can restore the model.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -86,6 +91,7 @@ class RolePolicy
 
     /**
      * Determine whether the user can permanently delete the model.
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Role  $role
      * @return mixed
@@ -97,10 +103,10 @@ class RolePolicy
 
     /**
      * Allow attaching permissions if admin
+     *
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function attachPermission(User $user, Role $role, Permission $permission)
     {
@@ -110,10 +116,10 @@ class RolePolicy
     /**
      * Allow attaching users if admin or if granted
      * management access
+     *
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function attachUser(User $user, Role $role, User $model)
     {
@@ -123,10 +129,10 @@ class RolePolicy
     /**
      * Allow attaching users if admin or if granted
      * management access
+     *
      * @param User $user
      * @param Permission $permission
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function detachUser(User $user, Role $role, User $model)
     {
@@ -135,6 +141,7 @@ class RolePolicy
 
     /**
      * Can the given user admin all roles
+     *
      * @param User $user
      * @return bool
      */

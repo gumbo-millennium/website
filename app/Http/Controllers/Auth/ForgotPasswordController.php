@@ -24,12 +24,12 @@ class ForgotPasswordController extends Controller
     | your application to your users. Feel free to explore this trait.
     |
     */
-
     use SendsPasswordResetEmails;
     use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.
+     *
      * @return void
      */
     public function __construct()
@@ -46,7 +46,7 @@ class ForgotPasswordController extends Controller
     {
         $form = $formBuilder->create(ForgotPasswordForm::class, [
             'method' => 'POST',
-            'url' => route('password.email')
+            'url' => route('password.email'),
         ]);
 
         return response()

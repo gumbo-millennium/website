@@ -19,6 +19,7 @@ abstract class BasePolicy extends BasicPolicy
 {
     /**
      * Don't act on Nova paths
+     *
      * @param Request $request
      * @param Response $response
      * @return bool
@@ -44,6 +45,7 @@ abstract class BasePolicy extends BasicPolicy
 
     /**
      * Configure CSP directives
+     *
      * @return void
      */
     public function configure()

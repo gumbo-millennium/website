@@ -10,6 +10,7 @@ class ValidateSvg extends SvgJob
 {
     /**
      * Execute the job.
+     *
      * @return void
      */
     public function handle()
@@ -58,7 +59,7 @@ class ValidateSvg extends SvgJob
         if (count($issues) === 1) {
             $this->fail(new \InvalidArgumentException("Error: {$message}"));
             return;
-        };
+        }
 
         // Returns the first issue and hints about the rest
         $restCount = count($issues) - 1;

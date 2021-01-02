@@ -10,6 +10,7 @@ class CreateFileBundlesTable extends Migration
 {
     /**
      * Run the migrations.
+     *
      * @return void
      */
     public function up()
@@ -39,6 +40,7 @@ class CreateFileBundlesTable extends Migration
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()

@@ -37,18 +37,20 @@ trait HandlesStripeRefunds
 
     /**
      * Maps refund reasons to credit note reasons
+     *
      * @var array<string>
      */
     private static array $refundCreditReasonMap = [
-        StripeServiceContract::REFUND_REQUESTED_BY_CUSTOMER => StripeServiceContract::CREDIT_ORDER_CHANGE
+        StripeServiceContract::REFUND_REQUESTED_BY_CUSTOMER => StripeServiceContract::CREDIT_ORDER_CHANGE,
     ];
 
     /**
      * Creates a refund for the given enrollment, which will issue a refund for the
      * charge, and then add that refund as a credit note on the invoice.
+     *
      * @param Enrollment $enrollment
      * @param string $reason
-     * @param null|int $amount
+     * @param int|null $amount
      * @return Refund
      */
     public function createRefund(Enrollment $enrollment, string $reason, ?int $amount): Refund
@@ -80,11 +82,12 @@ trait HandlesStripeRefunds
 
     /**
      * Creates the refund for the given charge, and returns it
+     *
      * @param Charge $charge
      * @param Enrollment $enrollment
      * @param Invoice $invoice
      * @param string $reason
-     * @param null|int $amount
+     * @param int|null $amount
      * @return Refund
      * @throws UnderflowException
      * @throws InvalidArgumentException
@@ -116,8 +119,8 @@ trait HandlesStripeRefunds
             'metadata' => [
                 'enrollment-id' => $enrollment->id,
                 'user-id' => $enrollment->user->id,
-                'invoice-id' =>  $invoice->number
-            ]
+                'invoice-id' =>  $invoice->number,
+            ],
         ];
 
         // Add reason
@@ -139,6 +142,7 @@ trait HandlesStripeRefunds
 
     /**
      * Creates the credit note for this invoice, created from the refund provided
+     *
      * @param Refund $refund
      * @param Enrollment $enrollment
      * @param Invoice $invoice
@@ -161,7 +165,7 @@ trait HandlesStripeRefunds
             "type" => "custom_line_item",
             "unit_amount" => $refund->amount,
             "quantity" => "1",
-            "description" => "Terugbetaling van {$invoice->number}"
+            "description" => "Terugbetaling van {$invoice->number}",
         ];
 
         $memo = "Terugbetaling na annulering van inschrijving op {$enrollment->activity->name}";
@@ -175,8 +179,8 @@ trait HandlesStripeRefunds
             'metadata' => [
                 'enrollment-id' => $enrollment->id,
                 'user-id' => $enrollment->user->id,
-                'invoice-id' =>  $invoice->number
-            ]
+                'invoice-id' =>  $invoice->number,
+            ],
         ];
 
         // Add reason

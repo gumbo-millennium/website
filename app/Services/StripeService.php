@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Handles making calls on the Stripe API
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -30,6 +31,7 @@ class StripeService implements StripeServiceContract
 
     /**
      * Handles exceptions from Stripe
+     *
      * @param ApiErrorException $exception
      * @param int|null $expect Expected error code (like 404)
      * @return void
@@ -45,7 +47,7 @@ class StripeService implements StripeServiceContract
         // Log error
         logger()->warning('Recieved HTTP error from Stripe API', [
             'exception' => $exception,
-            'json' => $exception->getJsonBody()
+            'json' => $exception->getJsonBody(),
         ]);
 
         // Report to Telescope and such

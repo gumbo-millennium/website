@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ShopController;
 use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
-    App\Http\Policy\LoginPolicy::class
+    App\Http\Policy\LoginPolicy::class,
 ]);
 
 // Home
@@ -186,6 +187,18 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
     Route::get('/', 'SponsorController@index')->name('index');
     Route::get('/{sponsor}', 'SponsorController@show')->name('show');
     Route::get('/{sponsor}/website', 'SponsorController@redirect')->name('link');
+});
+
+/**
+ * Webshop
+ */
+Route::prefix('shop')->name('shop.')->group(static function () {
+    Route::get('/', [ShopController::class, 'index'])->name('home');
+
+    Route::get('/item/{product}', [ShopController::class, 'showProduct'])->name('product');
+    Route::get('/item/{product}/{variant}', [ShopController::class, 'showProductVariant'])->name('product-variant');
+
+    Route::get('/{category}', [ShopController::class, 'showCategory'])->name('category');
 });
 
 // Common mistakes handler

@@ -16,18 +16,21 @@ class UpdateUser extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:update-user {user? : User to update}';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Updates the users via the Conscribo API';
 
     /**
      * Execute the console command.
+     *
      * @return void
      */
     public function handle()

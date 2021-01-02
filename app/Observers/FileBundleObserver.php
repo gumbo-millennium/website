@@ -10,6 +10,7 @@ class FileBundleObserver
 {
     /**
      * Ensures a user is set and a publication date is assigned
+     *
      * @param FileBundle $bundle
      * @return void
      */

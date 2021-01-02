@@ -11,6 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * A request with sign up data
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -18,12 +19,14 @@ class JoinRequest extends FormRequest
 {
     /**
      * Phone rule
+     *
      * @var PhoneNumber
      */
     private $phoneNumberRule;
 
     /**
      * Determine if the user is authorized to make this request.
+     *
      * @return bool
      */
     public function authorize()
@@ -33,6 +36,7 @@ class JoinRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
      * @return array
      */
     public function rules()
@@ -69,6 +73,7 @@ class JoinRequest extends FormRequest
 
     /**
      * Returns the data without sensitive fields
+     *
      * @return array
      */
     public function safe(): array
@@ -78,6 +83,7 @@ class JoinRequest extends FormRequest
 
     /**
      * Returns the submission for this data
+     *
      * @return JoinSubmission
      */
     public function submission(): JoinSubmission
@@ -97,7 +103,7 @@ class JoinRequest extends FormRequest
             'postal_code',
             'country',
             'windesheim_student',
-            'newsletter'
+            'newsletter',
         ])->toArray();
 
         // Format phone number, if possible
@@ -112,6 +118,7 @@ class JoinRequest extends FormRequest
 
     /**
      * Returns the phone rule
+     *
      * @return PhoneNumber
      */
     private function phoneRule(): PhoneNumber

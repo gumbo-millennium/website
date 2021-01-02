@@ -18,6 +18,7 @@ abstract class GumboViewModel extends ViewModel
      * Extends Spatie's ViewModel system to automagically add the
      * get<Name>Attribute methods if they're protected, and map them
      * to a snake case variant.
+     *
      * @return Collection
      */
     protected function items(): Collection

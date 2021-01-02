@@ -17,6 +17,7 @@ class VerifyEmail extends Command
 
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:verify-email
@@ -25,12 +26,14 @@ class VerifyEmail extends Command
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Re-sends the e-mail verification';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -40,6 +43,7 @@ class VerifyEmail extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
@@ -67,14 +71,17 @@ class VerifyEmail extends Command
         $this->line('Verification URL:');
         $this->line($this->getSignUrl($user) . PHP_EOL);
 
-        if ($sendUrl) {
-            $user->sendEmailVerificationNotification();
-            $this->info('Verification mail re-sent');
+        if (!$sendUrl) {
+            return;
         }
+
+        $user->sendEmailVerificationNotification();
+        $this->info('Verification mail re-sent');
     }
 
     /**
      * Returns likely URL
+     *
      * @param App\Models\User $user
      * @return string
      */

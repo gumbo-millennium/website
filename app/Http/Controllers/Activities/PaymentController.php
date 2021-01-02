@@ -23,9 +23,9 @@ use Stripe\Source;
  *
  * Note that usually, the webhooks will have validated the
  * payment a long time before the user returns here.
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PaymentController extends Controller
 {
@@ -33,6 +33,7 @@ class PaymentController extends Controller
 
     /**
      * Show the form to choose a bank for the iDEAL payment
+     *
      * @param StripeServiceContract $stripeService
      * @param IdealBankService $bankService
      * @param Request $request
@@ -62,7 +63,7 @@ class PaymentController extends Controller
         // Form
         $form = $formBuilder->create(PaymentStartForm::class, [
             'method' => 'POST',
-            'url' => route('enroll.pay', compact('activity'))
+            'url' => route('enroll.pay', compact('activity')),
         ]);
 
         // Build response
@@ -76,6 +77,7 @@ class PaymentController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
      * @param  Request  $request
      * @return Response
      */
@@ -114,6 +116,7 @@ class PaymentController extends Controller
 
     /**
      * Try to start iDEAL
+     *
      * @param Request $request
      * @param StripeService $stripeService
      * @param Activity $activity
@@ -168,6 +171,7 @@ class PaymentController extends Controller
 
     /**
      * Callback from Stripe
+     *
      * @param Request $request
      * @param Activity $activity
      * @return Response
@@ -188,14 +192,18 @@ class PaymentController extends Controller
 
     /**
      * Perform the actual validation
+     *
      * @param Request $request
      * @param StripeServiceContract $service
      * @param Activity $activity
      * @return RedirectResponse
      * @throws EnrollmentNotFoundException
      */
-    public function completeVerify(Request $request, StripeServiceContract $service, Activity $activity)
-    {
+    public function completeVerify(
+        Request $request,
+        StripeServiceContract $service,
+        Activity $activity
+    ) {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 

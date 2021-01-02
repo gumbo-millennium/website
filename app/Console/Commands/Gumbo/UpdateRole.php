@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Adds a role via CLI
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -20,18 +21,21 @@ class UpdateRole extends Command
 
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
     protected $signature = 'gumbo:update-role {user} {role} {--force} {--revoke}';
 
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Give or revoke a user with the given ID, email or alias the given role';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -41,6 +45,7 @@ class UpdateRole extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()

@@ -12,6 +12,7 @@ use Artesaos\SEOTools\Facades\SEOTools;
 
 /**
  * Renders user-generated news articles
+ *
  * @author Roelof Roos <github@roelof.io>
  * @license MPL-2.0
  */
@@ -19,6 +20,7 @@ class NewsController extends Controller
 {
     /**
      * Renders a news index, per 15 pages
+     *
      * @return Response
      */
     public function index()
@@ -75,12 +77,13 @@ class NewsController extends Controller
 
         // Return the view with all items
         return view('news.index')->with([
-            'items' => $allNewsItems
+            'items' => $allNewsItems,
         ]);
     }
 
     /**
      * Renders a single item
+     *
      * @param NewsItem $item
      * @return Response
      */
@@ -96,7 +99,7 @@ class NewsController extends Controller
         SEOTools::setDescription($description);
         SEOTools::setCanonical($url);
         SEOTools::addImages([
-            $item->image->url('social')
+            $item->image->url('social'),
         ]);
 
         // Set Open Graph
