@@ -134,7 +134,8 @@
             "npm run build",
             "docker-compose up -d",
             "echo \"Waiting for MySQL to get ready\" && sleep 10s",
-            "@php artisan migrate:fresh --seed --force"
+            "@php artisan migrate:fresh --seed --force",
+            "@php artisan db:seed --class=LocalSeeder"
         ],
         "ide": [
             "@php artisan clear-compiled",
