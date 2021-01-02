@@ -165,7 +165,7 @@
 
         {{-- Make the required alias file --}}
         echo -e "\nMaking an alias file..."
-        touch nova/aliases.php
+        touch nova/src/aliases.php
 
         echo -e "\nLaravel Nova extracted in library"
     else
