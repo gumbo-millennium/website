@@ -20,8 +20,6 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * Add page
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Page extends Resource
 {

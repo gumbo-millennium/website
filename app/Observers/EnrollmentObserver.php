@@ -10,8 +10,6 @@ use App\Models\States\Enrollment\State as EnrollmentState;
 /**
  * Listens for changes in enrollment elements. Sends users mails when they're
  * enrolled and unenrolled for events.
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class EnrollmentObserver
 {

@@ -26,7 +26,6 @@ class AdminGate
      *
      * @param User $user
      * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function nova(User $user): bool
     {

@@ -37,7 +37,6 @@ class PaymentPolicy
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, Payment $payment)
     {
@@ -49,7 +48,6 @@ class PaymentPolicy
      *
      * @param  User  $user
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function create(User $user)
     {
@@ -62,7 +60,6 @@ class PaymentPolicy
      * @param  User  $user
      * @param  Payment  $payment
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, Payment $payment)
     {

@@ -21,8 +21,6 @@ use Laravel\Nova\Panel;
 
 /**
  * File resource, highly linked.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FileBundle extends Resource
 {

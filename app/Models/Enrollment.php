@@ -125,7 +125,6 @@ class Enrollment extends UuidModel
      * Returns true if the state is stable and will not auto-delete
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsStableAttribute(): bool
     {
@@ -136,7 +135,6 @@ class Enrollment extends UuidModel
      * Returns if the enrollment is discounted.
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsDiscountedAttribute(): bool
     {

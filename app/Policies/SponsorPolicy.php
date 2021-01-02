@@ -32,7 +32,6 @@ class SponsorPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function view(User $user, Sponsor $sponsor)
     {
@@ -56,7 +55,6 @@ class SponsorPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function update(User $user, Sponsor $sponsor)
     {
@@ -69,7 +67,6 @@ class SponsorPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function delete(User $user, Sponsor $sponsor)
     {
@@ -82,7 +79,6 @@ class SponsorPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function restore(User $user, Sponsor $sponsor)
     {
@@ -95,7 +91,6 @@ class SponsorPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Sponsor  $sponsor
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function forceDelete(User $user, Sponsor $sponsor)
     {

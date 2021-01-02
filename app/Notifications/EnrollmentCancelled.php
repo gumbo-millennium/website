@@ -45,7 +45,6 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @return \Illuminate\Notifications\Messages\MailMessage
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function toMail()
     {

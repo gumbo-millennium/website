@@ -22,8 +22,6 @@ use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Roles, for the Permission Framework
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Role extends Resource
 {

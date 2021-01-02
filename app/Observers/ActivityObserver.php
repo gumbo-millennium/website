@@ -21,8 +21,6 @@ class ActivityObserver
      *
      * @param  \App\App\Models\Activity  $activity
      * @return void
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function saving(Activity $activity)
     {

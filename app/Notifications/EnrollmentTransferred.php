@@ -51,7 +51,6 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
      *
      * @param User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function toMail($notifiable)
     {

@@ -11,8 +11,6 @@ use Illuminate\Routing\Controller as BaseController;
 
 /**
  * Main controller class
- *
- * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {

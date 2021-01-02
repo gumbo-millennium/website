@@ -297,7 +297,6 @@ class UpdateConscriboUserJob implements ShouldQueue
      * @param array $accountingUser
      * @return void
      * @throws \InvalidArgumentException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function assignRoles(User $user, array $accountingUser): void
     {

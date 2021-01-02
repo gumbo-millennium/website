@@ -16,8 +16,6 @@ use Laravel\Nova\Fields\Text;
 
 /**
  * Users of our system
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class User extends Resource
 {

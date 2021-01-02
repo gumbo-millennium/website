@@ -10,8 +10,6 @@ use Laravel\Nova\Resource as NovaResource;
 
 /**
  * Generic resource
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 abstract class Resource extends NovaResource
 {

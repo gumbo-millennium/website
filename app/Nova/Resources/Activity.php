@@ -36,8 +36,6 @@ use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Activity extends Resource
 {

@@ -22,9 +22,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Registation controller
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Registration controller
  */
 class RegisterController extends Controller
 {

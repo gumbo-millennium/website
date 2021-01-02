@@ -68,7 +68,6 @@ class ActivityViewModel extends GumboViewModel
      * Handles checking if a user is enrolled
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     protected function getIsEnrolledAttribute(): bool
     {
@@ -79,7 +78,6 @@ class ActivityViewModel extends GumboViewModel
      * Handles checking if a user paid for this enrollment
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     protected function getHasPaidAttribute(): bool
     {
@@ -91,7 +89,6 @@ class ActivityViewModel extends GumboViewModel
      * Returns if the user needs to pay for this enrollment
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     protected function getIsPaidAttribute(): bool
     {
@@ -106,7 +103,6 @@ class ActivityViewModel extends GumboViewModel
      * Returns if the user is enrolled and the enrollment is in a non-volatile state.
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     protected function getIsStableAttribute(): bool
     {

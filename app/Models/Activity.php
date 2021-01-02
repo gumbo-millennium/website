@@ -189,7 +189,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if the enrollment is still open
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getEnrollmentOpenAttribute(): ?bool
     {
@@ -359,7 +358,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if members can go for free
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsFreeForMemberAttribute(): bool
     {
@@ -371,7 +369,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns true if the activity is free
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsFreeAttribute(): bool
     {
@@ -382,7 +379,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if the activity has been cancelled
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsCancelledAttribute(): bool
     {
@@ -393,7 +389,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if the activity was rescheduled to a different date
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsRescheduledAttribute(): bool
     {
@@ -404,7 +399,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if the activity was postponed to an as-of-yet unknown date
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsPostponedAttribute(): bool
     {
@@ -415,7 +409,6 @@ class Activity extends SluggableModel implements AttachableInterface
      * Returns if the activity is published
      *
      * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsPublishedAttribute(): bool
     {
