@@ -77,7 +77,7 @@ class Product extends Resource
                 ->nullable(),
 
             Text::make(__('Entity Tag'), 'etag')
-                ->exceptOnForms(),
+                ->onlyOnDetail(),
 
             Number::make(__('VAT'), 'vat_rate')
                 ->hideFromIndex()
