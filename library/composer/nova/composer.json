@@ -33,7 +33,10 @@
     "autoload": {
         "psr-4": {
             "Laravel\\Nova\\": "src/"
-        }
+        },
+        "files": [
+            "./src/aliases.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

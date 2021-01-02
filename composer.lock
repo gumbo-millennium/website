@@ -3257,7 +3257,7 @@
             "dist": {
                 "type": "path",
                 "url": "./library/composer/nova",
-                "reference": "3aeecd33941ce8fd26e2399860a0ea610a74580d"
+                "reference": "ee3b0bf6abbbcf54a040861d82ce208bb4e4840a"
             },
             "require": {
                 "brick/money": "^0.4.2",
@@ -3293,7 +3293,10 @@
             "autoload": {
                 "psr-4": {
                     "Laravel\\Nova\\": "src/"
-                }
+                },
+                "files": [
+                    "./src/aliases.php"
+                ]
             },
             "autoload-dev": {
                 "psr-4": {
