@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Helpers\Str;
-use App\Models\Page;
 use Tests\TestCase;
 
 class PagesTest extends TestCase

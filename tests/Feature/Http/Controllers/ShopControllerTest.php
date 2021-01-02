@@ -8,30 +8,13 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ShopControllerTest extends TestCase
 {
     use DatabaseTransactions;
-
-    private function onlyForMembers(string $url): TestResponse
-    {
-        Auth::logout();
-
-        $this->get($url)
-            ->assertRedirect(route('login'));
-
-        $this->actingAs($this->getGuestUser())
-            ->get($url)
-            ->assertForbidden();
-
-        return $this->actingAs($this->getMemberUser())
-            ->get($url);
-    }
 
     /**
      * A basic feature test example.
@@ -195,5 +178,20 @@ class ShopControllerTest extends TestCase
         foreach ($variants as $variant) {
             $response->assertSeeText($variant->name);
         }
+    }
+
+    private function onlyForMembers(string $url): TestResponse
+    {
+        Auth::logout();
+
+        $this->get($url)
+            ->assertRedirect(route('login'));
+
+        $this->actingAs($this->getGuestUser())
+            ->get($url)
+            ->assertForbidden();
+
+        return $this->actingAs($this->getMemberUser())
+            ->get($url);
     }
 }
