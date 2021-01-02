@@ -16,6 +16,9 @@ class LocalSeeder extends Seeder
         // Add users
         $this->call(UserSeeder::class);
 
+        // Seed shop
+        $this->call(ShopSeeder::class);
+
         // Add bot quotes
         $this->call(BotQuoteSeeder::class);
 

@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Helpers\Str;
-use App\Models\Page;
 use Tests\TestCase;
 
 class PagesTest extends TestCase
 {
+    /**
+     * @before
+     * @return void
+     */
+    public function updateContentFromGit(): void
+    {
+        $this->afterApplicationCreated(fn () => $this->artisan('gumbo:update-content'));
+    }
+
     /**
      * Test the homepage
      *
@@ -39,15 +47,11 @@ class PagesTest extends TestCase
      */
     public function provideTestUrls()
     {
-        // Get first page
-        $firstPage = Page::where('contents', '!=', '[]')->first();
-
         // Build set
         return [
             'homepage' => ['/', 200],
             'privacy-policy' => ['/privacy-policy', 200],
             'not-found' => [sprintf('/url%s', Str::uuid()), 404],
-            'first-page' => [$firstPage ? "/{$firstPage->slug}" : null, 200],
         ];
     }
 }

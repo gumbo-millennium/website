@@ -125,7 +125,7 @@
             "Composer\\Config::disableProcessTimeout",
             "@php -r \"file_exists('.env') || copy('.env.local', '.env');\"",
             "git submodule update --init",
-            "docker-compose pull",
+            "docker-compose pull || true",
             "docker-compose up -d",
             "@composer install --dev",
             "@php artisan app:env --force",
