@@ -163,6 +163,10 @@
         echo -e "\nMoving extracted contents..."
         mv laravel-nova-* nova
 
+        {{-- Make the required alias file --}}
+        echo -e "\nMaking an alias file..."
+        touch nova/aliases.php
+
         echo -e "\nLaravel Nova extracted in library"
     else
         {{-- Report missing --}}
