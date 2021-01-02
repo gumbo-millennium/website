@@ -24,6 +24,7 @@ class ShopController extends Controller
     {
         $categories = Category::query()
             ->where('visible', 1)
+            ->has('products.variants')
             ->orderBy('name')
             ->get();
 
@@ -40,7 +41,7 @@ class ShopController extends Controller
 
     public function showCategory(Category $category)
     {
-        if (!$category->visible) {
+        if (!$category->visible || !$category->products()->has('variants')->exists()) {
             throw new NotFoundHttpException();
         }
 
@@ -49,6 +50,7 @@ class ShopController extends Controller
             ->orderBy('name')
             ->with('variants')
             ->withCount('variants')
+            ->has('variants')
             ->get();
 
         // Add to CSP

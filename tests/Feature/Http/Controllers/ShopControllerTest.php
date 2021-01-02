@@ -48,7 +48,7 @@ class ShopControllerTest extends TestCase
             'visible' => 1,
         ]);
 
-        $productFactory = factory(Product::class, 5);
+        $productFactory = factory(Product::class, 5)->state('with-variants');
 
         foreach ($visible as $category) {
             $productFactory->create([
@@ -85,7 +85,7 @@ class ShopControllerTest extends TestCase
             'visible' => 1,
             'category_id' => $category->id,
         ];
-        $visibleProducts = factory(Product::class)->createMany([
+        $visibleProducts = factory(Product::class)->state('with-variants')->createMany([
             array_merge($base, ['name' => 'Visible Product 1']),
             array_merge($base, ['name' => 'Visible Product 2']),
             array_merge($base, ['name' => 'Visible Product 3']),
@@ -96,7 +96,7 @@ class ShopControllerTest extends TestCase
             'visible' => 0,
             'category_id' => $category->id,
         ];
-        $invisibleProducts = factory(Product::class)->createMany([
+        $invisibleProducts = factory(Product::class)->state('with-variants')->createMany([
             array_merge($base, ['name' => 'Hidden Product 1']),
             array_merge($base, ['name' => 'Hidden Product 2']),
             array_merge($base, ['name' => 'Hidden Product 3']),
@@ -108,7 +108,7 @@ class ShopControllerTest extends TestCase
             'visible' => 1,
             'category_id' => $category2->id,
         ];
-        $mismatchedProducts = factory(Product::class)->createMany([
+        $mismatchedProducts = factory(Product::class)->state('with-variants')->createMany([
             array_merge($base, ['name' => 'Other Product 1']),
             array_merge($base, ['name' => 'Other Product 2']),
             array_merge($base, ['name' => 'Other Product 3']),
@@ -129,6 +129,27 @@ class ShopControllerTest extends TestCase
         }
     }
 
+    public function testVariantRequirement()
+    {
+        $category = factory(Category::class)->create([
+            'visible' => 1,
+        ]);
+        $product = factory(Product::class)->create([
+            'visible' => 1,
+            'category_id' => $category->id,
+        ]);
+
+        $this->onlyForMembers(route('shop.home'))
+            ->assertOk()
+            ->assertDontSee($category->name);
+
+        $this->onlyForMembers(route('shop.category', compact('category')))
+            ->assertNotFound();
+
+        $this->onlyForMembers(route('shop.product', compact('product')))
+            ->assertNotFound();
+    }
+
     /**
      * A basic feature test example.
      *
@@ -140,7 +161,7 @@ class ShopControllerTest extends TestCase
             'visible' => 1,
         ]);
 
-        $product = factory(Product::class)->create([
+        $product = factory(Product::class)->state('with-variants')->create([
             'category_id' => $category->id,
             'visible' => 1,
         ]);
