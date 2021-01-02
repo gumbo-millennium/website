@@ -27,7 +27,7 @@ $logo = $sponsorService->toSvg($sponsor, [
             </p>
 
             {{-- Button --}}
-            <a href="{{ route('sponsors.link', compact('sponsor')) }}" class="btn btn--brand sponsor__card-btn">
+            <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="btn btn--brand sponsor__card-btn">
                 Bekijk sponsor
             </a>
         </div>
