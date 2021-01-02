@@ -65,7 +65,7 @@ class ShopController extends Controller
 
     public function showProduct(Product $product)
     {
-        if (!$product->visible) {
+        if (!$product->visible || !$product->category_id) {
             throw new NotFoundHttpException();
         }
 
@@ -82,7 +82,7 @@ class ShopController extends Controller
 
     public function showProductVariant(Product $product, string $variant)
     {
-        if (!$product->visible) {
+        if (!$product->visible || !$product->category_id) {
             throw new NotFoundHttpException();
         }
 
