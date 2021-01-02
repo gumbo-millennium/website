@@ -9,7 +9,7 @@ $logo = $sponsorService->toSvg($sponsor, [
 @unless (empty($logo))
 <div class="sponsor">
     <div class="container sponsor__container">
-        <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" class="sponsor__simple-link">
+        <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="sponsor__simple-link">
             {{-- Load SVG from platform --}}
             {{ $logo }}
         </a>

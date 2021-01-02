@@ -23,7 +23,7 @@
                 </div>
 
                 {{-- Button bit --}}
-                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" class="btn btn--brand sponsor-single__header-button">
+                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="btn btn--brand sponsor-single__header-button">
                     Lees meer
                 </a>
             </header>
@@ -38,7 +38,7 @@
                 <span class="sponsor-single__footer-text">
                     Interesse in {{ $sponsor->name }}?
                 </span>
-                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" class="btn btn--brand sponsor-single__footer-button">
+                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="btn btn--brand sponsor-single__footer-button">
                     Lees meer
                 </a>
             </div>
