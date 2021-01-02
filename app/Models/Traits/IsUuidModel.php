@@ -14,7 +14,7 @@ trait IsUuidModel
     protected static function bootIsUuidModel()
     {
         self::creating(static function ($model) {
-            $model->id = (string) Str::uuid();
+            $model->id ??= (string) Str::uuid();
         });
     }
 
