@@ -11,23 +11,6 @@ use LogicException;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    private static bool $botManMapped = false;
-
-    /**
-     * Defines the BotMan "hears" commands.
-     *
-     * @return void
-     */
-    public static function mapBotManCommands(): void
-    {
-        if (self::$botManMapped) {
-            return;
-        }
-
-        self::$botManMapped = true;
-        require base_path('routes/botman.php');
-    }
-
     /**
      * This namespace is applied to your controller routes.
      *
