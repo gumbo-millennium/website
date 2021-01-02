@@ -98,7 +98,9 @@
 
   <!-- Slevomatic Coding Standard: Cleaning -->
   <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
-  <rule ref="SlevomatCodingStandard.Functions.UnusedParameter" />
+  <rule ref="SlevomatCodingStandard.Functions.UnusedParameter">
+    <type>warning</type>
+  </rule>
   <rule ref="SlevomatCodingStandard.Functions.UselessParameterDefaultValue" />
   <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
     <properties>

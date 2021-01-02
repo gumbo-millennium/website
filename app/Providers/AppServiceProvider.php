@@ -14,6 +14,7 @@ use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
@@ -49,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Handle Horizon auth
         Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
+
+        // Components
+        Blade::component('components.breadcrumbs', 'breadcrumbs');
     }
 
     /**
