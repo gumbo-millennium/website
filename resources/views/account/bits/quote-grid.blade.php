@@ -1,44 +1,56 @@
 @php
 $hasDelete = (bool) ($delete ?? false);
+$lastDate = null;
 @endphp
-@if (!empty($quotes) && count($quotes) > 0)
-<table class="table-auto w-full border-collapse">
-    <thead>
-        <tr>
-            <th>Datum</th>
-            <th>Wist-je-datje</th>
-            @if ($hasDelete)
-            <th>&nbsp;</th>
-            @endif
-        </tr>
-    </thead>
+@forelse ($quotes as $quote)
+    @php
+    $dateIso = $quote->created_at->toIso8601String();
+    $curernt = $quote->created_at->isoFormat('HH:mm (z)');
+    $currentDate = $quote->created_at->isoFormat('dddd D MMM, Y')
+    @endphp
+    @if ($currentDate !== $lastDate)
+    <p class="my-4 text-gray-secondary-3 text-center text-sm">
+        {{ $currentDate }}
+    </p>
+    @endif
 
-    <tbody>
-        @foreach ($quotes as $quote)
-        @php
-        $dateIso = $quote->created_at->toIso8601String();
-        $dateHuman = $quote->created_at->isoFormat('D MMM Y, HH:mm (z)');
-        @endphp
-        <tr>
-            <td>
-                <time datetime="{{ $dateIso }}">{{ $dateHuman }}</time>
-            </td>
-            <td>
-                <q>{{ $quote->quote }}</q>
-                –
-                {{ $quote->display_name }}
-            </td>
-            @if ($hasDelete)
-            <td>
-                <button type="submit" form="quote-delete" class="appearance-none text-danger p-2" name="quote-id" value="{{ $quote->id }}">
-                    @icon('solid/trash-alt', ['class' => 'icon', 'aria-label' => 'Verwijder wist-je-datje'])
-                </button>
-            </td>
-            @endif
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-@else
+    <div class="flex flex-row items-end justify-items-end ml-auto">
+        {{-- Push right --}}
+        <div class="flex-grow"></div>
+
+        {{-- Start of chat bubble --}}
+        <blockquote class="mb-4 text-right">
+            {{-- Message --}}
+            <p class="rounded-lg bg-blue-secondary-2 p-2">
+                {{ $quote->quote }}
+            </p>
+
+            {{-- Footer --}}
+            <footer class="text-right m-2 text-gray-primary-3 text-sm">
+                {{-- Author --}}
+                <cite>{{ $quote->author }}</cite>
+
+                {{-- Date --}}
+                <time datetime="{{ $quote->created_at->toIso8601String() }}">
+                    {{ $quote->created_at->isoFormat('HH:mm (z)') }}
+                </time>
+            </footer>
+        </blockquote>
+
+        @if ($hasDelete)
+        <div class="mb-6 flex-none mr-2">
+            <button
+                type="submit"
+                form="quote-delete"
+                class="appearance-none text-danger p-2"
+                name="quote-id"
+                value="{{ $quote->id }}"
+            >
+                @icon('solid/trash-alt', ['class' => 'icon', 'aria-label' => 'Verwijder wist-je-datje'])
+            </button>
+        </div>
+        @endif
+    </div>
+@empty
     {{ $empty }}
-@endif
+@endforelse

@@ -29,8 +29,8 @@ class BotQuoteController extends Controller
 
         // Get user quotes
         $quotesQuery = BotQuote::whereUserId($user->id);
-        $unsentQuotes = (clone $quotesQuery)->whereNull('submitted_at')->paginate(20);
-        $sentQuotes = (clone $quotesQuery)->whereNotNull('submitted_at')->paginate(20, ['*'], 'sent-page');
+        $unsentQuotes = (clone $quotesQuery)->latest()->whereNull('submitted_at')->paginate(20);
+        $sentQuotes = (clone $quotesQuery)->latest()->whereNotNull('submitted_at')->paginate(20, ['*'], 'sent-page');
 
         // Render view
         return response()

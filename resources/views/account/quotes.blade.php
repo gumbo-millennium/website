@@ -28,7 +28,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 
 @component('account.bits.quote-grid', ['delete' => true, 'quotes' => $unsent])
 @slot('empty')
-<div class="p-16 text-center">
+<div class="py-16 px-4 text-center">
     <h3 class="text-title text-center">Geen wist-je-datjes</h3>
     <p class="text-gray-primary-2">Je hebt nog geen wist-je-datjes ingestuurd, of ze zijn allemaal al doorgestuurd.</p>
 </div>
@@ -43,7 +43,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 
 @component('account.bits.quote-grid', ['delete' => false, 'quotes' => $sent])
 @slot('empty')
-<div class="p-16 text-center">
+<div class="py-16 px-4 text-center">
     <h3 class="text-title text-center">Geen wist-je-datjes</h3>
     <p class="text-gray-primary-2">Er zijn geen wist-je-datjes van jou doorgestuurd naar de Gumbode, of ze zijn verwijderd.</p>
 </div>
