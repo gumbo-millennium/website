@@ -5,7 +5,6 @@ $lastDate = null;
 @forelse ($quotes as $quote)
     @php
     $dateIso = $quote->created_at->toIso8601String();
-    $curernt = $quote->created_at->isoFormat('HH:mm (z)');
     $currentDate = $quote->created_at->isoFormat('dddd D MMM, Y')
     @endphp
     @if ($currentDate !== $lastDate)
@@ -51,6 +50,10 @@ $lastDate = null;
         </div>
         @endif
     </div>
+
+    @php
+    $lastDate = $currentDate;
+    @endphp
 @empty
     {{ $empty }}
 @endforelse
