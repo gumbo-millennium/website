@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Models\FileCategory;
 use App\Models\FileDownload;
 use App\Models\JoinSubmission;
+use App\Models\MemberReferral;
 use App\Models\NewsItem;
 use App\Models\Page;
 use App\Models\Payment;
@@ -40,6 +41,7 @@ class AdminGate
             || $user->can('manage', FileCategory::class)
             || $user->can('manage', FileDownload::class)
             || $user->can('manage', JoinSubmission::class)
+            || $user->can('manage', MemberReferral::class)
             || $user->can('manage', NewsItem::class)
             || $user->can('manage', Page::class)
             || $user->can('manage', Payment::class)
