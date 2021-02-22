@@ -452,7 +452,7 @@ final class ConscriboService implements ConscriboServiceContract
             }
 
             // Map members to IDs
-            $row['members'] = collect(explode(',', $row['leden']))
+            $row['members'] = collect(explode(',', $row['leden'] ?? ''))
                 ->map('trim')
                 ->map(static fn ($val) => explode(':', $val, 2)[0])
                 ->map(static fn ($val) => filter_var($val, \FILTER_VALIDATE_INT))
