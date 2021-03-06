@@ -171,6 +171,10 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');
     Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');
 
+    // Permissions
+    Route::get('/toestemmingen', 'Account\GrantsController@editGrants')->name('grants');
+    Route::post('/toestemmingen', 'Account\GrantsController@updateGrants');
+
     // Telegram
     Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'Account\TelegramController@store');

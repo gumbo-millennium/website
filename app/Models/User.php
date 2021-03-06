@@ -80,6 +80,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     protected $attributes = [
         'insert' => null,
         'alias' => null,
+        'grants' => '[]',
     ];
 
     /**
@@ -90,6 +91,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     protected $casts = [
         'conscribo_id' => 'int',
         'address' => 'json',
+        'grants' => 'json',
     ];
 
     /**
@@ -246,5 +248,41 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
         // Return new data
         return $data;
+    }
+
+    /**
+     * Sets a grant on the user
+     *
+     * @param string $key
+     * @param bool|null $granted
+     * @return User
+     */
+    public function setGrant(string $key, ?bool $granted): self
+    {
+        $grants = $this->grants;
+
+        if ($granted === null) {
+            Arr::forget($grants, $key);
+        } else {
+            Arr::set($grants, $key, $granted);
+        }
+
+        $this->grants = $grants;
+
+        return $this;
+    }
+
+    /**
+     * Returns true if this user has granted the given flag.
+     *
+     * @param string $key
+     * @param bool $default
+     * @return bool
+     */
+    public function hasGrant(string $key, bool $default = false): bool
+    {
+        $grants = $this->grants;
+
+        return (bool) Arr::get($grants, $key, $default);
     }
 }

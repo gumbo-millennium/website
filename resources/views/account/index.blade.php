@@ -18,6 +18,15 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
+{{-- My grants --}}
+<div class="card card--padded">
+    <h3 class="heading-3 mt-0">Toestemmingen</h3>
+    <div class="flex flex-row items-center">
+        <p class="leading-none m-0 mr-4 flex-grow">Jouw gegeven toestemmingen</p>
+        <a href="{{ route('account.grants') }}" class="btn my-0">Naar overzicht</a>
+    </div>
+</div>
+
 {{-- My quotes --}}
 <div class="card card--padded">
     <h3 class="heading-3 mt-0">Mijn wist-je-datjes</h3>
