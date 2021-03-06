@@ -116,8 +116,8 @@ jobs:
 
       - name: Test optimizing the config
         run: |
-          php artisan optimize
-          php artisan optimize:clear
+          php artisan optimize -vv
+          php artisan optimize:clear -vv
 
       - name: Run unit tests
         run: vendor/bin/phpunit --coverage-clover coverage-clover.xml
