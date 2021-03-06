@@ -158,23 +158,23 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
-    Route::get('/', 'AccountController@index')->name('index');
+    Route::get('/', 'Account\DisplayController@index')->name('index');
 
     // Urls
-    Route::get('/api-urls', 'AccountController@urls')->name('urls');
+    Route::get('/api-urls', 'Account\DisplayController@showUrls')->name('urls');
 
     // Edit profile
-    Route::get('/bewerk-profiel', 'AccountController@edit')->name('edit');
-    Route::patch('/bewerk-profiel', 'AccountController@update')->name('update');
+    Route::get('/bewerk-profiel', 'Account\DetailsController@editDetails')->name('edit');
+    Route::patch('/bewerk-profiel', 'Account\DetailsController@updateDetails')->name('update');
 
     // Quotes
-    Route::get('/wist-je-datjes', 'BotQuoteController@index')->name('quotes');
-    Route::delete('/wist-je-datjes', 'BotQuoteController@destroy')->name('quotes.delete');
+    Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');
+    Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');
 
     // Telegram
-    Route::get('/telegram/connect', 'TelegramController@create')->name('tg.link');
-    Route::post('/telegram/connect', 'TelegramController@store');
-    Route::delete('/telegram/disconnect', 'TelegramController@delete')->name('tg.unlink');
+    Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
+    Route::post('/telegram/connect', 'Account\TelegramController@store');
+    Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');
 });
 
 // Onboarding URLs
