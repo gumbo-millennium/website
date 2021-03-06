@@ -68,7 +68,6 @@ class Page extends SluggableModel implements AttachableInterface
      * @inheritDoc
      */
     protected $casts = [
-        'contents' => 'json',
         'user_id' => 'int',
     ];
 

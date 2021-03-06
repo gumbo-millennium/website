@@ -11,6 +11,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Page::class, static fn (Faker $faker) => [
         'title' => Str::title($faker->words($faker->numberBetween(2, 8), true)),
-        'contents' => $faker->randomHtml(),
+        'contents' => '[]',
         'author_id' => optional(User::inRandomOrder()->first())->id,
     ]);
