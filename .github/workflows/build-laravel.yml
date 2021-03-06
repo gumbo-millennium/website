@@ -56,7 +56,6 @@ jobs:
           MYSQL_DATABASE: laravel
           MYSQL_USER: laravel
           MYSQL_PASSWORD: laravel
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
@@ -73,15 +72,6 @@ jobs:
       - name: Check for Gumbo Millennium typos
         run: .github/find-typos.sh
 
-      - name: Cache Composer
-        uses: actions/cache@v1
-        with:
-          path: vendor
-          key: composer-build-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            composer-build-${{ matrix.php }}-
-            composer-build-
-
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
@@ -95,12 +85,23 @@ jobs:
         run: cp .github/actions.env .env
 
       - name: Install composer dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: "--ignore-platform-req=php"
+
+      - name: Wait for MySQL to get ready
+        timeout-minutes: 5
         run: |
-          composer install --no-progress --no-interaction --ignore-platform-req=php
-          php artisan key:generate
+          while ! mysqladmin --protocol=tcp --port=13306 ping 2>/dev/null; do
+            echo "MySQL still offline, waiting 5 seconds";
+            sleep 5s;
+          done
 
       - name: Prepare database
         run: php artisan migrate --seed
+
+      - name: Install an application key
+        run: php artisan key:generate
 
       - name: Download front-end
         uses: actions/download-artifact@master
@@ -116,8 +117,8 @@ jobs:
 
       - name: Test optimizing the config
         run: |
-          php artisan optimize
-          php artisan optimize:clear
+          php artisan optimize -vv
+          php artisan optimize:clear -vv
 
       - name: Run unit tests
         run: vendor/bin/phpunit --coverage-clover coverage-clover.xml

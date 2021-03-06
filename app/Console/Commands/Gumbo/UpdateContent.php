@@ -90,9 +90,12 @@ class UpdateContent extends Command
             // Assign data
             $page->created_at = $data['created_at'];
             $page->updated_at = $data['updated_at'];
-            $page->contents = $data['content'];
             $page->title = $data['title'] ?? $this->buildTitle($slug);
             $page->summary = $data['summary'] ?? $data['tagline'] ?? null;
+
+            // Assign content
+            $content = $data['content'];
+            $page->contents = is_scalar($content) ?  $content : json_encode($content);
 
             // Save changes
             $page->save();
