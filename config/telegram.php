@@ -41,6 +41,7 @@ return [
             'commands' => [
                 App\Bots\Commands\ActivitiesCommand::class,
                 App\Bots\Commands\BeerCommand::class,
+                App\Bots\Commands\LeaderboardCommand::class,
                 App\Bots\Commands\LoginCommand::class,
                 App\Bots\Commands\LogoutCommand::class,
                 App\Bots\Commands\PlazaCamCommand::class,

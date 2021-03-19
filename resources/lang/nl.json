@@ -59,5 +59,7 @@
   "Referred by": "Referentie",
   "Referred by user": "Referentie gebruiker",
 
+  ":user with :count member|:user with :count members": ":user met :count lid|:user met :count leden",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

@@ -41,6 +41,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $gender
  * @property array|null $address
  * @property string|null $phone
+ * @property-read string $leaderboard_name
  * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $activities
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
  * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
@@ -60,6 +61,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     use HasRoles;
     use SoftDeletes;
     use MustVerifyEmail;
+
+    public const SHOW_IN_LEADERBOARD_GRANT = 'leaderboard:show';
 
     /**
      * @inheritDoc
@@ -319,5 +322,20 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
         $grants = $this->grants;
 
         return (bool) Arr::get($grants, $key, $default);
+    }
+
+    /**
+     * Name to show on the leaderboard, might be blurred.
+     *
+     * @return string
+     */
+    public function getLeaderboardNameAttribute(): string
+    {
+        $userName = $this->alias ?? $this->first_name;
+        if ($this->hasGrant(self::SHOW_IN_LEADERBOARD_GRANT)) {
+            return $userName;
+        }
+
+        return preg_replace('/[^\s-]/', '*', $userName);
     }
 }
