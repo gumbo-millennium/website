@@ -37,6 +37,25 @@ class JoinSubmission extends Model
     use HasEncryptedAttributes;
 
     /**
+     * Create a MemberReferral if the submisison has a referral set.
+     *
+     * @return void
+     */
+    public static function booted(): void
+    {
+        static::created(static function (self $submission) {
+            if (!$submission->referrer) {
+                return;
+            }
+
+            MemberReferral::create([
+                'subject' => $submission->first_name,
+                'referred_by' => $submission->referrer,
+            ]);
+        });
+    }
+
+    /**
      * @inheritDoc
      */
     protected $encrypted = [
