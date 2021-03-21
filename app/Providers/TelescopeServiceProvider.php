@@ -39,7 +39,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         // Filter batches
         Telescope::filterBatch(static function (Collection $entries) {
             // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
-            $entries->contains(static function (IncomingEntry $entry) {
+            return $entries->contains(static function (IncomingEntry $entry) {
                 return
                     $entry->isReportableException() ||
                     $entry->isFailedRequest() ||
