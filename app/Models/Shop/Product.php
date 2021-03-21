@@ -10,6 +10,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * A single product.
+ *
+ * @property string $id
+ * @property string|null $category_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property string $name
+ * @property string|null $description
+ * @property string $slug
+ * @property string|null $image_url
+ * @property string|null $etag
+ * @property int $vat_rate
+ * @property bool $visible
+ * @property array $meta
+ * @property-read \App\Models\Shop\Category|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
+ */
 class Product extends Model
 {
     use IsUuidModel;

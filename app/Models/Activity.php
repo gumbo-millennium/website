@@ -23,9 +23,65 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 /**
  * A hosted activity
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  * @property-read AttachmentInterface $image
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $deleted_at
+ * @property \Illuminate\Support\Date|null $published_at
+ * @property \Illuminate\Support\Date|null $cancelled_at
+ * @property string $name
+ * @property string $slug
+ * @property string|null $tagline
+ * @property array|null $description
+ * @property string|null $statement
+ * @property string|null $location
+ * @property string|null $location_address
+ * @property string $location_type
+ * @property \Illuminate\Support\Date $start_date Start date and time
+ * @property \Illuminate\Support\Date $end_date End date and time
+ * @property int|null $seats
+ * @property bool $is_public
+ * @property int|null $member_discount
+ * @property int|null $discount_count
+ * @property string|null $stripe_coupon_id
+ * @property int|null $price
+ * @property \Illuminate\Support\Date|null $enrollment_start
+ * @property \Illuminate\Support\Date|null $enrollment_end
+ * @property string|null $payment_type
+ * @property string|null $cancelled_reason
+ * @property \Illuminate\Support\Date|null $rescheduled_from
+ * @property string|null $rescheduled_reason
+ * @property \Illuminate\Support\Date|null $postponed_at
+ * @property string|null $postponed_reason
+ * @property mixed|null $enrollment_questions
+ * @property int|null $role_id
+ * @property string|null $image_file_name image name
+ * @property int|null $image_file_size image size (in bytes)
+ * @property string|null $image_content_type image content type
+ * @property string|null $image_updated_at image update timestamp
+ * @property mixed|null $image_variants image variants (json)
+ * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
+ * @property-read int $available_seats
+ * @property-read string|null $description_html
+ * @property-read int|null $discount_price
+ * @property-read int|null $discounts_available
+ * @property-read bool $enrollment_open
+ * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
+ * @property-read string $full_statement
+ * @property-read bool $is_cancelled
+ * @property-read bool $is_free
+ * @property-read bool $is_free_for_member
+ * @property-read bool $is_postponed
+ * @property-read bool $is_published
+ * @property-read bool $is_rescheduled
+ * @property-read string|null $location_url
+ * @property-read string|null $organiser
+ * @property-read string $price_label
+ * @property-read int|null $total_discount_price
+ * @property-read int|null $total_price
+ * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
+ * @property-read Role|null $role
  */
 class Activity extends SluggableModel implements AttachableInterface
 {

@@ -7,6 +7,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * A connection from Telegram to our website, used for the name basically.
+ *
+ * @property string $id
+ * @property string $driver
+ * @property string $driver_id
+ * @property string|null $name
+ * @property-read User $user
+ */
 class BotUserLink extends UuidModel
 {
     /**

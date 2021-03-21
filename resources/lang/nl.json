@@ -53,5 +53,13 @@
 
   "Failed to render body, sorry.": "De content kan helaas niet goed getoond worden, sorry.",
 
+  "Member Referral": "Ledenverwijzing",
+  "Member Referrals": "Ledenverwijzingen",
+  "New member": "Nieuw lid",
+  "Referred by": "Referentie",
+  "Referred by user": "Referentie gebruiker",
+
+  ":user with :count member|:user with :count members": ":user met :count lid|:user met :count leden",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

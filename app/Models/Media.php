@@ -9,6 +9,31 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
 
+/**
+ * File collection media
+ *
+ * @property int $id
+ * @property string $model_type
+ * @property int $model_id
+ * @property string $collection_name
+ * @property string $name
+ * @property string $file_name
+ * @property string|null $mime_type
+ * @property string $disk
+ * @property int $size
+ * @property array $manipulations
+ * @property array $custom_properties
+ * @property array $responsive_images
+ * @property int|null $order_column
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property-read \App\Models\FileBundle|null $bundle
+ * @property-read string $extension
+ * @property-read string $human_readable_size
+ * @property-read string $type
+ * @property-read \Illuminate\Database\Eloquent\Model $model
+ */
 class Media extends BaseMedia
 {
     use Searchable;

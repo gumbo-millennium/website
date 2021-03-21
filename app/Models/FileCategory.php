@@ -13,8 +13,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * A file category, containing file bundles
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property int $id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string|null $title
+ * @property string $slug
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $bundles
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
  */
 class FileCategory extends SluggableModel
 {

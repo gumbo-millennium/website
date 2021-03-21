@@ -15,9 +15,25 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * A news article
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  * @property-read AttachmentInterface $image
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date $published_at
+ * @property string $title
+ * @property string $slug
+ * @property string $category
+ * @property string|null $sponsor
+ * @property string|null $headline
+ * @property array|null $contents
+ * @property int|null $author_id
+ * @property string|null $image_file_name image name
+ * @property int|null $image_file_size image size (in bytes)
+ * @property string|null $image_content_type image content type
+ * @property string|null $image_updated_at image update timestamp
+ * @property array|null $image_variants image variants (json)
+ * @property-read User|null $author
+ * @property-read string|null $html
  */
 class NewsItem extends SluggableModel implements AttachableInterface
 {

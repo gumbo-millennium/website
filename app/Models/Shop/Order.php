@@ -9,6 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * A user's order
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $paid_at
+ * @property \Illuminate\Support\Date|null $shipped_at
+ * @property int $price
+ * @property-read string $status
+ * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $products
+ * @property-read \App\Models\User $user
+ */
 class Order extends Model
 {
 

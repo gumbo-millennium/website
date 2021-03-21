@@ -9,6 +9,19 @@ use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * A shop category.
+ *
+ * @property string $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property string $name
+ * @property string|null $description
+ * @property string $slug
+ * @property bool $visible
+ * @property array $meta
+ * @property-read \Illuminate\Database\Eloquent\Collection<Product> $products
+ */
 class Category extends Model
 {
     use IsUuidModel;

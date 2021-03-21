@@ -18,6 +18,42 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Our users
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $deleted_at
+ * @property string|null $stripe_id
+ * @property int|null $conscribo_id
+ * @property string|null $telegram_id
+ * @property string $first_name
+ * @property string|null $insert
+ * @property string $last_name
+ * @property string|null $name
+ * @property string $email
+ * @property \Illuminate\Support\Date|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property string|null $alias
+ * @property array $grants
+ * @property string|null $gender
+ * @property array|null $address
+ * @property string|null $phone
+ * @property-read string $leaderboard_name
+ * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $files
+ * @property-read array<int> $hosted_activity_ids
+ * @property-read bool $is_member
+ * @property-read string|null $public_name
+ * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $hosted_activities
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<\Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<\Spatie\Permission\Models\Permission> $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<Role> $roles
+ */
 class User extends Authenticatable implements MustVerifyEmailContract, ConvertsToStripe
 {
     use HasEncryptedAttributes;
@@ -25,6 +61,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     use HasRoles;
     use SoftDeletes;
     use MustVerifyEmail;
+
+    public const SHOW_IN_LEADERBOARD_GRANT = 'leaderboard:show';
 
     /**
      * @inheritDoc
@@ -284,5 +322,20 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
         $grants = $this->grants;
 
         return (bool) Arr::get($grants, $key, $default);
+    }
+
+    /**
+     * Name to show on the leaderboard, might be blurred.
+     *
+     * @return string
+     */
+    public function getLeaderboardNameAttribute(): string
+    {
+        $userName = $this->alias ?? $this->first_name;
+        if ($this->hasGrant(self::SHOW_IN_LEADERBOARD_GRANT)) {
+            return $userName;
+        }
+
+        return preg_replace('/[^\s-]/', '*', $userName);
     }
 }

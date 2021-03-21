@@ -9,8 +9,20 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * A payment transaction
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property string $id
+ * @property string $transaction_id
+ * @property int $user_id
+ * @property string $enrollment_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $completed_at
+ * @property string $status
+ * @property int $amount In cents
+ * @property \Illuminate\Support\Date|null $refunded_at
+ * @property int|null $refunded_amount
+ * @property \Illuminate\Support\Collection|null $data
+ * @property-read bool $is_completed
+ * @property-read bool $is_refunded
  */
 class Payment extends UuidModel
 {

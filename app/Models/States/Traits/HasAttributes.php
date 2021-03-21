@@ -8,9 +8,6 @@ use App\Helpers\Str;
 
 /**
  * Allows Eloquent-like access to the states
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 trait HasAttributes
 {
