@@ -13,13 +13,13 @@ class LeaderboardCommand extends Command
     private const EMOJI = ['🥇', '🥈', '🥉'];
 
     private const MESSAGE_EMPTY = <<<'HTML'
-    🏆 Nieuwe Leden Leaderboard
+    🏆 Werving Commissie Leaderboard
 
     Het leaderboard is momenteel leeg 😔
     HTML;
 
     private const MESSAGE_TEMPLATE = <<<'HTML'
-    🏆 Nieuwe Leden Leaderboard
+    🏆 Werving Commissie Leaderboard
 
     %s
 
@@ -39,7 +39,7 @@ class LeaderboardCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Toon de (besloten) activiteiten';
+    protected $description = 'Toon het Werving Commissie Leaderboard';
 
     /**
      * Handle the activity
