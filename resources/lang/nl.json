@@ -50,5 +50,8 @@
   "Paid": "Betaald",
   "Pending": "Niet betaald",
   "Price": "Prijs",
+
+  "Failed to render body, sorry.": "De content kan helaas niet goed getoond worden, sorry.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

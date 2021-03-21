@@ -131,23 +131,11 @@ class PageController extends Controller
      */
     protected function render(?string $group, string $slug)
     {
-        // Get cache key
-        $cacheKey = sprintf('pages-cache.%s.%s', $group ?? 'default', $slug);
-
-        // Check cache
-        $page = $this->cache->get($cacheKey);
-        if (!$this->cache->has($cacheKey)) {
-            // Check database
-            $page = Page::where(compact('group', 'slug'))->first();
-
-            // Store in cache
-            $this->cache->put($cacheKey, $page, now()->addHour());
-        }
-
-        // Handle cached 404
-        if ($page === null) {
-            abort(404);
-        }
+        // Get page
+        $page = Page::query()
+            ->whereGroup($group)
+            ->whereSlug($slug)
+            ->firstOrFail();
 
         // Set SEO
         SEOTools::setCanonical($page->url);
