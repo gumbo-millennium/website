@@ -8,6 +8,17 @@ use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * A mail that will be sent at a later date, or has been
+ * sent.
+ *
+ * @property int $id
+ * @property string $group
+ * @property string $name
+ * @property \Illuminate\Support\Date $scheduled_for
+ * @property \Illuminate\Support\Date|null $sent_at
+ * @property bool $is_sent
+ */
 class ScheduledMail extends Model
 {
     /**

@@ -16,8 +16,22 @@ use Spatie\MediaLibrary\Models\Media;
 /**
  * A bundle of uploaded files
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property int $id
+ * @property int|null $category_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date $published_at
+ * @property int|null $owner_id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $description
+ * @property int $total_size
+ * @property-read FileCategory|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property-read bool $is_available
+ * @property-read string|null $url
+ * @property-read \Illuminate\Database\Eloquent\Collection<Media> $media
+ * @property-read User|null $owner
  */
 class FileBundle extends SluggableModel implements HasMedia
 {

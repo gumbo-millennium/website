@@ -8,6 +8,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * A quote sent by a user via the Telegram bot
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $submitted_at
+ * @property int|null $user_id
+ * @property string $display_name
+ * @property string $quote
+ * @property-read User|null $user
+ */
 class BotQuote extends Model
 {
     private const KEEP_DAYS = 45;

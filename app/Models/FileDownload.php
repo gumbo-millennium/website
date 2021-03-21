@@ -13,8 +13,16 @@ use Spatie\MediaLibrary\Models\Media;
  * An individual file download, logs the bundle downloaded, the specific file downloaded (if any),
  * the user, the timestamp, the IP from which the user downloaded and the user agent used.
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property string $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property int $user_id
+ * @property int $bundle_id
+ * @property int|null $media_id
+ * @property string $ip
+ * @property string $user_agent
+ * @property-read FileBundle $bundle
+ * @property-read Media|null $media
+ * @property-read User $user
  */
 class FileDownload extends Pivot
 {

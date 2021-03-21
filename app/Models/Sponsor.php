@@ -17,9 +17,35 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Gumbo Millennium sponsors
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  * @property-read AttachmentInterface $backdrop
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $deleted_at
+ * @property string $name Sponsor name
+ * @property string $slug
+ * @property string $url URL of sponsor landing page
+ * @property \Illuminate\Support\Date|null $starts_at
+ * @property \Illuminate\Support\Date|null $ends_at
+ * @property int|null $has_page
+ * @property int $view_count Number of showings
+ * @property string|null $backdrop_file_name backdrop name
+ * @property int|null $backdrop_file_size backdrop size (in bytes)
+ * @property string|null $backdrop_content_type backdrop content type
+ * @property string|null $backdrop_updated_at backdrop update timestamp
+ * @property mixed|null $backdrop_variants backdrop variants (json)
+ * @property string|null $caption
+ * @property string|null $logo_gray
+ * @property string|null $logo_color
+ * @property string|null $contents_title
+ * @property mixed|null $contents
+ * @property-read \Illuminate\Database\Eloquent\Collection<SponsorClick> $clicks
+ * @property-read mixed $click_count
+ * @property-read string|null $content_html
+ * @property-read bool $is_active
+ * @property-read bool $is_classic
+ * @property-read string|null $logo_color_url
+ * @property-read string|null $logo_gray_url
  */
 class Sponsor extends SluggableModel implements AttachableInterface
 {

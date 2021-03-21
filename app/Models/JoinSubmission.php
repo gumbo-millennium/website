@@ -10,8 +10,26 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Encrypted submission to Gumbo
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property string|null $first_name
+ * @property string|null $insert
+ * @property string $last_name
+ * @property string $email
+ * @property string|null $phone Encrypted phone number
+ * @property string|null $date_of_birth Encrypted date of birth, as dd-mm-yyyy
+ * @property string|null $gender User supplied gender
+ * @property string|null $street Encrypted street name
+ * @property string|null $number Encrypted number
+ * @property string|null $city Encrypted city
+ * @property string|null $postal_code Encrypted zipcode
+ * @property string|null $country Encrypted country
+ * @property bool $windesheim_student
+ * @property bool $newsletter
+ * @property bool|null $granted
+ * @property string|null $referrer
+ * @property-read string $name
  */
 class JoinSubmission extends Model
 {

@@ -13,6 +13,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * A variant of the product, like size or color.
+ *
+ * @property string $id
+ * @property string $product_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property string $name
+ * @property string|null $description
+ * @property string $slug
+ * @property string|null $image_url
+ * @property string|null $sku
+ * @property int|null $price
+ * @property array $options
+ * @property array $meta
+ * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
+ * @property-read \App\Models\Shop\Product $product
+ */
 class ProductVariant extends Model
 {
     use IsUuidModel;

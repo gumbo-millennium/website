@@ -11,8 +11,16 @@ use Spatie\Permission\Models\Role as SpatieRole;
 /**
  * A role, with some modifications
  *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * @property int $id
+ * @property string $name
+ * @property string|null $title
+ * @property string $guard_name
+ * @property bool $default
+ * @property int|null $conscribo_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<\Spatie\Permission\Models\Permission> $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<User> $users
  */
 class Role extends SpatieRole
 {

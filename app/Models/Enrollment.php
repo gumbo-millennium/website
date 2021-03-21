@@ -20,7 +20,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * A user enrollment for an activity. Optionally has payments.
  *
- * @property \App\Models\States\Enrollment\State $state
+ * @property States\Enrollment\State $state
+ * @property string $id
+ * @property int $user_id
+ * @property int $activity_id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property \Illuminate\Support\Date|null $deleted_at
+ * @property string|null $deleted_reason
+ * @property int|null $price
+ * @property int|null $total_price
+ * @property string|null $payment_intent
+ * @property string|null $payment_invoice
+ * @property string|null $payment_source
+ * @property string $user_type
+ * @property \Illuminate\Support\Date|null $expire
+ * @property string|null $transfer_secret
+ * @property \Illuminate\Support\Collection|null $data
+ * @property-read Activity $activity
+ * @property-read bool $is_discounted
+ * @property-read bool $is_stable
+ * @property-read bool $requires_payment
+ * @property-read States\Enrollment\State|null $wanted_state
+ * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
+ * @property-read User $user
  */
 class Enrollment extends UuidModel
 {

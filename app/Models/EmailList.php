@@ -6,6 +6,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Date $created_at
+ * @property \Illuminate\Support\Date $updated_at
+ * @property string $email
+ * @property string $service_id
+ * @property string|null $name
+ * @property array<string> $aliases
+ * @property array<string> $members
+ */
 class EmailList extends Model
 {
     /**

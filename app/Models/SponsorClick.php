@@ -11,6 +11,12 @@ use InvalidArgumentException;
 
 /**
  * A collection of clicks on a sponsor for a given day
+ *
+ * @property int $id
+ * @property int $sponsor_id
+ * @property int $count
+ * @property \Illuminate\Support\Date $date
+ * @property-read Sponsor $sponsor
  */
 class SponsorClick extends Model
 {

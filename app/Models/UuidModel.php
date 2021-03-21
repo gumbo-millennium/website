@@ -10,9 +10,6 @@ use Ramsey\Uuid\Uuid;
 /**
  * A model that has a slug property, which is used to generate unique
  * looking URLs
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 abstract class UuidModel extends Model
 {
