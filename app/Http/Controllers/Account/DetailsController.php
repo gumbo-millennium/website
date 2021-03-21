@@ -2,98 +2,29 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
 use App\Forms\AccountEditForm;
 use App\Helpers\Str;
-use App\Models\BotUserLink;
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse as HttpRedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
- * Allows a user to change it's account info
+ * Allows a user to change it's account info.
  */
-class AccountController extends Controller
+class DetailsController extends Controller
 {
     /**
-     * Index page
-     *
-     * @param Request $request
-     * @return Illuminate\Http\Response
+     * Force auth
      */
-    public function index(Request $request)
+    public function __construct()
     {
-        $user = $request->user();
-        $telegramName = null;
-        if ($user->telegram_id) {
-            $telegramName = BotUserLink::getName('telegram', $user->telegram_id);
-        }
-
-        return response()
-            ->view('account.index', compact('user', 'telegramName'))
-            ->setPrivate();
-    }
-
-    public function urls(Request $request)
-    {
-        // Shorthands
-        $user = $request->user();
-        $urlExpire = now()->addYear()->diffInSeconds();
-
-        $urls = \collect();
-
-        // Plazacam view
-        if ($request->user()->hasPermissionTo('plazacam-view')) {
-            // Plazacam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Plazacam',
-                'url' => URL::signedRoute('api.plazacam.view', [
-                    'user' => $user->id,
-                    'image' => 'plaza',
-                ], $urlExpire),
-            ]);
-
-            // Coffeecam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Koffiecam',
-                'url' => URL::signedRoute('api.plazacam.view', [
-                    'user' => $user->id,
-                    'image' => 'coffee',
-                ], $urlExpire),
-            ]);
-        }
-
-        // Plazacam update
-        if ($request->user()->hasPermissionTo('plazacam-update')) {
-            // Plazacam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Plazacam (update)',
-                'url' => URL::signedRoute('api.plazacam.store', [
-                    'user' => $user->id,
-                    'image' => 'plaza',
-                ], $urlExpire),
-            ]);
-
-            // Coffeecam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Koffiecam (update)',
-                'url' => URL::signedRoute('api.plazacam.store', [
-                    'user' => $user->id,
-                    'image' => 'coffee',
-                ], $urlExpire),
-            ]);
-        }
-
-        // Render view
-        return response()
-            ->view('account.urls', compact('urls'))
-            ->setPrivate();
+        $this->middleware('auth');
     }
 
     /**
@@ -101,9 +32,9 @@ class AccountController extends Controller
      *
      * @param FormBuilder $formBuilder
      * @param Request $request
-     * @return Illuminate\Http\Response
+     * @return HttpResponse
      */
-    public function edit(FormBuilder $formBuilder, Request $request)
+    public function editDetails(FormBuilder $formBuilder, Request $request): HttpResponse
     {
         // Get current user
         $user = $request->user();
@@ -122,8 +53,7 @@ class AccountController extends Controller
         // Create form
         \assert($form instanceof AccountEditForm);
 
-        return response()
-            ->view('account.edit', [
+        return Response::view('account.edit', [
                 'user' => $user,
                 'form' => $form,
                 'isLinked' => $isLinked,
@@ -136,9 +66,9 @@ class AccountController extends Controller
      *
      * @param FormBuilder $formBuilder
      * @param Request $request
-     * @return void
+     * @return HttpRedirectResponse
      */
-    public function update(FormBuilder $formBuilder, Request $request)
+    public function updateDetails(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
         // Get current user
         $user = $request->user();
@@ -196,9 +126,9 @@ class AccountController extends Controller
             $message = 'Je gegevens zijn niet aangepast.';
         }
 
-        // Flash oK
+        // Flash OK
         flash($message, 'success');
-        return response()
-            ->redirectToRoute('account.index');
+
+        return Response::redirectToRoute('account.index');
     }
 }

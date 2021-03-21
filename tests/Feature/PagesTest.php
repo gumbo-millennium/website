@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Helpers\Str;
+use App\Models\Page;
 use Tests\TestCase;
 
 class PagesTest extends TestCase
@@ -37,6 +38,18 @@ class PagesTest extends TestCase
         // Test cached response
         $response = $this->get($url);
         $response->assertStatus($code);
+    }
+
+    /**
+     * Test a random page
+     */
+    public function testSeededPage(): void
+    {
+        $page = factory(Page::class)->create();
+
+        $this->get(url("/{$page->slug}"))
+            ->assertOk()
+            ->assertSee($page->title);
     }
 
     /**

@@ -1,0 +1,12 @@
+leaderboard:show:
+  name: Weergave op leaderboard
+  description: |
+    Via het (alleen-leden) Gumbot commando /leaderboard kan je kijken wie het
+    meeste Gumbo leden heeft aangedragen. Door dit aan te zetten, tonen wij je
+    naam op dit bord, anders staat er "(Gumbo lid)".
+
+enrollment:real-name:
+  name: Echte naam bij activiteiten
+  description: |
+    De deelnemers van activiteiten zijn zichtbaar voor leden, maar dit is
+    standaard je alias. Door dit aan te zetten, tonen wij je echte naam.

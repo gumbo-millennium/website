@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
 use App\Models\BotUserLink;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,11 +18,10 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class TelegramController extends Controller
 {
     /**
-     * All routes are user-only
+     * Force auth
      */
     public function __construct()
     {
-        // Get auth
         $this->middleware('auth');
     }
 

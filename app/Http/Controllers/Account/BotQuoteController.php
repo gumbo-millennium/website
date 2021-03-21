@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
 use App\Models\BotQuote;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,9 @@ use Illuminate\Http\Request;
  */
 class BotQuoteController extends Controller
 {
+    /**
+     * Force auth
+     */
     public function __construct()
     {
         $this->middleware('auth');

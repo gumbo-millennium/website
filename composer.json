@@ -27,7 +27,6 @@
         "irazasyed/telegram-bot-sdk": "^3.3",
         "kabbouchi/nova-impersonate": "^1.1",
         "kris/laravel-form-builder": "^1.22",
-        "laktak/hjson": "^2.1",
         "laravel/framework": "^6.7",
         "laravel/horizon": "^3.3",
         "laravel/nova": "^2.0",
