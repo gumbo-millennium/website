@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use HJSON\HJSONException as HumanJsonException;
-use HJSON\HJSONParser as HumanJsonParser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Creates all roles required for ranks that users can have.
@@ -20,27 +21,12 @@ class PermissionSeeder extends VerboseSeeder
     /**
      * Filename of the permission file, relative from the resources path
      */
-    private const PERMISSION_FILE = 'assets/json/permissions.jsonc';
+    private const PERMISSION_FILE = 'yaml/permissions.yaml';
 
     /**
      * Filename of the roles file, relative from the resources path
      */
-    private const ROLES_FILE = 'assets/json/roles.jsonc';
-
-    /**
-     * A human-friendly json parser
-     *
-     * @var HumanJsonParser
-     */
-    public HumanJsonParser $jsonParser;
-
-    /**
-     * Preps a HumanJsonParser
-     */
-    public function __construct()
-    {
-        $this->jsonParser = new HumanJsonParser();
-    }
+    private const ROLES_FILE = 'yaml/roles.yaml';
 
     /**
      * Run the database seeds.
@@ -50,19 +36,19 @@ class PermissionSeeder extends VerboseSeeder
     public function run()
     {
         // Reset cached roles and permissions
-        app()['cache']->forget('spatie.permission.cache');
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Load json files
-        $permissionMap = $this->loadJson(self::PERMISSION_FILE);
-        $roleMap = $this->loadJson(self::ROLES_FILE);
+        $permissionMap = $this->readYaml(self::PERMISSION_FILE);
+        $roleMap = $this->readYaml(self::ROLES_FILE);
 
         if (!$permissionMap) {
-            logger()->error("Cannot read permission json map, please check [file].", ['file' => self::PERMISSION_FILE]);
+            Log::error("Cannot read permission json map, please check {file}.", ['file' => self::PERMISSION_FILE]);
             $this->error('Cannot read permission json map, please check %s.', self::PERMISSION_FILE);
             return false;
         }
         if (!$roleMap) {
-            logger()->error("Cannot read roles json map, please check [file].", ['file' => self::PERMISSION_FILE]);
+            Log::error("Cannot read roles json map, please check {file}.", ['file' => self::PERMISSION_FILE]);
             $this->error('Cannot read roles json map, please check %s.', self::ROLES_FILE);
             return false;
         }
@@ -91,10 +77,11 @@ class PermissionSeeder extends VerboseSeeder
         // Loop through permission
         foreach ($permissionMap as $name => $title) {
             // Creates or updates the given permission
-            $perm = Permission::query()->updateOrCreate(
-                compact('name'),
-                compact('title')
-            );
+            $perm = Permission::query()
+                ->updateOrCreate(
+                    compact('name'),
+                    compact('title')
+                );
 
             // Assign item
             $collection->put($name, $perm);
@@ -107,9 +94,9 @@ class PermissionSeeder extends VerboseSeeder
     /**
      * Creates a map with permissons to assign to roles
      *
-     * @param Collection $permissions
-     * @param Collection $roles
-     * @param Collection $roleMap
+     * @param Collection<Permission> $permissions
+     * @param Collection<Role> $roles
+     * @param Collection<array> $roleMap
      * @return Collection
      */
     public function mapRolePermissions(
@@ -129,25 +116,19 @@ class PermissionSeeder extends VerboseSeeder
             if (count($wantedPermissions) === 1 && Arr::first($wantedPermissions) === '*') {
                 $rolePermissionMap->put($name, $permissions);
 
-                logger()->info(
-                    "Updated [role] with wildcard, it now has [count] permissions.",
-                    [
+                Log::info("Updated {role} with wildcard, it now has {count} permissions.", [
                     'role' => $roles->get($name) ?? $name,
                     'count' => count($rolePermissionMap->get($name)),
-                    ]
-                );
+                ]);
                 continue;
             }
 
             $rolePermissionMap->put($name, $permissions->only($wantedPermissions));
 
-            logger()->info(
-                "Updated [role], it now has [count] permissions.",
-                [
-                    'role' => $roles->get($name) ?? $name,
-                    'count' => count($rolePermissionMap->get($name)),
-                ]
-            );
+            Log::info("Updated {role}, it now has {count} permissions.", [
+                'role' => $roles->get($name) ?? $name,
+                'count' => count($rolePermissionMap->get($name)),
+            ]);
         }
 
         // Map extended permissions to the name too
@@ -164,14 +145,11 @@ class PermissionSeeder extends VerboseSeeder
                 $rolePermissionMap->get($name),
             ])->flatten());
 
-            logger()->info(
-                "Role [role] extends [source-role], now has [count] permissions",
-                [
+            Log::info("Role {role} extends {source-role}, now has {count} permissions", [
                 'role' => $roles->get($name) ?? $name,
                 'source-role' => $roles->get($extendName) ?? $extendName,
                 'count' => $updatedPermissions->count(),
-                ]
-            );
+            ]);
         }
 
         // Return the permissionmap
@@ -181,9 +159,9 @@ class PermissionSeeder extends VerboseSeeder
     /**
      * Creats all roles and assings permissions
      *
-     * @param Collection $permissions
-     * @param Collection $roleMap
-     * @return Collection
+     * @param Collection<Permission> $permissions
+     * @param Collection<Role> $roleMap
+     * @return Collection<Role>
      */
     public function seedRoles(Collection $permissions, Collection $roleMap): Collection
     {
@@ -205,10 +183,8 @@ class PermissionSeeder extends VerboseSeeder
             ));
 
             // Log result
-            logger()->info(sprintf(
-                "%s role [role].",
-                $role->wasRecentlyCreated ? 'Created' : 'Updated',
-            ), [
+            $action = $role->wasRecentlyCreated ? 'Created' : 'Updated';
+            Log::info("$action role {role}.", [
                 'role' => $role ?? $name,
             ]);
         }
@@ -223,19 +199,13 @@ class PermissionSeeder extends VerboseSeeder
             }
 
             // Update permissions
-            $role->syncPermissions($rolePermissionMap->get($name));
-
-            // Refresh model (for updated counts)
-            $role->refresh();
+            $role->permissions()->sync($rolePermissionMap->get($name)->pluck('id'));
 
             // Log result
-            logger()->info(
-                'Role [role] was updated, now has [count] permissions',
-                [
+            Log::info('Role {role} was updated, now has {count} permissions', [
                 'role' => $roles->get($name) ?? $name,
                 'count' => $role->permissions()->count(),
-                ]
-            );
+            ]);
         }
 
         // Return roles
@@ -248,7 +218,7 @@ class PermissionSeeder extends VerboseSeeder
      * @param string $path
      * @return Collection|null
      */
-    private function loadJson(string $path): ?Collection
+    private function readYaml(string $path): ?Collection
     {
         // Get path of the file
         $fullPath = resource_path($path);
@@ -257,14 +227,23 @@ class PermissionSeeder extends VerboseSeeder
         }
 
         // Get contents of the file
-        $contents = file_get_contents($fullPath);
-
-        // Convert contents to collection
         try {
-            return collect($this->jsonParser->parse($contents, [
-                'assoc' => true,
-            ]));
-        } catch (HumanJsonException $e) {
+            return collect(
+                Yaml::parseFile($fullPath)
+            );
+        } catch (ParseException $parseException) {
+            optional($this->command)->line(sprintf(
+                '<error>Error</>: Failed to read <info>%s</>: %s',
+                $path,
+                $parseException->getMessage()
+            ));
+
+            report(new RuntimeException(sprintf(
+                'Failed to read <info>%s</>: %s',
+                $path,
+                $parseException->getMessage()
+            ), 0, $parseException));
+
             return null;
         }
     }

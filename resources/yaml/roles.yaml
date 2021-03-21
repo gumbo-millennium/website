@@ -1,0 +1,112 @@
+# Create restricted role
+restricted:
+  title: Restricted user
+  permissions: []
+
+# Create 'verified' role
+verified:
+  title: E-mail geverifiëerd
+  permissions:
+    - verfied
+
+# Create guest role
+guest:
+  title: Gast
+  default: true
+  permissions:
+    - activity-enroll
+
+# Standard members
+member:
+  title: Gumbo Millennium lid
+  extends: guest
+  permissions:
+    # Allow file browsing
+    - file-view
+
+    # Allow viewing plazacam
+    - plazacam-view
+
+    # Allow enrolling on private events
+    - activity-private
+
+# Activiteiten Committee
+ac:
+  title: Activiteiten Commissie
+  extends: member
+  permissions:
+    # Allow activity management
+    - activity-admin
+
+# Landhuis committee
+lhw:
+  title: Landhuis Commissie
+  extends: member
+  permissions: []
+
+# Landhuis committee
+pc:
+  title: Plaza Commissie
+  extends: member
+  permissions:
+    - plazacam-update
+
+# Public Relations Project Group
+pr:
+  title: Public Relations Projectgroep
+  extends: member
+  permissions:
+    # Allow content management
+    - content-admin
+
+# Intro group, can create their own events but not modify others
+ic:
+  title: Introductie commissie
+  permissions:
+    - activity-create
+
+wc:
+  title: Werving Commissie
+  permissions:
+    - referral-manage
+
+# Board
+board:
+  title: Bestuur
+  extends: member
+  permissions:
+    # Allow file management
+    - file-admin
+
+    # Allow manually updating plazacam
+    - plazacam-update
+
+    # Allow editing content
+    - content-admin
+
+    # Allow administrating events
+    - activity-admin
+    - activity-purge
+
+    # Allow changing sponsors
+    - sponsor-admin
+
+    # Allow changing roles
+    - role-admin
+
+    # Allow managing users
+    - user-admin
+
+    # Allow looking into /join submits
+    - join-admin
+
+# Digital committee
+dc:
+  title: Digitale Commissie
+  extends: member
+  permissions:
+    # Allow monitoring platforms
+    - devops
+
+    # Allow becoming other users
+    - impersonate
