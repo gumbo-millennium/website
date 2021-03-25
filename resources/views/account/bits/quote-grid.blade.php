@@ -21,7 +21,7 @@ $lastDate = null;
         <blockquote class="mb-4 text-right">
             {{-- Message --}}
             <p class="rounded-lg bg-blue-secondary-2 p-2">
-                {{ $quote->quote }}
+                {!! nl2br(e($quote->quote)) !!}
             </p>
 
             {{-- Footer --}}
