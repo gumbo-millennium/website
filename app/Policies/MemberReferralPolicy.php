@@ -93,4 +93,16 @@ class MemberReferralPolicy
     {
         return $user->hasPermissionTo('referral-manage');
     }
+
+    /**
+     * Determine whether the user can add the source user to the referral.
+     *
+     * @param User $user
+     * @param MemberReferral $podcast
+     * @return bool
+     */
+    public function addUser(User $user, MemberReferral $memberReferral): bool
+    {
+        return $user->hasPermissionTo('referral-manage');
+    }
 }
