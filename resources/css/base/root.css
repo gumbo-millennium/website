@@ -101,3 +101,25 @@ Color definitions
     --color-brand-secondary-3: theme('colors.source.brand.700');
   }
 }
+
+
+.april-fools {
+  --color-brand-primary-1: theme('colors.source.brand-alt.500');
+  --color-brand-primary-2: theme('colors.source.brand-alt.600');
+  --color-brand-primary-3: theme('colors.source.brand-alt.700');
+  --color-brand-secondary-1: theme('colors.source.brand-alt.100');
+  --color-brand-secondary-2: theme('colors.source.brand-alt.200');
+  --color-brand-secondary-3: theme('colors.source.brand-alt.300');
+}
+
+@screen dark {
+  .april-fools {
+    /* brand */
+    --color-brand-primary-1: theme('colors.source.brand-alt.500');
+    --color-brand-primary-2: theme('colors.source.brand-alt.400');
+    --color-brand-primary-3: theme('colors.source.brand-alt.300');
+    --color-brand-secondary-1: theme('colors.source.brand-alt.900');
+    --color-brand-secondary-2: theme('colors.source.brand-alt.800');
+    --color-brand-secondary-3: theme('colors.source.brand-alt.700');
+  }
+}

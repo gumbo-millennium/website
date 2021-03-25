@@ -17,10 +17,17 @@
         </div>
 
         <div class="home-hero__logo">
+            @event ('april-fools')
+            <img src="{{ mix('images/logo-glass-april-green.svg') }}" alt="Gumbo Millennium"
+                class="home-hero__logo-image hidden dark:block" />
+            <img src="{{ mix('images/logo-glass-april-night.svg') }}" alt="Gumbo Millennium"
+                class="home-hero__logo-image block dark:hidden" />
+            @else
             <img src="{{ mix('images/logo-glass-green.svg') }}" alt="Gumbo Millennium"
                 class="home-hero__logo-image hidden dark:block" />
             <img src="{{ mix('images/logo-glass-night.svg') }}" alt="Gumbo Millennium"
                 class="home-hero__logo-image block dark:hidden" />
+            @endevent
         </div>
     </div>
 </div>

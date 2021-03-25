@@ -16,6 +16,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -53,6 +54,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Components
         Blade::component('components.breadcrumbs', 'breadcrumbs');
+
+        // April Fools
+        Blade::if('event', static function ($event) {
+            if ($event === 'april-fools') {
+                return Date::today()->format('m-d') === '04-01';
+            }
+
+            return false;
+        });
     }
 
     /**

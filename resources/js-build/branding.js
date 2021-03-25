@@ -3,6 +3,7 @@
  */
 
 // Get default theme
+const Color = require('color')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 // Shorthand some colors
@@ -43,6 +44,14 @@ const brandColors = {
   900: '#003900'
 }
 
+const brandColorsAlternative = {}
+
+const colorShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
+
+colorShades.forEach(name => {
+  brandColorsAlternative[name] = Color(brandColors[name]).rotate(180).hex()
+})
+
 const colors = {
   source: {
     // Default colors
@@ -53,7 +62,10 @@ const colors = {
 
     // Our colors
     gray: grayColors,
-    brand: brandColors
+    brand: brandColors,
+
+    // April fools ;)
+    'brand-alt': brandColorsAlternative
   },
 
   // Disable some colors

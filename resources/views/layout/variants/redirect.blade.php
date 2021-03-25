@@ -7,10 +7,17 @@
 @section('content')
 <div class="container container-sm payment-redirect">
     <div class="payment-redirect__logo" role="presentation">
+        @event ('april-fools')
+        <img src="{{ mix('images/logo-text-april-green.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image block dark:hidden"
+            width="250" height="100" />
+        <img src="{{ mix('images/logo-text-april-night.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image hidden dark:block"
+            width="250" height="100" />
+        @else
         <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image block dark:hidden"
             width="250" height="100" />
         <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="payment-redirect__logo-image hidden dark:block"
             width="250" height="100" />
+        @endevent
     </div>
 
     <div class="payment-redirect__loading">
