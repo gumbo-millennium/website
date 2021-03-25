@@ -25,7 +25,7 @@
     @show
 </head>
 
-<body>
+<body class="@event('april-fools') april-fools @endevent">
     {{-- Container --}}
     <div class="container">
         <a href="#content" class="a11y-skip">Ga direct naar inhoud</a>
