@@ -22,7 +22,9 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('manage', User::class);
+        return
+            $user->can('manage', User::class) ||
+            $user->is_member;
     }
 
     /**

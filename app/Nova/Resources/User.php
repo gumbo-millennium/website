@@ -8,11 +8,13 @@ use App\Models\User as UserModel;
 use App\Nova\Filters\UserRoleFilter;
 use App\Nova\Metrics\NewUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * Users of our system
@@ -72,7 +74,10 @@ class User extends Resource
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+                ->updateRules('unique:users,email,{{resourceId}}')
+                ->hideFromIndex(function (Request $request) {
+                    return Gate::denies('view', $this->model);
+                }),
 
             Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
