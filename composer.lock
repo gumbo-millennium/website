@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dcad39c4dd8c89c12eda90a26fa65737",
+    "content-hash": "cec0d556d564661b23cf64aac0ee4615",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -951,6 +951,61 @@
                 "source": "https://github.com/daniel-de-wit/nova-paperclip/tree/0.1.0"
             },
             "time": "2019-07-02T09:25:35+00:00"
+        },
+        {
+            "name": "david-griffiths/nova-dark-theme",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/David-Griffiths/Nova-Dark-Theme.git",
+                "reference": "dfd190f4d3454e5ec066b886ad687c135b680f3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/David-Griffiths/Nova-Dark-Theme/zipball/dfd190f4d3454e5ec066b886ad687c135b680f3b",
+                "reference": "dfd190f4d3454e5ec066b886ad687c135b680f3b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DavidGriffiths\\NovaDarkTheme\\ThemeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DavidGriffiths\\NovaDarkTheme\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Griffiths",
+                    "homepage": "https://github.com/David-Griffiths",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A dark theme for Laravel Nova",
+            "homepage": "https://github.com/David-Griffiths/Nova-Dark-Theme",
+            "keywords": [
+                "dark",
+                "laravel",
+                "nova",
+                "theme"
+            ],
+            "support": {
+                "issues": "https://github.com/David-Griffiths/Nova-Dark-Theme/issues",
+                "source": "https://github.com/David-Griffiths/Nova-Dark-Theme"
+            },
+            "time": "2019-02-16T22:07:27+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

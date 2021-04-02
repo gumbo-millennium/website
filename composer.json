@@ -14,6 +14,7 @@
         "cviebrock/eloquent-sluggable": "^6.0",
         "czim/laravel-paperclip": "^2.7",
         "daniel-de-wit/nova-paperclip": "^0.1",
+        "david-griffiths/nova-dark-theme": "^1.0",
         "doctrine/dbal": "^2.3",
         "ebess/advanced-nova-media-library": "^2.9",
         "eduardokum/laravel-mail-auto-embed": "^1.0",
