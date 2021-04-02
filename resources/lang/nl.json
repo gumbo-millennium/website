@@ -70,5 +70,14 @@
   "Sent at": "Sent at",
   "Number of recipients": "Number of recipients",
 
+  "Please specify the target audience, the message title and the message body.":
+    "Geef de doelgroep aan en typ daarna je bericht.",
+  "Send message": "Verstuur bericht",
+  "Cancel": "Annuleren",
+  "Send mail to participants": "Mail versturen naar deelnemers",
+  "The message has been scheduled.": "Het bericht is ingepland voor verzending.",
+  "Body of the mail, basic markdown formatting is supported.":
+    "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

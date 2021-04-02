@@ -9,6 +9,7 @@ use App\Models\Activity as ActivityModel;
 use App\Nova\Actions\CancelActivity;
 use App\Nova\Actions\PostponeActivity;
 use App\Nova\Actions\RescheduleActivity;
+use App\Nova\Actions\SendActivityMail;
 use App\Nova\Fields\Price;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters\RelevantActivitiesFilter;
@@ -396,6 +397,7 @@ class Activity extends Resource
             new CancelActivity(),
             new PostponeActivity(),
             new RescheduleActivity(),
+            new SendActivityMail(),
         ];
     }
 
