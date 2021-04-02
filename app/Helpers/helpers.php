@@ -24,6 +24,9 @@ if (!function_exists('mix_file')) {
             $path = parse_url($path, PHP_URL_PATH);
         }
 
+        // Remove queries
+        $path = Str::before($path, '?');
+
         // Convert to public path
         $fullPath = public_path($path);
         if (!file_exists($fullPath)) {
