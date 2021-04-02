@@ -173,6 +173,7 @@ class Activity extends Resource
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
             HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
+            HasMany::make(__('Messages'), 'messages', ActivityMessage::class),
         ];
     }
 

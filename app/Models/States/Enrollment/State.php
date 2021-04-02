@@ -20,6 +20,22 @@ abstract class State extends BaseState
     public const NAME = '_state';
 
     /**
+     * States not yet confirmed
+     */
+    public const PENDING_STATES = [
+        Created::class,
+        Seeded::class,
+    ];
+
+    /**
+     * States confirmed
+     */
+    public const CONFIRMED_STATES = [
+        Confirmed::class,
+        Paid::class,
+    ];
+
+    /**
      * States that are not eligible for automatic deletion
      */
     private const STABLE_STATES = [

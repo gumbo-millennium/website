@@ -1,0 +1,96 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Policies;
+
+use App\Models\ActivityMessage;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class ActivityMessagePolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Restrict monitoring all messages to activity admins.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function viewAny(User $user)
+    {
+        return $user->hasPermissionTo('activity-admin');
+    }
+
+    /**
+     * Determine whether the user can view the activity message.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\ActivityMessage  $activityMessage
+     * @return bool
+     */
+    public function view(User $user, ActivityMessage $activityMessage)
+    {
+        return $user->can('manage', $activityMessage->activity);
+    }
+
+    /**
+     * Prevent creating new activity messages directly. Actions should be used.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function create(User $user)
+    {
+        return false;
+    }
+
+    /**
+     * Activity messages are read-only, so no changes are allowed.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\ActivityMessage  $activityMessage
+     * @return bool
+     */
+    public function update(User $user, ActivityMessage $activityMessage)
+    {
+        return false;
+    }
+
+    /**
+     * Activity messages are read-only, so no changes are allowed.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\ActivityMessage  $activityMessage
+     * @return bool
+     */
+    public function delete(User $user, ActivityMessage $activityMessage)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can restore the activity message.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\ActivityMessage  $activityMessage
+     * @return bool
+     */
+    public function restore(User $user, ActivityMessage $activityMessage)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the activity message.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\ActivityMessage  $activityMessage
+     * @return bool
+     */
+    public function forceDelete(User $user, ActivityMessage $activityMessage)
+    {
+        return false;
+    }
+}

@@ -61,5 +61,13 @@
 
   ":user with :count member|:user with :count members": ":user met :count lid|:user met :count leden",
 
+  "Messages": "Berichten",
+  "Target audience": "Doelgroep",
+  "Mail title": "Mail title",
+  "Mail body": "Mail body",
+  "Created at": "Created at",
+  "Sent at": "Sent at",
+  "Number of recipients": "Number of recipients",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
