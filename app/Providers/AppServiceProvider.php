@@ -6,10 +6,12 @@ namespace App\Providers;
 
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
+use App\Contracts\MarkdownServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
+use App\Services\MarkdownService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
@@ -86,6 +88,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Conscribo API
         $this->app->singleton(ConscriboServiceContract::class, static fn () => ConscriboService::fromConfig());
+
+        // Markdown
+        $this->app->singleton(MarkdownServiceContract::class, MarkdownService::class);
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
