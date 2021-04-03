@@ -12,7 +12,7 @@ Welkom bij Gumbo Millennium!
 @endslot
 
 {{-- Image --}}
-@slot('mailImage', mix('images/mail/header-welcome.png'))
+@slot('mailImage', mix('images/header-welcome.png'))
 
 Beste {{ $submission->first_name }},
 

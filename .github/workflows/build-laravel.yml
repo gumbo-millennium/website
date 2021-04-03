@@ -64,6 +64,13 @@ jobs:
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: pcov
 
+      - name: Configure Imagick PDF policy
+        run:
+          sudo sed
+            --in-place
+            's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read" pattern="PDF" \/>/'
+            /etc/ImageMagick*/policy.xml
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:

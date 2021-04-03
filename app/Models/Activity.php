@@ -13,6 +13,7 @@ use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -536,6 +537,11 @@ class Activity extends SluggableModel implements AttachableInterface
             return Str::limit(Str::ascii("Gumbo {$this->statement}", 'nl'), 22, '');
         }
         return 'Gumbo Millennium';
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ActivityMessage::class);
     }
 
     /**

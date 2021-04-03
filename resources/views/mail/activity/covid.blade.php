@@ -5,7 +5,7 @@ Laatste informatie voor {{ $activity->name }}
 @endslot
 
 {{-- Image --}}
-@slot('mailImage', mix('images/mail/header-covid.png'))
+@slot('mailImage', mix('images/header-covid.png'))
 
 Beste {{ $participant->first_name }},
 
@@ -19,7 +19,7 @@ houden het kort).
 @slot('html')
 {{-- Keep distance --}}
 @component('mail::icon-tile')
-@slot('icon', mix('images/mail/mail-covid-distance.png'))
+@slot('icon', mix('images/mail-covid-distance.png'))
 @slot('iconAlt', "Houd afstand")
 @slot('title', 'Bewaar de afstand en blijf zitten')
 
@@ -38,7 +38,7 @@ houden het kort).
 
 {{-- No singing --}}
 @component('mail::icon-tile')
-@slot('icon', mix('images/mail/mail-covid-no-sing.png'))
+@slot('icon', mix('images/mail-covid-no-sing.png'))
 @slot('iconAlt', "Niet zingen")
 @slot('title', 'Niet zingen en geen Gumbo yell')
 
@@ -59,7 +59,7 @@ houden het kort).
 
 {{-- Stay home --}}
 @component('mail::icon-tile')
-@slot('icon', mix('images/mail/mail-covid-stay-home.png'))
+@slot('icon', mix('images/mail-covid-stay-home.png'))
 @slot('iconAlt', "Blijf thuis")
 @slot('title', 'Blijf thuis bij ziekte of ziekteverschijnselen')
 
