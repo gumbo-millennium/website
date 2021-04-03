@@ -62,6 +62,7 @@
   ":user with :count member|:user with :count members": ":user met :count lid|:user met :count leden",
 
   "Messages": "Berichten",
+  "Sender": "Afzender",
   "Target audience": "Doelgroep",
   "Mail title": "Mail title",
   "Mail body": "Mail body",
