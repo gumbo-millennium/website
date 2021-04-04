@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Nova\Flexible\Layouts;
 
 use Laravel\Nova\Fields\Trix;
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
 
-class FormContent extends Layout
+class FormContent extends FormField
 {
     /**
      * The layout's unique identifier

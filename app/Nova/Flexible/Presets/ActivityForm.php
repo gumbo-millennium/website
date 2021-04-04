@@ -7,10 +7,10 @@ namespace App\Nova\Flexible\Presets;
 use App\Nova\Flexible\Layouts\FormCheckbox;
 use App\Nova\Flexible\Layouts\FormContent;
 use App\Nova\Flexible\Layouts\FormEmail;
+use App\Nova\Flexible\Layouts\FormField;
 use App\Nova\Flexible\Layouts\FormPhone;
 use App\Nova\Flexible\Layouts\FormSelect;
 use App\Nova\Flexible\Layouts\FormTextArea;
-use App\Nova\Flexible\Layouts\FormTextField;
 use Whitecube\NovaFlexibleContent\Flexible;
 use Whitecube\NovaFlexibleContent\Layouts\Preset;
 
@@ -19,6 +19,16 @@ use Whitecube\NovaFlexibleContent\Layouts\Preset;
  */
 class ActivityForm extends Preset
 {
+    public const LAYOUTS = [
+        FormField::class,
+        FormEmail::class,
+        FormPhone::class,
+        FormSelect::class,
+        FormTextArea::class,
+        FormCheckbox::class,
+        FormContent::class,
+    ];
+
     /**
      * Execute the preset configuration
      *
@@ -30,12 +40,8 @@ class ActivityForm extends Preset
         $field->button('Formulierveld toevoegen');
 
         // Add text field
-        $field->addLayout(FormTextField::class);
-        $field->addLayout(FormEmail::class);
-        $field->addLayout(FormPhone::class);
-        $field->addLayout(FormSelect::class);
-        $field->addLayout(FormTextArea::class);
-        $field->addLayout(FormCheckbox::class);
-        $field->addLayout(FormContent::class);
+        foreach (self::LAYOUTS as $layout) {
+            $field->addLayout($layout);
+        }
     }
 }

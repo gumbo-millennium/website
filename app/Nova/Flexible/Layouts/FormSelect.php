@@ -6,10 +6,8 @@ namespace App\Nova\Flexible\Layouts;
 
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Text;
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
 
-class FormSelect extends Layout
+class FormSelect extends FormField
 {
     /**
      * The layout's unique identifier
@@ -32,15 +30,12 @@ class FormSelect extends Layout
      */
     public function fields()
     {
-        return [
-            Text::make('Label', 'label')->rules('required'),
-            Text::make('Helptekst', 'help')->nullable(),
-            Boolean::make('Verplicht', 'required'),
+        return array_merge(parent::fields(), [
             Boolean::make('Meerkeuze', 'multiple'),
             KeyValue::make('Opties', 'options')
                 ->keyLabel('Naam')
                 ->valueLabel('Label')
                 ->actionText('Optie toevoegen'),
-        ];
+        ]);
     }
 }

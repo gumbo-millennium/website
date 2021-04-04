@@ -9,6 +9,7 @@ use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
 use App\Models\Traits\HasSimplePaperclippedMedia;
+use App\Nova\Flexible\Presets\ActivityForm;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
@@ -311,7 +312,7 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         // Return flexible content
-        return $this->flexible('enrollment_questions');
+        return $this->flexible('enrollment_questions', ActivityForm::LAYOUTS);
     }
 
     /**

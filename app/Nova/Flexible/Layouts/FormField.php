@@ -8,7 +8,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Text;
 use Whitecube\NovaFlexibleContent\Layouts\Layout;
 
-class FormTextField extends Layout
+class FormField extends Layout
 {
     /**
      * The layout's unique identifier
