@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
@@ -16,6 +17,7 @@ use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -156,6 +158,7 @@ class Activity extends SluggableModel implements AttachableInterface
     protected $casts = [
         // Description
         'description' => 'json',
+        'enrollment_questions' => 'json',
 
         // Number of seats
         'seats' => 'int',
@@ -311,8 +314,15 @@ class Activity extends SluggableModel implements AttachableInterface
             return new Collection();
         }
 
+        // Map layouts with keys
+        $keyedLayouts = collect(ActivityForm::LAYOUTS)
+            ->mapWithKeys(static fn ($item) => [
+                (new $item())->name() => $item,
+            ])
+            ->toArray();
+
         // Return flexible content
-        return $this->flexible('enrollment_questions', ActivityForm::LAYOUTS);
+        return $this->flexible('enrollment_questions', $keyedLayouts);
     }
 
     /**
@@ -543,6 +553,26 @@ class Activity extends SluggableModel implements AttachableInterface
     public function messages(): HasMany
     {
         return $this->hasMany(ActivityMessage::class);
+    }
+
+    /**
+     * Returns the form fields interpreted as a form field.
+     *
+     * @return array|null
+     */
+    public function getFormAttribute(): ?array
+    {
+        $fields = [];
+
+        foreach ($this->flexible_content as $field) {
+            if (!$field instanceof FormLayoutContract) {
+                continue;
+            }
+
+            $fields[] = $field->toFormField();
+        }
+
+        return $fields;
     }
 
     /**
