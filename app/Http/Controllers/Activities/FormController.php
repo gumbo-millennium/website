@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
+use App\Forms\ActivityForm;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
@@ -74,7 +75,7 @@ class FormController extends Controller
      *
      * @param Activity $activity
      * @param array $options
-     * @return Kris\LaravelFormBuilder\Form
+     * @return Form
      */
     protected function getForm(Activity $activity, array $options = []): ?Form
     {
@@ -86,19 +87,11 @@ class FormController extends Controller
             return null;
         }
 
-        $formFields = $activity->form;
-        $formFields[] = [
-            'type' => 'submit',
-            'value' => 'Versturen',
-        ];
-
-        // Build form
-        $form = FormBuilder::createByArray($formFields, $options);
-
-        // Get form
-        \assert($form instanceof Form);
-
-        // Return
-        return $form;
+        // Prep form via helper
+        return FormBuilder::create(ActivityForm::class, [
+            'method' => 'POST',
+            'url' => route('enroll.edit', [$activity]),
+            'activity' => $activity,
+        ]);
     }
 }

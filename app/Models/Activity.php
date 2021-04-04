@@ -17,7 +17,6 @@ use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -86,6 +85,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read int|null $total_price
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
  * @property-read Role|null $role
+ * @property-read array<FormLayout>|null $form
  */
 class Activity extends SluggableModel implements AttachableInterface
 {
@@ -558,7 +558,7 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * Returns the form fields interpreted as a form field.
      *
-     * @return array|null
+     * @return array<FormLayout>|null
      */
     public function getFormAttribute(): ?array
     {
