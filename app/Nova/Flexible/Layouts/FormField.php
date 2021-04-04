@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
+use App\Contracts\FormLayoutContract;
+use App\Models\FormLayout;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Text;
 use Whitecube\NovaFlexibleContent\Layouts\Layout;
 
-class FormField extends Layout
+class FormField extends Layout implements FormLayoutContract
 {
     /**
      * The layout's unique identifier
@@ -36,5 +38,31 @@ class FormField extends Layout
             Text::make('Helptekst', 'help')->nullable(),
             Boolean::make('Verplicht', 'required'),
         ];
+    }
+
+    /**
+     * Converts a field to a formfield
+     *
+     * @return array
+     */
+    public function toFormField(): FormLayout
+    {
+        $config = [
+            'label' => $this->getAttribute('label'),
+        ];
+
+        if ($help = $this->getAttribute('help')) {
+            $config['help_block'] = [
+                'text' => $help,
+            ];
+        }
+
+        if ($this->getAttribute('required')) {
+            $config['rules'] = [
+                'required',
+            ];
+        }
+
+        return new FormLayout($this->key(), 'text', $config);
     }
 }

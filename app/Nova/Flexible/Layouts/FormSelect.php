@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
+use App\Models\FormLayout;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\KeyValue;
 
 class FormSelect extends FormField
 {
+    public const MAX_EXPANDED_COUNT = 5;
+
     /**
      * The layout's unique identifier
      *
@@ -36,6 +40,30 @@ class FormSelect extends FormField
                 ->keyLabel('Naam')
                 ->valueLabel('Label')
                 ->actionText('Optie toevoegen'),
+        ]);
+    }
+
+    /**
+     * Converts a field to a formfield
+     *
+     * @return array
+     */
+    public function toFormField(): FormLayout
+    {
+        $options = $this->getAttribute('options');
+        $multiple = (bool) $this->getAttribute('multiple');
+        $required = (bool) $this->getAttribute('required');
+
+
+        return FormLayout::merge(parent::toFormField(), null, 'choice', [
+            'choices' => $options,
+            'multiple' => $multiple,
+            'expanded' => count($options) <= self::MAX_EXPANDED_COUNT,
+            'rules' => array_filter([
+                $required ? 'required' : 'nullable',
+                $multiple ? 'array' : null,
+                Rule::in(array_keys($options)),
+            ]),
         ]);
     }
 }

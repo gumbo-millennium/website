@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
+use App\Models\FormLayout;
 use Laravel\Nova\Fields\Trix;
 
 class FormContent extends FormField
@@ -32,5 +33,17 @@ class FormContent extends FormField
         return [
             Trix::make('Content', 'content')->stacked(),
         ];
+    }
+
+    /**
+     * Converts a field to a formfield
+     *
+     * @return array
+     */
+    public function toFormField(): FormLayout
+    {
+        return FormLayout::merge(parent::toFormField(), null, 'static', [
+            'value' => $this->getAttribute('content'),
+        ]);
     }
 }

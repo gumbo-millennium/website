@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
+use App\Models\FormLayout;
+
 class FormCheckbox extends FormField
 {
     /**
@@ -19,4 +21,14 @@ class FormCheckbox extends FormField
      * @var string
      */
     protected $title = 'Checkbox';
+
+    /**
+     * Converts a field to a formfield
+     *
+     * @return array
+     */
+    public function toFormField(): FormLayout
+    {
+        return FormLayout::merge(parent::toFormField(), null, 'checkbox');
+    }
 }
