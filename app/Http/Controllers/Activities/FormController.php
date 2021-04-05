@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Activities;
 
+use App\Contracts\EnrollmentServiceContract;
 use App\Forms\ActivityForm;
 use App\Http\Controllers\Activities\Traits\HasEnrollments;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\States\Enrollment\Seeded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Kris\LaravelFormBuilder\Facades\FormBuilder;
 use Kris\LaravelFormBuilder\Form;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -36,17 +39,19 @@ class FormController extends Controller
         // Retrieve form
         $form = $this->getForm($activity, [
             'method' => 'PATCH',
-            'route' => route('enroll.edit', compact('activity')),
-            'model' => $enrollment->form,
+            'url' => route('enroll.edit', compact('activity')),
+            'data' => $enrollment->form_data,
         ]);
 
-        // Skip if empty
-        if (!$form) {
-            throw new BadRequestHttpException('Why are you seeing this?');
-        }
+        // Epicly fail if empty
+        throw_unless($form, BadRequestHttpException::class, 'Why are you seeing this?');
 
-        // TODO
-        abort(501, 'Not yet supported');
+        // Render form, but instruct browsers not to cache
+        return Response::view('activities.enrollments.form', [
+            'activity' => $activity,
+            'form' => $form,
+            'enrollment' => $enrollment,
+        ])->setPrivate()->header('Cache-Control', 'no-cache, no-store');
     }
 
     /**
@@ -55,8 +60,11 @@ class FormController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function save(Request $request, Activity $activity)
-    {
+    public function save(
+        Request $request,
+        Activity $activity,
+        EnrollmentServiceContract $enrollmentService
+    ) {
         // Get enrollment
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
@@ -66,8 +74,26 @@ class FormController extends Controller
         // Validate form
         $form->redirectIfNotValid(route('enroll.show', compact('activity')));
 
-        // Store data
-        $enrollment->form = $form->getFieldValues();
+        // Assign values
+        $enrollment->setFormData($form->getFieldValues());
+
+        // Store changes
+        $enrollment->save();
+
+        // Try to advance, if we're still in that stage.
+        if ($enrollmentService->canAdvanceTo($enrollment, Seeded::class)) {
+            $enrollmentService->advanceEnrollment($activity, $enrollment);
+        }
+
+        // Redirect back if done
+        if ($enrollment->state->isStable()) {
+            flash("That's it, je bent nu ingeschreven voor {$activity->name}", 'success');
+            return Response::redirectToRoute('activity.show', [$activity]);
+        }
+
+        // Or to the payment page
+        flash("Je gegevens zijn opgeslagen. Je kunt nu betalen.", 'success');
+        return Response::redirectToRoute('enroll.show', [$activity]);
     }
 
     /**
@@ -88,10 +114,8 @@ class FormController extends Controller
         }
 
         // Prep form via helper
-        return FormBuilder::create(ActivityForm::class, [
-            'method' => 'POST',
-            'url' => route('enroll.edit', [$activity]),
+        return FormBuilder::create(ActivityForm::class, array_merge($options, [
             'activity' => $activity,
-        ]);
+        ]));
     }
 }

@@ -12,11 +12,14 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
+use App\Models\States\Enrollment\State;
 use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Contracts\Cache\LockProvider;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 use LogicException;
 
 class EnrollmentService implements EnrollmentServiceContract
@@ -159,6 +162,41 @@ class EnrollmentService implements EnrollmentServiceContract
     }
 
     /**
+     * Returns if the given enrollment can advance to the given state. If it's already on
+     * or past said state, it should always return false.
+     *
+     * @param Enrollment $enrollment
+     * @param string $wantedState
+     * @return bool
+     */
+    public function canAdvanceTo(Enrollment $enrollment, string $wantedState): bool
+    {
+        if (!is_a($wantedState, State::class, true)) {
+            throw new InvalidArgumentException("Requested state [$wantedState], but it\'s invalid.");
+        }
+
+        if (is_a($enrollment->state, $wantedState)) {
+            return false;
+        }
+
+        $wantedStateName = (new $wantedState($enrollment))->name;
+        if (!in_array($wantedStateName, $enrollment->state->transitionableStates())) {
+            return false;
+        }
+
+        if ($wantedState === Seeded::class) {
+            return $enrollment->form !== null
+                || $enrollment->activity->form === null;
+        }
+
+        if ($wantedState === Confirmed::class) {
+            return !($enrollment->price > 0);
+        }
+
+        return false;
+    }
+
+    /**
      * Transitions states where possible
      *
      * @param Activity $activity
@@ -167,36 +205,27 @@ class EnrollmentService implements EnrollmentServiceContract
      */
     public function advanceEnrollment(Activity $activity, Enrollment &$enrollment): void
     {
-        // Get wanted state
-        $options = $enrollment->state->transitionableStates();
+        if ($this->canAdvanceTo($enrollment, Seeded::class)) {
+            Log::notice('Transitioning {enrollment} to seeded.', [
+                'enrollment' => $enrollment,
+            ]);
 
-        // Handle data step
-        if (\in_array(Seeded::$name, $options)) {
-            if ($activity->form !== null) {
-                logger()->debug('Enrollment needs to be seeded');
-                return;
-            }
-
-            // No form present, mutate the state
-            $enrollment->data = [];
             $enrollment->state->transitionTo(Seeded::class);
             $enrollment->save();
         }
 
-        // Check if we need payment
-        if (\in_array(Paid::$name, $options) && $enrollment->price > 0) {
-            logger()->debug('Ticket price non-zero, awaiting payment');
-            return;
+        if ($this->canAdvanceTo($enrollment, Confirmed::class)) {
+            Log::notice('Transitioning {enrollment} to confirmed.', [
+                'enrollment' => $enrollment,
+            ]);
+
+            $enrollment->state->transitionTo(Confirmed::class);
+            $enrollment->save();
         }
 
-        // Check if we can confirm
-        if (!\in_array(Confirmed::$name, $options)) {
-            return;
-        }
-
-        logger()->debug('Data provided and no payment needed, confirming enrollment');
-        $enrollment->state->transitionTo(Confirmed::class);
-        $enrollment->save();
+        Log::info('Not transitioning {enrollment} further.', [
+            'enrollment' => $enrollment,
+        ]);
     }
 
     /**

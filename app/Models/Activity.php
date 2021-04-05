@@ -564,7 +564,7 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         $fields = [];
 
-        foreach ($this->flexible_content as $field) {
+        foreach ($this->flexible_content ?? [] as $field) {
             if (!$field instanceof FormLayoutContract) {
                 continue;
             }
