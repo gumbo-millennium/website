@@ -34,9 +34,9 @@ class FormField extends Layout implements FormLayoutContract
     public function fields()
     {
         return [
-            Text::make('Label', 'label')->rules('required'),
-            Text::make('Helptekst', 'help')->nullable(),
-            Boolean::make('Verplicht', 'required'),
+            Text::make(__('Label'), 'label')->rules('required'),
+            Text::make(__('Help'), 'help')->nullable(),
+            Boolean::make(__('Required'), 'required'),
         ];
     }
 

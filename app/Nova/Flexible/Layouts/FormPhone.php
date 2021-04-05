@@ -6,7 +6,9 @@ namespace App\Nova\Flexible\Layouts;
 
 use App\Models\FormLayout;
 use App\Rules\PhoneNumber;
+use Illuminate\Support\Facades\Lang;
 use Laravel\Nova\Fields\Text;
+use Str;
 
 class FormPhone extends FormField
 {
@@ -32,8 +34,11 @@ class FormPhone extends FormField
     public function fields()
     {
         return array_merge(parent::fields(), [
-            Text::make('Standaard land', 'country')
-                ->help('ISO 3166-1 alpha-2 landcode (voorbeeld: NL)')
+            Text::make(__('Phone country'), 'country')
+                ->help(__('Two-letter country code (upper case)'))
+                ->suggestions([
+                    Str::upper(Lang::getLocale()),
+                ])
                 ->rules('required', 'regex:/^[A-Z]{2}$/'),
         ]);
     }

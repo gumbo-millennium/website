@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
+use App\Facades\Markdown;
 use App\Models\FormLayout;
-use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\Markdown as FieldsMarkdown;
+use Laravel\Nova\Fields\Text;
 
 class FormContent extends FormField
 {
@@ -31,7 +33,10 @@ class FormContent extends FormField
     public function fields()
     {
         return [
-            Trix::make('Content', 'content')->stacked(),
+            Text::make(__('Title'), 'title'),
+            FieldsMarkdown::make(__('Content'), 'content')
+                ->stacked()
+                ->help(__('Full markdown support. HTML will be removed.')),
         ];
     }
 
@@ -42,8 +47,11 @@ class FormContent extends FormField
      */
     public function toFormField(): FormLayout
     {
-        return FormLayout::merge(parent::toFormField(), null, 'static', [
-            'value' => $this->getAttribute('content'),
+        $markdown = Markdown::parseSafe($this->getAttribute('content'));
+
+        return FormLayout::merge(parent::toFormField(), $this->getAttribute('title'), 'static', [
+            'label' => null,
+            'value' => $markdown,
         ]);
     }
 }
