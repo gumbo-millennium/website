@@ -1,4 +1,4 @@
-<dropdown-trigger class="h-9 flex items-center" slot-scope="{toggle}" :handle-click="toggle">
+<dropdown-trigger class="h-9 flex items-center">
     <span class="text-90">
         {{ $user->alias ?? $user->first_name ?? $user->email ?? __('User') }}
     </span>
