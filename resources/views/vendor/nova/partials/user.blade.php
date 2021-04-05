@@ -6,14 +6,24 @@
 
 <dropdown-menu slot="menu" width="200" direction="rtl">
     {{-- Safe method to end one's session --}}
-    <form class="hidden" id="logout_form" action="{{ route('logout') }}" method="post">
+    <form class="hidden" id="nova-logout-form" action="{{ route('logout') }}" method="post">
         @csrf
     </form>
 
     {{-- Dropdown --}}
     <ul class="list-reset">
         <li>
-            <button type="submit" form="logout_form" style="width: 100%; text-align: left;" class="block no-underline text-90 hover:bg-30 p-3">
+            <a href="{{ route('home') }}" class="block no-underline text-90 hover:bg-30 p-3">
+                {{ __('Homepage') }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('account.index') }}" class="block no-underline text-90 hover:bg-30 p-3">
+                {{ __('My Account') }}
+            </a>
+        </li>
+        <li>
+            <button type="submit" form="nova-logout-form" style="appearance: none; width: 100%; text-align: left;" class="block no-underline text-90 hover:bg-30 p-3">
                 {{ __('Logout') }}
             </button>
         </li>

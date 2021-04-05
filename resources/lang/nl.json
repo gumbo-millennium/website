@@ -79,5 +79,7 @@
   "Body of the mail, basic markdown formatting is supported.":
     "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
 
+  "My Account": "Mijn account",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
