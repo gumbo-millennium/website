@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'enrollment' => [
         'closed' => 'gesloten',
@@ -11,6 +13,6 @@ return [
         'enrollments' => 'Inschrijving instellingen',
     ],
     'errors' => [
-        'no-access' => 'Sorry, deze activiteit is alleen voor leden.'
+        'no-access' => 'Sorry, deze activiteit is alleen voor leden.',
     ],
 ];

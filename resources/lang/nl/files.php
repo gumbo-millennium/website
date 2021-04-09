@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // System name. Used by jobs
     'name' => 'Bestandensysteem',
@@ -7,14 +9,14 @@ return [
     // Plural forms
     'plurals' => [
         'files' => 'bestand|bestanden',
-        'categories' => 'categorie|categorieën'
+        'categories' => 'categorie|categorieën',
     ],
 
     // File system titles
     'titles' => [
         'name' => 'Bestanden',
         'index' => 'Categorie overzicht',
-        'category' => 'Bestanden in :category'
+        'category' => 'Bestanden in :category',
     ],
 
     // File actions
@@ -27,7 +29,7 @@ return [
         'unpublish' => 'Intrekken',
         'edit' => 'Bewerken',
         'delete' => 'Verwijderen',
-        'back-to-index' => 'Terug naar categorie overzicht'
+        'back-to-index' => 'Terug naar categorie overzicht',
     ],
 
     // Table headers
@@ -85,14 +87,14 @@ return [
         'queue-hint' => implode(' ', [
             '<strong>Let op:</strong>',
             'De bestanden worden nagelopen op fouten en geoptimaliseerd voor publicatie op het web.',
-            'Dit kan een paar minuten duren.'
+            'Dit kan een paar minuten duren.',
         ]),
         'rows' => [
             'filename' => 'Bestandsnaam',
             'status' => 'Status',
-            'actions' => 'Acties'
+            'actions' => 'Acties',
         ],
         'close' => 'Sluiten',
-        'close-and-reload' => 'Sluiten en herladen'
+        'close-and-reload' => 'Sluiten en herladen',
     ],
 ];

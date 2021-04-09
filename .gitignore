@@ -1,7 +1,7 @@
 # Created by https://www.gitignore.io/api/laravel,node
 
 ### Laravel ###
-vendor/
+/vendor/
 node_modules/
 npm-debug.log
 yarn-error.log

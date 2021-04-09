@@ -56,9 +56,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         // Register benjaminhirsch/nova-slug-field
         $this->app->register(\Benjaminhirsch\NovaSlugField\FieldServiceProvider::class);
 
-        // Register coderello/laravel-nova-lang
-        $this->app->register(\Coderello\LaravelNovaLang\Providers\LaravelNovaLangServiceProvider::class);
-
         // Register ebess/advanced-nova-media-library
         $this->app->register(\Ebess\AdvancedNovaMediaLibrary\AdvancedNovaMediaLibraryServiceProvider::class);
 
