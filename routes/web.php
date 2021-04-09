@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ShopController;
 use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,12 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->middleware(['auth', 'member'])
     ->name('plazacam');
+
+/**
+ * Export route
+ */
+Route::get('admin/download-export/{export}', [FileExportController::class, 'download'])
+    ->name('export.download');
 
 /**
  * Files route
