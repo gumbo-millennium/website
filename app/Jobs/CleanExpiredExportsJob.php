@@ -32,17 +32,9 @@ class CleanExpiredExportsJob implements ShouldQueue
             ->get();
 
         foreach ($targets as $file) {
-            if (!$file->is_valid_export) {
-                $file->delete();
-                continue;
+            if ($file->is_valid_export && Storage::exists($file->path)) {
+                Storage::delete($file->path);
             }
-
-            if (!Storage::exists($file->path)) {
-                $file->delete();
-                continue;
-            }
-
-            Storage::delete($file->path);
 
             $file->delete();
         }
