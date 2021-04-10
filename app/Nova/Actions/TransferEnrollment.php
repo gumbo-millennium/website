@@ -10,6 +10,7 @@ use App\Models\States\Enrollment\Cancelled;
 use App\Models\User as ModelsUser;
 use App\Nova\Resources\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -87,5 +88,17 @@ class TransferEnrollment extends Action
                 ->resource(User::class)
                 ->max(5),
         ];
+    }
+
+    /**
+     * Determine if the action is executable for the given request.
+     *
+     * @param Request $request
+     * @param Enrollment $model
+     * @return bool
+     */
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $request->user()->can('manage', $model->activity);
     }
 }
