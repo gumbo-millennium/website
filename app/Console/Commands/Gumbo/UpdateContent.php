@@ -8,6 +8,7 @@ use App\Helpers\Str;
 use App\Models\Page;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use JsonSchema\Exception\JsonDecodingException;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -176,7 +177,10 @@ class UpdateContent extends Command
 
         // Skip if missing
         if (!\file_exists($directory) || !\is_dir($directory)) {
-            dd("No directory found!");
+            Log::warning('Page directory {directory} found!', [
+                'directory' => $directory,
+            ]);
+
             return [];
         }
 
@@ -185,6 +189,10 @@ class UpdateContent extends Command
 
         // Return if scan failed
         if (!$files) {
+            Log::warning('Page directory {directory} could not be scanned!', [
+                'directory' => $directory,
+            ]);
+
             return [];
         }
 

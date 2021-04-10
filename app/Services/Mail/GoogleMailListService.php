@@ -17,6 +17,7 @@ use Google_Service_Directory_Member as GroupMember;
 use Google_Service_Directory_Members as GroupMembers;
 use Google_Service_Groupssettings_Groups as GroupSettings;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use LogicException;
 use RuntimeException;
 
@@ -55,7 +56,9 @@ class GoogleMailListService implements MailListHandler
         }
 
         // Debug
-        dd($listEmails);
+        Log::debug('Email lists ready: {lists}', [
+            'lists' => $listEmails,
+        ]);
 
         // Unfold
         return $listEmails;

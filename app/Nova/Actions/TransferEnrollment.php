@@ -46,7 +46,6 @@ class TransferEnrollment extends Action
 
         $enrollment = Enrollment::find($models->first()->id);
         if (!$enrollment instanceof Enrollment || $enrollment->state instanceof Cancelled) {
-            dd($enrollment, $enrollment->state);
             return Action::danger('Kan alleen actieve inschrijvingen overschrijven');
         }
 
