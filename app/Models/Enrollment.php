@@ -235,6 +235,7 @@ class Enrollment extends UuidModel
         Arr::set($data, 'form.labels', $formLabels);
         Arr::set($data, 'form.exportable', $formExportable);
         Arr::set($data, 'form.filled', true);
+        Arr::set($data, 'form.medical', (bool) $this->activity->form_is_medical);
 
         // Re-apply
         $this->data = $data;

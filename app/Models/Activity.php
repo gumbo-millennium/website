@@ -17,6 +17,7 @@ use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -86,6 +87,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
  * @property-read Role|null $role
  * @property-read array<FormLayout>|null $form
+ * @property-read bool|null $form_is_medical True if the form contains field that are not to be exported
  */
 class Activity extends SluggableModel implements AttachableInterface
 {
@@ -573,6 +575,36 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         return $fields;
+    }
+
+    /**
+     * If the form contains medical data, we can't export the data.
+     * This method should check that somehow.
+     *
+     * @return bool|null
+     */
+    public function getFormIsMedicalAttribute(): ?bool
+    {
+        if ($this->form === null) {
+            return false;
+        }
+
+        $medicalNames = Config::get('gumbo.activity.medical-titles');
+
+        foreach ($this->form as $field) {
+            $fieldLabel = Arr::get($field->getOptions(), 'label');
+
+            if (!$fieldLabel || $field->getType() === 'static') {
+                continue;
+            }
+
+            $fieldLabel = Str::lower($fieldLabel);
+            if (Str::contains($fieldLabel, $medicalNames)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

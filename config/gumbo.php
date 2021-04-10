@@ -57,4 +57,12 @@ return [
 
     // Quote e-mail address
     'quote-to' => env('GUMBO_QUOTE_EMAIL'),
+
+    // Medial form fields
+    'medical-titles' => [
+        'allergieën',
+        'allergies',
+        'huisarts',
+        'dokter',
+    ],
 ];
