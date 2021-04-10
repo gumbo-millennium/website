@@ -8,7 +8,7 @@ use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Helpers\Arr;
 use App\Models\Sponsor;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Cache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;

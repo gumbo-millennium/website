@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Bots;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\URL;
+use Illuminate\Support\Facades\URL;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Laravel\Facades\Telegram;
