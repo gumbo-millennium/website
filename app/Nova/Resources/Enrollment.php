@@ -142,9 +142,10 @@ class Enrollment extends Resource
                 ->searchable(),
 
             // Add data
-            KeyValue::make('Metadata inschrijving', 'data')
-                ->rules('json')
-                ->hideFromIndex(),
+            KeyValue::make('Metadata inschrijving', 'form')
+                ->keyLabel(__('Field'))
+                ->valueLabel(__('Value'))
+                ->onlyOnDetail(),
 
             // Dates
             DateTime::make('Aangemaakt op', 'created_at')

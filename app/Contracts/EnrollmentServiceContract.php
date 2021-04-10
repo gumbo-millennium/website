@@ -46,6 +46,16 @@ interface EnrollmentServiceContract
     public function createEnrollment(Activity $activity, User $user): Enrollment;
 
     /**
+     * Returns if the given enrollment can advance to the given state. If it's already on
+     * or past said state, it should always return false.
+     *
+     * @param Enrollment $enrollment
+     * @param string $target
+     * @return bool
+     */
+    public function canAdvanceTo(Enrollment $enrollment, string $target): bool;
+
+    /**
      * Transitions states where possible
      *
      * @param Activity $activity

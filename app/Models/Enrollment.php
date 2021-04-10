@@ -14,6 +14,7 @@ use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -44,6 +45,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read States\Enrollment\State|null $wanted_state
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
  * @property-read User $user
+ * @property-read array<scalar>|null $form The form data ready for export
+ * @property-read array<scalar>|null $form_data The form data to supply to the form builder
+ * @property-read bool|null $is_form_exportable True if the form can be exported
  */
 class Enrollment extends UuidModel
 {
@@ -100,7 +104,7 @@ class Enrollment extends UuidModel
      * @inheritDoc
      */
     protected $casts = [
-        'data' => 'collection',
+        'data' => 'json',
         'paid' => 'bool',
     ];
 
@@ -194,6 +198,82 @@ class Enrollment extends UuidModel
         return $this->exists &&
             $this->total_price &&
             !($this->state instanceof CancelledState);
+    }
+
+    /**
+     * Stores the enrollment data on this user.
+     *
+     * @param array $values
+     * @return void
+     */
+    public function setFormData(array $values): void
+    {
+
+        // Transform data into something persistable
+        $formValues = [];
+        $formLabels = [];
+        $formExportable = [];
+
+        foreach ($this->activity->form as $field) {
+            $rawValue = Arr::get($values, $field->getName());
+            $fieldLabel = Arr::get($field->getOptions(), 'label', $field->getName());
+            $fieldType = $field->getType();
+
+            if ($fieldType === 'checkbox') {
+                $rawValue = (bool) $rawValue;
+            }
+
+            $formValues[$field->getName()] = $rawValue;
+            $formLabels[$field->getName()] = $fieldLabel;
+            $formExportable[$fieldLabel] = $rawValue;
+        }
+
+        // Store data
+        $data = $this->data;
+
+        // Assign data
+        Arr::set($data, 'form.fields', $formValues);
+        Arr::set($data, 'form.labels', $formLabels);
+        Arr::set($data, 'form.exportable', $formExportable);
+        Arr::set($data, 'form.filled', true);
+        Arr::set($data, 'form.medical', (bool) $this->activity->form_is_medical);
+
+        // Re-apply
+        $this->data = $data;
+    }
+
+    /**
+     * Returns the filled in form.
+     *
+     * @return array|null
+     */
+    public function getFormAttribute(): ?array
+    {
+        return Arr::get($this->data, 'form.exportable');
+    }
+
+    /**
+     * Returns the data for this form, as it's presented to the form builder.
+     *
+     * @return mixed
+     */
+    public function getFormDataAttribute()
+    {
+        return Arr::get($this->data, 'form.fields');
+    }
+
+    /**
+     * Returns if the form can be exported.
+     *
+     * @return bool|null
+     */
+    public function getIsFormExportableAttribute(): ?bool
+    {
+        if (!$this->form) {
+            return null;
+        }
+
+        return Arr::get($this->data, 'form.medical', false) !== true;
     }
 
     /**

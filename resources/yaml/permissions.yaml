@@ -36,6 +36,9 @@ user-admin: Gebruikers beheren
 payments-monitor: Inzage in transacties
 payment-admin: Beheer van transacties
 
+# Shop permissions
+shop-admin: Webwinkel beheren
+
 # System admin permissions
 devops: Toegang tot status dashboards
 impersonate: Inloggen als andere gebruikers

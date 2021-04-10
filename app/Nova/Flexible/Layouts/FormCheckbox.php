@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Text;
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
+use App\Models\FormLayout;
 
-class FormCheckbox extends Layout
+class FormCheckbox extends FormField
 {
     /**
      * The layout's unique identifier
@@ -25,16 +23,12 @@ class FormCheckbox extends Layout
     protected $title = 'Checkbox';
 
     /**
-     * Get the fields displayed by the layout.
+     * Converts a field to a formfield
      *
      * @return array
      */
-    public function fields()
+    public function toFormField(): FormLayout
     {
-        return [
-            Text::make('Label', 'label')->rules('required'),
-            Text::make('Helptekst', 'help')->nullable(),
-            Boolean::make('Verplicht (moet worden aangevinkt)', 'required'),
-        ];
+        return FormLayout::merge(parent::toFormField(), null, 'checkbox');
     }
 }

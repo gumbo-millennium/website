@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use App\Jobs\CleanExpiredExportsJob;
 use App\Jobs\Mail\ConstructGoogleActionList;
 use App\Jobs\PruneExpiredEnrollments;
 use App\Jobs\SendBotQuotes;
@@ -27,6 +28,9 @@ class Kernel extends ConsoleKernel
 
         // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();
+
+        // Wipe old exports
+        $schedule->job(CleanExpiredExportsJob::class)->weekly();
 
         // Update enrollments' user_type every hour
         $schedule->job(UpdateEnrollmentUserTypes::class)->dailyAt('04:00');

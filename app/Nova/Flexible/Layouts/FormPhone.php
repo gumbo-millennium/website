@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Flexible\Layouts;
 
-use Laravel\Nova\Fields\Boolean;
+use App\Models\FormLayout;
+use App\Rules\PhoneNumber;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Text;
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
 
-class FormPhone extends Layout
+class FormPhone extends FormField
 {
     /**
      * The layout's unique identifier
@@ -31,13 +33,28 @@ class FormPhone extends Layout
      */
     public function fields()
     {
-        return [
-            Text::make('Label', 'label')->rules('required'),
-            Text::make('Helptekst', 'help')->nullable(),
-            Text::make('Standaard land', 'country')
-                ->help('ISO 3166-1 alpha-2 landcode (voorbeeld: NL)')
+        return array_merge(parent::fields(), [
+            Text::make(__('Phone country'), 'country')
+                ->help(__('Two-letter country code (upper case)'))
+                ->suggestions([
+                    Str::upper(Lang::getLocale()),
+                ])
                 ->rules('required', 'regex:/^[A-Z]{2}$/'),
-            Boolean::make('Verplicht', 'required'),
-        ];
+        ]);
+    }
+
+    /**
+     * Converts a field to a formfield
+     *
+     * @return array
+     */
+    public function toFormField(): FormLayout
+    {
+        return FormLayout::merge(parent::toFormField(), null, 'textarea', [
+            'rules' => [
+                $this->getAttribute('required') ? 'required' : 'nullable',
+                new PhoneNumber($this->getAttribute('country')),
+            ],
+        ]);
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App;
 use App\Models\Activity;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\TransferStats;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;

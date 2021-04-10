@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // System name. Used by jobs
     'name' => 'File system',
@@ -7,7 +9,7 @@ return [
     // Plural forms
     'plurals' => [
         'files' => 'file|files',
-        'categories' => 'category|categories'
+        'categories' => 'category|categories',
     ],
 
     // File system titles
@@ -28,7 +30,7 @@ return [
         'unpublish' => 'Unpublish',
         'edit' => 'Edit',
         'delete' => 'Delete',
-        'back-to-index' => 'Back to category list'
+        'back-to-index' => 'Back to category list',
     ],
 
     // Table headers
@@ -94,14 +96,14 @@ return [
         'queue-hint' => implode(' ', [
             '<strong>Please note:</strong>',
             'The files will be verified and optimised for web delivery.',
-            'This might take a couple of minutes.'
+            'This might take a couple of minutes.',
         ]),
         'rows' => [
             'filename' => 'Filename',
             'status' => 'Status',
-            'actions' => 'Actions'
+            'actions' => 'Actions',
         ],
         'close' => 'Close',
-        'close-and-reload' => 'Close and reload'
+        'close-and-reload' => 'Close and reload',
     ],
 ];

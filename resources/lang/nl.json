@@ -79,5 +79,18 @@
   "Body of the mail, basic markdown formatting is supported.":
     "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
 
+  "Phone country": "Phone country",
+  "Two-letter country code (upper case)":
+    "Landcode voor telefoonnummers in niet-internationaal format (2 tekens, hoofdletters)",
+  "Label": "Label",
+  "Help": "Hulptekst",
+  "Required": "Verplicht",
+  "Title": "Titel",
+  "Content": "Content",
+  "Full markdown support. HTML will be removed.": "Markdown is ondersteund, HTML wordt verwijderd.",
+  "Field": "Veld",
+
+  "My Account": "Mijn account",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

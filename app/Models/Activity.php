@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
 use App\Models\Traits\HasSimplePaperclippedMedia;
+use App\Nova\Flexible\Presets\ActivityForm;
 use App\Traits\HasPaperclip;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -83,6 +86,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read int|null $total_price
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
  * @property-read Role|null $role
+ * @property-read array<FormLayout>|null $form
+ * @property-read bool|null $form_is_medical True if the form contains field that are not to be exported
  */
 class Activity extends SluggableModel implements AttachableInterface
 {
@@ -155,6 +160,7 @@ class Activity extends SluggableModel implements AttachableInterface
     protected $casts = [
         // Description
         'description' => 'json',
+        'enrollment_questions' => 'json',
 
         // Number of seats
         'seats' => 'int',
@@ -310,8 +316,15 @@ class Activity extends SluggableModel implements AttachableInterface
             return new Collection();
         }
 
+        // Map layouts with keys
+        $keyedLayouts = collect(ActivityForm::LAYOUTS)
+            ->mapWithKeys(static fn ($item) => [
+                (new $item())->name() => $item,
+            ])
+            ->toArray();
+
         // Return flexible content
-        return $this->flexible('enrollment_questions');
+        return $this->flexible('enrollment_questions', $keyedLayouts);
     }
 
     /**
@@ -542,6 +555,56 @@ class Activity extends SluggableModel implements AttachableInterface
     public function messages(): HasMany
     {
         return $this->hasMany(ActivityMessage::class);
+    }
+
+    /**
+     * Returns the form fields interpreted as a form field.
+     *
+     * @return array<FormLayout>|null
+     */
+    public function getFormAttribute(): ?array
+    {
+        $fields = [];
+
+        foreach ($this->flexible_content ?? [] as $field) {
+            if (!$field instanceof FormLayoutContract) {
+                continue;
+            }
+
+            $fields[] = $field->toFormField();
+        }
+
+        return $fields;
+    }
+
+    /**
+     * If the form contains medical data, we can't export the data.
+     * This method should check that somehow.
+     *
+     * @return bool|null
+     */
+    public function getFormIsMedicalAttribute(): ?bool
+    {
+        if ($this->form === null) {
+            return false;
+        }
+
+        $medicalNames = Config::get('gumbo.activity.medical-titles');
+
+        foreach ($this->form as $field) {
+            $fieldLabel = Arr::get($field->getOptions(), 'label');
+
+            if (!$fieldLabel || $field->getType() === 'static') {
+                continue;
+            }
+
+            $fieldLabel = Str::lower($fieldLabel);
+            if (Str::contains($fieldLabel, $medicalNames)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

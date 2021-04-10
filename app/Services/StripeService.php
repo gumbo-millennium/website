@@ -53,10 +53,6 @@ class StripeService implements StripeServiceContract
         // Report to Telescope and such
         report($exception);
 
-        if (app()->runningInConsole()) {
-            dump($exception);
-        }
-
         // Throw exception
         throw new HttpException(
             500,

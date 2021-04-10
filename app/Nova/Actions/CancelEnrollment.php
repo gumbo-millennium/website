@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use App\Nova\Resources\Enrollment as NovaEnrollment;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -87,5 +88,17 @@ class CancelEnrollment extends Action
                     StripeServiceContract::REFUND_FRAUDULENT => 'Frauduleus',
                 ]),
         ];
+    }
+
+    /**
+     * Determine if the action is executable for the given request.
+     *
+     * @param Request $request
+     * @param Enrollment $model
+     * @return bool
+     */
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $request->user()->can('manage', $model->activity);
     }
 }
