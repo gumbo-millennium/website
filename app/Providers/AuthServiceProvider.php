@@ -15,6 +15,10 @@ use App\Models\JoinSubmission;
 use App\Models\NewsItem;
 use App\Models\Page;
 use App\Models\Payment;
+use App\Models\Shop\Category;
+use App\Models\Shop\Order;
+use App\Models\Shop\Product;
+use App\Models\Shop\ProductVariant;
 use App\Models\Sponsor;
 use App\Models\User;
 use App\Policies\ActivityMessagePolicy;
@@ -30,6 +34,10 @@ use App\Policies\PagePolicy;
 use App\Policies\PaymentPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\Shop\CategoryPolicy;
+use App\Policies\Shop\OrderPolicy;
+use App\Policies\Shop\ProductPolicy;
+use App\Policies\Shop\ProductVariantPolicy;
 use App\Policies\SponsorPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -61,6 +69,12 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
         Sponsor::class => SponsorPolicy::class,
         User::class => UserPolicy::class,
+
+        // Shop
+        Order::class => OrderPolicy::class,
+        Category::class => CategoryPolicy::class,
+        Product::class => ProductPolicy::class,
+        ProductVariant::class => ProductVariantPolicy::class,
     ];
 
     /**
