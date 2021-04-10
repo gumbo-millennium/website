@@ -47,6 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read User $user
  * @property-read array<scalar>|null $form The form data ready for export
  * @property-read array<scalar>|null $form_data The form data to supply to the form builder
+ * @property-read bool|null $is_form_exportable True if the form can be exported
  */
 class Enrollment extends UuidModel
 {
@@ -259,6 +260,20 @@ class Enrollment extends UuidModel
     public function getFormDataAttribute()
     {
         return Arr::get($this->data, 'form.fields');
+    }
+
+    /**
+     * Returns if the form can be exported.
+     *
+     * @return bool|null
+     */
+    public function getIsFormExportableAttribute(): ?bool
+    {
+        if (!$this->form) {
+            return null;
+        }
+
+        return Arr::get($this->data, 'form.medical', false) !== true;
     }
 
     /**
