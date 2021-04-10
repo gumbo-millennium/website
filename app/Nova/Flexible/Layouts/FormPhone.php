@@ -7,8 +7,8 @@ namespace App\Nova\Flexible\Layouts;
 use App\Models\FormLayout;
 use App\Rules\PhoneNumber;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Text;
-use Str;
 
 class FormPhone extends FormField
 {

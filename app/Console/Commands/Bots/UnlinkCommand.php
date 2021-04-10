@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Console\Commands\Bots;
 
 use Illuminate\Console\Command;
-use Telegram;
+use Illuminate\Support\URL;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
-use URL;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class UnlinkCommand extends Command
 {

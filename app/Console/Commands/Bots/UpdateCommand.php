@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Console\Commands\Bots;
 
 use Illuminate\Console\Command;
-use Telegram;
 use Telegram\Bot\Api;
 use Telegram\Bot\Commands\CommandInterface;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class UpdateCommand extends Command
 {
