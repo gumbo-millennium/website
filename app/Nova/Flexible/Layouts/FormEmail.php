@@ -29,7 +29,8 @@ class FormEmail extends FormField
      */
     public function toFormField(): FormLayout
     {
-        return FormLayout::merge(parent::toFormField(), null, 'email', [
+        return FormLayout::merge(parent::toFormField(), null, 'text', [
+            'type' => 'email',
             'rules' => [
                 $this->getAttribute('required') ? 'required' : 'nullable',
                 'email',

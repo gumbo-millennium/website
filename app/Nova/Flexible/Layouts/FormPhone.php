@@ -50,7 +50,8 @@ class FormPhone extends FormField
      */
     public function toFormField(): FormLayout
     {
-        return FormLayout::merge(parent::toFormField(), null, 'textarea', [
+        return FormLayout::merge(parent::toFormField(), null, 'text', [
+            'type' => 'tel',
             'rules' => [
                 $this->getAttribute('required') ? 'required' : 'nullable',
                 new PhoneNumber($this->getAttribute('country')),

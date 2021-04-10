@@ -54,11 +54,17 @@ class FormSelect extends FormField
         $multiple = (bool) $this->getAttribute('multiple');
         $required = (bool) $this->getAttribute('required');
 
+        if (!$required && !$multiple) {
+            $options = array_merge(
+                ['' => '-'],
+                $options
+            );
+        }
 
-        return FormLayout::merge(parent::toFormField(), null, 'choice', [
+        return FormLayout::merge(parent::toFormField(), null, $multiple ? 'choice' : 'select', [
             'choices' => $options,
             'multiple' => $multiple,
-            'expanded' => count($options) <= self::MAX_EXPANDED_COUNT,
+            'expanded' => true,
             'rules' => array_filter([
                 $required ? 'required' : 'nullable',
                 $multiple ? 'array' : null,
