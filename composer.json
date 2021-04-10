@@ -111,8 +111,7 @@
         "post-install-cmd": [
             "@php artisan vendor:publish --tag=nova-assets || true",
             "@php artisan horizon:assets",
-            "@php artisan telescope:publish",
-            "@php artisan nova-lang:publish nl --force || true"
+            "@php artisan telescope:publish"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate"
