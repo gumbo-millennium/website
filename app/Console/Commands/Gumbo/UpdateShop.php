@@ -179,6 +179,7 @@ class UpdateShop extends Command
 
     /**
      * Check if the file is found, and not empty.
+     *
      * @param string $url
      * @return string
      */
