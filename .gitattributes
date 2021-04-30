@@ -4,7 +4,7 @@ CHANGELOG.md export-ignore
 
 # Ignore lock file diffs
 composer.lock binary export-ignore
-yarn.lock binary export-ignore
+package-lock.json binary export-ignore
 
 # Fixes for Windows being weird
 # See https://stackoverflow.com/a/2361309

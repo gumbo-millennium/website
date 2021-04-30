@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
@@ -85,6 +86,15 @@ class FileBundle extends Resource
             // Data
             Textarea::make('Omschrijving', 'description')
                 ->nullable(),
+
+            Select::make('Sorteren op', 'sort_order')
+                ->options([
+                    'asc' => 'Oplopend alfabetisch',
+                    'desc' => 'Aflopend alfabetisch',
+                ])
+                ->help('Bij datumnotaties, gebruik ISO 8601 (jjjj-mm-dd) om de volgorde goed te houden.')
+                ->displayUsingLabels()
+                ->hideFromIndex(),
 
             // Show timestamps
             DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
