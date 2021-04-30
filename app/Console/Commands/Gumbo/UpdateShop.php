@@ -88,6 +88,9 @@ class UpdateShop extends Command
                 'vat_rate' => (int) Arr::get($product, 'vatPercentage'),
             ]);
 
+            // Set visibility based on iZettle
+            $model->visible = Arr::get($product, 'online.status', 'VISIBLE') !== 'HIDDEN';
+
             // Safely get image
             $model->image_url = Arr::get($product, 'presentation.imageUrl');
             $model->image_url = $this->validateImageUrl($model->image_url);
