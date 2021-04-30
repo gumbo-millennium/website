@@ -140,6 +140,8 @@ class UpdateShop extends Command
     {
         // Get product
         $seenVariantIds = [];
+        $orderIndex = 0;
+
         foreach ($variants as $variant) {
             $model = ProductVariant::firstOrNew([
                 'id' => Arr::get($variant, 'uuid'),
@@ -149,6 +151,7 @@ class UpdateShop extends Command
             $model->description = Arr::get($variant, 'description');
             $model->sku = Arr::get($variant, 'sku');
             $model->price = Arr::get($variant, 'price.amount');
+            $model->order = $orderIndex++;
 
             // Safely get image
             $model->image_url = Arr::get($variant, 'presentation.imageUrl');

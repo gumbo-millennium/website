@@ -67,6 +67,6 @@ class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)
-            ->orderBy('product_id');
+            ->orderBy('order');
     }
 }
