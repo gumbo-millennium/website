@@ -48,7 +48,6 @@ class UpdateShop extends Command
     public function handle(InventoryService $service, GuzzleClient $client)
     {
         $this->client = $client;
-        $this->fallbackFile = (string) mix(self::FALLBACK_FILE);
 
         try {
             Product::unguard();
@@ -183,10 +182,10 @@ class UpdateShop extends Command
      * @param string $url
      * @return string
      */
-    private function validateImageUrl(?string $url): string
+    private function validateImageUrl(?string $url): ?string
     {
         if (!$url) {
-            return $this->fallbackFile;
+            return null;
         }
 
         $this->line("Checking [<info>{$url}</>] for existence...", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
@@ -200,9 +199,9 @@ class UpdateShop extends Command
                 return $url;
             }
 
-            return $this->fallbackFile;
+            return null;
         } catch (GuzzleException $exception) {
-            return $this->fallbackFile;
+            return null;
         }
     }
 }

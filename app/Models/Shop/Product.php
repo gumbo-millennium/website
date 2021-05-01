@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $vat_rate
  * @property bool $visible
  * @property array $meta
+ * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Category|null $category
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
  */
@@ -68,5 +69,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class)
             ->orderBy('order');
+    }
+
+    public function getValidImageUrlAttribute(): string
+    {
+        return $this->image_url ?? (string) mix('images/geen-foto.jpg');
     }
 }

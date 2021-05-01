@@ -28,8 +28,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int|null $price
  * @property array $options
  * @property array $meta
- * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
+ * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Product $product
+ * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
  */
 class ProductVariant extends Model
 {
@@ -81,5 +82,10 @@ class ProductVariant extends Model
     {
         return $this->belongsToMany(Order::class, 'shop_order_product_variant')
             ->using(OrderProduct::class);
+    }
+
+    public function getValidImageUrlAttribute(): string
+    {
+        return $this->image_url ?? $this->product->valid_image_url;
     }
 }
