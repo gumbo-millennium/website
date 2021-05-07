@@ -36,9 +36,7 @@ use Spatie\MediaLibrary\Models\Media;
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
-    use HasMediaTrait {
-        media as traitMedia;
-    }
+    use HasMediaTrait;
     use Searchable;
 
     /**
@@ -130,22 +128,6 @@ class FileBundle extends SluggableModel implements HasMedia
     public function owner(): Relation
     {
         return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    /**
-     * Set the polymorphic relation.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function media()
-    {
-        if ($this->sort_order === 'desc') {
-            return $this->traitMedia()
-                ->orderByDesc('name');
-        }
-
-        return $this->traitMedia()
-            ->orderBy('name');
     }
 
     /**
