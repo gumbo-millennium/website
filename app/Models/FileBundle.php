@@ -40,6 +40,15 @@ class FileBundle extends SluggableModel implements HasMedia
     use Searchable;
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'sort_order' => 'desc',
+    ];
+
+    /**
      * {@inheritDoc}
      */
     protected $appends = [
