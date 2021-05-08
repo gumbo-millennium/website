@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Http\Controllers;
+namespace Tests\Feature\Http\Controllers\Shop;
 
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
+use Tests\Traits\TestsMembersOnlyRoutes;
 
-class ShopControllerTest extends TestCase
+class ProductControllerTest extends TestCase
 {
     use DatabaseTransactions;
+    use TestsMembersOnlyRoutes;
 
     /**
      * A basic feature test example.
@@ -178,20 +178,5 @@ class ShopControllerTest extends TestCase
         foreach ($variants as $variant) {
             $response->assertSeeText($variant->name);
         }
-    }
-
-    private function onlyForMembers(string $url): TestResponse
-    {
-        Auth::logout();
-
-        $this->get($url)
-            ->assertRedirect(route('login'));
-
-        $this->actingAs($this->getGuestUser())
-            ->get($url)
-            ->assertForbidden();
-
-        return $this->actingAs($this->getMemberUser())
-            ->get($url);
     }
 }
