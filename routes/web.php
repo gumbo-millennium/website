@@ -211,6 +211,11 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::get('/item/{product}', [Shop\ProductController::class, 'showProduct'])->name('product');
     Route::get('/item/{product}/{variant}', [Shop\ProductController::class, 'showProductVariant'])->name('product-variant');
 
+    // Shopping cart
+    Route::get('/cart', [Shop\CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [Shop\CartController::class, 'add'])->name('cart.add');
+    Route::patch('/cart', [Shop\CartController::class, 'update'])->name('cart.update');
+
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });

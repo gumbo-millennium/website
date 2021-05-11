@@ -1,0 +1,29 @@
+.shop-cart {
+  @apply w-full;
+}
+
+.shop-cart thead {
+  @apply border-b border-gray-secondary-1;
+  @apply mb-2;
+}
+
+.shop-cart tfoot {
+  @apply border-t border-gray-secondary-1;
+  @apply mt-2;
+}
+
+.shop-cart td, .shop-cart th {
+  @apply px-4 py-2 text-left;
+}
+
+.shop-cart-amount {
+  @apply appearance-none p-2;
+  @apply rounded border-gray-secondary-1;
+  @apply bg-gray-secondary-3 text-gray-primary-1;
+}
+
+.shop-cart-button {
+  @apply appearance-none p-2;
+  @apply rounded border-gray-secondary-1;
+  @apply bg-gray-secondary-3 text-light;
+}

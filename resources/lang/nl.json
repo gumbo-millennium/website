@@ -92,5 +92,13 @@
 
   "My Account": "Mijn account",
 
+  "Your cart is empty": "Je winkelwagen is leeg",
+
+  ":Product was already in your cart, so we've added :count more.": ":Product zat al in je winkelwagen, aantal bijgewerkt.",
+  ":Product was added to your cart.": ":Product is toegevoegd aan je winkelwagen.",
+
+  ":Product has been updated": ":Product has been updated",
+  ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
