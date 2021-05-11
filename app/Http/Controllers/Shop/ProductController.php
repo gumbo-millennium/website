@@ -64,6 +64,7 @@ class ProductController extends Controller
         // Find first variant
         $variant = ProductVariant::query()
             ->where('product_id', $product->id)
+            ->orderByDesc('id')
             ->firstOrFail();
 
         return Response::redirectToRoute('shop.product-variant', [
