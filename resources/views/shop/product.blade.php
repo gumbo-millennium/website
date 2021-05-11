@@ -47,15 +47,22 @@
             @endif
 
             {{-- Order button --}}
-            <div class="mt-8">
-                <button disabled class="btn btn--brand btn--wide w-full uppercase">
+            <form action="{{ route('shop.cart.add') }}" method="POST" class="mt-8">
+                @csrf
+                <input type="hidden" name="variant" value="{{ $variant->id }}">
+                <input type="hidden" name="quantity" value="1">
+
+                <button class="btn btn--brand btn--wide w-full uppercase">
                     @icon('solid/shopping-cart', 'h-4 mr-2')
                     {{-- Start Ye' Plunder --}}
                     {{ Str::price($variant->price) }}
                 </button>
 
-                <p class="text-center text-gray-primary-2">Producten kopen is nog niet mogelijk.</p>
-            </div>
+                <p class="text-center text-gray-primary-2">
+                    <strong>Let op:</strong>
+                    Je kan webshop aankopen alleen afhalen
+                </p>
+            </form>
         </div>
     </div>
 @endsection
