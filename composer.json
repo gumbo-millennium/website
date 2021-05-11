@@ -119,7 +119,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover",
+            "@php artisan ide-helper:generate || true"
         ],
         "contribute": [
             "Composer\\Config::disableProcessTimeout",
