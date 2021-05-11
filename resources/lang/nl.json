@@ -99,6 +99,7 @@
 
   ":Product has been updated": ":Product has been updated",
   ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
+  "1 product|:count products": "1 product|:count producten",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
