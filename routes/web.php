@@ -203,7 +203,7 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 /**
  * Webshop
  */
-Route::prefix('shop')->name('shop.')->group(static function () {
+Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(static function () {
     // Homepage
     Route::get('/', [Shop\ProductController::class, 'index'])->name('home');
 
