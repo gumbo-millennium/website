@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\FileExportController;
-use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
 
@@ -204,12 +204,15 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
  * Webshop
  */
 Route::prefix('shop')->name('shop.')->group(static function () {
-    Route::get('/', [ShopController::class, 'index'])->name('home');
+    // Homepage
+    Route::get('/', [Shop\ProductController::class, 'index'])->name('home');
 
-    Route::get('/item/{product}', [ShopController::class, 'showProduct'])->name('product');
-    Route::get('/item/{product}/{variant}', [ShopController::class, 'showProductVariant'])->name('product-variant');
+    // Single item display
+    Route::get('/item/{product}', [Shop\ProductController::class, 'showProduct'])->name('product');
+    Route::get('/item/{product}/{variant}', [Shop\ProductController::class, 'showProductVariant'])->name('product-variant');
 
-    Route::get('/{category}', [ShopController::class, 'showCategory'])->name('category');
+    // Category
+    Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });
 
 // Common mistakes handler
