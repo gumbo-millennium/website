@@ -10,10 +10,12 @@ use App\Models\Shop\ProductVariant;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use Tests\Traits\TestsMembersOnlyRoutes;
 
 class CartControllerTest extends TestCase
 {
     use DatabaseTransactions;
+    use TestsMembersOnlyRoutes;
 
     public function testAddToCart(): void
     {
