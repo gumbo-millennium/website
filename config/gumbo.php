@@ -65,4 +65,9 @@ return [
         'huisarts',
         'dokter',
     ],
+
+    // Shop settings
+    'shop' => [
+        'max-quantity' => (int) env('GUMBO_SHOP_MAX_QUANTITY', 5),
+    ],
 ];

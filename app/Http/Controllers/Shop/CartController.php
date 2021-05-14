@@ -51,7 +51,8 @@ class CartController extends Controller
 
         // If an item is matched, simply increase the count
         if ($matchedItem) {
-            $addedQuantity = min(5 - $matchedItem->quantity, $request->quantity);
+            $maxCount = $request->getMaxQuantity();
+            $addedQuantity = min($maxCount - $matchedItem->quantity, $request->quantity);
 
             if ($addedQuantity > 0) {
                 Cart::update($matchedItem->id, [

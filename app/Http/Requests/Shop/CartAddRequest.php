@@ -21,7 +21,7 @@ class CartAddRequest extends CartRequest
             'quantity' => [
                 'required',
                 'integer',
-                'between:1,5',
+                "between:1,{$this->getMaxQuantity()}",
             ],
         ];
     }

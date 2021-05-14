@@ -22,7 +22,7 @@ class CartUpdateRequest extends FormRequest
             ],
             'quantity' => [
                 'required',
-                'between:0,5',
+                "between:0,{$this->getMaxQuantity()}",
             ],
         ];
     }

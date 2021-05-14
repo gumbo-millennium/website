@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Shop;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Config;
 
 abstract class CartRequest extends FormRequest
 {
@@ -16,6 +17,16 @@ abstract class CartRequest extends FormRequest
     public function authorize()
     {
         return $this->user() && $this->user()->is_member;
+    }
+
+    /**
+     * Max quantity per variant
+     *
+     * @return int
+     */
+    public function getMaxQuantity(): int
+    {
+        return Config::get('gumbo.shop.max-quantity', 5);
     }
 
     /**
