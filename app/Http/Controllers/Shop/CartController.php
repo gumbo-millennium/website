@@ -51,14 +51,23 @@ class CartController extends Controller
 
         // If an item is matched, simply increase the count
         if ($matchedItem) {
-            Cart::update($matchedItem->id, [
-                'quantity' => $request->quantity,
-            ]);
+            $addedQuantity = min(5 - $matchedItem->quantity, $request->quantity);
 
-            flash(__(':Product was already in your cart, so we\'ve added :count more.', [
-                'product' => $matchedItem->name,
-                'quantity' => $request->quantity,
-            ]));
+            if ($addedQuantity > 0) {
+                Cart::update($matchedItem->id, [
+                    'quantity' => $addedQuantity,
+                ]);
+
+                flash(__(':Product was already in your cart, so we\'ve added :count more.', [
+                    'product' => $matchedItem->name,
+                    'quantity' => $addedQuantity,
+                ]));
+            } else {
+                flash(__(':Product was already in your cart and you\'ve already hit the order limit for this item.', [
+                    'product' => $matchedItem->name,
+                ]));
+            }
+
 
             return ResponseFacade::redirectToRoute('shop.cart');
         }

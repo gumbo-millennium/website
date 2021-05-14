@@ -95,6 +95,8 @@
   "Your cart is empty": "Je winkelwagen is leeg",
 
   ":Product was already in your cart, so we've added :count more.": ":Product zat al in je winkelwagen, aantal bijgewerkt.",
+  ":Product was already in your cart and you've already hit the order limit for this item.":
+    ":Product zat al in je winkelwagen, en je hebt al het maximum aantal artikelen bereikt.",
   ":Product was added to your cart.": ":Product is toegevoegd aan je winkelwagen.",
 
   ":Product has been updated": ":Product has been updated",
