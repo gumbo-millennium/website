@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Shop;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class CartUpdateRequest extends FormRequest
+class CartUpdateRequest extends CartRequest
 {
     /**
      * Get the validation rules that apply to the request.
