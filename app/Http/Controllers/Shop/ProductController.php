@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -62,14 +63,11 @@ class ProductController extends Controller
         }
 
         // Find first variant
-        $variant = ProductVariant::query()
-            ->where('product_id', $product->id)
-            ->orderByDesc('id')
-            ->firstOrFail();
+        abort_unless($product->default_variant, HttpResponse::HTTP_NOT_FOUND);
 
         return Response::redirectToRoute('shop.product-variant', [
             'product' => $product,
-            'variant' => $variant->slug,
+            'variant' => $product->default_variant->slug,
         ]);
     }
 
