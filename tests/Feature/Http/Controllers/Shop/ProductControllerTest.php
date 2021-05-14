@@ -16,11 +16,6 @@ class ProductControllerTest extends TestCase
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testIndex()
     {
         $invisible = factory(Category::class, 5)->create([
@@ -50,11 +45,6 @@ class ProductControllerTest extends TestCase
         }
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testCategory()
     {
         $category = factory(Category::class)->create([
@@ -133,11 +123,6 @@ class ProductControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testDisplay()
     {
         $category = factory(Category::class)->create([
