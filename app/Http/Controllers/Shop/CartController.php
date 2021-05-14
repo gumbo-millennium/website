@@ -9,7 +9,6 @@ use App\Http\Requests\Shop\CartAddRequest;
 use App\Http\Requests\Shop\CartUpdateRequest;
 use App\Models\Shop\ProductVariant;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-use Darryldecode\Cart\ItemCollection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Response as ResponseFacade;
@@ -37,17 +36,8 @@ class CartController extends Controller
         $isSingleVariant = $product->variants->count() === 1;
 
         // De-duplicate
-        $matchedItem = null;
-        foreach (Cart::getContent() as $item) {
-            assert($item instanceof ItemCollection);
-
-            $itemModel = $item->model;
-            if (! $itemModel || !$itemModel->is($variant)) {
-                continue;
-            }
-
-            $matchedItem = $itemModel;
-        }
+        $matchedItem = Cart::getContent()
+            ->first(static fn ($row) => $variant->is($row->associatedModel));
 
         // If an item is matched, simply increase the count
         if ($matchedItem) {
@@ -68,7 +58,6 @@ class CartController extends Controller
                     'product' => $matchedItem->name,
                 ]));
             }
-
 
             return ResponseFacade::redirectToRoute('shop.cart');
         }
