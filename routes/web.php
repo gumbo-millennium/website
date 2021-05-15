@@ -216,6 +216,10 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::post('/cart', [Shop\CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart', [Shop\CartController::class, 'update'])->name('cart.update');
 
+    Route::get('/order', [Shop\OrderController::class, 'create'])->name('order.create');
+    Route::post('/order', [Shop\OrderController::class, 'store'])->name('order.store');
+    Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });

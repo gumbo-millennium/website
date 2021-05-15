@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Date|null $shipped_at
  * @property int $price
  * @property-read string $status
- * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $products
+ * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
  * @property-read \App\Models\User $user
  */
 class Order extends Model
@@ -39,7 +39,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products(): BelongsToMany
+    public function variants(): BelongsToMany
     {
         return $this->belongsToMany(ProductVariant::class, 'shop_order_product_variant')
             ->using(OrderProduct::class);
