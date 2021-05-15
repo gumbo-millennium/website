@@ -62,7 +62,7 @@ class Category extends Model
 
     public function getValidImageUrlAttribute(): string
     {
-        return $this->products->where('image_url', '!=', null)->first()->image_url
+        return $this->products->whereNotNull('image_url')->where('active', '=', 1)->first()->image_url
             ?? (string) mix('images/geen-foto.jpg');
     }
 }
