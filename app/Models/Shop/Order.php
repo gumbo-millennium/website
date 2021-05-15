@@ -34,6 +34,10 @@ class Order extends Model
         'shipped_at' => 'datetime',
     ];
 
+    protected $fillable = [
+        'price',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -42,7 +46,8 @@ class Order extends Model
     public function variants(): BelongsToMany
     {
         return $this->belongsToMany(ProductVariant::class, 'shop_order_product_variant')
-            ->using(OrderProduct::class);
+            ->using(OrderProduct::class)
+            ->withPivot(['quantity', 'price']);
     }
 
     public function getStatusAttribute(): string

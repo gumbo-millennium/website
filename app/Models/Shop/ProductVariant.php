@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property array $options
  * @property array $meta
  * @property-read string $valid_image_url
+ * @property-read string $display_name
  * @property-read \App\Models\Shop\Product $product
  * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
  */
@@ -47,6 +48,10 @@ class ProductVariant extends Model
     protected $attributes = [
         'options' => '[]',
         'meta' => '[]',
+    ];
+
+    protected $fillable = [
+        'price',
     ];
 
     /**
@@ -87,5 +92,12 @@ class ProductVariant extends Model
     public function getValidImageUrlAttribute(): string
     {
         return $this->image_url ?? $this->product->valid_image_url;
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->product->variants()->count() === 1
+            ? $this->product->name
+            : ($this->product->name . " " . $this->name);
     }
 }

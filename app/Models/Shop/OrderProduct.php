@@ -13,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property string $product_variant_id
  * @property int $order_id
  * @property int $price
- * @property int $vat_rate
+ * @property int $am
  * @property-read \App\Models\Shop\Order $order
- * @property-read \App\Models\Shop\ProductVariant $product
+ * @property-read \App\Models\Shop\ProductVariant $variant
  */
 class OrderProduct extends Pivot
 {
@@ -23,7 +23,7 @@ class OrderProduct extends Pivot
 
     protected $casts = [
         'price' => 'int',
-        'vat_rate' => 'int',
+        'amount' => 'int',
     ];
 
     public function order(): BelongsTo
@@ -31,8 +31,8 @@ class OrderProduct extends Pivot
         return $this->belongsTo(Order::class);
     }
 
-    public function product(): BelongsTo
+    public function variant(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::class);
+        return $this->belongsTo(ProductVariant::class, 'product_id');
     }
 }

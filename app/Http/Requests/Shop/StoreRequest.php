@@ -7,16 +7,16 @@ namespace App\Http\Requests\Shop;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 
-abstract class CartRequest extends StoreRequest
+abstract class StoreRequest extends FormRequest
 {
     /**
-     * Max quantity per variant
+     * Determine if the user is authorized to make this request.
      *
-     * @return int
+     * @return bool
      */
-    public function getMaxQuantity(): int
+    public function authorize()
     {
-        return Config::get('gumbo.shop.max-quantity', 5);
+        return $this->user() && $this->user()->is_member;
     }
 
     /**

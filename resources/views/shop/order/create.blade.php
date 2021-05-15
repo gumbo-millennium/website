@@ -8,18 +8,25 @@
 
     {{-- Categories --}}
     <div class="container">
-        <div class="flex">
-            <div class="w-2/3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur blanditiis, dicta dolor eos esse inventore iste magnam maxime nostrum porro, quae quisquam ratione repellendus repudiandae sapiente sed, tenetur voluptates.</div>
-            <div class="w-1/3">
-                @if ($cartItems->count() > 0)
-                    @include('shop.partials.product-list', ['readonly' => true])
-                @else
-                    <div class="p-8 text-center text-lg font-light border rounded border-gray-primary-1 text-gray-primary-1">
-                        @lang('Your cart is empty')
-                    </div>
-                @endif
+        <form method="post" target="{{ route('shop.order.store') }}">
+            @csrf
+            <div class="flex">
+                <div class="w-1/2">
+                    <p>Je bent er bijna! Nog even de laatste gegevens invullen en dan staat je bestelling vast. Je kan het!</p>
+                    <button type="submit" class="btn btn--brand">
+                        Bestellen
+                    </button>
+                </div>
+                <div class="w-1/2">
+                    @if ($cartItems->count() > 0)
+                        @include('shop.partials.product-list', ['readonly' => true])
+                    @else
+                        <div class="p-8 text-center text-lg font-light border rounded border-gray-primary-1 text-gray-primary-1">
+                            @lang('Your cart is empty')
+                        </div>
+                    @endif
+                </div>
             </div>
-        </div>
-
+        </form>
     </div>
 @endsection
