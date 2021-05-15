@@ -37,6 +37,7 @@ class Category extends Model
 
     protected $attributes = [
         'meta' => '[]',
+        'visible' => 0,
     ];
 
     /**
