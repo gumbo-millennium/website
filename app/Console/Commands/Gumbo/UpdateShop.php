@@ -68,6 +68,7 @@ class UpdateShop extends Command
 
         $seenProductIds = [];
         $seenVariantIds = [];
+        $seenCategoryIds = [];
 
         $this->line(sprintf(
             'Retrieved <info>%d</> products from API',
@@ -97,10 +98,14 @@ class UpdateShop extends Command
             $category = Arr::get($product, 'category');
             if ($category) {
                 $model->category()->associate(
-                    Category::firstOrCreate([
-                        'name' => $category,
+                    Category::updateOrCreate([
+                       'id' => $category['uuid'],
+                    ], [
+                        'name' => $category['name'],
                     ])
                 );
+
+                $seenCategoryIds[] = $category['uuid'];
             }
 
             // Save changes
@@ -130,11 +135,13 @@ class UpdateShop extends Command
 
         $productCount = Product::whereNotIn('id', $seenProductIds)->delete();
         $variantCount = ProductVariant::whereNotIn('id', Arr::collapse($seenVariantIds))->delete();
+        $categoryCount = Category::whereNotIn('id', $seenCategoryIds)->delete();
 
         $this->line(sprintf(
-            'Deleted <info>%s</> products and <info>%d</> variants.',
+            'Deleted <info>%s</> products, <info>%d</> variants and <info>%d</> categories.',
             $productCount,
-            $variantCount
+            $variantCount,
+            $categoryCount
         ));
     }
 
