@@ -8,6 +8,7 @@ use App\Models\Shop\Order;
 
 /**
  * Email sent to the board concerning new order submissions.
+ *
  * @author Mark Walet <mark.walet@gmail.com>
  * @license MPL-2.0
  */

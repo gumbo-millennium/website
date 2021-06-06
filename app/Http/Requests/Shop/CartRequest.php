@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Shop;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 
 abstract class CartRequest extends StoreRequest

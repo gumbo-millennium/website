@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Http\Controllers\Shop;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
-use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Tests\Traits\TestsMembersOnlyRoutes;
 
-class CartControllerTest extends TestCase
+class OrderControllerTest extends TestCase
 {
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;

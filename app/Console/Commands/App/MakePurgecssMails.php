@@ -6,7 +6,6 @@ namespace App\Console\Commands\App;
 
 use App\Helpers\Str;
 use App\Mail\ActivityCovidMail;
-use App\Mail\Join\NewOrderMail;
 use App\Mail\Join\UserJoinMail;
 use App\Mail\Shop\NewOrderBoardMail;
 use App\Models\Activity;

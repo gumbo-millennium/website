@@ -152,6 +152,9 @@
             "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
             "phpcs -n"
         ],
+        "cs": [
+            "phpcbf"
+        ],
         "test": [
             "vendor/bin/phpunit"
         ]

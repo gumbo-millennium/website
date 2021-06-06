@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mail\Shop;
 
-use App\Models\Orde;
 use App\Models\Shop\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

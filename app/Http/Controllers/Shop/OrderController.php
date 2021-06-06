@@ -13,10 +13,11 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response as ResponseFacade;
-use \Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 use function abort_if;
 
 class OrderController extends Controller
@@ -66,7 +67,7 @@ class OrderController extends Controller
         $order->user()->associate($user);
 
         // Map cart to proper order table
-        $variantWithAmount = $cartItems->mapWithKeys(fn ($item) => [$item->associatedModel->id => [
+        $variantWithAmount = $cartItems->mapWithKeys(static fn ($item) => [$item->associatedModel->id => [
             'quantity' => $item->quantity,
             'price' => $item->price,
         ]]);
