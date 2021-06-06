@@ -26,6 +26,7 @@ use Spatie\MediaLibrary\Models\Media;
  * @property string $slug
  * @property string|null $description
  * @property int $total_size
+ * @property string $sort_order
  * @property-read FileCategory|null $category
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
  * @property-read bool $is_available
@@ -37,6 +38,15 @@ class FileBundle extends SluggableModel implements HasMedia
 {
     use HasMediaTrait;
     use Searchable;
+
+    /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'sort_order' => 'desc',
+    ];
 
     /**
      * {@inheritDoc}

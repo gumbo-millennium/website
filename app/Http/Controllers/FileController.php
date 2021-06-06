@@ -136,7 +136,7 @@ class FileController extends Controller
         $bundle->loadMissing('media', 'category');
         $bundleMedia = $bundle
             ->getMedia()
-            ->sortByDesc('name');
+            ->sortBy('name', SORT_REGULAR, $bundle->sort_order === 'desc');
 
         // Set title
         SEOTools::setTitle("{$bundle->title} - {$bundle->category->title} - Bestanden");

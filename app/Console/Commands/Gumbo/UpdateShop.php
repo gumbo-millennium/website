@@ -8,12 +8,17 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use App\Services\InventoryService;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateShop extends Command
 {
+    private const FALLBACK_FILE = 'images/geen-foto.jpg';
+
     /**
      * The name and signature of the console command.
      *
@@ -31,13 +36,19 @@ class UpdateShop extends Command
      */
     protected $description = 'Updates the shop products and variants';
 
+    protected ?GuzzleClient $client = null;
+
+    private string $fallbackFile;
+
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle(InventoryService $service)
+    public function handle(InventoryService $service, GuzzleClient $client)
     {
+        $this->client = $client;
+
         try {
             Product::unguard();
             ProductVariant::unguard();
@@ -74,8 +85,14 @@ class UpdateShop extends Command
                 'description' => Arr::get($product, 'description'),
                 'etag' => Arr::get($product, 'etag'),
                 'vat_rate' => (int) Arr::get($product, 'vatPercentage'),
-                'image_url' => Arr::get($product, 'presentation.imageUrl'),
             ]);
+
+            // Set visibility based on iZettle
+            $model->visible = Arr::get($product, 'online.status', 'VISIBLE') !== 'HIDDEN';
+
+            // Safely get image
+            $model->image_url = Arr::get($product, 'presentation.imageUrl');
+            $model->image_url = $this->validateImageUrl($model->image_url);
 
             $category = Arr::get($product, 'category');
             if ($category) {
@@ -125,6 +142,8 @@ class UpdateShop extends Command
     {
         // Get product
         $seenVariantIds = [];
+        $orderIndex = 0;
+
         foreach ($variants as $variant) {
             $model = ProductVariant::firstOrNew([
                 'id' => Arr::get($variant, 'uuid'),
@@ -134,7 +153,11 @@ class UpdateShop extends Command
             $model->description = Arr::get($variant, 'description');
             $model->sku = Arr::get($variant, 'sku');
             $model->price = Arr::get($variant, 'price.amount');
+            $model->order = $orderIndex++;
+
+            // Safely get image
             $model->image_url = Arr::get($variant, 'presentation.imageUrl');
+            $model->image_url = $this->validateImageUrl($model->image_url);
 
             // Enure pairing
             $model->product()->associate($product);
@@ -151,5 +174,34 @@ class UpdateShop extends Command
         }
 
         return $seenVariantIds;
+    }
+
+    /**
+     * Check if the file is found, and not empty.
+     *
+     * @param string $url
+     * @return string
+     */
+    private function validateImageUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return null;
+        }
+
+        $this->line("Checking [<info>{$url}</>] for existence...", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+
+        try {
+            $response = $this->client->head($url, [
+                RequestOptions::TIMEOUT => 2,
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                return $url;
+            }
+
+            return null;
+        } catch (GuzzleException $exception) {
+            return null;
+        }
     }
 }

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $slug
  * @property bool $visible
  * @property array $meta
+ * @property-read string $valid_image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<Product> $products
  */
 class Category extends Model
@@ -55,5 +56,12 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+
+    public function getValidImageUrlAttribute(): string
+    {
+        return $this->products->where('image_url', '!=', null)->first()->image_url
+            ?? (string) mix('images/geen-foto.jpg');
     }
 }

@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col col-12 md:col">
-            <img class="w-full rounded" src="{{ $variant->image_url ?? $product->image_url }}"
+            <img class="w-full rounded" src="{{ $variant->valid_image_url ?? $product->valid_image_url }}"
                 title="Afbeelding van {{ $product->name }}" />
         </div>
 

@@ -17,9 +17,14 @@ trait BlocksCancelledActivityRuns
      */
     public function authorizedToRun(Request $request, $model)
     {
-        return
-            !$model->is_cancelled &&
-            $model->end_date > now() &&
-            parent::authorizedToRun($request, $model);
+        if ($model->is_cancelled) {
+            return false;
+        }
+
+        if ($model->end_date < now() && ! $model->is_postponed) {
+            return false;
+        }
+
+        return parent::authorizedToRun($request, $model);
     }
 }

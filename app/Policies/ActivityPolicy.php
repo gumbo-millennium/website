@@ -136,8 +136,13 @@ class ActivityPolicy
      */
     public function cancel(User $user, Activity $activity): bool
     {
-        // Can't cancel activities that have already started
-        if ($activity->end_date < now() || $activity->is_cancelled) {
+        // Can't cancel cancelled activities
+        if ($activity->is_cancelled) {
+            return false;
+        }
+
+        // Can't cancel activities that have already started, unless they're in postponed state
+        if ($activity->end_date < now() && ! $activity->is_postponed) {
             return false;
         }
 

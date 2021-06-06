@@ -30,8 +30,7 @@ class ShopController extends Controller
 
         // Add to CSP
         $images = $categories
-            ->map(static fn (Category $category) => $category->products()->first())
-            ->pluck('image_url');
+            ->pluck('valid_image_url');
         $this->addImageUrlsToCspPolicy($images);
 
         return Response::view('shop.index', [
@@ -54,7 +53,7 @@ class ShopController extends Controller
             ->get();
 
         // Add to CSP
-        $this->addImageUrlsToCspPolicy($products->pluck('image_url'));
+        $this->addImageUrlsToCspPolicy($products->pluck('valid_image_url'));
 
         // TODO: show category
         return Response::view('shop.category', [

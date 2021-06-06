@@ -22,8 +22,8 @@
                 <div class="card mb-4">
                     <div class="card__figure" role="presentation">
                         <img class="card__figure-image"
-                            src="{{ $product->image_url }}"
-                            title="Foto van {{ $product->image_url }}">
+                            src="{{ $product->valid_image_url }}"
+                            title="Foto van {{ $product->valid_image_url }}">
                     </div>
                     <div class="card__body">
                         <h2 class="card__body-title">

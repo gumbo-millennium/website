@@ -73,7 +73,7 @@ class CancelActivity extends Action
             \assert($activity instanceof Activity || $activity instanceof NovaActivity);
 
             // Skip already cancelled or ended
-            if ($activity->is_cancelled || $activity->end_date < now()) {
+            if ($activity->is_cancelled) {
                 $skipCount++;
                 continue;
             }

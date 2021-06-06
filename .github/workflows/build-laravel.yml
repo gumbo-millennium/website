@@ -38,6 +38,7 @@ jobs:
         with:
           name: front-end
           path: public/
+
   laravel-backend:
     name: "Back-end build and test"
     needs: [laravel-frontend]
@@ -140,6 +141,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
+
   deploy:
     name: "Deploy application"
     needs: [laravel-frontend, laravel-backend]
@@ -228,3 +230,13 @@ jobs:
           env_url: ${{ steps.deployment-data.outputs.app_url }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        if: success()
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: ${{ steps.deployment-data.outputs.name }}
