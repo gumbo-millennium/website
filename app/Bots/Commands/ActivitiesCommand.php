@@ -17,6 +17,13 @@ class ActivitiesCommand extends Command
 {
     private const ACTIVITY_URL = 'https://gumbo.nu/acpublicaties';
 
+    /**
+     * Message shown for users to login with.
+     */
+    private const REGISTER_MESSAGE = <<<'TEXT'
+    Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
+    TEXT;
+
     private const USER_MESSAGE = <<<'MARKDOWN'
     Activiteiten 🎯
 

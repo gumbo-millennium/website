@@ -62,12 +62,13 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
         "facade/ignition": "^1.16",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "fzaninotto/faker": "^1.9",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0",
         "php-parallel-lint/php-console-highlighter": "^0.5.0",
         "php-parallel-lint/php-parallel-lint": "^1.2",
+        "phpunit/phpunit": "^8.0",
         "sempro/phpunit-pretty-print": "^1.2",
         "slevomat/coding-standard": "^6.1",
         "squizlabs/php_codesniffer": "^3.3"
@@ -149,11 +150,11 @@
             "@php artisan horizon:assets"
         ],
         "lint": [
-            "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
-            "phpcs -n"
+            "vendor/bin/parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run"
         ],
         "cs": [
-            "phpcbf"
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
         ],
         "test": [
             "vendor/bin/phpunit"
