@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A user-generated page
+ * A user-generated page.
  *
  * @property-read AttachmentInterface $image
  * @property int $id
@@ -21,18 +21,18 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property \Illuminate\Support\Date $updated_at
  * @property string $title
  * @property string $slug
- * @property string|null $group
+ * @property null|string $group
  * @property string $type
- * @property string|null $summary
- * @property array|null $contents
- * @property int|null $author_id
- * @property string|null $image_file_name image name
- * @property int|null $image_file_size image size (in bytes)
- * @property string|null $image_content_type image content type
- * @property string|null $image_updated_at image update timestamp
- * @property array|null $image_variants image variants (json)
- * @property-read User|null $author
- * @property-read string|null $html
+ * @property null|string $summary
+ * @property null|array $contents
+ * @property null|int $author_id
+ * @property null|string $image_file_name image name
+ * @property null|int $image_file_size image size (in bytes)
+ * @property null|string $image_content_type image content type
+ * @property null|string $image_updated_at image update timestamp
+ * @property null|array $image_variants image variants (json)
+ * @property-read null|User $author
+ * @property-read null|string $html
  * @property-read string $url
  */
 class Page extends SluggableModel implements AttachableInterface
@@ -43,11 +43,13 @@ class Page extends SluggableModel implements AttachableInterface
     use PaperclipTrait;
 
     public const TYPE_USER = 'user';
+
     public const TYPE_REQUIRED = 'required';
+
     public const TYPE_GIT = 'git';
 
     /**
-     * Pages required to exist, cannot be deleted or renamed
+     * Pages required to exist, cannot be deleted or renamed.
      */
     public const REQUIRED_PAGES = [
         'home' => 'Homepage',
@@ -58,17 +60,8 @@ class Page extends SluggableModel implements AttachableInterface
     ];
 
     public const SLUG_HOMEPAGE = 'home';
-    public const SLUG_404 = 'error-404';
 
-    /**
-     * Returns pages required by the system, all in the main group
-     *
-     * @return array
-     */
-    public static function getRequiredPages(): array
-    {
-        return array_merge(self::REQUIRED_PAGES, config('gumbo.page-groups'));
-    }
+    public const SLUG_404 = 'error-404';
 
     /**
      * @inheritDoc
@@ -88,9 +81,15 @@ class Page extends SluggableModel implements AttachableInterface
     ];
 
     /**
-     * Generate the slug based on the title property
-     *
-     * @return array
+     * Returns pages required by the system, all in the main group.
+     */
+    public static function getRequiredPages(): array
+    {
+        return array_merge(self::REQUIRED_PAGES, config('gumbo.page-groups'));
+    }
+
+    /**
+     * Generate the slug based on the title property.
      */
     public function sluggable(): array
     {
@@ -108,7 +107,7 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the owning user, if present
+     * Returns the owning user, if present.
      *
      * @return BelongsTo
      */
@@ -118,9 +117,7 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Converts contents to HTML
-     *
-     * @return string|null
+     * Converts contents to HTML.
      */
     public function getHtmlAttribute(): ?string
     {
@@ -128,9 +125,8 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the URL to this page
+     * Returns the URL to this page.
      *
-     * @return string
      * @throws LogicException
      */
     public function getUrlAttribute(): string
@@ -143,9 +139,7 @@ class Page extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     *
-     * @return void
+     * Binds paperclip files.
      */
     protected function bindPaperclip(): void
     {

@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * A user's order
+ * A user's order.
  *
  * @property int $id
  * @property int $user_id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $paid_at
- * @property \Illuminate\Support\Date|null $shipped_at
+ * @property null|\Illuminate\Support\Date $paid_at
+ * @property null|\Illuminate\Support\Date $shipped_at
  * @property int $price
  * @property-read string $status
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Order extends Model
 {
-
     protected $table = 'shop_orders';
 
     protected $casts = [
@@ -56,6 +55,6 @@ class Order extends Model
             return 'sent';
         }
 
-         return $this->paid_at ? 'paid' : 'pending';
+        return $this->paid_at ? 'paid' : 'pending';
     }
 }

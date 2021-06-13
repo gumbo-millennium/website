@@ -42,7 +42,7 @@ class BeerCommand extends Command
     protected $aliases = ['beer'];
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -55,6 +55,7 @@ class BeerCommand extends Command
             $this->replyWithMessage([
                 'text' => '⏸ Rate limited (1x per min)',
             ]);
+
             return;
         }
 
@@ -63,7 +64,7 @@ class BeerCommand extends Command
 
         // Get user and check member rights
         $user = $this->getUser();
-        if (!$this->ensureIsMember($user)) {
+        if (! $this->ensureIsMember($user)) {
             return;
         }
 
@@ -76,16 +77,18 @@ class BeerCommand extends Command
 
             if ($startDate <= $nowDate && $endDate >= $nowDate) {
                 $configFile = $file;
+
                 break;
             }
         }
 
         // Get config
         $configPath = resource_path(sprintf(self::BEER_CONFIG_TEMPLATE, $configFile));
-        if (!file_exists($configPath) || !is_file($configPath)) {
+        if (! file_exists($configPath) || ! is_file($configPath)) {
             $this->replyWithMessage([
                 'text' => 'Dit commando is helaas kapot 😢',
             ]);
+
             return;
         }
 
@@ -96,6 +99,7 @@ class BeerCommand extends Command
             $this->replyWithMessage([
                 'text' => 'Dit commando is helaas kapot 😢',
             ]);
+
             return;
         }
 
@@ -110,7 +114,7 @@ class BeerCommand extends Command
 
         // Send as-is
         $this->replyWithMessage([
-            'text' => "🍻 $format",
+            'text' => "🍻 ${format}",
         ]);
     }
 }

@@ -44,7 +44,7 @@ class ConstructGoogleActionList implements ShouldQueue
             ->getResource('role', [], ['code', 'naam', 'leden', 'e_mailadres'])
             ->reject(static fn ($row) => empty($row['e_mailadres']));
 
-        Log::info("Recieved roles from Conscribo", compact('roles'));
+        Log::info('Recieved roles from Conscribo', compact('roles'));
 
         // Map "leden" to an array
         // 1) Get the 'leden' properties and split it on comma's followed by a digit (values are "1: user, 2: user")
@@ -54,8 +54,9 @@ class ConstructGoogleActionList implements ShouldQueue
             $role['leden'] = collect($memberList)
                 ->each('trim')
                 ->filter()
-                ->sort(static fn ($a, $b) => intval($a) <=> intval($b))
+                ->sort(static fn ($a, $b) => (int) $a <=> (int) $b)
                 ->toArray();
+
             return $role;
         });
 
@@ -71,7 +72,7 @@ class ConstructGoogleActionList implements ShouldQueue
             ->toArray();
 
         // Log count
-        Log::debug("Will look for {member-count} members", [
+        Log::debug('Will look for {member-count} members', [
             'member-count' => count($userIds),
         ]);
 
@@ -83,7 +84,7 @@ class ConstructGoogleActionList implements ShouldQueue
         );
 
         // Log count
-        Log::debug("Received {member-count} members from Conscribo", [
+        Log::debug('Received {member-count} members from Conscribo', [
             'member-count' => count($userResource),
         ]);
 
@@ -94,7 +95,7 @@ class ConstructGoogleActionList implements ShouldQueue
             ->map(static fn ($val) => Str::lower(trim($val)));
 
         // Log count
-        Log::info("After filter, got left with {email-count} email addresses from Conscribo", [
+        Log::info('After filter, got left with {email-count} email addresses from Conscribo', [
             'email-count' => count($emails),
             'query-count' => count($userResource),
             'search-count' => count($userIds),
@@ -119,7 +120,7 @@ class ConstructGoogleActionList implements ShouldQueue
             ];
 
             // Allow for alias changing
-            if (!empty(self::EMAIL_REMAP[$job['email']])) {
+            if (! empty(self::EMAIL_REMAP[$job['email']])) {
                 Log::debug('Remapping job {job} to use {new-email} instead of {old-email}', [
                     'job' => Arr::except($job, 'members'),
                     'old-email' => $job['email'],
@@ -142,15 +143,16 @@ class ConstructGoogleActionList implements ShouldQueue
         // Start a job for each email
         foreach ($jobList as $job) {
             $domain = Str::afterLast($job['email'], '@');
-            if (!\in_array($domain, $validDomains)) {
+            if (! \in_array($domain, $validDomains, true)) {
                 Log::warning('Tried to start job for {email}, which isn\'t in the safe domain list', [
                     'email' => $job['email'],
                     'safe-domains' => $validDomains,
                 ]);
+
                 continue;
             }
 
-            Log::info("Dispatching new Update job for {email}", [
+            Log::info('Dispatching new Update job for {email}', [
                 'email' => $job['email'],
                 'job' => array_merge($job, [
                     'members' => sprintf('[REDACTED %d EMAILS]', count($job['members'])),

@@ -10,14 +10,14 @@ use App\Models\Enrollment;
 class CreateInvoiceJob extends StripeJob
 {
     /**
-     * Enrollment
+     * Enrollment.
      *
      * @var \App\Models\Enrollment
      */
     protected $enrollment;
 
     /**
-     * Create new job for this enrollment
+     * Create new job for this enrollment.
      */
     public function __construct(Enrollment $enrollment)
     {

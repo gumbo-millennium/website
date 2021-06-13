@@ -14,9 +14,6 @@ use Stripe\Invoice;
  * Handles paid invoices, in case people pay out-of-band (via SEPA transfer or something).
  *
  * Called on payment_intent.succeeded
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class HandleInvoicePaid extends StripeWebhookJob
 {
@@ -24,7 +21,6 @@ class HandleInvoicePaid extends StripeWebhookJob
      * Execute the job.
      *
      * @param Invoice $invoice
-     * @return void
      */
     protected function process(?Invoice $invoice): void
     {
@@ -38,6 +34,7 @@ class HandleInvoicePaid extends StripeWebhookJob
                 'Recieved invoice change for unknown invoice {invoice}',
                 compact('invoice')
             );
+
             return;
         }
 

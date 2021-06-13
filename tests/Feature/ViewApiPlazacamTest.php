@@ -9,21 +9,16 @@ use Tests\TestCase;
 use Tests\Traits\TempUserTrait;
 
 /**
- * Tests API access to the plazacam
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Tests API access to the plazacam.
  */
 class ViewApiPlazacamTest extends TestCase
 {
     use TempUserTrait;
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadAnonymous(): void
+    public function test_read_anonymous(): void
     {
         // Get URL
         $url = URL::signedRoute('api.plazacam.view', [
@@ -39,11 +34,9 @@ class ViewApiPlazacamTest extends TestCase
     }
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadUser(): void
+    public function test_read_user(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -62,11 +55,9 @@ class ViewApiPlazacamTest extends TestCase
     }
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadMember(): void
+    public function test_read_member(): void
     {
         // Gets the user
         $user = $this->getUser(['guest', 'member']);

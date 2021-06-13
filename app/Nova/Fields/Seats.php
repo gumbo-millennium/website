@@ -7,18 +7,14 @@ namespace App\Nova\Fields;
 use Laravel\Nova\Fields\Number;
 
 /**
- * A seat availability field
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * A seat availability field.
  */
 class Seats extends Number
 {
     /**
      * Resolve the field's value for display.
      *
-     * @param  mixed  $resource
-     * @param  string|null  $attribute
+     * @param null|string $attribute
      * @return void
      */
     public function resolveForDisplay($resource, $attribute = null)

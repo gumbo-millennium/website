@@ -7,19 +7,14 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 
 /**
- * Adds or updates the default user
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Adds or updates the default user.
  */
 abstract class VerboseSeeder extends Seeder
 {
     /**
-     * Prints a line
+     * Prints a line.
      *
-     * @param string|array $message Message to print, array to pass to sprintf
-     * @param int $options
-     * @return void
+     * @param array|string $message Message to print, array to pass to sprintf
      */
     public function writeln($message, int $options = OutputStyle::OUTPUT_NORMAL): void
     {
@@ -31,10 +26,9 @@ abstract class VerboseSeeder extends Seeder
     }
 
     /**
-     * Prints a debug line
+     * Prints a debug line.
      *
      * @param mixed ...$args
-     * @return void
      */
     public function error(...$args): void
     {
@@ -47,10 +41,9 @@ abstract class VerboseSeeder extends Seeder
     }
 
     /**
-     * Prints a debug line
+     * Prints a debug line.
      *
      * @param mixed ...$args
-     * @return void
      */
     public function log(...$args): void
     {
@@ -58,10 +51,9 @@ abstract class VerboseSeeder extends Seeder
     }
 
     /**
-     * Prints a debug line
+     * Prints a debug line.
      *
      * @param mixed ...$args
-     * @return void
      */
     public function debug(...$args): void
     {

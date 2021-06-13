@@ -21,22 +21,16 @@ use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 
 /**
- * Handles creating enrollments, changes in the enrollment form and unenrollment
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Handles creating enrollments, changes in the enrollment form and unenrollment.
  */
 class EnrollmentController extends Controller
 {
-    use HasEnrollments;
     use HandlesStripeItems;
+    use HasEnrollments;
 
     /**
-     * Creates the new enrollment for the activity
+     * Creates the new enrollment for the activity.
      *
-     * @param EnrollmentServiceContract $enrollService
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function create(
@@ -59,7 +53,7 @@ class EnrollmentController extends Controller
             optional($lock)->block(15);
 
             // Check if the user can actually enroll
-            if (!$enrollService->canEnroll($activity, $user)) {
+            if (! $enrollService->canEnroll($activity, $user)) {
                 Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
                     'user' => $user,
                     'activity' => $activity,
@@ -67,6 +61,7 @@ class EnrollmentController extends Controller
 
                 // Redirect properly
                 $isEnrolled = Enrollment::findActive($user, $activity) !== null;
+
                 return \redirect()
                     ->route($isEnrolled ? 'enroll.edit' : 'activity.show', compact('activity'));
             }
@@ -104,10 +99,8 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * Shows the form to update the enrollment details
+     * Shows the form to update the enrollment details.
      *
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function edit(Request $request, Activity $activity)
@@ -130,10 +123,8 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * Creates the new enrollment for the activity
+     * Creates the new enrollment for the activity.
      *
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function update(Request $request, Activity $activity)
@@ -163,9 +154,6 @@ class EnrollmentController extends Controller
     /**
      * Redirects users to the proper route. Note that this route might redirect
      * to the payments, even if the activity has ended.
-     *
-     * @param Enrollment $enrollment
-     * @return RedirectResponse
      */
     public function redirect(Enrollment $enrollment): RedirectResponse
     {
@@ -185,6 +173,7 @@ class EnrollmentController extends Controller
                     'warning'
                 );
             }
+
             return redirect()->route('payment.start', compact('activity'));
         }
 
@@ -193,10 +182,8 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * Unenroll form
+     * Unenroll form.
      *
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function delete(Request $request, Activity $activity)
@@ -205,8 +192,9 @@ class EnrollmentController extends Controller
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Ask policy
-        if (!$request->user()->can('unenroll', $enrollment)) {
+        if (! $request->user()->can('unenroll', $enrollment)) {
             flash('Je kan je niet (meer) uitschrijven voor dit evenement', 'info');
+
             return redirect()->route('enroll.show', compact('activity'));
         }
 
@@ -215,10 +203,8 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * Confirmed unenroll requst
+     * Confirmed unenroll requst.
      *
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function destroy(Request $request, Activity $activity)
@@ -228,8 +214,9 @@ class EnrollmentController extends Controller
         $user = $request->user();
 
         // Ask policy
-        if (!$user->can('unenroll', $enrollment)) {
+        if (! $user->can('unenroll', $enrollment)) {
             flash('Je kan je niet meer uitschrijven voor dit evenement', 'info');
+
             return redirect()->route('enroll.show', compact('activity'));
         }
 
@@ -247,19 +234,17 @@ class EnrollmentController extends Controller
 
         // Done :)
         flash("Je bent uitgeschreven voor {$activity->name}.", 'sucess');
+
         return redirect()->route('activity.show', compact('activity'));
     }
 
     /**
      * Adds a Stripe Payment Intent or Stripe Invoice to the enrollment, if required.
-     *
-     * @param Enrollment $enrollment
-     * @return void
      */
     protected function addPaymentObject(Enrollment $enrollment): void
     {
         // Free enrollments don't need a payment object.
-        if (!$enrollment->price) {
+        if (! $enrollment->price) {
             return;
         }
 
@@ -299,7 +284,7 @@ class EnrollmentController extends Controller
             $enrollment->save();
         } catch (ApiErrorException $e) {
             // Log error
-            logger()->error("Recieved API error whilst creating intent for {enrollment}", [
+            logger()->error('Recieved API error whilst creating intent for {enrollment}', [
                 'exception' => $e,
                 'enrollment' => $enrollment,
             ]);

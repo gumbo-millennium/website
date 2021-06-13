@@ -15,7 +15,7 @@ trait TestsShop
         array $attributes = [],
         ?Product $product = null
     ): ProductVariant {
-        if (!$product) {
+        if (! $product) {
             $category = factory(Category::class)->create([
                 'visible' => true,
             ]);
@@ -36,7 +36,7 @@ trait TestsShop
         $this->assertSame(
             $quantity,
             Cart::getTotalQuantity(),
-            "Total cart quantity does not match [$quantity]"
+            "Total cart quantity does not match [${quantity}]"
         );
     }
 
@@ -45,7 +45,7 @@ trait TestsShop
         $this->assertEquals(
             $price,
             Cart::getTotal(),
-            "Cart price does not match expected price of [$price]"
+            "Cart price does not match expected price of [${price}]"
         );
     }
 }

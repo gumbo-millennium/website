@@ -36,7 +36,7 @@ trait HandlesStripeRefunds
     ];
 
     /**
-     * Maps refund reasons to credit note reasons
+     * Maps refund reasons to credit note reasons.
      *
      * @var array<string>
      */
@@ -47,11 +47,6 @@ trait HandlesStripeRefunds
     /**
      * Creates a refund for the given enrollment, which will issue a refund for the
      * charge, and then add that refund as a credit note on the invoice.
-     *
-     * @param Enrollment $enrollment
-     * @param string $reason
-     * @param int|null $amount
-     * @return Refund
      */
     public function createRefund(Enrollment $enrollment, string $reason, ?int $amount): Refund
     {
@@ -59,11 +54,11 @@ trait HandlesStripeRefunds
         $invoice = $this->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
         $charge = $this->getCharge($enrollment);
 
-        if (!$invoice) {
+        if (! $invoice) {
             throw new UnderflowException('No invoice has been created for the given enrollment.');
         }
 
-        if (!$charge) {
+        if (! $charge) {
             throw new UnderflowException('No charge has been made for the given enrollment.');
         }
 
@@ -81,13 +76,8 @@ trait HandlesStripeRefunds
     }
 
     /**
-     * Creates the refund for the given charge, and returns it
+     * Creates the refund for the given charge, and returns it.
      *
-     * @param Charge $charge
-     * @param Enrollment $enrollment
-     * @param Invoice $invoice
-     * @param string $reason
-     * @param int|null $amount
      * @return Refund
      * @throws UnderflowException
      * @throws InvalidArgumentException
@@ -124,12 +114,12 @@ trait HandlesStripeRefunds
         ];
 
         // Add reason
-        if (\in_array($reason, self::$validRefundReasons)) {
+        if (\in_array($reason, self::$validRefundReasons, true)) {
             $data['reason'] = $reason;
         }
 
         // Purge empty values
-        $data = \array_filter($data, static fn ($row) => !empty($row));
+        $data = \array_filter($data, static fn ($row) => ! empty($row));
 
         try {
             // Create the refund
@@ -141,13 +131,7 @@ trait HandlesStripeRefunds
     }
 
     /**
-     * Creates the credit note for this invoice, created from the refund provided
-     *
-     * @param Refund $refund
-     * @param Enrollment $enrollment
-     * @param Invoice $invoice
-     * @param string $reason
-     * @return CreditNote
+     * Creates the credit note for this invoice, created from the refund provided.
      */
     private function createStripeCreditNote(
         Refund $refund,
@@ -162,10 +146,10 @@ trait HandlesStripeRefunds
 
         $lineItems = [];
         $lineItems[] = [
-            "type" => "custom_line_item",
-            "unit_amount" => $refund->amount,
-            "quantity" => "1",
-            "description" => "Terugbetaling van {$invoice->number}",
+            'type' => 'custom_line_item',
+            'unit_amount' => $refund->amount,
+            'quantity' => '1',
+            'description' => "Terugbetaling van {$invoice->number}",
         ];
 
         $memo = "Terugbetaling na annulering van inschrijving op {$enrollment->activity->name}";
@@ -184,7 +168,7 @@ trait HandlesStripeRefunds
         ];
 
         // Add reason
-        if (in_array($reason, self::$validCreditNoteReasons)) {
+        if (in_array($reason, self::$validCreditNoteReasons, true)) {
             $data['reason'] = $reason;
         }
 

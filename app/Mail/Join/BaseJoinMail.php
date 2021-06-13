@@ -10,10 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Shared elements for the join mail
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Shared elements for the join mail.
  */
 abstract class BaseJoinMail extends Mailable
 {
@@ -33,7 +30,7 @@ abstract class BaseJoinMail extends Mailable
     ];
 
     /**
-     * Registry submission
+     * Registry submission.
      *
      * @var JoinSubmission
      */
@@ -59,10 +56,7 @@ abstract class BaseJoinMail extends Mailable
     abstract public function build();
 
     /**
-     * Returns the subject
-     *
-     * @param JoinSubmission $submission
-     * @return string
+     * Returns the subject.
      */
     abstract protected function createSubject(JoinSubmission $submission): string;
 }

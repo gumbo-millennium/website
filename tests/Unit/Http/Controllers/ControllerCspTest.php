@@ -14,7 +14,7 @@ class ControllerCspTest extends TestCase
      * Overriding only works if the container will start returning the same
      * instance of the Policy, so we make sure it does.
      */
-    public function testPolicyStaysTheSame()
+    public function test_policy_stays_the_same()
     {
         $controller = new Controller();
 
@@ -25,7 +25,7 @@ class ControllerCspTest extends TestCase
         $this->assertSame($first, $second);
     }
 
-    public function testImageWhitelisting()
+    public function test_image_whitelisting()
     {
         $controller = new Controller();
 

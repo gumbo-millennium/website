@@ -19,7 +19,7 @@ use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
- * Updates the user's roles by asking the Conscribo API
+ * Updates the user's roles by asking the Conscribo API.
  */
 class UpdateConscriboUserJob implements ShouldQueue
 {
@@ -35,16 +35,13 @@ class UpdateConscriboUserJob implements ShouldQueue
     ];
 
     /**
-     * The user we're updating
-     *
-     * @var User
+     * The user we're updating.
      */
     protected User $user;
 
     /**
      * Create a new job instance.
      *
-     * @param User $user
      * @return void
      */
     public function __construct(User $user)
@@ -64,15 +61,16 @@ class UpdateConscriboUserJob implements ShouldQueue
         $user = $this->user;
 
         // Skip if user e-mail is not verified
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             logger()->info('A role update job was started, but this user is not verified');
+
             return;
         }
 
         // Get user from Conscribo
         $accountingUser = $this->getConscriboUser($service, $user);
 
-        if (!$accountingUser) {
+        if (! $accountingUser) {
             // Log it
             logger()->notice('No user in Conscribo this e-mail address', compact('user'));
 
@@ -113,11 +111,8 @@ class UpdateConscriboUserJob implements ShouldQueue
     }
 
     /**
-     * Assign the member role
+     * Assign the member role.
      *
-     * @param User $user
-     * @param array $accountingUser
-     * @return void
      * @throws InvalidArgumentException
      */
     public function assignMemberRole(User $user, array $accountingUser): void
@@ -127,18 +122,19 @@ class UpdateConscriboUserJob implements ShouldQueue
         $memberEnded = $accountingUser['einddatum_lid'] !== null && $accountingUser['einddatum_lid'] < now();
 
         // Check member state
-        $isMember = $memberStarted && !$memberEnded;
+        $isMember = $memberStarted && ! $memberEnded;
 
         // Remove member if member without permission
-        if ($isMember !== $user->is_member && !$isMember) {
-            logger()->info("Removing member role from user.", compact('user'));
+        if ($isMember !== $user->is_member && ! $isMember) {
+            logger()->info('Removing member role from user.', compact('user'));
             $user->removeRole('member');
+
             return;
         }
 
         // Add member if not member yet
         if ($isMember !== $user->is_member && $isMember) {
-            logger()->info("Adding member role to user.", compact('user'));
+            logger()->info('Adding member role to user.', compact('user'));
             $user->assignRole('member');
         }
 
@@ -154,10 +150,7 @@ class UpdateConscriboUserJob implements ShouldQueue
     }
 
     /**
-     * Issues an update on Stripe if any visible data was changed
-     *
-     * @param User $user
-     * @return void
+     * Issues an update on Stripe if any visible data was changed.
      */
     private function maybeIssueStripeUpdate(User $user): void
     {
@@ -171,11 +164,7 @@ class UpdateConscriboUserJob implements ShouldQueue
     }
 
     /**
-     * Returns user information from Conscribo
-     *
-     * @param ConscriboService $service
-     * @param string $email
-     * @return array|null
+     * Returns user information from Conscribo.
      */
     private function getConscriboUser(ConscriboService $service, User $dbUser): ?array
     {
@@ -183,7 +172,7 @@ class UpdateConscriboUserJob implements ShouldQueue
         $groups = null;
 
         $query = ['email' => $dbUser->email];
-        if (!empty($dbUser->conscribo_id)) {
+        if (! empty($dbUser->conscribo_id)) {
             $query = ['code' => $dbUser->conscribo_id];
         }
 
@@ -214,7 +203,7 @@ class UpdateConscriboUserJob implements ShouldQueue
                 'einddatum_lid',
             ])->first();
 
-            if (!$user) {
+            if (! $user) {
                 return null;
             }
 
@@ -228,6 +217,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             ]);
         } catch (HttpExceptionInterface $exception) {
             report(new RuntimeException('Failed to get user from API', 0, $exception));
+
             return null;
         }
 
@@ -241,6 +231,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             logger()->info('Recieved {groups} for user', compact('groups'));
         } catch (HttpExceptionInterface $exception) {
             report(new RuntimeException('Failed to get groups from API', 0, $exception));
+
             return null;
         }
 
@@ -254,7 +245,8 @@ class UpdateConscriboUserJob implements ShouldQueue
     {
         $notEmptyGet = static function ($key) use ($accountingUser) {
             $val = trim((string) Arr::get($accountingUser, $key));
-            return !empty($val) ? $val : null;
+
+            return ! empty($val) ? $val : null;
         };
 
         // Store ID
@@ -291,11 +283,8 @@ class UpdateConscriboUserJob implements ShouldQueue
     }
 
     /**
-     * Assigns roles to the user, as a transaction
+     * Assigns roles to the user, as a transaction.
      *
-     * @param User $user
-     * @param array $accountingUser
-     * @return void
      * @throws \InvalidArgumentException
      */
     private function assignRoles(User $user, array $accountingUser): void
@@ -313,16 +302,18 @@ class UpdateConscriboUserJob implements ShouldQueue
         // Check current roles
         foreach ($user->roles as $role) {
             // Don't mutate reserved roles
-            if (in_array($role->name, self::RESERVED_ROLE)) {
+            if (in_array($role->name, self::RESERVED_ROLE, true)) {
                 $skippedRoles[] = $role->name;
+
                 continue;
             }
 
             // Check if in list
-            if (!in_array($role->name, $allowedRoles)) {
+            if (! in_array($role->name, $allowedRoles, true)) {
                 $removedRoles[] = $role->name;
-                logger()->info("Removing role [{role}] from user.", compact('role', 'user'));
+                logger()->info('Removing role [{role}] from user.', compact('role', 'user'));
                 $user->removeRole($role);
+
                 continue;
             }
 
@@ -332,12 +323,12 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         foreach ($roles as $role) {
             // Already existing roles are skipped
-            if (in_array($role->name, $presentRoles)) {
+            if (in_array($role->name, $presentRoles, true)) {
                 continue;
             }
 
             // Add role
-            logger()->info("Adding role [{role}] from user.", compact('role', 'user'));
+            logger()->info('Adding role [{role}] from user.', compact('role', 'user'));
             $user->assignRole($role);
 
             // Add new role to list

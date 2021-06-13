@@ -8,21 +8,17 @@ use App\Helpers\Str;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Validates email mutations and email lists
+ * Validates email mutations and email lists.
  */
 trait ValidatesEmailRequests
 {
     /**
-     * Valid committee handles
-     *
-     * @var string
+     * Valid committee handles.
      */
     private string $validCommitteeEmails = '/^(?:[a-z]{1,4}c|[a-z]{2,20}cie|[a-z]+commissie)$/';
 
     /**
-     * Valid project group handles
-     *
-     * @var string
+     * Valid project group handles.
      */
     private string $validProjectGroupEmails = '/^[a-z]+(?<!pg)$/';
 
@@ -30,9 +26,6 @@ trait ValidatesEmailRequests
      * Checks if the given email is mutatable, which is true unless the
      * email domain ends with one of the domains listed in the `services.google.domains`
      * config directory, or a subdomain of one of those.
-     *
-     * @param string $email
-     * @return bool
      */
     public function canMutate(string $email): bool
     {
@@ -41,7 +34,7 @@ trait ValidatesEmailRequests
         $emailDomain = Str::lower(Str::afterLast($email, '@'));
 
         // Disallow if own domain
-        if (\in_array($emailDomain, $domains)) {
+        if (\in_array($emailDomain, $domains, true)) {
             return false;
         }
 
@@ -61,9 +54,8 @@ trait ValidatesEmailRequests
     }
 
     /**
-     * Returns true if the given email is likely a mailing list we can modify via API
+     * Returns true if the given email is likely a mailing list we can modify via API.
      *
-     * @param string $email
      * @return bool
      */
     public function canProcessList(string $email)
@@ -73,15 +65,11 @@ trait ValidatesEmailRequests
         $emailDomain = Str::lower(Str::afterLast($email, '@'));
 
         // Disallow if own domain
-        return \in_array($emailDomain, $domains);
+        return \in_array($emailDomain, $domains, true);
     }
 
     /**
-     * Checks if the email address for the given mailing list matches the expectations
-     *
-     * @param string $name
-     * @param string $email
-     * @return bool
+     * Checks if the email address for the given mailing list matches the expectations.
      */
     public function validateListNameAgainstEmail(string $name, string $email): bool
     {
@@ -90,12 +78,12 @@ trait ValidatesEmailRequests
         $emailName = Str::before($email, '@');
 
         // If the email is for a committee, expect it to be short and end with a "C"
-        if (Str::contains($name, 'commissie') && !\preg_match($this->validCommitteeEmails, $emailName)) {
+        if (Str::contains($name, 'commissie') && ! \preg_match($this->validCommitteeEmails, $emailName)) {
             return false;
         }
 
         // If the email is for a projectgroep, ensure it does not end in 'pg'
-        if (Str::contains($name, ['projectgroep', 'pg']) && !\preg_match($this->validProjectGroupEmails, $emailName)) {
+        if (Str::contains($name, ['projectgroep', 'pg']) && ! \preg_match($this->validProjectGroupEmails, $emailName)) {
             return false;
         }
 

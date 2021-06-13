@@ -16,7 +16,7 @@ class ProductControllerTest extends TestCase
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
 
-    public function testIndex()
+    public function test_index()
     {
         $invisible = factory(Category::class, 5)->create([
             'visible' => 0,
@@ -45,7 +45,7 @@ class ProductControllerTest extends TestCase
         }
     }
 
-    public function testCategory()
+    public function test_category()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -76,7 +76,6 @@ class ProductControllerTest extends TestCase
             array_merge($base, ['name' => 'Hidden Product 4']),
         ]);
 
-
         $base = [
             'visible' => 1,
             'category_id' => $category2->id,
@@ -102,7 +101,7 @@ class ProductControllerTest extends TestCase
         }
     }
 
-    public function testVariantRequirement()
+    public function test_variant_requirement()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -123,7 +122,7 @@ class ProductControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    public function testDisplay()
+    public function test_display()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,

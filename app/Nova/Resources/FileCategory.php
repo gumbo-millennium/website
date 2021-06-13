@@ -32,7 +32,7 @@ class FileCategory extends Resource
     public static $title = 'title';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -79,7 +79,7 @@ class FileCategory extends Resource
                 Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
                 // phpcs:enable
                 Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
-                ]),
+            ]),
         ];
     }
 

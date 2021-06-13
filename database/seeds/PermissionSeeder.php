@@ -12,19 +12,16 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Creates all roles required for ranks that users can have.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class PermissionSeeder extends VerboseSeeder
 {
     /**
-     * Filename of the permission file, relative from the resources path
+     * Filename of the permission file, relative from the resources path.
      */
     private const PERMISSION_FILE = 'yaml/permissions.yaml';
 
     /**
-     * Filename of the roles file, relative from the resources path
+     * Filename of the roles file, relative from the resources path.
      */
     private const ROLES_FILE = 'yaml/roles.yaml';
 
@@ -42,14 +39,16 @@ class PermissionSeeder extends VerboseSeeder
         $permissionMap = $this->readYaml(self::PERMISSION_FILE);
         $roleMap = $this->readYaml(self::ROLES_FILE);
 
-        if (!$permissionMap) {
-            Log::error("Cannot read permission json map, please check {file}.", ['file' => self::PERMISSION_FILE]);
+        if (! $permissionMap) {
+            Log::error('Cannot read permission json map, please check {file}.', ['file' => self::PERMISSION_FILE]);
             $this->error('Cannot read permission json map, please check %s.', self::PERMISSION_FILE);
+
             return false;
         }
-        if (!$roleMap) {
-            Log::error("Cannot read roles json map, please check {file}.", ['file' => self::PERMISSION_FILE]);
+        if (! $roleMap) {
+            Log::error('Cannot read roles json map, please check {file}.', ['file' => self::PERMISSION_FILE]);
             $this->error('Cannot read roles json map, please check %s.', self::ROLES_FILE);
+
             return false;
         }
 
@@ -64,10 +63,7 @@ class PermissionSeeder extends VerboseSeeder
 
     /**
      * Creates all permissions in the $permissions collection, and returns a
-     * collection filled with Permission elements, based on name
-     *
-     * @param Collection $permissionMap
-     * @return Collection
+     * collection filled with Permission elements, based on name.
      */
     public function seedPermissions(Collection $permissionMap): Collection
     {
@@ -92,12 +88,11 @@ class PermissionSeeder extends VerboseSeeder
     }
 
     /**
-     * Creates a map with permissons to assign to roles
+     * Creates a map with permissons to assign to roles.
      *
      * @param Collection<Permission> $permissions
      * @param Collection<Role> $roles
      * @param Collection<array> $roleMap
-     * @return Collection
      */
     public function mapRolePermissions(
         Collection $permissions,
@@ -116,16 +111,17 @@ class PermissionSeeder extends VerboseSeeder
             if (count($wantedPermissions) === 1 && Arr::first($wantedPermissions) === '*') {
                 $rolePermissionMap->put($name, $permissions);
 
-                Log::info("Updated {role} with wildcard, it now has {count} permissions.", [
+                Log::info('Updated {role} with wildcard, it now has {count} permissions.', [
                     'role' => $roles->get($name) ?? $name,
                     'count' => count($rolePermissionMap->get($name)),
                 ]);
+
                 continue;
             }
 
             $rolePermissionMap->put($name, $permissions->only($wantedPermissions));
 
-            Log::info("Updated {role}, it now has {count} permissions.", [
+            Log::info('Updated {role}, it now has {count} permissions.', [
                 'role' => $roles->get($name) ?? $name,
                 'count' => count($rolePermissionMap->get($name)),
             ]);
@@ -145,7 +141,7 @@ class PermissionSeeder extends VerboseSeeder
                 $rolePermissionMap->get($name),
             ])->flatten());
 
-            Log::info("Role {role} extends {source-role}, now has {count} permissions", [
+            Log::info('Role {role} extends {source-role}, now has {count} permissions', [
                 'role' => $roles->get($name) ?? $name,
                 'source-role' => $roles->get($extendName) ?? $extendName,
                 'count' => $updatedPermissions->count(),
@@ -157,7 +153,7 @@ class PermissionSeeder extends VerboseSeeder
     }
 
     /**
-     * Creats all roles and assings permissions
+     * Creats all roles and assings permissions.
      *
      * @param Collection<Permission> $permissions
      * @param Collection<Role> $roleMap
@@ -184,7 +180,7 @@ class PermissionSeeder extends VerboseSeeder
 
             // Log result
             $action = $role->wasRecentlyCreated ? 'Created' : 'Updated';
-            Log::info("$action role {role}.", [
+            Log::info("${action} role {role}.", [
                 'role' => $role ?? $name,
             ]);
         }
@@ -194,7 +190,7 @@ class PermissionSeeder extends VerboseSeeder
 
         // Link rolePermissionMap to the Role
         foreach ($roles as $name => $role) {
-            if (!$rolePermissionMap->has($name)) {
+            if (! $rolePermissionMap->has($name)) {
                 continue;
             }
 
@@ -213,16 +209,13 @@ class PermissionSeeder extends VerboseSeeder
     }
 
     /**
-     * Returns JSON from file, as Collection
-     *
-     * @param string $path
-     * @return Collection|null
+     * Returns JSON from file, as Collection.
      */
     private function readYaml(string $path): ?Collection
     {
         // Get path of the file
         $fullPath = resource_path($path);
-        if (!file_exists($fullPath)) {
+        if (! file_exists($fullPath)) {
             return null;
         }
 

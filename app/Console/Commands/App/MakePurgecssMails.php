@@ -17,7 +17,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Mail\Mailable;
 
 /**
- * Makes purgecss mails
+ * Makes purgecss mails.
  */
 class MakePurgecssMails extends Command
 {
@@ -57,15 +57,13 @@ class MakePurgecssMails extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         // Get models
         $models = $this->seedModels();
 
-        $this->info("Models created");
+        $this->info('Models created');
 
         // Get path
         $filePath = \resource_path('assets/html/purgecss');
@@ -109,19 +107,19 @@ class MakePurgecssMails extends Command
 
             // Now delete everything
             foreach ($models as $model) {
-                if (!$model->exists) {
+                if (! $model->exists) {
                     continue;
                 }
 
                 $model->delete();
             }
 
-            $this->info("Models removed");
+            $this->info('Models removed');
         }
     }
 
     /**
-     * Returns a list of models
+     * Returns a list of models.
      *
      * @return array<\Illuminate\Database\Eloquent\Model>
      * @throws BindingResolutionException

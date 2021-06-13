@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A quote sent by a user via the Telegram bot
+ * A quote sent by a user via the Telegram bot.
  *
  * @property int $id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $submitted_at
- * @property int|null $user_id
+ * @property null|\Illuminate\Support\Date $submitted_at
+ * @property null|int $user_id
  * @property string $display_name
  * @property string $quote
- * @property-read User|null $user
+ * @property-read null|User $user
  */
 class BotQuote extends Model
 {
@@ -45,7 +45,7 @@ class BotQuote extends Model
     ];
 
     /**
-     * Returns owning user
+     * Returns owning user.
      */
     public function user(): BelongsTo
     {
@@ -53,10 +53,7 @@ class BotQuote extends Model
     }
 
     /**
-     * Scope by unsubmitted quotes
-     *
-     * @param Builder $query
-     * @return Builder
+     * Scope by unsubmitted quotes.
      */
     public function scopeNotSubmitted(Builder $query): Builder
     {
@@ -64,10 +61,7 @@ class BotQuote extends Model
     }
 
     /**
-     * Scope by unsubmitted quotes
-     *
-     * @param Builder $query
-     * @return Builder
+     * Scope by unsubmitted quotes.
      */
     public function scopeOutdated(Builder $query): Builder
     {

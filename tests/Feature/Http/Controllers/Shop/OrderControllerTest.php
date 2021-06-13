@@ -15,13 +15,13 @@ class OrderControllerTest extends TestCase
     use TestsMembersOnlyRoutes;
     use TestsShop;
 
-    public function testGetCreateWithEmptyCart()
+    public function test_get_create_with_empty_cart()
     {
         $this->onlyForMembers(route('shop.order.create'))
             ->assertRedirect(route('shop.cart'));
     }
 
-    public function testGetCreateWithCart()
+    public function test_get_create_with_cart()
     {
         $variant = $this->getProductVariant();
 

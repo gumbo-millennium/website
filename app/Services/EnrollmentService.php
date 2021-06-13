@@ -35,9 +35,7 @@ class EnrollmentService implements EnrollmentServiceContract
     }
 
     /**
-     * Returns true if the cache can be locked
-     *
-     * @return bool
+     * Returns true if the cache can be locked.
      */
     public function useLocks(): bool
     {
@@ -50,8 +48,8 @@ class EnrollmentService implements EnrollmentServiceContract
     public function getLock(Activity $activity): Lock
     {
         // Can't lock, return null
-        if (!$this->useLocks()) {
-            throw new LogicException("This service does not use locks");
+        if (! $this->useLocks()) {
+            throw new LogicException('This service does not use locks');
         }
 
         // Sanity
@@ -71,7 +69,7 @@ class EnrollmentService implements EnrollmentServiceContract
     public function canEnroll(Activity $activity, ?User $user): bool
     {
         // Check if open and not in the past
-        if (!$activity->enrollment_open || $activity->end_date < now()) {
+        if (! $activity->enrollment_open || $activity->end_date < now()) {
             return false;
         }
 
@@ -81,7 +79,7 @@ class EnrollmentService implements EnrollmentServiceContract
         }
 
         // Check permissions
-        if (!$user->can('enroll', $activity)) {
+        if (! $user->can('enroll', $activity)) {
             return false;
         }
 
@@ -96,15 +94,10 @@ class EnrollmentService implements EnrollmentServiceContract
     }
 
     /**
-     * Enrolls a user, /DOES NOT PERFORM CHECKS
-     *
-     * @param Activity $activity
-     * @param User $user
-     * @return Enrollment
+     * Enrolls a user, /DOES NOT PERFORM CHECKS.
      */
     public function createEnrollment(Activity $activity, User $user): Enrollment
     {
-
         // Create new enrollment
         $enrollment = new Enrollment();
 
@@ -123,7 +116,7 @@ class EnrollmentService implements EnrollmentServiceContract
         }
 
         // Set to null if the price is empty
-        if (!is_int($enrollment->price) || $enrollment->price <= 0) {
+        if (! is_int($enrollment->price) || $enrollment->price <= 0) {
             logger()->info('Price empty, wiping it.');
             $enrollment->price = null;
             $enrollment->total_price = null;
@@ -164,15 +157,11 @@ class EnrollmentService implements EnrollmentServiceContract
     /**
      * Returns if the given enrollment can advance to the given state. If it's already on
      * or past said state, it should always return false.
-     *
-     * @param Enrollment $enrollment
-     * @param string $wantedState
-     * @return bool
      */
     public function canAdvanceTo(Enrollment $enrollment, string $wantedState): bool
     {
-        if (!is_a($wantedState, State::class, true)) {
-            throw new InvalidArgumentException("Requested state [$wantedState], but it\'s invalid.");
+        if (! is_a($wantedState, State::class, true)) {
+            throw new InvalidArgumentException("Requested state [${wantedState}], but it\\'s invalid.");
         }
 
         if (is_a($enrollment->state, $wantedState)) {
@@ -180,7 +169,7 @@ class EnrollmentService implements EnrollmentServiceContract
         }
 
         $wantedStateName = (new $wantedState($enrollment))->name;
-        if (!in_array($wantedStateName, $enrollment->state->transitionableStates())) {
+        if (! in_array($wantedStateName, $enrollment->state->transitionableStates(), true)) {
             return false;
         }
 
@@ -190,18 +179,14 @@ class EnrollmentService implements EnrollmentServiceContract
         }
 
         if ($wantedState === Confirmed::class) {
-            return !($enrollment->price > 0);
+            return ! ($enrollment->price > 0);
         }
 
         return false;
     }
 
     /**
-     * Transitions states where possible
-     *
-     * @param Activity $activity
-     * @param Enrollment $enrollment
-     * @return void
+     * Transitions states where possible.
      */
     public function advanceEnrollment(Activity $activity, Enrollment &$enrollment): void
     {
@@ -230,7 +215,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
     /**
      * Transfers an enrollment to the new user, sending proper mails and
-     * invoicing jobs
+     * invoicing jobs.
      */
     public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment
     {
@@ -240,14 +225,14 @@ class EnrollmentService implements EnrollmentServiceContract
 
         // Sanity check
         if ($reciever->is($giver)) {
-            throw new \LogicException("Cannot transfer an enrollment to the same user");
+            throw new LogicException('Cannot transfer an enrollment to the same user');
         }
 
         // Transfer enrollment
         $enrollment->user()->associate($reciever);
 
         // Check expire, making sure it's at least 2 days
-        if (!$enrollment->state->isStable()) {
+        if (! $enrollment->state->isStable()) {
             $enrollment->expire = max($enrollment->expire, now()->addDays(2));
         }
 
@@ -262,7 +247,7 @@ class EnrollmentService implements EnrollmentServiceContract
         $reciever->notify(new EnrollmentTransferred($enrollment, $giver));
 
         // If not yet paid, make a new invoice
-        if (!$enrollment->state instanceof Paid && $enrollment->price > 0) {
+        if (! $enrollment->state instanceof Paid && $enrollment->price > 0) {
             VoidInvoice::withChain([
                 new CreateInvoiceJob($enrollment),
             ])->dispatch($enrollment);

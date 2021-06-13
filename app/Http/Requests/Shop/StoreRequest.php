@@ -9,6 +9,13 @@ use Illuminate\Foundation\Http\FormRequest;
 abstract class StoreRequest extends FormRequest
 {
     /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    abstract public function rules();
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -17,11 +24,4 @@ abstract class StoreRequest extends FormRequest
     {
         return $this->user() && $this->user()->is_member;
     }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    abstract public function rules();
 }

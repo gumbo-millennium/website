@@ -6,18 +6,12 @@ namespace App\Traits;
 
 /**
  * Handles the __consruct method to bind paperclip nodes
- * to the element
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * to the element.
  */
 trait HasPaperclip
 {
-
     /**
-     * Binds the files with paperclip
-     *
-     * @param array $attributes
+     * Binds the files with paperclip.
      */
     public function __construct(array $attributes = [])
     {

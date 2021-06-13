@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 trait IsUuidModel
 {
     /**
-     *  Setup model event hooks
+     *  Setup model event hooks.
      */
     protected static function bootIsUuidModel()
     {
@@ -20,12 +20,10 @@ trait IsUuidModel
 
     /**
      * Make sure model does not increment.
-     *
-     * @return void
      */
     protected function initializeIsUuidModel(): void
     {
         $this->incrementing = false;
-        $this->keyType = "uuid";
+        $this->keyType = 'uuid';
     }
 }

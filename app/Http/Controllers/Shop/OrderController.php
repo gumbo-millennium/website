@@ -18,14 +18,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-use function abort_if;
-
 class OrderController extends Controller
 {
-
     public function show(Order $order): Response
     {
-        abort_if(! $order->user->is(Auth::user()), 404);
+        \abort_if(! $order->user->is(Auth::user()), 404);
 
         $order->loadMissing(['variants', 'variants.product']);
 

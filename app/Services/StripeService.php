@@ -15,10 +15,7 @@ use Stripe\Exception\ApiErrorException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Handles making calls on the Stripe API
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Handles making calls on the Stripe API.
  */
 class StripeService implements StripeServiceContract
 {
@@ -30,11 +27,9 @@ class StripeService implements StripeServiceContract
     use HandlesStripeSources;
 
     /**
-     * Handles exceptions from Stripe
+     * Handles exceptions from Stripe.
      *
-     * @param ApiErrorException $exception
-     * @param int|null $expect Expected error code (like 404)
-     * @return void
+     * @param null|int $expect Expected error code (like 404)
      * @throws HttpException
      */
     protected function handleError(ApiErrorException $exception, ?int $expect = null): void
@@ -56,7 +51,7 @@ class StripeService implements StripeServiceContract
         // Throw exception
         throw new HttpException(
             500,
-            "Er is iets fout gegaan bij het communiceren met onze betaalpartner.",
+            'Er is iets fout gegaan bij het communiceren met onze betaalpartner.',
             $exception
         );
     }

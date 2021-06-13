@@ -95,7 +95,7 @@ class CartController extends Controller
         $entry = Cart::getContent()->firstWhere('id', $cartId);
 
         // Fail if missing
-        if (!$entry) {
+        if (! $entry) {
             flash(__('The given product could not be found in your cart'));
 
             return ResponseFacade::redirectToRoute('shop.cart');

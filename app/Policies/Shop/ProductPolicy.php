@@ -14,9 +14,6 @@ class ProductPolicy
 
     /**
      * Determine whether the user can view any products.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -26,9 +23,7 @@ class ProductPolicy
     /**
      * Determine whether the user can view the product.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Shop\Product  $product
-     * @return mixed
+     * @param \App\Shop\Product $product
      */
     public function view(User $user, Product $product)
     {
@@ -37,9 +32,6 @@ class ProductPolicy
 
     /**
      * Determine whether the user can create products.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -49,9 +41,7 @@ class ProductPolicy
     /**
      * Determine whether the user can update the product.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Shop\Product  $product
-     * @return mixed
+     * @param \App\Shop\Product $product
      */
     public function update(User $user, Product $product)
     {
@@ -61,9 +51,7 @@ class ProductPolicy
     /**
      * Determine whether the user can delete the product.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Shop\Product  $product
-     * @return mixed
+     * @param \App\Shop\Product $product
      */
     public function delete(User $user, Product $product)
     {
@@ -73,9 +61,7 @@ class ProductPolicy
     /**
      * Determine whether the user can restore the product.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Shop\Product  $product
-     * @return mixed
+     * @param \App\Shop\Product $product
      */
     public function restore(User $user, Product $product)
     {
@@ -85,9 +71,7 @@ class ProductPolicy
     /**
      * Determine whether the user can permanently delete the product.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Shop\Product  $product
-     * @return mixed
+     * @param \App\Shop\Product $product
      */
     public function forceDelete(User $user, Product $product)
     {

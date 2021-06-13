@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Activities\Traits;
 use App\Models\Enrollment;
 
 /**
- * Handles preparing data for Stripe
+ * Handles preparing data for Stripe.
  */
 trait FormatsStripeData
 {
@@ -16,7 +16,6 @@ trait FormatsStripeData
      * description.
      *
      * @param Enrollment $enrollment Enrollment to apply
-     * @return array|null
      */
     public function getEnrollmentInformation(Enrollment $enrollment): ?array
     {

@@ -12,15 +12,14 @@ class RequiresStripeKey
     /**
      * Process the queued job.
      *
-     * @param  mixed  $job
-     * @param  callable  $next
-     * @return mixed
+     * @param callable $next
      */
     public function handle($job, $next)
     {
         // Fail if key is missing
         if (empty(Stripe::getApiKey())) {
             $job->fail(new RuntimeException('No API key set for Stripe'));
+
             return;
         }
 

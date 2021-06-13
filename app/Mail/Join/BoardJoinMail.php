@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Nova;
 
 /**
- * Email sent to the board concerning the new member
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Email sent to the board concerning the new member.
  */
 class BoardJoinMail extends BaseJoinMail
 {

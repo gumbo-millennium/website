@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-
 namespace App\Models\Shop;
 
 use App\Models\Traits\IsSluggable;
@@ -21,11 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
  * @property string $name
- * @property string|null $description
+ * @property null|string $description
  * @property string $slug
- * @property string|null $image_url
- * @property string|null $sku
- * @property int|null $price
+ * @property null|string $image_url
+ * @property null|string $sku
+ * @property null|int $price
  * @property array $options
  * @property array $meta
  * @property-read string $valid_image_url
@@ -35,8 +33,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class ProductVariant extends Model
 {
-    use IsUuidModel;
     use IsSluggable;
+    use IsUuidModel;
 
     protected $table = 'shop_product_variants';
 
@@ -98,6 +96,6 @@ class ProductVariant extends Model
     {
         return $this->product->variants()->count() === 1
             ? $this->product->name
-            : ($this->product->name . " " . $this->name);
+            : ($this->product->name . ' ' . $this->name);
     }
 }

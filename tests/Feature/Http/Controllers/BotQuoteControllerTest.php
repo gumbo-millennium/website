@@ -16,10 +16,8 @@ class BotQuoteControllerTest extends FeatureTestCase
 
     /**
      * Tests the permissions, should be open for everyone.
-     *
-     * @return void
      */
-    public function testPageDisplay(): void
+    public function test_page_display(): void
     {
         $response = $this->get(route('account.quotes'));
         $response->assertRedirect(route('login'));
@@ -36,7 +34,7 @@ class BotQuoteControllerTest extends FeatureTestCase
     /**
      * Tests if the deletion is shown for the quotes only.
      */
-    public function testDeleteButtonAppearance()
+    public function test_delete_button_appearance()
     {
         $user = $this->getGuestUser();
         $this->actingAs($user);
@@ -59,7 +57,7 @@ class BotQuoteControllerTest extends FeatureTestCase
         ));
     }
 
-    public function testDateLabels(): void
+    public function test_date_labels(): void
     {
         $user = $this->getGuestUser();
         $this->actingAs($user);
@@ -102,10 +100,8 @@ class BotQuoteControllerTest extends FeatureTestCase
 
     /**
      * Deleting unsent quotes should be fine.
-     *
-     * @return void
      */
-    public function testDeleteUnsentQuote(): void
+    public function test_delete_unsent_quote(): void
     {
         $user = $this->getGuestUser();
         $this->actingAs($user);
@@ -124,11 +120,9 @@ class BotQuoteControllerTest extends FeatureTestCase
     }
 
     /**
-     * Sent quotes should not be delete-able
-     *
-     * @return void
+     * Sent quotes should not be delete-able.
      */
-    public function testDeleteSentQuote(): void
+    public function test_delete_sent_quote(): void
     {
         $user = $this->getGuestUser();
         $this->actingAs($user);
@@ -148,11 +142,9 @@ class BotQuoteControllerTest extends FeatureTestCase
     }
 
     /**
-     * You shouldn't be able to delete quotes of others, even if unsent
-     *
-     * @return void
+     * You shouldn't be able to delete quotes of others, even if unsent.
      */
-    public function testDeleteUnsentUnownedQuote(): void
+    public function test_delete_unsent_unowned_quote(): void
     {
         $user = $this->getGuestUser();
         $user2 = $this->getGuestUser();
@@ -186,11 +178,9 @@ class BotQuoteControllerTest extends FeatureTestCase
     }
 
     /**
-     * You shouldn't be able to delete quotes of others
-     *
-     * @return void
+     * You shouldn't be able to delete quotes of others.
      */
-    public function testDeleteSentUnownedQuote(): void
+    public function test_delete_sent_unowned_quote(): void
     {
         $user = $this->getGuestUser();
         $user2 = $this->getGuestUser();

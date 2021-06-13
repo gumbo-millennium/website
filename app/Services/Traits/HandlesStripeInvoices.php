@@ -21,16 +21,15 @@ use Stripe\Source;
 trait HandlesStripeInvoices
 {
     /**
-     * Invoices retrieved from API
+     * Invoices retrieved from API.
      *
      * @var array<Invoice>
      */
     private array $invoiceCache = [];
 
     /**
-     * Returns the invoice lines for this enrollment
+     * Returns the invoice lines for this enrollment.
      *
-     * @param Enrollment $enrollment
      * @return Illuminate\Support\Collection
      */
     public function getComputedInvoiceLines(Enrollment $enrollment): Collection
@@ -50,14 +49,14 @@ trait HandlesStripeInvoices
         $items[] = [$fullPrice, "Deelnamekosten {$enrollment->name}", true];
 
         // Add transfer fees if not free
-        if (!empty($userPrice)) {
+        if (! empty($userPrice)) {
             $items[] = [$transferPrice, 'Transactiekosten', false];
         }
 
         // There's a discount, but it's non-default. Add it as a line
         if ($userPrice !== $discountPrice && $userPrice !== $fullPrice) {
             $discount = $userPrice - $fullPrice;
-            $items[] = [$discount, $discount > 0 ? 'Toeslag' :  'Korting', true];
+            $items[] = [$discount, $discount > 0 ? 'Toeslag' : 'Korting', true];
         }
 
         // Return the items
@@ -65,9 +64,8 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Returns a single invoice for the given Enrollment
+     * Returns a single invoice for the given Enrollment.
      *
-     * @param Enrollment $enrollment
      * @param int $options Bitwise options, see OPT_ constants
      * @return Stripe\Invoice
      */
@@ -76,6 +74,7 @@ trait HandlesStripeInvoices
         // Forward to locked Create Enrollment method
         // Get a 1 minute lock on this user
         $lock = Cache::lock("stripe.invoice.{$enrollment->user_id}", 60);
+
         try {
             // Block for max 15 seconds
             $lock->block(15);
@@ -83,7 +82,7 @@ trait HandlesStripeInvoices
             // Reload model
             $enrollment->refresh();
 
-            if (!empty($this->invoiceCache[$enrollment->payment_invoice])) {
+            if (! empty($this->invoiceCache[$enrollment->payment_invoice])) {
                 return $this->invoiceCache[$enrollment->payment_invoice];
             }
 
@@ -122,9 +121,8 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Pays the invoice for the enrollment using the given source
+     * Pays the invoice for the enrollment using the given source.
      *
-     * @param Enrollment $enrollment
      * @param App\Contracts\Source $source
      * @return Stripe\Invoice
      */
@@ -141,7 +139,7 @@ trait HandlesStripeInvoices
             // Pay invoice
             return $this->invoiceCache[$enrollment->payment_invoice] = $invoice->pay([
                 'source' => $source->id,
-                ]);
+            ]);
         } catch (ApiErrorException $exception) {
             // Bubble all
             $this->handleError($exception);
@@ -152,8 +150,6 @@ trait HandlesStripeInvoices
      * Creates an Enrollment by purging the account of line items, creating
      * new ones, applying a coupon if present and finalising it.
      *
-     * @param Enrollment $enrollment
-     * @return Invoice
      * @throws RuntimeException
      * @throws InvalidArgumentException
      * @throws UnexpectedValueException
@@ -190,10 +186,8 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Clears pending invoice items off the account
+     * Clears pending invoice items off the account.
      *
-     * @param Customer $customer
-     * @return void
      * @throws UnexpectedValueException
      * @throws InvalidArgumentException
      */
@@ -208,7 +202,7 @@ trait HandlesStripeInvoices
             ])->all();
 
             foreach ($existing as $existingItem) {
-                if (!empty($existingItem->invoice)) {
+                if (! empty($existingItem->invoice)) {
                     continue;
                 }
                 $existingItem->delete();
@@ -222,11 +216,7 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Creates a new set of invoice items, for the new invoice
-     *
-     * @param Customer $customer
-     * @param Collection $items
-     * @return void
+     * Creates a new set of invoice items, for the new invoice.
      */
     private function createPendingInvoiceItems(Customer $customer, Collection $items): void
     {
@@ -237,7 +227,7 @@ trait HandlesStripeInvoices
             foreach ($items as [$linePrice, $lineDesc, $lineDiscount]) {
                 // Assertions
                 \assert(is_int($linePrice) && $linePrice > 0, 'Price not above 0');
-                \assert(is_string($lineDesc) && !empty($lineDesc), 'Description not a non-empty string');
+                \assert(is_string($lineDesc) && ! empty($lineDesc), 'Description not a non-empty string');
                 \assert(is_bool($lineDesc), 'Discount not a bool');
 
                 // Validate line
@@ -265,11 +255,8 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Assign new discount to the user, removing the old one
+     * Assign new discount to the user, removing the old one.
      *
-     * @param Customer $customer
-     * @param Coupon|null $coupon
-     * @return void
      * @throws UnexpectedValueException
      * @throws InvalidArgumentException
      */
@@ -301,11 +288,8 @@ trait HandlesStripeInvoices
     }
 
     /**
-     * Creates the actual invoice model on the stripe API
+     * Creates the actual invoice model on the stripe API.
      *
-     * @param Customer $customer
-     * @param Enrollment $enrollment
-     * @return Invoice
      * @throws RuntimeException
      * @throws UnexpectedValueException
      * @throws InvalidArgumentException

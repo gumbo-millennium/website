@@ -29,8 +29,6 @@ class ListenCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -40,8 +38,9 @@ class ListenCommand extends Command
 
         // Check for a webhook
         $info = $bot->getWebhookInfo();
-        if (!empty($info['url'])) {
+        if (! empty($info['url'])) {
             $this->error('Bot has a webhook setup, cannot listen for updates');
+
             return 1;
         }
 

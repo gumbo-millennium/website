@@ -9,14 +9,14 @@ use App\Models\User;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Account info update form
+ * Account info update form.
  *
  * @method User getModel()
  */
 class AccountGrantsForm extends Form
 {
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {

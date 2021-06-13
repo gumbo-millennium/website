@@ -8,9 +8,6 @@ use App\Models\Shop\Order;
 
 /**
  * Email sent to the board concerning new order submissions.
- *
- * @author Mark Walet <mark.walet@gmail.com>
- * @license MPL-2.0
  */
 class NewOrderBoardMail extends BaseShopMail
 {
@@ -28,6 +25,7 @@ class NewOrderBoardMail extends BaseShopMail
     {
         return $this->markdown('mail.shop.board');
     }
+
     /**
      * @inheritDoc
      */

@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use JsonException;
+use Throwable;
 
 /**
- * Converts contents array to HTML
+ * Converts contents array to HTML.
  */
 trait HasEditorJsContent
 {
@@ -30,10 +31,9 @@ trait HasEditorJsContent
     }
 
     /**
-     * Adds a HTML conversion method
+     * Adds a HTML conversion method.
      *
-     * @param string|array $contents
-     * @return string|null
+     * @param array|string $contents
      */
     protected function convertToHtml($contents): ?string
     {
@@ -43,7 +43,7 @@ trait HasEditorJsContent
         }
 
         // Return JSON as-is when Nova is not available
-        if (!Config::get('services.features.enable-nova')) {
+        if (! Config::get('services.features.enable-nova')) {
             return $this->renderConvertToHtmlError();
         }
 
@@ -61,7 +61,7 @@ trait HasEditorJsContent
         // Parse HTML
         try {
             return NovaEditorJs::generateHtmlOutput($contents);
-        } catch (\Throwable $renderException) {
+        } catch (Throwable $renderException) {
             report(new InvalidArgumentException(sprintf(
                 'Caught [%s] when trying to render %s (key %s): %s',
                 get_class($renderException),

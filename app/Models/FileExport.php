@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,16 +24,26 @@ use Illuminate\Support\Str;
  * @property-read User $owner
  * @property-read bool $is_expired
  * @property-read bool $is_valid_export
- * @property-read \DateTimeInterface $created_at
- * @property-read \DateTimeInterface $updated_at
- * @property-read \DateTimeInterface $expires_at
+ * @property-read DateTimeInterface $created_at
+ * @property-read DateTimeInterface $updated_at
+ * @property-read DateTimeInterface $expires_at
  */
 class FileExport extends Model implements Responsable
 {
     private const TARGET_DIR = 'private/exports';
 
     /**
-     * Override saving to assign a random URL key
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'owner_id' => 'int',
+        'expires_at' => 'datetime',
+    ];
+
+    /**
+     * Override saving to assign a random URL key.
      *
      * @return void
      */
@@ -46,20 +57,7 @@ class FileExport extends Model implements Responsable
     }
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'owner_id' => 'int',
-        'expires_at' => 'datetime',
-    ];
-
-    /**
      * Safely and quickly check for owner.
-     *
-     * @param User $user
-     * @return bool
      */
     public function isOwner(User $user): bool
     {
@@ -69,8 +67,6 @@ class FileExport extends Model implements Responsable
     /**
      * Owner of this export, and the only one allowed
      * to download it.
-     *
-     * @return BelongsTo
      */
     public function owner(): BelongsTo
     {
@@ -79,8 +75,6 @@ class FileExport extends Model implements Responsable
 
     /**
      * Expired downloads can never be downloaded.
-     *
-     * @return bool
      */
     public function getIsExpiredAttribute(): bool
     {
@@ -94,9 +88,6 @@ class FileExport extends Model implements Responsable
 
     /**
      * Purgeable items, that can be removed from disk.
-     *
-     * @param Builder $builder
-     * @return Builder
      */
     public function scopeWherePurgeable(Builder $builder): Builder
     {
@@ -110,7 +101,6 @@ class FileExport extends Model implements Responsable
     /**
      * Set the file, needs an actual file.
      *
-     * @param File $file
      * @param string $filename
      * @return FileExport
      */
@@ -129,11 +119,11 @@ class FileExport extends Model implements Responsable
      */
     public function toResponse($request)
     {
-        abort_if(!$this->isOwner($request->user()), 404);
+        abort_if(! $this->isOwner($request->user()), 404);
 
         abort_if($this->is_expired, 410);
 
-        if (!$this->is_valid_export) {
+        if (! $this->is_valid_export) {
             Log::warning('Received a request for a file stored in {path}, which seems invalid', [
                 'path' => $this->path,
                 'model' => $this,
@@ -142,7 +132,7 @@ class FileExport extends Model implements Responsable
             abort(410);
         }
 
-        abort_if(!Storage::exists($this->path), 410);
+        abort_if(! Storage::exists($this->path), 410);
 
         return Storage::download($this->path, $this->filename);
     }

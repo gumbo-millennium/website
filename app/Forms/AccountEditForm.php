@@ -9,9 +9,7 @@ use App\Models\User;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Account info update form
- *
- * @package App\Forms
+ * Account info update form.
  */
 class AccountEditForm extends Form
 {
@@ -20,9 +18,8 @@ class AccountEditForm extends Form
     private ?int $userId = null;
 
     /**
-     * Overrides user
+     * Overrides user.
      *
-     * @param User $user
      * @return void
      */
     public function setUser(User $user)
@@ -31,7 +28,7 @@ class AccountEditForm extends Form
     }
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {
@@ -48,9 +45,7 @@ class AccountEditForm extends Form
     }
 
     /**
-     * Returns a proper user id
-     *
-     * @return int|null
+     * Returns a proper user id.
      */
     protected function getUser(): ?int
     {

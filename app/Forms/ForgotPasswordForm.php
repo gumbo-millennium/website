@@ -7,12 +7,12 @@ namespace App\Forms;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Form to reset your password
+ * Form to reset your password.
  */
 class ForgotPasswordForm extends Form
 {
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {

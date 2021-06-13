@@ -9,21 +9,21 @@ use App\Models\FormLayout;
 class FormEmail extends FormField
 {
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'email';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
     protected $title = 'Email address';
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */

@@ -13,14 +13,14 @@ use Whitecube\NovaFlexibleContent\Layouts\Layout;
 class FormField extends Layout implements FormLayoutContract
 {
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'text-field';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
@@ -41,7 +41,7 @@ class FormField extends Layout implements FormLayoutContract
     }
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */

@@ -6,7 +6,6 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Log Channel
@@ -91,5 +90,4 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
     ],
-
 ];

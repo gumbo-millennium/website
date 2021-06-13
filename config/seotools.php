@@ -2,17 +2,11 @@
 
 declare(strict_types=1);
 
-/*
- * See https://github.com/artesaos/seotools
- */
-
 // phpcs:disable Generic.Files.LineLength.TooLong
 
 return [
     'meta' => [
-        /*
-         * The default configurations to be used by the meta generator.
-         */
+        // The default configurations to be used by the meta generator.
         'defaults'       => [
             'title'        => 'Gumbo Millennium', // set false to total remove
             'titleBefore'  => false, // Put defaults.title before page title, like 'It's Over 9000! - Dashboard'
@@ -23,9 +17,7 @@ return [
             'robots'       => env('GUMBO_BETA') ? 'noindex,nofollow' : 'all',
         ],
 
-        /*
-         * Webmaster tags are always added.
-         */
+        // Webmaster tags are always added.
         'webmaster_tags' => [
             'google'    => null,
             'bing'      => null,
@@ -37,9 +29,7 @@ return [
         'add_notranslate_class' => false,
     ],
     'opengraph' => [
-        /*
-         * The default configurations to be used by the opengraph generator.
-         */
+        // The default configurations to be used by the opengraph generator.
         'defaults' => [
             'title'       => 'Gumbo Millennium',
             'description' => 'Welkom bij de gezelligste studentenvereniging van Zwolle',
@@ -53,9 +43,7 @@ return [
         // We don't use Twitter
     ],
     'json-ld' => [
-        /*
-         * The default configurations to be used by the json-ld generator.
-         */
+        // The default configurations to be used by the json-ld generator.
         'defaults' => [
             'title'       => false,
             'description' => false,

@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use DateTimeInterface;
 use GuzzleHttp\Client as HttpClient;
+use function GuzzleHttp\Psr7\stream_for;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -18,21 +19,25 @@ use InvalidArgumentException;
 use JsonException;
 use RuntimeException;
 
-use function GuzzleHttp\Psr7\stream_for;
-
 /**
- * Communicates with the Conscribo API
+ * Communicates with the Conscribo API.
  */
 final class ConscriboService implements ConscriboServiceContract
 {
     public const ERR_NO_SESSION = 2000;
+
     public const ERR_BAD_REQUEST = 2001;
+
     public const ERR_API_FAILURE = 2010;
+
     public const ERR_HTTP_FAILURE = 2011;
 
     private const API_VERSION = '0.20161212';
+
     private const CACHE_KEY = 'conscribo.api-session-id';
+
     private const CACHE_TYPES = 'conscribo.api.types';
+
     private const CACHE_TYPE_FIELDS = 'conscribo.api.fields.%s';
 
     private const TTL_VALID = 60 * 15; // Cache session ID for 15 minutes
@@ -53,8 +58,35 @@ final class ConscriboService implements ConscriboServiceContract
     ];
 
     /**
+     * Base URL, or null if no account is known.
+     */
+    private ?string $endpoint;
+
+    private bool $retry = false;
+
+    /**
+     * Session ID obtained from the API or cache.
+     */
+    private ?string $sessionId = null;
+
+    /**
+     * Login username.
+     */
+    private string $username;
+
+    /**
+     * Login password.
+     */
+    private string $password;
+
+    /**
+     * Guzzle client.
+     */
+    private HttpClient $http;
+
+    /**
      * Returns a service from data in the config. Throws a fit
-     * if the config is missing
+     * if the config is missing.
      *
      * @return ConscriboService
      * @throws RuntimeException
@@ -73,45 +105,7 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Base URL, or null if no account is known
-     */
-    private ?string $endpoint;
-
-    private bool $retry = false;
-
-    /**
-     * Session ID obtained from the API or cache
-     */
-    private ?string $sessionId = null;
-
-    /**
-     * Login username
-     *
-     * @var string
-     */
-    private string $username;
-
-    /**
-     * Login password
-     *
-     * @var string
-     */
-    private string $password;
-
-    /**
-     * Guzzle client
-     *
-     * @var HttpClient
-     */
-    private HttpClient $http;
-
-    /**
-     * Creates service
-     *
-     * @param string|null $account
-     * @param string|null $username
-     * @param string|null $password
-     * @param HttpClient|null $client
+     * Creates service.
      */
     public function __construct(
         ?string $account = null,
@@ -124,7 +118,7 @@ final class ConscriboService implements ConscriboServiceContract
         $username ??= Config::get('services.conscribo.username');
         $password ??= Config::get('services.conscribo.password');
         // Check
-        if (!$account || empty($username) || empty($password)) {
+        if (! $account || empty($username) || empty($password)) {
             throw new InvalidArgumentException('Expected a username, password and account.');
         }
 
@@ -145,9 +139,8 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Attempts login with the API
+     * Attempts login with the API.
      *
-     * @return void
      * @throws ServiceException
      */
     public function authenticate(): void
@@ -175,7 +168,7 @@ final class ConscriboService implements ConscriboServiceContract
         }
 
         // Throw a fit
-        if ($psrResponse->getStatusCode() !== 200 || !Arr::has($response, 'result.sessionId')) {
+        if ($psrResponse->getStatusCode() !== 200 || ! Arr::has($response, 'result.sessionId')) {
             throw new RuntimeException('Failed to authenticate against Conscribo API');
         }
 
@@ -192,15 +185,12 @@ final class ConscriboService implements ConscriboServiceContract
     /**
      * Sends the given command to the Conscribo API.
      *
-     * @param string $command
-     * @param array $args
-     * @return array
      * @throws HttpExceptionInterface on API failure
      */
     public function runCommand(string $command, array $args): array
     {
         // Make first session ID request
-        if (!$this->sessionId || $this->retry) {
+        if (! $this->sessionId || $this->retry) {
             $this->authenticate();
             $this->retry = false;
         }
@@ -236,8 +226,9 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Get error
         $error = Str::lower(Arr::get($result, 'notifications.notification.0', 'unknown error'));
-        if (Str::contains($error, ['not authenticated', 'session is verlopen']) && !$this->retry) {
+        if (Str::contains($error, ['not authenticated', 'session is verlopen']) && ! $this->retry) {
             $this->retry = true;
+
             return $this->runCommand($command, $args);
         }
 
@@ -246,11 +237,7 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Identical to runCommand, but will raise a `offset` parameter to get all results
-     *
-     * @param string $command
-     * @param array $args
-     * @return array
+     * Identical to runCommand, but will raise a `offset` parameter to get all results.
      */
     public function runPaginatedCommand(string $command, array $args): array
     {
@@ -271,7 +258,7 @@ final class ConscriboService implements ConscriboServiceContract
             ]));
 
             // Skip if failed
-            if (!$response) {
+            if (! $response) {
                 break;
             }
 
@@ -285,12 +272,13 @@ final class ConscriboService implements ConscriboServiceContract
                 foreach ($response as $row => $value) {
                     if (is_array($value)) {
                         $resultKey = $row;
+
                         break;
                     }
                 }
 
                 // Fail if no key was found
-                if (!$resultKey) {
+                if (! $resultKey) {
                     break;
                 }
             }
@@ -307,9 +295,8 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Returns types available
+     * Returns types available.
      *
-     * @return array
      * @throws HttpExceptionInterface
      */
     public function getResourceTypes(): array
@@ -333,23 +320,21 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Returns fields for the given type
+     * Returns fields for the given type.
      *
-     * @param string $type
-     * @return array
      * @throws HttpExceptionInterface
      */
     public function getResourceFields(string $type): array
     {
         // Check config for an override
         $configType = config("services.conscribo.resources.{$type}");
-        if (!empty($configType)) {
+        if (! empty($configType)) {
             $type = $configType;
         }
 
         $types = $this->getResourceTypes();
-        if (!in_array($type, $types)) {
-            throw new \InvalidArgumentException("Type {$type} is not a valid resource type");
+        if (! in_array($type, $types, true)) {
+            throw new InvalidArgumentException("Type {$type} is not a valid resource type");
         }
 
         $cacheKey = sprintf(self::CACHE_TYPE_FIELDS, $type);
@@ -376,13 +361,11 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Returns a list of resources of the specified type
+     * Returns a list of resources of the specified type.
      *
-     * @param string $type
      * @param array<array> $filters
      * @param array<string> $fields
      * @param array<scalar> $options
-     * @return Collection
      * @throws HttpExceptionInterface
      * @throws InvalidArgumentException
      */
@@ -394,21 +377,21 @@ final class ConscriboService implements ConscriboServiceContract
     ): Collection {
         // Check config for an override
         $configType = config("services.conscribo.resources.{$type}");
-        if (!empty($configType)) {
+        if (! empty($configType)) {
             $type = $configType;
         }
 
         // Check if type exists
         $types = $this->getResourceTypes();
-        if (!in_array($type, $types)) {
-            throw new \InvalidArgumentException("Type {$type} is not a valid resource type");
+        if (! in_array($type, $types, true)) {
+            throw new InvalidArgumentException("Type {$type} is not a valid resource type");
         }
 
         // Get fields for type
         $resourceFields = $this->getResourceFields($type);
 
         foreach ($fields as $fieldName) {
-            if (!\array_key_exists($fieldName, $resourceFields)) {
+            if (! \array_key_exists($fieldName, $resourceFields)) {
                 throw new RuntimeException("Field [{$fieldName}] does not exist, so cannot be requested.");
             }
         }
@@ -433,7 +416,7 @@ final class ConscriboService implements ConscriboServiceContract
         $safeFilters = $this->buildFilters($resourceFields, $filters);
 
         // Add filters to request
-        if (!empty($safeFilters)) {
+        if (! empty($safeFilters)) {
             $arguments['filters'] = [
                 'filter' => $safeFilters,
             ];
@@ -447,7 +430,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Map members if a 'leden' item is present
         foreach ($out as $key => $row) {
-            if (!Arr::has($row, 'leden')) {
+            if (! Arr::has($row, 'leden')) {
                 continue;
             }
 
@@ -468,10 +451,7 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Returns an array of groups with
-     *
-     * @param string $resourceType
-     * @return array
+     * Returns an array of groups with.
      */
     public function getResourceGroups(string $resourceType): array
     {
@@ -517,11 +497,8 @@ final class ConscriboService implements ConscriboServiceContract
     /**
      * Validates filters and converts them to something the API can handle with.
      * Allowed formats:
-     * ['field' => 'value'], [0 => ['field', 'value']], [0 => ['field', 'operator', 'value']]
+     * ['field' => 'value'], [0 => ['field', 'value']], [0 => ['field', 'operator', 'value']].
      *
-     * @param array $fields
-     * @param array $filters
-     * @return array
      * @throws InvalidArgumentException
      */
     protected function buildFilters(array $fields, array $filters): array
@@ -544,14 +521,14 @@ final class ConscriboService implements ConscriboServiceContract
 
             // Ensure field exists
             [$fieldName, $operator, $value] = $filter;
-            if (!\array_key_exists($fieldName, $fields)) {
+            if (! \array_key_exists($fieldName, $fields)) {
                 throw new InvalidArgumentException(
                     "Filter at index [{$key}] tried to filter field [{$fieldName}]. which does not exist"
                 );
             }
 
             // Ensure operator exists
-            if (!array_key_exists($operator, self::FILTER_OPERATOR_MAP)) {
+            if (! array_key_exists($operator, self::FILTER_OPERATOR_MAP)) {
                 throw new InvalidArgumentException(
                     "Filter at index [{$key}] has operator [{$operator}]. which is invalid."
                 );
@@ -559,9 +536,9 @@ final class ConscriboService implements ConscriboServiceContract
 
             // Ensure operator is usable on field
             $fieldType = $fields[$fieldName]['type'];
-            if (!in_array($fieldType, self::FILTER_OPERATOR_MAP[$operator])) {
+            if (! in_array($fieldType, self::FILTER_OPERATOR_MAP[$operator], true)) {
                 throw new InvalidArgumentException(
-                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [$fieldType]."
+                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [${fieldType}]."
                 );
             }
 
@@ -580,7 +557,7 @@ final class ConscriboService implements ConscriboServiceContract
 
     /**
      * Convert a collection of raw API data to a collection of data formatted to be
-     * easy to use in PHP (dates as \DateTimeInterface, and such). Complexity: O(n²)
+     * easy to use in PHP (dates as \DateTimeInterface, and such). Complexity: O(n²).
      *
      * @param array<array> $fields
      * @param array<array> $data
@@ -599,7 +576,7 @@ final class ConscriboService implements ConscriboServiceContract
 
             // Iterate each field
             foreach ($row as $field => $value) {
-                if (!isset($fields[$field])) {
+                if (! isset($fields[$field])) {
                     throw new RuntimeException("Recieved unknown field [{$field}] from API");
                 }
 
@@ -607,20 +584,23 @@ final class ConscriboService implements ConscriboServiceContract
                 $fieldType = $fields[$field]['type'] ?? 'string';
 
                 // Treat dates as immutable
-                if ($fieldType === 'date' && $value !== '0000-00-00' && !empty($value)) {
+                if ($fieldType === 'date' && $value !== '0000-00-00' && ! empty($value)) {
                     $newRow[$field] = Date::createFromFormat('Y-m-d', $value)->setTime(0, 0)->toImmutable();
+
                     continue;
                 }
 
                 // Date '0000-00-00' is just null
                 if ($fieldType === 'date') {
                     $newRow[$field] = null;
+
                     continue;
                 }
 
                 // Checkboxes are stored as 0 or 1
                 if ($fieldType === 'checkbox') {
                     $newRow[$field] = "{$value}" === '1';
+
                     continue;
                 }
 
@@ -628,6 +608,7 @@ final class ConscriboService implements ConscriboServiceContract
                 if ($fieldType === 'number' && strlen($fieldType) < 7) {
                     $isFloat = \strpos($value, '.');
                     $newRow[$field] = \filter_var($value, $isFloat ? \FILTER_VALIDATE_FLOAT : \FILTER_VALIDATE_INT);
+
                     continue;
                 }
 
@@ -644,11 +625,10 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Converts params to a JSON body
+     * Converts params to a JSON body.
      *
      * @param string $command command to run
      * @param array $params params for the command
-     * @return string
      */
     private function buildBody(string $command, array $params): string
     {
@@ -658,9 +638,8 @@ final class ConscriboService implements ConscriboServiceContract
     }
 
     /**
-     * Returns headers
+     * Returns headers.
      *
-     * @param string|null $sessionId
      * @return array<string>
      */
     private function buildHeaders(?string $sessionId): array
@@ -672,6 +651,7 @@ final class ConscriboService implements ConscriboServiceContract
         if ($sessionId) {
             $headers['X-Conscribo-SessionId'] = $sessionId;
         }
+
         return $headers;
     }
 }

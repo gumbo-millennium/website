@@ -52,7 +52,7 @@ class LoginCommand extends Command
     protected $description = 'Koppel je Telegram account';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -71,6 +71,7 @@ class LoginCommand extends Command
                 'text' => sprintf(self::LOGOUT_MSG, $user->alias ?? $user->first_name),
                 'parse_mode' => 'HTML',
             ]);
+
             return;
         }
 

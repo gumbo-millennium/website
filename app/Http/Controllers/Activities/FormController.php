@@ -17,17 +17,14 @@ use Kris\LaravelFormBuilder\Form;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Handles forms on activities
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Handles forms on activities.
  */
 class FormController extends Controller
 {
     use HasEnrollments;
 
     /**
-     * Shows the Activity's from
+     * Shows the Activity's from.
      *
      * @return \Illuminate\Http\Response
      */
@@ -55,9 +52,8 @@ class FormController extends Controller
     }
 
     /**
-     * Stores changes to the activity
+     * Stores changes to the activity.
      *
-     * @param  Request  $request
      * @return Response
      */
     public function save(
@@ -88,19 +84,19 @@ class FormController extends Controller
         // Redirect back if done
         if ($enrollment->state->isStable()) {
             flash("That's it, je bent nu ingeschreven voor {$activity->name}", 'success');
+
             return Response::redirectToRoute('activity.show', [$activity]);
         }
 
         // Or to the payment page
-        flash("Je gegevens zijn opgeslagen. Je kunt nu betalen.", 'success');
+        flash('Je gegevens zijn opgeslagen. Je kunt nu betalen.', 'success');
+
         return Response::redirectToRoute('enroll.show', [$activity]);
     }
 
     /**
-     * Returns form for this activity
+     * Returns form for this activity.
      *
-     * @param Activity $activity
-     * @param array $options
      * @return Form
      */
     protected function getForm(Activity $activity, array $options = []): ?Form

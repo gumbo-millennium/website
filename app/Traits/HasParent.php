@@ -8,17 +8,12 @@ use App\Models\FileCategory;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * Element has a parent
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Element has a parent.
  */
 trait HasParent
 {
     /**
-     * Returns te
-     *
-     * @return Relation
+     * Returns te.
      */
     public function parent(): Relation
     {

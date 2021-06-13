@@ -60,7 +60,7 @@ class PlazaCamCommand extends Command
     protected $description = 'Toont de plaza of koffiecam';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -72,10 +72,11 @@ class PlazaCamCommand extends Command
         $user = $this->getUser();
 
         // Reject if rate-limited
-        if (!$user) {
+        if (! $user) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_GUEST, $imageName),
             ]);
+
             return;
         }
 
@@ -84,6 +85,7 @@ class PlazaCamCommand extends Command
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_EXPIRED, $imageName),
             ]);
+
             return;
         }
 
@@ -95,7 +97,7 @@ class PlazaCamCommand extends Command
         $steam = Storage::readStream($file);
 
         // Prep file
-        $file = new InputFile($steam, strtolower("$image.jpg"));
+        $file = new InputFile($steam, strtolower("${image}.jpg"));
 
         // Return message
         $this->replyWithPhoto([

@@ -11,44 +11,18 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A file category, containing file bundles
+ * A file category, containing file bundles.
  *
  * @property int $id
  * @property string $created_at
  * @property string $updated_at
- * @property string|null $title
+ * @property null|string $title
  * @property string $slug
  * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $bundles
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
  */
 class FileCategory extends SluggableModel
 {
-    /**
-     * Add a check to automatically sort by title if none is set
-     */
-    public static function boot()
-    {
-        // Forward to parent
-        parent::boot();
-
-        // Order by title by default
-        static::addGlobalScope(new DefaultOrderScope('title'));
-    }
-
-    /**
-     * Find the default category
-     *
-     * @param array $columns
-     * @return Model|Collection
-     */
-    public static function findDefault()
-    {
-        // Find first default category, or create one
-        return static::firstOrCreate(['default' => true], [
-            'title' => 'Overig',
-        ]);
-    }
-
     /**
      * Categories don't have timestamps.
      *
@@ -57,7 +31,7 @@ class FileCategory extends SluggableModel
     public $timestamps = false;
 
     /**
-     * Title and default are fillable
+     * Title and default are fillable.
      *
      * @var array
      */
@@ -69,9 +43,32 @@ class FileCategory extends SluggableModel
     ];
 
     /**
-     * Slug on the category title
+     * Add a check to automatically sort by title if none is set.
+     */
+    public static function boot()
+    {
+        // Forward to parent
+        parent::boot();
+
+        // Order by title by default
+        static::addGlobalScope(new DefaultOrderScope('title'));
+    }
+
+    /**
+     * Find the default category.
      *
-     * @return array
+     * @return Collection|Model
+     */
+    public static function findDefault()
+    {
+        // Find first default category, or create one
+        return static::firstOrCreate(['default' => true], [
+            'title' => 'Overig',
+        ]);
+    }
+
+    /**
+     * Slug on the category title.
      */
     public function sluggable(): array
     {
@@ -85,7 +82,7 @@ class FileCategory extends SluggableModel
     }
 
     /**
-     * The files that belong to this category
+     * The files that belong to this category.
      *
      * @return HasMany
      */
@@ -99,9 +96,7 @@ class FileCategory extends SluggableModel
     }
 
     /**
-     * Returns download counts
-     *
-     * @return HasManyThrough
+     * Returns download counts.
      */
     public function downloads(): HasManyThrough
     {
@@ -116,23 +111,16 @@ class FileCategory extends SluggableModel
     /**
      * Hide categories that are empty or only have non-released bundles.
      *
-     * @param Builder $query
-     * @return Builder
      * @throws InvalidArgumentException
      */
     public function scopeWhereAvailable(Builder $query): Builder
     {
         // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
-        return $query->whereHas('bundles', static function (Builder $query) {
-            return $query->whereAvailable();
-        });
+        return $query->whereHas('bundles', static fn (Builder $query) => $query->whereAvailable());
     }
 
     /**
-     * Attach all available scopes
-     *
-     * @param Builder $query
-     * @return Builder
+     * Attach all available scopes.
      */
     public function scopeWithAvailable(Builder $query): Builder
     {

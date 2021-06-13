@@ -10,10 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Shared elements for the shop mail
- *
- * @author Mark Walet <mark.walet@gmail.com>
- * @license MPL-2.0
+ * Shared elements for the shop mail.
  */
 abstract class BaseShopMail extends Mailable
 {
@@ -33,7 +30,7 @@ abstract class BaseShopMail extends Mailable
     ];
 
     /**
-     * New order
+     * New order.
      *
      * @var Order
      */
@@ -59,10 +56,7 @@ abstract class BaseShopMail extends Mailable
     abstract public function build();
 
     /**
-     * Returns the subject
-     *
-     * @param Order $order
-     * @return string
+     * Returns the subject.
      */
     abstract protected function createSubject(Order $order): string;
 }

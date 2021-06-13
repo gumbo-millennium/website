@@ -6,6 +6,8 @@ namespace App\Nova\Metrics;
 
 use App\Models\Sponsor;
 use App\Models\SponsorClick;
+use DateInterval;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Trend;
@@ -30,9 +32,6 @@ class SponsorClicksPerDay extends Trend
 
     /**
      * Calculate the value of the metric.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
@@ -63,7 +62,7 @@ class SponsorClicksPerDay extends Trend
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return DateInterval|DateTimeInterface|float|int
      */
     public function cacheFor()
     {

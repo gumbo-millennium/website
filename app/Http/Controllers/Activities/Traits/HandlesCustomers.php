@@ -10,14 +10,12 @@ use App\Services\StripeErrorService;
 use Stripe\Exception\ApiErrorException;
 
 /**
- * Handles customers in Stripe
+ * Handles customers in Stripe.
  */
 trait HandlesCustomers
 {
     /**
-     * Makes sure a Stripe customer is present for this user. Reloads the $enrollment if required
-     *
-     * @param Enrollment $enrollment
+     * Makes sure a Stripe customer is present for this user. Reloads the $enrollment if required.
      */
     protected function ensureCustomerExists(Enrollment &$enrollment): void
     {

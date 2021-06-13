@@ -37,7 +37,6 @@ class Category extends Resource
      */
     public static $group = 'Shop';
 
-
     /**
      * The columns that should be searched.
      *
@@ -52,7 +51,6 @@ class Category extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)

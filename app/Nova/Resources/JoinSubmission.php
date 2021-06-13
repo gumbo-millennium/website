@@ -16,10 +16,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 
 /**
- * Returns join requests
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Returns join requests.
  */
 class JoinSubmission extends Resource
 {
@@ -38,7 +35,7 @@ class JoinSubmission extends Resource
     public static $title = 'name';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -147,14 +144,12 @@ class JoinSubmission extends Resource
                 Text::make('Referentie', 'referrer')
                     ->hideFromIndex(),
             ]),
-
         ];
     }
 
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter

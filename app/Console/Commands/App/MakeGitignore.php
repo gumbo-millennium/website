@@ -9,9 +9,6 @@ use Illuminate\Console\Command;
 
 /**
  * Auto download an ignore file for this project.
- *
- * @author Roelof Roos
- * @license MPL-2.0
  */
 class MakeGitignore extends Command
 {
@@ -41,14 +38,12 @@ class MakeGitignore extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         // Find app root dir
         $rootDir = realpath(substr(__DIR__, 0, strrpos('app' . DIRECTORY_SEPARATOR, __DIR__)));
-        if (!$rootDir) {
+        if (! $rootDir) {
             $this->error(sprintf(
                 'Failed to determine root path form __DIR__: %s',
                 __DIR__
@@ -56,7 +51,7 @@ class MakeGitignore extends Command
         }
 
         $this->line(sprintf(
-            "Determined directory as <info>%s</info>",
+            'Determined directory as <info>%s</info>',
             $rootDir
         ));
 
@@ -64,7 +59,7 @@ class MakeGitignore extends Command
         $downloadUrl = 'https://www.gitignore.io/api/laravel,node';
 
         $this->line(sprintf(
-            "Downloading ignore file from <info>%s</info>...",
+            'Downloading ignore file from <info>%s</info>...',
             $downloadUrl
         ));
 
@@ -73,10 +68,11 @@ class MakeGitignore extends Command
 
         if ($data->getStatusCode() !== 200) {
             $this->alert(sprintf(
-                "Failed to download file; got %d %s",
+                'Failed to download file; got %d %s',
                 $data->getStatusCode(),
                 $data->getReasonPhrase()
             ));
+
             return false;
         }
 
@@ -101,17 +97,19 @@ IGNORE;
         // Trim lines and add trailing EOL
         $ignoreContent = trim($ignoreContent) . PHP_EOL;
 
-        $this->line("Writing contents...");
-        $ignoreFile = "$rootDir/.gitignore";
+        $this->line('Writing contents...');
+        $ignoreFile = "${rootDir}/.gitignore";
 
         file_put_contents($ignoreFile, $ignoreContent);
 
         if (md5_file($ignoreFile) === md5($ignoreContent)) {
             $this->info('Updated ok!');
+
             return true;
         }
 
         $this->warn('Failed to update, hashes don\'t match');
+
         return false;
     }
 }

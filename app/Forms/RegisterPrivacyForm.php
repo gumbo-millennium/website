@@ -7,14 +7,12 @@ namespace App\Forms;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Form to accept privacy policy
- *
- * @package App\Forms
+ * Form to accept privacy policy.
  */
 class RegisterPrivacyForm extends Form
 {
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {

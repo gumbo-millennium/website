@@ -9,9 +9,6 @@ use Illuminate\Console\Command;
 
 /**
  * Grants or revokes Super Admin priviliges on a user.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class SetAdmin extends Command
 {
@@ -43,16 +40,14 @@ class SetAdmin extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
-
         $user = $this->getUserArgument();
 
-        if (!$user) {
+        if (! $user) {
             $this->error('Cannot find user');
+
             return false;
         }
 
@@ -62,7 +57,7 @@ class SetAdmin extends Command
         $this->line("ID:    <comment>{$user->id}</>");
         $this->line("Email: <comment>{$user->email}</>");
         $this->line("Alias: <comment>{$user->alias}</>");
-        $this->line("");
+        $this->line('');
         $this->line(sprintf(
             'Current roles: <info>%s</>',
             $user->roles()->pluck('title')->implode('</>, <info>')
@@ -71,9 +66,10 @@ class SetAdmin extends Command
             'Current permissions: <info>%s</>',
             $user->getDirectPermissions()->pluck('title')->implode('</>, <info>')
         ));
-        $this->line("");
-        if (!$this->confirm('Is this the correct user', false)) {
+        $this->line('');
+        if (! $this->confirm('Is this the correct user', false)) {
             $this->warn('User aborted');
+
             return false;
         }
 

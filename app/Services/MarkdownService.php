@@ -56,9 +56,8 @@ final class MarkdownService implements MarkdownServiceContract
     }
 
     /**
-     * Remove the images from the document
+     * Remove the images from the document.
      *
-     * @param DocumentParsedEvent $event
      * @return void
      */
     private function removeImages(DocumentParsedEvent $event)
@@ -70,7 +69,7 @@ final class MarkdownService implements MarkdownServiceContract
             $node = $event->getNode();
 
             // Only stop at Image nodes when we first encounter them
-            if (!($node instanceof Image) || !$event->isEntering()) {
+            if (! ($node instanceof Image) || ! $event->isEntering()) {
                 continue;
             }
 

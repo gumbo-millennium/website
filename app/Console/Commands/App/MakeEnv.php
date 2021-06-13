@@ -6,32 +6,30 @@ namespace App\Console\Commands\App;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 /**
- * Creates the environment file
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Creates the environment file.
  */
 class MakeEnv extends Command
 {
     /**
-     * Environment template file's name
+     * Environment template file's name.
      */
     private const SOURCE_FILENAME = '.env.example';
 
     /**
-     * Environment template file's name
+     * Environment template file's name.
      */
     private const DEST_FILENAME = '.env';
 
     /**
-     * The host the Docker image runs on
+     * The host the Docker image runs on.
      */
     private const DOCKER_HOST = '127.0.0.1';
 
     /**
-     * Default (dev) config
+     * Default (dev) config.
      */
     private const DEFAULT_CONFIGS = [
         'APP_KEY' => null,
@@ -43,7 +41,7 @@ class MakeEnv extends Command
     ];
 
     /**
-     * Custom configs for certain environments
+     * Custom configs for certain environments.
      */
     private const EXTRA_CONFIGS = [
         'local' => [
@@ -91,9 +89,7 @@ class MakeEnv extends Command
     protected $description = 'Initialises the .env file';
 
     /**
-     * Writes an .env file,
-     *
-     * @return mixed
+     * Writes an .env file,.
      */
     public function handle()
     {
@@ -103,7 +99,7 @@ class MakeEnv extends Command
         $forced = $this->option('force');
 
         // Create file if it does not exist.
-        if ((!file_exists($envFile) || $forced) && is_writeable(dirname($envFile))) {
+        if ((! file_exists($envFile) || $forced) && is_writable(dirname($envFile))) {
             $config = $this->buildEnvironmentConstructionConfig();
             $this->line('<info>Environment configuration ready</>');
 
@@ -114,7 +110,7 @@ class MakeEnv extends Command
             $this->line('<info>Environment written to .env</>');
         }
 
-        if (!empty(config('app.key')) && !$forced) {
+        if (! empty(config('app.key')) && ! $forced) {
             return;
         }
 
@@ -125,8 +121,6 @@ class MakeEnv extends Command
 
     /**
      * Constructs a collection for the current environment.
-     *
-     * @return Collection
      */
     protected function buildEnvironmentConstructionConfig(): Collection
     {
@@ -137,8 +131,8 @@ class MakeEnv extends Command
             $env
         ));
 
-        if (!isset(self::EXTRA_CONFIGS[$env])) {
-            throw new \InvalidArgumentException("Environment {$env} not found!");
+        if (! isset(self::EXTRA_CONFIGS[$env])) {
+            throw new InvalidArgumentException("Environment {$env} not found!");
         }
 
         return collect(array_merge(self::DEFAULT_CONFIGS, self::EXTRA_CONFIGS[$env]));
@@ -147,7 +141,6 @@ class MakeEnv extends Command
     /**
      * Builds content of env file, replacing keys from the example with the new values specified in CONFIGS.
      *
-     * @param string $source
      * @return string .env file content
      */
     protected function constructEnv(string $source, Collection $config): string
@@ -163,8 +156,9 @@ class MakeEnv extends Command
 
         foreach ($template as $line) {
             $line = trim($line);
-            if (!preg_match('/^([A-Z][A-Z0-9_]+)=(?:.*)$/', $line, $matches)) {
+            if (! preg_match('/^([A-Z][A-Z0-9_]+)=(?:.*)$/', $line, $matches)) {
                 $result[] = $line;
+
                 continue;
             }
 
@@ -195,7 +189,7 @@ class MakeEnv extends Command
     }
 
     /**
-     * Writes the .env file in a safe fashion
+     * Writes the .env file in a safe fashion.
      *
      * @param string $file File to write (usually /.env)
      * @param string $content Contents to write

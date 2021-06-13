@@ -27,8 +27,6 @@ class ReindexMediaFiles extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -41,7 +39,7 @@ class ReindexMediaFiles extends Command
             // Get medias
             foreach ($medias as $media) {
                 $this->line(
-                    "Parsing <info>$media->file_name</> (<comment>{$media->id}</>)...",
+                    "Parsing <info>{$media->file_name}</> (<comment>{$media->id}</>)...",
                     null,
                     OutputInterface::VERBOSITY_VERY_VERBOSE
                 );
@@ -54,7 +52,7 @@ class ReindexMediaFiles extends Command
             $to = ($chunkCount += $perChunkCount) * $perChunkCount;
 
             // Report
-            $this->info("Parsed chunk {$chunkCount} (items <comment>$from</> – <comment>{$to}</>).");
+            $this->info("Parsed chunk {$chunkCount} (items <comment>${from}</> – <comment>{$to}</>).");
         });
     }
 }

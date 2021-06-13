@@ -8,15 +8,13 @@ use Illuminate\Support\Str as SupportStr;
 use Spatie\MediaLibrary\Helpers\File;
 
 /**
- * String extensions
+ * String extensions.
  */
 class Str extends SupportStr
 {
     /**
-     * Formats as Dutch number
+     * Formats as Dutch number.
      *
-     * @param mixed $value
-     * @param int $decimals
      * @return void
      */
     public static function number($value, int $decimals = 0): ?string
@@ -25,7 +23,7 @@ class Str extends SupportStr
         $value = self::getValidNumber($value);
 
         // Return formatted number, if set
-        return $value === null ? null :  number_format($value, $decimals, ',', '.');
+        return $value === null ? null : number_format($value, $decimals, ',', '.');
     }
 
     // Price formatting
@@ -50,23 +48,15 @@ class Str extends SupportStr
     }
 
     /**
-     * Returns file size
-     *
-     * @param mixed $size
-     * @return string
+     * Returns file size.
      */
     public static function filesize($size): string
     {
-        return File::getHumanReadableSize(intval(self::getValidNumber($size)));
+        return File::getHumanReadableSize((int) (self::getValidNumber($size)));
     }
 
     /**
      * Returns singular if value is one, plurarl otherwise.
-     *
-     * @param string $singular
-     * @param string $plural
-     * @param int $value
-     * @return string
      */
     public static function multiple(string $singular, string $plural, int $value): string
     {
@@ -74,10 +64,7 @@ class Str extends SupportStr
     }
 
     /**
-     * Validates given number
-     *
-     * @param mixed $value
-     * @return float|null
+     * Validates given number.
      */
     private static function getValidNumber($value): ?float
     {

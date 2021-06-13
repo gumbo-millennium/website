@@ -12,9 +12,10 @@ use Illuminate\Http\File;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 /**
- * Jobs to convert SVGs
+ * Jobs to convert SVGs.
  */
 abstract class SvgJob implements ShouldQueue
 {
@@ -31,16 +32,12 @@ abstract class SvgJob implements ShouldQueue
     protected const DISK = Sponsor::LOGO_DISK;
 
     /**
-     * Sponsor to update
-     *
-     * @var Sponsor
+     * Sponsor to update.
      */
     protected Sponsor $model;
 
     /**
-     * Attribute on the sponsor that needs updating
-     *
-     * @var string
+     * Attribute on the sponsor that needs updating.
      */
     protected string $attribute;
 
@@ -57,12 +54,10 @@ abstract class SvgJob implements ShouldQueue
 
     /**
      * Returns false if current model file does not exist.
-     *
-     * @return bool
      */
     protected function exists(): bool
     {
-        if (!$this->getPath()) {
+        if (! $this->getPath()) {
             return false;
         }
 
@@ -71,7 +66,7 @@ abstract class SvgJob implements ShouldQueue
     }
 
     /**
-     * Returns path to the svg
+     * Returns path to the svg.
      *
      * @return string
      */
@@ -81,9 +76,7 @@ abstract class SvgJob implements ShouldQueue
     }
 
     /**
-     * Returns file or fails the job
-     *
-     * @return File
+     * Returns file or fails the job.
      */
     protected function getTempFile(): File
     {
@@ -93,7 +86,7 @@ abstract class SvgJob implements ShouldQueue
         }
 
         // BUild error
-        $exception = new \RuntimeException('Cannot create file');
+        $exception = new RuntimeException('Cannot create file');
 
         // Fail task
         $this->fail($exception);
@@ -103,9 +96,8 @@ abstract class SvgJob implements ShouldQueue
     }
 
     /**
-     * Replaces file in the attribute
+     * Replaces file in the attribute.
      *
-     * @param File|null $file
      * @return void
      * @throws InvalidArgumentException
      */
@@ -147,32 +139,34 @@ abstract class SvgJob implements ShouldQueue
     }
 
     /**
-     * Converts the file on the model to an actual file
+     * Converts the file on the model to an actual file.
      *
-     * @return File|null
      * @throws InvalidArgumentException
      */
     private function createTempFile(): ?File
     {
         // Fail if missing
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             echo "NOT FOUND\n";
+
             return null;
         }
 
         // Get handle on source
         $sourceHandle = Storage::disk(Sponsor::LOGO_DISK)->readStream($this->getPath());
-        if (!$sourceHandle || !\is_resource($sourceHandle)) {
+        if (! $sourceHandle || ! \is_resource($sourceHandle)) {
             echo "HANDLE FAILED\n";
+
             return null;
         }
 
         // Get handle on target
         $targetFile = \tempnam(\sys_get_temp_dir(), 'svg');
         $targetHandle = fopen($targetFile, 'w');
-        if (!$targetHandle || !\is_resource($targetHandle)) {
+        if (! $targetHandle || ! \is_resource($targetHandle)) {
             echo "HANDLE TARGET FAILED\n";
             fclose($sourceHandle);
+
             return null;
         }
 
@@ -187,6 +181,7 @@ abstract class SvgJob implements ShouldQueue
         if ($copyOk === false) {
             @unlink($targetFile);
             echo "COPY FAILED\n";
+
             return null;
         }
 

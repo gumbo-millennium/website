@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
- * Allow wildcard editing of join requests
+ * Allow wildcard editing of join requests.
  */
 class JoinSubmissionPolicy
 {
@@ -20,9 +20,6 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can view any join submissions.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -31,9 +28,6 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can view the join submission.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function view(User $user)
     {
@@ -42,9 +36,6 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can create join submissions.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -53,9 +44,6 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can update the join submission.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function update(User $user)
     {
@@ -64,9 +52,6 @@ class JoinSubmissionPolicy
 
     /**
      * Determine whether the user can delete the join submission.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function delete(User $user)
     {
@@ -76,7 +61,6 @@ class JoinSubmissionPolicy
     /**
      * Determine whether the user can manage join submission.
      *
-     * @param  \App\Models\User  $user
      * @return bool
      */
     public function manage(User $user)

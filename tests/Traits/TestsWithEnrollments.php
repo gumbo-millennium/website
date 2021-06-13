@@ -22,8 +22,6 @@ trait TestsWithEnrollments
     /**
      * Returns the thingy that makes enrollments go vroom.
      * Helper for App::make not type-hinting.
-     *
-     * @return EnrollmentServiceContract
      */
     protected function getEnrollmentService(): EnrollmentServiceContract
     {
@@ -33,10 +31,6 @@ trait TestsWithEnrollments
     /**
      * Enrolls the user into the activity, trying it's hardest to get to $wantedState, if set.
      *
-     * @param Activity $activity
-     * @param User $user
-     * @param string|null $wantedState
-     * @return Enrollment
      * @throws InvalidArgumentException Invalid or impossible states
      */
     protected function enrollUser(
@@ -49,7 +43,7 @@ trait TestsWithEnrollments
         $enrollment = $service->createEnrollment($activity, $user);
 
         // Leave as-is
-        if (!$wantedState || $wantedState === Created::class) {
+        if (! $wantedState || $wantedState === Created::class) {
             return $enrollment;
         }
 
@@ -82,11 +76,11 @@ trait TestsWithEnrollments
         }
 
         if ($wantedState !== Refunded::class) {
-            throw new InvalidArgumentException("Requested unknown state [$wantedState] on enrollment");
+            throw new InvalidArgumentException("Requested unknown state [${wantedState}] on enrollment");
         }
 
         if ($enrollment->price === null) {
-            throw new InvalidArgumentException("Requested refunded state on free enrollment");
+            throw new InvalidArgumentException('Requested refunded state on free enrollment');
         }
 
         $enrollment

@@ -25,34 +25,11 @@ class ConfirmEnrollment extends Action
     use SerializesModels;
 
     /**
-     * Makes a new Confirm Enrollment configured to this model
-     *
-     * @param Enrollment $enrollment
-     * @param User $user
-     * @return ConfirmEnrollment
-     */
-    public static function make(Enrollment $enrollment, User $user): self
-    {
-        // Prep proper text
-        $noticeText = 'Weet je zeker dat je deze inschrijving wilt bevestigen?';
-        if ($enrollment->requires_payment) {
-            $noticeText .= ' Dit verwijderd de betaalverplichting.';
-        }
-
-        // Make instance
-        return (new self())
-            ->canSee(static fn () => \in_array(Confirmed::$name, $enrollment->state->transitionableStates()))
-            ->canRun(static fn () => $user->can('manage', $enrollment))
-            ->confirmText($noticeText)
-            ->onlyOnTableRow();
-    }
-
-    /**
      * The displayable name of the action.
      *
      * @var string
      */
-    public $name = "Bevestig inschrijving"; // contains non-breaking space (U+00A0)
+    public $name = "Bevestig\u{a0}inschrijving"; // contains non-breaking space (U+00A0)
 
     /**
      * The text to be used for the action's confirm button.
@@ -67,6 +44,27 @@ class ConfirmEnrollment extends Action
      * @var string
      */
     public $cancelButtonText = 'Annuleren';
+
+    /**
+     * Makes a new Confirm Enrollment configured to this model.
+     *
+     * @return ConfirmEnrollment
+     */
+    public static function make(Enrollment $enrollment, User $user): self
+    {
+        // Prep proper text
+        $noticeText = 'Weet je zeker dat je deze inschrijving wilt bevestigen?';
+        if ($enrollment->requires_payment) {
+            $noticeText .= ' Dit verwijderd de betaalverplichting.';
+        }
+
+        // Make instance
+        return (new self())
+            ->canSee(static fn () => \in_array(Confirmed::$name, $enrollment->state->transitionableStates(), true))
+            ->canRun(static fn () => $user->can('manage', $enrollment))
+            ->confirmText($noticeText)
+            ->onlyOnTableRow();
+    }
 
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function handle(ActionFields $fields, Collection $models)
@@ -92,7 +90,7 @@ class ConfirmEnrollment extends Action
 
         // Skip if not confirm-able
         $options = $model->state->transitionableStates();
-        if (!\in_array(Confirmed::$name, $options)) {
+        if (! \in_array(Confirmed::$name, $options, true)) {
             return Action::danger("De inschrijving van {$userName} kan niet worden bevestigd.");
         }
 
@@ -123,6 +121,7 @@ class ConfirmEnrollment extends Action
 
         // Done ☺
         $result = $needsPayment ? 'gemarkered als betaald' : 'bevestigd';
+
         return Action::message("De inschrijving van {$userName} is {$result}");
     }
 }

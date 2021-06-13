@@ -10,21 +10,16 @@ use Tests\TestCase;
 use Tests\Traits\TempUserTrait;
 
 /**
- * Tests updating the plazacam
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Tests updating the plazacam.
  */
 class UpdatePlazacamTest extends TestCase
 {
     use TempUserTrait;
 
     /**
-     * Test assignment by guest
-     *
-     * @return void
+     * Test assignment by guest.
      */
-    public function testWriteUser(): void
+    public function test_write_user(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -49,11 +44,9 @@ class UpdatePlazacamTest extends TestCase
     }
 
     /**
-     * Test assignment by member
-     *
-     * @return void
+     * Test assignment by member.
      */
-    public function testWriteMember(): void
+    public function test_write_member(): void
     {
         // Gets the all-knowning user
         $user = $this->getUser(['member']);
@@ -78,11 +71,9 @@ class UpdatePlazacamTest extends TestCase
     }
 
     /**
-     * Test assignment by PC
-     *
-     * @return void
+     * Test assignment by PC.
      */
-    public function testWritePlazaCommittee(): void
+    public function test_write_plaza_committee(): void
     {
         // Gets the all-knowning user
         $user = $this->getUser(['member', 'pc']);
@@ -107,11 +98,9 @@ class UpdatePlazacamTest extends TestCase
     }
 
     /**
-     * Test assignment by board
-     *
-     * @return void
+     * Test assignment by board.
      */
-    public function testWriteBoard(): void
+    public function test_write_board(): void
     {
         // Gets the all-knowning user
         $user = $this->getUser(['member', 'board']);

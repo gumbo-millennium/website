@@ -23,13 +23,16 @@ class OptimizeUserSvg implements ShouldQueue
     use SerializesModels;
 
     public const TARGET_FULL_COLOR = 'color';
+
     public const TARGET_MONOTONE = 'mono';
+
     private const VALID_TARGETS = [
         self::TARGET_FULL_COLOR,
         self::TARGET_MONOTONE,
     ];
 
     private string $path;
+
     private string $target;
 
     /**
@@ -39,8 +42,8 @@ class OptimizeUserSvg implements ShouldQueue
      */
     public function __construct(string $path, string $target)
     {
-        if (!in_array($target, self::VALID_TARGETS)) {
-            throw new LogicException("SVG target is invalid.");
+        if (! in_array($target, self::VALID_TARGETS, true)) {
+            throw new LogicException('SVG target is invalid.');
         }
 
         $this->path = $path;
@@ -55,7 +58,7 @@ class OptimizeUserSvg implements ShouldQueue
     public function handle()
     {
         // Ensure file exists
-        if (!Storage::exists($this->path)) {
+        if (! Storage::exists($this->path)) {
             return false;
         }
 
@@ -76,7 +79,7 @@ class OptimizeUserSvg implements ShouldQueue
         }
 
         // Skip if SVG is empty
-        if (!empty($svg)) {
+        if (! empty($svg)) {
             return false;
         }
 
@@ -88,10 +91,7 @@ class OptimizeUserSvg implements ShouldQueue
     }
 
     /**
-     * Minifies the SVG using `svgo`
-     *
-     * @param string $contents
-     * @return string|null
+     * Minifies the SVG using `svgo`.
      */
     private function minifySvg(string $contents): ?string
     {
@@ -120,8 +120,9 @@ class OptimizeUserSvg implements ShouldQueue
         }
 
         // Check if output looks like an SVG
-        if (!Str::contains($stdout, ['<?xml', '<svg'])) {
+        if (! Str::contains($stdout, ['<?xml', '<svg'])) {
             logger()->error('Failed to convert SVG to something predictable', compact('stdout', 'stderr'));
+
             return null;
         }
 
@@ -130,10 +131,7 @@ class OptimizeUserSvg implements ShouldQueue
     }
 
     /**
-     * Replaces all colors with the 'currentColor' property
-     *
-     * @param string $contents
-     * @return string
+     * Replaces all colors with the 'currentColor' property.
      */
     private function makeCurrentColor(string $contents): string
     {

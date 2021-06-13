@@ -10,7 +10,7 @@ use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
 
 /**
- * File collection media
+ * File collection media.
  *
  * @property int $id
  * @property string $model_type
@@ -18,17 +18,17 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
  * @property string $collection_name
  * @property string $name
  * @property string $file_name
- * @property string|null $mime_type
+ * @property null|string $mime_type
  * @property string $disk
  * @property int $size
  * @property array $manipulations
  * @property array $custom_properties
  * @property array $responsive_images
- * @property int|null $order_column
+ * @property null|int $order_column
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
- * @property-read \App\Models\FileBundle|null $bundle
+ * @property-read null|\App\Models\FileBundle $bundle
  * @property-read string $extension
  * @property-read string $human_readable_size
  * @property-read string $type
@@ -48,9 +48,7 @@ class Media extends BaseMedia
     ];
 
     /**
-     * Returns the downloads
-     *
-     * @return HasMany
+     * Returns the downloads.
      */
     public function downloads(): HasMany
     {
@@ -58,9 +56,7 @@ class Media extends BaseMedia
     }
 
     /**
-     * Returns the file bundle this media file belongs to
-     *
-     * @return FileBundle|null
+     * Returns the file bundle this media file belongs to.
      */
     public function getBundleAttribute(): ?FileBundle
     {
@@ -85,13 +81,14 @@ class Media extends BaseMedia
     }
 
     /**
-     * Prevent searching non-published files
+     * Prevent searching non-published files.
      *
      * @return bool
      */
     public function shouldBeSearchable()
     {
         $model = $this->model();
-        return (!$model instanceof FileBundle) || $model->is_available;
+
+        return (! $model instanceof FileBundle) || $model->is_available;
     }
 }

@@ -52,8 +52,6 @@ class SendMail extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -61,8 +59,9 @@ class SendMail extends Command
         $user = User::whereEmail($email)->first();
         \assert($user instanceof User);
 
-        if (!$user) {
-            $this->line("Cannot find a user with the email address <info>$email</>.");
+        if (! $user) {
+            $this->line("Cannot find a user with the email address <info>${email}</>.");
+
             return false;
         }
 
@@ -79,8 +78,8 @@ class SendMail extends Command
 
         $this->line(sprintf(
             'Received enrollment <info>%s</> for <comment>%s</>.',
-            $enrollment ? $enrollment->id : "NULL",
-            $enrollment ? $enrollment->activity->name : "NULL"
+            $enrollment ? $enrollment->id : 'NULL',
+            $enrollment ? $enrollment->activity->name : 'NULL'
         ));
 
         // Store on app

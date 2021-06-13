@@ -42,8 +42,6 @@ class UpdateShop extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle(InventoryService $service, GuzzleClient $client)
     {
@@ -96,7 +94,7 @@ class UpdateShop extends Command
             if ($category) {
                 $model->category()->associate(
                     Category::updateOrCreate([
-                       'id' => $category['uuid'],
+                        'id' => $category['uuid'],
                     ], [
                         'name' => $category['name'],
                     ])
@@ -126,7 +124,7 @@ class UpdateShop extends Command
         ));
 
         // Prune if requested
-        if (!$this->option('prune')) {
+        if (! $this->option('prune')) {
             return;
         }
 
@@ -188,7 +186,7 @@ class UpdateShop extends Command
      */
     private function validateImageUrl(?string $url): ?string
     {
-        if (!$url) {
+        if (! $url) {
             return null;
         }
 

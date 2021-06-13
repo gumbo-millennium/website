@@ -9,22 +9,21 @@ use Illuminate\Contracts\Validation\Rule;
 use SplFileInfo;
 
 /**
- * Validates if the given file is a valid SVG
+ * Validates if the given file is a valid SVG.
  */
 class ValidSvg implements Rule
 {
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
      * @return bool
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function passes($attribute, $value)
     {
         // Skip if invalid
-        if (!$value instanceof SplFileInfo) {
+        if (! $value instanceof SplFileInfo) {
             return false;
         }
 
@@ -36,7 +35,7 @@ class ValidSvg implements Rule
         $cleanContents = $sanitizer->sanitize(\file_get_contents($value->getPathname()));
 
         // Check if not-empty
-        return !empty($cleanContents);
+        return ! empty($cleanContents);
     }
 
     /**

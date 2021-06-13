@@ -14,17 +14,11 @@ use Stripe\Source;
  * Handles paid invoices, in case people pay out-of-band (via SEPA transfer or something).
  *
  * Called on source.chargeable
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class HandleSourceChargeable extends StripeWebhookJob
 {
     /**
      * Execute the job.
-     *
-     * @param Invoice $invoice
-     * @return void
      */
     protected function process(?Source $source): void
     {
@@ -38,6 +32,7 @@ class HandleSourceChargeable extends StripeWebhookJob
                 'Recieved chargeable {source} for unknown enrollment',
                 compact('source')
             );
+
             return;
         }
 
@@ -68,7 +63,7 @@ class HandleSourceChargeable extends StripeWebhookJob
 
         $invoice = $service->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
         \assert($invoice instanceof \Stripe\Invoice);
-        if (!$invoice) {
+        if (! $invoice) {
             logger()->notice(
                 'Recieved chargeable {source} for enrollment without invoice',
                 compact('source', 'enrollment')

@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Updates all users from Conscribo
+ * Updates all users from Conscribo.
  */
 class UpdateUser extends Command
 {
@@ -47,11 +47,12 @@ class UpdateUser extends Command
         // Update all matching users
         foreach ($users->cursor() as $user) {
             // Help IDE and get sane
-            assert($user instanceof User, "User invalid");
+            assert($user instanceof User, 'User invalid');
 
             // Skip non-verified users
-            if (!$user->hasVerifiedEmail()) {
+            if (! $user->hasVerifiedEmail()) {
                 $this->line(sprintf('Skipped <info>%s</>.', $user->name), null, OutputInterface::VERBOSITY_VERBOSE);
+
                 continue;
             }
 

@@ -12,14 +12,14 @@ use Laravel\Nova\Fields\Text;
 class FormContent extends FormField
 {
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'content';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
@@ -41,7 +41,7 @@ class FormContent extends FormField
     }
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */

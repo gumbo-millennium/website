@@ -12,34 +12,29 @@ use Telegram\Bot\Objects\User as TelegramUser;
 abstract class Command extends TelegramCommand
 {
     /**
-     * Runs a string through sprintf, and unwraps single newlines
-     *
-     * @param string $text
-     * @param mixed $arg
-     * @return string
+     * Runs a string through sprintf, and unwraps single newlines.
      */
     public function formatText(string $text, ...$args): string
     {
         $out = sprintf($text, ...$args);
+
         return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
     }
 
     /**
-     * Returns Telegram User
-     *
-     * @return TelegramUser|null
+     * Returns Telegram User.
      */
     protected function getTelegramUser(): ?TelegramUser
     {
         // Look for a message
         $message = $this->update->getMessage();
-        if (!$message || !$message instanceof Message) {
+        if (! $message || ! $message instanceof Message) {
             return null;
         }
 
         // Look for a user
         $chatUser = $message->from;
-        if (!$chatUser || !$chatUser instanceof TelegramUser) {
+        if (! $chatUser || ! $chatUser instanceof TelegramUser) {
             return null;
         }
 
@@ -48,16 +43,14 @@ abstract class Command extends TelegramCommand
     }
 
     /**
-     * Get the user based on the update
-     *
-     * @return User|null
+     * Get the user based on the update.
      */
     protected function getUser(): ?User
     {
         $chatUser = $this->getTelegramUser();
 
         // Skip if empty
-        if (!$chatUser) {
+        if (! $chatUser) {
             return null;
         }
 
@@ -68,28 +61,25 @@ abstract class Command extends TelegramCommand
     }
 
     /**
-     * Require the user to be logged in and a member
-     *
-     * @param User|null $user
-     * @return bool
+     * Require the user to be logged in and a member.
      */
     protected function ensureIsMember(?User $user): bool
     {
         $message = null;
-        if (!$user) {
+        if (! $user) {
             $message = <<<'EOL'
             🛂 Je moet ingelogd zijn om dit commando te gebruiken.
 
             Log in door /login in een PM te sturen.
             EOL;
-        } elseif (!$user->is_member) {
+        } elseif (! $user->is_member) {
             $message = <<<'EOL'
             ⛔ Dit commando is alleen voor leden.
             EOL;
         }
 
         // Pass
-        if (!$message) {
+        if (! $message) {
             return true;
         }
 

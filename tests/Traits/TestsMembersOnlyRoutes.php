@@ -18,14 +18,14 @@ trait TestsMembersOnlyRoutes
 
         $params ??= [];
 
-        $this->$method($url, $params)
+        $this->{$method}($url, $params)
             ->assertRedirect(route('login'));
 
         $this->actingAs($this->getGuestUser())
-            ->$method($url, $params)
+            ->{$method}($url, $params)
             ->assertForbidden();
 
         return $this->actingAs($this->getMemberUser())
-            ->$method($url, $params);
+            ->{$method}($url, $params);
     }
 }

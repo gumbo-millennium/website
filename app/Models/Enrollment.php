@@ -27,27 +27,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int $activity_id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $deleted_at
- * @property string|null $deleted_reason
- * @property int|null $price
- * @property int|null $total_price
- * @property string|null $payment_intent
- * @property string|null $payment_invoice
- * @property string|null $payment_source
+ * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|string $deleted_reason
+ * @property null|int $price
+ * @property null|int $total_price
+ * @property null|string $payment_intent
+ * @property null|string $payment_invoice
+ * @property null|string $payment_source
  * @property string $user_type
- * @property \Illuminate\Support\Date|null $expire
- * @property string|null $transfer_secret
- * @property \Illuminate\Support\Collection|null $data
+ * @property null|\Illuminate\Support\Date $expire
+ * @property null|string $transfer_secret
+ * @property null|\Illuminate\Support\Collection $data
  * @property-read Activity $activity
  * @property-read bool $is_discounted
  * @property-read bool $is_stable
  * @property-read bool $requires_payment
- * @property-read States\Enrollment\State|null $wanted_state
+ * @property-read null|States\Enrollment\State $wanted_state
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
  * @property-read User $user
- * @property-read array<scalar>|null $form The form data ready for export
- * @property-read array<scalar>|null $form_data The form data to supply to the form builder
- * @property-read bool|null $is_form_exportable True if the form can be exported
+ * @property-read null|array<scalar> $form The form data ready for export
+ * @property-read null|array<scalar> $form_data The form data to supply to the form builder
+ * @property-read null|bool $is_form_exportable True if the form can be exported
  */
 class Enrollment extends UuidModel
 {
@@ -56,42 +56,8 @@ class Enrollment extends UuidModel
     use SoftDeletes;
 
     public const USER_TYPE_MEMBER = 'member';
+
     public const USER_TYPE_GUEST = 'guest';
-
-    /**
-     * Finds the active enrollment for this activity
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment|null
-     */
-    public static function findActive(User $user, Activity $activity): ?Enrollment
-    {
-        return self::query()
-            ->withoutTrashed()
-            ->whereUserId($user->id)
-            ->whereActivityId($activity->id)
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
-            ->with(['activity'])
-            ->first();
-    }
-
-    /**
-     * Finds the active enrollment for this activity, or throws a 404 HTTP exception
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return Enrollment
-     * @throws NotFoundHttpException if there is no enrollment present
-     */
-    public static function findActiveOrFail(User $user, Activity $activity): Enrollment
-    {
-        $result = self::findActive($user, $activity);
-        if ($result) {
-            return $result;
-        }
-        throw new NotFoundHttpException();
-    }
 
     /**
      * @inheritDoc
@@ -119,7 +85,36 @@ class Enrollment extends UuidModel
     ];
 
     /**
-     * An enrollment can have multiple payments (in case one failed, for example)
+     * Finds the active enrollment for this activity.
+     */
+    public static function findActive(User $user, Activity $activity): ?self
+    {
+        return self::query()
+            ->withoutTrashed()
+            ->whereUserId($user->id)
+            ->whereActivityId($activity->id)
+            ->whereNotState('state', [CancelledState::class, RefundedState::class])
+            ->with(['activity'])
+            ->first();
+    }
+
+    /**
+     * Finds the active enrollment for this activity, or throws a 404 HTTP exception.
+     *
+     * @throws NotFoundHttpException if there is no enrollment present
+     */
+    public static function findActiveOrFail(User $user, Activity $activity): self
+    {
+        $result = self::findActive($user, $activity);
+        if ($result) {
+            return $result;
+        }
+
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * An enrollment can have multiple payments (in case one failed, for example).
      *
      * @return HasMany
      */
@@ -129,7 +124,7 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * The user this enrollment belongs to
+     * The user this enrollment belongs to.
      *
      * @return BelongsTo
      */
@@ -139,7 +134,7 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * The activity this enrollment belongs to
+     * The activity this enrollment belongs to.
      *
      * @return BelongsTo
      */
@@ -149,9 +144,7 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * Returns true if the state is stable and will not auto-delete
-     *
-     * @return bool
+     * Returns true if the state is stable and will not auto-delete.
      */
     public function getIsStableAttribute(): bool
     {
@@ -160,8 +153,6 @@ class Enrollment extends UuidModel
 
     /**
      * Returns if the enrollment is discounted.
-     *
-     * @return bool
      */
     public function getIsDiscountedAttribute(): bool
     {
@@ -172,21 +163,21 @@ class Enrollment extends UuidModel
      * Returns state we want to go to, depending on Enrollment's own attributes.
      * Returns null if it can't figure it out.
      *
-     * @return App\Models\States\Enrollment\State|null
+     * @return null|App\Models\States\Enrollment\State
      */
     public function getWantedStateAttribute(): ?EnrollmentState
     {
         // First check for any transition
         $options = $this->state->transitionableStates();
-        if (in_array(SeededState::$name, $options) && $this->activity->form) {
+        if (in_array(SeededState::$name, $options, true) && $this->activity->form) {
             return new SeededState($this);
         }
 
-        if (in_array(PaidState::$name, $options) && $this->price) {
+        if (in_array(PaidState::$name, $options, true) && $this->price) {
             return new PaidState($this);
         }
 
-        if (in_array(ConfirmedState::$name, $options)) {
+        if (in_array(ConfirmedState::$name, $options, true)) {
             return new ConfirmedState($this);
         }
 
@@ -197,18 +188,14 @@ class Enrollment extends UuidModel
     {
         return $this->exists &&
             $this->total_price &&
-            !($this->state instanceof CancelledState);
+            ! ($this->state instanceof CancelledState);
     }
 
     /**
      * Stores the enrollment data on this user.
-     *
-     * @param array $values
-     * @return void
      */
     public function setFormData(array $values): void
     {
-
         // Transform data into something persistable
         $formValues = [];
         $formLabels = [];
@@ -244,8 +231,6 @@ class Enrollment extends UuidModel
 
     /**
      * Returns the filled in form.
-     *
-     * @return array|null
      */
     public function getFormAttribute(): ?array
     {
@@ -254,8 +239,6 @@ class Enrollment extends UuidModel
 
     /**
      * Returns the data for this form, as it's presented to the form builder.
-     *
-     * @return mixed
      */
     public function getFormDataAttribute()
     {
@@ -264,12 +247,10 @@ class Enrollment extends UuidModel
 
     /**
      * Returns if the form can be exported.
-     *
-     * @return bool|null
      */
     public function getIsFormExportableAttribute(): ?bool
     {
-        if (!$this->form) {
+        if (! $this->form) {
             return null;
         }
 
@@ -277,9 +258,7 @@ class Enrollment extends UuidModel
     }
 
     /**
-     * Register the states an enrollment can have
-     *
-     * @return void
+     * Register the states an enrollment can have.
      */
     protected function registerStates(): void
     {

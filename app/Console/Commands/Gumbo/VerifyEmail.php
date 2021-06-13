@@ -43,15 +43,14 @@ class VerifyEmail extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         $user = $this->getUserArgument();
 
-        if (!$user) {
+        if (! $user) {
             $this->error('Cannot find user');
+
             return false;
         }
 
@@ -61,9 +60,10 @@ class VerifyEmail extends Command
         $this->line("ID:    <comment>{$user->id}</>");
         $this->line("Email: <comment>{$user->email}</>");
         $this->line("Alias: <comment>{$user->alias}</>");
-        $this->line("");
-        if (!$this->confirm('Is this the correct user', false)) {
+        $this->line('');
+        if (! $this->confirm('Is this the correct user', false)) {
             $this->warn('User aborted');
+
             return false;
         }
 
@@ -71,7 +71,7 @@ class VerifyEmail extends Command
         $this->line('Verification URL:');
         $this->line($this->getSignUrl($user) . PHP_EOL);
 
-        if (!$sendUrl) {
+        if (! $sendUrl) {
             return;
         }
 
@@ -80,10 +80,9 @@ class VerifyEmail extends Command
     }
 
     /**
-     * Returns likely URL
+     * Returns likely URL.
      *
      * @param App\Models\User $user
-     * @return string
      */
     private function getSignUrl(User $user): string
     {

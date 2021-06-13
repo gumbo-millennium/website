@@ -29,20 +29,20 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 // Route::get('/search/{query}', 'SearchController@search')->name('search');
 
 /**
- * Plazacam routes
+ * Plazacam routes.
  */
 Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
 /**
- * Export route
+ * Export route.
  */
 Route::get('admin/download-export/{export}', [FileExportController::class, 'download'])
     ->name('export.download');
 
 /**
- * Files route
+ * Files route.
  */
 Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
@@ -63,7 +63,7 @@ Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->grou
 });
 
 /**
- * Activities
+ * Activities.
  */
 Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // USER ROUTES
@@ -85,7 +85,7 @@ Route::permanentRedirect('/activity', '/activiteiten');
 Route::permanentRedirect('/activiteit', '/activiteiten');
 
 /**
- * Enrollments
+ * Enrollments.
  */
 Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
     // Actioon view
@@ -128,7 +128,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 });
 
 /**
- * News
+ * News.
  */
 Route::prefix('nieuws')->name('news.')->group(static function () {
     // Main route
@@ -139,7 +139,7 @@ Route::prefix('nieuws')->name('news.')->group(static function () {
 });
 
 /**
- * Join controller
+ * Join controller.
  */
 Route::prefix('word-lid')->name('join.')->group(static function () {
     // Join form (normal and intro)
@@ -201,7 +201,7 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 });
 
 /**
- * Webshop
+ * Webshop.
  */
 Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(static function () {
     // Homepage
@@ -242,8 +242,8 @@ $groupRegex = sprintf(
         array_keys(config('gumbo.page-groups'))
     ))
 );
-Route::get("{group}", 'PageController@group')->where('group', $groupRegex)->name('group.index');
-Route::get("{group}/{slug}", 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
+Route::get('{group}', 'PageController@group')->where('group', $groupRegex)->name('group.index');
+Route::get('{group}/{slug}', 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
 
 // Redirects
 Route::redirect('corona', '/coronavirus');

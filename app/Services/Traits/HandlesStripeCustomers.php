@@ -12,23 +12,22 @@ use Stripe\Exception\ApiErrorException;
 trait HandlesStripeCustomers
 {
     /**
-     * Customers retrieved from API
+     * Customers retrieved from API.
      *
      * @var array<Customer>
      */
     private array $customerCache = [];
 
     /**
-     * Returns the customer for this user
+     * Returns the customer for this user.
      *
-     * @param User $user
      * @param int $options Bitwise options, see OPT_ constants
-     * @return Stripe\Customer|null
+     * @return null|Stripe\Customer
      */
     public function getCustomer(User $user, int $options = 0): ?Customer
     {
         // Check request cache
-        if (!empty($this->customerCache[$user->stripe_id])) {
+        if (! empty($this->customerCache[$user->stripe_id])) {
             return $this->customerCache[$user->stripe_id];
         }
 

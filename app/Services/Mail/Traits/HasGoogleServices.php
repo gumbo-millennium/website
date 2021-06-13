@@ -18,20 +18,20 @@ use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 /**
- * Provides shorthands for Google services
+ * Provides shorthands for Google services.
  */
 trait HasGoogleServices
 {
     private ?GoogleDirectoryService $googleDirectoryService = null;
+
     private ?GoogleGroupsSettingsService $googleGroupsSettingsService = null;
 
     /**
-     * Safely calls a Google service, handling any errors as they come up
+     * Safely calls a Google service, handling any errors as they come up.
      *
-     * @param Closure $method
      * @param string $action For logging, action performed
      * @param string $subject For logging, subject performed on
-     * @return mixed|null
+     * @return null|mixed
      * @throws InvalidArgumentException
      */
     public function callGoogleService(Closure $method, string $action, string $subject)
@@ -52,6 +52,7 @@ trait HasGoogleServices
             // Handle not found
             if ($exception->getCode() === 404) {
                 Log::debug('[Google] {action} for {subject} resulted in a 404', compact('action', 'subject'));
+
                 return null;
             }
 
@@ -78,9 +79,8 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns a Google Directory Groups manager
+     * Returns a Google Directory Groups manager.
      *
-     * @return GoogleDirectoryGroupsResource
      * @throws InvalidArgumentException
      * @internal
      */
@@ -90,9 +90,8 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns a Google Directory Group Alias manager
+     * Returns a Google Directory Group Alias manager.
      *
-     * @return GoogleDirectoryAliasesResource
      * @throws InvalidArgumentException
      */
     protected function getGoogleGroupAliasManager(): GoogleDirectoryAliasesResource
@@ -101,9 +100,8 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns Google Directory Group Members manager
+     * Returns Google Directory Group Members manager.
      *
-     * @return GoogleDirectoryMembersResource
      * @throws InvalidArgumentException
      */
     protected function getGoogleGroupMembersManager(): GoogleDirectoryMembersResource
@@ -112,9 +110,8 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns Google Groups Settings manager
+     * Returns Google Groups Settings manager.
      *
-     * @return GoogleGroupsSettingsResource
      * @throws InvalidArgumentException
      */
     protected function getGoogleGroupSettingsManager(): GoogleGroupsSettingsResource
@@ -123,9 +120,9 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns a Google client
+     * Returns a Google client.
      *
-     * @return Google_Client|null
+     * @return null|Google_Client
      * @throws InvalidArgumentException
      * @throws LogicException
      */
@@ -136,16 +133,15 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns Google directory service
+     * Returns Google directory service.
      *
-     * @return GoogleDirectoryService
      * @throws InvalidArgumentException
      * @internal
      */
     private function getGoogleDirectory(): GoogleDirectoryService
     {
         // Create new if missing
-        if (!$this->googleDirectoryService) {
+        if (! $this->googleDirectoryService) {
             $this->googleDirectoryService = new GoogleDirectoryService($this->getGoogleClient());
         }
 
@@ -154,16 +150,15 @@ trait HasGoogleServices
     }
 
     /**
-     * Returns Google Groups Settings client
+     * Returns Google Groups Settings client.
      *
-     * @return GoogleGroupsSettingsService
      * @throws InvalidArgumentException
      * @internal
      */
     private function getGoogleGroupSettings(): GoogleGroupsSettingsService
     {
         // Create new if missing
-        if (!$this->googleGroupsSettingsService) {
+        if (! $this->googleGroupsSettingsService) {
             $this->googleGroupsSettingsService = new GoogleGroupsSettingsService($this->getGoogleClient());
         }
 

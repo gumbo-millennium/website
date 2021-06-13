@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
  * @property string $name
- * @property string|null $description
+ * @property null|string $description
  * @property string $slug
  * @property bool $visible
  * @property array $meta
@@ -25,8 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Category extends Model
 {
-    use IsUuidModel;
     use IsSluggable;
+    use IsUuidModel;
 
     protected $table = 'shop_categories';
 
@@ -58,7 +58,6 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
-
 
     public function getValidImageUrlAttribute(): string
     {

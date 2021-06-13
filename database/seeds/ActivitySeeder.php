@@ -15,7 +15,7 @@ use Spatie\Permission\Models\Role;
 class ActivitySeeder extends Seeder
 {
     /**
-     * Returns start of semester, as immutable element
+     * Returns start of semester, as immutable element.
      *
      * @return \DateTimeImmutable
      */
@@ -66,9 +66,7 @@ class ActivitySeeder extends Seeder
     }
 
     /**
-     * Adds a Bruisweken event
-     *
-     * @return void
+     * Adds a Bruisweken event.
      */
     public function seedBruisweken(): void
     {
@@ -91,15 +89,13 @@ class ActivitySeeder extends Seeder
     }
 
     /**
-     * Adds an introduction week event
-     *
-     * @return void
+     * Adds an introduction week event.
      */
     public function seedGumboIntro(): void
     {
         // Bruisweken are one week before start of semester
         $semesterStamp = $this->getStartOfYear()->addWeeks(7)->timestamp;
-        $startStamp = strtotime("tuesday", $semesterStamp);
+        $startStamp = strtotime('tuesday', $semesterStamp);
         $date = Carbon::parse("@{$startStamp}")->toImmutable();
         $year = $date->year;
 
@@ -125,9 +121,7 @@ class ActivitySeeder extends Seeder
     }
 
     /**
-     * Adds Christmas drinks and Christmas dinner
-     *
-     * @return void
+     * Adds Christmas drinks and Christmas dinner.
      */
     public function seedChristmasEvents(): void
     {
@@ -145,15 +139,14 @@ class ActivitySeeder extends Seeder
         // Create events already happened
         $this->createChristmasEvents($christmasDate->subYear());
     }
+
     /**
-     * Creates an activity if it's not already there yet
+     * Creates an activity if it's not already there yet.
      *
-     * @param string $slug
-     * @param array $args
      * @param bool $withEnrollments Automatically register some users?
-     * @return Activity|null Created activity, or null if it already exists
+     * @return null|Activity created activity, or null if it already exists
      *
-     * Seeder is allowed to use boolean flag.
+     * Seeder is allowed to use boolean flag
      */
     private function safeCreate(string $slug, array $args, bool $withEnrollments = true): ?Activity
     {
@@ -167,7 +160,7 @@ class ActivitySeeder extends Seeder
         );
 
         // Don't register users if we don't want to
-        if (!$withEnrollments) {
+        if (! $withEnrollments) {
             return $activity;
         }
 
@@ -199,8 +192,6 @@ class ActivitySeeder extends Seeder
 
     /**
      * Creates all christmas events for this given date.
-     *
-     * @param DateTimeImmutable $date
      */
     private function createChristmasEvents(DateTimeImmutable $date): void
     {
@@ -241,9 +232,7 @@ class ActivitySeeder extends Seeder
 
     /**
      * Creates an event on the lhw role, to test role-level
-     * access
-     *
-     * @return void
+     * access.
      */
     private function seedBasicAccessEvent(): void
     {
@@ -262,9 +251,7 @@ class ActivitySeeder extends Seeder
     }
 
     /**
-     * Seeds a bunch of events that start soon
-     *
-     * @return void
+     * Seeds a bunch of events that start soon.
      */
     private function seedPaymentTest(): void
     {
@@ -337,7 +324,7 @@ class ActivitySeeder extends Seeder
             ], false);
 
             // Skip if not created
-            if (!$activity) {
+            if (! $activity) {
                 continue;
             }
 

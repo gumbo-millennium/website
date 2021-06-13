@@ -42,7 +42,7 @@ class LeaderboardCommand extends Command
     protected $description = 'Toon het Werving Commissie Leaderboard';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -51,7 +51,7 @@ class LeaderboardCommand extends Command
 
         // Members only
         $user = $this->getUser();
-        if (!$this->ensureIsMember($user)) {
+        if (! $this->ensureIsMember($user)) {
             return;
         }
 
@@ -72,6 +72,7 @@ class LeaderboardCommand extends Command
             $this->replyWithMessage([
                 'text' => self::MESSAGE_EMPTY,
             ]);
+
             return;
         }
 

@@ -17,7 +17,7 @@ class CartControllerTest extends TestCase
     use TestsMembersOnlyRoutes;
     use TestsShop;
 
-    public function testAddingItemsIsForMembersOnly(): void
+    public function test_adding_items_is_for_members_only(): void
     {
         $this->onlyForMembers(route('shop.cart'))
             ->assertOk();
@@ -37,7 +37,7 @@ class CartControllerTest extends TestCase
         ], 'patch')->assertRedirect(route('shop.cart'));
     }
 
-    public function testAddToCart(): void
+    public function test_add_to_cart(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -54,7 +54,7 @@ class CartControllerTest extends TestCase
         $this->assertCartPrice(15);
     }
 
-    public function testAddingDuplicatesGetMerged(): void
+    public function test_adding_duplicates_get_merged(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -65,7 +65,7 @@ class CartControllerTest extends TestCase
         $safeQuantity = intdiv(Config::get('gumbo.shop.max-quantity'), 2);
 
         if ($safeQuantity < 1) {
-            $this->markTestSkipped("Cannot properly add items, the shop max quantity is too low.");
+            $this->markTestSkipped('Cannot properly add items, the shop max quantity is too low.');
         }
 
         $this->post(route('shop.cart.add'), [
@@ -82,7 +82,7 @@ class CartControllerTest extends TestCase
         $this->assertCartQuantity($safeQuantity + $safeQuantity);
     }
 
-    public function testAddingDuplicatesDoesNotOverflow(): void
+    public function test_adding_duplicates_does_not_overflow(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -104,7 +104,7 @@ class CartControllerTest extends TestCase
         $this->assertCartQuantity(Config::get('gumbo.shop.max-quantity'));
     }
 
-    public function testUpdatingQuantityWorks(): void
+    public function test_updating_quantity_works(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -131,7 +131,7 @@ class CartControllerTest extends TestCase
         $this->assertCartQuantity(4);
     }
 
-    public function testUpdatingToZeroWorks(): void
+    public function test_updating_to_zero_works(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -167,7 +167,7 @@ class CartControllerTest extends TestCase
         $this->assertCartQuantity(1);
     }
 
-    public function testAddQuantityLimits()
+    public function test_add_quantity_limits()
     {
         $this->actingAs($this->getMemberUser());
 

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class MarkdownServiceTest extends TestCase
 {
-    public function testBasicUse(): void
+    public function test_basic_use(): void
     {
         $markdown = <<<'MARKDOWN'
         ## Hello World
@@ -25,7 +25,7 @@ class MarkdownServiceTest extends TestCase
         HTML, $result);
     }
 
-    public function testUnsafeMarkdown(): void
+    public function test_unsafe_markdown(): void
     {
         $markdown = <<<'markdown'
         ## Hello World
@@ -45,7 +45,7 @@ class MarkdownServiceTest extends TestCase
         HTML, $result);
     }
 
-    public function testImagesAreNotSupported(): void
+    public function test_images_are_not_supported(): void
     {
         $markdown = <<<'markdown'
         ## Hello World

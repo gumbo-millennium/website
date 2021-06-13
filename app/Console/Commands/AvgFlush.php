@@ -8,10 +8,7 @@ use App\Models\FileDownload;
 use Illuminate\Console\Command;
 
 /**
- * Deletes data we're not supposed to keep for extended periods of time
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Deletes data we're not supposed to keep for extended periods of time.
  */
 class AvgFlush extends Command
 {
@@ -33,8 +30,6 @@ class AvgFlush extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -43,7 +38,7 @@ class AvgFlush extends Command
 
         if ($this->option('more-recent')) {
             $query = $query->where('downloaded_at', '<', today()->subDays(30));
-        } elseif (!$this->option('all')) {
+        } elseif (! $this->option('all')) {
             $query = $query->where('downloaded_at', '<', today()->subDays(90));
         }
 

@@ -39,8 +39,6 @@ class SendActivityCovidMails extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -64,6 +62,7 @@ class SendActivityCovidMails extends Command
             $scheduled = ScheduledMail::findForModelMail($activity, 'covid-mail');
             if ($scheduled->is_sent) {
                 $this->line("Mail for <comment>{$activity->name}</> already sent");
+
                 continue;
             }
 
@@ -72,7 +71,7 @@ class SendActivityCovidMails extends Command
             $scheduled->save();
 
             // Report
-            $this->line("Schedule entry created", null, OutputInterface::VERBOSITY_VERBOSE);
+            $this->line('Schedule entry created', null, OutputInterface::VERBOSITY_VERBOSE);
 
             // Send
             $this->sendMail($activity);

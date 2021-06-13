@@ -34,7 +34,7 @@ class ProductController extends Controller
 
     public function showCategory(Category $category)
     {
-        if (!$category->visible || !$category->products()->has('variants')->exists()) {
+        if (! $category->visible || ! $category->products()->has('variants')->exists()) {
             throw new NotFoundHttpException();
         }
 
@@ -58,7 +58,7 @@ class ProductController extends Controller
 
     public function showProduct(Product $product)
     {
-        if (!$product->visible || !$product->category_id) {
+        if (! $product->visible || ! $product->category_id) {
             throw new NotFoundHttpException();
         }
 
@@ -73,7 +73,7 @@ class ProductController extends Controller
 
     public function showProductVariant(Product $product, string $variant)
     {
-        if (!$product->visible || !$product->category_id) {
+        if (! $product->visible || ! $product->category_id) {
             throw new NotFoundHttpException();
         }
 
