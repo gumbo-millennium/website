@@ -1,16 +1,13 @@
 {
-  // Configure PHP Mess detector
-  "phpmd.validate.rulesetsFile": "./phpmd.xml",
-  "phpmd.validate.executablePath": "./vendor/bin/phpmd",
+    // Don't auto-complete PHP, let PHP-Intellisense work it out.
+    "php.suggest.basic": false,
 
-  // Configure PHP_CodeSniffer
-  "phpcs.executablePath": "./vendor/bin/phpcs",
-  "phpcs.autoConfigSearch": true,
+    // Allow tailwind's custom directives
+    "css.lint.unknownAtRules": "ignore",
+    "css.validate": false,
 
-  // Don't auto-complete PHP, let PHP-Intellisense work it out.
-  "php.suggest.basic": false,
-
-  // Allow tailwind's custom directives
-  "css.lint.unknownAtRules": "ignore",
-  "css.validate": false,
+    // PHP-CS-Fixer
+    "php-cs-fixer.allowRisky": true,
+    "php-cs-fixer.config": ".php-cs-fixer.php;.php-cs-fixer.dist.php",
+    "php-cs-fixer.executablePath": "vendor/bin/php-cs-fixer",
 }
