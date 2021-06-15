@@ -41,7 +41,7 @@ class ConstructGoogleActionList implements ShouldQueue
     {
         // Get all roles, removing those without email
         $roles = $conscribo
-            ->getResource('role', [], ['code', 'naam', 'leden', 'e_mailadres'])
+            ->getResource('role', [], ['code', 'voorzitter', 'naam', 'leden', 'e_mailadres'])
             ->reject(static fn ($row) => empty($row['e_mailadres']));
 
         Log::info("Recieved roles from Conscribo", compact('roles'));
@@ -51,11 +51,13 @@ class ConstructGoogleActionList implements ShouldQueue
         // 3) Sort by member ID by casting to a number
         $roles = $roles->map(static function (&$role) {
             $memberList = preg_split('/\,\s*(?=\d+\:)/', $role['leden'] ?? '');
+
             $role['leden'] = collect($memberList)
                 ->each('trim')
                 ->filter()
                 ->sort(static fn ($a, $b) => intval($a) <=> intval($b))
                 ->toArray();
+
             return $role;
         });
 
@@ -104,11 +106,19 @@ class ConstructGoogleActionList implements ShouldQueue
         $jobList = collect();
         foreach ($roles as $role) {
             // Build member list
-            $jobMembers = $emails
-                ->only($role['leden'])
-                ->values()
-                ->map(static fn ($val) => [$val, MailList::ROLE_NORMAL])
-                ->toArray();
+            $emailsBySelector = $emails
+                ->only($role['leden']);
+
+            $jobMembers = [];
+
+            foreach ($emailsBySelector as $selector => $email) {
+                $userName = trim(explode(':', $selector, 2)[1] ?? '---invalid');
+
+                $jobMembers[] = [
+                    $email,
+                    $role['voorzitter'] === $userName ? MailList::ROLE_ADMIN : MailList::ROLE_NORMAL,
+                ];
+            }
 
             // Build job
             $job = [
