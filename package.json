@@ -16,7 +16,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@tailwindcss/custom-forms": "^0.2.1",
-    "laravel-mix": "^6.0.13",
+    "laravel-mix": "^6.0.20",
     "tailwindcss": "^1.9.6"
   },
   "devDependencies": {
