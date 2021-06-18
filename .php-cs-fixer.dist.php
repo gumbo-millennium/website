@@ -8,7 +8,8 @@ use PhpCsFixer\Finder;
 $finder = Finder::create()
     ->exclude([
         'vendor',
-        'node_modules',
+	'node_modules',
+	'storage',
     ])
     ->notName([
         '_ide_helper*',
