@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Auth\Traits\RedirectsToHomepage;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Response as ResponseFacade;
 
 class VerificationController extends Controller
 {
@@ -21,7 +22,6 @@ class VerificationController extends Controller
     | be re-sent if the user didn't receive the original email message.
     |
     */
-    use RedirectsToHomepage;
     use VerifiesEmails;
 
     /**
@@ -37,5 +37,33 @@ class VerificationController extends Controller
 
         SEOMeta::setTitle('E-mailadres valideren');
         SEOMeta::setRobots('noindex,nofollow');
+    }
+
+    /**
+     * Redirect route after verification.
+     */
+    public function redirectTo(): string
+    {
+        if (request()->routeIs('verification.notice')) {
+            return route('account.index');
+        }
+
+        return route('verification.notice');
+    }
+
+    /**
+     * Resend the email verification notification.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resend(Request $request)
+    {
+        if (! $request->user()->hasVerifiedEmail()) {
+            $request->user()->sendEmailVerificationNotification();
+
+            flash()->info(__('A fresh verification link has been sent to your email address.'));
+        }
+
+        return ResponseFacade::redirectTo($this->redirectPath());
     }
 }
