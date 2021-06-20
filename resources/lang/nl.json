@@ -103,6 +103,9 @@
   ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
   "1 product|:count products": "1 product|:count producten",
 
+  "A fresh verification link has been sent to your email address.":
+    "Een versgebakken verificatielink is verstuurd naar je e-mailadres.",
+
   "Your previous payment is still pending, or this order cannot be paid right now. Try again later.":
     "Je vorige betaling wordt nog verwerkt, of het is momenteel niet mogelijk om te betalen. Probeer het later opnieuw.",
   "The payment didn't go through or is still processing.":

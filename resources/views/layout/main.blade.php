@@ -33,6 +33,7 @@
 
     @section('main.header')
     @include('layout.header')
+    @includeWhen(optional(Auth::user())->hasVerifiedEmail() === false, 'layout.verify-banner')
     @show
 
     {{-- Main content --}}
