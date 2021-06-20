@@ -9,6 +9,11 @@ return [
     // Cost of a single payment transaction via Stripe, in cents!
     'transfer-fee' => 29,
 
+    // Cost of Mollie, including refund buffer.
+    'fees' => [
+        'shop-order' => 40,
+    ],
+
     // Google config
     'google' => [
         // Allowed domains
@@ -77,6 +82,16 @@ return [
                 'name' => 'Bestuur Gumbo Millennium',
                 'email' => 'bestuur@gumbo-millennium.nl',
             ],
+        ],
+    ],
+
+    'fallbacks' => [
+        'address' => [
+            'line1' => 'Campus 2-6',
+            'line2' => 't.a.v Gumbo Millennium',
+            'postal_code' => '8017 CA',
+            'city' => 'Zwolle',
+            'country' => 'NL',
         ],
     ],
 ];

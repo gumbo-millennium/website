@@ -216,9 +216,14 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::post('/cart', [Shop\CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart', [Shop\CartController::class, 'update'])->name('cart.update');
 
-    Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
     Route::get('/order', [Shop\OrderController::class, 'create'])->name('order.create');
     Route::post('/order', [Shop\OrderController::class, 'store'])->name('order.store');
+
+    Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+    Route::get('/order/{order}/complete', [Shop\OrderController::class, 'complete'])->name('order.complete');
+
+    Route::get('/order/{order}/pay', [Shop\OrderController::class, 'pay'])->name('order.pay');
+    Route::get('/order/{order}/validate-payment', [Shop\OrderController::class, 'validate'])->name('order.validate-payment');
 
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');

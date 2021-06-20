@@ -103,5 +103,10 @@
   ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
   "1 product|:count products": "1 product|:count producten",
 
+  "Your previous payment is still pending, or this order cannot be paid right now. Try again later.":
+    "Je vorige betaling wordt nog verwerkt, of het is momenteel niet mogelijk om te betalen. Probeer het later opnieuw.",
+  "The payment didn't go through or is still processing.":
+    "Je betaling is mislukt of wordt nog verwerkt. Check later nog eens.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

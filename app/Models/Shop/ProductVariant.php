@@ -26,8 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property null|int $price
  * @property array $options
  * @property array $meta
- * @property-read string $valid_image_url
+ * @property-read string $url
  * @property-read string $display_name
+ * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Product $product
  * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
  */
@@ -97,5 +98,13 @@ class ProductVariant extends Model
         return $this->product->variants()->count() === 1
             ? $this->product->name
             : ($this->product->name . ' ' . $this->name);
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('shop.product-variant', [
+            'product' => $this->product,
+            'variant' => $this,
+        ]);
     }
 }
