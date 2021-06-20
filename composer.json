@@ -38,6 +38,7 @@
         "laulamanapps/izettle-api": "dev-develop",
         "league/commonmark": "^1.5",
         "mischiefcollective/colorjizz": "^1.0",
+        "mollie/laravel-mollie": "^2.14",
         "phpoffice/phpspreadsheet": "^1.11",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
