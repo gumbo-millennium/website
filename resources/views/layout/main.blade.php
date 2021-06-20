@@ -34,6 +34,7 @@
     @section('main.header')
     @include('layout.header')
     @includeWhen(optional(Auth::user())->hasVerifiedEmail() === false, 'layout.verify-banner')
+    @include('layout.flash-message')
     @show
 
     {{-- Main content --}}
