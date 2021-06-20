@@ -37,7 +37,7 @@
             @if ($variants->count() > 1 )
             <h3 class="font-title font-lg mt-8 mb-2">Varianten</h3>
             <div class="shop-detail__variants">
-                @foreach ($variants->sortByDesc('id') as $productVariant)
+                @foreach ($variants as $productVariant)
                 <a href="{{ route('shop.product-variant', ['product' => $product, 'variant' => $productVariant]) }}"
                     class="shop-detail__variant {{ $variant->is($productVariant) ? 'shop-detail__variant--active' : '' }} mb-2">
                     {{ $productVariant->name }}

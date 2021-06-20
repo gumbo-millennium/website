@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Helpers\Str;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,6 +37,22 @@ class ProductVariant extends Model
 {
     use IsSluggable;
     use IsUuidModel;
+
+    protected const ORDER_KEYS = [
+        '4xs',
+        '3xs',
+        'xxxs',
+        'xxs',
+        'xs',
+        's',
+        'm',
+        'l',
+        'xl',
+        'xxl',
+        'xxxl',
+        '3xl',
+        '4xl',
+    ];
 
     protected $table = 'shop_product_variants';
 
@@ -106,5 +123,19 @@ class ProductVariant extends Model
             'product' => $this->product,
             'variant' => $this,
         ]);
+    }
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        self::saving(function (self $variant) {
+            if (!$variant->exists || $variant->wasChanged('name') || !$variant->order) {
+                $arrPos = array_search(Str::lower($variant->name), self::ORDER_KEYS);
+
+                // order is a TINYINT, max value 255 (1 byte)
+                $variant->order = $arrPos !== false ? ($arrPos + 1) : 255;
+            }
+        });
     }
 }

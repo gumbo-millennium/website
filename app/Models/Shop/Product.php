@@ -69,7 +69,8 @@ class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)
-            ->orderBy('order');
+            ->orderBy('order')
+            ->orderBy('name');
     }
 
     public function getValidImageUrlAttribute(): string
