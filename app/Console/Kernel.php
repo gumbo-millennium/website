@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('gumbo:update-sponsor-logos')->dailyAt('05:00');
 
         // Update shop twice a day
-        $schedule->command('gumbo:update-shop')->twiceDaily(11, 23);
+        $schedule->command('shop:update')->twiceDaily(11, 23);
 
         // Send required mails every hour
         // $schedule->command('gumbo:send-activity-covid-mails')->hourly();

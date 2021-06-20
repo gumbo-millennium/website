@@ -25,7 +25,7 @@ class UpdateShop extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:update-shop
+    shop:update
         {--prune : Remove unmatched items}
     CMD;
 
