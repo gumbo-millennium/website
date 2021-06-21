@@ -31,7 +31,7 @@ class DropUserIdAndTypeFromBotUserLinks extends Migration
         }
 
         // Remove timestamps
-        if (!Schema::hasColumn('bot_user_links', 'created_at')) {
+        if (! Schema::hasColumn('bot_user_links', 'created_at')) {
             return;
         }
 

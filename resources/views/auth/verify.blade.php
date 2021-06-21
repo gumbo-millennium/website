@@ -22,7 +22,7 @@ $form = \FormBuilder::plain($formOptions)->add('submit', 'submit', [
 </div>
 @endif
 
-<p class="mb-8">Voordat je verder gaat, moet je je e-mailadres verifiëren</p>
+<p class="mb-8">Om volledig toegang te krijgen tot de website, moet je je e-mailadres bevestigen.</p>
 
 {{-- Form --}}
 <p>Geen e-mail ontvangen, of kan je 'm even niet vinden? Klik dan hieronder om een nieuwe verificatiemail aan te vragen.</p>

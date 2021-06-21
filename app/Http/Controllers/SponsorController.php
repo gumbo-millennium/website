@@ -13,9 +13,8 @@ use Illuminate\Support\Carbon;
 class SponsorController extends Controller
 {
     /**
-     * Return index of sponsors
+     * Return index of sponsors.
      *
-     * @param Request $request
      * @return string
      */
     public function index()
@@ -46,10 +45,8 @@ class SponsorController extends Controller
     }
 
     /**
-     * Returns single sponsor, if they have a detail page
+     * Returns single sponsor, if they have a detail page.
      *
-     * @param SponsorService $service
-     * @param string $sponsor
      * @return Response
      * @throws HttpResponseException
      */
@@ -59,7 +56,7 @@ class SponsorController extends Controller
         $sponsor = Sponsor::withTrashed()->whereSlug($sponsor)->first();
 
         // Hide if none found
-        if (!$sponsor || !$sponsor->has_page) {
+        if (! $sponsor || ! $sponsor->has_page) {
             abort(404);
         }
 
@@ -72,7 +69,7 @@ class SponsorController extends Controller
         }
 
         // 402 if expired or invalid
-        if (!$sponsor->is_active) {
+        if (! $sponsor->is_active) {
             abort(402);
         }
 
@@ -89,7 +86,6 @@ class SponsorController extends Controller
     /**
      * Redirects a user to the sponsor, if found.
      *
-     * @param string $sponsor
      * @return RedirectResponse
      * @throws HttpResponseException
      * @throws InvalidArgumentException
@@ -101,7 +97,7 @@ class SponsorController extends Controller
         $sponsor = Sponsor::withTrashed()->whereSlug($sponsor)->first();
 
         // Hide if none found
-        if (!$sponsor) {
+        if (! $sponsor) {
             abort(404);
         }
 
@@ -111,7 +107,7 @@ class SponsorController extends Controller
         }
 
         // 402 if expired or invalid
-        if (!$sponsor->is_active) {
+        if (! $sponsor->is_active) {
             abort(402);
         }
 

@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Basic Stripe job, with a webhook
+ * Basic Stripe job, with a webhook.
  */
 abstract class StripeJob implements ShouldQueue
 {
@@ -22,7 +22,7 @@ abstract class StripeJob implements ShouldQueue
     use SerializesModels;
 
     /**
-     * Makes sure a Stripe key is present
+     * Makes sure a Stripe key is present.
      *
      * @return array
      */

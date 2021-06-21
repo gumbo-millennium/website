@@ -9,14 +9,14 @@ use LogicException;
 use Spatie\Permission\Models\Role as SpatieRole;
 
 /**
- * A role, with some modifications
+ * A role, with some modifications.
  *
  * @property int $id
  * @property string $name
- * @property string|null $title
+ * @property null|string $title
  * @property string $guard_name
  * @property bool $default
- * @property int|null $conscribo_id
+ * @property null|int $conscribo_id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<\Spatie\Permission\Models\Permission> $permissions
@@ -25,7 +25,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 class Role extends SpatieRole
 {
     /**
-     * Groups the system should not remove
+     * Groups the system should not remove.
      */
     public const REQUIRED_GROUPS = [
         'guest',
@@ -33,22 +33,6 @@ class Role extends SpatieRole
         'verified',
         'board',
     ];
-
-    /**
-     * Prevent deleting of a required model, as a safety net
-     *
-     * @param Role $role
-     * @return void
-     * @throws LogicException
-     */
-    public static function bootRole(): void
-    {
-        static::deleting(static function (Role $role) {
-            if (\in_array($role->name, self::REQUIRED_GROUPS)) {
-                throw new LogicException("Cannot remove required role {$role->name}");
-            }
-        });
-    }
 
     /**
      * {@inheritDoc}
@@ -59,10 +43,21 @@ class Role extends SpatieRole
     ];
 
     /**
-     * Filter on default value
+     * Prevent deleting of a required model, as a safety net.
      *
-     * @param Builder $query
-     * @return Builder
+     * @throws LogicException
+     */
+    public static function bootRole(): void
+    {
+        static::deleting(static function (self $role) {
+            if (\in_array($role->name, self::REQUIRED_GROUPS, true)) {
+                throw new LogicException("Cannot remove required role {$role->name}");
+            }
+        });
+    }
+
+    /**
+     * Filter on default value.
      */
     public function scopeDefault(Builder $query): Builder
     {

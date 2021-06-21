@@ -16,18 +16,17 @@ use RuntimeException;
 
 /**
  * Simple sponsor showing system, preventing duplicate
- * sponsors on pages
+ * sponsors on pages.
  */
 class SponsorService implements SponsorServiceContract
 {
     private bool $shown = false;
+
     private ?Sponsor $sponsor = null;
 
     /**
      * Returns if the current page still needs a sponsor.
      * Result might change mid-page, if a sponsor is present earlier.
-     *
-     * @return bool
      */
     public function hasSponsor(): bool
     {
@@ -38,8 +37,6 @@ class SponsorService implements SponsorServiceContract
 
     /**
      * Returns the sponsor for this page, if any.
-     *
-     * @return Sponsor|null
      */
     public function getSponsor(): ?Sponsor
     {
@@ -50,7 +47,7 @@ class SponsorService implements SponsorServiceContract
 
         // Check the sponsor and null if not found
         $sponsor = $this->querySponsor();
-        if (!$sponsor) {
+        if (! $sponsor) {
             return null;
         }
 
@@ -65,11 +62,8 @@ class SponsorService implements SponsorServiceContract
     }
 
     /**
-     * Converts a sponsor to inline SVG
+     * Converts a sponsor to inline SVG.
      *
-     * @param Sponsor|null $sponsor
-     * @param array $attrs
-     * @return HtmlString|null
      * @throws InvalidArgumentException
      */
     public function toSvg(?Sponsor $sponsor, array $attrs, string $style = 'gray'): ?HtmlString
@@ -83,32 +77,33 @@ class SponsorService implements SponsorServiceContract
         $property = "logo_{$style}";
 
         // Return empty if not found
-        if (!$sponsor || !$sponsor->$property) {
+        if (! $sponsor || ! $sponsor->{$property}) {
             return null;
         }
 
         // Check cache
         $cacheKey = vsprintf('sponsor.%d-%s.%s', [
             $sponsor->id,
-            substr(md5($sponsor->$property), 0, 16),
+            substr(md5($sponsor->{$property}), 0, 16),
             substr(md5(\http_build_query($attrs)), 0, 16),
         ]);
 
         // Load from cache
         if (Cache::has($cacheKey)) {
             $value = Cache::get($cacheKey);
+
             return $value ? new HtmlString($value) : null;
         }
 
         try {
             // Get SVG
-            $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->$property);
+            $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->{$property});
         } catch (FileNotFoundException $exception) {
             // Handle not founds
             report(new RuntimeException(
                 "Could not find imag for {$sponsor->name} ({$sponsor->id})",
                 404,
-                $exception
+                $exception,
             ));
 
             // Cache null
@@ -121,14 +116,14 @@ class SponsorService implements SponsorServiceContract
         // Build attributes
         $attributes = [''];
         foreach ($attrs as $name => $value) {
-            $value = implode(" ", Arr::wrap($value));
+            $value = implode(' ', Arr::wrap($value));
             $value = \htmlspecialchars($value, \ENT_COMPAT | \ENT_NOQUOTES | \ENT_HTML5);
             $value = str_replace('"', '\\"', $value);
             $attributes[] = sprintf('%s="%s"', $name, $value);
         }
 
         // Replace SVG tag with new tag
-        $content = \str_replace('<svg', sprintf("<svg%s", implode(' ', $attributes)), $content, $count);
+        $content = \str_replace('<svg', sprintf('<svg%s', implode(' ', $attributes)), $content, $count);
 
         // Ensure we've seen an SVG
         if ($count !== 1) {
@@ -177,7 +172,7 @@ class SponsorService implements SponsorServiceContract
             ->first();
 
         // Mark as hidden if no sponsor is available
-        if (!$this->sponsor) {
+        if (! $this->sponsor) {
             $this->shown = true;
         }
 

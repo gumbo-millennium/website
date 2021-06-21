@@ -13,10 +13,8 @@ class FileExportControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
-     *
-     * @return void
      */
-    public function testBasicFunctioning(): void
+    public function test_basic_functioning(): void
     {
         Storage::fake();
 
@@ -55,7 +53,7 @@ class FileExportControllerTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function testInvalidFileLocation(): void
+    public function test_invalid_file_location(): void
     {
         Storage::fake();
 
@@ -79,7 +77,6 @@ class FileExportControllerTest extends TestCase
         $response->assertHeaderMissing('Content-Disposition');
         $response->assertStatus(410);
 
-
         $this->actingAs($user2);
 
         $response = $this->get(route('export.download', [$movedFile]));
@@ -87,7 +84,7 @@ class FileExportControllerTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function testDeletedFile(): void
+    public function test_deleted_file(): void
     {
         Storage::fake();
 

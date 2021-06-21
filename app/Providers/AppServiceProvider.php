@@ -28,7 +28,7 @@ use Stripe\Stripe as StripeClient;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Singleton bindings
+     * Singleton bindings.
      *
      * @var array<string>
      */
@@ -129,10 +129,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Boot flash settings
         Flash::levels([
-            'info' => "notice notice--info",
-            'error' => "notice notice--warning",
-            'warning' => "notice notice--warning",
-            'success' => "notice notice--brand",
+            'info' => 'notice notice--info',
+            'error' => 'notice notice--warning',
+            'warning' => 'notice notice--warning',
+            'success' => 'notice notice--brand',
         ]);
 
         // Registrer Laravel Nova
@@ -140,18 +140,19 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Safely registers Nova if it's enabled and available
+     * Safely registers Nova if it's enabled and available.
      */
     private function registerNova(): void
     {
         // Check if Nova is enabled to begin with
-        if (!Config::get('services.features.enable-nova')) {
+        if (! Config::get('services.features.enable-nova')) {
             return;
         }
 
         // Check if Nova is available, disable if not
-        if (!class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
+        if (! class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
             Config::set('services.features.enable-nova', false);
+
             return;
         }
 

@@ -18,20 +18,17 @@ use App\Models\User;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Handles authorisation for users entering admin areas
+ * Handles authorisation for users entering admin areas.
  */
 class AdminGate
 {
     /**
-     * Returns if the user can enter Nova
-     *
-     * @param User $user
-     * @return bool
+     * Returns if the user can enter Nova.
      */
     public function nova(User $user): bool
     {
         // Disallow if nova isn't available
-        if (!Config::get('services.features.enable-nova')) {
+        if (! Config::get('services.features.enable-nova')) {
             return false;
         }
 

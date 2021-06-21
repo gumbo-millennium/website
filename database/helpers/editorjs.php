@@ -31,13 +31,13 @@ $getBlock = static function (Faker $faker): array {
             return [
                 'type' => 'image',
                 'data' => [
-                    "file" => [
-                        "url" => "https://picsum.photos/200/300",
+                    'file' => [
+                        'url' => 'https://picsum.photos/200/300',
                     ],
-                    "caption" => $faker->optional(0.8)->sentence,
-                    "withBorder" => $faker->boolean,
-                    "stretched" => $faker->boolean,
-                    "withBackground" => $faker->boolean,
+                    'caption' => $faker->optional(0.8)->sentence,
+                    'withBorder' => $faker->boolean,
+                    'stretched' => $faker->boolean,
+                    'withBackground' => $faker->boolean,
                 ],
             ];
         default:

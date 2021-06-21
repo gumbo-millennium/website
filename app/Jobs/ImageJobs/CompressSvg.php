@@ -34,7 +34,7 @@ class CompressSvg extends SvgJob
         $process->run();
 
         // Log if SVGO failed
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             \logger()->warning('Cannot process svg');
         }
 

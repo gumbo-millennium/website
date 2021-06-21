@@ -32,7 +32,7 @@ class LogoutCommand extends Command
     protected $description = 'Ontkoppel je Telegram account';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -42,12 +42,13 @@ class LogoutCommand extends Command
         // Get user
         $user = $this->getUser();
 
-        if (!$user) {
+        if (! $user) {
             // Not logged in
             $this->replyWithMessage([
                 'text' => self::LOGOUT_FAIL,
                 'parse_mode' => 'HTML',
             ]);
+
             return;
         }
 
@@ -63,6 +64,5 @@ class LogoutCommand extends Command
             'text' => self::LOGOUT_OK,
             'parse_mode' => 'HTML',
         ]);
-        return;
     }
 }

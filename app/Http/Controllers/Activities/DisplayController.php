@@ -18,10 +18,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 /**
- * Handles showing activity lists, activities and the schedule route
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Handles showing activity lists, activities and the schedule route.
  */
 class DisplayController extends Controller
 {
@@ -30,7 +27,6 @@ class DisplayController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
      * @return Response
      */
     public function index(Request $request)
@@ -67,7 +63,7 @@ class DisplayController extends Controller
 
         // SEO
         $title = 'Activiteiten';
-        $description = "Ga mee op avontuur met Gumbo Millennium en kom naar onze feesten en activiteiten.";
+        $description = 'Ga mee op avontuur met Gumbo Millennium en kom naar onze feesten en activiteiten.';
         $canonical = route('activity.index');
 
         // Set SEO data
@@ -96,13 +92,12 @@ class DisplayController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Activity  $activity
      * @return Response
      */
     public function show(Request $request, Activity $activity)
     {
         // Redirect if not public and not logged in
-        if (!$activity->is_public && !$request->user()) {
+        if (! $activity->is_public && ! $request->user()) {
             return \redirect()
                 ->guest(route('login'));
         }
@@ -123,16 +118,12 @@ class DisplayController extends Controller
         // Show view
         return view('activities.show', new ActivityViewModel(
             $request->user(),
-            $activity
+            $activity,
         ));
     }
 
     /**
-     * Handle "please login to enroll" buttons
-     *
-     * @param Request $request
-     * @param Activity $activity
-     * @return RedirectResponse
+     * Handle "please login to enroll" buttons.
      */
     public function login(Request $request, Activity $activity): RedirectResponse
     {
@@ -147,11 +138,7 @@ class DisplayController extends Controller
     }
 
     /**
-     * Handles re-sending the verification mail on activities
-     *
-     * @param Request $request
-     * @param Activity $activity
-     * @return RedirectResponse
+     * Handles re-sending the verification mail on activities.
      */
     public function retryActivate(Request $request, Activity $activity): RedirectResponse
     {
@@ -159,8 +146,9 @@ class DisplayController extends Controller
         $user = $request->user();
 
         // Check if logged in
-        if (!$user) {
+        if (! $user) {
             flash('Je bent niet ingelogd, log eerst in.', 'warning');
+
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -170,6 +158,7 @@ class DisplayController extends Controller
         // Check if verified
         if ($user->hasVerifiedEmail()) {
             flash('Je hebt het e-mailadres van je account al geverifiëerd.', 'info');
+
             return redirect()->route('activity.show', compact('activity'));
         }
 

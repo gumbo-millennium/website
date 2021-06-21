@@ -8,15 +8,13 @@ use App\Helpers\Arr;
 use Illuminate\Validation\Rule;
 
 /**
- * Registration form
+ * Registration form.
  */
 trait UserDataForm
 {
     /**
-     * Add email field
+     * Add email field.
      *
-     * @param int|null $user
-     * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
     public function addEmail(?int $userId = null, array $override = []): self
@@ -30,30 +28,28 @@ trait UserDataForm
 
         // Options
         $options = [
-                'label' => 'E-mailadres',
-                'rules' => [
-                    'required',
-                    'string',
-                    'email',
-                    $duplicateRule,
-                ],
-                'error_messages' => [
-                    // phpcs:ignore Generic.Files.LineLength.TooLong
-                    'alias.unique' => 'Er bestaat al een account met dit e-mailadres.',
-                ],
-                'attr' => [
-                    'autocomplete' => 'email',
-                ],
-            ];
+            'label' => 'E-mailadres',
+            'rules' => [
+                'required',
+                'string',
+                'email',
+                $duplicateRule,
+            ],
+            'error_messages' => [
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                'alias.unique' => 'Er bestaat al een account met dit e-mailadres.',
+            ],
+            'attr' => [
+                'autocomplete' => 'email',
+            ],
+        ];
 
         return $this->add('email', 'email', $this->dotMerge($options, $override));
     }
 
     /**
-     * Add alias
+     * Add alias.
      *
-     * @param int|null $user
-     * @param array $override
      * @return Kris\LaravelFormBuilder\Form|UserDataForm
      */
     public function addAlias(?int $userId = null, array $override = []): self
@@ -100,9 +96,8 @@ trait UserDataForm
     }
 
     /**
-     * Adds names to the field
+     * Adds names to the field.
      *
-     * @param bool $disabled
      * @return $this
      */
     protected function addNames(bool $disabled): self
@@ -150,11 +145,7 @@ trait UserDataForm
     }
 
     /**
-     * Builsd merged array from dot notation
-     *
-     * @param array $source
-     * @param array $merges
-     * @return array
+     * Builsd merged array from dot notation.
      */
     private function dotMerge(array $source, array $merges): array
     {
@@ -162,6 +153,7 @@ trait UserDataForm
         foreach ($merges as $key => $value) {
             Arr::set($source, $key, $value);
         }
+
         return $source;
     }
 }

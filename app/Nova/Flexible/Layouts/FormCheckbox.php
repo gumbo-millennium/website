@@ -9,21 +9,21 @@ use App\Models\FormLayout;
 class FormCheckbox extends FormField
 {
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'checkbox';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
     protected $title = 'Checkbox';
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */

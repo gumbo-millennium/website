@@ -14,7 +14,7 @@ SEOMeta::setCanonical(url('/'));
 
 @section('content')
 {{-- Covid --}}
-@include('content.home.corona')
+@includeWhen(!Auth::user() || Auth::user()->hasVerifiedEmail(), 'content.home.corona')
 
 {{-- Header --}}
 @include('content.home.header')

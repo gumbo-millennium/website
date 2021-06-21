@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\URL;
 class DisplayController extends Controller
 {
     /**
-     * Force auth
+     * Force auth.
      */
     public function __construct()
     {
@@ -27,10 +27,7 @@ class DisplayController extends Controller
     }
 
     /**
-     * Index page
-     *
-     * @param Request $request
-     * @return HttpResponse
+     * Index page.
      */
     public function index(Request $request): HttpResponse
     {
@@ -47,9 +44,6 @@ class DisplayController extends Controller
 
     /**
      * API urls for the user to (ab)use.
-     *
-     * @param Request $request
-     * @return HttpResponse
      */
     public function viewUrls(Request $request): HttpResponse
     {

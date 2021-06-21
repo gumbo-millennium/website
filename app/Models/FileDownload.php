@@ -17,30 +17,15 @@ use Spatie\MediaLibrary\Models\Media;
  * @property \Illuminate\Support\Date $created_at
  * @property int $user_id
  * @property int $bundle_id
- * @property int|null $media_id
+ * @property null|int $media_id
  * @property string $ip
  * @property string $user_agent
  * @property-read FileBundle $bundle
- * @property-read Media|null $media
+ * @property-read null|Media $media
  * @property-read User $user
  */
 class FileDownload extends Pivot
 {
-    /**
-     *  Setup model event hooks
-     */
-    public static function boot()
-    {
-        // Forward first
-        parent::boot();
-
-        // Generate UUID on create and add downloaded_at
-        self::creating(static function ($model) {
-            $model->id = (string) Uuid::uuid4();
-            $model->created_at = now();
-        });
-    }
-
     /**
      * Categories don't have timestamps.
      *
@@ -49,21 +34,21 @@ class FileDownload extends Pivot
     public $timestamps = false;
 
     /**
-     * Disable incrementing primary key
+     * Disable incrementing primary key.
      *
      * @var bool
      */
     public $incrementing = false;
 
     /**
-     * Set key type to string
+     * Set key type to string.
      *
      * @var string
      */
     public $keyType = 'string';
 
     /**
-     * The IP is fillable, others aren't
+     * The IP is fillable, others aren't.
      *
      * @var array
      */
@@ -76,7 +61,7 @@ class FileDownload extends Pivot
     ];
 
     /**
-     * A file download has a download date
+     * A file download has a download date.
      *
      * @var array
      */
@@ -92,7 +77,22 @@ class FileDownload extends Pivot
     protected $table = 'file_downloads';
 
     /**
-     * User that downloaded this file
+     *  Setup model event hooks.
+     */
+    public static function boot()
+    {
+        // Forward first
+        parent::boot();
+
+        // Generate UUID on create and add downloaded_at
+        self::creating(static function ($model) {
+            $model->id = (string) Uuid::uuid4();
+            $model->created_at = now();
+        });
+    }
+
+    /**
+     * User that downloaded this file.
      *
      * @return BelongsTo
      */
@@ -102,7 +102,7 @@ class FileDownload extends Pivot
     }
 
     /**
-     * Bundle the media came from downloaded
+     * Bundle the media came from downloaded.
      *
      * @return BelongsTo
      */
@@ -112,7 +112,7 @@ class FileDownload extends Pivot
     }
 
     /**
-     * Media file the user downloaded
+     * Media file the user downloaded.
      *
      * @return BelongsTo
      */

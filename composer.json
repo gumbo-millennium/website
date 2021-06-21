@@ -13,6 +13,7 @@
         "cviebrock/eloquent-sluggable": "^6.0",
         "czim/laravel-paperclip": "^2.7",
         "daniel-de-wit/nova-paperclip": "^0.1",
+        "darryldecode/cart": "^4.2",
         "david-griffiths/nova-dark-theme": "^1.0",
         "doctrine/dbal": "^2.3",
         "ebess/advanced-nova-media-library": "^2.9",
@@ -37,6 +38,7 @@
         "laulamanapps/izettle-api": "dev-develop",
         "league/commonmark": "^1.5",
         "mischiefcollective/colorjizz": "^1.0",
+        "mollie/laravel-mollie": "^2.14",
         "phpoffice/phpspreadsheet": "^1.11",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.8",
@@ -61,12 +63,13 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
         "facade/ignition": "^1.16",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "fzaninotto/faker": "^1.9",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0",
         "php-parallel-lint/php-console-highlighter": "^0.5.0",
         "php-parallel-lint/php-parallel-lint": "^1.2",
+        "phpunit/phpunit": "^8.0",
         "sempro/phpunit-pretty-print": "^1.2",
         "slevomat/coding-standard": "^6.1",
         "squizlabs/php_codesniffer": "^3.3"
@@ -119,7 +122,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover",
+            "@php artisan ide-helper:generate || true"
         ],
         "contribute": [
             "Composer\\Config::disableProcessTimeout",
@@ -147,8 +151,11 @@
             "@php artisan horizon:assets"
         ],
         "lint": [
-            "parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
-            "phpcs -n"
+            "vendor/bin/parallel-lint --exclude vendor --exclude node_modules --exclude ./_* .",
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run || true"
+        ],
+        "cs": [
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
         ],
         "test": [
             "vendor/bin/phpunit"

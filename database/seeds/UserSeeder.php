@@ -7,10 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Adds or updates the default user
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Adds or updates the default user.
  */
 class UserSeeder extends Seeder
 {
@@ -38,11 +35,6 @@ class UserSeeder extends Seeder
 
     /**
      * Creates a user.
-     *
-     * @param string $slug
-     * @param string $name
-     * @param array $roles
-     * @return void
      */
     private function makeUser(string $slug, string $name, array $roles): void
     {
@@ -56,7 +48,7 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole($roles);
 
-        if (!$user->trashed()) {
+        if (! $user->trashed()) {
             return;
         }
 

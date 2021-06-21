@@ -12,7 +12,7 @@ use Stripe\Invoice;
 class VoidInvoice extends StripeJob
 {
     /**
-     * Undocumented variable
+     * Undocumented variable.
      */
     protected Enrollment $enrollment;
 
@@ -35,17 +35,19 @@ class VoidInvoice extends StripeJob
         $enrollment = $this->enrollment;
 
         // Stop if enrollment is free or not cancelled
-        if (!$enrollment->payment_invoice) {
+        if (! $enrollment->payment_invoice) {
             logger()->info('Enrollment {enrollment} does not have an invoice.', [
                 'enrollment' => $enrollment,
             ]);
+
             return;
         }
 
         // Get data from Stripe
         $invoice = $service->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
-        if (!$invoice) {
+        if (! $invoice) {
             logger()->info('Cannot find invoice on {enrollment}.', compact('enrollment'));
+
             return;
         }
 
@@ -57,8 +59,9 @@ class VoidInvoice extends StripeJob
         if ($invoice->status === Invoice::STATUS_VOID) {
             logger()->info(
                 'Cannot void already voided invoice {invoice}. Doing nothing.',
-                compact('enrollment', 'invoice')
+                compact('enrollment', 'invoice'),
             );
+
             return;
         }
 
@@ -66,8 +69,9 @@ class VoidInvoice extends StripeJob
         if ($invoice->status === Invoice::STATUS_PAID) {
             logger()->info(
                 'Cannot void paid invoice {invoice}.',
-                compact('enrollment', 'invoice')
+                compact('enrollment', 'invoice'),
             );
+
             return;
         }
 
@@ -85,13 +89,14 @@ class VoidInvoice extends StripeJob
             $enrollment->payment_invoice = null;
             $enrollment->payment_source = null;
             $enrollment->save();
+
             return;
         }
 
         // Void the invoice if it's possible
         \assert(
-            in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE]),
-            "Invoice in unknown ste {$invoice->status}"
+            in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE], true),
+            "Invoice in unknown ste {$invoice->status}",
         );
 
         // Void invoice

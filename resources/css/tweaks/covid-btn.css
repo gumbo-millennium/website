@@ -27,12 +27,3 @@
 .covid-btn-wrapper:first-child {
   @apply mt-0;
 }
-
-@screen dark {
-  .covid-btn {
-    @apply bg-blue-secondary-1 text-blue-primary-1;
-  }
-  .covid-btn:hover, .covid-btn:focus, .covid-btn:active {
-    @apply bg-blue-secondary-2 text-dark;
-  }
-}

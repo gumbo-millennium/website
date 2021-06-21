@@ -9,19 +9,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * Creates a temporary user and deletes it after the tests are done
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Creates a temporary user and deletes it after the tests are done.
  */
 trait TempUserTrait
 {
     /**
      * Sets up a new user on a dump e-mail with the given roles.
      *
-     * @param array $roles
-     * @param bool|null $emailValidated Set to false to mark user as non-validated
-     * @return User
+     * @param null|bool $emailValidated Set to false to mark user as non-validated
      */
     public static function getUser(array $roles, ?bool $emailValidated = null): User
     {
@@ -45,7 +40,7 @@ trait TempUserTrait
     }
 
     /**
-     * Deletes temp user after class completes
+     * Deletes temp user after class completes.
      *
      * @afterClass
      */

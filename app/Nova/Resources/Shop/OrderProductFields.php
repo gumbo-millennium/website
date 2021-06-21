@@ -8,7 +8,7 @@ use App\Nova\Fields\Price;
 use Laravel\Nova\Fields\Number;
 
 /**
- * Fields that are present on the Order <-> ProductVariant
+ * Fields that are present on the Order <-> ProductVariant.
  */
 class OrderProductFields
 {

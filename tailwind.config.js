@@ -8,27 +8,18 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 // Build configs
 module.exports = {
-  plugins: gumboSettings.plugins,
-  purge: {
-    mode: 'layers',
-    content: [
-    './resources/views/**/*.blade.php'
+  // mode: 'jit',
 
-  ]
-},
+  purge: [
+    'resources/views/**/*.blade.php',
+    'app/**/*.php',
+  ],
+
   theme: {
     container: {
       center: true
     },
     extend: {
-      screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        dark: {
-          raw: '(prefers-color-scheme: dark)'
-        }
-      },
       spacing: {
         0: '0',
         1: '0.25rem',
@@ -92,79 +83,16 @@ module.exports = {
       zIndex: {}
     }
   },
-  variants: {
-    accessibility: ['focus'],
-    alignContent: [],
-    alignItems: ['responsive'],
-    alignSelf: [],
-    appearance: [],
-    backgroundAttachment: [],
-    backgroundColor: ['hover', 'focus'],
-    backgroundPosition: [],
-    backgroundRepeat: [],
-    backgroundSize: ['responsive'],
-    borderCollapse: [],
-    borderColor: ['hover', 'focus'],
-    borderRadius: [],
-    borderStyle: ['responsive'],
-    borderWidth: ['responsive'],
-    boxShadow: ['responsive', 'hover', 'focus'],
-    cursor: [],
-    display: ['responsive'],
-    fill: [],
-    flex: ['responsive'],
-    flexDirection: ['responsive'],
-    flexGrow: ['responsive'],
-    flexShrink: ['responsive'],
-    flexWrap: ['responsive'],
-    float: [],
-    fontFamily: [],
-    fontSize: [],
-    fontSmoothing: [],
-    fontStyle: [],
-    fontWeight: ['hover', 'focus'],
-    height: ['responsive'],
-    inset: [],
-    justifyContent: ['responsive'],
-    letterSpacing: [],
-    lineHeight: ['responsive'],
-    listStylePosition: [],
-    listStyleType: [],
-    margin: ['responsive'],
-    maxHeight: ['responsive'],
-    maxWidth: ['responsive'],
-    minHeight: ['responsive'],
-    minWidth: ['responsive'],
-    objectFit: [],
-    objectPosition: [],
-    opacity: [],
-    order: [],
-    outline: ['focus'],
-    overflow: ['responsive'],
-    padding: ['responsive'],
-    placeholderColor: ['focus'],
-    pointerEvents: [],
-    position: ['responsive'],
-    resize: [],
-    stroke: [],
-    tableLayout: ['responsive'],
-    textAlign: ['responsive'],
-    textColor: ['responsive', 'hover', 'focus'],
-    textDecoration: ['responsive', 'hover', 'focus'],
-    textTransform: ['responsive'],
-    userSelect: [],
-    verticalAlign: [],
-    visibility: [],
-    whitespace: [],
-    width: ['responsive'],
-    wordBreak: [],
-    zIndex: []
-  },
+
   corePlugins: {
     backgroundOpacity: false,
     textOpacity: false,
     borderOpacity: false,
     placeholderOpacity: false,
     divideOpacity: false
-  }
+  },
+
+  plugins: [
+    require('@tailwindcss/forms'),
+  ]
 }

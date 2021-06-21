@@ -23,14 +23,13 @@ class TestSendActivityMessageJob extends TestCase
 
     /**
      * @before
-     * @return void
      */
     public function alwaysFakeMail(): void
     {
         $this->afterApplicationCreated(static fn () => Mail::fake());
     }
 
-    public function testMessageToAllMessage(): void
+    public function test_message_to_all_message(): void
     {
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
@@ -41,7 +40,6 @@ class TestSendActivityMessageJob extends TestCase
 
         $this->enrollUser($activity, $confirmedUser, Confirmed::class);
         $this->enrollUser($activity, $pendingUser, Seeded::class);
-
 
         $testSubject = $this->faker->sentence;
         $testBody = $this->getMarkdownBody();
@@ -60,7 +58,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($pendingUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
 
         Mail::assertQueued(
@@ -68,11 +66,11 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($confirmedUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
-    public function testPendingMessage(): void
+    public function test_pending_message(): void
     {
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
@@ -101,11 +99,11 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($pendingUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
-    public function testConfirmedMessage(): void
+    public function test_confirmed_message(): void
     {
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
@@ -134,11 +132,11 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($confirmedUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
-    public function testCancellationsDontGetMail(): void
+    public function test_cancellations_dont_get_mail(): void
     {
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
@@ -169,14 +167,12 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($cancelledUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
     /**
-     * Returns random Markdown
-     *
-     * @return string
+     * Returns random Markdown.
      */
     protected function getMarkdownBody(): string
     {

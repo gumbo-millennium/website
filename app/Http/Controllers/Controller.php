@@ -14,7 +14,7 @@ use Spatie\Csp\Directive;
 use Spatie\Csp\Policies\Policy;
 
 /**
- * Main controller class
+ * Main controller class.
  */
 class Controller extends BaseController
 {
@@ -23,7 +23,7 @@ class Controller extends BaseController
     use ValidatesRequests;
 
     /**
-     * Returns a policy you can add stuff to
+     * Returns a policy you can add stuff to.
      */
     protected function alterCspPolicy(): Policy
     {
@@ -33,16 +33,18 @@ class Controller extends BaseController
 
         $instance = App::make(AppPolicy::class);
         App::instance(AppPolicy::class, $instance);
+
         return $instance;
     }
+
     /**
-     * Whitelists the given image URLs with the image content policy
+     * Whitelists the given image URLs with the image content policy.
      */
     protected function addImageUrlsToCspPolicy(iterable $imageUrls): void
     {
         $hosts = [];
         foreach ($imageUrls as $url) {
-            if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            if (! filter_var($url, FILTER_VALIDATE_URL)) {
                 continue;
             }
 

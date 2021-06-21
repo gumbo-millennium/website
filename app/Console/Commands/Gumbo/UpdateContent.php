@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use JsonSchema\Exception\JsonDecodingException;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Runs an update on all files that are in the version-controlled pages
@@ -21,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpdateContent extends Command
 {
     private const PAGE_DIRECTORY = 'assets/json/pages';
+
     private const PAGE_REGEX = '/^([a-z0-9\-]+)\.json$/';
 
     /**
@@ -39,8 +41,6 @@ class UpdateContent extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -56,24 +56,20 @@ class UpdateContent extends Command
         // Print OK
         $this->info('Updated Git-based content successfully!');
     }
+
     /**
-     * Returns a title from a slug
-     *
-     * @param string $slug
-     * @return string
+     * Returns a title from a slug.
      */
     private function buildTitle(string $slug): string
     {
         $name = Str::afterLast($slug, '-slash-');
         $name = str_replace('-', ' ', $name);
+
         return Str::title(trim($name));
     }
 
     /**
-     * Creates or updates all pages in the list, marking them as non-mutable
-     *
-     * @param array $pages
-     * @return void
+     * Creates or updates all pages in the list, marking them as non-mutable.
      */
     private function createOrUpdatePages(array $pages): void
     {
@@ -85,7 +81,7 @@ class UpdateContent extends Command
             // Get contents
             $page = Page::firstOrNew(
                 ['slug' => $slug],
-                ['type' => Page::TYPE_GIT]
+                ['type' => Page::TYPE_GIT],
             );
 
             // Assign data
@@ -96,7 +92,7 @@ class UpdateContent extends Command
 
             // Assign content
             $content = $data['content'];
-            $page->contents = is_scalar($content) ?  $content : json_encode($content);
+            $page->contents = is_scalar($content) ? $content : json_encode($content);
 
             // Save changes
             $page->save();
@@ -106,25 +102,24 @@ class UpdateContent extends Command
 
             // Log stuff
             $this->line(sprintf(
-                "<comment>%s</> page <info>%s</> (%d)",
+                '<comment>%s</> page <info>%s</> (%d)',
                 $page->wasRecentlyCreated ? 'Created' : 'Updated',
                 $page->slug,
-                $page->id
+                $page->id,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         $this->line(
             "Marked <info>{$updateCount}</> page(s) as Git pages",
             null,
-            OutputInterface::VERBOSITY_VERBOSE
+            OutputInterface::VERBOSITY_VERBOSE,
         );
     }
 
     /**
-     * Removes 'git' flag from pages no longer in version index
+     * Removes 'git' flag from pages no longer in version index.
      *
      * @param array<string> $pageSlugs
-     * @return void
      */
     private function releaseNonVersionedPages(array $pageSlugs): void
     {
@@ -152,21 +147,21 @@ class UpdateContent extends Command
 
             // Log stuff
             $this->line(sprintf(
-                "Unmarked page <info>%s</> (%d)",
+                'Unmarked page <info>%s</> (%d)',
                 $page->slug,
-                $page->id
+                $page->id,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         $this->line(
             "Marked <info>{$updateCount}</> page(s) as non-Git pages",
             null,
-            OutputInterface::VERBOSITY_VERBOSE
+            OutputInterface::VERBOSITY_VERBOSE,
         );
     }
 
     /**
-     * Returns list of pages versioned in the code
+     * Returns list of pages versioned in the code.
      *
      * @return array<array<mixed>>
      */
@@ -176,7 +171,7 @@ class UpdateContent extends Command
         $directory = resource_path(self::PAGE_DIRECTORY);
 
         // Skip if missing
-        if (!\file_exists($directory) || !\is_dir($directory)) {
+        if (! \file_exists($directory) || ! \is_dir($directory)) {
             Log::warning('Page directory {directory} found!', [
                 'directory' => $directory,
             ]);
@@ -188,7 +183,7 @@ class UpdateContent extends Command
         $files = scandir($directory);
 
         // Return if scan failed
-        if (!$files) {
+        if (! $files) {
             Log::warning('Page directory {directory} could not be scanned!', [
                 'directory' => $directory,
             ]);
@@ -201,7 +196,7 @@ class UpdateContent extends Command
 
         // Loop files
         foreach ($files as $file) {
-            if (!\preg_match(self::PAGE_REGEX, $file, $matches)) {
+            if (! \preg_match(self::PAGE_REGEX, $file, $matches)) {
                 continue;
             }
 
@@ -210,7 +205,7 @@ class UpdateContent extends Command
                 $path = $directory . DIRECTORY_SEPARATOR . $file;
 
                 // Ensure readability
-                if (!\is_file($path)) {
+                if (! \is_file($path)) {
                     // Create a runtime exception with info
                     $exception = new RuntimeException("Cannot read {$path} or it's not a file.");
 
@@ -238,7 +233,7 @@ class UpdateContent extends Command
                 $exception = new RuntimeException(
                     "Failed to parse JSON in {$path}: {$exception->getMessage()}",
                     $exception->getCode(),
-                    $exception
+                    $exception,
                 );
 
                 // Report it to Laravel
@@ -254,12 +249,7 @@ class UpdateContent extends Command
     }
 
     /**
-     * Processes the data from the file
-     *
-     * @param array $data
-     * @param string $key
-     * @param string $path
-     * @return Carbon
+     * Processes the data from the file.
      */
     private function parseDate(array $data, string $key, string $path): Carbon
     {
@@ -274,12 +264,12 @@ class UpdateContent extends Command
         try {
             // Parse as ISO8601 date and set time to midnight
             return Carbon::createFromFormat('Y-m-d', $value)->setTime(0, 0, 0);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             // Report error
             report(new RuntimeException(
                 "Failed to parse date in {$path}: {$exception->getMessage()}",
                 $exception->getCode(),
-                $exception
+                $exception,
             ));
 
             // Return today

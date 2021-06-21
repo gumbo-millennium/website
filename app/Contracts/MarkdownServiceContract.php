@@ -11,18 +11,12 @@ interface MarkdownServiceContract
     /**
      * Returns the body as parsed markdown. Should only contain safe HTML,
      * but no guarantees given.
-     *
-     * @param string $body
-     * @return string
      */
     public function parse(string $body): string;
 
     /**
      * Returns the body as safe, parsed markdown. Can be injected into a
      * page without further validation.
-     *
-     * @param string $body
-     * @return HtmlString
      */
     public function parseSafe(string $body): HtmlString;
 }

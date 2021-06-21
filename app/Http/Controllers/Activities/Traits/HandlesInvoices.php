@@ -13,16 +13,13 @@ use Stripe\InvoiceItem;
 use Stripe\PaymentIntent;
 
 /**
- * Creates Billing Invoices in Stripe
+ * Creates Billing Invoices in Stripe.
  */
 trait HandlesInvoices
 {
     /**
      * Creates a Billing Invoice at Stripe and returns it.
-     * Returns null if $enrollment is a free activity (for this user)
-     *
-     * @param Enrollment $enrollment
-     * @return Invoice|null
+     * Returns null if $enrollment is a free activity (for this user).
      */
     protected function createPaymentInvoice(Enrollment $enrollment): ?Invoice
     {
@@ -54,7 +51,7 @@ trait HandlesInvoices
                 'payment_method_types' => ['ideal'],
                 'collection_method' => 'send_invoice',
                 'due_date' => $dueDate,
-            ]
+            ],
         );
 
         // Build invoice products
@@ -87,7 +84,7 @@ trait HandlesInvoices
             // Delete lines not supposed to be on this invoice
             $invoiceLines = $invoice->lines->all(['limit' => 20]);
             foreach ($invoiceLines as $line) {
-                if (in_array($line->id, $createdLines)) {
+                if (in_array($line->id, $createdLines, true)) {
                     continue;
                 }
 
@@ -100,12 +97,12 @@ trait HandlesInvoices
             app(StripeErrorService::class)->handleCreate($error);
         }
     }
+
     /**
      * Retrieves or creates invoice for the given enrollment.
      * Returns null if this user need not pay.
      *
-     * @param Enrollment $enrollment
-     * @return Stripe\Invoice|null
+     * @return null|Stripe\Invoice
      * @throws BindingResolutionException
      * @throws ExceptionInvalidArgumentException
      */
@@ -123,11 +120,13 @@ trait HandlesInvoices
 
         // Retrieve intent from server
         $intent = null;
+
         try {
             // Retrieve intent
             $intent = PaymentIntent::retrieve($enrollment->payment_intent);
         } catch (ApiErrorException $error) {
             app(StripeErrorService::class)->handleUpdate($error);
+
             return null;
         }
 

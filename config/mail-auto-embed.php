@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Mail auto embed
@@ -26,5 +25,4 @@ return [
     */
 
     'method' => 'attachment',
-
 ];

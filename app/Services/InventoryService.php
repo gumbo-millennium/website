@@ -19,6 +19,7 @@ class InventoryService
     private const CACHE_TOKEN = 'izettle.api.token';
 
     private string $clientId;
+
     private string $clientAssertion;
 
     private ?IZettleClient $client = null;
@@ -28,7 +29,7 @@ class InventoryService
         $clientId = Config::get('services.izettle.client-id');
         $clientAssertion = Config::get('services.izettle.client-assertion');
 
-        if (!$clientId || !$clientAssertion) {
+        if (! $clientId || ! $clientAssertion) {
             throw new RuntimeException('iZettle API is not configured');
         }
 
@@ -37,7 +38,7 @@ class InventoryService
     }
 
     /**
-     * Get JSON from the API
+     * Get JSON from the API.
      */
     public function getJson(string $endpoint, array $args = []): array
     {
@@ -82,6 +83,7 @@ class InventoryService
         $accessToken = $this->getAccessToken();
         if ($accessToken) {
             $izettleClient->setAccessToken($accessToken);
+
             return $izettleClient;
         }
 
@@ -98,7 +100,7 @@ class InventoryService
     protected function getAccessToken(): ?AccessToken
     {
         $accessToken = Cache::get(self::CACHE_TOKEN);
-        if (!$accessToken instanceof AccessToken || $accessToken->isExpired()) {
+        if (! $accessToken instanceof AccessToken || $accessToken->isExpired()) {
             return null;
         }
 

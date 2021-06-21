@@ -11,13 +11,13 @@ class PageControllerTest extends TestCase
 {
     private const GIT_FILE = 'privacy-policy';
 
-    public function testHomepage(): void
+    public function test_homepage(): void
     {
         $this->get('/')
             ->assertOk();
     }
 
-    public function testGitPage(): void
+    public function test_git_page(): void
     {
         $file = self::GIT_FILE;
 

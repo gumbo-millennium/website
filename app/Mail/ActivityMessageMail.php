@@ -22,10 +22,6 @@ class ActivityMessageMail extends Mailable
 
     /**
      * Preps a new custom user message.
-     *
-     * @param Enrollment $enrollment
-     * @param string $title
-     * @param string $body
      */
     public function __construct(Enrollment $enrollment, ActivityMessage $activityMessage)
     {

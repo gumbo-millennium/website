@@ -27,13 +27,12 @@ class EnrollmentStateListener
     /**
      * Handle the event.
      *
-     * @param  StateChanged  $event
      * @return void
      */
     public function handle(StateChanged $event)
     {
         // Don't act on enrollments
-        if (!$event->model instanceof Enrollment) {
+        if (! $event->model instanceof Enrollment) {
             return;
         }
 
@@ -43,7 +42,7 @@ class EnrollmentStateListener
         $user = $enrollment->user;
 
         // Handle cancellation
-        if (!($finalState instanceof Cancelled)) {
+        if (! ($finalState instanceof Cancelled)) {
             return;
         }
 

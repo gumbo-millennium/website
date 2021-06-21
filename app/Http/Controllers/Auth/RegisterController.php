@@ -22,20 +22,23 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Registration controller
+ * Registration controller.
  */
 class RegisterController extends Controller
 {
-    use RedirectsUsers;
     use RedirectsToHomepage;
+    use RedirectsUsers;
 
     private const SESSION_ACCESS = 'onboarding.after-registration';
+
     private const DATA_SESSION_KEY = 'register.user';
+
     private const PRIVACY_CACHE_KEY = 'register.privacy.companies';
+
     private const PRIVACY_COMPANY_FILE = 'assets/yaml/privacy/companies.yaml';
 
     /**
-     * A useful form builder
+     * A useful form builder.
      */
     private FormBuilder $formBuilder;
 
@@ -52,7 +55,6 @@ class RegisterController extends Controller
         // Middleware
         $this->middleware('guest')->except('afterRegister');
     }
-
 
     /**
      * Show the application registration form.
@@ -76,10 +78,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * Registers a new user in the system
+     * Registers a new user in the system.
      *
-     * @param Request $request
-     * @param FormBuilder $formBuilder
      * @return Illuminate\Http\RedirectResponse
      */
     public function register(Request $request)
@@ -106,15 +106,14 @@ class RegisterController extends Controller
     }
 
     /**
-     * Shows the 'what we steal from your privé' message
+     * Shows the 'what we steal from your privé' message.
      *
-     * @param Request $request
      * @return Illuminate\Http\RedirectResponse
      */
     public function showPrivacy(Request $request, Repository $cache)
     {
         // Redirect if wrong
-        if (!$request->session()->has(self::DATA_SESSION_KEY)) {
+        if (! $request->session()->has(self::DATA_SESSION_KEY)) {
             return response()->redirectToRoute('register');
         }
 
@@ -130,7 +129,7 @@ class RegisterController extends Controller
 
         // Check cache
         $companies = $cache->get(self::PRIVACY_CACHE_KEY);
-        if (!$companies) {
+        if (! $companies) {
             // Get new file
             $path = \resource_path(self::PRIVACY_COMPANY_FILE);
 
@@ -155,9 +154,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * Confirms privacy policy and creates account
+     * Confirms privacy policy and creates account.
      *
-     * @param Request $request
      * @return Illuminate\Http\RedirectResponse
      * @throws RuntimeException
      */
@@ -170,7 +168,7 @@ class RegisterController extends Controller
         $form->redirectIfNotValid();
 
         // Redirect if wrong
-        if (!$request->session()->has(self::DATA_SESSION_KEY)) {
+        if (! $request->session()->has(self::DATA_SESSION_KEY)) {
             return response()->redirectToRoute('register');
         }
 
@@ -195,9 +193,8 @@ class RegisterController extends Controller
     }
 
     /**
-     * Show welcome response
+     * Show welcome response.
      *
-     * @param Request $request
      * @return Response
      * @throws RuntimeException
      */

@@ -29,6 +29,18 @@
         {{-- User info --}}
         <ul class="userbar__links userbar__links--user">
             @auth
+            {{-- Shopping cart --}}
+            @unless (Cart::isEmpty())
+            <li class="userbar__links-link cursor-default">
+                <a href="{{ route('shop.cart') }}" class="userbar__links-item">
+                    @icon('solid/shopping-cart', ['aria-label' => 'Winkelwagentje'])
+                    <span>
+                        {{ Lang::choice('1 product|:count products', Cart::getContent()->sum('quantity')) }}
+                    </span>
+                </a>
+            </li>
+            @endif
+
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
                 <a href="{{ route('account.index') }}" class="userbar__links-item">
@@ -141,12 +153,3 @@
         </ul>
     </div>
 </nav>
-
-{{-- Flashed messages --}}
-@if (flash()->message)
-<div class="container mt-2" role="alert">
-    <div class="notice {{ flash()->class }}">
-        <p>{{ flash()->message }}</p>
-    </div>
-</div>
-@endif

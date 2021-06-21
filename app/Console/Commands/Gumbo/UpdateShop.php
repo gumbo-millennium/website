@@ -25,7 +25,7 @@ class UpdateShop extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:update-shop
+    shop:update
         {--prune : Remove unmatched items}
     CMD;
 
@@ -42,8 +42,6 @@ class UpdateShop extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle(InventoryService $service, GuzzleClient $client)
     {
@@ -68,10 +66,11 @@ class UpdateShop extends Command
 
         $seenProductIds = [];
         $seenVariantIds = [];
+        $seenCategoryIds = [];
 
         $this->line(sprintf(
             'Retrieved <info>%d</> products from API',
-            count($products)
+            count($products),
         ), null, OutputInterface::VERBOSITY_VERBOSE);
 
         foreach ($products as $product) {
@@ -87,9 +86,6 @@ class UpdateShop extends Command
                 'vat_rate' => (int) Arr::get($product, 'vatPercentage'),
             ]);
 
-            // Set visibility based on iZettle
-            $model->visible = Arr::get($product, 'online.status', 'VISIBLE') !== 'HIDDEN';
-
             // Safely get image
             $model->image_url = Arr::get($product, 'presentation.imageUrl');
             $model->image_url = $this->validateImageUrl($model->image_url);
@@ -97,10 +93,14 @@ class UpdateShop extends Command
             $category = Arr::get($product, 'category');
             if ($category) {
                 $model->category()->associate(
-                    Category::firstOrCreate([
-                        'name' => $category,
-                    ])
+                    Category::updateOrCreate([
+                        'id' => $category['uuid'],
+                    ], [
+                        'name' => $category['name'],
+                    ]),
                 );
+
+                $seenCategoryIds[] = $category['uuid'];
             }
 
             // Save changes
@@ -108,7 +108,7 @@ class UpdateShop extends Command
 
             $this->line(sprintf(
                 'Created product <info>%s</>',
-                $model->name
+                $model->name,
             ), null, OutputInterface::VERBOSITY_VERBOSE);
 
             // Keep track of IDs
@@ -120,21 +120,23 @@ class UpdateShop extends Command
 
         $this->line(sprintf(
             'Created or updated <info>%d</> products',
-            count($seenProductIds)
+            count($seenProductIds),
         ));
 
         // Prune if requested
-        if (!$this->option('prune')) {
+        if (! $this->option('prune')) {
             return;
         }
 
         $productCount = Product::whereNotIn('id', $seenProductIds)->delete();
         $variantCount = ProductVariant::whereNotIn('id', Arr::collapse($seenVariantIds))->delete();
+        $categoryCount = Category::whereNotIn('id', $seenCategoryIds)->delete();
 
         $this->line(sprintf(
-            'Deleted <info>%s</> products and <info>%d</> variants.',
+            'Deleted <info>%s</> products, <info>%d</> variants and <info>%d</> categories.',
             $productCount,
-            $variantCount
+            $variantCount,
+            $categoryCount,
         ));
     }
 
@@ -142,7 +144,6 @@ class UpdateShop extends Command
     {
         // Get product
         $seenVariantIds = [];
-        $orderIndex = 0;
 
         foreach ($variants as $variant) {
             $model = ProductVariant::firstOrNew([
@@ -153,7 +154,6 @@ class UpdateShop extends Command
             $model->description = Arr::get($variant, 'description');
             $model->sku = Arr::get($variant, 'sku');
             $model->price = Arr::get($variant, 'price.amount');
-            $model->order = $orderIndex++;
 
             // Safely get image
             $model->image_url = Arr::get($variant, 'presentation.imageUrl');
@@ -167,7 +167,7 @@ class UpdateShop extends Command
             $this->line(sprintf(
                 'Created variant <info>%s</> for <comment>%s</>',
                 $model->name,
-                $product->name
+                $product->name,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
             $seenVariantIds[] = $model->id;
@@ -184,7 +184,7 @@ class UpdateShop extends Command
      */
     private function validateImageUrl(?string $url): ?string
     {
-        if (!$url) {
+        if (! $url) {
             return null;
         }
 

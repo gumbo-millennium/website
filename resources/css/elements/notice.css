@@ -5,7 +5,7 @@
 }
 
 .notice__icon {
-  @apply mr-2 icon-lg border-gray-primary-1;
+  @apply mr-2 h-6 border-gray-primary-1;
 }
 
 .notice--large {

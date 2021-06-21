@@ -26,7 +26,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
- * User enrollment
+ * User enrollment.
  */
 class Enrollment extends Resource
 {
@@ -45,7 +45,7 @@ class Enrollment extends Resource
     public static $title = 'id';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -60,10 +60,9 @@ class Enrollment extends Resource
     ];
 
     /**
-     * Make sure the user can only see enrollments he/she is allowed to see
+     * Make sure the user can only see enrollments he/she is allowed to see.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
@@ -81,7 +80,7 @@ class Enrollment extends Resource
         // allowed to globally manage events.
         return parent::indexQuery($request, $query->whereIn(
             'activity_id',
-            $user->getHostedActivityIdQuery()
+            $user->getHostedActivityIdQuery(),
         ));
     }
 
@@ -90,8 +89,7 @@ class Enrollment extends Resource
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)
@@ -109,7 +107,7 @@ class Enrollment extends Resource
         // allowed to globally manage events.
         return parent::relatableQuery($request, $query->whereIn(
             'activity_id',
-            $user->getHostedActivityIdQuery()
+            $user->getHostedActivityIdQuery(),
         ));
     }
 
@@ -185,7 +183,6 @@ class Enrollment extends Resource
     /**
      * Get the actions available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -197,12 +194,13 @@ class Enrollment extends Resource
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
                 ->cancelButtonText('Niet annuleren')
                 ->confirmButtonText('Inschrijving annuleren')
-                ->canSee(fn () => !$this->state->isOneOf([Cancelled::class]))
+                ->canSee(fn () => ! $this->state->isOneOf([Cancelled::class]))
                 ->canRun(static function ($request, $enrollment) {
                     if ($enrollment->state->isOneOf([Cancelled::class])) {
                         return false;
                     }
                     $action = $enrollment->price !== null ? 'refund' : 'cancel';
+
                     return $request->user()->can($action, $enrollment);
                 }),
             (new TransferEnrollment())
@@ -210,11 +208,12 @@ class Enrollment extends Resource
                 ->confirmText('Weet je zeker dat je deze inschrijving wil overschrijven naar een andere gebruiker?')
                 ->cancelButtonText('Annuleren')
                 ->confirmButtonText('Inschrijving overschrijven')
-                ->canSee(fn () => !$this->state->isOneOf([Cancelled::class]))
+                ->canSee(fn () => ! $this->state->isOneOf([Cancelled::class]))
                 ->canRun(static function ($request, $enrollment) {
                     if ($enrollment->state->isOneOf([Cancelled::class])) {
                         return false;
                     }
+
                     return $request->user()->can('manage', $enrollment);
                 }),
             ConfirmEnrollment::make($this->model(), $request->user()),
@@ -237,7 +236,6 @@ class Enrollment extends Resource
     /**
      * Get the filters available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter

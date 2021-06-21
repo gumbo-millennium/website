@@ -9,17 +9,12 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 
 /**
- * Update roles from Conscribo when the user has verified it's email
- *
- * @package App\Listeners
+ * Update roles from Conscribo when the user has verified it's email.
  */
 class CheckConscriboWhenVerified
 {
     /**
      * Handle the event.
-     *
-     * @param Verified $event
-     * @return void
      */
     public function handle(Verified $event): void
     {

@@ -14,13 +14,11 @@ class FileBundlePolicy
     use HandlesAuthorization;
 
     public const USER_PERMISSION = 'file-view';
+
     public const ADMIN_PERMISSION = 'file-admin';
 
     /**
      * Determine whether the user can view any files.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -30,9 +28,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can view the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function view(User $user, FileBundle $file)
     {
@@ -41,9 +37,6 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can view the file.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewPublic(User $user)
     {
@@ -53,9 +46,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can download the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function download(User $user, FileBundle $file)
     {
@@ -64,9 +55,6 @@ class FileBundlePolicy
 
     /**
      * Determine whether the user can create files.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -76,9 +64,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can update the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function update(User $user, FileBundle $file)
     {
@@ -88,9 +74,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can delete the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function delete(User $user, FileBundle $file)
     {
@@ -100,9 +84,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can restore the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function restore(User $user, FileBundle $file)
     {
@@ -112,9 +94,7 @@ class FileBundlePolicy
     /**
      * Determine whether the user can permanently delete the file.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\File  $file
-     * @return mixed
+     * @param \App\Models\File $file
      */
     public function forceDelete(User $user, FileBundle $file)
     {
@@ -122,10 +102,7 @@ class FileBundlePolicy
     }
 
     /**
-     * Can the given user manage the given activities or activities in general
-     *
-     * @param User $user
-     * @return bool
+     * Can the given user manage the given activities or activities in general.
      */
     public function manage(User $user): bool
     {

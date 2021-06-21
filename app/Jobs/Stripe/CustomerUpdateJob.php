@@ -10,7 +10,7 @@ use App\Models\User;
 class CustomerUpdateJob extends StripeJob
 {
     /**
-     * User
+     * User.
      */
     protected User $user;
 
@@ -38,8 +38,9 @@ class CustomerUpdateJob extends StripeJob
         $customer = $service->getCustomer($this->user);
 
         // Get Skip if no update is required (the customer was created)
-        if (!$shouldUpdate) {
+        if (! $shouldUpdate) {
             \logger()->info('Not issuing an update');
+
             return;
         }
 

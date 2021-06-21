@@ -32,8 +32,6 @@ class UnlinkCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -50,6 +48,7 @@ class UnlinkCommand extends Command
         // Skip if unset
         if (empty($info['url'])) {
             $this->info('No webhook is set');
+
             return 255;
         }
 
@@ -58,7 +57,7 @@ class UnlinkCommand extends Command
             $this->line("Bot webhook URL [{$info['url']}] does not match expected URL, not removing.");
 
             // Well, unless forced
-            if (!$this->option('force')) {
+            if (! $this->option('force')) {
                 return 1;
             }
             $this->warn('You\'ve forced it, let\'s burn this 💩');
@@ -70,11 +69,13 @@ class UnlinkCommand extends Command
 
             // And report OK
             $this->info('Webhook removed');
+
             return 0;
         } catch (TelegramSDKException $e) {
             // Fail 😢
             $this->line('Webhook could not be removed:');
             $this->error($e->getMessage());
+
             return 1;
         }
     }

@@ -14,7 +14,7 @@ use Stripe\Exception\ApiErrorException;
 trait HandlesStripeCoupons
 {
     /**
-     * Coupons retrieved from API
+     * Coupons retrieved from API.
      *
      * @var array<Coupon>
      */
@@ -22,9 +22,6 @@ trait HandlesStripeCoupons
 
     /**
      * Returns the computed coupon for this activity.
-     *
-     * @param Activity $activity
-     * @return Collection|null
      */
     public function getComputedCoupon(Activity $activity): ?Collection
     {
@@ -49,22 +46,22 @@ trait HandlesStripeCoupons
     }
 
     /**
-     * Returns the coupon for this activity, to apply the discount on the activity
+     * Returns the coupon for this activity, to apply the discount on the activity.
      *
-     * @param Activity $activity
      * @param int $options Bitwise options, see OPT_ constants
-     * @return Stripe\Coupon|null
+     * @return null|Stripe\Coupon
      */
     public function getCoupon(Activity $activity, int $options = 0): ?Coupon
     {
         // No Coupon on activities without member discount
-        if (!$activity->member_discount) {
+        if (! $activity->member_discount) {
             logger()->info('Tried to get coupon for activity without discount', compact('activity'));
+
             return null;
         }
 
         // Return from cache
-        if (!empty($this->couponCache[$activity->stripe_coupon_id])) {
+        if (! empty($this->couponCache[$activity->stripe_coupon_id])) {
             return $this->couponCache[$activity->stripe_coupon_id];
         }
 

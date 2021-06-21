@@ -29,8 +29,6 @@ class ListRole extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -61,21 +59,21 @@ class ListRole extends Command
         $scopedList = collect();
         foreach ($allPerms as $perm) {
             $scopedList->push(
-                collect($perm->$view)
-                    ->concat($allRoles->map(static fn ($role) => $perm->roles->contains($role) ? '<info>✔</>' : ''))
+                collect($perm->{$view})
+                    ->concat($allRoles->map(static fn ($role) => $perm->roles->contains($role) ? '<info>✔</>' : '')),
             );
         }
 
         // Generate headers
         $headers = collect(['Permission'])
-            ->concat($allRoles->map(static fn ($role) => $role->$view));
+            ->concat($allRoles->map(static fn ($role) => $role->{$view}));
 
         // Check if scopedList is empty
         if ($scopedList->count() === 0) {
             $scopedList->push([
                 new TableCell(
                     '<comment>No results found.</>',
-                    ['colspan' => $headers->count()]
+                    ['colspan' => $headers->count()],
                 ),
             ]);
         }

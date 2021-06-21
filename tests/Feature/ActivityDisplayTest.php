@@ -10,11 +10,8 @@ use Tests\TestCase;
 
 class ActivityDisplayTest extends TestCase
 {
-
     /**
-     * Ensures there are some activities
-     *
-     * @return void
+     * Ensures there are some activities.
      */
     public function seedBefore(): void
     {
@@ -22,15 +19,11 @@ class ActivityDisplayTest extends TestCase
     }
 
     /**
-     * Get test route
+     * Get test route.
      *
-     * @param string $route
-     * @param User|null $user
-     * @param Activity|null $activity
-     * @return void
      * @dataProvider provideTestRoutes
      */
-    public function testVariousRoutes(string $route, ?User $user, ?Activity $activity): void
+    public function test_various_routes(string $route, ?User $user, ?Activity $activity): void
     {
         // Run proper command
         $response = $user ? ($this->actingAs($user)->get($route)) : $this->get($route);
@@ -39,7 +32,7 @@ class ActivityDisplayTest extends TestCase
         $response->assertStatus(200);
 
         // Check if a title should be set
-        if (!$activity) {
+        if (! $activity) {
             return;
         }
 
@@ -47,7 +40,7 @@ class ActivityDisplayTest extends TestCase
     }
 
     /**
-     * Provides a list of test routes
+     * Provides a list of test routes.
      *
      * @return array<array<string>>
      */

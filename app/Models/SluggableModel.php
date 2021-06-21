@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * A model that has a slug property, which is used to generate unique
- * looking URLs
+ * looking URLs.
  */
 abstract class SluggableModel extends Model
 {

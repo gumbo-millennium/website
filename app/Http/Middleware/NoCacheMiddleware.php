@@ -12,15 +12,13 @@ class NoCacheMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
      */
     public function handle($request, Closure $next)
     {
         $response = $next($request);
 
-        if (!$response instanceof ResponseInterface) {
+        if (! $response instanceof ResponseInterface) {
             return $response;
         }
 

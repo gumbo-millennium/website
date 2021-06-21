@@ -41,18 +41,18 @@ class ShallowGoogleMailList extends GoogleMailList
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function removeEmail(string $email): void
     {
-
         throw new LogicException('Cannot remove members on a shallow group');
     }
+
     public function getChangedEmails(): array
     {
         return [];
     }
 
     /**
-     * Returns the full mail list
+     * Returns the full mail list.
      *
-     * @return MailList|GoogleMailList
+     * @return GoogleMailList|MailList
      * @throws BindingResolutionException
      */
     public function toFullList(): MailList

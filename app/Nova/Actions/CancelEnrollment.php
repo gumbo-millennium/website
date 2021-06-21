@@ -32,18 +32,15 @@ class CancelEnrollment extends Action
 
     /**
      * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
         $skipCount = 0;
         $cancelCount = 0;
         foreach ($models as $model) {
-            if (!$model instanceof Enrollment && !$model instanceof NovaEnrollment) {
+            if (! $model instanceof Enrollment && ! $model instanceof NovaEnrollment) {
                 $skipCount++;
+
                 continue;
             }
 
@@ -93,7 +90,6 @@ class CancelEnrollment extends Action
     /**
      * Determine if the action is executable for the given request.
      *
-     * @param Request $request
      * @param Enrollment $model
      * @return bool
      */

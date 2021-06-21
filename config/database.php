@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Helpers\Str;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name
@@ -36,7 +35,6 @@ return [
     */
 
     'connections' => [
-
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
@@ -103,7 +101,6 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-
     ],
 
     /*
@@ -131,7 +128,6 @@ return [
     */
 
     'redis' => [
-
         'client' => env('REDIS_CLIENT', 'predis'),
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'predis'),
@@ -154,5 +150,4 @@ return [
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
     ],
-
 ];

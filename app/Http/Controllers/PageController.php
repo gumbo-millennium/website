@@ -23,7 +23,7 @@ class PageController extends Controller
     }
 
     /**
-     * Renders the homepage
+     * Renders the homepage.
      *
      * @return Response
      */
@@ -77,7 +77,7 @@ class PageController extends Controller
     }
 
     /**
-     * Handles fallback routes
+     * Handles fallback routes.
      *
      * @return Response
      */
@@ -87,9 +87,8 @@ class PageController extends Controller
     }
 
     /**
-     * Group overview page
+     * Group overview page.
      *
-     * @param string $group
      * @return JsonResponse
      * @throws InvalidArgumentException
      */
@@ -111,10 +110,8 @@ class PageController extends Controller
     }
 
     /**
-     * Group detail page
+     * Group detail page.
      *
-     * @param string $group
-     * @param string $slug
      * @return App\Http\Controllers\Response
      * @throws HttpResponseException
      */
@@ -124,9 +121,8 @@ class PageController extends Controller
     }
 
     /**
-     * Renders a single page, if possible
+     * Renders a single page, if possible.
      *
-     * @param string $slug
      * @return Response
      */
     protected function render(?string $group, string $slug)

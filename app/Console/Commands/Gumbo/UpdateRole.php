@@ -10,10 +10,7 @@ use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Spatie\Permission\Models\Role;
 
 /**
- * Adds a role via CLI
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Adds a role via CLI.
  */
 class UpdateRole extends Command
 {
@@ -45,23 +42,24 @@ class UpdateRole extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         $user = $this->getUserArgument();
 
-        if (!$user) {
+        if (! $user) {
             $this->error('Cannot find user');
+
             return false;
         }
 
         $roleName = $this->argument('role');
+
         try {
             $role = Role::findByName($roleName);
         } catch (RoleDoesNotExist $e) {
             $this->error("Cannot find role named \"{$roleName}\"");
+
             return false;
         }
 
@@ -72,14 +70,15 @@ class UpdateRole extends Command
         $this->line("ID:    <comment>{$user->id}</>");
         $this->line("Email: <comment>{$user->email}</>");
         $this->line("Alias: <comment>{$user->alias}</>");
-        $this->line("");
+        $this->line('');
         $this->line(sprintf(
             'Current roles: <info>%s</>',
-            $user->roles()->pluck('title')->implode('</>, <info>')
+            $user->roles()->pluck('title')->implode('</>, <info>'),
         ));
-        $this->line("");
-        if (!$force && !$this->confirm('Is this the correct user')) {
+        $this->line('');
+        if (! $force && ! $this->confirm('Is this the correct user')) {
             $this->warn('User aborted');
+
             return false;
         }
 
@@ -91,7 +90,7 @@ class UpdateRole extends Command
                 'Removed role <comment>%s</> (<comment>%s</>) from <info>%s</>.',
                 $role->title,
                 $role->name,
-                $user->name
+                $user->name,
             ));
 
             return true;
@@ -104,7 +103,7 @@ class UpdateRole extends Command
             'Added role <info>%s</> (%s) to <info>%s</>.',
             $role->title,
             $role->name,
-            $user->name
+            $user->name,
         ));
 
         return true;

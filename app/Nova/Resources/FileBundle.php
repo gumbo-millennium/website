@@ -40,7 +40,7 @@ class FileBundle extends Resource
     public static $title = 'title';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -62,8 +62,9 @@ class FileBundle extends Resource
         $maxSize = Cache::remember(
             'nova.filebundle.maxsize',
             now()->addDay(),
-            static fn () => Str::filesize(config('medialibrary.max_file_size'))
+            static fn () => Str::filesize(config('medialibrary.max_file_size')),
         );
+
         return [
             ID::make()->sortable(),
 
@@ -114,7 +115,7 @@ class FileBundle extends Resource
                     ->onlyOnDetail(),
                 Number::make('Aantal downloads', 'downloads_count')
                     ->onlyOnDetail(),
-                ]),
+            ]),
         ];
     }
 }

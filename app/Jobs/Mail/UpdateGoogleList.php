@@ -26,7 +26,9 @@ class UpdateGoogleList implements ShouldQueue
     use SerializesModels;
 
     private const NO_CHANGE = [];
+
     private const NO_ALIAS_CHANGE = [];
+
     private const NO_MEMBER_CHANGE = [
         // Board is all internally linked
         'bestuur',
@@ -38,17 +40,15 @@ class UpdateGoogleList implements ShouldQueue
     ];
 
     protected string $email;
+
     protected string $name;
+
     protected ?array $aliases;
+
     protected array $members;
 
     /**
-     * Prepare a mutation on the given list
-     *
-     * @param string $email
-     * @param string $name
-     * @param array|null $aliases
-     * @param array $members
+     * Prepare a mutation on the given list.
      */
     public function __construct(string $email, string $name, ?array $aliases, array $members)
     {
@@ -59,10 +59,7 @@ class UpdateGoogleList implements ShouldQueue
     }
 
     /**
-     * Updates the mailing list
-     *
-     * @param MailListHandler $handler
-     * @return void
+     * Updates the mailing list.
      */
     public function handle(MailListHandler $handler): void
     {
@@ -71,9 +68,9 @@ class UpdateGoogleList implements ShouldQueue
 
         // Get change flags
         $mailHandle = Str::beforeLast($list->getEmail(), '@');
-        $updateAny = !\in_array($mailHandle, self::NO_CHANGE);
-        $updateAliases = !\in_array($mailHandle, self::NO_ALIAS_CHANGE);
-        $updateMembers = !\in_array($mailHandle, self::NO_MEMBER_CHANGE);
+        $updateAny = ! \in_array($mailHandle, self::NO_CHANGE, true);
+        $updateAliases = ! \in_array($mailHandle, self::NO_ALIAS_CHANGE, true);
+        $updateMembers = ! \in_array($mailHandle, self::NO_MEMBER_CHANGE, true);
 
         // Update model
         $this->updateModel($list);
@@ -88,7 +85,7 @@ class UpdateGoogleList implements ShouldQueue
             $this->updateMembers($list);
         }
 
-        $hasChanges = !(empty($list->getChangedAliases()) && empty($list->getChangedEmails()));
+        $hasChanges = ! (empty($list->getChangedAliases()) && empty($list->getChangedEmails()));
 
         // Commit changes
         if ($hasChanges) {
@@ -112,7 +109,7 @@ class UpdateGoogleList implements ShouldQueue
         }
 
         // Update model
-        if (!$hasChanges) {
+        if (! $hasChanges) {
             return;
         }
 
@@ -120,9 +117,8 @@ class UpdateGoogleList implements ShouldQueue
     }
 
     /**
-     * Finds or creates list
+     * Finds or creates list.
      *
-     * @param MailListHandler $handler
      * @return MailList
      */
     public function getEmailList(MailListHandler $handler)
@@ -130,7 +126,8 @@ class UpdateGoogleList implements ShouldQueue
         // Get existing
         $list = $handler->getList($this->email);
         if ($list) {
-            Log::debug("Retireved {list} from handler", compact('list'));
+            Log::debug('Retireved {list} from handler', compact('list'));
+
             return $list;
         }
 
@@ -138,16 +135,13 @@ class UpdateGoogleList implements ShouldQueue
         $list = $handler->createList($this->email, $this->name);
 
         // Log
-        Log::info("Created new {list} via handler", compact('list'));
+        Log::info('Created new {list} via handler', compact('list'));
 
         return $list;
     }
 
     /**
-     * Applies updates to the model
-     *
-     * @param MailList $list
-     * @return void
+     * Applies updates to the model.
      */
     public function updateModel(MailList $list): void
     {
@@ -183,23 +177,21 @@ class UpdateGoogleList implements ShouldQueue
     }
 
     /**
-     * Updates the aliases on the list
-     *
-     * @param MailList $list
-     * @return void
+     * Updates the aliases on the list.
      */
     private function updateAliases(MailList $list): void
     {
         // Speed up search
-            $wantedAliases = \array_flip($this->aliases);
-            $existingAliases = [];
+        $wantedAliases = \array_flip($this->aliases);
+        $existingAliases = [];
 
-            // Remove extra aliases
+        // Remove extra aliases
         foreach ($list->listAliases() as $alias) {
             // Skip if ok
             if (\array_key_exists($alias, $wantedAliases)) {
                 Log::debug('Found required alias {alias} on list', compact('alias'));
                 $existingAliases[$alias] = true;
+
                 continue;
             }
 
@@ -208,12 +200,13 @@ class UpdateGoogleList implements ShouldQueue
             $list->deleteAlias($alias);
         }
 
-            // Add missing aliases
+        // Add missing aliases
         foreach ($this->aliases as $alias) {
             // Skip if exists
             if (\array_key_exists($alias, $existingAliases)) {
                 Log::debug('Already found alias {alias} on list', compact('alias'));
                 echo "Found existing {$alias}\n";
+
                 continue;
             }
 
@@ -224,10 +217,8 @@ class UpdateGoogleList implements ShouldQueue
     }
 
     /**
-     * Updates all users on this list, except those who appear to be forwarders
+     * Updates all users on this list, except those who appear to be forwarders.
      *
-     * @param MailList $list
-     * @return void
      * @throws BindingResolutionException
      */
     private function updateMembers(MailList $list): void
@@ -241,42 +232,47 @@ class UpdateGoogleList implements ShouldQueue
             if (\array_key_exists($email, $wantedMembers)) {
                 Log::debug('Found required member {email} on list', compact('email'));
                 $existingMembers[$email] = $role;
+
                 continue;
             }
 
             // Don't remove internal members
             $domain = Str::afterLast($email, '@');
-            if (\in_array($domain, \config('services.google.domains'))) {
+            if (\in_array($domain, \config('services.google.domains'), true)) {
                 Log::info('Found internal member {email}, whitelisting it', compact('email'));
                 $existingMembers[$email] = $role;
+
                 continue;
             }
 
             // Remove if excess
             Log::notice('Flagging member {email} for removal', compact('email'));
             $list->removeEmail($email);
+
             continue;
         }
 
         // Add missing and invalid
         foreach ($this->members as [$email, $role]) {
             // Add missing
-            if (!\array_key_exists($email, $existingMembers)) {
+            if (! \array_key_exists($email, $existingMembers)) {
                 Log::notice('Flagging member {email} as {role}', compact('email', 'role'));
                 $list->addEmail($email, $role);
+
                 continue;
             }
 
             // Continue if up-to-date
             if ($existingMembers[$email] === $role) {
                 Log::debug('Checked {email}, it\'s up-to-date', compact('email'));
+
                 continue;
             }
 
             // Update role
             Log::info(
                 'Flagging member {email} to change from {old-role} to {role}',
-                compact('email', 'role') + ['old-row' => $existingMembers[$email]]
+                compact('email', 'role') + ['old-row' => $existingMembers[$email]],
             );
             $list->updateEmail($email, $role);
         }

@@ -10,15 +10,12 @@ use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * A request with sign up data
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * A request with sign up data.
  */
 class JoinRequest extends FormRequest
 {
     /**
-     * Phone rule
+     * Phone rule.
      *
      * @var PhoneNumber
      */
@@ -46,9 +43,9 @@ class JoinRequest extends FormRequest
 
         return [
             // Names
-            'first_name' => "required|string|min:2",
+            'first_name' => 'required|string|min:2',
             'insertion' => 'sometimes|nullable|string|min:2',
-            'last_name' => "required|string|min:2",
+            'last_name' => 'required|string|min:2',
 
             // Contact info
             'email' => ['required', 'email'],
@@ -72,9 +69,7 @@ class JoinRequest extends FormRequest
     }
 
     /**
-     * Returns the data without sensitive fields
-     *
-     * @return array
+     * Returns the data without sensitive fields.
      */
     public function safe(): array
     {
@@ -82,9 +77,7 @@ class JoinRequest extends FormRequest
     }
 
     /**
-     * Returns the submission for this data
-     *
-     * @return JoinSubmission
+     * Returns the submission for this data.
      */
     public function submission(): JoinSubmission
     {
@@ -117,9 +110,7 @@ class JoinRequest extends FormRequest
     }
 
     /**
-     * Returns the phone rule
-     *
-     * @return PhoneNumber
+     * Returns the phone rule.
      */
     private function phoneRule(): PhoneNumber
     {

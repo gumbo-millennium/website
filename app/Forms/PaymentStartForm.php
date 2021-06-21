@@ -9,9 +9,7 @@ use Illuminate\Validation\Rule;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Payment start form
- *
- * @package App\Forms
+ * Payment start form.
  */
 class PaymentStartForm extends Form
 {
@@ -23,7 +21,7 @@ class PaymentStartForm extends Form
     }
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {

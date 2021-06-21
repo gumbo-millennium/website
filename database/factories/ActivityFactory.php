@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Models\Activity;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
@@ -93,7 +91,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         } else {
             $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
                 (clone $factoryData['start_date'])->subMonth(),
-                $factoryData['start_date']
+                $factoryData['start_date'],
             );
             $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
         }

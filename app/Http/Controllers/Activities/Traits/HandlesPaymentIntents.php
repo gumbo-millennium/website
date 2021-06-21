@@ -13,15 +13,12 @@ use Stripe\PaymentIntent;
 use Stripe\Source;
 
 /**
- * Creates Payment Intents on Stripe
+ * Creates Payment Intents on Stripe.
  */
 trait HandlesPaymentIntents
 {
     /**
      * Builds a redirect to Stripe, if applicable. Returns null otherwise.
-     *
-     * @param PaymentIntent $intent
-     * @return RedirectResponse|null
      */
     public function redirectPaymentIntent(PaymentIntent $intent): ?RedirectResponse
     {
@@ -31,7 +28,7 @@ trait HandlesPaymentIntents
         }
 
         // Check the action
-        if (!$intent->next_action) {
+        if (! $intent->next_action) {
             return null;
         }
 
@@ -48,10 +45,7 @@ trait HandlesPaymentIntents
 
     /**
      * Creates a Payment Intent at Stripe and returns it
-     * Returns null if $enrollment is a free activity (for this user)
-     *
-     * @param Enrollment $enrollment
-     * @return PaymentIntent|null
+     * Returns null if $enrollment is a free activity (for this user).
      */
     protected function createPaymentIntent(Enrollment $enrollment): ?PaymentIntent
     {
@@ -80,12 +74,12 @@ trait HandlesPaymentIntents
             app(StripeErrorService::class)->handleCreate($error);
         }
     }
+
     /**
      * Creates a Payment Intent at Stripe, returns the ID.
-     * Returns null if $enrollment is a free activity (for this user)
+     * Returns null if $enrollment is a free activity (for this user).
      *
-     * @param Enrollment $enrollment
-     * @return string|null
+     * @return null|string
      */
     protected function getPaymentIntent(Enrollment $enrollment): ?PaymentIntent
     {
@@ -101,11 +95,13 @@ trait HandlesPaymentIntents
 
         // Retrieve intent from server
         $intent = null;
+
         try {
             // Retrieve intent
             $intent = PaymentIntent::retrieve($enrollment->payment_intent);
         } catch (ApiErrorException $error) {
             app(StripeErrorService::class)->handleUpdate($error);
+
             return null;
         }
 
@@ -119,11 +115,10 @@ trait HandlesPaymentIntents
     }
 
     /**
-     * Confirms the intent, returnin the user to the corresponding Enrollment
+     * Confirms the intent, returnin the user to the corresponding Enrollment.
      *
      * @param Enrollment $enrollment The enrollment, required for return URL
      * @param PaymentIntent $intent The intent to verify
-     * @param Source $method Source to charge
      * @return PaymentIntent Updated intent
      */
     protected function confirmPaymentIntent(
@@ -136,7 +131,7 @@ trait HandlesPaymentIntents
             $intent->status !== PaymentIntent::STATUS_REQUIRES_PAYMENT_METHOD &&
             $intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION
         ) {
-            throw new InvalidArgumentException("Intent cannot be confirmed right now", 1);
+            throw new InvalidArgumentException('Intent cannot be confirmed right now', 1);
         }
 
         try {

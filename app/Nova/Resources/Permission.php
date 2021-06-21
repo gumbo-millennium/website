@@ -19,11 +19,10 @@ use Spatie\Permission\PermissionRegistrar;
 use Vyuldashev\NovaPermission\AttachToRole;
 
 /**
- * Permissions, for the Permission Framework
+ * Permissions, for the Permission Framework.
  */
 class Permission extends Resource
 {
-
     /**
      * The model the resource corresponds to.
      *
@@ -49,14 +48,14 @@ class Permission extends Resource
     ];
 
     /**
-     * Hide the item in the navbar
+     * Hide the item in the navbar.
      *
      * @var bool
      */
     public static $displayInNavigation = false;
 
     /**
-     * Returns the model for the permission
+     * Returns the model for the permission.
      *
      * @return void
      */
@@ -68,7 +67,6 @@ class Permission extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
@@ -113,7 +111,6 @@ class Permission extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return array
      * @return array
      */

@@ -11,16 +11,15 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class TelegramBotController extends Controller
 {
     /**
-     * Require signed requests
+     * Require signed requests.
      */
     public function __construct()
     {
         $this->middleware('signed');
     }
+
     /**
-     * Handles requests from Telegram
-     *
-     * @return Response
+     * Handles requests from Telegram.
      */
     public function handle(): Response
     {

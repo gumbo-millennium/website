@@ -10,14 +10,12 @@ use App\Models\Activity;
 class UpdateCouponJob extends StripeJob
 {
     /**
-     * Activity
-     *
-     * @var \App\Models\Activity
+     * Activity.
      */
     protected Activity $activity;
 
     /**
-     * Create new job for this activity
+     * Create new job for this activity.
      */
     public function __construct(Activity $activity)
     {
@@ -34,14 +32,16 @@ class UpdateCouponJob extends StripeJob
         $activity = $this->activity;
         $coupon = $service->getCoupon($activity);
 
-        if (!$coupon && empty($activity->member_discount)) {
+        if (! $coupon && empty($activity->member_discount)) {
             logger()->info('No coupon and none needed', ['coupon' => $coupon]);
+
             return;
         }
 
         // Coupon is up-to-date
         if ($coupon->amount_off === $activity->member_discount) {
             logger()->info('Coupon {coupon} up-to-date', ['coupon' => $coupon]);
+
             return;
         }
 

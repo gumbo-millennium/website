@@ -71,7 +71,7 @@
   .navbar__nav {
     @apply bg-transparent shadow-none;
     @apply static flex p-0;
-    @apply flex-row flex-no-wrap;
+    @apply flex-row flex-nowrap;
   }
   .navbar__nav-item {
     @apply relative px-4;
@@ -109,8 +109,3 @@
   }
 } */
 
-@screen dark {
-  .navbar {
-    @apply text-gray-primary-3;
-  }
-}

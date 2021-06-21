@@ -53,7 +53,6 @@ class Order extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -83,7 +82,11 @@ class Order extends Resource
                 ->sortable()
                 ->min(1.00),
 
-            BelongsToMany::make(__('Products'), 'products', ProductVariant::class)
+            Price::make(__('Fees'), 'fee')
+                ->sortable()
+                ->min(0.00),
+
+            BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
                 ->fields(new OrderProductFields()),
         ];
     }

@@ -11,10 +11,8 @@ class PageModelTest extends TestCase
 {
     /**
      * A basic unit test example.
-     *
-     * @return void
      */
-    public function testPageContentsAreStrings(): void
+    public function test_page_contents_are_strings(): void
     {
         $page = factory(Page::class)->create();
 

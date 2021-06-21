@@ -9,7 +9,6 @@ use Laravel\Nova\Http\Middleware\DispatchServingNovaEvent;
 use Vyuldashev\NovaPermission\ForgetCachedPermissions;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Nova App Name
@@ -94,5 +93,4 @@ return [
     */
 
     'pagination' => 'links',
-
 ];

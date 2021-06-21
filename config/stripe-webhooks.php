@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
      * Stripe will sign each webhook using a secret. You can find the used secret at the
      * webhook configuration settings: https://dashboard.stripe.com/account/webhooks.

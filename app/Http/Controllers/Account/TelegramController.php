@@ -18,7 +18,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class TelegramController extends Controller
 {
     /**
-     * Force auth
+     * Force auth.
      */
     public function __construct()
     {
@@ -27,10 +27,9 @@ class TelegramController extends Controller
 
     /**
      * Connects a Telegram account to a user, often called from the Telegram
-     * Login API
+     * Login API.
      *
-     * @param Request $request
-     * @return RedirectResponse|HttpResponse
+     * @return HttpResponse|RedirectResponse
      * @throws BadRequestHttpException
      * @link https://core.telegram.org/widgets/login#receiving-authorization-data
      */
@@ -40,8 +39,9 @@ class TelegramController extends Controller
         $telegramId = $this->getTelegramId($request);
 
         // Fail if no ID
-        if (!$telegramId) {
+        if (! $telegramId) {
             \flash('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen', 'error');
+
             return Response::redirectToRoute('account.index');
         }
 
@@ -56,9 +56,8 @@ class TelegramController extends Controller
     }
 
     /**
-     * Save the new connection
+     * Save the new connection.
      *
-     * @param Request $request
      * @return RedirectResponse
      * @throws BadRequestHttpException
      */
@@ -68,8 +67,9 @@ class TelegramController extends Controller
         $telegramId = $this->getTelegramId($request);
 
         // Fail if no ID
-        if (!$telegramId) {
+        if (! $telegramId) {
             \flash('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen', 'error');
+
             return Response::redirectToRoute('account.index');
         }
 
@@ -83,14 +83,14 @@ class TelegramController extends Controller
         $username = BotUserLink::getName('telegram', $telegramId);
 
         // Forward
-        \flash("Je account is nu gekoppeld aan de Telegram account \"$username\"", 'success');
+        \flash("Je account is nu gekoppeld aan de Telegram account \"${username}\"", 'success');
+
         return Response::redirectToRoute('account.index');
     }
 
     /**
-     * Submit a deletion request
+     * Submit a deletion request.
      *
-     * @param Request $request
      * @return void
      */
     public function delete(Request $request)
@@ -103,14 +103,13 @@ class TelegramController extends Controller
 
         // Forward
         \flash('Je account is niet meer aan een Telegram account gekoppeld', 'success');
+
         return Response::redirectToRoute('account.index');
     }
 
     /**
-     * Validates that the request came from Telegram
+     * Validates that the request came from Telegram.
      *
-     * @param Request $request
-     * @return void
      * @throws BadRequestHttpException if the request is invalid
      * @throws ServiceUnavailableHttpException if the app's config is invalid
      */
@@ -121,7 +120,7 @@ class TelegramController extends Controller
 
         // Get the data used to sign the request
         $dataList = Collection::make($request->except('hash'))
-            ->map(static fn ($val, $key) => "$key=$val")
+            ->map(static fn ($val, $key) => "${key}=${val}")
             ->sort()
             ->implode("\n");
 
@@ -134,7 +133,7 @@ class TelegramController extends Controller
         $botToken = optional(Telegram::bot())->getAccessToken();
 
         // Fail if no token is available
-        if (!$botToken) {
+        if (! $botToken) {
             throw new ServiceUnavailableHttpException('Validation system is not available');
         }
 
@@ -143,7 +142,7 @@ class TelegramController extends Controller
         $signed = hash_hmac('sha256', $dataList, $botSecret);
 
         // Compare using a timing-safe function
-        if (!hash_equals($signed, $hash)) {
+        if (! hash_equals($signed, $hash)) {
             throw new BadRequestHttpException('The data signature is invalid');
         }
 
@@ -157,10 +156,8 @@ class TelegramController extends Controller
     /**
      * Returns the Telegram ID retrieved from the request (if it's valid) or from
      * the cache if that's still valid. Will only validate Telegram responses if
-     * $request is a GET-request
+     * $request is a GET-request.
      *
-     * @param Request $request
-     * @return string|null
      * @throws RuntimeException if key val
      * @throws BadRequestHttpException
      */

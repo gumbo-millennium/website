@@ -12,7 +12,7 @@ trait ForwardsCallsToPrivateMethods
     public function __call($name, $args)
     {
         if (method_exists($this, $name)) {
-            return $this->$name(...$args);
+            return $this->{$name}(...$args);
         }
 
         try {
@@ -21,6 +21,7 @@ trait ForwardsCallsToPrivateMethods
             dd($error->getMessage());
 
             $self = static::class;
+
             throw new LogicException("Method {$name} not found on {$self}");
         }
     }

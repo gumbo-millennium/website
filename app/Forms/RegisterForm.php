@@ -9,9 +9,7 @@ use App\Forms\Traits\UseTemplateStrings;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Registration form
- *
- * @package App\Forms
+ * Registration form.
  */
 class RegisterForm extends Form
 {
@@ -19,7 +17,7 @@ class RegisterForm extends Form
     use UseTemplateStrings;
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {

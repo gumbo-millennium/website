@@ -43,7 +43,6 @@ return [
         'state-desc' => 'Legenda bestandstatus',
     ],
 
-
     // File state lines
     'state' => [
         'pending' => 'In behandeling',

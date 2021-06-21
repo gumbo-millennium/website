@@ -23,14 +23,14 @@ class SackCommand extends Command
     protected $description = 'Stuurt iemand De Laan uit';
 
     /**
-     * Command Argument Pattern
+     * Command Argument Pattern.
      *
      * @var string
      */
     protected $pattern = '[^\s].+';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -43,6 +43,7 @@ class SackCommand extends Command
             $this->replyWithMessage([
                 'text' => '⏸ Rate limited (1x per ALV)',
             ]);
+
             return;
         }
 
@@ -51,7 +52,7 @@ class SackCommand extends Command
 
         // Get user and check member rights
         $user = $this->getUser();
-        if (!$this->ensureIsMember($user)) {
+        if (! $this->ensureIsMember($user)) {
             return;
         }
 
@@ -62,7 +63,7 @@ class SackCommand extends Command
         $format = sprintf(
             '😡 %s dient een royatieverzoek in voor %s.',
             $user->name,
-            $target
+            $target,
         );
 
         // Send as-is

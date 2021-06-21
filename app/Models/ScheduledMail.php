@@ -16,27 +16,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $group
  * @property string $name
  * @property \Illuminate\Support\Date $scheduled_for
- * @property \Illuminate\Support\Date|null $sent_at
+ * @property null|\Illuminate\Support\Date $sent_at
  * @property bool $is_sent
  */
 class ScheduledMail extends Model
 {
-    /**
-     * Returns a ScheduledMail with the given name
-     *
-     * @param Model $model
-     * @param string $name
-     * @return ScheduledMail
-     */
-    public static function findForModelMail(Model $model, string $name): self
-    {
-        $objectName = sprintf("%s:%s", \class_basename($model), $model->{$model->primaryKey});
-        return static::firstOrNew([
-            'group' => $objectName,
-            'name' => Str::slug($name),
-        ]);
-    }
-
     /**
      * Indicates if the model should be timestamped.
      *
@@ -75,6 +59,21 @@ class ScheduledMail extends Model
         'scheduled_for',
         'sent_at',
     ];
+
+    /**
+     * Returns a ScheduledMail with the given name.
+     *
+     * @return ScheduledMail
+     */
+    public static function findForModelMail(Model $model, string $name): self
+    {
+        $objectName = sprintf('%s:%s', \class_basename($model), $model->{$model->primaryKey});
+
+        return static::firstOrNew([
+            'group' => $objectName,
+            'name' => Str::slug($name),
+        ]);
+    }
 
     public function scopeWhereSent(Builder $query): Builder
     {

@@ -18,14 +18,13 @@ trait UseTemplateStrings
     ];
 
     /**
-     * Returns a placeholder name
-     *
-     * @return array
+     * Returns a placeholder name.
      */
     protected function getTemplateName(): array
     {
         $name = Arr::random(self::$dummyNames);
         $name[3] = Str::slug(implode(' ', $name), '.') . '@example.com';
+
         return $name;
     }
 }

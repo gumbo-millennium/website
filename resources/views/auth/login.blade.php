@@ -70,7 +70,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
         {{-- Spacing --}}
         <div class="flex-grow mr-8"></div>
         {{-- Submit button --}}
-        <button class="form__field-input form-input flex-grow inline-block w-auto" type="submit">Inloggen</button>
+        <button class="btn btn--brand" type="submit">Inloggen</button>
     </div>
 </form>
 @endsection

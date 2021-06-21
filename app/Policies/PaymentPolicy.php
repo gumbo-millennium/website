@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
- * Restrict most changes to payments
+ * Restrict most changes to payments.
  */
 class PaymentPolicy
 {
@@ -23,7 +23,6 @@ class PaymentPolicy
     /**
      * Determine whether the user can view any payments.
      *
-     * @param  User  $user
      * @return bool
      */
     public function viewAny(User $user)
@@ -34,8 +33,6 @@ class PaymentPolicy
     /**
      * Determine whether the user can view the payment.
      *
-     * @param  User  $user
-     * @param  Payment  $payment
      * @return bool
      */
     public function view(User $user, Payment $payment)
@@ -46,7 +43,6 @@ class PaymentPolicy
     /**
      * Determine whether the user can create payments.
      *
-     * @param  User  $user
      * @return bool
      */
     public function create(User $user)
@@ -57,8 +53,6 @@ class PaymentPolicy
     /**
      * Determine whether the user can update the payment.
      *
-     * @param  User  $user
-     * @param  Payment  $payment
      * @return bool
      */
     public function update(User $user, Payment $payment)
@@ -69,8 +63,6 @@ class PaymentPolicy
     /**
      * Determine whether the user can delete the payment.
      *
-     * @param  User  $user
-     * @param  Payment  $payment
      * @return bool
      */
     public function delete(User $user, Payment $payment)
@@ -79,9 +71,8 @@ class PaymentPolicy
     }
 
     /**
-     * Returns if the user is allowed to view payments
+     * Returns if the user is allowed to view payments.
      *
-     * @param User $user
      * @return bool
      */
     public function manage(User $user)
@@ -93,9 +84,8 @@ class PaymentPolicy
     }
 
     /**
-     * Returns if the user is allowed to modify payments
+     * Returns if the user is allowed to modify payments.
      *
-     * @param User $user
      * @return bool
      */
     public function admin(User $user)

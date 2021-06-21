@@ -8,21 +8,16 @@ use Tests\TestCase;
 use Tests\Traits\TempUserTrait;
 
 /**
- * Tests viewing the plazacam
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Tests viewing the plazacam.
  */
 class ViewPlazacamTest extends TestCase
 {
     use TempUserTrait;
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadAnonymous(): void
+    public function test_read_anonymous(): void
     {
         // Get URL
         $url = route('plazacam', [
@@ -37,11 +32,9 @@ class ViewPlazacamTest extends TestCase
     }
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadUser(): void
+    public function test_read_user(): void
     {
         // Gets the user
         $user = $this->getUser(['guest']);
@@ -59,11 +52,9 @@ class ViewPlazacamTest extends TestCase
     }
 
     /**
-     * Test anonymous image retrieval
-     *
-     * @return void
+     * Test anonymous image retrieval.
      */
-    public function testReadMember(): void
+    public function test_read_member(): void
     {
         // Gets the user
         $user = $this->getUser(['member']);

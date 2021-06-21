@@ -10,19 +10,14 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
- * Only allow members here
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Only allow members here.
  */
 class MembersOnlyMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
      */
     public function handle($request, Closure $next)
     {
@@ -30,7 +25,7 @@ class MembersOnlyMiddleware
             return new UnauthorizedHttpException();
         }
 
-        if (!Auth::user()->hasRole('member')) {
+        if (! Auth::user()->hasRole('member')) {
             throw new AccessDeniedHttpException('You have to be a member to view this resource.');
         }
 

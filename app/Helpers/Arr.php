@@ -7,7 +7,7 @@ namespace App\Helpers;
 use Illuminate\Support\Arr as SupportArr;
 
 /**
- * Array extensions
+ * Array extensions.
  */
 class Arr extends SupportArr
 {
