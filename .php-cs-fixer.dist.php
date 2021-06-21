@@ -108,14 +108,13 @@ return (new Config())
         'no_alternative_syntax' => true,
         'no_superfluous_elseif' => true,
         'no_useless_else' => true,
-        'trailing_comma_in_multiline_array' => true,
-        // 'trailing_comma_in_multiline' => [
-        //     'after_heredoc' => true,
-        //     'elements' => [
-        //         'arrays',
-        //         'arguments',
-        //     ],
-        // ],
+        'trailing_comma_in_multiline' => [
+            'after_heredoc' => true,
+            'elements' => [
+                'arrays',
+                'arguments',
+            ],
+        ],
 
         // Function Notation
         'function_typehint_space' => true,
