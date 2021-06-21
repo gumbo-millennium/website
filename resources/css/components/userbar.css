@@ -66,13 +66,3 @@
 .userbar__links-item--flex .icon {
   @apply mr-2;
 }
-
-@screen dark {
-  .userbar {
-    @apply bg-brand-primary-1 text-gray-primary-3;
-  }
-
-  .userbar__links-item:hover, .userbar__links-item:active {
-    @apply text-gray-primary-1;
-  }
-}

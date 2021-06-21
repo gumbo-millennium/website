@@ -2,22 +2,6 @@
   Heading content
 */
 
-.plain-content h1 {
-  @apply heading-1;
-}
-
-.plain-content h2 {
-  @apply heading-2;
-}
-
-.plain-content h3 {
-  @apply heading-3;
-}
-
-.plain-content h4 {
-  @apply heading-4;
-}
-
 .plain-content p, .plain-content ul, .plain-content ol {
   @apply mb-4;
 }

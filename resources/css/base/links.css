@@ -9,12 +9,3 @@ a {
 a:hover, a:active {
   @apply text-gray-primary-3 no-underline;
 }
-
-@screen dark {
-  a {
-    @apply text-gray-primary-2;
-  }
-  a:hover, a:active {
-    @apply text-gray-primary-1;
-  }
-}
