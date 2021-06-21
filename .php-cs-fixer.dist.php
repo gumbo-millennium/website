@@ -109,12 +109,12 @@ return (new Config())
         'no_alternative_syntax' => true,
         'no_superfluous_elseif' => true,
         'no_useless_else' => true,
-        'trailing_comma_in_multiline_array' => [
+        'trailing_comma_in_multiline' => [
             'after_heredoc' => true,
-            // 'elements' => [
-            //     'arrays',
-            //     'arguments',
-            // ],
+            'elements' => [
+                'arrays',
+                'arguments',
+            ],
         ],
 
         // Function Notation
