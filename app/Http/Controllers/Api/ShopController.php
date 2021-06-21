@@ -6,13 +6,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Facades\Payments;
 use App\Http\Controllers\Controller;
-use App\Mail\Shop\NewOrderBoardMail;
-use App\Mail\Shop\NewOrderUserMail;
 use App\Models\Shop\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use InvalidArgumentException;
 

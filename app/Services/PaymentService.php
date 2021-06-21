@@ -17,13 +17,13 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Order as MollieOrder;
 use Mollie\Api\Resources\Payment;
 use Mollie\Laravel\Facades\Mollie;
-use Mollie\Laravel\Wrappers\MollieApiWrapper;
 use RuntimeException;
 use UnexpectedValueException;
 
 final class PaymentService
 {
     private array $orders = [];
+
     public function createForOrder(Order $order): MollieOrder
     {
         $user = $order->user;
@@ -104,8 +104,8 @@ final class PaymentService
         if (in_array(parse_url(URL::full(), PHP_URL_HOST), [
             'localhost',
             '127.0.0.1',
-            '[::1]'
-        ])) {
+            '[::1]',
+        ], true)) {
             unset($orderArray['webhookUrl']);
         }
 

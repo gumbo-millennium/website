@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners\Shop;
 
 use App\Events\OrderPaidEvent;
@@ -17,7 +19,7 @@ class SendMailsOnOrderPaid implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param object $event
      * @return void
      */
     public function handle(OrderPaidEvent $event)
@@ -28,6 +30,5 @@ class SendMailsOnOrderPaid implements ShouldQueue
         // Send mails
         Mail::to($order->user)->send(new NewOrderUserMail($order));
         Mail::to(Config::get('gumbo.mail-recipients.board'))->send(new NewOrderBoardMail($order));
-
     }
 }

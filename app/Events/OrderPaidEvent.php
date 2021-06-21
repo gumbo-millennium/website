@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events;
 
 use App\Models\Shop\Order;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class OrderPaidEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     protected Order $order;
 
@@ -30,7 +31,7 @@ class OrderPaidEvent
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return array|\Illuminate\Broadcasting\Channel
      */
     public function broadcastOn()
     {
