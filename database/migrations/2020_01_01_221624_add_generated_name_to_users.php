@@ -18,7 +18,8 @@ class AddGeneratedNameToUsers extends Migration
         Schema::table('users', static function (Blueprint $table) {
             $table->string('name')
                 ->virtualAs('CONCAT_WS(" ", `first_name`, `insert`, `last_name`)')
-                ->after('last_name');
+                ->after('last_name')
+                ->default('');
         });
     }
 

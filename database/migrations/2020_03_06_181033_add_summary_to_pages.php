@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddSummaryToPages extends Migration
@@ -16,7 +17,7 @@ class AddSummaryToPages extends Migration
     public function up()
     {
         Schema::table('pages', static function (Blueprint $table) {
-            $table->string('summary', 120)->after('type');
+            $table->string('summary', 120)->after('type')->default('');
         });
     }
 
