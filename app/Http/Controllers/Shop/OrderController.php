@@ -84,7 +84,7 @@ class OrderController extends Controller
 
         // Create order with Mollie
         $mollieOrder = Payments::createForOrder($order);
-        $order->payment_id = $mollieOrder;
+        $order->payment_id = $mollieOrder->id;
         $order->save();
 
         // Redirect to order
