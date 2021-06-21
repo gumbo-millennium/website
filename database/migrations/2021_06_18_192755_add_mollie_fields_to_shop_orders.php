@@ -19,7 +19,7 @@ class AddMollieFieldsToShopOrders extends Migration
         Schema::table('shop_orders', function (Blueprint $table) {
             $table->string('number', 20)->after('id');
 
-            $table->timestamp('expires_at')->after('updated_at');
+            $table->timestamp('expires_at')->nullable()->default(null)->after('updated_at');
 
             $table->string('payment_id')->nullable()->default(null)->after('user_id');
 
