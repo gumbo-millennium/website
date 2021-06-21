@@ -156,7 +156,7 @@ class ActivitySeeder extends Seeder
         }
 
         $activity = factory(Activity::class)->create(
-            array_merge(['slug' => $slug], $args)
+            array_merge(['slug' => $slug], $args),
         );
 
         // Don't register users if we don't want to

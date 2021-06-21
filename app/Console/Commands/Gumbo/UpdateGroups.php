@@ -120,7 +120,7 @@ class UpdateGroups extends Command
                     $role->title,
                     $role->name,
                     $adminRole['naam'],
-                    $role->conscribo_id
+                    $role->conscribo_id,
                 ), null, OutputInterface::VERBOSITY_VERBOSE);
 
                 // Continue to next item
@@ -131,7 +131,7 @@ class UpdateGroups extends Command
             $this->line(sprintf(
                 'Could not find suitable role for <error>%s</> (<comment>%s</>)!',
                 $role->title,
-                $role->name
+                $role->name,
             ));
         }
     }

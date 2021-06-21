@@ -81,7 +81,7 @@ class ActivityMessage extends Resource
 
             Text::make(__('Status'), fn () => $this->sent_at
                 ? __('Sent to :count recipient(s)', ['count' => $this->receipients])
-                : __('Not yet sent'))
+                : __('Not yet sent'), )
                 ->onlyOnIndex(),
         ];
     }

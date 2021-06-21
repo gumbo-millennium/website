@@ -66,7 +66,7 @@ class SponsorClick extends Model
         // Run a prepared statement
         DB::statement(
             sprintf(self::INCREMENT_QUERY, (new self())->getTable()),
-            [$sponsor->id]
+            [$sponsor->id],
         );
     }
 

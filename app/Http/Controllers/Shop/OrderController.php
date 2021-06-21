@@ -36,7 +36,7 @@ class OrderController extends Controller
         $this->addImageUrlsToCspPolicy(
             Cart::getContent()
                 ->map(fn ($item) => $item->associatedModel->valid_image_url)
-                ->toArray()
+                ->toArray(),
         );
 
         // Show confirmation page
@@ -105,7 +105,7 @@ class OrderController extends Controller
 
         // Whitelist images
         $this->addImageUrlsToCspPolicy(
-            $order->variants->pluck('valid_image_url')->toArray()
+            $order->variants->pluck('valid_image_url')->toArray(),
         );
 
         // Render it
@@ -130,7 +130,7 @@ class OrderController extends Controller
         }
 
         flash()->info(
-            __('Your previous payment is still pending, or this order cannot be paid right now. Try agan later.')
+            __('Your previous payment is still pending, or this order cannot be paid right now. Try agan later.'),
         );
 
         return ResponseFacade::redirectToRoute('shop.order.show', $order);
@@ -142,14 +142,14 @@ class OrderController extends Controller
 
         if (Payments::isPaid($order)) {
             flash()->success(
-                'Je betaling is ontvangen. Het kan even duren voordat dit zichtbaar is...'
+                'Je betaling is ontvangen. Het kan even duren voordat dit zichtbaar is...',
             );
 
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
         flash()->info(
-            'Je betaling is nog in behandeling of geannuleerd. Probeer het later nog eens.'
+            'Je betaling is nog in behandeling of geannuleerd. Probeer het later nog eens.',
         );
 
         return ResponseFacade::redirectToRoute('shop.order.show', $order);

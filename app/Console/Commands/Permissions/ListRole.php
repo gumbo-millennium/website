@@ -60,7 +60,7 @@ class ListRole extends Command
         foreach ($allPerms as $perm) {
             $scopedList->push(
                 collect($perm->{$view})
-                    ->concat($allRoles->map(static fn ($role) => $perm->roles->contains($role) ? '<info>✔</>' : ''))
+                    ->concat($allRoles->map(static fn ($role) => $perm->roles->contains($role) ? '<info>✔</>' : '')),
             );
         }
 
@@ -73,7 +73,7 @@ class ListRole extends Command
             $scopedList->push([
                 new TableCell(
                     '<comment>No results found.</>',
-                    ['colspan' => $headers->count()]
+                    ['colspan' => $headers->count()],
                 ),
             ]);
         }

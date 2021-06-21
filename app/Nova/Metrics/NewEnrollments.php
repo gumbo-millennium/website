@@ -31,7 +31,7 @@ class NewEnrollments extends Value
         return $this->count(
             $request,
             $this->getHostedEnrollmentsQuery($request),
-            'updated_at'
+            'updated_at',
         )->allowZeroResult();
     }
 

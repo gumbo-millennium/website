@@ -36,7 +36,7 @@ class VerifiedIfFree
         // Flash message
         \flash(
             "Je moet eerst je e-mailadres bevestigen, voordat je kan inschrijven voor {$activity->name}.",
-            'warning'
+            'warning',
         );
 
         // Redirect back to activity

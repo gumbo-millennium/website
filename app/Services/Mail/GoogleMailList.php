@@ -295,7 +295,7 @@ class GoogleMailList implements JsonSerializable, MailList
         return $this->checkEmailInList(
             Arr::pluck($this->members, 0),
             $this->memberChanges,
-            $email
+            $email,
         );
     }
 
@@ -307,7 +307,7 @@ class GoogleMailList implements JsonSerializable, MailList
         return $this->checkEmailInList(
             $this->aliases,
             $this->aliasChanges,
-            $email
+            $email,
         );
     }
 

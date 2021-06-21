@@ -73,7 +73,7 @@ class IndexFileContents implements ShouldQueue
         if ($media->mime_type !== 'application/pdf') {
             logger()->notice(
                 "Will not process file of type {$media->mime_type} present on {media}",
-                compact('media')
+                compact('media'),
             );
 
             return;
@@ -87,7 +87,7 @@ class IndexFileContents implements ShouldQueue
         if (\filesize($tempfile) !== $media->size) {
             logger()->warning(
                 'Copying media to temp file resulted in different sizes',
-                compact('media', 'tempfile')
+                compact('media', 'tempfile'),
             );
 
             return;
@@ -100,7 +100,7 @@ class IndexFileContents implements ShouldQueue
         } catch (Throwable $exception) {
             logger()->error(
                 'Retrieving PDF contents failed: {exception}',
-                compact('media', 'exception')
+                compact('media', 'exception'),
             );
         }
 
@@ -111,7 +111,7 @@ class IndexFileContents implements ShouldQueue
         } catch (Throwable $exception) {
             logger()->error(
                 'Retrieving PDF contents failed: {exception}',
-                compact('media', 'exception')
+                compact('media', 'exception'),
             );
         }
 
@@ -126,7 +126,7 @@ class IndexFileContents implements ShouldQueue
         // Log result
         logger()->notice(
             'Updated PDF metadata of {media}',
-            compact('media')
+            compact('media'),
         );
     }
 
@@ -168,7 +168,7 @@ class IndexFileContents implements ShouldQueue
             ['exiftool'],
             ['-a', '-G1', '-json'],
             $requestList->toArray(),
-            [$file]
+            [$file],
         );
 
         // Run meta command

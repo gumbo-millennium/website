@@ -91,7 +91,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         } else {
             $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
                 (clone $factoryData['start_date'])->subMonth(),
-                $factoryData['start_date']
+                $factoryData['start_date'],
             );
             $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
         }

@@ -180,12 +180,12 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         } catch (ConnectException $exception) {
             logger()->warning(
                 'Failed to connect to Stripe for Invoice PDF',
-                compact('exception', 'enrollment', 'invoice')
+                compact('exception', 'enrollment', 'invoice'),
             );
         } catch (ClientException $exception) {
             logger()->warning(
                 'Failed to get Invoice PDF from Stripe server',
-                compact('exception', 'enrollment', 'invoice')
+                compact('exception', 'enrollment', 'invoice'),
             );
         }
 

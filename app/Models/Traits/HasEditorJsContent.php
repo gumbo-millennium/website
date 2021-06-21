@@ -26,7 +26,7 @@ trait HasEditorJsContent
     {
         return sprintf(
             $this->htmlConversionErrorTemplate,
-            __('Failed to render body, sorry.')
+            __('Failed to render body, sorry.'),
         );
     }
 
@@ -67,7 +67,7 @@ trait HasEditorJsContent
                 get_class($renderException),
                 static::class,
                 $this instanceof Model ? $this->getKey() : '???',
-                $renderException->getMessage()
+                $renderException->getMessage(),
             ), 0, $renderException));
 
             return $this->renderConvertToHtmlError();

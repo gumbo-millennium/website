@@ -122,7 +122,7 @@ class ActivitiesCommand extends Command
                 $suffixes[] = sprintf(
                     '%d / %d beschikbaar',
                     $activity->available_seats,
-                    $activity->seats
+                    $activity->seats,
                 );
             }
 
@@ -139,7 +139,7 @@ class ActivitiesCommand extends Command
         $message = trim(sprintf(
             self::USER_MESSAGE,
             implode("  \n", $lines),
-            $user === null ? self::REGISTER_MESSAGE : null
+            $user === null ? self::REGISTER_MESSAGE : null,
         ));
 
         // Add debug
@@ -155,7 +155,7 @@ class ActivitiesCommand extends Command
             Keyboard::inlineButton([
                 'text' => 'Activiteitenkanaal',
                 'url' => $this->getActivityChannelUrl(),
-            ])
+            ]),
         );
 
         // Return message

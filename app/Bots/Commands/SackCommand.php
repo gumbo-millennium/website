@@ -63,7 +63,7 @@ class SackCommand extends Command
         $format = sprintf(
             '😡 %s dient een royatieverzoek in voor %s.',
             $user->name,
-            $target
+            $target,
         );
 
         // Send as-is

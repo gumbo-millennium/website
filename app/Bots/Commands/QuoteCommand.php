@@ -126,7 +126,7 @@ class QuoteCommand extends Command
             Keyboard::inlineButton([
                 'text' => 'Bekijk mijn wist-je-datjes',
                 'url' => route('account.quotes'),
-            ])
+            ]),
         );
 
         // Return message

@@ -64,7 +64,7 @@ class PaymentController extends Controller
         return response()
             ->view(
                 'activities.enrollments.payment',
-                compact('enrollment', 'activity', 'form', 'invoiceLines', 'invoiceCoupon')
+                compact('enrollment', 'activity', 'form', 'invoiceLines', 'invoiceCoupon'),
             )
             ->setPrivate();
     }

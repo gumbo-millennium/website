@@ -57,7 +57,7 @@ class FormSelect extends FormField
         if (! $required && ! $multiple) {
             $options = array_merge(
                 ['' => '-'],
-                $options
+                $options,
             );
         }
 

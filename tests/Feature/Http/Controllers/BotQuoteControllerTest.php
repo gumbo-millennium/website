@@ -53,7 +53,7 @@ class BotQuoteControllerTest extends FeatureTestCase
         // Count the number of delete buttons
         $this->assertEquals(8, substr_count(
             $response->getContent(),
-            'Verwijder wist-je-datje'
+            'Verwijder wist-je-datje',
         ));
     }
 

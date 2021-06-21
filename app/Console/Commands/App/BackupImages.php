@@ -52,7 +52,7 @@ class BackupImages extends Command
         // Add archive comment
         $zip->setArchiveComment(sprintf(
             'Image backup generated on %s.',
-            date('l, dS \o\f F Y \a\t H:is (T)')
+            date('l, dS \o\f F Y \a\t H:is (T)'),
         ));
 
         // Get all activities
@@ -110,7 +110,7 @@ class BackupImages extends Command
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$baseName} #{$itemId}</>.",
                         null,
-                        OutputInterface::VERBOSITY_DEBUG
+                        OutputInterface::VERBOSITY_DEBUG,
                     );
 
                     continue;
@@ -128,7 +128,7 @@ class BackupImages extends Command
                     $item->getKey(),
                     $propertyName,
                     $attachmentName,
-                    $attachmentExt
+                    $attachmentExt,
                 );
 
                 // Get storage
@@ -143,7 +143,7 @@ class BackupImages extends Command
                 $this->line(
                     "Wrote <info>{$propertyName}</> from <comment>{$baseName} #{$itemId}</> as <info>{$filename}</>.",
                     null,
-                    OutputInterface::VERBOSITY_DEBUG
+                    OutputInterface::VERBOSITY_DEBUG,
                 );
 
                 // Raise count

@@ -34,9 +34,9 @@ class ConfirmedEnrollments extends Trend
             $request,
             $this->getHostedEnrollmentsQuery($request)->whereState(
                 'state',
-                [Paid::class, Confirmed::class]
+                [Paid::class, Confirmed::class],
             ),
-            'updated_at'
+            'updated_at',
         );
     }
 

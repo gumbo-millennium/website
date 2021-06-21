@@ -80,7 +80,7 @@ class ConstructGoogleActionList implements ShouldQueue
         $userResource = $conscribo->getResource(
             'user',
             [['selector', '~', $userIds]],
-            ['selector', 'email']
+            ['selector', 'email'],
         );
 
         // Log count
@@ -163,7 +163,7 @@ class ConstructGoogleActionList implements ShouldQueue
                 $job['email'],
                 $job['name'],
                 $job['aliases'],
-                $job['members']
+                $job['members'],
             );
         }
     }

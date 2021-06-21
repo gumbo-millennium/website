@@ -59,7 +59,7 @@ class LeaderboardCommand extends Command
         $referrals = MemberReferral::query()
             ->select(
                 'user_id',
-                DB::raw('COUNT(*) as referral_count')
+                DB::raw('COUNT(*) as referral_count'),
             )
             ->groupBy('user_id')
             ->orderByDesc('referral_count')

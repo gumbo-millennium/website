@@ -83,7 +83,7 @@ class Role extends Resource
         // Only return own roles in
         return parent::relatableQuery($request, $query->whereIn(
             'id',
-            $user->roles->pluck('id')
+            $user->roles->pluck('id'),
         ));
     }
 

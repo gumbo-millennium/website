@@ -211,7 +211,7 @@ final class PaymentService
             throw new RuntimeException(
                 "API call to Mollie failed: {$apiException->getMessage()}",
                 $apiException->getCode(),
-                $apiException
+                $apiException,
             );
         }
 

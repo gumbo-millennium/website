@@ -92,7 +92,7 @@ class VerifyEmail extends Command
             [
                 'id' => $user->getKey(),
                 'hash' => sha1($user->getEmailForVerification()),
-            ]
+            ],
         );
     }
 }

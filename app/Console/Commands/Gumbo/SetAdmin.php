@@ -60,11 +60,11 @@ class SetAdmin extends Command
         $this->line('');
         $this->line(sprintf(
             'Current roles: <info>%s</>',
-            $user->roles()->pluck('title')->implode('</>, <info>')
+            $user->roles()->pluck('title')->implode('</>, <info>'),
         ));
         $this->line(sprintf(
             'Current permissions: <info>%s</>',
-            $user->getDirectPermissions()->pluck('title')->implode('</>, <info>')
+            $user->getDirectPermissions()->pluck('title')->implode('</>, <info>'),
         ));
         $this->line('');
         if (! $this->confirm('Is this the correct user', false)) {
@@ -79,7 +79,7 @@ class SetAdmin extends Command
 
             $this->line(sprintf(
                 'Removed super admin from <info>%s</>.',
-                $user->name
+                $user->name,
             ));
 
             return true;
@@ -90,7 +90,7 @@ class SetAdmin extends Command
 
         $this->line(sprintf(
             'Granted super admin to <info>%s</>.',
-            $user->name
+            $user->name,
         ));
 
         return true;

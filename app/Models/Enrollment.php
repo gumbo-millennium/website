@@ -281,13 +281,13 @@ class Enrollment extends UuidModel
             // Created, Seeded, Confirmed, Paid → Cancelled
             ->allowTransition(
                 [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
-                CancelledState::class
+                CancelledState::class,
             )
 
             // Paid, Cancelled → Refunded
             ->allowTransition(
                 [PaidState::class, CancelledState::class],
-                RefundedState::class
+                RefundedState::class,
             );
     }
 }

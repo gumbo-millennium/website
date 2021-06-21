@@ -32,7 +32,7 @@ class HandleInvoicePaid extends StripeWebhookJob
         if ($enrollment === null) {
             logger()->info(
                 'Recieved invoice change for unknown invoice {invoice}',
-                compact('invoice')
+                compact('invoice'),
             );
 
             return;
@@ -42,7 +42,7 @@ class HandleInvoicePaid extends StripeWebhookJob
         if ($enrollment->state instanceof Cancelled) {
             logger()->info(
                 'Recieved invoice change for cancelled enrollment {invoice}',
-                compact('invoice')
+                compact('invoice'),
             );
 
             // Stop
@@ -58,7 +58,7 @@ class HandleInvoicePaid extends StripeWebhookJob
         // Log result
         logger()->info(
             'Marking {enrollment} as paid.',
-            compact('enrollment', 'invoice')
+            compact('enrollment', 'invoice'),
         );
 
         // Mark enrollment as paid

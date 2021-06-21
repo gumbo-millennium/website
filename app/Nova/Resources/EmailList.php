@@ -78,7 +78,7 @@ class EmailList extends Resource
 
                     return \implode("\n", \array_map(
                         static fn ($val) => "- {$val['email']} ({$val['role']})",
-                        $values
+                        $values,
                     ));
                 })
                 ->readonly()

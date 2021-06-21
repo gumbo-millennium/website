@@ -189,7 +189,7 @@ class JoinController extends Controller
             if (! $user) {
                 // Set next URL
                 \redirect()->setIntendedUrl(
-                    \route('activity.show', ['activity' => $introActivity])
+                    \route('activity.show', ['activity' => $introActivity]),
                 );
 
                 // Flash message
@@ -217,7 +217,7 @@ class JoinController extends Controller
             // Flash failure
             \flash(
                 'Je aanmelding is ontvangen, maar je kon helaas niet ingeschreven worden op de introductieweek.',
-                'warning'
+                'warning',
             );
 
             // Redirect to welcome

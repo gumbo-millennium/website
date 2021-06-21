@@ -40,7 +40,7 @@ return [
             'User-Agent' => sprintf(
                 'gumbo-millennium.nl/1.0 (incompatible; curl/%s; php/%s; https://www.gumbo-millennium.nl);',
                 curl_version()['version'],
-                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION
+                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
             ),
         ],
 

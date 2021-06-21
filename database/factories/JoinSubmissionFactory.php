@@ -19,7 +19,7 @@ $genders = array_merge(
     array_fill(0, 10, 'Vrouw'),
     array_fill(0, 2, 'Apache Gevechtshelikopter'),
     array_fill(0, 2, 'Lightrode Wasbeer'),
-    array_fill(0, 4, 'Waluigi')
+    array_fill(0, 4, 'Waluigi'),
 );
 
 $factory->define(JoinSubmission::class, static fn (Faker $faker) => [

@@ -62,7 +62,7 @@ class FileBundle extends Resource
         $maxSize = Cache::remember(
             'nova.filebundle.maxsize',
             now()->addDay(),
-            static fn () => Str::filesize(config('medialibrary.max_file_size'))
+            static fn () => Str::filesize(config('medialibrary.max_file_size')),
         );
 
         return [

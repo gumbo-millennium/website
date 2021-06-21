@@ -110,7 +110,7 @@ class CancelActivity extends Action
         return Action::message(sprintf(
             '%d van de %d %s activiteiten zijn geannuleerd',
             $totalCount - $skipCount,
-            $totalCount
+            $totalCount,
         ));
     }
 

@@ -190,7 +190,7 @@ class NewMemberForm extends Form
                         <a href="%s" target="_blank">Lees het Privacybeleid</a>
                         (opent in een nieuw tabblad).
                         HTML,
-                        url('/privacy-policy')
+                        url('/privacy-policy'),
                     ),
                 ],
             ]);

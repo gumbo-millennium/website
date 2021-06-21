@@ -79,7 +79,7 @@ class ActivityMessage extends Model
         static::saving(static fn (self $message) => throw_unless(
             in_array($message->target_audience, self::VALID_AUDIENCES, true),
             DomainException::class,
-            "Target audience [{$message->target_audience}] is invalid."
+            "Target audience [{$message->target_audience}] is invalid.",
         ));
     }
 

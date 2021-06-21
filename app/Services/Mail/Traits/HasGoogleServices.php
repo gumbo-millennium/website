@@ -59,7 +59,7 @@ trait HasGoogleServices
             // Log error
             Log::notice(
                 '[Google] {action} for {subject} failed with {exception}',
-                compact('action', 'subject', 'exception')
+                compact('action', 'subject', 'exception'),
             );
 
             // Construct a better error

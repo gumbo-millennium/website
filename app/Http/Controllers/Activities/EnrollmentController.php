@@ -170,7 +170,7 @@ class EnrollmentController extends Controller
             if ($enrollment->activity->end_date < now()) {
                 flash(
                     'Het evenement is afgelopen, maar je moet nog betalen. Gelieve dat meteen even te doen.',
-                    'warning'
+                    'warning',
                 );
             }
 

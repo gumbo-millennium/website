@@ -73,7 +73,7 @@ class UpdateRole extends Command
         $this->line('');
         $this->line(sprintf(
             'Current roles: <info>%s</>',
-            $user->roles()->pluck('title')->implode('</>, <info>')
+            $user->roles()->pluck('title')->implode('</>, <info>'),
         ));
         $this->line('');
         if (! $force && ! $this->confirm('Is this the correct user')) {
@@ -90,7 +90,7 @@ class UpdateRole extends Command
                 'Removed role <comment>%s</> (<comment>%s</>) from <info>%s</>.',
                 $role->title,
                 $role->name,
-                $user->name
+                $user->name,
             ));
 
             return true;
@@ -103,7 +103,7 @@ class UpdateRole extends Command
             'Added role <info>%s</> (%s) to <info>%s</>.',
             $role->title,
             $role->name,
-            $user->name
+            $user->name,
         ));
 
         return true;

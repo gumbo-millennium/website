@@ -34,9 +34,9 @@ class PendingEnrollments extends Value
             $request,
             $this->getHostedEnrollmentsQuery($request)->whereState(
                 'state',
-                [Created::class, Seeded::class]
+                [Created::class, Seeded::class],
             ),
-            'updated_at'
+            'updated_at',
         );
     }
 

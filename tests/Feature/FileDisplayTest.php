@@ -340,7 +340,7 @@ class FileDisplayTest extends TestCase
         $data['created_at'] = $data['updated_at'] = now()->addWeek();
         $data['title'] = sprintf(
             'Category for test on %s.',
-            now()->format('H:i:s.u (T)')
+            now()->format('H:i:s.u (T)'),
         );
         $data['slug'] = Str::slug($data['title']);
 
@@ -375,7 +375,7 @@ class FileDisplayTest extends TestCase
         $data['category_id'] = $category->id;
         $data['title'] = sprintf(
             'Bundle for test on %s.',
-            now()->format('H:i:s.u (T)')
+            now()->format('H:i:s.u (T)'),
         );
         $data['slug'] = Str::slug($data['title']);
 

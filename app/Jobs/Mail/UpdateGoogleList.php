@@ -272,7 +272,7 @@ class UpdateGoogleList implements ShouldQueue
             // Update role
             Log::info(
                 'Flagging member {email} to change from {old-role} to {role}',
-                compact('email', 'role') + ['old-row' => $existingMembers[$email]]
+                compact('email', 'role') + ['old-row' => $existingMembers[$email]],
             );
             $list->updateEmail($email, $role);
         }

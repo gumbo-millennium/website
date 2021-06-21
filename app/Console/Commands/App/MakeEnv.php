@@ -128,7 +128,7 @@ class MakeEnv extends Command
 
         $this->line(sprintf(
             'Building configuration for "<comment>%s</>" environment.',
-            $env
+            $env,
         ));
 
         if (! isset(self::EXTRA_CONFIGS[$env])) {
@@ -147,7 +147,7 @@ class MakeEnv extends Command
     {
         $this->line(sprintf(
             'Building new .env file from <comment>%s</>',
-            $source
+            $source,
         ));
 
         $template = explode("\n", file_get_contents($source));
@@ -170,7 +170,7 @@ class MakeEnv extends Command
                 $line = sprintf(
                     '%s=%s',
                     $key,
-                    str_replace('{HOST}', self::DOCKER_HOST, $config->get($key))
+                    str_replace('{HOST}', self::DOCKER_HOST, $config->get($key)),
                 );
                 $replace++;
             }
@@ -182,7 +182,7 @@ class MakeEnv extends Command
         $this->line(sprintf(
             'Replaced <comment>%d</comment> of <comment>%d</> entries for target file.',
             $replace,
-            count($result)
+            count($result),
         ));
 
         return implode("\n", $result);
@@ -200,7 +200,7 @@ class MakeEnv extends Command
         $this->line(sprintf(
             'Creating .env file of <comment>%.1f</> KB in "<info>%s</>".',
             mb_strlen($content, '8bit') / 1024,
-            dirname($file)
+            dirname($file),
         ));
 
         // Make sure file exists

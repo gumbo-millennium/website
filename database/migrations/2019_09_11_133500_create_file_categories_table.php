@@ -27,7 +27,7 @@ class CreateFileCategoriesTable extends Migration
         // Ensure an 'other' category exists
         FileCategory::firstOrCreate(
             ['slug' => 'other'],
-            ['title' => 'Overige']
+            ['title' => 'Overige'],
         );
     }
 

@@ -46,13 +46,13 @@ class MakeGitignore extends Command
         if (! $rootDir) {
             $this->error(sprintf(
                 'Failed to determine root path form __DIR__: %s',
-                __DIR__
+                __DIR__,
             ));
         }
 
         $this->line(sprintf(
             'Determined directory as <info>%s</info>',
-            $rootDir
+            $rootDir,
         ));
 
         // Download ignore file from https://gitignore.io
@@ -60,7 +60,7 @@ class MakeGitignore extends Command
 
         $this->line(sprintf(
             'Downloading ignore file from <info>%s</info>...',
-            $downloadUrl
+            $downloadUrl,
         ));
 
         $client = new Client();
@@ -70,7 +70,7 @@ class MakeGitignore extends Command
             $this->alert(sprintf(
                 'Failed to download file; got %d %s',
                 $data->getStatusCode(),
-                $data->getReasonPhrase()
+                $data->getReasonPhrase(),
             ));
 
             return false;

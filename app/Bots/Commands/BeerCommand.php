@@ -109,7 +109,7 @@ class BeerCommand extends Command
             Arr::random($config['targets']),
             Arr::random($config['methods']),
             Arr::random($config['adjectives']),
-            Arr::random($config['subjects'])
+            Arr::random($config['subjects']),
         );
 
         // Send as-is

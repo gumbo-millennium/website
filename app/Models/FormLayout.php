@@ -21,7 +21,7 @@ class FormLayout
         return new self(
             $name ?? $existingLayout->getName(),
             $type ?? $existingLayout->getType(),
-            array_merge($existingLayout->getOptions(), $options ?? [])
+            array_merge($existingLayout->getOptions(), $options ?? []),
         );
     }
 

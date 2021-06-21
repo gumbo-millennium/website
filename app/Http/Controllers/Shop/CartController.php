@@ -23,7 +23,7 @@ class CartController extends Controller
         $cartItems = Cart::getContent()->sortBy('metadata.sort-key');
 
         $this->addImageUrlsToCspPolicy(
-            $cartItems->map(fn ($item) => $item->associatedModel->valid_image_url)->toArray()
+            $cartItems->map(fn ($item) => $item->associatedModel->valid_image_url)->toArray(),
         );
 
         return ResponseFacade::view('shop.cart', [

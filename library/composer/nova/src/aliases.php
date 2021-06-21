@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laravel\Nova;
 
 class_alias(\Laravel\Nova\Nova::class, \Laravel\Nova\Actions\Action::class);

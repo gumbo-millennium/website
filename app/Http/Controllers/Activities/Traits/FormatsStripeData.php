@@ -32,7 +32,7 @@ trait FormatsStripeData
         $description = sprintf(
             'Inschrijving voor %s (%s)',
             $activity->name,
-            $user->is_member ? 'lid' : 'bezoekers'
+            $user->is_member ? 'lid' : 'bezoekers',
         );
 
         // Return data

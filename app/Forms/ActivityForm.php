@@ -45,7 +45,7 @@ class ActivityForm extends Form
                 $formField->getType(),
                 array_merge([
                     'value' => $this->getData($formField->getName()),
-                ], $formField->getOptions())
+                ], $formField->getOptions()),
             );
         }
 

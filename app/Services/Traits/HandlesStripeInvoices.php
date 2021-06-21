@@ -308,7 +308,7 @@ trait HandlesStripeInvoices
             if ($invoice->amount_due !== $enrollment->total_price) {
                 logger()->error(
                     'Invoice price does not match enrollment price',
-                    compact('invoice', 'enrollment')
+                    compact('invoice', 'enrollment'),
                 );
                 $invoice->delete();
 

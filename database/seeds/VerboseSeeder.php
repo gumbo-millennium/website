@@ -36,7 +36,7 @@ abstract class VerboseSeeder extends Seeder
 
         $this->writeln(
             sprintf("<error>{$message}</>", ...$args),
-            OutputStyle::OUTPUT_NORMAL | OutputStyle::VERBOSITY_QUIET
+            OutputStyle::OUTPUT_NORMAL | OutputStyle::VERBOSITY_QUIET,
         );
     }
 

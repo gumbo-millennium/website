@@ -79,7 +79,7 @@ class SendMail extends Command
         $this->line(sprintf(
             'Received enrollment <info>%s</> for <comment>%s</>.',
             $enrollment ? $enrollment->id : 'NULL',
-            $enrollment ? $enrollment->activity->name : 'NULL'
+            $enrollment ? $enrollment->activity->name : 'NULL',
         ));
 
         // Store on app

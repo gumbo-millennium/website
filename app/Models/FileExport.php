@@ -94,7 +94,7 @@ class FileExport extends Model implements Responsable
         return $builder->where(
             static fn (Builder $query) => $query
                 ->whereDoesntHave('owner_id')
-                ->orWhere('expires_at', '<', Date::today()->subWeek())
+                ->orWhere('expires_at', '<', Date::today()->subWeek()),
         );
     }
 

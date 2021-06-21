@@ -48,7 +48,7 @@ class GetPlazacam extends Command
         // Add user idenifier if present
         if ($userId) {
             $userQuery = $userQuery->where(static fn ($query) => $query->where('id', $userId)
-                ->orWhere('email', $userId));
+                ->orWhere('email', $userId), );
         }
 
         // Get user

@@ -32,7 +32,7 @@ class SitemapController extends Controller
         abort_unless(
             $request->accepts('text/xml'),
             Response::HTTP_NOT_ACCEPTABLE,
-            'You need to be able to understand XML sitemaps'
+            'You need to be able to understand XML sitemaps',
         );
     }
 
@@ -46,7 +46,7 @@ class SitemapController extends Controller
         // Reject if the user can't handle XML
         if (! $request->accepts('text/xml')) {
             return new NotAcceptableHttpException(
-                'Sitemap is only available as XML, but you don\'t seem to want that.'
+                'Sitemap is only available as XML, but you don\'t seem to want that.',
             );
         }
 
@@ -103,7 +103,7 @@ class SitemapController extends Controller
                 route("${base}.show", [$field => $model]),
                 $model->updated_at,
                 '0.8',
-                'weekly'
+                'weekly',
             );
         }
     }

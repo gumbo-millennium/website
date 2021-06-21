@@ -51,7 +51,7 @@ trait HandlesInvoices
                 'payment_method_types' => ['ideal'],
                 'collection_method' => 'send_invoice',
                 'due_date' => $dueDate,
-            ]
+            ],
         );
 
         // Build invoice products

@@ -83,7 +83,7 @@ class SendActivityMail extends Action
                 ->options(
                     collect(ActivityMessage::VALID_AUDIENCES)->mapWithKeys(static fn ($val) => [
                         $val => __("gumbo.target-audiences.{$val}"),
-                    ])->toArray()
+                    ])->toArray(),
                 )
                 ->rules([
                     'required',

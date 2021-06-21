@@ -115,7 +115,7 @@ class Sponsor extends Resource
                         'image',
                         'mimes:jpeg,png',
                         'max:2048',
-                        Rule::dimensions()->ratio(2 / 1)
+                        Rule::dimensions()->ratio(2 / 1),
                     ),
 
                 Heading::make('Pagina-advertentie'),

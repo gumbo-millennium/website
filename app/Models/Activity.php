@@ -167,7 +167,7 @@ class Activity extends SluggableModel implements AttachableInterface
                     ->orWhere(static fn (Builder $query) => $query
                     ->whereNotNull('postponed_at')
                     ->whereNull('cancelled_at')
-                    ->whereNull('rescheduled_from'));
+                    ->whereNull('rescheduled_from'), );
             })
             ->orderBy('start_date')
             ->whereAvailable($user);
@@ -262,7 +262,7 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->end_date < $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets after activity end',
-                ['activity' => $this]
+                ['activity' => $this],
             );
 
             return false;
@@ -272,7 +272,7 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->enrollment_end !== null && $this->enrollment_end < $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets after enrollment closure',
-                ['activity' => $this]
+                ['activity' => $this],
             );
 
             return false;
@@ -282,7 +282,7 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->enrollment_start !== null && $this->enrollment_start > $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets before enrollment start',
-                ['activity' => $this]
+                ['activity' => $this],
             );
 
             return false;
@@ -488,7 +488,7 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         return $query->where(static fn (Builder $query) => $query
             ->whereNull('published_at')
-            ->orWhere('published_at', '<', \now()));
+            ->orWhere('published_at', '<', \now()), );
     }
 
     /**
@@ -504,7 +504,7 @@ class Activity extends SluggableModel implements AttachableInterface
         // Build HERE maps link
         return sprintf(
             'https://www.qwant.com/maps/?%s',
-            \http_build_query(['q' => $this->location_address])
+            \http_build_query(['q' => $this->location_address]),
         );
     }
 

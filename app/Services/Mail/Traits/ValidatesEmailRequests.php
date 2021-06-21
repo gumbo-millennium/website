@@ -41,7 +41,7 @@ trait ValidatesEmailRequests
         // Disallow if subdomain of own domain
         $subdomains = \array_map(
             static fn ($domain) => ".{$domain}",
-            $domains
+            $domains,
         );
 
         // Check if it ends with our domain

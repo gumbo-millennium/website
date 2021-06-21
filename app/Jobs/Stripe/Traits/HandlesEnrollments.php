@@ -23,7 +23,7 @@ trait HandlesEnrollments
         if ($enrollment->state instanceof Cancelled) {
             logger()->info(
                 'Tried to cancel already-cancelled enrollment {enrollment}',
-                compact('enrollment')
+                compact('enrollment'),
             );
 
             return;
@@ -36,7 +36,7 @@ trait HandlesEnrollments
         // Log result
         logger()->info(
             'Marked {enrollment} as cancelled.',
-            compact('enrollment')
+            compact('enrollment'),
         );
     }
 }

@@ -243,7 +243,7 @@ class Activity extends Resource
                         ->maxWidth(3072)
                         ->maxHeight(1024)
                         ->minWidth(768)
-                        ->minHeight(256)
+                        ->minHeight(256),
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')

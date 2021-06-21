@@ -27,7 +27,7 @@ $factory->afterMaking(FileExport::class, static function (FileExport $export) {
 
     if (! $export->owner_id) {
         $export->owner()->associate(
-            User::query()->inRandomOrder()->first()
+            User::query()->inRandomOrder()->first(),
         );
     }
 

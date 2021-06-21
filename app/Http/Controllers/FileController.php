@@ -215,7 +215,7 @@ class FileController extends Controller
             ->whereIn('model_id', Cache::remember(
                 'files.search.file-ids',
                 Date::now()->addHour(),
-                static fn () => FileBundle::whereAvailable()->pluck('id')
+                static fn () => FileBundle::whereAvailable()->pluck('id'),
             ));
 
         // Perform the search query

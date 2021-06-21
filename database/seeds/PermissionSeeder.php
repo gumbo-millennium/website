@@ -76,7 +76,7 @@ class PermissionSeeder extends VerboseSeeder
             $perm = Permission::query()
                 ->updateOrCreate(
                     compact('name'),
-                    compact('title')
+                    compact('title'),
                 );
 
             // Assign item
@@ -175,7 +175,7 @@ class PermissionSeeder extends VerboseSeeder
             // Add to the role queue, by either updating or creating the role
             $roles->put($name, $role = Role::query()->updateOrCreate(
                 compact('name'),
-                compact('title', 'default')
+                compact('title', 'default'),
             ));
 
             // Log result
@@ -222,19 +222,19 @@ class PermissionSeeder extends VerboseSeeder
         // Get contents of the file
         try {
             return collect(
-                Yaml::parseFile($fullPath)
+                Yaml::parseFile($fullPath),
             );
         } catch (ParseException $parseException) {
             optional($this->command)->line(sprintf(
                 '<error>Error</>: Failed to read <info>%s</>: %s',
                 $path,
-                $parseException->getMessage()
+                $parseException->getMessage(),
             ));
 
             report(new RuntimeException(sprintf(
                 'Failed to read <info>%s</>: %s',
                 $path,
-                $parseException->getMessage()
+                $parseException->getMessage(),
             ), 0, $parseException));
 
             return null;

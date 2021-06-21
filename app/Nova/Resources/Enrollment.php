@@ -80,7 +80,7 @@ class Enrollment extends Resource
         // allowed to globally manage events.
         return parent::indexQuery($request, $query->whereIn(
             'activity_id',
-            $user->getHostedActivityIdQuery()
+            $user->getHostedActivityIdQuery(),
         ));
     }
 
@@ -107,7 +107,7 @@ class Enrollment extends Resource
         // allowed to globally manage events.
         return parent::relatableQuery($request, $query->whereIn(
             'activity_id',
-            $user->getHostedActivityIdQuery()
+            $user->getHostedActivityIdQuery(),
         ));
     }
 

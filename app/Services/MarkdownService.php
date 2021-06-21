@@ -33,7 +33,7 @@ final class MarkdownService implements MarkdownServiceContract
         // Add security observer
         $environment->addEventListener(
             DocumentParsedEvent::class,
-            fn (DocumentParsedEvent $event) => $this->removeImages($event)
+            fn (DocumentParsedEvent $event) => $this->removeImages($event),
         );
 
         // Allow some extra features, but always keep end-user safety in mind!

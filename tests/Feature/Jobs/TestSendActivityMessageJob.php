@@ -58,7 +58,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($pendingUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
 
         Mail::assertQueued(
@@ -66,7 +66,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($confirmedUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
@@ -99,7 +99,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($pendingUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
@@ -132,7 +132,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($confirmedUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 
@@ -167,7 +167,7 @@ class TestSendActivityMessageJob extends TestCase
             static fn (ActivityMessageMail $mail) => (
                 $mail->hasTo($cancelledUser->email) &&
                 $mail->getActivityMessage()->is($message)
-            )
+            ),
         );
     }
 

@@ -106,7 +106,7 @@ class RescheduleActivity extends Action
         // Report
         return Action::message(sprintf(
             'De activiteit is verplaatst naar %s',
-            $startDate->isoFormat('D MMM Y, HH:mm (z)')
+            $startDate->isoFormat('D MMM Y, HH:mm (z)'),
         ));
     }
 

@@ -106,7 +106,7 @@ class NewsItem extends Resource
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140),
                 ),
 
             // Add data

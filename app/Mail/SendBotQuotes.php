@@ -46,7 +46,7 @@ class SendBotQuotes extends Mailable
         // Set subject
         $title = $this->setSubject(
             $this->quotes->min('created_at'),
-            $this->quotes->max('created_at')
+            $this->quotes->max('created_at'),
         );
 
         // Get attachments

@@ -148,7 +148,7 @@ class RestoreImages extends Command
             $this->line(
                 "No items for <info>{$classDisplay}</>.",
                 null,
-                OutputInterface::VERBOSITY_VERBOSE
+                OutputInterface::VERBOSITY_VERBOSE,
             );
 
             return;
@@ -167,7 +167,7 @@ class RestoreImages extends Command
         $this->line(
             "Updating <info>{$classDisplay}</>...",
             null,
-            OutputInterface::VERBOSITY_VERY_VERBOSE
+            OutputInterface::VERBOSITY_VERY_VERBOSE,
         );
         $updateCount = 0;
 
@@ -183,7 +183,7 @@ class RestoreImages extends Command
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
                         null,
-                        OutputInterface::VERBOSITY_VERY_VERBOSE
+                        OutputInterface::VERBOSITY_VERY_VERBOSE,
                     );
 
                     continue;
@@ -192,7 +192,7 @@ class RestoreImages extends Command
                 $this->line(
                     "Updating <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>...",
                     null,
-                    OutputInterface::VERBOSITY_DEBUG
+                    OutputInterface::VERBOSITY_DEBUG,
                 );
 
                 // Prep a tempfle
@@ -222,7 +222,7 @@ class RestoreImages extends Command
                 $this->line(
                     "Updated <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
                     null,
-                    OutputInterface::VERBOSITY_VERBOSE
+                    OutputInterface::VERBOSITY_VERBOSE,
                 );
                 $updateCount++;
 
@@ -235,7 +235,7 @@ class RestoreImages extends Command
         $this->line(
             "Updated <info>{$updateCount}</> on <comment>{$classDisplay}</>.",
             null,
-            OutputInterface::VERBOSITY_NORMAL
+            OutputInterface::VERBOSITY_NORMAL,
         );
     }
 

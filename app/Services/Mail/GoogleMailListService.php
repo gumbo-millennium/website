@@ -89,7 +89,7 @@ class GoogleMailListService implements MailListHandler
         $result = $this->callGoogleService(
             static fn () => $groupsManager->listGroups($query),
             'get group',
-            $email
+            $email,
         );
 
         // Check if the result is valid
@@ -116,7 +116,7 @@ class GoogleMailListService implements MailListHandler
         $members = $this->callGoogleService(
             static fn () => $memberManager->listMembers($group->getId()),
             'get group members',
-            $email
+            $email,
         );
 
         // Build and return
@@ -154,7 +154,7 @@ class GoogleMailListService implements MailListHandler
         $result = $this->callGoogleService(
             static fn () => $groupsManager->insert($group),
             'create group',
-            $email
+            $email,
         );
 
         // Fail if required
@@ -180,7 +180,7 @@ class GoogleMailListService implements MailListHandler
         $ok = $this->callGoogleService(
             static fn () => $permissionManager->patch($list->getEmail(), $permissions),
             'update permssions',
-            $list->getEmail()
+            $list->getEmail(),
         );
 
         // Check
@@ -208,7 +208,7 @@ class GoogleMailListService implements MailListHandler
                 $this->callGoogleService(
                     static fn () => $aliasManager->delete($list->getServiceId(), $alias),
                     "delete alias ${alias}",
-                    $list->getEmail()
+                    $list->getEmail(),
                 );
 
                 continue;
@@ -228,7 +228,7 @@ class GoogleMailListService implements MailListHandler
             $this->callGoogleService(
                 static fn () => $aliasManager->insert($list->getServiceId(), $aliasObj),
                 "create alias ${alias}",
-                $list->getEmail()
+                $list->getEmail(),
             );
         }
 
@@ -239,7 +239,7 @@ class GoogleMailListService implements MailListHandler
                 $this->callGoogleService(
                     static fn () => $memberManager->delete($list->getServiceId(), $email),
                     "delete member ${email}",
-                    $list->getEmail()
+                    $list->getEmail(),
                 );
 
                 continue;
@@ -261,7 +261,7 @@ class GoogleMailListService implements MailListHandler
                 $this->callGoogleService(
                     static fn () => $memberManager->patch($list->getServiceId(), $email, $memberObj),
                     "update member ${email}",
-                    $list->getEmail()
+                    $list->getEmail(),
                 );
 
                 continue;
@@ -271,7 +271,7 @@ class GoogleMailListService implements MailListHandler
             $this->callGoogleService(
                 static fn () => $memberManager->insert($list->getServiceId(), $memberObj),
                 "add member ${email}",
-                $list->getEmail()
+                $list->getEmail(),
             );
         }
     }
@@ -288,7 +288,7 @@ class GoogleMailListService implements MailListHandler
         $res = $this->callGoogleService(
             static fn () => $groupManager->delete($list->getServiceId()),
             'delete',
-            $list->getEmail()
+            $list->getEmail(),
         );
 
         // Check if failed
@@ -318,7 +318,7 @@ class GoogleMailListService implements MailListHandler
             $groupItem = $this->callGoogleService(
                 static fn () => $groupsManager->listGroups($args),
                 'list groups',
-                $domain
+                $domain,
             );
 
             // Add each item from result set

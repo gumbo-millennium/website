@@ -41,7 +41,7 @@ class ReindexMediaFiles extends Command
                 $this->line(
                     "Parsing <info>{$media->file_name}</> (<comment>{$media->id}</>)...",
                     null,
-                    OutputInterface::VERBOSITY_VERY_VERBOSE
+                    OutputInterface::VERBOSITY_VERY_VERBOSE,
                 );
                 IndexFileContents::dispatchNow($media);
                 $this->info("Parsed {$media->file_name}.", OutputInterface::VERBOSITY_VERBOSE);

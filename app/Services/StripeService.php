@@ -52,7 +52,7 @@ class StripeService implements StripeServiceContract
         throw new HttpException(
             500,
             'Er is iets fout gegaan bij het communiceren met onze betaalpartner.',
-            $exception
+            $exception,
         );
     }
 }

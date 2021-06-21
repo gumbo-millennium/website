@@ -81,7 +81,7 @@ class UpdateContent extends Command
             // Get contents
             $page = Page::firstOrNew(
                 ['slug' => $slug],
-                ['type' => Page::TYPE_GIT]
+                ['type' => Page::TYPE_GIT],
             );
 
             // Assign data
@@ -105,14 +105,14 @@ class UpdateContent extends Command
                 '<comment>%s</> page <info>%s</> (%d)',
                 $page->wasRecentlyCreated ? 'Created' : 'Updated',
                 $page->slug,
-                $page->id
+                $page->id,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         $this->line(
             "Marked <info>{$updateCount}</> page(s) as Git pages",
             null,
-            OutputInterface::VERBOSITY_VERBOSE
+            OutputInterface::VERBOSITY_VERBOSE,
         );
     }
 
@@ -149,14 +149,14 @@ class UpdateContent extends Command
             $this->line(sprintf(
                 'Unmarked page <info>%s</> (%d)',
                 $page->slug,
-                $page->id
+                $page->id,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         $this->line(
             "Marked <info>{$updateCount}</> page(s) as non-Git pages",
             null,
-            OutputInterface::VERBOSITY_VERBOSE
+            OutputInterface::VERBOSITY_VERBOSE,
         );
     }
 
@@ -233,7 +233,7 @@ class UpdateContent extends Command
                 $exception = new RuntimeException(
                     "Failed to parse JSON in {$path}: {$exception->getMessage()}",
                     $exception->getCode(),
-                    $exception
+                    $exception,
                 );
 
                 // Report it to Laravel
@@ -269,7 +269,7 @@ class UpdateContent extends Command
             report(new RuntimeException(
                 "Failed to parse date in {$path}: {$exception->getMessage()}",
                 $exception->getCode(),
-                $exception
+                $exception,
             ));
 
             // Return today

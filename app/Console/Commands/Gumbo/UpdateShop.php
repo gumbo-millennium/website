@@ -70,7 +70,7 @@ class UpdateShop extends Command
 
         $this->line(sprintf(
             'Retrieved <info>%d</> products from API',
-            count($products)
+            count($products),
         ), null, OutputInterface::VERBOSITY_VERBOSE);
 
         foreach ($products as $product) {
@@ -97,7 +97,7 @@ class UpdateShop extends Command
                         'id' => $category['uuid'],
                     ], [
                         'name' => $category['name'],
-                    ])
+                    ]),
                 );
 
                 $seenCategoryIds[] = $category['uuid'];
@@ -108,7 +108,7 @@ class UpdateShop extends Command
 
             $this->line(sprintf(
                 'Created product <info>%s</>',
-                $model->name
+                $model->name,
             ), null, OutputInterface::VERBOSITY_VERBOSE);
 
             // Keep track of IDs
@@ -120,7 +120,7 @@ class UpdateShop extends Command
 
         $this->line(sprintf(
             'Created or updated <info>%d</> products',
-            count($seenProductIds)
+            count($seenProductIds),
         ));
 
         // Prune if requested
@@ -136,7 +136,7 @@ class UpdateShop extends Command
             'Deleted <info>%s</> products, <info>%d</> variants and <info>%d</> categories.',
             $productCount,
             $variantCount,
-            $categoryCount
+            $categoryCount,
         ));
     }
 
@@ -167,7 +167,7 @@ class UpdateShop extends Command
             $this->line(sprintf(
                 'Created variant <info>%s</> for <comment>%s</>',
                 $model->name,
-                $product->name
+                $product->name,
             ), null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
             $seenVariantIds[] = $model->id;

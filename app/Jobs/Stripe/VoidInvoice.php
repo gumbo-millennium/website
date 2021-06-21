@@ -59,7 +59,7 @@ class VoidInvoice extends StripeJob
         if ($invoice->status === Invoice::STATUS_VOID) {
             logger()->info(
                 'Cannot void already voided invoice {invoice}. Doing nothing.',
-                compact('enrollment', 'invoice')
+                compact('enrollment', 'invoice'),
             );
 
             return;
@@ -69,7 +69,7 @@ class VoidInvoice extends StripeJob
         if ($invoice->status === Invoice::STATUS_PAID) {
             logger()->info(
                 'Cannot void paid invoice {invoice}.',
-                compact('enrollment', 'invoice')
+                compact('enrollment', 'invoice'),
             );
 
             return;
@@ -96,7 +96,7 @@ class VoidInvoice extends StripeJob
         // Void the invoice if it's possible
         \assert(
             in_array($invoice->status, [Invoice::STATUS_OPEN, Invoice::STATUS_UNCOLLECTIBLE], true),
-            "Invoice in unknown ste {$invoice->status}"
+            "Invoice in unknown ste {$invoice->status}",
         );
 
         // Void invoice

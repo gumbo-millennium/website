@@ -515,7 +515,7 @@ final class ConscriboService implements ConscriboServiceContract
                 $filter = [$filter[0], '=', $filter[1]];
             } elseif (count($filter) !== 3) {
                 throw new InvalidArgumentException(
-                    "Filter at index {$key} is not a valid filter!"
+                    "Filter at index {$key} is not a valid filter!",
                 );
             }
 
@@ -523,14 +523,14 @@ final class ConscriboService implements ConscriboServiceContract
             [$fieldName, $operator, $value] = $filter;
             if (! \array_key_exists($fieldName, $fields)) {
                 throw new InvalidArgumentException(
-                    "Filter at index [{$key}] tried to filter field [{$fieldName}]. which does not exist"
+                    "Filter at index [{$key}] tried to filter field [{$fieldName}]. which does not exist",
                 );
             }
 
             // Ensure operator exists
             if (! array_key_exists($operator, self::FILTER_OPERATOR_MAP)) {
                 throw new InvalidArgumentException(
-                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid."
+                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid.",
                 );
             }
 
@@ -538,7 +538,7 @@ final class ConscriboService implements ConscriboServiceContract
             $fieldType = $fields[$fieldName]['type'];
             if (! in_array($fieldType, self::FILTER_OPERATOR_MAP[$operator], true)) {
                 throw new InvalidArgumentException(
-                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [${fieldType}]."
+                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [${fieldType}].",
                 );
             }
 

@@ -87,7 +87,7 @@ class LoginCommand extends Command
                     'url' => route('account.tg.link'),
                     'request_write_access' => false,
                 ],
-            ])
+            ]),
         );
 
         // Return message

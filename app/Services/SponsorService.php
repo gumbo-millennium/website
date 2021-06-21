@@ -103,7 +103,7 @@ class SponsorService implements SponsorServiceContract
             report(new RuntimeException(
                 "Could not find imag for {$sponsor->name} ({$sponsor->id})",
                 404,
-                $exception
+                $exception,
             ));
 
             // Cache null

@@ -55,7 +55,7 @@ class SendActivityCovidMails extends Command
             $this->line(
                 "Sending Covid mail for <comment>{$activity->name}</>.",
                 null,
-                OutputInterface::VERBOSITY_VERBOSE
+                OutputInterface::VERBOSITY_VERBOSE,
             );
 
             // Get mail
@@ -98,7 +98,7 @@ class SendActivityCovidMails extends Command
             $this->line(
                 "Sending to <info>{$user->name}</> (<comment>{$user->id}</>)",
                 null,
-                OutputInterface::VERBOSITY_VERY_VERBOSE
+                OutputInterface::VERBOSITY_VERY_VERBOSE,
             );
 
             Mail::to($enrollment->user)

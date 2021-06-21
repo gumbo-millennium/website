@@ -117,7 +117,7 @@ abstract class SvgJob implements ShouldQueue
                 '%s.%s.%s.svg',
                 $this->model->slug,
                 substr(\sha1("{$this->attribute}-{$this->model->id}"), 0, 4),
-                substr(\sha1_file($path), 0, 16)
+                substr(\sha1_file($path), 0, 16),
             );
 
             // Store original version

@@ -127,7 +127,7 @@ class EnrollmentService implements EnrollmentServiceContract
         $price = $enrollment->total_price;
         logger()->debug(
             'Assigned enrollment price of {price} ({rawPrice}).',
-            compact('user', 'activity', 'rawPrice', 'price')
+            compact('user', 'activity', 'rawPrice', 'price'),
         );
 
         // Save the enrollment
@@ -141,7 +141,7 @@ class EnrollmentService implements EnrollmentServiceContract
                 'activity' => $activity,
                 'enrollment' => $enrollment,
                 'enrollment-id' => $enrollment->id,
-            ]
+            ],
         );
 
         // Create invoice if the event is paid

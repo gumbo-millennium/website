@@ -118,7 +118,7 @@ class DisplayController extends Controller
         // Show view
         return view('activities.show', new ActivityViewModel(
             $request->user(),
-            $activity
+            $activity,
         ));
     }
 
