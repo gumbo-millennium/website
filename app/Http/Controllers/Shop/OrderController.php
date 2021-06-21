@@ -129,7 +129,7 @@ class OrderController extends Controller
             return ResponseFacade::redirectToRoute('shop.order.complete', $order);
         }
 
-        Flash::info(
+        flash()->info(
             __('Your previous payment is still pending, or this order cannot be paid right now. Try agan later.')
         );
 
@@ -141,14 +141,14 @@ class OrderController extends Controller
         \abort_if(! $order->user->is(Auth::user()), 404);
 
         if (Payments::isPaid($order)) {
-            Flash::success(
+            flash()->success(
                 'Je betaling is ontvangen. Het kan even duren voordat dit zichtbaar is...'
             );
 
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        Flash::info(
+        flash()->info(
             'Je betaling is nog in behandeling of geannuleerd. Probeer het later nog eens.'
         );
 
