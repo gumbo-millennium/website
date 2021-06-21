@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Events\OrderPaidEvent;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -57,6 +58,12 @@ class Order extends Model
 
             // Set order number
             $order->number = self::determineOrderNumber($order);
+        });
+
+        static::updating(function (self $order) {
+            if ($order->paid_at !== null && $order->getOriginal('paid_at') === null) {
+                OrderPaidEvent::dispatch($order);
+            }
         });
     }
 

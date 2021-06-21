@@ -48,10 +48,6 @@ class ShopController extends Controller
         $order->paid_at = $paymentDate;
         $order->save();
 
-        // Send mails
-        Mail::to($order->user)->queue(new NewOrderUserMail($order));
-        Mail::to(Config::get('gumbo.mail-recipients.board'))->queue(new NewOrderBoardMail($order));
-
         return ResponseFacade::noContent(Response::HTTP_OK);
     }
 }
