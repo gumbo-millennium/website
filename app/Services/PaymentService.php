@@ -149,7 +149,7 @@ final class PaymentService
     /**
      * Returns at what time the order was paid, if known.
      */
-    public function paidAt(Order $order): DateTimeInterface
+    public function paidAt(Order $order): ?DateTimeInterface
     {
         try {
             $mollieOrder = $this->findOrder($order);

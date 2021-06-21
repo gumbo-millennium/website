@@ -59,6 +59,12 @@ class Kernel extends ConsoleKernel
 
         // Send quotes weekly
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
+
+        // Fix broken Mollie invoices a couple times a day
+        $schedule->command('shop:repair-orders')->cron('45 */2 * * *');
+
+        // Manually check for payments every hour
+        $schedule->command('shop:update-orders')->hourlyAt(15);
     }
 
     /**
