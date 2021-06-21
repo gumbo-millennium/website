@@ -6,6 +6,17 @@
 Je winkelwagen is <strong>geen</strong> reservering, dus lekker snel bestellen is aan te raden.
 @endsection
 
+@section('shop-crumbs')
+{{-- Breadcrumbs --}}
+@breadcrumbs([
+    'items' => [
+        route('shop.home') => 'Shop',
+        '' => 'Winkelwagen',
+    ]
+])
+@endbreadcrumbs
+@endsection
+
 {{-- Main --}}
 @section('shop-content')
 @if ($cartItems->count() > 0)

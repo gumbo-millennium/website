@@ -220,10 +220,9 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::post('/order', [Shop\OrderController::class, 'store'])->name('order.store');
 
     Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
-    Route::get('/order/{order}/complete', [Shop\OrderController::class, 'complete'])->name('order.complete');
 
     Route::get('/order/{order}/pay', [Shop\OrderController::class, 'pay'])->name('order.pay');
-    Route::get('/order/{order}/validate-payment', [Shop\OrderController::class, 'validate'])->name('order.validate-payment');
+    Route::get('/order/{order}/pay/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
 
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');

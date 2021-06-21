@@ -11,24 +11,19 @@ use DateTimeInterface;
 use Doctrine\Common\Cache\Psr6\InvalidArgument;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Mollie\Api\Exceptions\ApiException;
-use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Order as MollieOrder;
 use Mollie\Api\Resources\Payment;
+use Mollie\Laravel\Facades\Mollie;
+use Mollie\Laravel\Wrappers\MollieApiWrapper;
 use RuntimeException;
 use UnexpectedValueException;
 
 final class PaymentService
 {
-    private MollieApiClient $api;
-
-    private array $cache = [];
-
-    public function __construct(MollieApiClient $api)
-    {
-        $this->api = $api;
-    }
-
+    private array $orders = [];
     public function createForOrder(Order $order): MollieOrder
     {
         $user = $order->user;
@@ -50,13 +45,13 @@ final class PaymentService
                 'type' => 'physical',
                 'category' => 'gift',
                 'name' => $variant->display_name,
-                'quantity' => $variant->pivot->amount,
+                'quantity' => $variant->pivot->quantity,
                 'unitPrice' => $this->currency($variant->pivot->price),
-                'totalAmount' => $this->currency($variant->pivot->price * $variant->pivot->amount),
-                'vatRate' => '0.00 %',
+                'totalAmount' => $this->currency($variant->pivot->price * $variant->pivot->quantity),
+                'vatRate' => '0.00',
                 'vatAmount' => $this->currency(0),
                 'sku' => $variant->sku,
-                'imageUrl' => $variant->valid_image_url,
+                'imageUrl' => URL::to($variant->valid_image_url),
                 'productUrl' => $variant->url,
             ];
         }
@@ -69,11 +64,11 @@ final class PaymentService
             'quantity' => 1,
             'unitPrice' => $transferFee,
             'totalAmount' => $transferFee,
-            'vatRate' => '0.00 %',
+            'vatRate' => '0.00',
             'vatAmount' => $this->currency(0),
         ];
 
-        return $this->api->orders->create([
+        $orderArray = [
             'amount' => $this->currency($order->price),
             'orderNumber' => $order->number,
             'lines' => $orderLines,
@@ -95,18 +90,27 @@ final class PaymentService
             ],
 
             // Redirect URL
-            'redirectUrl' => route('shop.order.return', $order),
+            'redirectUrl' => route('shop.order.pay-return', $order),
             'webhookUrl' => route('api.webhooks.shop'),
 
-            // Method and expiration settings
+            // Payment method settings
             'method' => 'ideal',
+            'locale' => 'nl_NL',
 
             // Expiration date (always +24 hours)
-            'expiresAt' => $order->expires_at->format('Y-m-d'),
+            'expiresAt' => ($order->expires_at ?? Date::now()->addDays(2))->format('Y-m-d'),
+        ];
 
-            'embed' => [
-                'payments',
-            ],
+        if (in_array(parse_url(URL::full(), PHP_URL_HOST), [
+            'localhost',
+            '127.0.0.1',
+            '[::1]'
+        ])) {
+            unset($orderArray['webhookUrl']);
+        }
+
+        return Mollie::api()->orders->create($orderArray, [
+            'embed' => 'payments',
         ]);
     }
 
@@ -186,13 +190,23 @@ final class PaymentService
             throw new UnexpectedValueException('No Mollie order for this Gumbo order yet', 404);
         }
 
+        if (isset($this->orders[$order->payment_id])) {
+            return $this->orders[$order->payment_id];
+        }
+
+        Log::info('Using Mollie API', [
+            'api' => Mollie::api()->getApiEndpoint(),
+            'key' => Config::get('mollie'),
+        ]);
+
         try {
-            return $this->order[$order->payment_id] ??= $this->api->orders->get($order->payment_id, [
+            $mollieOrder = Mollie::api()->orders->get($order->payment_id, [
                 'embed' => [
                     'payments',
-                    'refunds',
                 ],
             ]);
+
+            return $this->orders[$order->payment_id] = $mollieOrder;
         } catch (ApiException $apiException) {
             throw new RuntimeException(
                 "API call to Mollie failed: {$apiException->getMessage()}",

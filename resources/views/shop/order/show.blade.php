@@ -1,19 +1,26 @@
 @extends('shop.layout')
 
 @php($user = Auth::user())
-@php($expiry = Carbon\Carbon::today()->addDay(2));
 
 {{-- Header --}}
-@section('shop-title', 'Bestelling plaatsen')
-@section('shop-subtitle', 'Je bent bijna de trotse, nieuwe eigenaar van Gumbo merch!')
+@section('shop-title', "Bestelling {$order->number}")
+@section('shop-subtitle')
+@if ($order->status === 'pending')
+Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd DD MMMM') }}.
+@elseif ($order->status === 'shipped')
+Afgeleverd op {{ $order->shipped_at->isoFormat('dddd DD MMMM') }}.
+@elseif ($order->status === 'paid')
+Betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM, H:mm') }}.
+@endif
+@endsection
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
 @breadcrumbs([
     'items' => [
         route('shop.home') => 'Shop',
-        route('shop.cart') => 'Winkelwagen',
-        '' => 'Plaatsen'
+        '' => 'Bestellingen',
+        '' => "Bestelling {$order->number}"
     ]
 ])
 @endbreadcrumbs
@@ -21,9 +28,6 @@
 
 {{-- Main --}}
 @section('shop-content')
-<form class="grid grid-col-1" method="post" action="{{ route('shop.order.store') }}">
-    @csrf
-
     <h3 class="text-xl font-title font-medium mb-4">Factuuradres</h3>
 
     <div class="bg-gray-50 rounded-lg p-4 mb-2">
@@ -40,7 +44,11 @@
     <div class="bg-gray-50 rounded-lg p-4 mb-4">
         <strong class="text-lg font-title font-bold">Afhalen bij het bestuur</strong>
         <p>
+            @if ($order->shipped_at)
+            Je hebt je bestelling afgehaald op {{ $order->shipped_at->isoFormat('dddd DD MMMM') }}.
+            @else
             Het bestuur neemt contact met je op voor het afhalen van je bestelling.
+            @endif
         </p>
     </div>
 
@@ -49,27 +57,25 @@
     <div class="bg-gray-50 rounded-lg p-4 mb-4">
         <strong class="text-lg font-title font-bold">iDEAL</strong>
         <p class="mb-2">
-            De kosten voor betaling via iDEAL bedragen {{ Str::price(Cart::getTotal() - Cart::getSubTotal()) }}.<br />
-            Deze zijn opgenomen in je totaalbedrag rechts.
+            @if ($order->paid_at)
+            Je hebt je bestelling betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM') }}.
+            @else
+            Je moet deze bestelling betalen voor {{ $order->expires_at->isoFormat('dddd DD MMMM') }}.
+            @endif
         </p>
     </div>
 
-    <h3 class="text-xl font-title font-medium mb-4">Deadline</h3>
+    @if ($order->paid_at === null)
+    <a href="{{ route('shop.order.pay', [$order]) }}" class="btn btn--brand">
+        Betaal bestelling
+    </a>
+    @endif
 
-    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-        <p>
-            Je hebt na plaatsing van je bestelling tot
-            <time datetime="{{ $expiry->format('Y-m-d') }}" class="font-bold">{{ $expiry->isoFormat('dddd DD MMMM') }}</time>
-            om te betalen, anders wordt je bestelling geannuleerd.
-        </p>
-    </div>
-
-    <button type="submit" class="btn btn--brand">
-        Plaats bestelling
-    </button>
 </form>
 @endsection
 
 @section('shop-sidebar')
-    @include('shop.partials.product-card', ['readonly' => true])
+    <h3 class="text-xl font-title font-medium mb-4">Jouw bestelling</h3>
+
+    @include('shop.partials.order-list')
 @endsection

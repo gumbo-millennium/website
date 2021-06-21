@@ -3,6 +3,17 @@
 {{-- Header --}}
 @section('shop-title', $category->name)
 
+@section('shop-crumbs')
+{{-- Breadcrumbs --}}
+@breadcrumbs([
+    'items' => [
+        route('shop.home') => 'Shop',
+        '' => $category->name,
+    ]
+])
+@endbreadcrumbs
+@endsection
+
 {{-- Main --}}
 @section('shop-content')
 <div class="row">

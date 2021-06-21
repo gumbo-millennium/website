@@ -99,7 +99,7 @@ class OrderController extends Controller
     public function show(Request $request, Order $order): Response
     {
         // Only allowing viewing your own orders
-        abort_if($order->user() !== $request->user(), 404);
+        abort_unless($request->user()->is($order->user), 404);
 
         $order->hungry();
 
@@ -116,7 +116,8 @@ class OrderController extends Controller
 
     public function pay(Request $request, Order $order): RedirectResponse
     {
-        \abort_if(! $order->user->is(Auth::user()), 404);
+        // Only allowing viewing your own orders
+        abort_unless($request->user()->is($order->user), 404);
 
         $next = Payments::getRedirectUrl($order);
 
@@ -135,36 +136,22 @@ class OrderController extends Controller
         return ResponseFacade::redirectToRoute('shop.order.show', $order);
     }
 
-    public function return(request $request, Order $order): RedirectResponse
+    public function payReturn(Request $request, Order $order): RedirectResponse
     {
         \abort_if(! $order->user->is(Auth::user()), 404);
 
         if (Payments::isPaid($order)) {
-            return ResponseFacade::redirectToRoute('shop.order.complete', $order);
-        }
+            Flash::success(
+                'Je betaling is ontvangen. Het kan even duren voordat dit zichtbaar is...'
+            );
 
-        Flash::info(
-            __('The payment didn\'t go through or is still processing.')
-        );
-
-        return ResponseFacade::redirectToRoute('shop.order.show', $order);
-    }
-
-    /**
-     * Displays an order and allows a user to pay for the order.
-     */
-    public function complete(Order $order): Response
-    {
-        \abort_if(! $order->user->is(Auth::user()), 404);
-
-        if (! Payments::isPaid($order)) {
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        $order->loadMissing(['variants', 'variants.product']);
+        Flash::info(
+            'Je betaling is nog in behandeling of geannuleerd. Probeer het later nog eens.'
+        );
 
-        return ResponseFacade::view('shop.order.complete', [
-            'order' => $order,
-        ])->setPrivate();
+        return ResponseFacade::redirectToRoute('shop.order.show', $order);
     }
 }

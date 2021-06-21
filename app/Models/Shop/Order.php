@@ -41,6 +41,7 @@ class Order extends Model
 
     protected $fillable = [
         'price',
+        'fee',
     ];
 
     /**

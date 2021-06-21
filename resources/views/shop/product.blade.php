@@ -12,7 +12,8 @@ raden.
 @breadcrumbs([
     'items' => [
         route('shop.home') => 'Shop',
-        route('shop.category', compact('category')) => $category->name
+        route('shop.category', compact('category')) => $category->name,
+        '' => $product->name,
     ]
 ])
 @endbreadcrumbs
