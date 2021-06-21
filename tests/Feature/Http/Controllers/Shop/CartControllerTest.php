@@ -17,6 +17,16 @@ class CartControllerTest extends TestCase
     use TestsMembersOnlyRoutes;
     use TestsShop;
 
+    private const SHOP_FEE = 50;
+
+    /**
+     * @before
+     */
+    public function setFees(): void
+    {
+        $this->afterApplicationCreated(fn () => Config::set('gumbo.fees.shop-order', self::SHOP_FEE));
+    }
+
     public function test_adding_items_is_for_members_only(): void
     {
         $this->onlyForMembers(route('shop.cart'))
@@ -51,7 +61,7 @@ class CartControllerTest extends TestCase
         ])->assertRedirect(route('shop.cart'));
 
         $this->assertCartQuantity(1);
-        $this->assertCartPrice(15);
+        $this->assertCartPrice(15 + self::SHOP_FEE);
     }
 
     public function test_adding_duplicates_get_merged(): void
@@ -78,7 +88,7 @@ class CartControllerTest extends TestCase
             'quantity' => $safeQuantity,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(($safeQuantity + $safeQuantity) * $variant->price);
+        $this->assertCartPrice(($safeQuantity + $safeQuantity) * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity($safeQuantity + $safeQuantity);
     }
 
@@ -100,7 +110,7 @@ class CartControllerTest extends TestCase
             'quantity' => 1,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(Config::get('gumbo.shop.max-quantity') * $variant->price);
+        $this->assertCartPrice(Config::get('gumbo.shop.max-quantity') * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity(Config::get('gumbo.shop.max-quantity'));
     }
 
@@ -117,7 +127,7 @@ class CartControllerTest extends TestCase
             'quantity' => 2,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(2 * $variant->price);
+        $this->assertCartPrice(2 * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity(2);
 
         $firstItemId = Cart::getContent()->first()->id;
@@ -127,7 +137,7 @@ class CartControllerTest extends TestCase
             'quantity' => 4,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(4 * $variant->price);
+        $this->assertCartPrice(4 * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity(4);
     }
 
@@ -153,7 +163,7 @@ class CartControllerTest extends TestCase
             'quantity' => 1,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(2 * $variant->price + 1 * $variant2->price);
+        $this->assertCartPrice(2 * $variant->price + 1 * $variant2->price + self::SHOP_FEE);
         $this->assertCartQuantity(3);
 
         $firstItemId = Cart::getContent()->first()->id;
@@ -163,7 +173,7 @@ class CartControllerTest extends TestCase
             'quantity' => 0,
         ])->assertRedirect(route('shop.cart'));
 
-        $this->assertCartPrice(1 * $variant2->price);
+        $this->assertCartPrice(1 * $variant2->price + self::SHOP_FEE);
         $this->assertCartQuantity(1);
     }
 
