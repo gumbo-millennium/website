@@ -8,13 +8,14 @@ use PhpCsFixer\Finder;
 $finder = Finder::create()
     ->exclude([
         'vendor',
-	'node_modules',
-	'storage',
+        'node_modules',
+        'storage',
     ])
     ->notName([
         '_ide_helper*',
     ])
     ->notPath([
+        'bootstrap/cache',
         'bootstrap/app.php',
         'public/index.php',
         'server.php',
@@ -108,12 +109,12 @@ return (new Config())
         'no_alternative_syntax' => true,
         'no_superfluous_elseif' => true,
         'no_useless_else' => true,
-        'trailing_comma_in_multiline' => [
+        'trailing_comma_in_multiline_array' => [
             'after_heredoc' => true,
-            'elements' => [
-                'arrays',
-                'arguments',
-            ],
+            // 'elements' => [
+            //     'arrays',
+            //     'arguments',
+            // ],
         ],
 
         // Function Notation
