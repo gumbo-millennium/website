@@ -37,7 +37,11 @@ final class PaymentService
         $address = [];
 
         foreach ($safeAddress as $field => $value) {
-            $address[$field] == Arr::get($user->address, $field, $value);
+            $address[$field] = Arr::get($user->address, $field, $value);
+        }
+
+        if (isset($user->address['line1'])) {
+            $address['line2'] = $user->address['line2'];
         }
 
         $orderLines = [];
@@ -88,17 +92,18 @@ final class PaymentService
                 'postalCode' => $user->address['postal_code'],
                 'city' => $user->address['city'],
                 'country' => Str::upper($user->address['country']),
-
-                // Redirect URL
-                'redirectUrl' => route('shop.order.return', $order),
-                'webhookUrl' => route('api.webhooks.shop'),
-
-                // Method and expiration settings
-                'method' => 'ideal',
-
-                // Expiration date (always +24 hours)
-                'expiresAt' => $order->expires_at->format('Y-m-d'),
             ],
+
+            // Redirect URL
+            'redirectUrl' => route('shop.order.return', $order),
+            'webhookUrl' => route('api.webhooks.shop'),
+
+            // Method and expiration settings
+            'method' => 'ideal',
+
+            // Expiration date (always +24 hours)
+            'expiresAt' => $order->expires_at->format('Y-m-d'),
+
             'embed' => [
                 'payments',
             ],

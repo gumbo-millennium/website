@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\HtmlString;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -316,5 +317,30 @@ class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailC
         }
 
         return preg_replace('/[^\s-]/', '*', $userName);
+    }
+
+    public function getAddressStringAttribute(): ?HtmlString
+    {
+        $line1 = Arr::get($this->address, 'line1');
+        $line2 = Arr::get($this->address, 'line2');
+        $postcode = Arr::get($this->address, 'postal_code');
+        $city = Arr::get($this->address, 'city');
+
+        if (! $line1 || ! $city) {
+            return null;
+        }
+
+        $lines = [
+            $line1,
+            $line2,
+            "${postcode}, ${city}",
+        ];
+
+        $address = collect($lines)
+            ->filter(fn ($value) => ! empty($value))
+            ->map(fn ($value) => e($value))
+            ->implode('<br />');
+
+        return new HtmlString($address);
     }
 }

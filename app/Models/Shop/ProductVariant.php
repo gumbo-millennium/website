@@ -70,6 +70,20 @@ class ProductVariant extends Model
         'price',
     ];
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        self::saving(function (self $variant) {
+            if (! $variant->exists || $variant->wasChanged('name') || ! $variant->order) {
+                $arrPos = array_search(Str::lower($variant->name), self::ORDER_KEYS, true);
+
+                // order is a TINYINT, max value 255 (1 byte)
+                $variant->order = $arrPos !== false ? ($arrPos + 1) : 255;
+            }
+        });
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -123,19 +137,5 @@ class ProductVariant extends Model
             'product' => $this->product,
             'variant' => $this,
         ]);
-    }
-
-    public static function boot(): void
-    {
-        parent::boot();
-
-        self::saving(function (self $variant) {
-            if (!$variant->exists || $variant->wasChanged('name') || !$variant->order) {
-                $arrPos = array_search(Str::lower($variant->name), self::ORDER_KEYS);
-
-                // order is a TINYINT, max value 255 (1 byte)
-                $variant->order = $arrPos !== false ? ($arrPos + 1) : 255;
-            }
-        });
     }
 }

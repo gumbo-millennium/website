@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -45,8 +46,10 @@ class Order extends Model
     /**
      * Bind invoice ID handling.
      */
-    public static function booted()
+    public static function boot()
     {
+        parent::boot();
+
         static::creating(function (self $order) {
             // Set expiration
             $order->expires_at ??= Date::now()->addDay();
@@ -54,6 +57,35 @@ class Order extends Model
             // Set order number
             $order->number = self::determineOrderNumber($order);
         });
+    }
+
+    /**
+     * Assigns an order number if not yet set.
+     * @return void
+     */
+    public static function determineOrderNumber(self $order): string
+    {
+        $targetDate = $order->created_at ?? Date::now();
+
+        // Get invoice number
+        $startOfMonth = Date::parse(sprintf(
+            'first day of %s %d',
+            $targetDate->format('F'),
+            $targetDate->year,
+        ));
+
+        $orderCount = self::query()
+            ->whereBetween('created_at', [$startOfMonth, $targetDate])
+            ->when($order->id, fn (Builder $query) => $query->where('id', '<', $order->id))
+            ->count();
+
+        // Set invoice ID
+        return sprintf(
+            '%02d.%02d.%03d',
+            $targetDate->century % 100,
+            $targetDate->month,
+            $orderCount + 1,
+        );
     }
 
     public function user(): BelongsTo
@@ -88,32 +120,5 @@ class Order extends Model
             'variants',
             'variants.product',
         ]);
-    }
-
-    /**
-     * Assigns an order number if not yet set.
-     * @return void
-     */
-    public static function determineOrderNumber(self $order): string
-    {
-        // Get invoice number
-        $startOfMonth = Date::parse(sprintf(
-            'first day of %s %d',
-            $order->created_at->format('F'),
-            $order->created_at->year,
-        ));
-
-        $orderCount = self::query()
-            ->whereBetween('created_at', [$startOfMonth, $order->created_at])
-            ->where('id', '<', $order->id)
-            ->count();
-
-        // Set invoice ID
-        return sprintf(
-            '%02d.%02d.%03d',
-            $order->created_at->century % 100,
-            $order->created_at->month,
-            $orderCount + 1,
-        );
     }
 }

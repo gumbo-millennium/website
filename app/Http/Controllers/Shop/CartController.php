@@ -8,9 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\CartAddRequest;
 use App\Http\Requests\Shop\CartUpdateRequest;
 use App\Models\Shop\ProductVariant;
+use Darryldecode\Cart\CartCondition;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Str;
 
@@ -18,8 +20,14 @@ class CartController extends Controller
 {
     public function index(): Response
     {
+        $cartItems = Cart::getContent()->sortBy('metadata.sort-key');
+
+        $this->addImageUrlsToCspPolicy(
+            $cartItems->map(fn ($item) => $item->associatedModel->valid_image_url)->toArray()
+        );
+
         return ResponseFacade::view('shop.cart', [
-            'cartItems' => Cart::getContent()->sortBy('metadata.sort-key'),
+            'cartItems' => $cartItems,
         ]);
     }
 
@@ -34,6 +42,9 @@ class CartController extends Controller
 
         $product = $variant->product;
         $isSingleVariant = $product->variants->count() === 1;
+
+        // Ensure a fee is present on the cart
+        $this->addPaymentCondition();
 
         // De-duplicate
         $matchedItem = Cart::getContent()
@@ -125,5 +136,18 @@ class CartController extends Controller
         ]));
 
         return ResponseFacade::redirectToRoute('shop.cart');
+    }
+
+    private function addPaymentCondition(): void
+    {
+        Cart::removeConditionsByType('fee');
+
+        Cart::condition(new CartCondition([
+            'name' => 'Transactiekosten',
+            'type' => 'fee',
+            'target' => 'total',
+            'value' => Config::get('gumbo.fees.shop-order'),
+            'order' => 1,
+        ]));
     }
 }

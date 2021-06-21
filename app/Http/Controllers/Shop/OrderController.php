@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Spatie\Flash\Flash;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrderController extends Controller
@@ -32,6 +31,13 @@ class OrderController extends Controller
         if (Cart::getTotalQuantity() === 0) {
             return ResponseFacade::redirectToRoute('shop.cart');
         }
+
+        // Whitelist images
+        $this->addImageUrlsToCspPolicy(
+            Cart::getContent()
+                ->map(fn ($item) => $item->associatedModel->valid_image_url)
+                ->toArray()
+        );
 
         // Show confirmation page
         return ResponseFacade::view('shop.order.create', [
@@ -58,19 +64,20 @@ class OrderController extends Controller
 
         // Create order
         $order = new Order([
+            'fee' => Cart::getTotal() - Cart::getSubTotal(),
             'price' => Cart::getTotal(),
         ]);
         $order->user()->associate($user);
 
-        // Map cart to proper order table
+        // Save changes
+        $order->save();
+
+        // Assign variants, mapped as a proper table
         $variantWithAmount = $cartItems->mapWithKeys(static fn ($item) => [$item->associatedModel->id => [
             'quantity' => $item->quantity,
             'price' => $item->price,
         ]]);
         $order->variants()->sync($variantWithAmount);
-
-        // Save changes
-        $order->save();
 
         // Clean cart
         Cart::clear();
@@ -81,15 +88,12 @@ class OrderController extends Controller
         $order->save();
 
         // Redirect to order
-        return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        return ResponseFacade::redirectToRoute('shop.order.pay', $order);
     }
 
     /**
      * Display the order, remains available after the order is paid.
      *
-     * @param Request $request
-     * @param Order $order
-     * @return Response
      * @throws NotFoundHttpException If the order is not found or if the user doens't match the order owner
      */
     public function show(Request $request, Order $order): Response
@@ -97,9 +101,16 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_if($order->user() !== $request->user(), 404);
 
+        $order->hungry();
+
+        // Whitelist images
+        $this->addImageUrlsToCspPolicy(
+            $order->variants->pluck('valid_image_url')->toArray()
+        );
+
         // Render it
         return ResponseFacade::view('shop.order.show', [
-            'order' => $order->hungry()
+            'order' => $order,
         ]);
     }
 
@@ -113,7 +124,7 @@ class OrderController extends Controller
             return ResponseFacade::redirectTo($next);
         }
 
-        if (!$next && Payments::isPaid($order)) {
+        if (! $next && Payments::isPaid($order)) {
             return ResponseFacade::redirectToRoute('shop.order.complete', $order);
         }
 
