@@ -83,7 +83,7 @@ class OrderController extends Controller
         Cart::clear();
 
         // Create order with Mollie
-        $mollieOrder = Payments::createForOrder($order);
+        $mollieOrder = Payments::createOrder($order);
         $order->payment_id = $mollieOrder->id;
         $order->save();
 
@@ -101,6 +101,7 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
+        // Hungry, Hungry, Model
         $order->hungry();
 
         // Whitelist images
@@ -119,9 +120,7 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        $next = Payments::getRedirectUrl($order);
-
-        if ($next) {
+        if ($next = Payments::getRedirectUrl($order)) {
             return ResponseFacade::redirectTo($next);
         }
 

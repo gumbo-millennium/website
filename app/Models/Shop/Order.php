@@ -4,13 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Contracts\Payments\PayableModel;
+use App\Contracts\Payments\ShippableModel;
 use App\Events\OrderPaidEvent;
+use App\Helpers\Arr;
+use App\Models\Traits\IsPayable;
+use App\Models\Traits\IsShippable;
 use App\Models\User;
+use App\Services\Payments\Address;
+use App\Services\Payments\Order as FluentOrder;
+use App\Services\Payments\OrderLine;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\URL;
 
 /**
  * A user's order.
@@ -29,8 +39,11 @@ use Illuminate\Support\Facades\Date;
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
  * @property-read \App\Models\User $user
  */
-class Order extends Model
+class Order extends Model implements PayableModel, ShippableModel
 {
+    use IsPayable;
+    use IsShippable;
+
     protected $table = 'shop_orders';
 
     protected $casts = [
@@ -38,6 +51,7 @@ class Order extends Model
         'expires_at' => 'datetime',
         'paid_at' => 'datetime',
         'shipped_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -128,5 +142,75 @@ class Order extends Model
             'variants',
             'variants.product',
         ]);
+    }
+
+    /**
+     * Returns a Mollie order from this model.
+     */
+    public function toMollieOrder(): FluentOrder
+    {
+        $order = FluentOrder::make($this->price, $this->number);
+        $user = $this->user;
+
+        $userAddress = $user->address;
+        if (! Arr::has($userAddress ?? [], ['line1', 'postal_code', 'city', 'country'])) {
+            $userAddress = Config::get('gumbo.fallbacks.address');
+        }
+
+        $address = Address::make()
+            ->streetAndNumber(Arr::get($userAddress, 'line1'))
+            ->streetAddition(Arr::get($userAddress, 'line2'))
+            ->city(Arr::get($userAddress, 'city'))
+            ->postalCode(Arr::get($userAddress, 'postal_code'))
+            ->country(Arr::get($userAddress, 'country'));
+
+        $order
+            ->billingAddress($address)
+            ->shippingAddress($address);
+
+        foreach ($order->variants as $variant) {
+            $order->addLine(
+                OrderLine::make(
+                    $variant->display_name,
+                    $variant->pivot->quantity,
+                    $variant->pivot->price,
+                )
+                    ->sku($variant->sku)
+                    ->imageUrl(URL::to($variant->valid_image_url))
+                    ->productUrl($variant->url),
+            );
+        }
+
+        $order->addLine(
+            OrderLine::make(
+                'Transactiekosten',
+                1,
+                $this->fee,
+                'surcharge',
+            ),
+        );
+
+        $order
+            ->redirectUrl(URL::route('shop.order.pay-return', $order));
+
+        $isLocal = in_array(parse_url(URL::to('/'), PHP_URL_HOST), [
+            'localhost',
+            '127.0.0.1',
+            '[::1]',
+        ], true);
+
+        if (! $isLocal) {
+            $order
+                ->webhookUrl(URL::route('api.webhooks.shop'));
+        }
+
+        $order
+            ->method('ideal')
+            ->locale('nl_NL');
+
+        $order
+            ->expiresAt($order->expires_at ?? Date::now()->addDays(2));
+
+        return $order;
     }
 }

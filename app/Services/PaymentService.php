@@ -4,161 +4,159 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Payments\PayableModel;
+use App\Contracts\Payments\ShippableModel;
 use App\Helpers\Arr;
-use App\Helpers\Str;
-use App\Models\Shop\Order;
-use DateTimeInterface;
 use Doctrine\Common\Cache\Psr6\InvalidArgument;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Mollie\Api\Exceptions\ApiException;
-use Mollie\Api\Resources\Order as MollieOrder;
+use Mollie\Api\Resources\Order;
 use Mollie\Api\Resources\Payment;
+use Mollie\Api\Resources\Refund;
+use Mollie\Api\Resources\Shipment;
 use Mollie\Laravel\Facades\Mollie;
 use RuntimeException;
 use UnexpectedValueException;
 
 final class PaymentService
 {
-    private array $orders = [];
+    /**
+     * @var array<Order> $orders
+     */
+    private array $cachedOrders = [];
 
-    public function createForOrder(Order $order): MollieOrder
+    public function createOrder(PayableModel $model): Order
     {
-        $user = $order->user;
-
-        $safeAddress = Config::get('gumbo.fallbacks.address');
-        $address = [];
-
-        foreach ($safeAddress as $field => $value) {
-            $address[$field] = Arr::get($user->address, $field, $value);
-        }
-
-        if (isset($user->address['line1'])) {
-            $address['line2'] = $user->address['line2'];
-        }
-
-        $orderLines = [];
-        foreach ($order->variants as $variant) {
-            $orderLines[] = [
-                'type' => 'physical',
-                'category' => 'gift',
-                'name' => $variant->display_name,
-                'quantity' => $variant->pivot->quantity,
-                'unitPrice' => $this->currency($variant->pivot->price),
-                'totalAmount' => $this->currency($variant->pivot->price * $variant->pivot->quantity),
-                'vatRate' => '0.00',
-                'vatAmount' => $this->currency(0),
-                'sku' => $variant->sku,
-                'imageUrl' => URL::to($variant->valid_image_url),
-                'productUrl' => $variant->url,
-            ];
-        }
-
-        $transferFee = $this->currency($order->fee);
-        $orderLines[] = [
-            'type' => 'surcharge',
-            'category' => 'gift',
-            'name' => 'Transactiekosten',
-            'quantity' => 1,
-            'unitPrice' => $transferFee,
-            'totalAmount' => $transferFee,
-            'vatRate' => '0.00',
-            'vatAmount' => $this->currency(0),
-        ];
-
-        $orderArray = [
-            'amount' => $this->currency($order->price),
-            'orderNumber' => $order->number,
-            'lines' => $orderLines,
-            'billingAddress' => [
-                // Name
-                'givenName' => $user->first_name,
-                'familyName' => trim("{$user->insert} {$user->last_name}"),
-
-                // Contact details
-                'email' => $user->email,
-                'phone' => $user->phone,
-
-                // Address
-                'streetAndNumber' => $user->address['line1'],
-                'streetAdditional' => $user->address['line2'],
-                'postalCode' => $user->address['postal_code'],
-                'city' => $user->address['city'],
-                'country' => Str::upper($user->address['country']),
-            ],
-
-            // Redirect URL
-            'redirectUrl' => route('shop.order.pay-return', $order),
-            'webhookUrl' => route('api.webhooks.shop'),
-
-            // Payment method settings
-            'method' => 'ideal',
-            'locale' => 'nl_NL',
-
-            // Expiration date (always +24 hours)
-            'expiresAt' => ($order->expires_at ?? Date::now()->addDays(2))->format('Y-m-d'),
-        ];
+        $order = $model->toMollieOrder();
 
         if (in_array(parse_url(URL::full(), PHP_URL_HOST), [
             'localhost',
             '127.0.0.1',
             '[::1]',
         ], true)) {
-            unset($orderArray['webhookUrl']);
+            unset($order['webhookUrl']);
         }
 
-        return Mollie::api()->orders->create($orderArray, [
-            'embed' => 'payments',
+        return Mollie::api()->orders->create($order, [
+            'embed' => ['payments'],
         ]);
     }
 
-    public function getRedirectUrl(Order $order): string
+    public function shipAll(ShippableModel $model): ?Shipment
     {
-        // Paid orders don't have a redirect URL
-        if ($order->paid_at !== null) {
+        // Find order
+        $mollieOrder = $this->findOrder($model);
+
+        // Check if cancelled
+        if ($mollieOrder->isCanceled()) {
             return null;
         }
 
-        try {
-            $mollieOrder = $this->findOrder($order);
+        // Find any shipments
+        if ($mollieOrder->isShipping()) {
+            return Arr::first($mollieOrder->shipments());
+        }
 
-            // Paid upstream but webhook not yet processed.
-            if ($mollieOrder->isPaid()) {
+        // Ship everything
+        return $mollieOrder->shipAll();
+    }
+
+    public function refundAll(PayableModel $model): ?Refund
+    {
+        // Find order
+        $order = $this->findOrder($model);
+
+        // Check if shipped
+        if ($order->isShipping() || ! $order->isPaid()) {
+            return null;
+        }
+
+        // Check if refunded
+        if ($order->amountRefunded >= $order->amount) {
+            return Arr::first($order->refunds());
+        }
+
+        // Refund everything
+        return $order->refundAll();
+    }
+
+    public function getDashboardUrl(PayableModel $model): ?string
+    {
+        $order = $this->findOrder($model);
+
+        return object_get($order->_links, 'dashboard');
+    }
+
+    public function getRedirectUrl(PayableModel $model): string
+    {
+        // Paid orders don't have a redirect URL
+        if ($model->paid_at !== null) {
+            return null;
+        }
+
+        $order = $this->findOrder($model);
+
+        // Paid or cancelled, cannot be paid anymore.
+        if (
+            $order->isPaid()
+            || $order->isCanceled()
+            || $order->isExpired()
+        ) {
+            return null;
+        }
+
+        // Check for a checkout URL, might be null in case
+        // the payment was cancelled or has failed.
+        $existingUrl = $order->getCheckoutUrl();
+        if ($existingUrl) {
+            return $existingUrl;
+        }
+
+        // Create a new payment with the same options
+        /** @var Payment $payment */
+        $payment = $order->createPayment([]);
+
+        // Return new URL
+        return $payment->getCheckoutUrl();
+    }
+
+    /**
+     * Returns the payment that was succesfully completed.
+     */
+    public function getCompletedPayment(PayableModel $model): ?Payment
+    {
+        try {
+            $order = $this->findOrder($model);
+
+            if (! $order->isPaid()) {
                 return null;
             }
 
-            // Check for a checkout URL, might be null in case
-            // the payment was cancelled or has failed.
-            $existingUrl = $mollieOrder->getCheckoutUrl();
-            if ($existingUrl) {
-                return $existingUrl;
-            }
-
-            // Create a new payment and return that URL
-            /** @var Payment $payment */
-            $payment = $mollieOrder->createPayment([]);
-
-            return $payment->getCheckoutUrl();
+            return Arr::first(
+                $order->payments(),
+                fn (Payment $payment) => $payment->isPaid(),
+            );
         } catch (InvalidArgument $exception) {
             return null;
         }
     }
 
     /**
-     * Returns at what time the order was paid, if known.
+     * Returns the shipment, if there's any.
      */
-    public function paidAt(Order $order): ?DateTimeInterface
+    public function getShipment(ShippableModel $model): ?Shipment
     {
         try {
-            $mollieOrder = $this->findOrder($order);
+            $order = $this->findOrder($model);
 
-            if (! $mollieOrder->isPaid()) {
+            if (! $order->isShipping()) {
                 return null;
             }
 
-            return Date::parse($mollieOrder->paidAt)->toImmutable();
+            /** @var Shipment */
+            return Arr::first($order->shipments());
         } catch (InvalidArgument $exception) {
             return null;
         }
@@ -167,31 +165,40 @@ final class PaymentService
     /**
      * Checks if an order is paid, does not mutate the $order.
      */
-    public function isPaid(Order $order): bool
+    public function isPaid(PayableModel $model): bool
     {
-        if ($order->paid_at !== null) {
+        if ($model->{$model->getPaidAtField()} !== null) {
             return true;
         }
 
-        return $this->paidAt($order) !== null;
+        return $this->getCompletedPayment($model) !== null;
     }
 
-    private function currency(?int $value): ?array
+    /**
+     * Checks if an order is shipped, does not mutate the $order.
+     */
+    public function isShipped(ShippableModel $model): bool
     {
-        return $value === null ? null : [
-            'currency' => 'EUR',
-            'value' => sprintf('%.2f', $value / 100),
-        ];
-    }
-
-    private function findOrder(Order $order): MollieOrder
-    {
-        if (! $order->payment_id) {
-            throw new UnexpectedValueException('No Mollie order for this Gumbo order yet', 404);
+        if ($model->{$model->getShippedAtField()} !== null) {
+            return true;
         }
 
-        if (isset($this->orders[$order->payment_id])) {
-            return $this->orders[$order->payment_id];
+        return $this->getShipment($model) !== null;
+    }
+
+    /**
+     * Locates an order and stores the result in a request cache.
+     */
+    private function findOrder(PayableModel $model): Order
+    {
+        $paymentId = $model->{$model->getPaymentIdField()};
+
+        if (! $paymentId) {
+            throw new UnexpectedValueException('No Mollie order for this model (yet).', 404);
+        }
+
+        if (isset($this->cachedOrders[$paymentId])) {
+            return $this->cachedOrders[$paymentId];
         }
 
         Log::info('Using Mollie API', [
@@ -200,13 +207,14 @@ final class PaymentService
         ]);
 
         try {
-            $mollieOrder = Mollie::api()->orders->get($order->payment_id, [
+            $order = Mollie::api()->orders->get($paymentId, [
                 'embed' => [
                     'payments',
+                    'shipments',
                 ],
             ]);
 
-            return $this->orders[$order->payment_id] = $mollieOrder;
+            return $this->cachedOrders[$paymentId] = $order;
         } catch (ApiException $apiException) {
             throw new RuntimeException(
                 "API call to Mollie failed: {$apiException->getMessage()}",
@@ -215,6 +223,6 @@ final class PaymentService
             );
         }
 
-        return $this->order[$order->payment_id];
+        return $this->cachedOrders[$paymentId];
     }
 }
