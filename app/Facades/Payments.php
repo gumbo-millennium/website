@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isPaid(Order $order)
  * @method static null|\DateTimeInterface paidAt(Order $order)
  *
- * @see \App\Facades\PaymentService
+ * @see \App\Services\PaymentService
  */
 class Payments extends Facade
 {
