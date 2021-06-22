@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Api\ShopController;
+use App\Http\Controllers\Api\MollieController;
+use App\Http\Controllers\PlazaCamController;
+use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,12 +23,12 @@ use Illuminate\Support\Facades\Route;
 // });
 
 // Plazacam submission
-Route::put('plazacam/{user}/{image}', 'PlazaCamController@store')
+Route::put('plazacam/{user}/{image}', [PlazaCamController::class, 'store'])
     ->middleware('signed')
     ->name('plazacam.store');
 
 // Plazacam viewing via API
-Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
+Route::get('plazacam/{user}/{image}', [PlazaCamController::class, 'api'])
     ->middleware('signed')
     ->name('plazacam.view');
 
@@ -34,7 +36,8 @@ Route::get('plazacam/{user}/{image}', 'PlazaCamController@api')
 Route::stripeWebhooks('payments/stripe/handle');
 
 // Register Telegram webhooks
-Route::post('/bots/telegram', 'TelegramBotController@handle')->name('bots.telegram');
+Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('bots.telegram');
 
 // Register Mollie webhook URL
-Route::post('/webhooks/shop', [ShopController::class, 'webhook'])->name('webhooks.shop');
+Route::post('/mollie/hooks/activities', [MollieController::class, 'activity'])->name('webhooks.shop');
+Route::post('/mollie/hooks/shop', [MollieController::class, 'shop'])->name('webhooks.shop');
