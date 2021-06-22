@@ -56,7 +56,7 @@ final class PaymentService
             ];
         }
 
-        $transferFee = $this->currency(Config::get('gumbo.fees.shop-order'));
+        $transferFee = $this->currency($order->fee);
         $orderLines[] = [
             'type' => 'surcharge',
             'category' => 'gift',

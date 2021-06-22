@@ -146,7 +146,7 @@ class CartController extends Controller
             'name' => 'Transactiekosten',
             'type' => 'fee',
             'target' => 'total',
-            'value' => Config::get('gumbo.fees.shop-order'),
+            'value' => Config::get('gumbo.transfer-fee'),
             'order' => 1,
         ]));
     }

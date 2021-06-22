@@ -6,13 +6,8 @@ return [
     // Application status, based on URL
     'beta' => env('GUMBO_BETA', env('APP_URL', 'http://localhost') !== 'https://www.gumbo-millennium.nl'),
 
-    // Cost of a single payment transaction via Stripe, in cents!
-    'transfer-fee' => 29,
-
-    // Cost of Mollie, including refund buffer.
-    'fees' => [
-        'shop-order' => 40,
-    ],
+    // Cost of a single payment transaction
+    'transfer-fee' => 40,
 
     // Google config
     'google' => [
