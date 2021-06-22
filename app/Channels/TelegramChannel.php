@@ -33,6 +33,8 @@ class TelegramChannel
         // Get the bot out
         $bot = Telegram::bot();
 
+        dump($message->toArray());
+
         // Determine proper action
         $method = 'send' . class_basename($message);
         if (! method_exists($bot, $method)) {
