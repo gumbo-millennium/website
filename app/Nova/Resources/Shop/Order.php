@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Nova\Resources\Shop;
 
 use App\Models\Shop\Order as Model;
+use App\Nova\Actions\Shop\CancelOrder;
+use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
@@ -66,6 +68,12 @@ class Order extends Resource
             DateTime::make(__('Shipped at'), 'shipped_at')
                 ->onlyOnDetail(),
 
+            DateTime::make(__('Cancelled at'), 'cancelled_at')
+                ->onlyOnDetail(),
+
+            DateTime::make(__('Expires at'), 'expires_at')
+                ->onlyOnDetail(),
+
             BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
 
@@ -88,6 +96,20 @@ class Order extends Resource
 
             BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
                 ->fields(new OrderProductFields()),
+        ];
+    }
+
+    /**
+     * Get the actions available on the entity.
+     *
+     * @return array
+     */
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    public function actions(Request $request)
+    {
+        return [
+            new ShipOrder(),
+            new CancelOrder(),
         ];
     }
 }

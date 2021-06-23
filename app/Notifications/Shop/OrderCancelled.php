@@ -6,7 +6,7 @@ namespace App\Notifications\Shop;
 
 use Illuminate\Notifications\Messages\MailMessage;
 
-class OrderExpired extends ShopNotification
+class OrderCancelled extends ShopNotification
 {
     /**
      * Get the notification's delivery channels.
@@ -31,17 +31,13 @@ class OrderExpired extends ShopNotification
         $date = $order->created_at->isoFormat('dddd DD MMMM');
 
         return (new MailMessage())
-            ->subject("Bestelling {$order->number} verlopen")
+            ->subject("Bestelling {$order->number} geannuleerd")
 
             ->greeting("Beste {$notifiable->first_name},")
 
-            ->line("Je hebt op {$date} een bestelling geplaatst (nummertje {$order->number}), maar deze niet op tijd betaald.")
+            ->line("Je bestelling van {$date} (bestelnummer {$order->number}) is geannuleerd.")
 
-            ->line('Omdat je met jouw bestelling ook een stukje voorraad dibst, moet je op tijd betalen.')
-
-            ->line("**BUT YOU DIDN'T, DID YOU NOW!?**")
-
-            ->line('Dus, om deze reden is jouw bestelling het raam uit gegooit. Als je toch de producten wil kopen, mag je opnieuw naar de webshop.')
+            ->line('Als je toch de producten wil kopen, kan je hieronder de bestelling bekijken ter referentie.')
 
             ->action(
                 'Bekijk bestelling',
