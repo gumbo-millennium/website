@@ -25,23 +25,19 @@ module.exports = ({ file, options, env }) => {
     tailwindcss(),
     responsiveImages(),
     postcssCalc({}),
-    postcssRem(remConfig),
     autoprefixer()
     // cssnano
   ]
 
   // Inline variables if required
-  if (file.basename === 'mail.css') {
-    // Remove dark
-    plugins.splice(plugins.length - 1, 0, removeDarkMode())
-
-    // Remove unsuported variables
-    if (isProduction) {
-      plugins.splice(plugins.length - 1, 0, postcssVariables())
-    }
-
-    // Add rem to px
-    plugins.splice(plugins.length - 1, 0, pixrem({ replace: false }))
+  if (file.basename === 'mail.css' && isProduction) {
+    // Remove dark, variables and convert rem to px
+    plugins.splice(plugins.length - 1, 0, [
+      removeDarkMode(),
+      postcssVariables(),
+      postcssRem(remConfig),
+      pixrem({ replace: false })
+    ])
   }
 
   if (isProduction) {

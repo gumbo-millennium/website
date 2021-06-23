@@ -37,3 +37,7 @@
 .btn--wide {
   @apply block text-center;
 }
+
+.btn--small {
+  @apply my-2 py-2 px-6;
+}

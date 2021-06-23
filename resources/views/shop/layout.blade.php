@@ -9,6 +9,10 @@
     @endif
 </div>
 
+{{-- Adverts? --}}
+@section('shop-adverts')
+@show
+
 {{-- Breadcrumbs --}}
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}

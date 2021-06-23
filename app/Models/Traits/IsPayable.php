@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Models\Traits;
 
 use App\Contracts\Payments\PayableModel;
+use App\Helpers\Arr;
+use App\Models\User;
+use App\Services\Payments\Address;
 use App\Services\Payments\Order;
+use Illuminate\Support\Facades\Config;
 
 trait IsPayable
 {
@@ -65,5 +69,29 @@ trait IsPayable
         }
 
         return PayableModel::STATUS_OPEN;
+    }
+
+    /**
+     * Returns a valid address to ship to.
+     */
+    protected function getPaymentAddressForUser(User $user): Address
+    {
+        $userAddress = $user->address;
+        if (! Arr::has($userAddress ?? [], ['line1', 'postal_code', 'city', 'country'])) {
+            $userAddress = Config::get('gumbo.fallbacks.address');
+        }
+
+        return Address::make()
+            ->givenName($user->first_name)
+            ->familyName(trim("{$user->insert} {$user->last_name}"))
+
+            ->email($user->email)
+            ->phone($user->phone)
+
+            ->streetAndNumber(Arr::get($userAddress, 'line1'))
+            ->streetAdditional(Arr::get($userAddress, 'line2'))
+            ->city(Arr::get($userAddress, 'city'))
+            ->postalCode(Arr::get($userAddress, 'postal_code'))
+            ->country(Arr::get($userAddress, 'country'));
     }
 }

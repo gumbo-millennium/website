@@ -23,7 +23,7 @@ use UnexpectedValueException;
 class PaymentService implements PaymentServiceContract
 {
     /**
-     * @var array<Order> $orders
+     * @var array<Order> $cachedOrders
      */
     private array $cachedOrders = [];
 
@@ -49,10 +49,7 @@ class PaymentService implements PaymentServiceContract
 
         try {
             $order = Mollie::api()->orders->get($paymentId, [
-                'embed' => [
-                    'payments',
-                    'shipments',
-                ],
+                'embed' => 'payments,shipments',
             ]);
 
             return $this->cachedOrders[$paymentId] = $order;
@@ -82,6 +79,15 @@ class PaymentService implements PaymentServiceContract
         return Mollie::api()->orders->create($order->toArray(), [
             'embed' => ['payments'],
         ]);
+    }
+
+    public function cancelOrder(PayableModel $model): void
+    {
+        $order = $this->findOrder($model);
+
+        if ($order->isCancelable) {
+            $order->cancel();
+        }
     }
 
     public function isPaid(PayableModel $model): bool
@@ -163,7 +169,7 @@ class PaymentService implements PaymentServiceContract
             }
 
             return Arr::first(
-                $order->payments(),
+                $order->payments() ?? [],
                 fn (Payment $payment) => $payment->isPaid(),
             );
         } catch (InvalidArgument $exception) {

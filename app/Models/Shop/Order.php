@@ -6,17 +6,14 @@ namespace App\Models\Shop;
 
 use App\Contracts\Payments\PayableModel;
 use App\Events\OrderPaidEvent;
-use App\Helpers\Arr;
 use App\Models\Traits\IsPayable;
 use App\Models\User;
-use App\Services\Payments\Address;
 use App\Services\Payments\Order as FluentOrder;
 use App\Services\Payments\OrderLine;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\URL;
 
@@ -147,20 +144,8 @@ class Order extends Model implements PayableModel
     public function toMollieOrder(): FluentOrder
     {
         $order = FluentOrder::make($this->price, $this->number);
-        $user = $this->user;
 
-        $userAddress = $user->address;
-        if (! Arr::has($userAddress ?? [], ['line1', 'postal_code', 'city', 'country'])) {
-            $userAddress = Config::get('gumbo.fallbacks.address');
-        }
-
-        $address = Address::make()
-            ->streetAndNumber(Arr::get($userAddress, 'line1'))
-            ->streetAddition(Arr::get($userAddress, 'line2'))
-            ->city(Arr::get($userAddress, 'city'))
-            ->postalCode(Arr::get($userAddress, 'postal_code'))
-            ->country(Arr::get($userAddress, 'country'));
-
+        $address = $this->getPaymentAddressForUser($this->user);
         $order
             ->billingAddress($address)
             ->shippingAddress($address);

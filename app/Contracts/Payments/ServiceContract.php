@@ -24,6 +24,13 @@ interface ServiceContract
     public function createOrder(PayableModel $model): Order;
 
     /**
+     * Cancels the order for Mollie, does not mutate model.
+     *
+     * @throws RuntimeException if $model has no associated order
+     */
+    public function cancelOrder(PayableModel $model): void;
+
+    /**
      * Checks if an order is paid, does not mutate the $model.
      */
     public function isPaid(PayableModel $model): bool;

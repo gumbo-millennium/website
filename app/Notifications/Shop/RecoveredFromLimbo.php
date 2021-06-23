@@ -15,7 +15,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Date;
 use Telegram\Bot\Keyboard\Keyboard;
 
-class ExpiresSoonReminder extends ShopNotification implements TelegramNotification
+class RecoveredFromLimbo extends ShopNotification implements TelegramNotification
 {
     /**
      * Get the notification's delivery channels.
@@ -37,23 +37,19 @@ class ExpiresSoonReminder extends ShopNotification implements TelegramNotificati
      */
     public function toMail($notifiable)
     {
-        $order = $this->order;
-        $value = Str::price($this->order->price);
-
-        $expiration = $order->expires_at->isoFormat('dddd DD MMMM, \o\m H:mm');
         $orderDate = $this->order->created_at->isoFormat('dddd DD MMMM');
-        $orderTime = $this->order->created_at->isoFormat('H:mm');
 
         return (new MailMessage())
-            ->subject('Je webwinkel bestelling verloopt bijna!')
+            ->subject('je kunt nu betalen!')
+
             ->greeting("Beste {$notifiable->first_name},")
 
-            ->line("Op {$orderDate} om {$orderTime} heb je een bestelling geplaatst in de Gumbo webwinkel ter waarde van {$value}.")
-            ->line("Deze bestelling moet je betaald hebben voor {$expiration}, anders annuleren we deze.")
+            ->line('Sorry dat er wat fout ging bij je bestelling, waardoor je niet verder kon.')
+            ->line("We hebben je bestelling van {$orderDate} opgeduikeld uit limbo en je kan hem nu betalen.")
 
-            ->action('Nu betalen', url('/'))
+            ->action('Bekijk bestelling', route('shop.order.show', $this->order))
 
-            ->line('Als je geen behoefte hebt om deze bestelling af te ronden, dan hoef je niks te doen.')
+            ->line('Als je geen behoefte meer hebt om deze bestelling af te ronden, dan hoef je niks te doen.')
 
             ->salutation('Tot snel!');
     }
@@ -68,22 +64,17 @@ class ExpiresSoonReminder extends ShopNotification implements TelegramNotificati
         $value = Str::price($this->order->price);
 
         $message = <<<TEXT
-        ⏰ Je bestelling verloopt bijna!
+        Je bestelling is hersteld 💚
 
-        Je hebt nog {$expiresIn} om je Gumbo webwinkel bestelling {$order->number} af te ronden!
+        Sorry voor de overlast, maar je kan nu je bestelling betalen.
+        De bestelling verloopt over {$expiresIn}, dus voor die tijd betalen of we gooien 'm weg.
         TEXT;
 
         return Message::make($message)
             ->addKeyboardRow(
                 Keyboard::inlineButton([
-                    'text' => "Nu {$value} betalen",
-                    'url' => route('shop.order.pay', $this->order),
-                ]),
-            )
-            ->addKeyboardRow(
-                Keyboard::inlineButton([
-                    'text' => 'Bestelling annuleren',
-                    'url' => route('shop.order.cancel', $this->order),
+                    'text' => 'Bekijk bestelling',
+                    'url' => route('shop.order.show', $this->order),
                 ]),
             );
     }

@@ -65,6 +65,10 @@ class Kernel extends ConsoleKernel
 
         // Manually check for payments every hour
         $schedule->command('shop:update-orders')->hourlyAt(15);
+
+        // Shop expiration and reminders
+        $schedule->command('shop:send-reminders')->hourlyAt(20);
+        $schedule->command('shop:cancel-expired')->twiceDaily(2, 14);
     }
 
     /**

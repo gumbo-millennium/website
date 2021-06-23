@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \Mollie\Api\Resources\Order createOrder(PayableModel $model)
  * @method static \Mollie\Api\Resources\Order findOrder(PayableModel $model)
+ * @method static void cancelOrder(PayableModel $model)
  *
  * @method static bool isPaid(PayableModel $model)
  * @method static bool isCompleted(PayableModel $model)

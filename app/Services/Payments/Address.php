@@ -14,7 +14,7 @@ use Illuminate\Support\Fluent;
  * @method self email(string $email)
  * @method self phone(string $phone)
  * @method self streetAndNumber(string $streetAndNumber)
- * @method self streetAddition(string $streetAddition)
+ * @method self streetAdditional(string $streetAdditional)
  * @method self postalCode(string $postalCode)
  * @method self city(string $city)
  * @method self region(string $region)

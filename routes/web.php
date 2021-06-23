@@ -226,6 +226,9 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::get('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
     Route::get('/bestellingen/{order}/betalen/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
 
+    Route::get('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancelShow'])->name('order.cancel');
+    Route::post('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancel']);
+
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });

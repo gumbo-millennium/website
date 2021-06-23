@@ -17,9 +17,19 @@
         </div>
 
         <div>
-            <p class="text-center rounded-full select-none text-sm py-1 px-2 border border-gray-400">
-                {{ Str::price($order->price) }}
-            </p>
+            @if ($order->cancelled_at)
+                <p class="text-center uppercase rounded-full select-none text-sm py-1 px-2 border border-red-400 text-red-500">
+                    Geannuleerd
+                </p>
+            @elseif ($order->payment_id === null)
+                <p class="text-center rounded-full select-none text-sm py-1 px-2 bg-black text-white">
+                    limbo
+                </p>
+            @else
+                <p class="text-center rounded-full select-none text-sm py-1 px-2 border border-gray-400">
+                    {{ Str::price($order->price) }}
+                </p>
+            @endif
         </div>
     </div>
 </div>
