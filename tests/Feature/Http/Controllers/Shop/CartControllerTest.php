@@ -24,7 +24,7 @@ class CartControllerTest extends TestCase
      */
     public function setFees(): void
     {
-        $this->afterApplicationCreated(fn () => Config::set('gumbo.fees.shop-order', self::SHOP_FEE));
+        $this->afterApplicationCreated(fn () => Config::set('gumbo.transfer-fee', self::SHOP_FEE));
     }
 
     public function test_adding_items_is_for_members_only(): void
