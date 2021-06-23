@@ -50,6 +50,12 @@ class Category extends Model
                 'unique' => true,
                 'maxLengthKeepWords' => 48,
                 'source' => 'name',
+                'reserved' => [
+                    'item',
+                    'winkelwagen',
+                    'plaats-bestelling',
+                    'bestellingen',
+                ],
             ],
         ];
     }

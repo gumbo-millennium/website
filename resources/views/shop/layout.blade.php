@@ -21,6 +21,7 @@
 @show
 
 {{-- Main --}}
+@section('shop-container')
 <div class="container">
     @hasSection ('shop-sidebar')
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -35,4 +36,5 @@
     @yield('shop-content')
     @endif
 </div>
+@show()
 @endsection

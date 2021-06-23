@@ -42,7 +42,9 @@ class Order extends Fluent
 
     public function expiresAt(?DateTimeInterface $expiresAt): self
     {
-        return $this['expiresAt'] = optional($expiresAt)->format('Y-m-d');
+        $this['expiresAt'] = optional($expiresAt)->format('Y-m-d');
+
+        return $this;
     }
 
     public function toArray()

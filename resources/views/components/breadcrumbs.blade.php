@@ -10,7 +10,7 @@
             <li>
                 @icon('solid/chevron-right', 'h-4')
             </li>
-            @empty ($url)
+            @if (is_int($url))
             <li>
                 <span class="breadcrumbs__item cursor-default">
                     {{ $text }}

@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Contracts\Payments\PayableModel;
-use App\Contracts\Payments\ShippableModel;
 use App\Events\OrderPaidEvent;
 use App\Helpers\Arr;
 use App\Models\Traits\IsPayable;
-use App\Models\Traits\IsShippable;
 use App\Models\User;
 use App\Services\Payments\Address;
 use App\Services\Payments\Order as FluentOrder;
@@ -39,10 +37,9 @@ use Illuminate\Support\Facades\URL;
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
  * @property-read \App\Models\User $user
  */
-class Order extends Model implements PayableModel, ShippableModel
+class Order extends Model implements PayableModel
 {
     use IsPayable;
-    use IsShippable;
 
     protected $table = 'shop_orders';
 
@@ -168,7 +165,7 @@ class Order extends Model implements PayableModel, ShippableModel
             ->billingAddress($address)
             ->shippingAddress($address);
 
-        foreach ($order->variants as $variant) {
+        foreach ($this->variants as $variant) {
             $order->addLine(
                 OrderLine::make(
                     $variant->display_name,
@@ -185,13 +182,13 @@ class Order extends Model implements PayableModel, ShippableModel
             OrderLine::make(
                 'Transactiekosten',
                 1,
-                $this->fee,
+                (int) $this->fee,
                 'surcharge',
             ),
         );
 
         $order
-            ->redirectUrl(URL::route('shop.order.pay-return', $order));
+            ->redirectUrl(URL::route('shop.order.pay-return', $this));
 
         $isLocal = in_array(parse_url(URL::to('/'), PHP_URL_HOST), [
             'localhost',
@@ -209,7 +206,7 @@ class Order extends Model implements PayableModel, ShippableModel
             ->locale('nl_NL');
 
         $order
-            ->expiresAt($order->expires_at ?? Date::now()->addDays(2));
+            ->expiresAt($this->expires_at ?? Date::now()->addDays(2));
 
         return $order;
     }

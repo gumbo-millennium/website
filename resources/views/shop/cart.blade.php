@@ -11,7 +11,7 @@ Je winkelwagen is <strong>geen</strong> reservering, dus lekker snel bestellen i
 @breadcrumbs([
     'items' => [
         route('shop.home') => 'Shop',
-        '' => 'Winkelwagen',
+        'Winkelwagen',
     ]
 ])
 @endbreadcrumbs

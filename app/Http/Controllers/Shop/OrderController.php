@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreOrderRequest;
 use App\Models\Shop\Order;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,6 +22,43 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrderController extends Controller
 {
+    /**
+     * List of placed orders.
+     */
+    public function index(Request $request): Response
+    {
+        $orders = Order::query()
+            ->whereHas('user', fn (Builder $query) => $query->whereId($request->user()->id))
+            ->with([
+                'variants',
+                'variants.product',
+            ])
+            ->orderBy('created_at')
+            ->get();
+
+        // Whitelist images
+        $this->addImageUrlsToCspPolicy(
+            $orders->map(
+                fn (Order $order) => $order
+                ->variants
+                ->first()
+                ->valid_image_url,
+            )->toArray(),
+        );
+
+        return ResponseFacade::view('shop.order.index', [
+            'totalOrders' => $orders->count(),
+            'openOrders' => $orders->where('payment_status', PayableModel::STATUS_OPEN),
+            'paidOrders' => $orders->where('payment_status', PayableModel::STATUS_PAID),
+            'completedOrders' => $orders->where('payment_status', PayableModel::STATUS_COMPLETED),
+            'restOrders' => $orders->whereNotIn('payment_status', [
+                PayableModel::STATUS_COMPLETED,
+                PayableModel::STATUS_PAID,
+                PayableModel::STATUS_OPEN,
+            ]),
+        ])->header('Cache-Control', 'no-cache, no-store');
+    }
+
     /**
      * Shows the current shopping cart. It does NOT yet check if the
      * inventory allows for this order to fly, that's up to the
@@ -44,7 +83,7 @@ class OrderController extends Controller
             'total' => Cart::getTotal(),
             'subTotal' => Cart::getSubTotal(),
             'cartItems' => Cart::getContent(),
-        ])->header('Cache-Control', 'no-store');
+        ])->header('Cache-Control', 'no-cache, no-store');
     }
 
     /**
@@ -152,5 +191,42 @@ class OrderController extends Controller
         );
 
         return ResponseFacade::redirectToRoute('shop.order.show', $order);
+    }
+
+    public function cancelShow(Request $request, Order $order): Response
+    {
+        // Only allowing viewing your own orders
+        abort_unless($request->user()->is($order->user), 404);
+
+        if ($order->shipped_at !== null) {
+            flash()->info(
+                'Deze bestelling is al verzonden. Je kunt hem niet meer annuleren.',
+            );
+
+            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        }
+
+        $order->hungry();
+
+        // Whitelist images
+        $this->addImageUrlsToCspPolicy(
+            $order->variants->pluck('valid_image_url')->toArray(),
+        );
+
+        // Find refund info
+        $payment = Payments::getCompletedPayment($order);
+        if ($payment) {
+            // Render it
+            return ResponseFacade::view('shop.order.cancel', [
+                'order' => $order,
+                'isPaid' => Payments::isPaid($order),
+            ]);
+        }
+    }
+
+    public function cancel(Request $request, Order $order): RedirectResponse
+    {
+        // Only allowing viewing your own orders
+        abort_unless($request->user()->is($order->user), 404);
     }
 }

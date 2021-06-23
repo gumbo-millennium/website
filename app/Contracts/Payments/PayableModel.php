@@ -8,6 +8,16 @@ use App\Services\Payments\Order;
 
 interface PayableModel
 {
+    public const STATUS_UNKNOWN = 'unknown';
+
+    public const STATUS_OPEN = 'open';
+
+    public const STATUS_PAID = 'paid';
+
+    public const STATUS_CANCELLED = 'cancelled';
+
+    public const STATUS_COMPLETED = 'completed';
+
     /**
      * Returns a Mollie order from this model.
      */
@@ -27,4 +37,9 @@ interface PayableModel
      * Returns the field to store when the object was cancelled.
      */
     public function getCancelledAtField(): string;
+
+    /**
+     * Returns the field to store when the order was completed.
+     */
+    public function getCompletedAtField(): string;
 }

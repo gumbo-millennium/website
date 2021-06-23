@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Payments\PayableModel;
-use App\Contracts\Payments\ShippableModel;
+use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Helpers\Arr;
 use Doctrine\Common\Cache\Psr6\InvalidArgument;
 use Illuminate\Support\Facades\Config;
@@ -20,12 +20,52 @@ use Mollie\Laravel\Facades\Mollie;
 use RuntimeException;
 use UnexpectedValueException;
 
-final class PaymentService
+class PaymentService implements PaymentServiceContract
 {
     /**
      * @var array<Order> $orders
      */
     private array $cachedOrders = [];
+
+    /**
+     * Locates an order and stores the result in a request cache.
+     */
+    public function findOrder(PayableModel $model): Order
+    {
+        $paymentId = $model->{$model->getPaymentIdField()};
+
+        if (! $paymentId) {
+            throw new UnexpectedValueException('No Mollie order for this model (yet).', 404);
+        }
+
+        if (isset($this->cachedOrders[$paymentId])) {
+            return $this->cachedOrders[$paymentId];
+        }
+
+        Log::info('Using Mollie API', [
+            'api' => Mollie::api()->getApiEndpoint(),
+            'key' => Config::get('mollie'),
+        ]);
+
+        try {
+            $order = Mollie::api()->orders->get($paymentId, [
+                'embed' => [
+                    'payments',
+                    'shipments',
+                ],
+            ]);
+
+            return $this->cachedOrders[$paymentId] = $order;
+        } catch (ApiException $apiException) {
+            throw new RuntimeException(
+                "API call to Mollie failed: {$apiException->getMessage()}",
+                $apiException->getCode(),
+                $apiException,
+            );
+        }
+
+        return $this->cachedOrders[$paymentId];
+    }
 
     public function createOrder(PayableModel $model): Order
     {
@@ -39,47 +79,38 @@ final class PaymentService
             unset($order['webhookUrl']);
         }
 
-        return Mollie::api()->orders->create($order, [
+        return Mollie::api()->orders->create($order->toArray(), [
             'embed' => ['payments'],
         ]);
     }
 
-    public function shipAll(ShippableModel $model): ?Shipment
+    public function isPaid(PayableModel $model): bool
     {
-        // Find order
-        $mollieOrder = $this->findOrder($model);
-
-        // Check if cancelled
-        if ($mollieOrder->isCanceled()) {
-            return null;
+        if ($model->{$model->getPaidAtField()} !== null) {
+            return true;
         }
 
-        // Find any shipments
-        if ($mollieOrder->isShipping()) {
-            return Arr::first($mollieOrder->shipments());
-        }
-
-        // Ship everything
-        return $mollieOrder->shipAll();
+        return $this->findOrder($model)->isPaid();
     }
 
-    public function refundAll(PayableModel $model): ?Refund
+    public function isCompleted(PayableModel $model): bool
     {
-        // Find order
+        if ($model->{$model->getCompletedAtField()} !== null) {
+            return true;
+        }
+
+        return $this->findOrder($model)->isCompleted();
+    }
+
+    public function isCancelled(PayableModel $model): bool
+    {
+        if ($model->{$model->getCancelledAtField()} !== null) {
+            return true;
+        }
+
         $order = $this->findOrder($model);
 
-        // Check if shipped
-        if ($order->isShipping() || ! $order->isPaid()) {
-            return null;
-        }
-
-        // Check if refunded
-        if ($order->amountRefunded >= $order->amount) {
-            return Arr::first($order->refunds());
-        }
-
-        // Refund everything
-        return $order->refundAll();
+        return $order->isCanceled() || $order->isExpired();
     }
 
     public function getDashboardUrl(PayableModel $model): ?string
@@ -122,9 +153,6 @@ final class PaymentService
         return $payment->getCheckoutUrl();
     }
 
-    /**
-     * Returns the payment that was succesfully completed.
-     */
     public function getCompletedPayment(PayableModel $model): ?Payment
     {
         try {
@@ -143,10 +171,7 @@ final class PaymentService
         }
     }
 
-    /**
-     * Returns the shipment, if there's any.
-     */
-    public function getShipment(ShippableModel $model): ?Shipment
+    public function getShipment(PayableModel $model): ?Shipment
     {
         try {
             $order = $this->findOrder($model);
@@ -162,67 +187,43 @@ final class PaymentService
         }
     }
 
-    /**
-     * Checks if an order is paid, does not mutate the $order.
-     */
-    public function isPaid(PayableModel $model): bool
+    public function shipAll(PayableModel $model, ?string $carrier = null, ?string $trackingCode = null): ?Shipment
     {
-        if ($model->{$model->getPaidAtField()} !== null) {
-            return true;
+        // Find order
+        $mollieOrder = $this->findOrder($model);
+
+        // Check if cancelled
+        if ($mollieOrder->isCanceled()) {
+            return null;
         }
 
-        return $this->getCompletedPayment($model) !== null;
-    }
-
-    /**
-     * Checks if an order is shipped, does not mutate the $order.
-     */
-    public function isShipped(ShippableModel $model): bool
-    {
-        if ($model->{$model->getShippedAtField()} !== null) {
-            return true;
+        // Find any shipments (shipping = some is sent, completed = all is sent)
+        if ($mollieOrder->isShipping() || $mollieOrder->isCompleted()) {
+            return Arr::first($mollieOrder->shipments());
         }
 
-        return $this->getShipment($model) !== null;
-    }
-
-    /**
-     * Locates an order and stores the result in a request cache.
-     */
-    private function findOrder(PayableModel $model): Order
-    {
-        $paymentId = $model->{$model->getPaymentIdField()};
-
-        if (! $paymentId) {
-            throw new UnexpectedValueException('No Mollie order for this model (yet).', 404);
-        }
-
-        if (isset($this->cachedOrders[$paymentId])) {
-            return $this->cachedOrders[$paymentId];
-        }
-
-        Log::info('Using Mollie API', [
-            'api' => Mollie::api()->getApiEndpoint(),
-            'key' => Config::get('mollie'),
+        // Ship everything
+        return $mollieOrder->shipAll([
+            '',
         ]);
+    }
 
-        try {
-            $order = Mollie::api()->orders->get($paymentId, [
-                'embed' => [
-                    'payments',
-                    'shipments',
-                ],
-            ]);
+    public function refundAll(PayableModel $model): ?Refund
+    {
+        // Find order
+        $order = $this->findOrder($model);
 
-            return $this->cachedOrders[$paymentId] = $order;
-        } catch (ApiException $apiException) {
-            throw new RuntimeException(
-                "API call to Mollie failed: {$apiException->getMessage()}",
-                $apiException->getCode(),
-                $apiException,
-            );
+        // Check if shipped
+        if ($order->isShipping() || ! $order->isPaid()) {
+            return null;
         }
 
-        return $this->cachedOrders[$paymentId];
+        // Check if refunded
+        if ($order->amountRefunded >= $order->amount) {
+            return Arr::first($order->refunds());
+        }
+
+        // Refund everything
+        return $order->refundAll();
     }
 }

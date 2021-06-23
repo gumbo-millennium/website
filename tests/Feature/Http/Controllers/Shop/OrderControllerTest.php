@@ -4,7 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Shop;
 
+use App\Facades\Payments;
+use App\Helpers\Str;
+use App\Models\Shop\Order;
+use App\Models\Shop\ProductVariant;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources as MollieResources;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
 use Tests\Traits\TestsMembersOnlyRoutes;
@@ -15,27 +24,150 @@ class OrderControllerTest extends TestCase
     use TestsMembersOnlyRoutes;
     use TestsShop;
 
-    public function test_get_create_with_empty_cart()
+    public function test_get_create_with_empty_cart(): void
     {
         $this->onlyForMembers(route('shop.order.create'))
             ->assertRedirect(route('shop.cart'));
     }
 
-    public function test_get_create_with_cart()
+    public function test_get_create_with_cart(): void
     {
-        $this->markTestSkipped('Will fix when we have SQLite');
+        $this->actingAs($this->getMemberUser());
 
         $variant = $this->getProductVariant();
 
-        $response = $this->onlyForMembers(route('shop.cart.add'), [
+        $payFee = Config::get('gumbo.transfer-fee');
+
+        $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => 1,
-        ], 'post');
-        $response->assertRedirect();
+        ])->assertRedirect();
 
-        $response = $this->onlyForMembers(route('shop.order.create'));
+        $response = $this->get(route('shop.order.create'));
         $response
             ->assertOk()
-            ->assertSeeText($variant->display_name);
+            ->assertSeeText($variant->display_name)
+            ->assertSee(Str::price($payFee));
+    }
+
+    public function test_submit_create_with_empty_cart(): void
+    {
+        $this->onlyForMembers(route('shop.order.store'), [], 'post')
+            ->assertRedirect(route('shop.cart'));
+    }
+
+    public function test_submit_create_with_items_in_cart(): void
+    {
+        $variant = $this->getProductVariant();
+
+        $variantPrice = $variant->price;
+        $payFee = Config::get('gumbo.transfer-fee');
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 2,
+        ])->assertRedirect();
+
+        Payments::partialMock()
+            ->expects('createOrder')
+            ->andReturn(
+                tap(new MollieResources\Order(
+                    App::make(MollieApiClient::class),
+                ), fn ($order) => $order->id = 'test-123'),
+            );
+
+        $this->post(route('shop.order.store'))
+            ->assertRedirect(route('shop.order.pay', ['order' => Order::query()->max('id')]));
+
+        $lastOrder = Order::latest()->first();
+
+        $this->assertNotNull($lastOrder, 'Cannot find created order');
+
+        $this->assertEquals($payFee + $variantPrice * 2, $lastOrder->price);
+
+        $this->assertEquals('test-123', $lastOrder->payment_id);
+    }
+
+    public function test_view_order(): void
+    {
+        $memberUser = $this->getMemberUser();
+
+        $variant = $this->getProductVariant();
+
+        $order = $this->createOrder($memberUser, [
+            $variant,
+        ]);
+
+        $orderUrl = route('shop.order.show', [$order]);
+
+        // Test logged out
+        $this
+            ->get($orderUrl)
+            ->assertRedirect(route('login'));
+
+        // Test guest (members only)
+        $this
+            ->actingAs($this->getGuestUser())
+            ->get($orderUrl)
+            ->assertForbidden();
+
+        // Test different user than owner
+        $this
+            ->actingAs($this->getBoardUser())
+            ->get($orderUrl)
+            ->assertNotFound();
+
+        // Test actual user
+        $this
+            ->actingAs($memberUser)
+            ->get($orderUrl)
+            ->assertOk()
+            ->assertSee($variant->display_name)
+            ->assertSee($order->number)
+            ->assertSee(Str::price($order->price))
+            ->assertSee(Str::price($order->fee))
+            ->assertSee(Str::price($variant->price));
+    }
+
+    /**
+     * Create a quick order to test with.
+     */
+    private function createOrder(User $user, array $variants, int $fee = 100): Order
+    {
+        // Map variants to array
+        $variants = collect($variants);
+
+        // Create order
+        $order = new Order([
+            'fee' => $fee,
+            'price' => $variants->sum('price') + $fee,
+        ]);
+
+        $order->user()->associate($user);
+
+        // Save changes
+        $order->save();
+
+        // Assign variants, mapped as a proper table
+        $variantWithAmount = collect($variants)
+            ->mapWithKeys(function (ProductVariant $variant) {
+                return [
+                    $variant->id => [
+                        'price' => $variant->price,
+                        'quantity' => 1,
+                    ],
+                ];
+            });
+
+        $order->variants()->sync($variantWithAmount);
+
+        $order
+            ->refresh()
+            ->loadMissing([
+                'variants',
+                'variants.product',
+            ]);
+
+        return $order;
     }
 }

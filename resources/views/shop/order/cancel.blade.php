@@ -3,16 +3,8 @@
 @php($user = Auth::user())
 
 {{-- Header --}}
-@section('shop-title', "Bestelling {$order->number}")
-@section('shop-subtitle')
-@if ($order->status === 'pending')
-Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd DD MMMM') }}.
-@elseif ($order->status === 'shipped')
-Afgeleverd op {{ $order->shipped_at->isoFormat('dddd DD MMMM') }}.
-@elseif ($order->status === 'paid')
-Betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM, H:mm') }}.
-@endif
-@endsection
+@section('shop-title', "Bestelling {$order->number} annuleren")
+@section('shop-subtitle', 'Toch maar niet?')
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
@@ -20,7 +12,8 @@ Betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM, H:mm') }}.
     'items' => [
         route('shop.home') => 'Shop',
         route('shop.order.index') => 'Bestellingen',
-        "Bestelling {$order->number}"
+        route('shop.order.show', $order) => "Bestelling {$order->number}"
+        'Annuleren'
     ]
 ])
 @endbreadcrumbs
@@ -28,9 +21,15 @@ Betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM, H:mm') }}.
 
 {{-- Main --}}
 @section('shop-content')
-    <h3 class="text-xl font-title font-medium mb-4">Factuuradres</h3>
+    <h3 class="text-xl font-title font-medium mb-4">Terugbetaling</h3>
 
     <div class="bg-gray-50 rounded-lg p-4 mb-2">
+        @if ($isPaid)
+        <strong class="text-lg font-title font-bold">{{ $user->name }}</strong>
+        <p>
+            {{ $user->address_string }}
+        </p>
+        @endif
         <strong class="text-lg font-title font-bold">{{ $user->name }}</strong>
         <p>
             {{ $user->address_string }}
