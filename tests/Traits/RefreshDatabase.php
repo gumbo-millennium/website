@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Traits;
 
-use Illuminate\Foundation\Testing\RefreshDatabase as BaseTrait;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\RefreshDatabase as BaseTrait;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 
 trait RefreshDatabase
