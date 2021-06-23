@@ -76,8 +76,9 @@ class OrderControllerTest extends TestCase
                 ), fn ($order) => $order->id = 'test-123'),
             );
 
+        $nextOrderId = (Order::query()->max('id') ?? 0) + 1;
         $this->post(route('shop.order.store'))
-            ->assertRedirect(route('shop.order.pay', ['order' => Order::query()->max('id')]));
+            ->assertRedirect(route('shop.order.pay', ['order' => $nextOrderId]));
 
         $lastOrder = Order::latest()->first();
 
