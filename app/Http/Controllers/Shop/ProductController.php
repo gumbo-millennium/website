@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
-use App\Helpers\Arr;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;

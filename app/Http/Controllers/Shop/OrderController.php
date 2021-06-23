@@ -8,12 +8,10 @@ use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreOrderRequest;
-use App\Models\Payment;
 use App\Models\Shop\Order;
 use App\Notifications\Shop\OrderRefunded;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Date;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,9 +21,7 @@ use Illuminate\Support\Facades\Response as ResponseFacade;
 use Mollie\Laravel\Facades\Mollie;
 use Spatie\Flash\Flash;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use UnexpectedValueException;
 
 class OrderController extends Controller
@@ -146,7 +142,7 @@ class OrderController extends Controller
      * Display the order, remains available after the order is paid.
      *
      * @throws NotFoundHttpException If the order is not found or if the user doens't match the order owner
-     * @return Response|RedirectResponse
+     * @return RedirectResponse|Response
      */
     public function show(Request $request, Order $order)
     {
@@ -182,10 +178,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Redirect to Mollie to pay, or back if that's not neccesary
-     * @param Request $request
-     * @param Order $order
-     * @return RedirectResponse
+     * Redirect to Mollie to pay, or back if that's not neccesary.
      */
     public function pay(Request $request, Order $order): RedirectResponse
     {
@@ -240,7 +233,7 @@ class OrderController extends Controller
     /**
      * Cancellation form.
      *
-     * @return Response|RedirectResponse
+     * @return RedirectResponse|Response
      */
     public function cancelShow(Request $request, Order $order)
     {
@@ -333,7 +326,7 @@ class OrderController extends Controller
             $order->user->notify(new OrderRefunded(
                 $order,
                 $refundInfo['amount'],
-                $refundInfo['accountNumber']
+                $refundInfo['accountNumber'],
             ));
         }
 
