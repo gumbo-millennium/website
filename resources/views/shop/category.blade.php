@@ -8,7 +8,7 @@
 @breadcrumbs([
     'items' => [
         route('shop.home') => 'Shop',
-        '' => $category->name,
+        $category->name,
     ]
 ])
 @endbreadcrumbs

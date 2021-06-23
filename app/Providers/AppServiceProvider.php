@@ -7,11 +7,13 @@ namespace App\Providers;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\MarkdownServiceContract;
+use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
+use App\Services\PaymentService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
@@ -39,6 +41,8 @@ class AppServiceProvider extends ServiceProvider
         StripeServiceContract::class => StripeService::class,
         // Enrollment service
         EnrollmentServiceContract::class => EnrollmentService::class,
+        // Mollie Payment service
+        PaymentServiceContract::class => PaymentService::class,
     ];
 
     /**

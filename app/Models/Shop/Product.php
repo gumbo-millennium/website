@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|string $etag
  * @property int $vat_rate
  * @property bool $visible
+ * @property bool $advertise
  * @property array $meta
  * @property-read string $valid_image_url
  * @property-read null|ProductVariant $default_variant
@@ -39,6 +40,7 @@ class Product extends Model
 
     protected $casts = [
         'visible' => 'bool',
+        'advertise' => 'bool',
         'vat_rate' => 'int',
         'meta' => 'json',
     ];
@@ -80,8 +82,7 @@ class Product extends Model
 
     public function getDefaultVariantAttribute(): ?ProductVariant
     {
-        return $this->variants()
-            ->orderBy('id')
+        return $this->variants
             ->first();
     }
 }
