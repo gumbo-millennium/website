@@ -14,17 +14,11 @@ use Stripe\Source;
  * Handles paid invoices, in case people pay out-of-band (via SEPA transfer or something).
  *
  * Called on source.chargeable
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class HandleSourceChargeable extends StripeWebhookJob
 {
     /**
      * Execute the job.
-     *
-     * @param Invoice $invoice
-     * @return void
      */
     protected function process(?Source $source): void
     {
@@ -36,8 +30,9 @@ class HandleSourceChargeable extends StripeWebhookJob
         if ($enrollment === null) {
             logger()->info(
                 'Recieved chargeable {source} for unknown enrollment',
-                compact('source')
+                compact('source'),
             );
+
             return;
         }
 
@@ -45,7 +40,7 @@ class HandleSourceChargeable extends StripeWebhookJob
         if ($enrollment->state instanceof Cancelled) {
             logger()->info(
                 'Recieved chargeable {source} for cancelled enrollment',
-                compact('source', 'enrollment')
+                compact('source', 'enrollment'),
             );
 
             // Stop
@@ -56,7 +51,7 @@ class HandleSourceChargeable extends StripeWebhookJob
         if ($enrollment->state instanceof Paid) {
             logger()->info(
                 'Recieved chargeable {source} for already paid enrollment',
-                compact('source', 'enrollment')
+                compact('source', 'enrollment'),
             );
 
             // noop
@@ -68,10 +63,10 @@ class HandleSourceChargeable extends StripeWebhookJob
 
         $invoice = $service->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
         \assert($invoice instanceof \Stripe\Invoice);
-        if (!$invoice) {
+        if (! $invoice) {
             logger()->notice(
                 'Recieved chargeable {source} for enrollment without invoice',
-                compact('source', 'enrollment')
+                compact('source', 'enrollment'),
             );
 
             // noop
@@ -81,7 +76,7 @@ class HandleSourceChargeable extends StripeWebhookJob
         if ($invoice->amount_remaining > $source->amount) {
             logger()->notice(
                 'Recieved chargeable {source} for {invoice} of insufficient amount',
-                compact('source', 'enrollment', 'invoice')
+                compact('source', 'enrollment', 'invoice'),
             );
 
             // noop
@@ -91,7 +86,7 @@ class HandleSourceChargeable extends StripeWebhookJob
         // Log result
         logger()->info(
             'Paying {invoice} with {source}.',
-            compact('enrollment', 'invoice', 'source')
+            compact('enrollment', 'invoice', 'source'),
         );
 
         // Try to pay

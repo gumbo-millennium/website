@@ -28,8 +28,6 @@ class ListUser extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -74,7 +72,7 @@ class ListUser extends Command
             $why = $why->concat($rolesWithPerm);
 
             $hasPerms->push([
-                $perm->$view,
+                $perm->{$view},
                 $user->hasPermissionTo($perm) ? '<info>✔</>' : '',
                 $why->implode(', '),
             ]);

@@ -14,9 +14,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Updates all non-cancelled enrollments' user_type to the correct type.
- * Should run on a schedule
- *
- * @package App\Jobs
+ * Should run on a schedule.
  */
 class UpdateEnrollmentUserTypes implements ShouldQueue
 {

@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
- * Tests the following cases
+ * Tests the following cases.
  *
  * As anonymous:
  * - all file routes (302 to login)
@@ -42,9 +42,7 @@ class FileDisplayTest extends TestCase
     protected static ?FileBundle $bundle = null;
 
     /**
-     * Ensures there are some bundles and categories to work with
-     *
-     * @return void
+     * Ensures there are some bundles and categories to work with.
      */
     public function seedBefore(): void
     {
@@ -52,13 +50,12 @@ class FileDisplayTest extends TestCase
     }
 
     /**
-     * Test viewing as logged out user
+     * Test viewing as logged out user.
      *
-     * @param string $route
      * @return void
      * @dataProvider provideTestRoutes
      */
-    public function testViewListAsAnonymous(string $route)
+    public function test_view_list_as_anonymous(string $route)
     {
         // Request the index
         $response = $this->get($route);
@@ -70,32 +67,31 @@ class FileDisplayTest extends TestCase
     /**
      * A basic feature test example.
      *
-     * @param string $route
      * @return void
      * @dataProvider provideTestRoutes
      */
-    public function testViewListAsGuest(string $route)
+    public function test_view_list_as_guest(string $route)
     {
         // Get a guest user
         $user = $this->getGuestUser();
 
         // Request the index
         $response = $this->actingAs($user)
-                    ->get($route);
+            ->get($route);
 
         // Expect 403 on all routes
         $response->assertForbidden();
     }
 
     /**
-     * Test if we're seeing our first category when looking at the file index
+     * Test if we're seeing our first category when looking at the file index.
      *
      * @return void
      */
-    public function testViewIndex()
+    public function test_view_index()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('home', $routes)) {
+        if (! array_key_exists('home', $routes)) {
             $this->markTestIncomplete('Cannot find [home] key in route list');
         }
 
@@ -104,7 +100,7 @@ class FileDisplayTest extends TestCase
 
         // Request the index
         $response = $this->actingAs($user)
-                    ->get($routes['home']);
+            ->get($routes['home']);
 
         // Expect an OK response
         $response->assertOk();
@@ -119,10 +115,10 @@ class FileDisplayTest extends TestCase
      *
      * @return void
      */
-    public function testViewExistingCategory()
+    public function test_view_existing_category()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('category', $routes)) {
+        if (! array_key_exists('category', $routes)) {
             $this->markTestIncomplete('Cannot find [category] key in route list');
         }
 
@@ -149,10 +145,10 @@ class FileDisplayTest extends TestCase
      *
      * @return void
      */
-    public function testViewBundle()
+    public function test_view_bundle()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle', $routes)) {
+        if (! array_key_exists('bundle', $routes)) {
             $this->markTestIncomplete('Cannot find [bundle] key in route list');
         }
 
@@ -179,10 +175,10 @@ class FileDisplayTest extends TestCase
      *
      * @return void
      */
-    public function testDownloadBundle()
+    public function test_download_bundle()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle-download', $routes)) {
+        if (! array_key_exists('bundle-download', $routes)) {
             $this->markTestIncomplete('Cannot find [bundle-download] key in route list');
         }
 
@@ -204,16 +200,15 @@ class FileDisplayTest extends TestCase
         $response->assertHeaderMissing('Location');
     }
 
-
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
      *
      * @return void
      */
-    public function testDownloadBundleFile()
+    public function test_download_bundle_file()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('bundle-download-single', $routes)) {
+        if (! array_key_exists('bundle-download-single', $routes)) {
             $this->markTestIncomplete('Cannot find [bundle-download-single] key in route list');
         }
 
@@ -230,20 +225,20 @@ class FileDisplayTest extends TestCase
 
         // Expect an OK response
         $response->assertOk();
-        $response->assertHeader('Content-Disposition', "attachment; filename=chicken.pdf");
+        $response->assertHeader('Content-Disposition', 'attachment; filename=chicken.pdf');
         $response->assertHeader('Content-Type', 'application/pdf');
         $response->assertHeaderMissing('Location');
     }
 
     /**
-     * Test if we're getting a 404 when requesting a non-existing category
+     * Test if we're getting a 404 when requesting a non-existing category.
      *
      * @return void
      */
-    public function testViewNonExistingCategory()
+    public function test_view_non_existing_category()
     {
         $routes = $this->getTestRoutes();
-        if (!array_key_exists('category-missing', $routes)) {
+        if (! array_key_exists('category-missing', $routes)) {
             $this->markTestIncomplete('Cannot find [category-missing] key in route list');
         }
 
@@ -258,11 +253,8 @@ class FileDisplayTest extends TestCase
         $response->assertNotFound();
     }
 
-
     /**
-     * Provide translated list of test routes
-     *
-     * @return array
+     * Provide translated list of test routes.
      */
     public function provideTestRoutes(): array
     {
@@ -279,6 +271,7 @@ class FileDisplayTest extends TestCase
             if (preg_match('/^([a-z]+)\-([a-z]+)$/i', $name, $matches)) {
                 // Rename it to "<name> (<modifier>)"
                 $result["{$matches[1]} ({$matches[2]})"] = $data;
+
                 continue;
             }
 
@@ -291,7 +284,7 @@ class FileDisplayTest extends TestCase
     }
 
     /**
-     * Provides routes as a predictable list
+     * Provides routes as a predictable list.
      *
      * @return array<string>
      */
@@ -330,9 +323,7 @@ class FileDisplayTest extends TestCase
     }
 
     /**
-     * Returns most recent category
-     *
-     * @return FileCategory|null
+     * Returns most recent category.
      */
     private function getCategoryModel(): ?FileCategory
     {
@@ -348,8 +339,8 @@ class FileDisplayTest extends TestCase
         $data = [];
         $data['created_at'] = $data['updated_at'] = now()->addWeek();
         $data['title'] = sprintf(
-            "Category for test on %s.",
-            now()->format('H:i:s.u (T)')
+            'Category for test on %s.',
+            now()->format('H:i:s.u (T)'),
         );
         $data['slug'] = Str::slug($data['title']);
 
@@ -360,9 +351,9 @@ class FileDisplayTest extends TestCase
     }
 
     /**
-     * Returns most recent file
+     * Returns most recent file.
      *
-     * @return FileBundle|null
+     * @return null|FileBundle
      */
     private function getBundleModel(): FileBundle
     {
@@ -383,8 +374,8 @@ class FileDisplayTest extends TestCase
         $data['published_at'] = now()->subWeek();
         $data['category_id'] = $category->id;
         $data['title'] = sprintf(
-            "Bundle for test on %s.",
-            now()->format('H:i:s.u (T)')
+            'Bundle for test on %s.',
+            now()->format('H:i:s.u (T)'),
         );
         $data['slug'] = Str::slug($data['title']);
 

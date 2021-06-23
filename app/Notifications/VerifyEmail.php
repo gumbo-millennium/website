@@ -17,7 +17,6 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -35,16 +34,12 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
     }
 
     /**
-     * User is creating a new account
-     *
-     * @param User $user
-     * @param string $url
-     * @return MailMessage
+     * User is creating a new account.
      */
     private function toNewMail(User $user, string $url): MailMessage
     {
         return (new MailMessage())
-            ->subject("Welkom bij Gumbo Millennium")
+            ->subject('Welkom bij Gumbo Millennium')
             ->greeting('Welkom bij Gumbo Millennium')
             ->line("Beste {$user->first_name},")
             ->line(<<<'TEXT'
@@ -66,16 +61,12 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
     }
 
     /**
-     * User has changed e-mailadres
-     *
-     * @param User $user
-     * @param string $url
-     * @return MailMessage
+     * User has changed e-mailadres.
      */
     private function toUpdatedEmail(User $user, string $url): MailMessage
     {
         return (new MailMessage())
-            ->subject("Bevestig je e-mailadres")
+            ->subject('Bevestig je e-mailadres')
             ->greeting('Bevestig je wijziging')
             ->line("Beste {$user->first_name},")
             ->line(<<<'TEXT'

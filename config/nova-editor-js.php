@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     /**
-     * Configure tools
+     * Configure tools.
      */
     'toolSettings' => [
         'header' => [
@@ -111,7 +111,7 @@ return [
 
     /**
      * Output validation config
-     * https://github.com/editor-js/editorjs-php
+     * https://github.com/editor-js/editorjs-php.
      */
     'validationSettings' => [
         'tools' => [
@@ -225,13 +225,11 @@ return [
                                     'required' => false,
                                 ],
                             ],
-
                         ],
                     ],
                 ],
             ],
             'delimiter' => [
-
             ],
             'table' => [
                 'content' => [

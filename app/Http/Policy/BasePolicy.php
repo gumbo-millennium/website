@@ -13,16 +13,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base Content-Security-Policy.
- * Allows most local elements and Google Fonts
+ * Allows most local elements and Google Fonts.
  */
 abstract class BasePolicy extends BasicPolicy
 {
     /**
-     * Don't act on Nova paths
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * Don't act on Nova paths.
      */
     public function shouldBeApplied(Request $request, Response $response): bool
     {
@@ -44,7 +40,7 @@ abstract class BasePolicy extends BasicPolicy
     }
 
     /**
-     * Configure CSP directives
+     * Configure CSP directives.
      *
      * @return void
      */

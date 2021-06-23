@@ -15,9 +15,7 @@ class AddSecurityHeaders
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
      */
     public function handle($request, Closure $next)
     {
@@ -32,7 +30,7 @@ class AddSecurityHeaders
         }
 
         // Check if the response is one we can add headers to
-        if (!$response instanceof ResponseInterface) {
+        if (! $response instanceof ResponseInterface) {
             return $response;
         }
 

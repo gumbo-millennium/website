@@ -18,10 +18,7 @@ trait UsesStripePaymentData
     ];
 
     /**
-     * Returns data for the enrollment
-     *
-     * @param Enrollment $enrollment
-     * @return array
+     * Returns data for the enrollment.
      */
     protected function getPaymentInfo(Enrollment $enrollment): array
     {
@@ -37,7 +34,7 @@ trait UsesStripePaymentData
         $charge = $stripeService->getCharge($enrollment, null);
 
         // Fail if no charge was found
-        if (!$charge) {
+        if (! $charge) {
             return array_merge([], self::$defaultData);
         }
 

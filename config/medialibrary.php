@@ -19,7 +19,6 @@ use Spatie\MediaLibrary\ResponsiveImages\TinyPlaceholderGenerator\Blurred;
 use Spatie\MediaLibrary\ResponsiveImages\WidthCalculator\FileSizeOptimizedWidthCalculator;
 
 return [
-
     /*
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
@@ -38,15 +37,11 @@ return [
      */
     'queue_name' => '',
 
-    /*
-     * The fully qualified class name of the media model.
-     */
+    // The fully qualified class name of the media model.
     'media_model' => Media::class,
 
     's3' => [
-        /*
-         * The domain that should be prepended when generating urls.
-         */
+        // The domain that should be prepended when generating urls.
         'domain' => 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com',
     ],
 
@@ -65,7 +60,6 @@ return [
     ],
 
     'responsive_images' => [
-
         /*
          * This class is responsible for calculating the target widths of the responsive
          * images. By default we optimize for filesize and create variations that each are 20%
@@ -100,9 +94,7 @@ return [
      */
     'version_urls' => false,
 
-    /*
-     * The class that contains the strategy for determining a media file's path.
-     */
+    // The class that contains the strategy for determining a media file's path.
     'path_generator' => LocalPathGenerator::class,
 
     /*
@@ -132,9 +124,7 @@ return [
         ],
     ],
 
-    /*
-     * These generators will be used to create an image of media files.
-     */
+    // These generators will be used to create an image of media files.
     'image_generators' => [
         Image::class,
         Webp::class,

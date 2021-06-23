@@ -11,18 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base Content-Security-Policy.
- * Allows most local elements, Google Fonts and our Service Worker
+ * Allows most local elements, Google Fonts and our Service Worker.
  */
 class AppPolicy extends BasePolicy
 {
     private const IGNORED_PATHS = '/^\/?admin($|\/)/';
 
     /**
-     * Don't act on Nova paths
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * Don't act on Nova paths.
      */
     public function shouldBeApplied(Request $request, Response $response): bool
     {
@@ -36,7 +32,7 @@ class AppPolicy extends BasePolicy
     }
 
     /**
-     * Configure CSP directives
+     * Configure CSP directives.
      *
      * @return void
      */
@@ -55,7 +51,7 @@ class AppPolicy extends BasePolicy
         $this->addDirective(Directive::CONNECT, 'https://api.stripe.com');
 
         // Load local stuff, if local
-        if (!app()->isLocal()) {
+        if (! app()->isLocal()) {
             return;
         }
 
@@ -63,9 +59,7 @@ class AppPolicy extends BasePolicy
     }
 
     /**
-     * Configure local directives
-     *
-     * @return void
+     * Configure local directives.
      */
     public function configureLocal(): void
     {

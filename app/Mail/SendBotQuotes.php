@@ -46,7 +46,7 @@ class SendBotQuotes extends Mailable
         // Set subject
         $title = $this->setSubject(
             $this->quotes->min('created_at'),
-            $this->quotes->max('created_at')
+            $this->quotes->max('created_at'),
         );
 
         // Get attachments
@@ -68,9 +68,8 @@ class SendBotQuotes extends Mailable
     }
 
     /**
-     * Creates a list of quotes in XSLX, ODT and CSV format
+     * Creates a list of quotes in XSLX, ODT and CSV format.
      *
-     * @param Collection $quotes
      * @return array<string>
      */
     public function buildQuoteFiles(Collection $quotes, string $title): array
@@ -143,7 +142,7 @@ class SendBotQuotes extends Mailable
             $quoteKey = $quoteDate->format('Y-m-d');
 
             // Create entry if missing
-            if (!isset($quotesList[$quoteKey])) {
+            if (! isset($quotesList[$quoteKey])) {
                 $quotesList[$quoteKey] = [
                     'title' => $quoteDate->isoFormat('ddd DD MMMM'),
                     'quotes' => [],
@@ -180,17 +179,20 @@ class SendBotQuotes extends Mailable
         // Return just one month if it is just one month
         if ($start->month === $end->month) {
             $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel}");
+
             return "{$baseName} - {$startLabel}";
         }
 
         // Return "en"-separated if two months
         if ($start->month + 1 === $end->month) {
             $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} en {$endLabel}");
+
             return "{$baseName} - {$startLabel} en {$endLabel}";
         }
 
         // Return range otherwise
         $this->subject("[gumbo.nu] De wist-je-datjes van {$startLabel} t/m {$endLabel}");
+
         return "{$baseName} - {$startLabel} tm {$endLabel}";
     }
 }

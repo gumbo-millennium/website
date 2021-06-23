@@ -15,12 +15,12 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
 /**
- * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+ * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter.
  */
 class EnrollmentStateFilter extends BooleanFilter
 {
     /**
-     * All available states
+     * All available states.
      */
     private const VALID_STATES = [
         Created::class => Created::NAME,
@@ -32,7 +32,7 @@ class EnrollmentStateFilter extends BooleanFilter
     ];
 
     /**
-     * All default states
+     * All default states.
      */
     private const DEFAULT_STATES = [
         Created::NAME,
@@ -51,9 +51,7 @@ class EnrollmentStateFilter extends BooleanFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply(Request $request, $query, $value)
@@ -62,7 +60,7 @@ class EnrollmentStateFilter extends BooleanFilter
         $states = collect($value)
             ->filter()
             ->keys()
-            ->filter(static fn ($val) => \in_array($val, self::VALID_STATES))
+            ->filter(static fn ($val) => \in_array($val, self::VALID_STATES, true))
             ->values()
             ->all();
 
@@ -73,7 +71,6 @@ class EnrollmentStateFilter extends BooleanFilter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
@@ -95,7 +92,7 @@ class EnrollmentStateFilter extends BooleanFilter
     public function default()
     {
         return collect(self::VALID_STATES)
-            ->mapWithKeys(static fn ($state) => [$state => \in_array($state, self::DEFAULT_STATES)])
+            ->mapWithKeys(static fn ($state) => [$state => \in_array($state, self::DEFAULT_STATES, true)])
             ->all();
     }
 }

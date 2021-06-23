@@ -11,15 +11,12 @@ use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOTools;
 
 /**
- * Renders user-generated news articles
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Renders user-generated news articles.
  */
 class NewsController extends Controller
 {
     /**
-     * Renders a news index, per 15 pages
+     * Renders a news index, per 15 pages.
      *
      * @return Response
      */
@@ -82,9 +79,8 @@ class NewsController extends Controller
     }
 
     /**
-     * Renders a single item
+     * Renders a single item.
      *
-     * @param NewsItem $item
      * @return Response
      */
     public function show(NewsItem $item)

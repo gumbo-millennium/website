@@ -7,10 +7,7 @@ namespace App\Mail\Join;
 use App\Models\JoinSubmission;
 
 /**
- * Email sent to the new member concerning his enrollment
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Email sent to the new member concerning his enrollment.
  */
 class UserJoinMail extends BaseJoinMail
 {

@@ -46,6 +46,7 @@ class SendBotQuotes implements ShouldQueue
         // Skip if empty
         if (empty($recipient)) {
             $this->fail(new RuntimeException('No quote recipient set'));
+
             return;
         }
 

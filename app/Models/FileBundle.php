@@ -14,25 +14,25 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
 
 /**
- * A bundle of uploaded files
+ * A bundle of uploaded files.
  *
  * @property int $id
- * @property int|null $category_id
+ * @property null|int $category_id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
  * @property \Illuminate\Support\Date $published_at
- * @property int|null $owner_id
+ * @property null|int $owner_id
  * @property string $title
  * @property string $slug
- * @property string|null $description
+ * @property null|string $description
  * @property int $total_size
  * @property string $sort_order
- * @property-read FileCategory|null $category
+ * @property-read null|FileCategory $category
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
  * @property-read bool $is_available
- * @property-read string|null $url
+ * @property-read null|string $url
  * @property-read \Illuminate\Database\Eloquent\Collection<Media> $media
- * @property-read User|null $owner
+ * @property-read null|User $owner
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
@@ -86,10 +86,8 @@ class FileBundle extends SluggableModel implements HasMedia
     ];
 
     /**
-     * Hide non-released bundles
+     * Hide non-released bundles.
      *
-     * @param Builder $query
-     * @return Builder
      * @throws InvalidArgumentException
      */
     public function scopeWhereAvailable(Builder $query): Builder
@@ -104,9 +102,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * Generate the slug based on the display_title property
-     *
-     * @return array
+     * Generate the slug based on the display_title property.
      */
     public function sluggable(): array
     {
@@ -121,8 +117,6 @@ class FileBundle extends SluggableModel implements HasMedia
 
     /**
      * The roles that belong to the user.
-     *
-     * @return BelongsTo
      */
     public function category(): BelongsTo
     {
@@ -130,7 +124,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * A file has an owner
+     * A file has an owner.
      *
      * @return BelongsTo
      */
@@ -140,9 +134,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * Returns the absolute URL to the file
-     *
-     * @return string|null
+     * Returns the absolute URL to the file.
      */
     public function getUrlAttribute(): ?string
     {
@@ -154,9 +146,8 @@ class FileBundle extends SluggableModel implements HasMedia
         return route('files.show', ['bundle' => $this]);
     }
 
-
     /**
-     * Configure the collection to privately store the data
+     * Configure the collection to privately store the data.
      *
      * @return void
      */
@@ -183,9 +174,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * Returns the downloads
-     *
-     * @return HasMany
+     * Returns the downloads.
      */
     public function downloads(): HasMany
     {
@@ -193,9 +182,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * Returns if the bundle is available
-     *
-     * @return bool
+     * Returns if the bundle is available.
      */
     public function getIsAvailableAttribute(): bool
     {
@@ -203,7 +190,7 @@ class FileBundle extends SluggableModel implements HasMedia
     }
 
     /**
-     * Prevent searching non-published files
+     * Prevent searching non-published files.
      *
      * @return bool
      */

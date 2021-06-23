@@ -23,12 +23,14 @@ use Illuminate\Support\LazyCollection;
  * @property \Carbon\CarbonInterface $updated_at
  * @property \Carbon\CarbonInterface $sent_at
  * @property-read Activity $activity
- * @property-read User|null $sender
+ * @property-read null|User $sender
  */
 class ActivityMessage extends Model
 {
     public const AUDIENCE_ANY = 'any';
+
     public const AUDIENCE_CONFIRMED = 'confirmed';
+
     public const AUDIENCE_PENDING = 'pending';
 
     public const VALID_AUDIENCES = [
@@ -36,17 +38,6 @@ class ActivityMessage extends Model
         self::AUDIENCE_CONFIRMED,
         self::AUDIENCE_PENDING,
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saving(static fn (self $message) => throw_unless(
-            in_array($message->target_audience, self::VALID_AUDIENCES),
-            DomainException::class,
-            "Target audience [{$message->target_audience}] is invalid."
-        ));
-    }
 
     /**
      * The attributes that should be cast to native types.
@@ -80,6 +71,17 @@ class ActivityMessage extends Model
         'subject',
         'body',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(static fn (self $message) => throw_unless(
+            in_array($message->target_audience, self::VALID_AUDIENCES, true),
+            DomainException::class,
+            "Target audience [{$message->target_audience}] is invalid.",
+        ));
+    }
 
     public function activity(): BelongsTo
     {

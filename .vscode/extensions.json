@@ -5,7 +5,7 @@
     "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
-    "ikappas.phpcs",
+    "junstyle.php-cs-fixer",
     "linyang95.phpmd",
     "mikestead.dotenv",
     "neilbrayfield.php-docblocker",
@@ -16,6 +16,7 @@
     "dbaeumer.jshint",
     "eg2.tslint",
     "felixfbecker.php-intellisense",
+    "ikappas.phpcs",
     "ms-mssql.mssql",
   ]
 }

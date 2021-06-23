@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * A payment transaction
+ * A payment transaction.
  *
  * @property string $id
  * @property string $transaction_id
@@ -15,12 +15,12 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $enrollment_id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $completed_at
+ * @property null|\Illuminate\Support\Date $completed_at
  * @property string $status
  * @property int $amount In cents
- * @property \Illuminate\Support\Date|null $refunded_at
- * @property int|null $refunded_amount
- * @property \Illuminate\Support\Collection|null $data
+ * @property null|\Illuminate\Support\Date $refunded_at
+ * @property null|int $refunded_amount
+ * @property null|\Illuminate\Support\Collection $data
  * @property-read bool $is_completed
  * @property-read bool $is_refunded
  */
@@ -44,9 +44,7 @@ class Payment extends UuidModel
     ];
 
     /**
-     * Returns if the payment was refunded
-     *
-     * @return bool
+     * Returns if the payment was refunded.
      */
     public function getIsCompletedAttribute(): bool
     {
@@ -54,9 +52,7 @@ class Payment extends UuidModel
     }
 
     /**
-     * Returns if the payment was refunded
-     *
-     * @return bool
+     * Returns if the payment was refunded.
      */
     public function getIsRefundedAttribute(): bool
     {
@@ -64,9 +60,7 @@ class Payment extends UuidModel
     }
 
     /**
-     * Returns true if the whole transaction was refunded
-     *
-     * @return bool
+     * Returns true if the whole transaction was refunded.
      */
     public function isFullyRefunded(): bool
     {
@@ -75,10 +69,7 @@ class Payment extends UuidModel
     }
 
     /**
-     * Scopes the query to only return completed payments
-     *
-     * @param Builder $query
-     * @return Builder
+     * Scopes the query to only return completed payments.
      */
     public function scopeCompleted(Builder $query): Builder
     {
@@ -86,10 +77,7 @@ class Payment extends UuidModel
     }
 
     /**
-     * Scopes the query to only show refunded payments
-     *
-     * @param Builder $query
-     * @return Builder
+     * Scopes the query to only show refunded payments.
      */
     public function scopeRefunded(Builder $query): Builder
     {

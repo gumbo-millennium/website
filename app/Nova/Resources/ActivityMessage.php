@@ -14,7 +14,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 
 /**
- * Messages sent from activities to users
+ * Messages sent from activities to users.
  */
 class ActivityMessage extends Resource
 {
@@ -33,7 +33,7 @@ class ActivityMessage extends Resource
     public static $title = 'subject';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -81,7 +81,7 @@ class ActivityMessage extends Resource
 
             Text::make(__('Status'), fn () => $this->sent_at
                 ? __('Sent to :count recipient(s)', ['count' => $this->receipients])
-                : __('Not yet sent'))
+                : __('Not yet sent'), )
                 ->onlyOnIndex(),
         ];
     }

@@ -9,27 +9,22 @@ use Illuminate\Support\Facades\Cache;
 use JsonException;
 
 /**
- * Provides banks for iDEAL
- *
- * @author Roelof Roos <github@roelof.io>
+ * Provides banks for iDEAL.
  */
 class IdealBankService
 {
     /**
-     * Path to the bank list
+     * Path to the bank list.
      */
     private const BANKS_FILE = 'assets/json/ideal-banks.json';
 
     /**
      * @var Collection
-     * @package App\Services
      */
-    private $cachedList = null;
+    private $cachedList;
 
     /**
-     * Returns all banks
-     *
-     * @return array
+     * Returns all banks.
      */
     public function getAll(): array
     {
@@ -37,9 +32,7 @@ class IdealBankService
     }
 
     /**
-     * Returns all bank names
-     *
-     * @return array
+     * Returns all bank names.
      */
     public function names(): array
     {
@@ -47,9 +40,7 @@ class IdealBankService
     }
 
     /**
-     * Returns all Stripe bank codes
-     *
-     * @return array
+     * Returns all Stripe bank codes.
      */
     public function codes(): array
     {
@@ -57,10 +48,7 @@ class IdealBankService
     }
 
     /**
-     * Returns the name of the bank with the given code
-     *
-     * @param string $code
-     * @return string|null
+     * Returns the name of the bank with the given code.
      */
     public function getName(string $code): ?string
     {
@@ -68,7 +56,7 @@ class IdealBankService
     }
 
     /**
-     * Returns the bank list
+     * Returns the bank list.
      *
      * @return Illuminate\Support\Collection
      */
@@ -82,6 +70,7 @@ class IdealBankService
         // Check global cache
         if (Cache::has('ideal.banklist')) {
             $this->cachedList = Collection::make(Cache::get('ideal.banklist'));
+
             return $this->cachedList;
         }
 
@@ -90,7 +79,7 @@ class IdealBankService
 
         // Check existance
         $path = \resource_path(self::BANKS_FILE);
-        if (!\file_exists($path)) {
+        if (! \file_exists($path)) {
             return $this->cachedList;
         }
 
@@ -98,6 +87,7 @@ class IdealBankService
         try {
             $json = json_decode(\file_get_contents($path), true, 15, \JSON_THROW_ON_ERROR);
             Cache::put('ideal.banklist', $json, now()->addHours(6));
+
             return $this->cachedList = Collection::make($json);
         } catch (JsonException $e) {
             return $this->cachedList;

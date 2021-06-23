@@ -20,7 +20,7 @@ use Kris\LaravelFormBuilder\FormBuilder;
 class DetailsController extends Controller
 {
     /**
-     * Force auth
+     * Force auth.
      */
     public function __construct()
     {
@@ -28,11 +28,7 @@ class DetailsController extends Controller
     }
 
     /**
-     * Edit form
-     *
-     * @param FormBuilder $formBuilder
-     * @param Request $request
-     * @return HttpResponse
+     * Edit form.
      */
     public function editDetails(FormBuilder $formBuilder, Request $request): HttpResponse
     {
@@ -54,19 +50,15 @@ class DetailsController extends Controller
         \assert($form instanceof AccountEditForm);
 
         return Response::view('account.edit', [
-                'user' => $user,
-                'form' => $form,
-                'isLinked' => $isLinked,
-            ])
+            'user' => $user,
+            'form' => $form,
+            'isLinked' => $isLinked,
+        ])
             ->setPrivate();
     }
 
     /**
-     * Applying the changes
-     *
-     * @param FormBuilder $formBuilder
-     * @param Request $request
-     * @return HttpRedirectResponse
+     * Applying the changes.
      */
     public function updateDetails(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
@@ -105,7 +97,7 @@ class DetailsController extends Controller
         }
 
         // Update name, if allowed
-        if (!$isLinked) {
+        if (! $isLinked) {
             $user->first_name = $userValues['first_name'];
             $user->insert = $userValues['insert'];
             $user->last_name = $userValues['last_name'];

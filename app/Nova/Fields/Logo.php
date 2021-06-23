@@ -11,7 +11,7 @@ use Laravel\Nova\Fields\Image;
 class Logo extends Image
 {
     /**
-     * Creates a logo
+     * Creates a logo.
      *
      * @return static
      */

@@ -15,7 +15,7 @@ class ChangeNovaActionEventsIdsToStrings extends Migration
     public function up()
     {
         // Only run when Nova is actually installed
-        if (!Schema::hasTable('action_events')) {
+        if (! Schema::hasTable('action_events')) {
             return;
         }
 

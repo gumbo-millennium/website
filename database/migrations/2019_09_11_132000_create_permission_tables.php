@@ -7,10 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Creates permissions table for role-permission system
- *
- * @license MIT
- * @author Spatie (https://github.com/spatie)
+ * Creates permissions table for role-permission system.
  */
 class CreatePermissionTables extends Migration
 {
@@ -46,7 +43,7 @@ class CreatePermissionTables extends Migration
 
             $table->string('model_type', 185);
             $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type',]);
+            $table->index([$columnNames['model_morph_key'], 'model_type', ]);
 
             $table->foreign('permission_id')
                 ->references('id')
@@ -55,7 +52,7 @@ class CreatePermissionTables extends Migration
 
             $table->primary(
                 ['permission_id', $columnNames['model_morph_key'], 'model_type'],
-                'model_has_permissions_permission_model_type_primary'
+                'model_has_permissions_permission_model_type_primary',
             );
         });
 
@@ -67,7 +64,7 @@ class CreatePermissionTables extends Migration
 
             $table->string('model_type', 185);
             $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type',]);
+            $table->index([$columnNames['model_morph_key'], 'model_type', ]);
 
             $table->foreign('role_id')
                 ->references('id')
@@ -76,7 +73,7 @@ class CreatePermissionTables extends Migration
 
             $table->primary(
                 ['role_id', $columnNames['model_morph_key'], 'model_type'],
-                'model_has_roles_role_model_type_primary'
+                'model_has_roles_role_model_type_primary',
             );
         });
 

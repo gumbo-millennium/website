@@ -1,5 +1,5 @@
 .pagination {
-  @apply flex flex-row flex-no-wrap justify-between;
+  @apply flex flex-row flex-nowrap justify-between;
   @apply list-none mb-8 mt-4;
 }
 

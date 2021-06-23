@@ -6,6 +6,8 @@ namespace App\Nova\Metrics;
 
 use App\Models\Enrollment;
 use App\Nova\Metrics\Traits\HasOnlyHostedEnrollments;
+use DateInterval;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
@@ -23,16 +25,13 @@ class NewEnrollments extends Value
 
     /**
      * Calculate the value of the metric.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
         return $this->count(
             $request,
             $this->getHostedEnrollmentsQuery($request),
-            'updated_at'
+            'updated_at',
         )->allowZeroResult();
     }
 
@@ -55,7 +54,7 @@ class NewEnrollments extends Value
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return DateInterval|DateTimeInterface|float|int
      */
     public function cacheFor()
     {

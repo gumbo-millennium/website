@@ -16,31 +16,32 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\HtmlString;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * Our users
+ * Our users.
  *
  * @property int $id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $deleted_at
- * @property string|null $stripe_id
- * @property int|null $conscribo_id
- * @property string|null $telegram_id
+ * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|string $stripe_id
+ * @property null|int $conscribo_id
+ * @property null|string $telegram_id
  * @property string $first_name
- * @property string|null $insert
+ * @property null|string $insert
  * @property string $last_name
- * @property string|null $name
+ * @property null|string $name
  * @property string $email
- * @property \Illuminate\Support\Date|null $email_verified_at
+ * @property null|\Illuminate\Support\Date $email_verified_at
  * @property string $password
- * @property string|null $remember_token
- * @property string|null $alias
+ * @property null|string $remember_token
+ * @property null|string $alias
  * @property array $grants
- * @property string|null $gender
- * @property array|null $address
- * @property string|null $phone
+ * @property null|string $gender
+ * @property null|array $address
+ * @property null|string $phone
  * @property-read string $leaderboard_name
  * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $activities
  * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
@@ -48,19 +49,19 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $files
  * @property-read array<int> $hosted_activity_ids
  * @property-read bool $is_member
- * @property-read string|null $public_name
+ * @property-read null|string $public_name
  * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $hosted_activities
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<\Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection<\Spatie\Permission\Models\Permission> $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection<Role> $roles
  */
-class User extends Authenticatable implements MustVerifyEmailContract, ConvertsToStripe
+class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailContract
 {
     use HasEncryptedAttributes;
-    use Notifiable;
     use HasRoles;
-    use SoftDeletes;
     use MustVerifyEmail;
+    use Notifiable;
+    use SoftDeletes;
 
     public const SHOW_IN_LEADERBOARD_GRANT = 'leaderboard:show';
 
@@ -133,9 +134,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     ];
 
     /**
-     * Returns files the user has uploaded
-     *
-     * @return HasMany
+     * Returns files the user has uploaded.
      */
     public function files(): HasMany
     {
@@ -143,7 +142,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns downloads the user has performed
+     * Returns downloads the user has performed.
      *
      * @return BelongsToMany
      */
@@ -153,9 +152,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns enrollments the user has performed
-     *
-     * @return HasMany
+     * Returns enrollments the user has performed.
      */
     public function enrollments(): HasMany
     {
@@ -163,7 +160,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns the activities the user is enrolled in
+     * Returns the activities the user is enrolled in.
      *
      * @return HasManyThrough
      */
@@ -173,7 +170,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns activities the user can manage
+     * Returns activities the user can manage.
      *
      * @return HasMany
      */
@@ -183,9 +180,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns the public name of the user
-     *
-     * @return string|null
+     * Returns the public name of the user.
      */
     public function getPublicNameAttribute(): ?string
     {
@@ -193,9 +188,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns if this user is a member
-     *
-     * @return bool
+     * Returns if this user is a member.
      */
     public function getIsMemberAttribute(): bool
     {
@@ -203,7 +196,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns a list of IDs that the user hosts
+     * Returns a list of IDs that the user hosts.
      *
      * @return Collection
      */
@@ -220,8 +213,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
      * Returns (sub)query that only returns the Activities this user
      * is a manager of.
      *
-     * @param Builder|null $query
-     * @return Builder
      * @throws InvalidArgumentException
      */
     public function getHostedActivityQuery(?Builder $query = null): Builder
@@ -241,9 +232,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns a subquery to select all activity IDs this user can manage
+     * Returns a subquery to select all activity IDs this user can manage.
      *
-     * @return Builder
      * @throws InvalidArgumentException
      */
     public function getHostedActivityIdQuery(): Builder
@@ -262,9 +252,7 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Returns Stripe-ready array
-     *
-     * @return array
+     * Returns Stripe-ready array.
      */
     public function toStripeCustomer(): array
     {
@@ -289,10 +277,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
     }
 
     /**
-     * Sets a grant on the user
+     * Sets a grant on the user.
      *
-     * @param string $key
-     * @param bool|null $granted
      * @return User
      */
     public function setGrant(string $key, ?bool $granted): self
@@ -312,10 +298,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Returns true if this user has granted the given flag.
-     *
-     * @param string $key
-     * @param bool $default
-     * @return bool
      */
     public function hasGrant(string $key, bool $default = false): bool
     {
@@ -326,8 +308,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
 
     /**
      * Name to show on the leaderboard, might be blurred.
-     *
-     * @return string
      */
     public function getLeaderboardNameAttribute(): string
     {
@@ -337,5 +317,30 @@ class User extends Authenticatable implements MustVerifyEmailContract, ConvertsT
         }
 
         return preg_replace('/[^\s-]/', '*', $userName);
+    }
+
+    public function getAddressStringAttribute(): ?HtmlString
+    {
+        $line1 = Arr::get($this->address, 'line1');
+        $line2 = Arr::get($this->address, 'line2');
+        $postcode = Arr::get($this->address, 'postal_code');
+        $city = Arr::get($this->address, 'city');
+
+        if (! $line1 || ! $city) {
+            return null;
+        }
+
+        $lines = [
+            $line1,
+            $line2,
+            "${postcode}, ${city}",
+        ];
+
+        $address = collect($lines)
+            ->filter(fn ($value) => ! empty($value))
+            ->map(fn ($value) => e($value))
+            ->implode('<br />');
+
+        return new HtmlString($address);
     }
 }

@@ -18,14 +18,14 @@ use Kris\LaravelFormBuilder\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Allows a user to specify grants
+ * Allows a user to specify grants.
  */
 class GrantsController extends Controller
 {
     public const GRANTS_FILE = 'assets/yaml/grants.yaml';
 
     /**
-     * Returns customizable grants
+     * Returns customizable grants.
      *
      * @return Generator<Grant>
      */
@@ -45,7 +45,7 @@ class GrantsController extends Controller
     }
 
     /**
-     * Force auth
+     * Force auth.
      */
     public function __construct()
     {
@@ -53,11 +53,7 @@ class GrantsController extends Controller
     }
 
     /**
-     * Edit form
-     *
-     * @param FormBuilder $formBuilder
-     * @param Request $request
-     * @return HttpResponse
+     * Edit form.
      */
     public function editGrants(FormBuilder $formBuilder, Request $request): HttpResponse
     {
@@ -72,11 +68,7 @@ class GrantsController extends Controller
     }
 
     /**
-     * Applying the changes
-     *
-     * @param FormBuilder $formBuilder
-     * @param Request $request
-     * @return HttpRedirectResponse
+     * Applying the changes.
      */
     public function updateGrants(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
@@ -105,11 +97,7 @@ class GrantsController extends Controller
     }
 
     /**
-     * Returns the form for modifying the grants
-     *
-     * @param FormBuilder $formBuilder
-     * @param User $user
-     * @return AccountGrantsForm
+     * Returns the form for modifying the grants.
      */
     private function getForm(FormBuilder $formBuilder, User $user): AccountGrantsForm
     {

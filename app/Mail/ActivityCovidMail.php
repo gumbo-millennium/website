@@ -53,7 +53,7 @@ class ActivityCovidMail extends Mailable
         // Add unsubscribe header
         $this->withSwiftMessage(
             // phpcs:ignore PSR2.Methods.FunctionCallSignature.MultipleArguments
-            static fn (Swift_Message $message) => $message->getHeaders()->addTextHeader("List-Unsubscribe", $cancelUrl)
+            static fn (Swift_Message $message) => $message->getHeaders()->addTextHeader('List-Unsubscribe', $cancelUrl),
         );
 
         // Render

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\ShopController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,3 +35,6 @@ Route::stripeWebhooks('payments/stripe/handle');
 
 // Register Telegram webhooks
 Route::post('/bots/telegram', 'TelegramBotController@handle')->name('bots.telegram');
+
+// Register Mollie webhook URL
+Route::post('/webhooks/shop', [ShopController::class, 'webhook'])->name('webhooks.shop');

@@ -30,7 +30,7 @@ class ActivityForm extends Preset
     ];
 
     /**
-     * Execute the preset configuration
+     * Execute the preset configuration.
      *
      * @return void
      */

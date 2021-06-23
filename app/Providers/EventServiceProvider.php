@@ -64,7 +64,7 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
-     * Auto-discover events
+     * Auto-discover events.
      *
      * @return true
      */

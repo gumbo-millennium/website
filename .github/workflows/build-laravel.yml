@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node-build-${{ hashFiles('**/yarn.lock') }}
+          key: node-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-build-${{ env.cache-name }}-
             node-build-
@@ -26,12 +26,12 @@ jobs:
       - name: Copy environment config
         run: cp .github/actions.env .env
 
-      - name: Install Yarn dependencies
+      - name: Install Node dependencies
         if: steps.cache-node.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: npm clean-install
 
       - name: Build Front-end
-        run: yarn build
+        run: npm run build
 
       - name: Publish front-end
         uses: actions/upload-artifact@master
@@ -84,7 +84,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node-build-${{ hashFiles('**/yarn.lock') }}
+          key: node-build-${{ hashFiles('**/package-lock.lock') }}
           restore-keys: |
             node-build-${{ env.cache-name }}-
             node-build-
@@ -118,7 +118,7 @@ jobs:
           path: public/
 
       - name: Install Font Awesome icons
-        run: yarn run postinstall
+        run: npm run postinstall
 
       - name: Run linters
         run: composer run lint

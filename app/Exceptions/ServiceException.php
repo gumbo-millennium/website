@@ -8,33 +8,29 @@ use RuntimeException;
 use Throwable;
 
 /**
- * The enrollment could not be found
+ * The enrollment could not be found.
  */
 class ServiceException extends RuntimeException
 {
     public const SERVICE_CONSCRIBO = 'conscribo';
+
     public const SERVICE_STRIPE = 'stripe';
+
     public const SERVICE_GOOGLE = 'google';
 
     /**
-     * Service that did boom
-     *
-     * @var string
+     * Service that did boom.
      */
     protected string $service;
 
     /**
-     * Creates a new service error
+     * Creates a new service error.
      *
-     * @param string $service
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
      * @return void
      */
     public function __construct(
         string $service,
-        string $message = "",
+        string $message = '',
         int $code = 0,
         ?Throwable $previous = null
     ) {
@@ -43,9 +39,7 @@ class ServiceException extends RuntimeException
     }
 
     /**
-     * Returns guilty service
-     *
-     * @return string
+     * Returns guilty service.
      */
     public function getService(): string
     {
@@ -55,7 +49,7 @@ class ServiceException extends RuntimeException
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)

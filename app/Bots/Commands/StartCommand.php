@@ -27,7 +27,7 @@ class StartCommand extends Command
     protected $description = 'Toont het welkomstbericht';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {

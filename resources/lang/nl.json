@@ -90,7 +90,28 @@
   "Full markdown support. HTML will be removed.": "Markdown is ondersteund, HTML wordt verwijderd.",
   "Field": "Veld",
 
+  "Fees": "Transactiekosten",
+
   "My Account": "Mijn account",
+
+  "Your cart is empty": "Je winkelwagen is leeg",
+
+  ":Product was already in your cart, so we've added :count more.": ":Product zat al in je winkelwagen, aantal bijgewerkt.",
+  ":Product was already in your cart and you've already hit the order limit for this item.":
+    ":Product zat al in je winkelwagen, en je hebt al het maximum aantal artikelen bereikt.",
+  ":Product was added to your cart.": ":Product is toegevoegd aan je winkelwagen.",
+
+  ":Product has been updated": ":Product has been updated",
+  ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
+  "1 product|:count products": "1 product|:count producten",
+
+  "A fresh verification link has been sent to your email address.":
+    "Een versgebakken verificatielink is verstuurd naar je e-mailadres.",
+
+  "Your previous payment is still pending, or this order cannot be paid right now. Try again later.":
+    "Je vorige betaling wordt nog verwerkt, of het is momenteel niet mogelijk om te betalen. Probeer het later opnieuw.",
+  "The payment didn't go through or is still processing.":
+    "Je betaling is mislukt of wordt nog verwerkt. Check later nog eens.",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

@@ -14,14 +14,14 @@ class FormSelect extends FormField
     public const MAX_EXPANDED_COUNT = 5;
 
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'select';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
@@ -44,7 +44,7 @@ class FormSelect extends FormField
     }
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */
@@ -54,10 +54,10 @@ class FormSelect extends FormField
         $multiple = (bool) $this->getAttribute('multiple');
         $required = (bool) $this->getAttribute('required');
 
-        if (!$required && !$multiple) {
+        if (! $required && ! $multiple) {
             $options = array_merge(
                 ['' => '-'],
-                $options
+                $options,
             );
         }
 

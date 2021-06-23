@@ -21,8 +21,8 @@ class ConfirmPasswordController extends Controller
     | this trait and override any functions that require customization.
     |
     */
-    use RedirectsToHomepage;
     use ConfirmsPasswords;
+    use RedirectsToHomepage;
 
     /**
      * Create a new controller instance.

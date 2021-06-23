@@ -2,26 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Http\Controllers;
+namespace Tests\Feature\Http\Controllers\Shop;
 
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
+use Tests\Traits\TestsMembersOnlyRoutes;
 
-class ShopControllerTest extends TestCase
+class ProductControllerTest extends TestCase
 {
     use DatabaseTransactions;
+    use TestsMembersOnlyRoutes;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testIndex()
+    public function test_index()
     {
         $invisible = factory(Category::class, 5)->create([
             'visible' => 0,
@@ -50,12 +45,7 @@ class ShopControllerTest extends TestCase
         }
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testCategory()
+    public function test_category()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -86,7 +76,6 @@ class ShopControllerTest extends TestCase
             array_merge($base, ['name' => 'Hidden Product 4']),
         ]);
 
-
         $base = [
             'visible' => 1,
             'category_id' => $category2->id,
@@ -112,7 +101,7 @@ class ShopControllerTest extends TestCase
         }
     }
 
-    public function testVariantRequirement()
+    public function test_variant_requirement()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -133,12 +122,7 @@ class ShopControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testDisplay()
+    public function test_display()
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -159,7 +143,7 @@ class ShopControllerTest extends TestCase
             'product' => $product->slug,
         ]);
 
-        $variant = $product->variants->first();
+        $variant = $product->default_variant;
         $productVariantUrl  = route('shop.product-variant', [
             'product' => $product->slug,
             'variant' => $variant->slug,
@@ -178,20 +162,5 @@ class ShopControllerTest extends TestCase
         foreach ($variants as $variant) {
             $response->assertSeeText($variant->name);
         }
-    }
-
-    private function onlyForMembers(string $url): TestResponse
-    {
-        Auth::logout();
-
-        $this->get($url)
-            ->assertRedirect(route('login'));
-
-        $this->actingAs($this->getGuestUser())
-            ->get($url)
-            ->assertForbidden();
-
-        return $this->actingAs($this->getMemberUser())
-            ->get($url);
     }
 }

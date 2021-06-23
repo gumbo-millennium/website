@@ -124,3 +124,8 @@ storage/debugbar
 
 # Ignore Auth files (Google and such)
 /storage/auth/
+
+# php-cs-fixer
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+.phpunit.result.cache

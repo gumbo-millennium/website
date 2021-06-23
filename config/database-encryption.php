@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
      * Enable database encryption.
      * Default: false
@@ -47,5 +46,4 @@ return [
      * @var null|array
      */
     'control_characters' => null,
-
 ];

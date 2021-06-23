@@ -82,16 +82,3 @@
 .card__list-separator {
   @apply mx-2 opacity-75;
 }
-
-@screen dark {
-  .card {
-    @apply bg-gray-secondary-2;
-    /* @apply border border-gray-secondary-2; */
-  }
-  .card__figure {
-    @apply bg-gray-secondary-3;
-  }
-  .card__figure--alleen-samen {
-    background-color: #ffb604;
-  }
-}

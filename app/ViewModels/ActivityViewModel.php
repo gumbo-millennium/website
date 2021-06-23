@@ -23,14 +23,12 @@ class ActivityViewModel extends GumboViewModel
     public $enrollment;
 
     /**
-     * @var User|null $user
+     * @var null|User $user
      */
     protected $user;
 
     /**
-     * Creates a new Activity Model for the given user
-     *
-     * @param Activity $activity
+     * Creates a new Activity Model for the given user.
      */
     public function __construct(?User $user, Activity $activity)
     {
@@ -40,9 +38,7 @@ class ActivityViewModel extends GumboViewModel
     }
 
     /**
-     * Returns the user's enrollment. Should be just one
-     *
-     * @return Enrollment|null
+     * Returns the user's enrollment. Should be just one.
      */
     protected function getEnrollment(): ?Enrollment
     {
@@ -52,8 +48,9 @@ class ActivityViewModel extends GumboViewModel
         }
 
         // Anonymous users can't be enrolled
-        if (!$this->user) {
+        if (! $this->user) {
             $this->enrollment = false;
+
             return null;
         }
 
@@ -65,9 +62,7 @@ class ActivityViewModel extends GumboViewModel
     }
 
     /**
-     * Handles checking if a user is enrolled
-     *
-     * @return bool
+     * Handles checking if a user is enrolled.
      */
     protected function getIsEnrolledAttribute(): bool
     {
@@ -75,20 +70,17 @@ class ActivityViewModel extends GumboViewModel
     }
 
     /**
-     * Handles checking if a user paid for this enrollment
-     *
-     * @return bool
+     * Handles checking if a user paid for this enrollment.
      */
     protected function getHasPaidAttribute(): bool
     {
         $enrollment = $this->getEnrollment();
+
         return $enrollment ? $enrollment->state->is(Paid::class) : false;
     }
 
     /**
-     * Returns if the user needs to pay for this enrollment
-     *
-     * @return bool
+     * Returns if the user needs to pay for this enrollment.
      */
     protected function getIsPaidAttribute(): bool
     {
@@ -101,8 +93,6 @@ class ActivityViewModel extends GumboViewModel
 
     /**
      * Returns if the user is enrolled and the enrollment is in a non-volatile state.
-     *
-     * @return bool
      */
     protected function getIsStableAttribute(): bool
     {

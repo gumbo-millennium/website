@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * A collection of clicks on a sponsor for a given day
+ * A collection of clicks on a sponsor for a given day.
  *
  * @property int $id
  * @property int $sponsor_id
@@ -25,46 +25,6 @@ class SponsorClick extends Model
         VALUES (?, NOW())
         ON DUPLICATE KEY UPDATE `count` = `count` + 1;
     SQL;
-
-    /**
-     * Increments the number of clicks for this sponsor for today
-     *
-     * @param Sponsor $sponsor
-     * @return void
-     * @throws QueryException
-     */
-    public static function addClick(Sponsor $sponsor): void
-    {
-        // Get sanity in here
-        if (!$sponsor->exists()) {
-            throw new InvalidArgumentException('Invalid sponsor supplied to increment.');
-        }
-
-        // Run a prepared statement
-        DB::statement(
-            sprintf(self::INCREMENT_QUERY, (new SponsorClick())->getTable()),
-            [$sponsor->id]
-        );
-    }
-
-    /**
-     * Ensure a date is always set
-     *
-     * @param Closure|string $callback
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(static function ($click) {
-            if ($click->date !== null) {
-                return;
-            }
-
-            $click->date = now();
-        });
-    }
 
     /**
      * Indicates if the model should be timestamped.
@@ -92,9 +52,44 @@ class SponsorClick extends Model
     ];
 
     /**
-     * Returns owning sponsor
+     * Increments the number of clicks for this sponsor for today.
      *
-     * @return BelongsTo
+     * @throws QueryException
+     */
+    public static function addClick(Sponsor $sponsor): void
+    {
+        // Get sanity in here
+        if (! $sponsor->exists()) {
+            throw new InvalidArgumentException('Invalid sponsor supplied to increment.');
+        }
+
+        // Run a prepared statement
+        DB::statement(
+            sprintf(self::INCREMENT_QUERY, (new self())->getTable()),
+            [$sponsor->id],
+        );
+    }
+
+    /**
+     * Ensure a date is always set.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(static function ($click) {
+            if ($click->date !== null) {
+                return;
+            }
+
+            $click->date = now();
+        });
+    }
+
+    /**
+     * Returns owning sponsor.
      */
     public function sponsor(): BelongsTo
     {

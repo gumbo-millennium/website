@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\FileExportController;
-use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
 
@@ -29,20 +29,20 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 // Route::get('/search/{query}', 'SearchController@search')->name('search');
 
 /**
- * Plazacam routes
+ * Plazacam routes.
  */
 Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
 /**
- * Export route
+ * Export route.
  */
 Route::get('admin/download-export/{export}', [FileExportController::class, 'download'])
     ->name('export.download');
 
 /**
- * Files route
+ * Files route.
  */
 Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
@@ -63,7 +63,7 @@ Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->grou
 });
 
 /**
- * Activities
+ * Activities.
  */
 Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // USER ROUTES
@@ -85,7 +85,7 @@ Route::permanentRedirect('/activity', '/activiteiten');
 Route::permanentRedirect('/activiteit', '/activiteiten');
 
 /**
- * Enrollments
+ * Enrollments.
  */
 Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
     // Actioon view
@@ -128,7 +128,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 });
 
 /**
- * News
+ * News.
  */
 Route::prefix('nieuws')->name('news.')->group(static function () {
     // Main route
@@ -139,7 +139,7 @@ Route::prefix('nieuws')->name('news.')->group(static function () {
 });
 
 /**
- * Join controller
+ * Join controller.
  */
 Route::prefix('word-lid')->name('join.')->group(static function () {
     // Join form (normal and intro)
@@ -201,15 +201,31 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 });
 
 /**
- * Webshop
+ * Webshop.
  */
-Route::prefix('shop')->name('shop.')->group(static function () {
-    Route::get('/', [ShopController::class, 'index'])->name('home');
+Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(static function () {
+    // Homepage
+    Route::get('/', [Shop\ProductController::class, 'index'])->name('home');
 
-    Route::get('/item/{product}', [ShopController::class, 'showProduct'])->name('product');
-    Route::get('/item/{product}/{variant}', [ShopController::class, 'showProductVariant'])->name('product-variant');
+    // Single item display
+    Route::get('/item/{product}', [Shop\ProductController::class, 'showProduct'])->name('product');
+    Route::get('/item/{product}/{variant}', [Shop\ProductController::class, 'showProductVariant'])->name('product-variant');
 
-    Route::get('/{category}', [ShopController::class, 'showCategory'])->name('category');
+    // Shopping cart
+    Route::get('/cart', [Shop\CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [Shop\CartController::class, 'add'])->name('cart.add');
+    Route::patch('/cart', [Shop\CartController::class, 'update'])->name('cart.update');
+
+    Route::get('/order', [Shop\OrderController::class, 'create'])->name('order.create');
+    Route::post('/order', [Shop\OrderController::class, 'store'])->name('order.store');
+
+    Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+
+    Route::get('/order/{order}/pay', [Shop\OrderController::class, 'pay'])->name('order.pay');
+    Route::get('/order/{order}/pay/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+
+    // Category
+    Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });
 
 // Common mistakes handler
@@ -227,11 +243,11 @@ $groupRegex = sprintf(
     '^(%s)$',
     implode('|', array_map(
         static fn ($key) => preg_quote($key, '/'),
-        array_keys(config('gumbo.page-groups'))
-    ))
+        array_keys(config('gumbo.page-groups')),
+    )),
 );
-Route::get("{group}", 'PageController@group')->where('group', $groupRegex)->name('group.index');
-Route::get("{group}/{slug}", 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
+Route::get('{group}', 'PageController@group')->where('group', $groupRegex)->name('group.index');
+Route::get('{group}/{slug}', 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
 
 // Redirects
 Route::redirect('corona', '/coronavirus');

@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
- * Permission policy of the Activity model
+ * Permission policy of the Activity model.
  */
 class ActivityPolicy
 {
@@ -18,15 +18,13 @@ class ActivityPolicy
     use HandlesAuthorization;
 
     public const CREATE_PERMISSION = 'activity-create';
+
     public const ADMIN_PERMISSION = 'activity-admin';
+
     public const PURGE_PERMISSION = 'activity-purge';
 
     /**
      * Returns if the user is the owner of the given activity.
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return bool
      */
     private static function isOwner(User $user, Activity $activity): bool
     {
@@ -35,9 +33,6 @@ class ActivityPolicy
 
     /**
      * Returns if the user is the owner of any activity.
-     *
-     * @param User $user
-     * @return bool
      */
     private static function isAnyOwner(User $user): bool
     {
@@ -46,9 +41,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can view any activities.
-     *
-     * @param  User  $user
-     * @return bool
      */
     public function viewAny(User $user): bool
     {
@@ -59,9 +51,7 @@ class ActivityPolicy
     /**
      * Determine whether the user can view the activity.
      *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
+     * @param User $user
      */
     public function view(?User $user, Activity $activity): bool
     {
@@ -70,16 +60,12 @@ class ActivityPolicy
     }
 
     /**
-     * Can this user enroll
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return bool
+     * Can this user enroll.
      */
     public function enroll(User $user, Activity $activity): bool
     {
         // Non-public activities cannot be enrolled by guests
-        if (!$user->is_member && !$activity->is_public) {
+        if (! $user->is_member && ! $activity->is_public) {
             return false;
         }
 
@@ -99,9 +85,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can create activities.
-     *
-     * @param  User  $user
-     * @return bool
      */
     public function create(User $user): bool
     {
@@ -111,10 +94,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can update the activity.
-     *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
      */
     public function update(User $user, Activity $activity): bool
     {
@@ -129,10 +108,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can delete the activity.
-     *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
      */
     public function cancel(User $user, Activity $activity): bool
     {
@@ -152,15 +127,11 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can delete the activity.
-     *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
      */
     public function delete(User $user, Activity $activity): bool
     {
         // Prevent deletion if not allowed
-        if (!$user->can('admin', $activity)) {
+        if (! $user->can('admin', $activity)) {
             return false;
         }
 
@@ -190,10 +161,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can restore the activity.
-     *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
      */
     public function restore(User $user, Activity $activity): bool
     {
@@ -208,10 +175,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can permanently delete the activity.
-     *
-     * @param  User  $user
-     * @param  Activity  $activity
-     * @return bool
      */
     public function forceDelete(User $user, Activity $activity): bool
     {
@@ -227,11 +190,7 @@ class ActivityPolicy
     }
 
     /**
-     * Allow linking an enrollment if the user is a manager of the event
-     *
-     * @param User $user
-     * @param Activity $activity
-     * @return bool
+     * Allow linking an enrollment if the user is a manager of the event.
      */
     public function addEnrollment(User $user, Activity $activity): bool
     {
@@ -239,11 +198,7 @@ class ActivityPolicy
     }
 
     /**
-     * Can the given user manage the given activities or activities in general
-     *
-     * @param User $user
-     * @param Activity|null $activity
-     * @return bool
+     * Can the given user manage the given activities or activities in general.
      */
     public function manage(User $user, ?Activity $activity = null): bool
     {
@@ -252,10 +207,7 @@ class ActivityPolicy
     }
 
     /**
-     * Can the user perform admin actions on this object
-     *
-     * @param User $user
-     * @return bool
+     * Can the user perform admin actions on this object.
      */
     public function admin(User $user): bool
     {

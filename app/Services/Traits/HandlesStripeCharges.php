@@ -11,17 +11,16 @@ use Stripe\Exception\ApiErrorException;
 trait HandlesStripeCharges
 {
     /**
-     * Charges retrieved from API
+     * Charges retrieved from API.
      *
      * @var array<Charge>
      */
     private array $chargeCache = [];
 
     /**
-     * Returns the charge for this paid Enrollement
+     * Returns the charge for this paid Enrollement.
      *
-     * @param Enrollment $enrollment
-     * @return Stripe\Charge|null
+     * @return null|Stripe\Charge
      */
     public function getCharge(Enrollment $enrollment): ?Charge
     {
@@ -31,7 +30,7 @@ trait HandlesStripeCharges
         }
 
         // Check cached
-        if (!empty($this->chargeCache[$enrollment->payment_invoice])) {
+        if (! empty($this->chargeCache[$enrollment->payment_invoice])) {
             return $this->chargeCache[$enrollment->payment_invoice];
         }
 
@@ -58,6 +57,7 @@ trait HandlesStripeCharges
 
             // Log 404 (weird, but okay)
             logger()->info('Failed to find charge for {invoice}', compact('invoice'));
+
             return null;
         }
     }

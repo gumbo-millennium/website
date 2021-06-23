@@ -17,19 +17,16 @@ use UnderflowException;
 /**
  * Handles receiving, storing and publishing of the plazacam.
  * Requires a valid user with 'member' status.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class PlazaCamController extends Controller
 {
     /**
-     * Path of the plaza cam
+     * Path of the plaza cam.
      */
     private const IMAGE_PLAZA = 'plazacam/image-plaza.jpg';
 
     /**
-     * Path of the coffee cam
+     * Path of the coffee cam.
      */
     private const IMAGE_COFFEE = 'plazacam/image-coffee.jpg';
 
@@ -39,22 +36,19 @@ class PlazaCamController extends Controller
     ];
 
     /**
-     * Return if the cam is still valid (up to 90 minutes after creation)
-     *
-     * @param string $cam
-     * @return bool
+     * Return if the cam is still valid (up to 90 minutes after creation).
      */
     public static function isExpired(string $cam): bool
     {
         // Check if the requested cam exists
-        if (!\array_key_exists($cam, self::VALID_IMAGES)) {
+        if (! \array_key_exists($cam, self::VALID_IMAGES)) {
             return true;
         }
 
         $camPath = self::VALID_IMAGES[$cam] ?? null;
 
         // Check if the cam
-        if (!Storage::exists($camPath)) {
+        if (! Storage::exists($camPath)) {
             return true;
         }
 
@@ -65,8 +59,6 @@ class PlazaCamController extends Controller
     /**
      * Returns the path to the file of the given cam.
      *
-     * @param string $name
-     * @return string|null
      * @throws InvalidArgumentException
      * @throws UnderflowException
      */
@@ -76,13 +68,13 @@ class PlazaCamController extends Controller
         $image = self::VALID_IMAGES[$name] ?? null;
 
         // Throw unknown exception
-        if (!$image) {
+        if (! $image) {
             throw new InvalidArgumentException('Cam not recognized');
         }
 
         // Throw 404 if the image is unavailable
-        if (!Storage::exists($image)) {
-            throw new UnderflowException("Cannot locate cam file");
+        if (! Storage::exists($image)) {
+            throw new UnderflowException('Cannot locate cam file');
         }
 
         // Return path
@@ -91,8 +83,6 @@ class PlazaCamController extends Controller
 
     /**
      * Prevent the images from being updated on weekends and between 22.00 - 07.00.
-     *
-     * @return bool
      */
     protected static function isAvailable(): bool
     {
@@ -103,16 +93,15 @@ class PlazaCamController extends Controller
     }
 
     /**
-     * Gets an image from the web endpoint
+     * Gets an image from the web endpoint.
      *
-     * @param string $location Location to retrieve
      * @return Response
      * @throws BadRequestHttpException
      */
     public function image(string $image)
     {
         // Only allow certain cams
-        if (!in_array($image, ['plaza', 'coffee'])) {
+        if (! in_array($image, ['plaza', 'coffee'], true)) {
             throw new NotFoundHttpException('Cannot find an image for that location.');
         }
 
@@ -121,21 +110,20 @@ class PlazaCamController extends Controller
     }
 
     /**
-     * Responds with images from API calls
+     * Responds with images from API calls.
      *
-     * @param Request $request
      * @return Response
      * @throws BadRequestHttpException if something is wrong
      */
     public function api(User $user, string $image)
     {
         // Check permission
-        if (!$user->hasPermissionTo('plazacam-view')) {
+        if (! $user->hasPermissionTo('plazacam-view')) {
             throw new AccessDeniedHttpException('You are not allowed to view the plazacam');
         }
 
         // Only allow certain cams
-        if (!in_array($image, ['plaza', 'coffee'])) {
+        if (! in_array($image, ['plaza', 'coffee'], true)) {
             throw new NotFoundHttpException('Cannot find an image for that location.');
         }
 
@@ -144,30 +132,29 @@ class PlazaCamController extends Controller
     }
 
     /**
-     * Stores images of the plaza- and coffeecam. Requires a user that's a member
+     * Stores images of the plaza- and coffeecam. Requires a user that's a member.
      *
-     * @param Request $request
      * @param User $user Issuing user
      * @param string $image Image location
      * @return Response
      * @throws AccessDeniedHttpException If user is not a member
-     * @throws NotFoundHttpException  If the image location could not be found
+     * @throws NotFoundHttpException If the image location could not be found
      * @throws BadRequestHttpException If the request is not meeting demands
      */
     public function store(Request $request, User $user, string $image)
     {
         // Check permission
-        if (!$user->hasPermissionTo('plazacam-update')) {
+        if (! $user->hasPermissionTo('plazacam-update')) {
             throw new AccessDeniedHttpException('You are not allowed to write new plazacam images');
         }
 
         // Only allow certain cams
-        if (!in_array($image, ['plaza', 'coffee'])) {
+        if (! in_array($image, ['plaza', 'coffee'], true)) {
             throw new NotFoundHttpException('Cannot find an image for that location.');
         }
 
         // Make sure file is present
-        if (!$request->hasFile('file')) {
+        if (! $request->hasFile('file')) {
             throw new BadRequestHttpException('Expected a file on [file], but none was found');
         }
 
@@ -191,9 +178,8 @@ class PlazaCamController extends Controller
     }
 
     /**
-     * Actually retrieves images
+     * Actually retrieves images.
      *
-     * @param string $image
      * @return Response
      */
     protected function getImage(string $name)

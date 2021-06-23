@@ -9,6 +9,11 @@ return [
     // Cost of a single payment transaction via Stripe, in cents!
     'transfer-fee' => 29,
 
+    // Cost of Mollie, including refund buffer.
+    'fees' => [
+        'shop-order' => 40,
+    ],
+
     // Google config
     'google' => [
         // Allowed domains
@@ -35,7 +40,7 @@ return [
             'User-Agent' => sprintf(
                 'gumbo-millennium.nl/1.0 (incompatible; curl/%s; php/%s; https://www.gumbo-millennium.nl);',
                 curl_version()['version'],
-                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION
+                PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
             ),
         ],
 
@@ -64,5 +69,29 @@ return [
         'allergies',
         'huisarts',
         'dokter',
+    ],
+
+    // Shop settings
+    'shop' => [
+        'max-quantity' => (int) env('GUMBO_SHOP_MAX_QUANTITY', 5),
+    ],
+
+    'mail-recipients' => [
+        'board' => [
+            [
+                'name' => 'Bestuur Gumbo Millennium',
+                'email' => 'bestuur@gumbo-millennium.nl',
+            ],
+        ],
+    ],
+
+    'fallbacks' => [
+        'address' => [
+            'line1' => 'Campus 2-6',
+            'line2' => 't.a.v Gumbo Millennium',
+            'postal_code' => '8017 CA',
+            'city' => 'Zwolle',
+            'country' => 'NL',
+        ],
     ],
 ];

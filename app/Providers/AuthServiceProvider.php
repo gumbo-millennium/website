@@ -98,7 +98,6 @@ class AuthServiceProvider extends ServiceProvider
      * Check if a user has permission to be super admin. Cannot be inherited from roles.
      *
      * @param User $user User to authenticate
-     * @return bool|null
      */
     public function hasDirectAdminPermission(User $user): ?bool
     {

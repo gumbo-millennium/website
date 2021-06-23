@@ -11,8 +11,7 @@ trait BlocksCancelledActivityRuns
     /**
      * Determine if the action is executable for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param \Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function authorizedToRun(Request $request, $model)

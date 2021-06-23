@@ -10,22 +10,19 @@ use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
 
 /**
- * Validates phone numbers using libphonenumber
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Validates phone numbers using libphonenumber.
  */
 class PhoneNumber implements Rule
 {
     /**
-     * The region to validate the number for
+     * The region to validate the number for.
      *
-     * @var string|null
+     * @var null|string
      */
     private $region;
 
     /**
-     * The current validator instance
+     * The current validator instance.
      *
      * @var PhoneNumberUtil
      */
@@ -45,8 +42,7 @@ class PhoneNumber implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
      * @return bool
      */
     public function passes($attribute, $value) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
@@ -83,10 +79,10 @@ class PhoneNumber implements Rule
     }
 
     /**
-     * Formats phone numbers to a standardised form
+     * Formats phone numbers to a standardised form.
      *
      * @param string $value Phone number to parse
-     * @return string|null Returns null if parsing failed
+     * @return null|string Returns null if parsing failed
      */
     public function format(string $value): ?string
     {

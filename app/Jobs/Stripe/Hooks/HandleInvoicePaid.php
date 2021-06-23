@@ -14,9 +14,6 @@ use Stripe\Invoice;
  * Handles paid invoices, in case people pay out-of-band (via SEPA transfer or something).
  *
  * Called on payment_intent.succeeded
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class HandleInvoicePaid extends StripeWebhookJob
 {
@@ -24,7 +21,6 @@ class HandleInvoicePaid extends StripeWebhookJob
      * Execute the job.
      *
      * @param Invoice $invoice
-     * @return void
      */
     protected function process(?Invoice $invoice): void
     {
@@ -36,8 +32,9 @@ class HandleInvoicePaid extends StripeWebhookJob
         if ($enrollment === null) {
             logger()->info(
                 'Recieved invoice change for unknown invoice {invoice}',
-                compact('invoice')
+                compact('invoice'),
             );
+
             return;
         }
 
@@ -45,7 +42,7 @@ class HandleInvoicePaid extends StripeWebhookJob
         if ($enrollment->state instanceof Cancelled) {
             logger()->info(
                 'Recieved invoice change for cancelled enrollment {invoice}',
-                compact('invoice')
+                compact('invoice'),
             );
 
             // Stop
@@ -61,7 +58,7 @@ class HandleInvoicePaid extends StripeWebhookJob
         // Log result
         logger()->info(
             'Marking {enrollment} as paid.',
-            compact('enrollment', 'invoice')
+            compact('enrollment', 'invoice'),
         );
 
         // Mark enrollment as paid

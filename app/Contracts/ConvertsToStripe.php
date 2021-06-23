@@ -7,9 +7,7 @@ namespace App\Contracts;
 interface ConvertsToStripe
 {
     /**
-     * Returns Stripe-ready array
-     *
-     * @return array
+     * Returns Stripe-ready array.
      */
     public function toStripeCustomer(): array;
 }

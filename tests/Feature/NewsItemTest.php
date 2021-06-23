@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
- * Tests the following flow
+ * Tests the following flow.
  *
  * - Loading the news page
  * - Creating a new news item and checking if it's shown
@@ -21,10 +21,8 @@ class NewsItemTest extends TestCase
 {
     /**
      * A basic feature test example.
-     *
-     * @return void
      */
-    public function testIndex(): void
+    public function test_index(): void
     {
         // Get news index
         $response = $this->get(route('news.index'));
@@ -34,12 +32,11 @@ class NewsItemTest extends TestCase
     }
 
     /**
-     * Tests if the newly created news item is shown
+     * Tests if the newly created news item is shown.
      *
-     * @return NewsItem
-     * @depends testIndex
+     * @depends test_index
      */
-    public function testIndexWithItem(): NewsItem
+    public function test_index_with_item(): NewsItem
     {
         // Create random item with a unique title
         $item = factory(NewsItem::class, 1)->create([
@@ -60,13 +57,11 @@ class NewsItemTest extends TestCase
     }
 
     /**
-     * Tests if the item can be seen
+     * Tests if the item can be seen.
      *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
+     * @depends test_index_with_item
      */
-    public function testViewItem(NewsItem $item): void
+    public function test_view_item(NewsItem $item): void
     {
         // Get news index
         $response = $this->get(route('news.show', ['news' => $item]));
@@ -79,14 +74,12 @@ class NewsItemTest extends TestCase
     }
 
     /**
-     * Tests if an item that's deleted, returns a 404
+     * Tests if an item that's deleted, returns a 404.
      *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
+     * @depends test_index_with_item
+     * @depends test_view_item
      */
-    public function testViewDeletedItem(NewsItem $item): void
+    public function test_view_deleted_item(NewsItem $item): void
     {
         // Delete item
         $item->delete();
@@ -99,14 +92,12 @@ class NewsItemTest extends TestCase
     }
 
     /**
-     * Tests if an item that's deleted, isn't shown on the cover (of Vogue)
+     * Tests if an item that's deleted, isn't shown on the cover (of Vogue).
      *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
+     * @depends test_index_with_item
+     * @depends test_view_item
      */
-    public function testIndexWithoutDeletedItem(NewsItem $item): void
+    public function test_index_without_deleted_item(NewsItem $item): void
     {
         // Get news index
         $response = $this->get(route('news.index'));

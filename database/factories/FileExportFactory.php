@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Models\FileExport;
 use App\Models\User;
 use Faker\Generator as Faker;
@@ -19,17 +17,17 @@ $factory->define(FileExport::class, static function (Faker $faker) {
 $factory->afterMaking(FileExport::class, static function (FileExport $export) {
     $fakeFile = tempnam(sys_get_temp_dir(), 'test');
 
-    if (!file_put_contents($fakeFile, 'test')) {
+    if (! file_put_contents($fakeFile, 'test')) {
         throw new RuntimeException('Failed to create test file');
     }
 
-    if (!$export->filename) {
+    if (! $export->filename) {
         $export->attachFile(new File($fakeFile));
     }
 
-    if (!$export->owner_id) {
+    if (! $export->owner_id) {
         $export->owner()->associate(
-            User::query()->inRandomOrder()->first()
+            User::query()->inRandomOrder()->first(),
         );
     }
 

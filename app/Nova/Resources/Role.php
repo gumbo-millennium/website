@@ -21,7 +21,7 @@ use Spatie\Permission\Models\Role as RoleModel;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
- * Roles, for the Permission Framework
+ * Roles, for the Permission Framework.
  */
 class Role extends Resource
 {
@@ -50,7 +50,7 @@ class Role extends Resource
     ];
 
     /**
-     * Hide the item in the navbar
+     * Hide the item in the navbar.
      *
      * @var bool
      */
@@ -66,8 +66,7 @@ class Role extends Resource
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)
@@ -84,15 +83,13 @@ class Role extends Resource
         // Only return own roles in
         return parent::relatableQuery($request, $query->whereIn(
             'id',
-            $user->roles->pluck('id')
+            $user->roles->pluck('id'),
         ));
     }
-
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter

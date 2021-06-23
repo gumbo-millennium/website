@@ -11,21 +11,17 @@ use Stripe\StripeObject;
 use Stripe\Util\Util;
 
 /**
- * Basic Stripe job, with a webhook
+ * Basic Stripe job, with a webhook.
  */
 abstract class StripeWebhookJob extends StripeJob
 {
     /**
-     * Provided webhook
-     *
-     * @var WebhookCall
+     * Provided webhook.
      */
     protected WebhookCall $webhook;
 
     /**
-     * The event we're processing
-     *
-     * @var Event|null
+     * The event we're processing.
      */
     protected ?Event $event = null;
 
@@ -42,8 +38,6 @@ abstract class StripeWebhookJob extends StripeJob
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     final public function handle(): void
     {
@@ -73,12 +67,12 @@ abstract class StripeWebhookJob extends StripeJob
         logger()->debug('Event payload: {payload}', compact('payload'));
 
         $stripeObject = Util::convertToStripeObject($payload, []);
-        if (!$stripeObject instanceof StripeObject) {
+        if (! $stripeObject instanceof StripeObject) {
             $stripeObject = null;
         }
 
         // Call process if it exists
-        if (!\method_exists($this, 'process')) {
+        if (! \method_exists($this, 'process')) {
             return;
         }
 

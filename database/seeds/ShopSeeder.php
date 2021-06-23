@@ -81,7 +81,6 @@ class ShopSeeder extends Seeder
                 ]);
             $order->products()->sync($productMap);
 
-
             $order->save();
         }
     }

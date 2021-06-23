@@ -7,20 +7,17 @@ namespace App\Models\States\Traits;
 use App\Helpers\Str;
 
 /**
- * Allows Eloquent-like access to the states
+ * Allows Eloquent-like access to the states.
  */
 trait HasAttributes
 {
     /**
-     * Get the property
-     *
-     * @param string $key
-     * @return mixed
+     * Get the property.
      */
     public function __get(string $key)
     {
         // Skip if empty
-        if (!$key) {
+        if (! $key) {
             return;
         }
 
@@ -30,7 +27,7 @@ trait HasAttributes
 
         // Check if method exists
         if (method_exists($this, "get{$keyCaps}Attribute")) {
-            return $this->$keyMethod();
+            return $this->{$keyMethod}();
         }
     }
 }

@@ -5,18 +5,23 @@ const postcss = require('postcss')
 */
 
 // Bind plugin
-module.exports = postcss.plugin('remove-darkmode', () => {
-  return (css) => {
-    /** @var {postcss.Container} css */
-    // Iterate at-rules
-    css.walkAtRules((decl) => {
-      // Skip at rules that are not a color scheme filter
-      if (decl.params.indexOf('prefers-color-scheme') === -1) {
-        return
-      }
 
-      // Just remove the declaration
-      decl.remove()
-    })
+module.exports = () => {
+  return {
+    postcssPlugin: 'remove-darkmode',
+
+    AtRule: {
+      media: atRule => {
+        // Skip at rules that are not a color scheme filter
+        if (atRule.params.indexOf('prefers-color-scheme') === -1) {
+          return
+        }
+
+        // Just remove the declaration
+        atRule.remove()
+      }
+    }
   }
-})
+}
+
+module.exports.postcss = true

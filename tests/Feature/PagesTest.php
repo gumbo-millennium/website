@@ -12,7 +12,6 @@ class PagesTest extends TestCase
 {
     /**
      * @before
-     * @return void
      */
     public function updateContentFromGit(): void
     {
@@ -20,12 +19,11 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test the homepage
+     * Test the homepage.
      *
-     * @return void
      * @dataProvider provideTestUrls
      */
-    public function testUrl(?string $url, int $code): void
+    public function test_url(?string $url, int $code): void
     {
         if ($url === null) {
             $this->markTestSkipped('Missing URL');
@@ -41,9 +39,9 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test a random page
+     * Test a random page.
      */
-    public function testSeededPage(): void
+    public function test_seeded_page(): void
     {
         $page = factory(Page::class)->create();
 
@@ -53,7 +51,7 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Returns test strings
+     * Returns test strings.
      *
      * @return array<string,int>
      * @throws InvalidArgumentException

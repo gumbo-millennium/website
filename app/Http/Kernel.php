@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\AddSecurityHeaders::class,
             \Spatie\Csp\AddCspHeaders::class,
+            \App\Http\Middleware\StartCartSession::class,
         ],
 
         'api' => [

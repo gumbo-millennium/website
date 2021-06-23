@@ -34,10 +34,6 @@ class TransferEnrollment extends Action
 
     /**
      * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
@@ -46,7 +42,7 @@ class TransferEnrollment extends Action
         }
 
         $enrollment = Enrollment::find($models->first()->id);
-        if (!$enrollment instanceof Enrollment || $enrollment->state instanceof Cancelled) {
+        if (! $enrollment instanceof Enrollment || $enrollment->state instanceof Cancelled) {
             return Action::danger('Kan alleen actieve inschrijvingen overschrijven');
         }
 
@@ -93,7 +89,6 @@ class TransferEnrollment extends Action
     /**
      * Determine if the action is executable for the given request.
      *
-     * @param Request $request
      * @param Enrollment $model
      * @return bool
      */

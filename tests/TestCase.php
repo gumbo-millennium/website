@@ -23,9 +23,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Creates an application if one isn't set
-     *
-     * @return void
+     * Creates an application if one isn't set.
      */
     public function ensureApplicationExists(): void
     {

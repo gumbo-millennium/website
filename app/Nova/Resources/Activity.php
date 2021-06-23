@@ -36,7 +36,7 @@ use Laravel\Nova\Panel;
 use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
- * An activity resource, highly linked
+ * An activity resource, highly linked.
  */
 class Activity extends Resource
 {
@@ -55,7 +55,7 @@ class Activity extends Resource
     public static $title = 'name';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -65,7 +65,6 @@ class Activity extends Resource
      * @inheritDoc
      */
     public static $defaultSort = 'start_date';
-
 
     /**
      * The columns that should be searched.
@@ -80,10 +79,9 @@ class Activity extends Resource
     ];
 
     /**
-     * Make sure the user can only see enrollments he/she is allowed to see
+     * Make sure the user can only see enrollments he/she is allowed to see.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
@@ -96,8 +94,7 @@ class Activity extends Resource
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)
@@ -108,8 +105,7 @@ class Activity extends Resource
     /**
      * Build a Scout search query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Scout\Builder  $query
+     * @param \Laravel\Scout\Builder $query
      * @return \Laravel\Scout\Builder
      */
     public static function scoutQuery(NovaRequest $request, $query)
@@ -119,10 +115,9 @@ class Activity extends Resource
 
     /**
      * Return query that is filtered on allowed activities, IF the user is
-     * not allowed to view them all
+     * not allowed to view them all.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     private static function queryAllOrManaged(NovaRequest $request, $query)
@@ -158,11 +153,9 @@ class Activity extends Resource
         return sprintf('%s (%s - %s)', $startDate, $startTime, $endTime);
     }
 
-
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
@@ -181,7 +174,7 @@ class Activity extends Resource
     public function mainFields(Request $request): MergeValue
     {
         $user = $request->user();
-        $groupRules = $user->can('admin', Activity::class) ? 'nullable' : 'required';
+        $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
 
         return $this->merge([
             ID::make()->sortable(),
@@ -250,7 +243,7 @@ class Activity extends Resource
                         ->maxWidth(3072)
                         ->maxHeight(1024)
                         ->minWidth(768)
-                        ->minHeight(256)
+                        ->minHeight(256),
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')
@@ -278,9 +271,7 @@ class Activity extends Resource
     }
 
     /**
-     * Pricing fields
-     *
-     * @return array
+     * Pricing fields.
      */
     public function pricingFields(): array
     {
@@ -387,7 +378,6 @@ class Activity extends Resource
     /**
      * Get the actions available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -404,7 +394,6 @@ class Activity extends Resource
     /**
      * Get the filters available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)

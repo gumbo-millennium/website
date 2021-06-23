@@ -17,6 +17,13 @@ class ActivitiesCommand extends Command
 {
     private const ACTIVITY_URL = 'https://gumbo.nu/acpublicaties';
 
+    /**
+     * Message shown for users to login with.
+     */
+    private const REGISTER_MESSAGE = <<<'TEXT'
+    Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
+    TEXT;
+
     private const USER_MESSAGE = <<<'MARKDOWN'
     Activiteiten 🎯
 
@@ -26,13 +33,6 @@ class ActivitiesCommand extends Command
 
     %s
     MARKDOWN;
-
-    /**
-     * Message shown for users to login with
-     */
-    private const REGISTER_MESSAGE = <<<'TEXT'
-    Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
-    TEXT;
 
     /**
      * The name of the Telegram command.
@@ -49,7 +49,7 @@ class ActivitiesCommand extends Command
     protected $description = 'Toon de (besloten) activiteiten';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -91,12 +91,14 @@ class ActivitiesCommand extends Command
             // Activity is cancelled
             if ($activity->is_cancelled) {
                 $lines[] = "{$line} (geannuleerd)";
+
                 continue;
             }
 
             // Activity is sold out
             if ($activity->available_seats === 0) {
                 $lines[] = "{$line} (uitverkocht)";
+
                 continue;
             }
 
@@ -113,12 +115,12 @@ class ActivitiesCommand extends Command
                 $suffixes[] = sprintf(
                     '%d / %d beschikbaar',
                     $activity->available_seats,
-                    $activity->seats
+                    $activity->seats,
                 );
             }
 
             // Merge into brackets
-            if (!empty($suffixes)) {
+            if (! empty($suffixes)) {
                 $line = sprintf('%s (%s)', $line, \implode(', ', $suffixes));
             }
 
@@ -130,7 +132,7 @@ class ActivitiesCommand extends Command
         $message = trim(sprintf(
             self::USER_MESSAGE,
             implode("  \n", $lines),
-            $user === null ? self::REGISTER_MESSAGE : null
+            $user === null ? self::REGISTER_MESSAGE : null,
         ));
 
         // Add debug
@@ -146,7 +148,7 @@ class ActivitiesCommand extends Command
             Keyboard::inlineButton([
                 'text' => 'Activiteitenkanaal',
                 'url' => $this->getActivityChannelUrl(),
-            ])
+            ]),
         );
 
         // Return message
@@ -159,9 +161,7 @@ class ActivitiesCommand extends Command
     }
 
     /**
-     * Retursn the effective URL to the activity channel, or the URL as-is
-     *
-     * @return string
+     * Retursn the effective URL to the activity channel, or the URL as-is.
      */
     private function getActivityChannelUrl(): string
     {
@@ -189,6 +189,7 @@ class ActivitiesCommand extends Command
 
         // Cache and return
         Cache::put('telegram.bot.activities.url', $effectiveUrl, now()->addDay());
+
         return $effectiveUrl;
     }
 }

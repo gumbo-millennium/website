@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class GrantsTest extends TestCase
 {
-    public function testDefaultValues(): void
+    public function test_default_values(): void
     {
         $user = $this->getGuestUser();
 
@@ -20,7 +20,7 @@ class GrantsTest extends TestCase
         $this->assertEmpty($user->grants);
     }
 
-    public function testGrantsFileIsValid(): void
+    public function test_grants_file_is_valid(): void
     {
         $grantFile = resource_path(GrantsController::GRANTS_FILE);
         $fileGrants = Yaml::parseFile($grantFile);
@@ -33,7 +33,7 @@ class GrantsTest extends TestCase
         }
     }
 
-    public function testGrantGeneratorReturnsProperValues(): void
+    public function test_grant_generator_returns_proper_values(): void
     {
         $grantFile = resource_path(GrantsController::GRANTS_FILE);
         $fileGrants = Yaml::parseFile($grantFile);
@@ -51,14 +51,14 @@ class GrantsTest extends TestCase
         }
     }
 
-    public function testGrantsPageRequiresLogin(): void
+    public function test_grants_page_requires_login(): void
     {
         $grantsRequest = $this->get(route('account.grants'));
 
         $grantsRequest->assertRedirect();
     }
 
-    public function testGrantsAreRenderedInTheForm(): void
+    public function test_grants_are_rendered_in_the_form(): void
     {
         $user = $this->getGuestUser();
 
@@ -75,9 +75,9 @@ class GrantsTest extends TestCase
     }
 
     /**
-     * @depends testDefaultValues
+     * @depends test_default_values
      */
-    public function testSavingGrantsWorksProperly(): void
+    public function test_saving_grants_works_properly(): void
     {
         $user = $this->getGuestUser();
 

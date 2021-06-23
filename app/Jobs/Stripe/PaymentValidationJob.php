@@ -13,7 +13,7 @@ use Stripe\Invoice;
 class PaymentValidationJob extends StripeJob
 {
     /**
-     * Enrollment to check
+     * Enrollment to check.
      *
      * @var Enrollment
      */
@@ -36,8 +36,6 @@ class PaymentValidationJob extends StripeJob
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle(StripeServiceContract $service): void
     {
@@ -47,6 +45,7 @@ class PaymentValidationJob extends StripeJob
         // Skip if paid
         if ($enrollment->state->isOneOf(PaidState::class, CancelledState::class)) {
             logger()->info('Got validation on paid/cancelled enrollment. Stopping');
+
             return;
         }
 
@@ -54,8 +53,9 @@ class PaymentValidationJob extends StripeJob
         $invoice = $service->getInvoice($enrollment);
 
         // Check invoice
-        if (!$invoice) {
+        if (! $invoice) {
             logger()->info('Found no invoice for {enrollment}', compact('enrollment'));
+
             return;
         }
 
@@ -65,6 +65,7 @@ class PaymentValidationJob extends StripeJob
 
             $newEnrollment = Enrollment::find($enrollment->id);
             $newEnrollment->transitionTo(PaidState::class)->saveOrFail();
+
             return;
         }
 
@@ -74,6 +75,7 @@ class PaymentValidationJob extends StripeJob
 
             $newEnrollment = Enrollment::find($enrollment->id);
             $newEnrollment->transitionTo(CancelledState::class)->saveOrFail();
+
             return;
         }
 
