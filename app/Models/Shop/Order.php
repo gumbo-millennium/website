@@ -191,7 +191,7 @@ class Order extends Model implements PayableModel
             ->locale('nl_NL');
 
         $order
-            ->expiresAt($this->expires_at ?? Date::now()->addDays(2));
+            ->expiresAt($this->expires_at->addDays(5));
 
         return $order;
     }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Helpers\Str;
 use App\Models\Page;
+use Symfony\Component\Finder\Finder;
 use Tests\TestCase;
 
 class PageControllerTest extends TestCase
@@ -19,13 +21,27 @@ class PageControllerTest extends TestCase
 
     public function test_git_page(): void
     {
+        $this->artisan('gumbo:update-content');
+
         $file = self::GIT_FILE;
 
-        $this->assertFileExists(resource_path("assets/json/pages/{$file}.json"));
+        $finder = Finder::create()
+            ->in(resource_path('assets/json/pages'))
+            ->name('*.json')
+            ->files();
 
-        $this->assertTrue(Page::whereSlug($file)->exists());
+        $pageTable = (new Page())->getTable();
 
-        $this->get("/{$file}")
-            ->assertOk();
+        foreach ($finder as $file) {
+            $this->assertFileExists($file->getPathname());
+
+            $slug = Str::beforeLast($file->getFilename(), '.');
+
+            $this->assertDatabaseHas($pageTable, [
+                'slug' => $slug,
+            ]);
+
+            $this->get("/${slug}")->assertOk();
+        }
     }
 }

@@ -132,7 +132,7 @@ return (new Config())
             'import_functions' => false,
             'import_classes' => true,
         ],
-        'ordered_imports' => ['sort_algorithm' => 'alpha', ],
+        'ordered_imports' => ['sort_algorithm' => 'alpha'],
 
         // Language Constructs
         'explicit_indirect_variable' => true,
@@ -140,7 +140,7 @@ return (new Config())
         'is_null' => true,
 
         // List Notation
-        'list_syntax' => true,
+        'list_syntax' => ['syntax' => 'short'],
 
         // Operator
         'not_operator_with_successor_space' => true,
@@ -148,8 +148,8 @@ return (new Config())
         'ternary_to_null_coalescing' => true,
 
         // PHPUnit
-        'php_unit_method_casing' => ['case' => 'snake_case',        ],
-        'php_unit_test_annotation' => ['style' => 'prefix',        ],
+        'php_unit_method_casing' => ['case' => 'snake_case'],
+        'php_unit_test_annotation' => ['style' => 'prefix'],
 
         // PHPDoc
         'align_multiline_comment' => true,
@@ -164,14 +164,14 @@ return (new Config())
         'no_blank_lines_after_phpdoc' => true,
         'no_empty_phpdoc' => true,
         'no_superfluous_phpdoc_tags' => true,
-        'phpdoc_align' => ['align' => 'left',        ],
+        'phpdoc_align' => ['align' => 'left'],
         'phpdoc_annotation_without_dot' => true,
         'phpdoc_indent' => true,
         'phpdoc_line_span' => true,
         'phpdoc_scalar' => true,
         'phpdoc_summary' => true,
         'phpdoc_trim' => true,
-        'phpdoc_types_order' => ['null_adjustment' => 'always_first',        ],
+        'phpdoc_types_order' => ['null_adjustment' => 'always_first'],
 
         // Return Notation
         'no_useless_return' => true,

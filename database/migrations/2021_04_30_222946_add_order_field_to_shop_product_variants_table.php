@@ -16,7 +16,7 @@ class AddOrderFieldToShopProductVariantsTable extends Migration
     public function up()
     {
         Schema::table('shop_product_variants', static function (Blueprint $table) {
-            $table->unsignedTinyInteger('order')->after('slug');
+            $table->unsignedTinyInteger('order')->after('slug')->default(0);
         });
     }
 

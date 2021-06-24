@@ -148,6 +148,9 @@ class FileController extends Controller
         // Check permissions
         $this->authorize('download', $bundle);
 
+        // Softfail if not published
+        abort_unless($bundle->is_available, 404);
+
         // Log bundle download
         $this->log($request, $bundle, null);
 
@@ -180,6 +183,9 @@ class FileController extends Controller
 
         // Check permissions
         $this->authorize('download', $bundle);
+
+        // Softfail if not published
+        abort_unless($bundle->is_available, 404);
 
         // Log bundle download
         $this->log($request, $bundle, $media);

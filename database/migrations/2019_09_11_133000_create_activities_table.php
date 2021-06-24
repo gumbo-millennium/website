@@ -56,7 +56,6 @@ class CreateActivitiesTable extends Migration
             // Add role and user foreign key
             $roleTable = config('permission.table_names.roles');
             $table->foreign('role_id')->references('id')->on($roleTable)->onDelete('set null');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

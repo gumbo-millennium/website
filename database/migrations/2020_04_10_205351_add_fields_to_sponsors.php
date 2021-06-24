@@ -28,11 +28,15 @@ class AddFieldsToSponsors extends Migration
             // Add has_page as computed field
             $table->string('contents_title')->nullable()->default(null);
             $table->json('contents')->nullable();
-            $table->boolean('has_page')->storedAs(self::PAGE_SQL)->after('ends_at');
+            $hasPage = $table->boolean('has_page')->storedAs(self::PAGE_SQL)->after('ends_at');
 
             // Add soft deletes and slug
             $table->softDeletes()->after('updated_at');
-            $table->string('slug', 60)->after('name');
+            $table->string('slug', 60)->default('')->after('name');
+
+            if (DB::getDriverName() === 'sqlite') {
+                $hasPage->default(false);
+            }
         });
 
         // Auto-update slug by assigning random value, setting it to null

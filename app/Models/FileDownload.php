@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Date;
 use Spatie\MediaLibrary\Models\Media;
 
 /**
@@ -85,9 +86,9 @@ class FileDownload extends Pivot
         parent::boot();
 
         // Generate UUID on create and add downloaded_at
-        self::creating(static function ($model) {
-            $model->id = (string) Uuid::uuid4();
-            $model->created_at = now();
+        self::creating(function (self $download) {
+            $download->id ??= (string) Str::uuid();
+            $download->created_at = Date::now();
         });
     }
 
