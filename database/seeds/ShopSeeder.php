@@ -75,11 +75,11 @@ class ShopSeeder extends Seeder
             $productMap = $products
                 ->mapWithKeys(static fn (ProductVariant $variant) => [
                     $variant->id => new OrderProduct([
+                        'quantity' => 1,
                         'price' => $variant->price,
-                        'vat_rate' => $variant->product->vat_rate,
                     ]),
                 ]);
-            $order->products()->sync($productMap);
+            $order->variants()->sync($productMap);
 
             $order->save();
         }
