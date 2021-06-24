@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\NewsItem;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class NewsItemTest extends TestCase
@@ -88,7 +87,6 @@ class NewsItemTest extends TestCase
         // Get unpublished item
         $this->get(route('news.show', $unpublished))
             ->assertNotFound();
-
     }
 
     private function getTestNewsItem(array $attributes = []): NewsItem
