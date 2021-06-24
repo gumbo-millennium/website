@@ -141,6 +141,9 @@
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('files.index') }}">Bestanden</a>
             </li>
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="{{ route('shop.index') }}">Shop</a>
+            </li>
             @endif
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('news.index') }}">Nieuws</a>
