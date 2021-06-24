@@ -182,7 +182,7 @@ abstract class Command extends TelegramCommand
                 'text' => $message,
             ]);
 
-            return false;
+            return true;
         }
 
         // Prep rate limit
