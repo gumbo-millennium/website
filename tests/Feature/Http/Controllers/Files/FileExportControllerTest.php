@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Files;
 
 use App\Models\FileExport;
 use App\Models\User;
