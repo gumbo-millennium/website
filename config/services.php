@@ -64,6 +64,11 @@ return [
         ],
     ],
 
+    // Tenor gif search
+    'tenor' => [
+        'api-key' => env('TENOR_API_KEY'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Feature flags

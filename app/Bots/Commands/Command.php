@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use App\Helpers\Arr;
 use App\Models\User;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Uri;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
+use JsonException;
 use Telegram\Bot\Commands\Command as TelegramCommand;
+use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\User as TelegramUser;
 
@@ -19,6 +28,73 @@ abstract class Command extends TelegramCommand
         $out = sprintf($text, ...$args);
 
         return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
+    }
+
+    public function getReplyGifUrl(string $search): ?InputFile
+    {
+        if (! $apiKey = Config::get('services.tenor.api-key')) {
+            dump('no key');
+
+            return null;
+        }
+
+        /** @var GuzzleClient $http */
+        $http = App::make(GuzzleClient::class);
+
+        $searchUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/search'), [
+            'key' => $apiKey,
+            'q' => $search,
+            'locale' => 'nl_NL',
+            'contentfilter' => 'medium',
+            'media_filter' => 'minimal',
+            'limit' => 1,
+        ]);
+
+        $result = $http->get($searchUrl);
+
+        try {
+            $body = json_decode($result->getBody()->getContents(), true, 64, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $body = null;
+        }
+
+        if ($result->getStatusCode() !== 200 || ! $body) {
+            dump('no ok');
+            dump($body);
+
+            return null;
+        }
+
+        $imageId = Arr::get($body, 'results.0.id');
+        $imagePublicUrl = Arr::get($body, 'results.0.url');
+        $imageUrl = Arr::get($body, 'results.0.media.0.mp4.url');
+
+        if (! $imageId || ! filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+            dump([
+                'no id',
+                $imageId,
+                $imageUrl,
+                $body,
+            ]);
+
+            return null;
+        }
+
+        $shareUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/registershare'), [
+            'key' => $apiKey,
+            'id' => $imageId,
+            'locale' => 'nl_NL',
+            'q' => $search,
+        ]);
+
+        $http->get($shareUrl);
+
+        return InputFile::create($imageUrl, basename($imagePublicUrl));
+    }
+
+    protected function isInGroupChat(): bool
+    {
+        return $this->getTelegramUser()->id !== $this->update->getChat()->id;
     }
 
     /**
@@ -89,5 +165,35 @@ abstract class Command extends TelegramCommand
         ]);
 
         return false;
+    }
+
+    protected function forgetRateLimit(string $key): void
+    {
+        Cache::forget($this->getRateLimitKey($key));
+    }
+
+    protected function rateLimit(string $key, string $message = '⏸ Nog even wachten...', string $period = 'PT5M'): bool
+    {
+        // Rate limit
+        $cacheKey = $this->getRateLimitKey($key);
+
+        if (Cache::get($cacheKey) > Date::now()) {
+            $this->replyWithMessage([
+                'text' => $message,
+            ]);
+
+            return false;
+        }
+
+        // Prep rate limit
+        $next = Date::now()->toImmutable()->add($period);
+        Cache::put($cacheKey, $next, $next->addWeek());
+
+        return false;
+    }
+
+    private function getRateLimitKey(string $key): string
+    {
+        return sprintf('tg.rate-limits.%s.%s', $key, optional($this->getTelegramUser())->id ?? 'shared');
     }
 }
