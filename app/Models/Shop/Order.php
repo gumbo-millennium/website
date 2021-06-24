@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Events\OrderPaidEvent;
+use App\Models\Traits\IsPayable;
 use App\Models\User;
+use App\Services\Payments\Order as FluentOrder;
+use App\Services\Payments\OrderLine;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\URL;
 
 /**
  * A user's order.
@@ -29,8 +34,10 @@ use Illuminate\Support\Facades\Date;
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
  * @property-read \App\Models\User $user
  */
-class Order extends Model
+class Order extends Model implements PayableModel
 {
+    use IsPayable;
+
     protected $table = 'shop_orders';
 
     protected $casts = [
@@ -38,6 +45,7 @@ class Order extends Model
         'expires_at' => 'datetime',
         'paid_at' => 'datetime',
         'shipped_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -128,5 +136,63 @@ class Order extends Model
             'variants',
             'variants.product',
         ]);
+    }
+
+    /**
+     * Returns a Mollie order from this model.
+     */
+    public function toMollieOrder(): FluentOrder
+    {
+        $order = FluentOrder::make($this->price, $this->number);
+
+        $address = $this->getPaymentAddressForUser($this->user);
+        $order
+            ->billingAddress($address)
+            ->shippingAddress($address);
+
+        foreach ($this->variants as $variant) {
+            $order->addLine(
+                OrderLine::make(
+                    $variant->display_name,
+                    $variant->pivot->quantity,
+                    $variant->pivot->price,
+                )
+                    ->sku($variant->sku)
+                    ->imageUrl(URL::to($variant->valid_image_url))
+                    ->productUrl($variant->url),
+            );
+        }
+
+        $order->addLine(
+            OrderLine::make(
+                'Transactiekosten',
+                1,
+                (int) $this->fee,
+                'surcharge',
+            ),
+        );
+
+        $order
+            ->redirectUrl(URL::route('shop.order.pay-return', $this));
+
+        $isLocal = in_array(parse_url(URL::to('/'), PHP_URL_HOST), [
+            'localhost',
+            '127.0.0.1',
+            '[::1]',
+        ], true);
+
+        if (! $isLocal) {
+            $order
+                ->webhookUrl(URL::route('api.webhooks.shop'));
+        }
+
+        $order
+            ->method('ideal')
+            ->locale('nl_NL');
+
+        $order
+            ->expiresAt($this->expires_at ?? Date::now()->addDays(2));
+
+        return $order;
     }
 }

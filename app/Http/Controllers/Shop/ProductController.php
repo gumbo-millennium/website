@@ -22,13 +22,30 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
+        $advertisedProduct = Product::query()
+            ->where([
+                'visible' => 1,
+                'advertise' => 1,
+            ])
+            ->with([
+                'category',
+                'variants',
+            ])
+            ->orderByDesc('created_at')
+            ->first();
+
         // Add to CSP
         $images = $categories
-            ->pluck('valid_image_url');
+            ->pluck('valid_image_url')
+            ->push(object_get($advertisedProduct, 'default_variant.valid_image_url'))
+            ->filter()
+            ->toArray();
+
         $this->addImageUrlsToCspPolicy($images);
 
         return Response::view('shop.index', [
             'categories' => $categories,
+            'advertisedProduct' => $advertisedProduct,
         ]);
     }
 

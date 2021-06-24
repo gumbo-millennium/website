@@ -6,6 +6,7 @@ namespace App\Console\Commands\Shop;
 
 use App\Facades\Payments;
 use App\Models\Shop\Order;
+use App\Notifications\Shop\RecoveredFromLimbo;
 use Illuminate\Console\Command;
 
 class RepairOrdersCommand extends Command
@@ -39,7 +40,7 @@ class RepairOrdersCommand extends Command
         foreach ($orders as $order) {
             assert($order instanceof Order);
 
-            $mollieOrder = Payments::createForOrder($order);
+            $mollieOrder = Payments::createOrder($order);
             $order->payment_id = $mollieOrder->id;
             $order->save();
 
@@ -48,6 +49,9 @@ class RepairOrdersCommand extends Command
                 $mollieOrder->id,
                 $order->number,
             ));
+
+            // Send message
+            $order->user->notifyNow(new RecoveredFromLimbo($order));
         }
 
         return 0;

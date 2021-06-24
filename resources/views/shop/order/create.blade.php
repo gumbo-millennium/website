@@ -13,7 +13,7 @@
     'items' => [
         route('shop.home') => 'Shop',
         route('shop.cart') => 'Winkelwagen',
-        '' => 'Plaatsen'
+        'Bestelling plaatsen'
     ]
 ])
 @endbreadcrumbs

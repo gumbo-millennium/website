@@ -212,17 +212,22 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::get('/item/{product}/{variant}', [Shop\ProductController::class, 'showProductVariant'])->name('product-variant');
 
     // Shopping cart
-    Route::get('/cart', [Shop\CartController::class, 'index'])->name('cart');
-    Route::post('/cart', [Shop\CartController::class, 'add'])->name('cart.add');
-    Route::patch('/cart', [Shop\CartController::class, 'update'])->name('cart.update');
+    Route::get('/winkelwagen', [Shop\CartController::class, 'index'])->name('cart');
+    Route::post('/winkelwagen', [Shop\CartController::class, 'add'])->name('cart.add');
+    Route::patch('/winkelwagen', [Shop\CartController::class, 'update'])->name('cart.update');
 
-    Route::get('/order', [Shop\OrderController::class, 'create'])->name('order.create');
-    Route::post('/order', [Shop\OrderController::class, 'store'])->name('order.store');
+    Route::get('/plaats-bestelling', [Shop\OrderController::class, 'create'])->name('order.create');
+    Route::post('/plaats-bestelling', [Shop\OrderController::class, 'store'])->name('order.store');
 
-    Route::get('/order/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+    Route::get('/bestellingen', [Shop\OrderController::class, 'index'])->name('order.index');
 
-    Route::get('/order/{order}/pay', [Shop\OrderController::class, 'pay'])->name('order.pay');
-    Route::get('/order/{order}/pay/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+    Route::get('/bestellingen/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+
+    Route::get('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
+    Route::get('/bestellingen/{order}/betalen/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+
+    Route::get('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancelShow'])->name('order.cancel');
+    Route::post('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancel']);
 
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
