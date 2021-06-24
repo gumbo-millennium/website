@@ -60,6 +60,8 @@ class OrderControllerTest extends TestCase
     {
         $variant = $this->getProductVariant();
 
+        $this->actingAs($this->getMemberUser());
+
         $variantPrice = $variant->price;
         $payFee = Config::get('gumbo.transfer-fee');
 
@@ -118,16 +120,17 @@ class OrderControllerTest extends TestCase
             ->get($orderUrl)
             ->assertNotFound();
 
-        // Test actual user
+        // Test actual user (should redirect, since Mollie isn't available)
         $this
             ->actingAs($memberUser)
             ->get($orderUrl)
-            ->assertOk()
-            ->assertSee($variant->display_name)
-            ->assertSee($order->number)
-            ->assertSee(Str::price($order->price))
-            ->assertSee(Str::price($order->fee))
-            ->assertSee(Str::price($variant->price));
+            ->assertRedirect(route('shop.order.index'));
+
+        // Test index route
+        $this
+            ->actingAs($memberUser)
+            ->get(route('shop.order.index'))
+            ->assertSee($order->number);
     }
 
     /**
