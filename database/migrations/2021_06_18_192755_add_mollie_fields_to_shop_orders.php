@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Shop\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddMollieFieldsToShopOrders extends Migration
@@ -17,13 +18,17 @@ class AddMollieFieldsToShopOrders extends Migration
     public function up()
     {
         Schema::table('shop_orders', function (Blueprint $table) {
-            $table->string('number', 20)->after('id');
+            $numberColumn = $table->string('number', 20)->after('id');
 
             $table->timestamp('expires_at')->nullable()->default(null)->after('updated_at');
 
             $table->string('payment_id')->nullable()->default(null)->after('user_id');
 
             $table->unsignedSmallInteger('fee')->default(0)->after('price');
+
+            if (DB::getDriverName() === 'sqlite') {
+                $numberColumn->default('');
+            }
         });
 
         foreach (Order::cursor() as $order) {
