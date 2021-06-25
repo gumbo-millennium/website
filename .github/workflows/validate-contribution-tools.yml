@@ -46,7 +46,7 @@ jobs:
           php-version: 7.4
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: none
-          tools: composer:v1
+          tools: composer
 
       - name: Log in to GitHub Packages
         run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin <<< "${DOCKER_PASSWORD}"
