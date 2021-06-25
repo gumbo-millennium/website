@@ -15,6 +15,8 @@ Er is een bestelling binnengekomen voor de merchandise van Gumbo Millennium.
 
 De bestelling is voor {{ $order->user->name }}.
 
+Je kan de details zien [in het Mollie dashboard]({{ dashboardUrl }}), of op de website, onder nummer **{{ $order->number }}**.
+
 De bestelling:
 
 @component('mail::table')

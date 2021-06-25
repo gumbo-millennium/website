@@ -46,10 +46,9 @@ class OrderController extends Controller
         // Whitelist images
         $this->addImageUrlsToCspPolicy(
             $orders->map(
-                fn (Order $order) => $order
-                    ->variants
-                    ->first()
-                    ->valid_image_url,
+                fn (Order $order) => optional(
+                    $order->variants->first()
+                )->valid_image_url,
             )->toArray(),
         );
 
