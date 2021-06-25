@@ -48,7 +48,7 @@ class PayableStatusFilter extends Filter
             PayableModel::STATUS_PAID,
             PayableModel::STATUS_CANCELLED,
             PayableModel::STATUS_COMPLETED,
-        ])->mapWithKeys(fn ($val) => [$val => __("gumbo.payment-status.{$val}")])->all();
+        ])->mapWithKeys(fn ($val) => [__("gumbo.payment-status.{$val}") => $val])->all();
     }
 
     /**
