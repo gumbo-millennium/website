@@ -113,5 +113,9 @@
   "The payment didn't go through or is still processing.":
     "Je betaling is mislukt of wordt nog verwerkt. Check later nog eens.",
 
+  "Order Number": "Bestelnummer",
+  "Cancelled at": "Geannuleerd op",
+  "Expires at": "Verloopt op",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
