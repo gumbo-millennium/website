@@ -23,6 +23,7 @@
 @section('shop-content')
 <form class="grid grid-col-1" method="post" action="{{ route('shop.order.store') }}">
     @csrf
+    <input type="hidden" name="idempotency_token" value="{{ Str::random(10) }}">
 
     <h3 class="text-xl font-title font-medium mb-4">Factuuradres</h3>
 

@@ -13,10 +13,8 @@ interface ServiceContract
 {
     /**
      * Reeturns the Mollie order for the given model.
-     *
-     * @throws RuntimeException if $model has no associated order
      */
-    public function findOrder(PayableModel $model): Order;
+    public function findOrder(PayableModel $model): ?Order;
 
     /**
      * Creates a Mollie order for the given model.

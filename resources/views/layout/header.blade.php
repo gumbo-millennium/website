@@ -143,6 +143,11 @@
             </li>
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('shop.home') }}">Shop</a>
+                <ul class="navbar__dropdown">
+                    <li class="navbar__dropdown-item">
+                        <a href="{{ route('shop.order.index') }}" class="navbar__dropdown-link">Bestellingen</a>
+                    </li>
+                </ul>
             </li>
             @endif
             <li class="navbar__nav-item">

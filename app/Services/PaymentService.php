@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Contracts\Payments\PayableModel;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Helpers\Arr;
-use Doctrine\Common\Cache\Psr6\InvalidArgument;
+use App\Helpers\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -18,10 +18,16 @@ use Mollie\Api\Resources\Refund;
 use Mollie\Api\Resources\Shipment;
 use Mollie\Laravel\Facades\Mollie;
 use RuntimeException;
-use UnexpectedValueException;
 
 class PaymentService implements PaymentServiceContract
 {
+    private const LOCAL_URLS = [
+        'localhost',
+        '127.0.0.1',
+        '[::1]',
+        '*.test',
+    ];
+
     /**
      * @var array<Order> $cachedOrders
      */
@@ -30,15 +36,15 @@ class PaymentService implements PaymentServiceContract
     /**
      * Locates an order and stores the result in a request cache.
      */
-    public function findOrder(PayableModel $model): Order
+    public function findOrder(PayableModel $model): ?Order
     {
         $paymentId = $model->{$model->getPaymentIdField()};
 
         if (! $paymentId) {
-            throw new UnexpectedValueException('No Mollie order for this model (yet).', 404);
+            return null;
         }
 
-        if (isset($this->cachedOrders[$paymentId])) {
+        if (array_key_exists($paymentId, $this->cachedOrders)) {
             return $this->cachedOrders[$paymentId];
         }
 
@@ -54,37 +60,41 @@ class PaymentService implements PaymentServiceContract
 
             return $this->cachedOrders[$paymentId] = $order;
         } catch (ApiException $apiException) {
+            if ($apiException->getCode() === 404) {
+                return $this->cachedOrders[$paymentId] = null;
+            }
+
             throw new RuntimeException(
                 "API call to Mollie failed: {$apiException->getMessage()}",
                 $apiException->getCode(),
                 $apiException,
             );
         }
-
-        return $this->cachedOrders[$paymentId];
     }
 
     public function createOrder(PayableModel $model): Order
     {
         $order = $model->toMollieOrder();
 
-        if (in_array(parse_url(URL::full(), PHP_URL_HOST), [
-            'localhost',
-            '127.0.0.1',
-            '[::1]',
-        ], true)) {
+        if (Str::is(self::LOCAL_URLS, parse_url(URL::full(), PHP_URL_HOST))) {
             unset($order['webhookUrl']);
         }
 
-        return Mollie::api()->orders->create($order->toArray(), [
-            'embed' => ['payments'],
+        $order = Mollie::api()->orders->create($order->toArray(), [
+            'embed' => 'payments,shipments',
         ]);
+
+        return $this->cachedOrders[$order->id] = $order;
     }
 
     public function cancelOrder(PayableModel $model): void
     {
-        $order = $this->findOrder($model);
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return;
+        }
 
+        // Cancel if possible
         if ($order->isCancelable) {
             $order->cancel();
         }
@@ -92,36 +102,55 @@ class PaymentService implements PaymentServiceContract
 
     public function isPaid(PayableModel $model): bool
     {
+        // Check local first
         if ($model->{$model->getPaidAtField()} !== null) {
             return true;
         }
 
-        return $this->findOrder($model)->isPaid();
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return false;
+        }
+
+        return $order->isPaid();
     }
 
     public function isCompleted(PayableModel $model): bool
     {
+        // Check local first
         if ($model->{$model->getCompletedAtField()} !== null) {
             return true;
         }
 
-        return $this->findOrder($model)->isCompleted();
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return false;
+        }
+
+        return $order->isCompleted();
     }
 
     public function isCancelled(PayableModel $model): bool
     {
+        // Check local first
         if ($model->{$model->getCancelledAtField()} !== null) {
             return true;
         }
 
-        $order = $this->findOrder($model);
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return false;
+        }
 
         return $order->isCanceled() || $order->isExpired();
     }
 
     public function getDashboardUrl(PayableModel $model): ?string
     {
-        $order = $this->findOrder($model);
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return null;
+        }
 
         return object_get($order->_links, 'dashboard');
     }
@@ -133,7 +162,10 @@ class PaymentService implements PaymentServiceContract
             return null;
         }
 
-        $order = $this->findOrder($model);
+        // Find order
+        if (! $order = $this->findOrder($model)) {
+            return null;
+        }
 
         // Paid or cancelled, cannot be paid anymore.
         if (
@@ -161,55 +193,58 @@ class PaymentService implements PaymentServiceContract
 
     public function getCompletedPayment(PayableModel $model): ?Payment
     {
-        try {
-            $order = $this->findOrder($model);
-
-            if (! $order->isPaid()) {
-                return null;
-            }
-
-            return Arr::first(
-                $order->payments() ?? [],
-                fn (Payment $payment) => $payment->isPaid(),
-            );
-        } catch (InvalidArgument $exception) {
+        // Find order
+        if (! $order = $this->findOrder($model)) {
             return null;
         }
+
+        // Only works if the order is paid
+        if (! $order->isPaid()) {
+            return null;
+        }
+
+        // Find the first
+        return Arr::first(
+            $order->payments() ?? [],
+            fn (Payment $payment) => $payment->isPaid(),
+        );
     }
 
     public function getShipment(PayableModel $model): ?Shipment
     {
-        try {
-            $order = $this->findOrder($model);
-
-            if (! $order->isShipping()) {
-                return null;
-            }
-
-            /** @var Shipment */
-            return Arr::first($order->shipments());
-        } catch (InvalidArgument $exception) {
+        // Find order
+        if (! $order = $this->findOrder($model)) {
             return null;
         }
+
+        // Only works if the order is shipped
+        if (! ($order->isShipping() && $order->isCompleted())) {
+            return null;
+        }
+
+        /** @var Shipment */
+        return Arr::first($order->shipments());
     }
 
     public function shipAll(PayableModel $model, ?string $carrier = null, ?string $trackingCode = null): ?Shipment
     {
         // Find order
-        $mollieOrder = $this->findOrder($model);
+        if (! $order = $this->findOrder($model)) {
+            return null;
+        }
 
         // Check if cancelled
-        if ($mollieOrder->isCanceled()) {
+        if ($order->isCanceled()) {
             return null;
         }
 
         // Find any shipments (shipping = some is sent, completed = all is sent)
-        if ($mollieOrder->isShipping() || $mollieOrder->isCompleted()) {
-            return Arr::first($mollieOrder->shipments());
+        if ($order->isShipping() || $order->isCompleted()) {
+            return Arr::first($order->shipments());
         }
 
         // Ship everything
-        return $mollieOrder->shipAll([
+        return $order->shipAll([
             '',
         ]);
     }
@@ -217,7 +252,9 @@ class PaymentService implements PaymentServiceContract
     public function refundAll(PayableModel $model): ?Refund
     {
         // Find order
-        $order = $this->findOrder($model);
+        if (! $order = $this->findOrder($model)) {
+            return null;
+        }
 
         // Check if shipped
         if ($order->isShipping() || ! $order->isPaid()) {
