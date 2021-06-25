@@ -7,7 +7,6 @@ namespace App\Models;
 use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 /**
  * A mail that will be sent at a later date, or has been
