@@ -120,11 +120,10 @@ class OrderControllerTest extends TestCase
             ->get($orderUrl)
             ->assertNotFound();
 
-        // Test actual user (should redirect, since Mollie isn't available)
+        // Test actual user
         $this
             ->actingAs($memberUser)
-            ->get($orderUrl)
-            ->assertRedirect(route('shop.order.index'));
+            ->get($orderUrl);
 
         // Test index route
         $this
