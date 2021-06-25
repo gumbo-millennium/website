@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Contracts\Payments\PayableModel;
-use App\Events\OrderPaidEvent;
 use App\Models\Traits\IsPayable;
 use App\Models\User;
 use App\Services\Payments\Order as FluentOrder;
@@ -66,12 +65,6 @@ class Order extends Model implements PayableModel
 
             // Set order number
             $order->number = self::determineOrderNumber($order);
-        });
-
-        static::updating(function (self $order) {
-            if ($order->paid_at !== null && $order->getOriginal('paid_at') === null) {
-                OrderPaidEvent::dispatch($order);
-            }
         });
     }
 

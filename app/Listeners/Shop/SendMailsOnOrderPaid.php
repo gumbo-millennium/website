@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Listeners\Shop;
 
-use App\Events\OrderPaidEvent;
+use App\Events\Shop\OrderPaidEvent;
 use App\Mail\Shop\NewOrderBoardMail;
 use App\Mail\Shop\NewOrderUserMail;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Shop;
 
-use App\Events\OrderPaidEvent;
 use App\Facades\Payments;
+use App\Jobs\Shop\UpdateOrderJob;
 use App\Models\Shop\Order;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateOrdersCommand extends Command
 {
@@ -23,7 +24,7 @@ class UpdateOrdersCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Pulls in information about orders that have not been paid yet.';
+    protected $description = 'Updates orders that might have updates.';
 
     /**
      * Execute the console command.
@@ -33,7 +34,8 @@ class UpdateOrdersCommand extends Command
     public function handle(): int
     {
         $orders = Order::query()
-            ->whereNull('paid_at')
+            ->whereNull('shipped_at')
+            ->whereNull('cancelled_at')
             ->whereNotNull('payment_id')
             ->cursor();
 
@@ -41,26 +43,17 @@ class UpdateOrdersCommand extends Command
             assert($order instanceof Order);
 
             // Get order
-            if (! $mollieOrder = Payments::findOrder($order)) {
+            if (! Payments::findOrder($order)) {
+                $this->line("Skipped <info>{$order->number}</>, no associated order");
+
                 continue;
             }
 
-            // Check if paid
-            if (! $paidAt = Payments::paidAt($order)) {
-                continue;
-            }
+            $this->line("Processing <info>{$order->number}</>...", null, OutputInterface::VERBOSITY_VERBOSE);
 
-            // Mark as paid
-            $order->paid_at = $paidAt;
-            $order->save();
+            UpdateOrderJob::dispatchNow($order);
 
-            // Fire event
-            OrderPaidEvent::dispatch($order);
-
-            $this->line(sprintf(
-                'Marked order <info>%s</> as paid.',
-                $order->number,
-            ));
+            $this->line("Processed <info>{$order->number}</>.");
         }
 
         return 0;

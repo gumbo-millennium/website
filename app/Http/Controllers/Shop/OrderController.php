@@ -18,6 +18,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response as ResponseFacade;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UnexpectedValueException;
@@ -98,6 +99,14 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): RedirectResponse
     {
+        // Check for tokens and redirect if set
+        $idempotencyToken = $request->has('idempotency_token')
+            ? "itempotency.order.{$request->post('idempotency_token')}"
+            : null;
+        if ($idempotencyToken && $next = Session::get($idempotencyToken)) {
+            return RedirectResponse::to($next);
+        }
+
         // Disallow competing cart if cart is empty
         if (Cart::getTotalQuantity() === 0) {
             return ResponseFacade::redirectToRoute('shop.cart');
@@ -116,6 +125,11 @@ class OrderController extends Controller
 
         // Save changes
         $order->save();
+
+        // Assign idempotency token
+        if ($idempotencyToken) {
+            Session::put($idempotencyToken, route('shop.order.show', [$order]));
+        }
 
         // Assign variants, mapped as a proper table
         $variantWithAmount = $cartItems->mapWithKeys(static fn ($item) => [$item->associatedModel->id => [
