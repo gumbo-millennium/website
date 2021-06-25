@@ -70,14 +70,6 @@ class OrderControllerTest extends TestCase
             'quantity' => 2,
         ])->assertRedirect();
 
-        Payments::partialMock()
-            ->expects('createOrder')
-            ->andReturn(
-                tap(new MollieResources\Order(
-                    App::make(MollieApiClient::class),
-                ), fn ($order) => $order->id = 'test-123'),
-            );
-
         $nextOrderId = (Order::query()->max('id') ?? 0) + 1;
         $this->post(route('shop.order.store'))
             ->assertRedirect(route('shop.order.pay', ['order' => $nextOrderId]));
@@ -87,8 +79,6 @@ class OrderControllerTest extends TestCase
         $this->assertNotNull($lastOrder, 'Cannot find created order');
 
         $this->assertEquals($payFee + $variantPrice * 2, $lastOrder->price);
-
-        $this->assertEquals('test-123', $lastOrder->payment_id);
     }
 
     public function test_view_order(): void
