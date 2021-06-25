@@ -188,4 +188,12 @@ class Order extends Model implements PayableModel
 
         return $order;
     }
+
+    /**
+     * Returns the field to store when the object was shipped.
+     */
+    public function getCompletedAtField(): string
+    {
+        return 'shipped_at';
+    }
 }

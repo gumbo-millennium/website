@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * A mail that will be sent at a later date, or has been
@@ -61,18 +62,31 @@ class ScheduledMail extends Model
     ];
 
     /**
-     * Returns a ScheduledMail with the given name.
+     * Returns a ScheduledMail with the given name, optionally scoped to the user.
      *
      * @return ScheduledMail
      */
-    public static function findForModelMail(Model $model, string $name): self
+    public static function findForModelMail(Model $model, string $name, ?User $user = null): self
     {
-        $objectName = sprintf('%s:%s', \class_basename($model), $model->{$model->primaryKey});
-
         return static::firstOrNew([
-            'group' => $objectName,
-            'name' => Str::slug($name),
+            'group' => self::findObjectName($model),
+            'name' => sprintf('%s:%s', Str::slug($name), $user ? $user->id : 'any'),
         ]);
+    }
+
+    /**
+     * Finds all mails sent for the given group.
+     */
+    public static function findAllForModel(Model $model): Collection
+    {
+        return self::query()
+            ->whereGroup(self::findObjectName($model))
+            ->get();
+    }
+
+    private static function findObjectName(Model $model): string
+    {
+        return sprintf('%s:%s', \class_basename($model), $model->{$model->primaryKey});
     }
 
     public function scopeWhereSent(Builder $query): Builder
