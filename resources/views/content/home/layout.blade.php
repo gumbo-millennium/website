@@ -25,6 +25,13 @@ SEOMeta::setCanonical(url('/'));
 {{-- Grote Clubactie --}}
 @includeWhen(now() < Carbon::parse('2020-12-10T00:00:00'), 'content.home.clubactie')
 
+{{-- Shop --}}
+@if ($advertisedProduct)
+<div class="container my-8">
+    @include('shop.partials.home-advert', ['product' => $advertisedProduct])
+</div>
+@endif
+
 {{-- Activities --}}
 @include('content.home.activities')
 

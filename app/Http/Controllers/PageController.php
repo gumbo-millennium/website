@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\SponsorService;
+use App\Http\Controllers\Shop\ProductController;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
@@ -69,9 +70,18 @@ class PageController extends Controller
                 ->keyBy('activity_id');
         }
 
+        if ($advertisedProduct = ProductController::getAdvertisedProduct()) {
+            $this->addImageUrlsToCspPolicy([$advertisedProduct->valid_image_url]);
+        }
+
         // Return view
         return response()
-            ->view('content.home.layout', compact('homeSponsors', 'nextEvents', 'enrollments'))
+            ->view('content.home.layout', [
+                'homeSponsors' => $homeSponsors,
+                'nextEvents' => $nextEvents,
+                'enrollments' => $enrollments,
+                'advertisedProduct' => $advertisedProduct,
+            ])
             ->setPublic()
             ->setMaxAge(60 * 15); // Cache for 15 min max
     }

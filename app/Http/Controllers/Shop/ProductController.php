@@ -23,7 +23,7 @@ class ProductController extends Controller
         return  Product::query()
             ->where([
                 'visible' => 1,
-                'advertise' => 1,
+                'advertise_on_home' => 1,
             ])
             ->with([
                 'category',
@@ -42,18 +42,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        $advertisedProduct = Product::query()
-            ->where([
-                'visible' => 1,
-                'advertise' => 1,
-            ])
-            ->with([
-                'category',
-                'variants',
-            ])
-            ->whereHas('category', fn (Builder $query) => $query->whereVisible(true))
-            ->orderByDesc('created_at')
-            ->first();
+        $advertisedProduct = self::getAdvertisedProduct();
 
         // Add to CSP
         $images = $categories
