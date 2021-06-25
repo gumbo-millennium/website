@@ -7,7 +7,6 @@ namespace App\Notifications\Shop;
 use App\Models\Shop\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 abstract class ShopNotification extends Notification implements ShouldQueue

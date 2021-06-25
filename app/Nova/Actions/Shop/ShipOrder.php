@@ -6,9 +6,7 @@ namespace App\Nova\Actions\Shop;
 
 use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
-use App\Models\Enrollment;
 use App\Models\Shop\Order;
-use App\Models\User;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
@@ -19,8 +17,8 @@ use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
 
 class ShipOrder extends Action
 {
@@ -72,8 +70,6 @@ class ShipOrder extends Action
 
     /**
      * Get the displayable name of the action.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -115,8 +111,6 @@ class ShipOrder extends Action
 
     /**
      * Get the fields available on the action.
-     *
-     * @return array
      */
     public function fields(): array
     {
@@ -136,7 +130,7 @@ class ShipOrder extends Action
             Text::make(__('Track-and-Trace code'), 'trackingcode')
                 ->nullable()
                 ->help(__('Only required if you actually shipped this order, otherwise just click :send', [
-                    'send' => __('Send')
+                    'send' => __('Send'),
                 ])),
         ];
     }

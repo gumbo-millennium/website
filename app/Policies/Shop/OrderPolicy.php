@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Policies\Shop;
 
 use App\Models\Shop\Order;
-use App\Models\Shop\ProductVariant;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

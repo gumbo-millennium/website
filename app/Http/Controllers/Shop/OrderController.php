@@ -47,7 +47,7 @@ class OrderController extends Controller
         $this->addImageUrlsToCspPolicy(
             $orders->map(
                 fn (Order $order) => optional(
-                    $order->variants->first()
+                    $order->variants->first(),
                 )->valid_image_url,
             )->toArray(),
         );

@@ -10,10 +10,7 @@ use App\Models\User;
 class UserObserver
 {
     /**
-     * Handle any kind of changes to the user
-     *
-     * @param User $user
-     * @return void
+     * Handle any kind of changes to the user.
      */
     public function saved(User $user): void
     {
@@ -23,7 +20,7 @@ class UserObserver
         }
 
         // Trigger update if the user was created, or if the name or email address was changed
-        if (!$user->wasRecentlyCreated && !$user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
+        if (! $user->wasRecentlyCreated && ! $user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
             return;
         }
 

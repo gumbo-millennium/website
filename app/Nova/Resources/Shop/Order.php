@@ -6,8 +6,6 @@ namespace App\Nova\Resources\Shop;
 
 use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
-use App\Nova\Actions\Shop\CancelOrder;
-use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
@@ -115,12 +113,11 @@ class Order extends Resource
      *
      * @return array
      */
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function actions(Request $request)
     {
         return [
-            new ShipOrder(),
-            new CancelOrder(),
+            // new ShipOrder(),
+            // new CancelOrder(),
         ];
     }
 }

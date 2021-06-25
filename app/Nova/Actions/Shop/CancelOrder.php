@@ -6,10 +6,7 @@ namespace App\Nova\Actions\Shop;
 
 use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
-use App\Models\Enrollment;
-use App\Models\Payment;
 use App\Models\Shop\Order;
-use App\Models\User;
 use App\Notifications\Shop\OrderCancelled;
 use App\Notifications\Shop\OrderRefunded;
 use App\Nova\Resources\Shop\Order as NovaOrder;
@@ -21,7 +18,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use UnexpectedValueException;
 
 class CancelOrder extends Action
 {
@@ -73,8 +69,6 @@ class CancelOrder extends Action
 
     /**
      * Get the displayable name of the action.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -126,7 +120,7 @@ class CancelOrder extends Action
             return Action::message('Bestellingen geannuleerd.');
         }
 
-        if($failedOrders === 0) {
+        if ($failedOrders === 0) {
             return Action::message('Alle bestellingen geannuleerd.');
         }
 
@@ -140,8 +134,8 @@ class CancelOrder extends Action
 
         return Action::danger(sprintf(
             '%d van %d bestellingen geannuleerd.',
-            $$modelCount - $failedOrders,
-            $modelCount
+            ${$modelCount} - $failedOrders,
+            $modelCount,
         ));
     }
 

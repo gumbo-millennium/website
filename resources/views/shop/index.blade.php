@@ -39,7 +39,7 @@
 {{-- Main --}}
 @section('shop-content')
 <div class="row">
-    @foreach ($categories as $category)
+    @forelse ($categories as $category)
     @php($firstProduct = $category->products->first())
 
     <div class="col col-12 md:col-6">
@@ -56,6 +56,10 @@
             </div>
         </div>
     </div>
-    @endforeach
+    @empty
+        @include('shop.partials.order-empty', [
+            'text' => 'Er is momenteel niks beschikbaar in de webshop.',
+        ])
+    @endforelse
 </div>
 @endsection
