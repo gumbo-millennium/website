@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|string $etag
  * @property int $vat_rate
  * @property bool $visible
- * @property bool $advertise
+ * @property bool $advertise_on_home
  * @property array $meta
  * @property-read string $valid_image_url
  * @property-read null|ProductVariant $default_variant
@@ -40,7 +40,7 @@ class Product extends Model
 
     protected $casts = [
         'visible' => 'bool',
-        'advertise' => 'bool',
+        'advertise_on_home' => 'bool',
         'vat_rate' => 'int',
         'meta' => 'json',
     ];

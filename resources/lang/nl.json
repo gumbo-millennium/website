@@ -132,5 +132,10 @@
   "Are you sure you want to cancel this order? The user will be issued a refund if they've completed payment.":
     "Weet je zeker dat je deze bestelling wilt annuleren? De besteller krijgt het geld teruggestort indien er al betaald is.",
 
+  "Advertise on homepage and shop landing":
+    "Adverteren op homepage en shop startpagina.",
+  "The category and the product need to be visible for the advertisement to show.":
+    "De categorie en het product dient hiervoor zichtbaar te zijn.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
