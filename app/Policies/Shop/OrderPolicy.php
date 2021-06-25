@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policies\Shop;
 
 use App\Models\Shop\Order;
+use App\Models\Shop\ProductVariant;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -74,6 +75,22 @@ class OrderPolicy
      * @param \App\Shop\Order $order
      */
     public function forceDelete(User $user, Order $order)
+    {
+        return false;
+    }
+
+    /**
+     * Prevent the users from attaching new product variants.
+     */
+    public function attachAnyProductVariant(User $user, Order $order): bool
+    {
+        return false;
+    }
+
+    /**
+     * Prevent the users from detaching product variants.
+     */
+    public function detachAnyProductVariant(User $user, Order $order): bool
     {
         return false;
     }
