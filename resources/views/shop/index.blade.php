@@ -7,33 +7,7 @@
 @endsection
 
 @section('shop-adverts')
-@if ($product = $advertisedProduct)
-<div class="shop-header">
-    <img role="none" class="shop-header-image" src="{{ $product->valid_image_url }}" />
-
-    <div class="shop-header-gradient"></div>
-
-    <div class="shop-header-body-wrapper">
-        <div class="container shop-header-body p-4 md:p-8 md:pb-12 lg:pb-16 flex flex-col md:flex-row items-stretch">
-            <div class="flex flex-col flex-grow md:justify-end">
-                <p class="font-medium text-white upppercase text-xl md:text-xl lg:text-2xl md:mb-2">
-                    Nieuw in de shop
-                </p>
-
-                <h3
-                    class="shop-header-title font-title font-bold text-brand-primary-1 text-5xl lg:text-8xl">
-                    {{ $product->default_variant->display_name }}
-                </h3>
-            </div>
-
-            <div class="md:flex items-end">
-                <a href="{{ $product->default_variant->url }}" class="btn btn--small btn--brand">Nu bekijken</a>
-            </div>
-
-        </div>
-    </div>
-</div>
-@endif
+@includeWhen($advertisedProduct, 'shop.partials.home-advert', ['product' => $advertisedProduct])
 @endsection
 
 {{-- Main --}}
@@ -57,9 +31,11 @@
         </div>
     </div>
     @empty
-        @include('shop.partials.order-empty', [
-            'text' => 'Er is momenteel niks beschikbaar in de webshop.',
-        ])
+    <div class="col-12">
+        <div class="my-8 p-8 px-8 md:px-16 rounded border border-gray-300 text-gray-700 text-center font-light text-3xl">
+            Er is momenteel niks beschikbaar in de webshop.
+        </div>
+    </div>
     @endforelse
 </div>
 @endsection

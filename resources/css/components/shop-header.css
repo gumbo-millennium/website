@@ -2,13 +2,17 @@
 .shop-header-image,
 .shop-header-gradient,
 .shop-header-body-wrapper {
-  @apply w-screen;
+  @apply w-full;
 
   height: 256px;
 }
 
 .shop-header {
   @apply overflow-hidden;
+}
+
+.container .shop-header {
+  @apply rounded-lg;
 }
 
 .shop-header-image,

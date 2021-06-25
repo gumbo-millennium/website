@@ -86,7 +86,7 @@ class Product extends Resource
             Boolean::make(__('Visible'), 'visible'),
 
             Boolean::make(__('Advertise on homepage and shop landing'), 'advertise_on_home')
-                ->help('The category and the product need to be visible for the advertisement to show.'),
+                ->help(__('The category and the product need to be visible for the advertisement to show.')),
 
             BelongsTo::make(__('Category'), 'category', Category::class)
                 ->searchable(),
