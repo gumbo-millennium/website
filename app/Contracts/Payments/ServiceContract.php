@@ -51,7 +51,7 @@ interface ServiceContract
     /**
      * Returns the URL to the payment URL, if any.
      */
-    public function getRedirectUrl(PayableModel $model): string;
+    public function getRedirectUrl(PayableModel $model): ?string;
 
     /**
      * Returns the single payment that was succesfully completed.

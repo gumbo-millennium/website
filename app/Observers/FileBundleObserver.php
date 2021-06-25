@@ -9,10 +9,7 @@ use App\Models\FileBundle;
 class FileBundleObserver
 {
     /**
-     * Ensures a user is set and a publication date is assigned
-     *
-     * @param FileBundle $bundle
-     * @return void
+     * Ensures a user is set and a publication date is assigned.
      */
     public function saving(FileBundle $bundle): void
     {

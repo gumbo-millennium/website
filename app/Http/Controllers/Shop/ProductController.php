@@ -8,12 +8,32 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductController extends Controller
 {
+    /**
+     * Get the item advertised in the shop.
+     */
+    public static function getAdvertisedProduct(): ?Product
+    {
+        return  Product::query()
+            ->where([
+                'visible' => 1,
+                'advertise' => 1,
+            ])
+            ->with([
+                'category',
+                'variants',
+            ])
+            ->whereHas('category', fn (Builder $query) => $query->whereVisible(true))
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
     public function index()
     {
         $categories = Category::query()
@@ -31,6 +51,7 @@ class ProductController extends Controller
                 'category',
                 'variants',
             ])
+            ->whereHas('category', fn (Builder $query) => $query->whereVisible(true))
             ->orderByDesc('created_at')
             ->first();
 

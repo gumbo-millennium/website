@@ -45,7 +45,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        return $user->hasPermissionTo('shop-admin') && $order->shipped_at === null;
+        return false;
     }
 
     /**
@@ -74,6 +74,22 @@ class OrderPolicy
      * @param \App\Shop\Order $order
      */
     public function forceDelete(User $user, Order $order)
+    {
+        return false;
+    }
+
+    /**
+     * Prevent the users from attaching new product variants.
+     */
+    public function attachAnyProductVariant(User $user, Order $order): bool
+    {
+        return false;
+    }
+
+    /**
+     * Prevent the users from detaching product variants.
+     */
+    public function detachAnyProductVariant(User $user, Order $order): bool
     {
         return false;
     }

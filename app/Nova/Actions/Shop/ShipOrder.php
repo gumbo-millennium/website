@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
-use App\Models\Enrollment;
 use App\Models\Shop\Order;
-use App\Models\User;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
 
 class ShipOrder extends Action
 {
@@ -28,37 +31,49 @@ class ShipOrder extends Action
      *
      * @var string
      */
-    public $name = 'Versturen'; // contains non-breaking space (U+00A0)
+    public $name = 'Ship';
 
     /**
      * The text to be used for the action's confirm button.
      *
      * @var string
      */
-    public $confirmButtonText = 'Versturen';
+    public $confirmButtonText = 'Ship order';
 
     /**
      * The text to be used for the action's cancel button.
      *
      * @var string
      */
-    public $cancelButtonText = 'Annuleren';
+    public $cancelButtonText = 'Cancel';
 
     /**
-     * Makes a new Confirm Enrollment configured to this model.
+     * The text to be used for the action's confirmation text.
      *
-     * @return ConfirmEnrollment
+     * @var string
      */
-    public static function make(Order $order, User $user): self
-    {
-        // Prep proper text
-        $noticeText = 'Wil je deze bestelling markeren als verzonden? Dit voorkomt annulering.';
+    public $confirmText = 'Wil je deze bestelling markeren als afgegeven? Indien je \'m opstuurt kan je de bezorgdienst en tracking-code opgeven.';
 
-        // Make instance
-        return (new self())
-            ->canSee(static fn () => ! Payments::isCompleted($order) && ! Payments::isCancelled($order) && Payments::isPaid(${$order}))
-            ->confirmText($noticeText)
-            ->onlyOnDetail();
+    /**
+     * Indicates if this action is available on the resource index view.
+     *
+     * @var bool
+     */
+    public $showOnIndex = false;
+
+    /**
+     * Indicates if this action is available on the resource's table row.
+     *
+     * @var bool
+     */
+    public $showOnTableRow = true;
+
+    /**
+     * Get the displayable name of the action.
+     */
+    public function name(): string
+    {
+        return __($this->name);
     }
 
     public function handle(ActionFields $fields, Collection $models)
@@ -78,7 +93,7 @@ class ShipOrder extends Action
                 Payments::isCancelled($order) ||
                 ! Payments::isPaid($order)
             ) {
-                return Action::danger("Kan {$order->number} niet als verzonden markeren.");
+                continue;
             }
 
             Payments::shipAll(
@@ -91,6 +106,41 @@ class ShipOrder extends Action
             $order->save();
         }
 
-        return Action::danger('Bestelling gemarkeerd als verzonden.');
+        return Action::message('Bestelling gemarkeerd als verzonden.');
+    }
+
+    /**
+     * Get the fields available on the action.
+     */
+    public function fields(): array
+    {
+        return [
+            Heading::make(__('Shipping information'))
+                ->help(__('If you shipped this order, please fill in the fields below. If you handed the order off in person, skip \'em')),
+
+            Select::make(__('Shipping Provider'), 'carrier')
+                ->options([
+                    'postnl' => 'PostNL',
+                    'dpd' => 'DPD',
+                    'dhl' => 'DHL',
+                    'cycloon' => 'Cycloon',
+                ])
+                ->nullable(),
+
+            Text::make(__('Track-and-Trace code'), 'trackingcode')
+                ->nullable()
+                ->help(__('Only required if you actually shipped this order, otherwise just click :send', [
+                    'send' => __('Send'),
+                ])),
+        ];
+    }
+
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $model instanceof PayableModel
+            && Payments::findOrder($model) !== null
+            && Payments::isPaid($model)
+            && ! Payments::isCompleted($model)
+            && ! Payments::isCancelled($model);
     }
 }

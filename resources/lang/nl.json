@@ -113,5 +113,24 @@
   "The payment didn't go through or is still processing.":
     "Je betaling is mislukt of wordt nog verwerkt. Check later nog eens.",
 
+  "Order Number": "Bestelnummer",
+  "Cancelled at": "Geannuleerd op",
+  "Expires at": "Verloopt op",
+
+  "Shipping Provider": "Bezorgdienst",
+  "Track-and-Trace code": "Track\u00a0&\u00a0Trace code",
+
+  "Shipping information": "Verzendinformatie",
+  "If you shipped this order, please fill in the fields below. If you handed the order off in person, skip 'em":
+    "Indien je deze bestelling per post hebt verstuurd, kan je hieronder de trackinginformatie opgeven.",
+  "Only required if you actually shipped this order, otherwise just click :send":
+    "Vul alleen in als je deze bestelling op de post hebt gedaan, anders klik je gewoon op :send.",
+
+  "Ship": "Versturen",
+  "Ship order": "Bestelling versturen",
+
+  "Are you sure you want to cancel this order? The user will be issued a refund if they've completed payment.":
+    "Weet je zeker dat je deze bestelling wilt annuleren? De besteller krijgt het geld teruggestort indien er al betaald is.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

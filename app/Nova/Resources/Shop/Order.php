@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
-use App\Nova\Actions\Shop\CancelOrder;
-use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields;
 
 // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Order extends Resource
@@ -47,9 +42,17 @@ class Order extends Resource
      * @var array
      */
     public static $search = [
-        'id',
-        'name',
-        'slug',
+        'number',
+    ];
+
+    /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = [
+        'user',
+        'variants',
     ];
 
     /**
@@ -60,30 +63,32 @@ class Order extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(),
+            Fields\ID::make(__('Order Number'), 'number'),
 
-            DateTime::make(__('Paid at'), 'paid_at')
+            Fields\DateTime::make(__('Paid at'), 'paid_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Shipped at'), 'shipped_at')
+            Fields\DateTime::make(__('Shipped at'), 'shipped_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Cancelled at'), 'cancelled_at')
+            Fields\DateTime::make(__('Cancelled at'), 'cancelled_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Expires at'), 'expires_at')
+            Fields\DateTime::make(__('Expires at'), 'expires_at')
                 ->onlyOnDetail(),
 
-            BelongsTo::make(__('User'), 'user', User::class)
+            Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
 
-            Badge::make(__('Status'), 'status')
+            Fields\Badge::make(__('Status'), 'payment_status')
                 ->onlyOnIndex()
-                ->displayUsing(static fn ($status) => __(ucfirst($status)))
+                ->displayUsing(static fn ($status) => __("gumbo.payment-status.{$status}"))
                 ->map([
-                    __('Sent') => 'success',
-                    __('Paid') => 'info',
-                    __('Pending') => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_UNKNOWN) => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_OPEN) => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_PAID) => 'info',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_CANCELLED) => 'danger',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_COMPLETED) => 'success',
                 ]),
 
             Price::make(__('Price'), 'price')
@@ -92,9 +97,13 @@ class Order extends Resource
 
             Price::make(__('Fees'), 'fee')
                 ->sortable()
-                ->min(0.00),
+                ->min(0.00)
+                ->hideFromIndex(),
 
-            BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
+            Fields\Number::make(__('Number of products'), fn () => $this->variants->sum('pivot.quantity'))
+                ->onlyOnIndex(),
+
+            Fields\BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
                 ->fields(new OrderProductFields()),
         ];
     }
@@ -104,12 +113,11 @@ class Order extends Resource
      *
      * @return array
      */
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function actions(Request $request)
     {
         return [
-            new ShipOrder(),
-            new CancelOrder(),
+            // new ShipOrder(),
+            // new CancelOrder(),
         ];
     }
 }

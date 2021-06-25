@@ -155,7 +155,7 @@ class PaymentService implements PaymentServiceContract
         return object_get($order->_links, 'dashboard');
     }
 
-    public function getRedirectUrl(PayableModel $model): string
+    public function getRedirectUrl(PayableModel $model): ?string
     {
         // Paid orders don't have a redirect URL
         if ($model->paid_at !== null) {
