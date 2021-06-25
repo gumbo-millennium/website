@@ -57,7 +57,6 @@ class Order extends Resource
         'variants',
     ];
 
-
     /**
      * Get the fields displayed by the resource.
      *
