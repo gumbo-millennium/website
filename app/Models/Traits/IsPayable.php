@@ -9,7 +9,9 @@ use App\Helpers\Arr;
 use App\Models\User;
 use App\Services\Payments\Address;
 use App\Services\Payments\Order;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 trait IsPayable
 {
@@ -69,6 +71,30 @@ trait IsPayable
         }
 
         return PayableModel::STATUS_OPEN;
+    }
+
+    public function scopeWherePaymentStatus(Builder $query, string $status): Builder
+    {
+        switch ($status) {
+            case PayableModel::STATUS_CANCELLED:
+                return $query->whereNotNull($this->getCancelledAtField());
+            case PayableModel::STATUS_UNKNOWN:
+                return $query->whereNull($this->getPaymentIdField());
+            case PayableModel::STATUS_COMPLETED:
+                return $query->whereNotNull($this->getCompletedAtField());
+            case PayableModel::STATUS_PAID:
+                return $query
+                    ->whereNotNull($this->getPaidAtField())
+                    ->whereNull($this->getCompletedAtField())
+                    ->whereNull($this->getCancelledAtField());
+
+            case PayableModel::STATUS_OPEN:
+                return $query
+                    ->whereNull($this->getPaidAtField())
+                    ->whereNull($this->getCancelledAtField());
+        }
+
+        throw new InvalidArgumentException("Unknown payment status [${status}].");
     }
 
     /**

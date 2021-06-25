@@ -7,6 +7,7 @@ namespace App\Nova\Resources\Shop;
 use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
 use App\Nova\Fields\Price;
+use App\Nova\Filters\PayableStatusFilter;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
@@ -118,6 +119,18 @@ class Order extends Resource
         return [
             // new ShipOrder(),
             // new CancelOrder(),
+        ];
+    }
+
+    /**
+     * Get the filters available on the entity.
+     *
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [
+            new PayableStatusFilter(),
         ];
     }
 }
