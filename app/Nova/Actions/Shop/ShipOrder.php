@@ -16,6 +16,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
 
 class ShipOrder extends Action
 {
@@ -28,21 +31,38 @@ class ShipOrder extends Action
      *
      * @var string
      */
-    public $name = 'Versturen'; // contains non-breaking space (U+00A0)
+    public $name = 'Ship';
 
     /**
      * The text to be used for the action's confirm button.
      *
      * @var string
      */
-    public $confirmButtonText = 'Versturen';
+    public $confirmButtonText = 'Ship order';
 
     /**
      * The text to be used for the action's cancel button.
      *
      * @var string
      */
-    public $cancelButtonText = 'Annuleren';
+    public $cancelButtonText = 'Cancel';
+
+    /**
+     * The text to be used for the action's confirmation text.
+     *
+     * @var string
+     */
+    public $confirmText = 'Wil je deze bestelling markeren als afgegeven? Indien je \'m opstuurt kan je de bezorgdienst en tracking-code opgeven.';
+
+    /**
+     * Get the displayable name of the action.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return __($this->name);
+    }
 
     /**
      * Makes a new Confirm Enrollment configured to this model.
@@ -91,6 +111,34 @@ class ShipOrder extends Action
             $order->save();
         }
 
-        return Action::danger('Bestelling gemarkeerd als verzonden.');
+        return Action::message('Bestelling gemarkeerd als verzonden.');
+    }
+
+    /**
+     * Get the fields available on the action.
+     *
+     * @return array
+     */
+    public function fields(): array
+    {
+        return [
+            Heading::make(__('Shipping information'))
+                ->help(__('If you shipped this order, please fill in the fields below. If you handed the order off in person, skip \'em')),
+
+            Select::make(__('Shipping Provider'), 'carrier')
+                ->options([
+                    'postnl' => 'PostNL',
+                    'dpd' => 'DPD',
+                    'dhl' => 'DHL',
+                    'cycloon' => 'Cycloon',
+                ])
+                ->nullable(),
+
+            Text::make(__('Track-and-Trace code'), 'trackingcode')
+                ->nullable()
+                ->help(__('Only required if you actually shipped this order, otherwise just click :send', [
+                    'send' => __('Send')
+                ])),
+        ];
     }
 }

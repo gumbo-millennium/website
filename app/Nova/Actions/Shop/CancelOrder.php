@@ -38,14 +38,21 @@ class CancelOrder extends Action
      *
      * @var string
      */
-    public $confirmButtonText = 'Bestelling annuleren';
+    public $confirmButtonText = 'Cancel order';
 
     /**
      * The text to be used for the action's cancel button.
      *
      * @var string
      */
-    public $cancelButtonText = 'Scherm sluiten';
+    public $cancelButtonText = 'Close window';
+
+    /**
+     * The text to be used for the action's confirmation text.
+     *
+     * @var string
+     */
+    public $confirmText = 'Are you sure you want to cancel this order? The user will be issued a refund if they\'ve completed payment.';
 
     /**
      * Makes a new Confirm Enrollment configured to this model.
@@ -75,6 +82,8 @@ class CancelOrder extends Action
 
     public function handle(ActionFields $fields, Collection $models)
     {
+        $failedOrders = 0;
+
         foreach ($models as $order) {
             // Get the inner order
             if ($order instanceof NovaOrder) {
@@ -89,7 +98,9 @@ class CancelOrder extends Action
                 Payments::isCompleted($order) ||
                 Payments::isCancelled($order)
             ) {
-                return Action::danger("Kan {$order->number} niet annuleren.");
+                $failedOrders++;
+
+                continue;
             }
 
             $order->cancelled_at = Date::now();
@@ -108,6 +119,28 @@ class CancelOrder extends Action
             optional($order->user)->notify($notice);
         }
 
-        return Action::danger('Bestelling geannuleerd.');
+        $modelCount = $models->count();
+
+        if ($failedOrders === 0 && $modelCount === 1) {
+            return Action::message('Bestellingen geannuleerd.');
+        }
+
+        if($failedOrders === 0) {
+            return Action::message('Alle bestellingen geannuleerd.');
+        }
+
+        if ($modelCount === 1) {
+            return Action::danger('Bestelling kon niet worden geannuleerd.');
+        }
+
+        if ($modelCount === $failedOrders) {
+            return Action::danger('Bestellingen konden niet worden geannuleerd.');
+        }
+
+        return Action::danger(sprintf(
+            '%d van %d bestellingen geannuleerd.',
+            $$modelCount - $failedOrders,
+            $modelCount
+        ));
     }
 }
