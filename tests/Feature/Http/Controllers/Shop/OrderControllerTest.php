@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Shop;
 
-use App\Facades\Payments;
 use App\Helpers\Str;
 use App\Models\Shop\Order;
 use App\Models\Shop\ProductVariant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
-use Mollie\Api\MollieApiClient;
-use Mollie\Api\Resources as MollieResources;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
 use Tests\Traits\TestsMembersOnlyRoutes;
