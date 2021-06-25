@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Models\Enrollment;
+use App\Models\Payment;
 use App\Models\Shop\Order;
 use App\Models\User;
 use App\Notifications\Shop\OrderCancelled;
 use App\Notifications\Shop\OrderRefunded;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -55,29 +58,27 @@ class CancelOrder extends Action
     public $confirmText = 'Are you sure you want to cancel this order? The user will be issued a refund if they\'ve completed payment.';
 
     /**
-     * Makes a new Confirm Enrollment configured to this model.
+     * Indicates if this action is available on the resource index view.
      *
-     * @return ConfirmEnrollment
+     * @var bool
      */
-    public static function make(Order $order, User $user): self
-    {
-        // Prep proper text
-        $noticeText = 'Wil je deze bestelling annuleren?';
-        if ($order->paid_at !== null) {
-            $noticeText = ' De gebruiker wordt automatisch terugbetaald.';
-        }
+    public $showOnIndex = false;
 
-        // Make instance
-        return (new self())
-            ->canSee(function () use ($order) {
-                try {
-                    return ! Payments::isCompleted($order) && ! Payments::isCancelled($order);
-                } catch (UnexpectedValueException $e) {
-                    return false;
-                }
-            })
-            ->confirmText($noticeText)
-            ->onlyOnDetail();
+    /**
+     * Indicates if this action is available on the resource's table row.
+     *
+     * @var bool
+     */
+    public $showOnTableRow = true;
+
+    /**
+     * Get the displayable name of the action.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return __($this->name);
     }
 
     public function handle(ActionFields $fields, Collection $models)
@@ -142,5 +143,13 @@ class CancelOrder extends Action
             $$modelCount - $failedOrders,
             $modelCount
         ));
+    }
+
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $model instanceof PayableModel
+            && Payments::findOrder($model) !== null
+            && ! Payments::isCompleted($model)
+            && ! Payments::isCancelled($model);
     }
 }

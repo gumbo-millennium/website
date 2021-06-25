@@ -46,7 +46,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        return $user->hasPermissionTo('shop-admin') && $order->shipped_at === null;
+        return false;
     }
 
     /**

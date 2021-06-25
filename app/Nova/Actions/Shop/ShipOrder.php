@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Models\Enrollment;
 use App\Models\Shop\Order;
 use App\Models\User;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -55,6 +57,20 @@ class ShipOrder extends Action
     public $confirmText = 'Wil je deze bestelling markeren als afgegeven? Indien je \'m opstuurt kan je de bezorgdienst en tracking-code opgeven.';
 
     /**
+     * Indicates if this action is available on the resource index view.
+     *
+     * @var bool
+     */
+    public $showOnIndex = false;
+
+    /**
+     * Indicates if this action is available on the resource's table row.
+     *
+     * @var bool
+     */
+    public $showOnTableRow = true;
+
+    /**
      * Get the displayable name of the action.
      *
      * @return string
@@ -62,23 +78,6 @@ class ShipOrder extends Action
     public function name(): string
     {
         return __($this->name);
-    }
-
-    /**
-     * Makes a new Confirm Enrollment configured to this model.
-     *
-     * @return ConfirmEnrollment
-     */
-    public static function make(Order $order, User $user): self
-    {
-        // Prep proper text
-        $noticeText = 'Wil je deze bestelling markeren als verzonden? Dit voorkomt annulering.';
-
-        // Make instance
-        return (new self())
-            ->canSee(static fn () => ! Payments::isCompleted($order) && ! Payments::isCancelled($order) && Payments::isPaid(${$order}))
-            ->confirmText($noticeText)
-            ->onlyOnDetail();
     }
 
     public function handle(ActionFields $fields, Collection $models)
@@ -98,7 +97,7 @@ class ShipOrder extends Action
                 Payments::isCancelled($order) ||
                 ! Payments::isPaid($order)
             ) {
-                return Action::danger("Kan {$order->number} niet als verzonden markeren.");
+                continue;
             }
 
             Payments::shipAll(
@@ -140,5 +139,14 @@ class ShipOrder extends Action
                     'send' => __('Send')
                 ])),
         ];
+    }
+
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $model instanceof PayableModel
+            && Payments::findOrder($model) !== null
+            && Payments::isPaid($model)
+            && ! Payments::isCompleted($model)
+            && ! Payments::isCancelled($model);
     }
 }
