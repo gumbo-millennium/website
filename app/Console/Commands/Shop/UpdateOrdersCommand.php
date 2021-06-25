@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Shop;
 
+use App\Events\OrderPaidEvent;
 use App\Facades\Payments;
 use App\Models\Shop\Order;
 use Illuminate\Console\Command;
@@ -39,14 +40,22 @@ class UpdateOrdersCommand extends Command
         foreach ($orders as $order) {
             assert($order instanceof Order);
 
-            $paidAt = Payments::paidAt($order);
-
-            if ($paidAt === null) {
+            // Get order
+            if (! $mollieOrder = Payments::findOrder($order)) {
                 continue;
             }
 
+            // Check if paid
+            if (! $paidAt = Payments::paidAt($order)) {
+                continue;
+            }
+
+            // Mark as paid
             $order->paid_at = $paidAt;
             $order->save();
+
+            // Fire event
+            OrderPaidEvent::dispatch($order);
 
             $this->line(sprintf(
                 'Marked order <info>%s</> as paid.',

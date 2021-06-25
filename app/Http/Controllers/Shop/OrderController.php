@@ -11,15 +11,13 @@ use App\Http\Requests\Shop\StoreOrderRequest;
 use App\Models\Shop\Order;
 use App\Notifications\Shop\OrderRefunded;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-use Date;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response as ResponseFacade;
-use Mollie\Laravel\Facades\Mollie;
-use Spatie\Flash\Flash;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UnexpectedValueException;
@@ -129,11 +127,6 @@ class OrderController extends Controller
         // Clean cart
         Cart::clear();
 
-        // Create order with Mollie
-        $mollieOrder = Payments::createOrder($order);
-        $order->payment_id = $mollieOrder->id;
-        $order->save();
-
         // Redirect to order
         return ResponseFacade::redirectToRoute('shop.order.pay', $order);
     }
@@ -178,19 +171,60 @@ class OrderController extends Controller
     }
 
     /**
-     * Redirect to Mollie to pay, or back if that's not neccesary.
+     * @return RedirectResponse|Response
      */
-    public function pay(Request $request, Order $order): RedirectResponse
+    public function pay(Request $request, Order $order)
     {
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
+        // Check if cancelled
         if (Payments::isCancelled($order)) {
             flash()->info(
                 'Deze bestelling is geannuleerd, dus je kan \'m niet meer betalen.',
             );
 
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        }
+
+        // Or paid
+        if (Payments::isPaid($order)) {
+            flash()->info(
+                'Deze bestelling is al betaald.',
+            );
+
+            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        }
+
+        // Redirect to 'please wait' page
+        return ResponseFacade::view('shop.order.pay')
+            ->header('Refresh', '0;url=' . route('shop.order.pay-redirect', $order))
+            ->header('Cache-Control', 'no-store, no-cache');
+    }
+
+    /**
+     * Redirect to Mollie to pay, or back if that's not neccesary.
+     */
+    public function payRedirect(Request $request, Order $order): RedirectResponse
+    {
+        // Only allowing viewing your own orders
+        abort_unless($request->user()->is($order->user), 404);
+
+        // Can't pay cancelled or paid orders
+        if (Payments::isCancelled($order) || Payments::isPaid($order)) {
+            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        }
+
+        sleep(2);
+
+        // Fetch order to check if set
+        $mollieOrder = Payments::findOrder($order);
+
+        // Create order with Mollie if it doesn't exist yet.
+        if (! $mollieOrder) {
+            $mollieOrder = Payments::createOrder($order);
+            $order->payment_id = $mollieOrder->id;
+            $order->save();
         }
 
         if ($next = Payments::getRedirectUrl($order)) {

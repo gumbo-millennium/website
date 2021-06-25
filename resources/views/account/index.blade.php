@@ -18,6 +18,17 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
+{{-- Shop orders --}}
+@if ($user->is_member)
+<div class="card card--padded">
+    <h3 class="heading-3 mt-0">Bestellingen</h3>
+    <div class="flex flex-row items-center">
+        <p class="leading-none m-0 mr-4 flex-grow">Beheer je bestellingen uit de webshop</p>
+        <a href="{{ route('shop.order.index') }}" class="btn btn--brand my-0">Mijn bestellingen</a>
+    </div>
+</div>
+@endif
+
 {{-- My grants --}}
 <div class="card card--padded">
     <h3 class="heading-3 mt-0">Toestemmingen</h3>

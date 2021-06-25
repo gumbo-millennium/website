@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\Payments\PayableModel;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Helpers\Arr;
+use App\Helpers\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -20,6 +21,13 @@ use RuntimeException;
 
 class PaymentService implements PaymentServiceContract
 {
+    private const LOCAL_URLS = [
+        'localhost',
+        '127.0.0.1',
+        '[::1]',
+        '*.test',
+    ];
+
     /**
      * @var array<Order> $cachedOrders
      */
@@ -68,17 +76,15 @@ class PaymentService implements PaymentServiceContract
     {
         $order = $model->toMollieOrder();
 
-        if (in_array(parse_url(URL::full(), PHP_URL_HOST), [
-            'localhost',
-            '127.0.0.1',
-            '[::1]',
-        ], true)) {
+        if (Str::is(self::LOCAL_URLS, parse_url(URL::full(), PHP_URL_HOST))) {
             unset($order['webhookUrl']);
         }
 
-        return Mollie::api()->orders->create($order->toArray(), [
-            'embed' => ['payments'],
+        $order = Mollie::api()->orders->create($order->toArray(), [
+            'embed' => 'payments,shipments',
         ]);
+
+        return $this->cachedOrders[$order->id] = $order;
     }
 
     public function cancelOrder(PayableModel $model): void
@@ -103,7 +109,7 @@ class PaymentService implements PaymentServiceContract
 
         // Find order
         if (! $order = $this->findOrder($model)) {
-            return null;
+            return false;
         }
 
         return $order->isPaid();
@@ -118,7 +124,7 @@ class PaymentService implements PaymentServiceContract
 
         // Find order
         if (! $order = $this->findOrder($model)) {
-            return null;
+            return false;
         }
 
         return $order->isCompleted();
@@ -133,7 +139,7 @@ class PaymentService implements PaymentServiceContract
 
         // Find order
         if (! $order = $this->findOrder($model)) {
-            return null;
+            return false;
         }
 
         return $order->isCanceled() || $order->isExpired();
