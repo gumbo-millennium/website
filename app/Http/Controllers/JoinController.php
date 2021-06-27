@@ -273,7 +273,7 @@ class JoinController extends Controller
             ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
 
             // Get the one that starts soonest
-            ->orderBy('start_date')
+            ->orderByDesc('start_date')
 
             // Return first
             ->first();
