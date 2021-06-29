@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('shop:update')->twiceDaily(11, 23);
 
         // Send feature mails on common times
-        $schedule->command('gumbo:send-activity-feature-mails')->cron('15 0,9,12,17,21 * * *');
+        $schedule->command('gumbo:send-activity-feature-mails')->cron('15 2,7,12,16,21 * * *');
 
         // Updated maillists every other night
         $schedule->job(ConstructGoogleActionList::class)->days(1, 3, 5)->dailyAt('06:00');
