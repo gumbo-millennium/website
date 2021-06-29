@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateScheduledMailsTable extends Migration
@@ -28,7 +29,10 @@ class CreateScheduledMailsTable extends Migration
             $table->timestamp('sent_at')->nullable()->default(null);
 
             // Virtuals
-            $table->boolean('is_sent')->virtualAs('ISNULL(`sent_at`)');
+            $virtual = $table->boolean('is_sent')->virtualAs('ISNULL(`sent_at`)');
+            if (DB::getDriverName() === 'sqlite') {
+                $virtual->default(0);
+            }
         });
     }
 

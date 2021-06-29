@@ -8,7 +8,7 @@ coronacheck:
   title: Testen voor Toegang
   icon: qrcode
   mail:
-    send: PT40H
+    send: PT48H
     subject: Heb jij al een coronatoegangsbewijs voor {name}?
     body: |
       Hoi {user},

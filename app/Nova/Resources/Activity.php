@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
-use App\Helpers\Arr;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions\CancelActivity;
 use App\Nova\Actions\PostponeActivity;
@@ -164,6 +163,10 @@ class Activity extends Resource
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
+        $featuresMap = collect(Config::get('gumbo.activity-features', []))
+            ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
+            ->all();
+
         return [
             $this->mainFields($request),
 
@@ -192,7 +195,7 @@ class Activity extends Resource
                     ->rules('required'),
 
                 BooleanGroup::make('Eigenschappen', 'features')
-                    ->options(Arr::pluck(Config::get('gumbo.activity-features', []), 'title'))
+                    ->options($featuresMap)
                     ->help('Extra eigenschappen om aan deze activiteit toe te voegen.'),
             ]),
 
