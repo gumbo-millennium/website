@@ -109,6 +109,15 @@ class Activity extends SluggableModel implements AttachableInterface
     public const LOCATION_MIXED = 'mixed';
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'features' => '[]',
+    ];
+
+    /**
      * @inheritDoc
      */
     protected $dates = [
