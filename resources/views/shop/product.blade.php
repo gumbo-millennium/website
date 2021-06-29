@@ -1,11 +1,7 @@
 @extends('shop.layout')
 
 {{-- Header --}}
-@section('shop-title', 'Jouw winkelwagen')
-@section('shop-subtitle')
-Je winkelwagen is <strong>geen</strong> reservering, dus lekker snel bestellen is aan te
-raden.
-@endsection
+@section('shop-title', $variant->display_name)
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
