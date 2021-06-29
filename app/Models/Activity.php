@@ -114,7 +114,7 @@ class Activity extends SluggableModel implements AttachableInterface
      * @var array
      */
     protected $attributes = [
-        'features' => [],
+        'features' => '[]',
     ];
 
     /**
