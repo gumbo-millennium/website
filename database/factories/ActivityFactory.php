@@ -23,9 +23,6 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
     $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
 
     $factoryData = [
-        // Optionally cancel it
-        'cancelled_at' => $faker->optional(0.05)->dateTimeBetween('-2 years', '-6 hours'),
-
         // Sometimes add a publish date
         'published_at' => $faker->optional()->dateTimeBetween('-1 year', '-5 minutes'),
 
@@ -47,10 +44,6 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
             Activity::LOCATION_ONLINE,
             Activity::LOCATION_MIXED,
         ]),
-
-        // Seats
-        'seats' => $faker->optional(0.2)->numberBetween(4, 60),
-        'is_public' => $faker->boolean(90),
 
         // Pricing
         'price' => null,
@@ -82,23 +75,37 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         }
     }
 
-    // Postpone or reschedule 20% of the activity
-    if ($faker->boolean(20)) {
-        // Postpone activity
-        if ($faker->boolean) {
-            $factoryData['postponed_at'] = $faker->dateTimeBetween('-2 weeks', '+2 weeks');
-            $factoryData['postponed_reason'] = $faker->optional(0.80)->sentence;
-        } else {
-            $factoryData['rescheduled_from'] = $faker->dateTimeBetween(
-                (clone $factoryData['start_date'])->subMonth(),
-                $factoryData['start_date'],
-            );
-            $factoryData['rescheduled_reason'] = $faker->optional(0.80)->sentence;
-        }
-    }
-
     return $factoryData;
 });
+
+$factory->state(Activity::class, 'cancelled', fn (Faker $faker) => [
+    'cancelled_at' => $faker->dateTimeBetween('-1 month', 'now'),
+]);
+
+$factory->state(Activity::class, 'with-seats', fn (Faker $faker) => [
+    'seats' => $faker->numberBetween(4, 80),
+]);
+
+$factory->state(Activity::class, 'public', fn () => [
+    'is_public' => true,
+]);
+
+$factory->state(Activity::class, 'private', fn () => [
+    'is_public' => false,
+]);
+
+$factory->state(Activity::class, 'postponed', fn (Faker $faker) => [
+    'postponed_at' => $faker->dateTimeBetween('-2 weeks', '+2 weeks'),
+    'postponed_reason' => $faker->optional(0.80)->sentence,
+]);
+
+$factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [
+    'rescheduled_from' => $faker->dateTimeBetween(
+        (clone $activity->start_date)->subMonth(),
+        $activity->start_date,
+    ),
+    'rescheduled_reason' => $faker->optional(0.80)->sentence,
+]);
 
 $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
     'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
