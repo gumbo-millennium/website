@@ -14,9 +14,9 @@ use Tests\Traits\TestsMembersOnlyRoutes;
 
 class ProductControllerTest extends TestCase
 {
-    use TestsShop;
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
+    use TestsShop;
 
     public function test_index()
     {
@@ -56,7 +56,6 @@ class ProductControllerTest extends TestCase
         $this->onlyForMembers(route('shop.home'))
             ->assertOk()
             ->assertSeeText($product->name);
-
     }
 
     public function test_category()
