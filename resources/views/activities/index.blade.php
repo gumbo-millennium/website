@@ -41,11 +41,11 @@ $firstActivity = $past ? null : $activities->first();
     </div>
 @else
     {{-- Activity cards --}}
-    <div class="card-grid mb-4">
+    <div class="card-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-4">
         @foreach ($activities as $activity)
-        <div class="card-grid__item">
+        {{-- <div class="card-grid__item"> --}}
             @include('activities.bits.single')
-        </div>
+        {{-- </div> --}}
         @endforeach
     </div>
 

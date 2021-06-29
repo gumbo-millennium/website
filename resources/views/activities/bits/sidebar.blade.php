@@ -243,10 +243,10 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 <hr class="border-gray-secondary-3 my-8" />
 
 {{-- Data --}}
-<dl class="flex flex-row flex-wrap row">
+<dl class="grid grid-cols-2 gap-2">
     @foreach ($properties as $label => list($value, $icon))
-    <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
-    <dd class="col w-2/3 flex-none mb-2 text-sm">
+    <dt class="font-bold">{{ $label }}</dt>
+    <dd class="text-sm">
         @if ($icon)
             @icon($icon, 'mr-2')
         @endif
