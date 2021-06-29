@@ -1,7 +1,15 @@
 name: Check & fix code style
 
 on:
-  - push
+  push:
+    branches-ignore:
+      - master
+    paths:
+      - app/**/*.php
+      - config/**/*.php
+      - database/**/*.php
+      - routes/**/*.php
+      - tests/**/*.php
 
 jobs:
   php-cs-fixer:
