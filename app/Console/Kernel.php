@@ -45,8 +45,8 @@ class Kernel extends ConsoleKernel
         // Update shop twice a day
         $schedule->command('shop:update')->twiceDaily(11, 23);
 
-        // Send required mails every hour
-        // $schedule->command('gumbo:send-activity-covid-mails')->hourly();
+        // Send feature mails on common times
+        $schedule->command('gumbo:send-activity-feature-mails')->cron('15 0,9,12,17,21 * * *');
 
         // Updated maillists every other night
         $schedule->job(ConstructGoogleActionList::class)->days(1, 3, 5)->dailyAt('06:00');
