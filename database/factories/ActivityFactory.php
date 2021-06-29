@@ -83,7 +83,7 @@ $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
 ]);
 
 $factory->state(Activity::class, 'paid', fn (Faker $faker) => [
-        'price' => intdiv($faker->numberBetween(500, 6000), 25) * 25,
+    'price' => intdiv($faker->numberBetween(500, 6000), 25) * 25,
 ]);
 
 $factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [
