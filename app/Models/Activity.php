@@ -65,6 +65,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property null|string $image_content_type image content type
  * @property null|string $image_updated_at image update timestamp
  * @property null|mixed $image_variants image variants (json)
+ * @property \Illuminate\Support\Collection $features
  * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
  * @property-read int $available_seats
  * @property-read null|string $description_html
@@ -149,6 +150,9 @@ class Activity extends SluggableModel implements AttachableInterface
         'member_discount' => 'int',
         'discount_count' => 'int',
         'price' => 'int',
+
+        // Features
+        'features' => 'json',
     ];
 
     /**
@@ -571,6 +575,16 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         return false;
+    }
+
+    public function scopeWhereHasFeature(Builder $query, string $feature): Builder
+    {
+        return $query->where("features.{$feature}", '=', true);
+    }
+
+    public function hasFeature(string $feature): bool
+    {
+        return (bool) Arr::get($this->features ?? [], $feature, false);
     }
 
     /**

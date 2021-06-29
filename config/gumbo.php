@@ -89,4 +89,9 @@ return [
             'country' => 'NL',
         ],
     ],
+
+    // Activity features, seeded from Yaml file in resources
+    'activity-features' => [
+        // Don't add content here.
+    ],
 ];
