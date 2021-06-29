@@ -54,27 +54,6 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         'image' => $faker->optional(0.2)->passthrough($imageOptions->random()),
     ];
 
-    // Does this activity has a price?
-    if ($faker->boolean(80)) {
-        $price = $faker->numberBetween(500, $faker->numberBetween(500, 6000) * 1.25);
-        $price = $price - ($price % 25);
-        $factoryData['price'] = $price;
-
-        if ($faker->boolean(10)) {
-            // Full discount for members
-            $factoryData['member_discount'] = $price;
-        } elseif ($faker->boolean(35)) {
-            // Partial discount
-            $factoryData['member_discount'] = $faker->numberBetween(0, $price);
-            $factoryData['member_discount'] -= $factoryData['member_discount'] % 25;
-        }
-
-        // Restrict discount
-        if ($factoryData['member_discount'] && $faker->boolean(25)) {
-            $factoryData['discount_count'] = $faker->numberBetween(1, $factoryData['seats']);
-        }
-    }
-
     return $factoryData;
 });
 
@@ -99,14 +78,18 @@ $factory->state(Activity::class, 'postponed', fn (Faker $faker) => [
     'postponed_reason' => $faker->optional(0.80)->sentence,
 ]);
 
+$factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
+    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
+]);
+
+$factory->state(Activity::class, 'paid', fn (Faker $faker) => [
+    'price' => intdiv($faker->numberBetween(500, 6000), 25) * 25,
+]);
+
 $factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [
     'rescheduled_from' => $faker->dateTimeBetween(
         (clone $activity->start_date)->subMonth(),
         $activity->start_date,
     ),
     'rescheduled_reason' => $faker->optional(0.80)->sentence,
-]);
-
-$factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
-    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
 ]);

@@ -10,6 +10,7 @@ $finder = Finder::create()
         'vendor',
         'node_modules',
         'storage',
+        'library/composer'
     ])
     ->notName([
         '_ide_helper*',

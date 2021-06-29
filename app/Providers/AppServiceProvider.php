@@ -26,9 +26,12 @@ use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
 use Stripe\Stripe as StripeClient;
+use Symfony\Component\Yaml\Yaml;
 
 class AppServiceProvider extends ServiceProvider
 {
+    private const ACTIVITY_FEATURES_FILE = 'assets/yaml/activity-features.yaml';
+
     /**
      * Singleton bindings.
      *
@@ -138,6 +141,19 @@ class AppServiceProvider extends ServiceProvider
             'warning' => 'notice notice--warning',
             'success' => 'notice notice--brand',
         ]);
+
+        // Bind feature config
+        if (! $this->app->configurationIsCached()) {
+            foreach (Yaml::parseFile(resource_path(self::ACTIVITY_FEATURES_FILE)) as $feature => $options) {
+                $options = array_merge([
+                    'title' => null,
+                    'icon' => null,
+                    'mail' => null,
+                ], $options);
+
+                Config::set("gumbo.activity-features.{$feature}", $options);
+            }
+        }
 
         // Registrer Laravel Nova
         $this->registerNova();

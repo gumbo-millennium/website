@@ -22,9 +22,11 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -161,9 +163,44 @@ class Activity extends Resource
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
+        $featuresMap = collect(Config::get('gumbo.activity-features', []))
+            ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
+            ->all();
+
         return [
             $this->mainFields($request),
+
+            new Panel('Evenement-details', [
+                Text::make('Weergavenaam locatie', 'location')
+                    ->hideFromIndex()
+                    ->rules('required', 'string', 'between:2,64')
+                    ->help('Weergavenaam van de locatie.'),
+
+                Text::make('Adres locatie', 'location_address')
+                    ->hideFromIndex()
+                    ->rules('required_unless:location_type,online', 'max:190')
+                    ->help(<<<'LOCATION'
+                        Het adres van de locatie, indien niet geheel online.
+                        Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
+                    LOCATION),
+
+                Select::make('Type locatie', 'location_type')
+                    ->hideFromIndex()
+                    ->options([
+                        ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
+                        ActivityModel::LOCATION_ONLINE => 'Geheel online',
+                        ActivityModel::LOCATION_MIXED => 'Gemixt',
+                    ])
+                    ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
+                    ->rules('required'),
+
+                BooleanGroup::make('Eigenschappen', 'features')
+                    ->options($featuresMap)
+                    ->help('Extra eigenschappen om aan deze activiteit toe te voegen.'),
+            ]),
+
             new Panel('Datum en prijs-instellingen', $this->pricingFields()),
+
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
             HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
@@ -187,40 +224,24 @@ class Activity extends Resource
             Slug::make('Pad', 'slug')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
-                ->readonly(fn () => $this->exists),
+                ->readonly(fn () => $this->exists)
+                ->hideFromIndex(),
 
             Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
                 ->help('Korte slagzin om de activiteit te omschrijven')
                 ->rules('nullable', 'string', 'between:4,255'),
 
+            BelongsTo::make('Groep', 'role', Role::class)
+                ->help('Groep of commissie die deze activiteit beheert')
+                ->rules($groupRules)
+                ->hideFromIndex()
+                ->nullable(),
+
             Text::make('Incasso-omschrijving', 'statement')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,16')
                 ->help('2-16 tekens lange omschrijng, welke op het iDEAL afschrift getoond wordt.'),
-
-            Text::make('Weergavenaam locatie', 'location')
-                ->hideFromIndex()
-                ->rules('required', 'string', 'between:2,64')
-                ->help('Weergavenaam van de locatie.'),
-
-            Text::make('Adres locatie', 'location_address')
-                ->hideFromIndex()
-                ->rules('required_unless:location_type,online', 'max:190')
-                ->help(<<<'LOCATION'
-                    Het adres van de locatie, indien niet geheel online.
-                    Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
-                LOCATION),
-
-            Select::make('Type locatie', 'location_type')
-                ->hideFromIndex()
-                ->options([
-                    ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
-                    ActivityModel::LOCATION_ONLINE => 'Geheel online',
-                    ActivityModel::LOCATION_MIXED => 'Gemixt',
-                ])
-                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
-                ->rules('required'),
 
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
@@ -261,12 +282,6 @@ class Activity extends Resource
             Text::make('Geannuleerd om', 'cancelled_reason')
                 ->readonly()
                 ->onlyOnDetail(),
-
-            BelongsTo::make('Groep', 'role', Role::class)
-                ->help('Groep of commissie die deze activiteit beheert')
-                ->rules($groupRules)
-                ->hideFromIndex()
-                ->nullable(),
         ]);
     }
 
