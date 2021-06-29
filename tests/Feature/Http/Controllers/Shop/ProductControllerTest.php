@@ -8,11 +8,13 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
 use Tests\Traits\TestsMembersOnlyRoutes;
 
 class ProductControllerTest extends TestCase
 {
+    use TestsShop;
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
 
@@ -43,6 +45,18 @@ class ProductControllerTest extends TestCase
         foreach ($invisible as $category) {
             $response->assertDontSeeText($category->name);
         }
+    }
+
+    public function test_homepage_with_advertisement(): void
+    {
+        $product = $this->getProductVariant()->product;
+        $product->advertise_on_home = true;
+        $product->save();
+
+        $this->onlyForMembers(route('shop.home'))
+            ->assertOk()
+            ->assertSeeText($product->name);
+
     }
 
     public function test_category()
