@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Gumbo;
 
 use App\Console\Commands\Traits\FindsUserTrait;
-use App\Contracts\ConscriboServiceContract;
+use App\Contracts\ConscriboService;
 use App\Helpers\Str;
 use App\Models\Role;
 use Illuminate\Console\Command;
@@ -51,7 +51,7 @@ class UpdateGroups extends Command
     /**
      * Execute the console command.
      */
-    public function handle(ConscriboServiceContract $service)
+    public function handle(ConscriboService $service)
     {
         // Get all roles
         $systemRoles = Role::get();
