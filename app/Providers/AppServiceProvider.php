@@ -10,6 +10,7 @@ use App\Contracts\MarkdownServiceContract;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
+use App\Events\EventService;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
@@ -64,7 +65,11 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.breadcrumbs', 'breadcrumbs');
 
         // Special events
-        Blade::if('event', static fn ($event) => false);
+        Blade::if('event', function ($event) {
+            $service = $this->app->make(EventService::class);
+
+            return $service->eventActive($event);
+        });
     }
 
     /**
@@ -91,6 +96,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Markdown
         $this->app->singleton(MarkdownServiceContract::class, MarkdownService::class);
+
+        // Events
+        $this->app->singleton(EventService::class);
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
