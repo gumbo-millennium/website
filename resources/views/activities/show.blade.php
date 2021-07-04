@@ -45,13 +45,8 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
             srcset="{{ $activity->image->url('cover') }} 384w,{{ $activity->image->url('cover-2x') }} 768w">
         @else
         <div class="w-full h-64 flex items-center">
-            @event ('april-fools')
-            <img src="{{ mix('images/logo-text-april-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block dark:hidden">
-            <img src="{{ mix('images/logo-text-april-night.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto hidden dark:block">
-            @else
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block dark:hidden">
             <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto hidden dark:block">
-            @endevent
         </div>
         @endif
     </div>

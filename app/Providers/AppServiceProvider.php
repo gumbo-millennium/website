@@ -64,12 +64,8 @@ class AppServiceProvider extends ServiceProvider
         // Components
         Blade::component('components.breadcrumbs', 'breadcrumbs');
 
-        // April Fools
+        // Special events
         Blade::if('event', static function ($event) {
-            if ($event === 'april-fools') {
-                return Date::today()->format('m-d') === '04-01';
-            }
-
             return false;
         });
     }

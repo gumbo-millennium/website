@@ -84,17 +84,10 @@
 <nav class="@stack('header.navbar-class')">
     <div class="container navbar__container">
         <a href="{{ route('home') }}" class="logo-wrapper">
-            @event ('april-fools')
-            <img src="{{ mix('images/logo-text-april-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
-                class="logo block dark:hidden" width="160" height="64" />
-            <img src="{{ mix('images/logo-text-april-night.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
-                class="logo hidden dark:block" width="160" height="64" />
-            @else
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
                 class="logo block dark:hidden" width="160" height="64" />
             <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
                 class="logo hidden dark:block" width="160" height="64" />
-            @endevent
         </a>
 
         {{-- Push everything to the right --}}
