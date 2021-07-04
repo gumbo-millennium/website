@@ -64,7 +64,10 @@ class Order extends Resource
     public function fields(Request $request)
     {
         return [
-            Fields\ID::make(__('Order Number'), 'number'),
+            Fields\ID::make(__('ID'), 'id')
+                ->onlyOnDetail(),
+
+            Fields\Text::make(__('Order Number'), 'number'),
 
             Fields\DateTime::make(__('Paid at'), 'paid_at')
                 ->onlyOnDetail(),
