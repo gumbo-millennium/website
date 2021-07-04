@@ -65,7 +65,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property null|string $image_content_type image content type
  * @property null|string $image_updated_at image update timestamp
  * @property null|mixed $image_variants image variants (json)
- * @property \Illuminate\Support\Collection $features
+ * @property array $features
+ * @property-read \Illuminate\Support\Collection $expanded_features
  * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
  * @property-read int $available_seats
  * @property-read null|string $description_html
@@ -470,6 +471,29 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getIsPublishedAttribute(): bool
     {
         return $this->published_at === null || $this->published_at < \now();
+    }
+
+    /**
+     * Returns collection of applied icons, with label and icon
+     * @return Collection
+     */
+    public function getExpandedFeaturesAttribute(): Collection
+    {
+        $featureIcons = collect();
+
+        foreach (collect($this->features)->filter()->keys() as $feature) {
+            $featureIcon = Config::get("gumbo.activity-features.{$feature}.icon");
+            if (! file_exists(storage_path("app/font-awesome/{$featureIcon}.svg"))) {
+                continue;
+            }
+
+            $featureIcons->push((object) [
+                'icon' => $featureIcon,
+                'title' => Config::get("gumbo.activity-features.{$feature}.title"),
+            ]);
+        }
+
+        return $featureIcons;
     }
 
     /**

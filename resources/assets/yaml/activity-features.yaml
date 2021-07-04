@@ -27,11 +27,11 @@ coronacheck:
 
 has-own-bar:
   title: Met eigen bar
-  icon: coin
+  icon: coins
 
 car-required:
   title: Auto vereist
-  icon: cars
+  icon: car-alt
   mail: P3D
 
 first-aid:

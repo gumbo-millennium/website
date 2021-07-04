@@ -20,6 +20,8 @@ $discountWarning = (object) [
     )
 ];
 
+$isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
+
 @endphp
 
 {{-- Set title --}}
@@ -53,6 +55,13 @@ $discountWarning = (object) [
         </div>
         @endif
     </div>
+
+    @if ($isCoronacheck)
+    <div class="notice notice--large notice--warning">
+        <h3 class="notice__title">Testen voor Toegang</h3>
+        <p>Om aan deze activiteit deel te nemen, moet je aan de deur een geldige CoronaCheck QR-code kunnen tonen.</p>
+    </div>
+    @endif
 
     {{-- Unlisted --}}
     @if (!$activity->is_published)

@@ -60,6 +60,8 @@ if ($activity->is_cancelled) {
 }
 $urlClass = implode(' ', $urlClass);
 
+$features = $activity->expanded_features;
+
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
@@ -93,6 +95,18 @@ $urlClass = implode(' ', $urlClass);
                 <span class="card__figure-badge card__figure-badge--brand">Alleen online</span>
             @endif
         </div>
+
+        {{-- Icons --}}
+        @if ($features->isNotEmpty())
+        <div class="absolute bottom-4 right-4 rounded-lg bg-white flex items-center space-x-2 p-2">
+            @foreach ($features as $feature)
+            @icon("solid/$feature->icon", [
+                'class' => 'icon h-4 card__figure-icon',
+                'title' => $feature->title
+            ])
+            @endforeach
+        </div>
+        @endif
     </div>
 
     <div class="card__body">
