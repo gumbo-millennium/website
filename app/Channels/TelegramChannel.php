@@ -7,6 +7,8 @@ namespace App\Channels;
 use App\Contracts\TelegramNotification;
 use App\Contracts\TelegramNotificationWithAfter;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramChannel
@@ -33,8 +35,6 @@ class TelegramChannel
         // Get the bot out
         $bot = Telegram::bot();
 
-        dump($message->toArray());
-
         // Determine proper action
         $method = 'send' . class_basename($message);
         if (! method_exists($bot, $method)) {
@@ -42,7 +42,16 @@ class TelegramChannel
         }
 
         // Send and check result
-        $result = $bot->{$method}($message->toArray());
+        try {
+            $result = $bot->{$method}($message->toArray());
+        } catch (TelegramResponseException $exception) {
+            Log::warning('Failed to send message to Telegram: {exception}', [
+                'exception' => $exception,
+                'message' => $message->toArray()
+            ]);
+
+            return;
+        }
 
         // Allow an after hook
         if ($notification instanceof TelegramNotificationWithAfter) {
