@@ -185,7 +185,6 @@ class Enrollment extends Resource
      *
      * @return array
      */
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function actions(Request $request)
     {
         return [

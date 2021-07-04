@@ -13,7 +13,6 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Category extends Resource
 {
     /**

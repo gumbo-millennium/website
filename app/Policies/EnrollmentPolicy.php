@@ -16,7 +16,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class EnrollmentPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     /**

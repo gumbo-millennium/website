@@ -14,7 +14,6 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class ProductVariant extends Resource
 {
     /**

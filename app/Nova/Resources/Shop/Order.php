@@ -15,7 +15,6 @@ use App\Nova\Resources\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Order extends Resource
 {
     /**

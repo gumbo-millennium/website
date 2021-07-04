@@ -14,9 +14,6 @@ use App\Models\States\Enrollment\Seeded;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
-/**
- * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter.
- */
 class EnrollmentStateFilter extends BooleanFilter
 {
     /**

@@ -13,7 +13,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class JoinSubmissionPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'join-admin';

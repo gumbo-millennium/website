@@ -7,9 +7,6 @@ namespace App\Nova\Filters;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
-/**
- * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter.
- */
 class RelevantActivitiesFilter extends BooleanFilter
 {
     /**

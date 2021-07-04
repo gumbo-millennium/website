@@ -7,8 +7,6 @@ use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Route;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
-
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
     App\Http\Policy\LoginPolicy::class,

@@ -70,7 +70,6 @@ class TestEmailValidation extends TestCase
      */
     public function test_validate_name(): void
     {
-        // phpcs:disable Generic.Files.LineLength.TooLong
         // Get mock
         $mock = $this->getValidationMock();
 
@@ -95,6 +94,5 @@ class TestEmailValidation extends TestCase
         // Validate invalid project group
         $this->assertFalse($mock->validateListNameAgainstEmail('Projectgroep - Public Relations', 'prpg@example.com'));
         $this->assertFalse($mock->validateListNameAgainstEmail('BBQPG', 'bbqpg@example.com'));
-        // phpcs:enable
     }
 }

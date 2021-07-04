@@ -14,7 +14,6 @@ use Spatie\Permission\Models\Permission;
  */
 class PermissionPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'role-admin';

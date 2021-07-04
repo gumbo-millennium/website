@@ -8,9 +8,6 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
-/**
- * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter.
- */
 class UserRoleFilter extends Filter
 {
     private const AVAILABLE_ROLES = [
