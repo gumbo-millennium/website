@@ -474,8 +474,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns collection of applied icons, with label and icon
-     * @return Collection
+     * Returns collection of applied icons, with label and icon.
      */
     public function getExpandedFeaturesAttribute(): Collection
     {

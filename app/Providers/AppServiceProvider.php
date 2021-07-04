@@ -20,7 +20,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -65,9 +64,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.breadcrumbs', 'breadcrumbs');
 
         // Special events
-        Blade::if('event', static function ($event) {
-            return false;
-        });
+        Blade::if('event', static fn ($event) => false);
     }
 
     /**

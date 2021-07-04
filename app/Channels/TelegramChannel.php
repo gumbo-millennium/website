@@ -47,7 +47,7 @@ class TelegramChannel
         } catch (TelegramResponseException $exception) {
             Log::warning('Failed to send message to Telegram: {exception}', [
                 'exception' => $exception,
-                'message' => $message->toArray()
+                'message' => $message->toArray(),
             ]);
 
             return;
