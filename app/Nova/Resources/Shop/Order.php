@@ -14,6 +14,7 @@ use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\ActionRequest;
 
 class Order extends Resource
 {
@@ -136,5 +137,33 @@ class Order extends Resource
         return [
             new PayableStatusFilter(),
         ];
+    }
+
+    /**
+     * Determine if the current user can update the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current user can delete the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
     }
 }

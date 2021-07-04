@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
-use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Models\Shop\Order;
-use App\Notifications\Shop\OrderCancelled;
-use App\Notifications\Shop\OrderRefunded;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -77,7 +73,7 @@ class CancelOrder extends Action
 
     public function handle(ActionFields $fields, Collection $models)
     {
-        $failedOrders = 0;
+        $blockedItems = 0;
 
         foreach ($models as $order) {
             // Get the inner order
@@ -93,7 +89,7 @@ class CancelOrder extends Action
                 Payments::isCompleted($order) ||
                 Payments::isCancelled($order)
             ) {
-                $failedOrders++;
+                $blockedItems++;
 
                 continue;
             }
@@ -103,24 +99,18 @@ class CancelOrder extends Action
 
             Payments::cancelOrder($order);
 
-            $notice = new OrderCancelled($order);
-
             if (Payments::isPaid($order)) {
                 Payments::refundAll($order);
-
-                $notice = new OrderRefunded($order, $order->price, '[N/A]');
             }
-
-            optional($order->user)->notify($notice);
         }
 
         $modelCount = $models->count();
 
-        if ($failedOrders === 0 && $modelCount === 1) {
-            return Action::message('Bestellingen geannuleerd.');
+        if ($blockedItems === 0 && $modelCount === 1) {
+            return Action::message('Bestelling geannuleerd.');
         }
 
-        if ($failedOrders === 0) {
+        if ($blockedItems === 0) {
             return Action::message('Alle bestellingen geannuleerd.');
         }
 
@@ -128,7 +118,7 @@ class CancelOrder extends Action
             return Action::danger('Bestelling kon niet worden geannuleerd.');
         }
 
-        if ($modelCount === $failedOrders) {
+        if ($modelCount === $blockedItems) {
             return Action::danger('Bestellingen konden niet worden geannuleerd.');
         }
 
@@ -137,13 +127,5 @@ class CancelOrder extends Action
             ${$modelCount} - $failedOrders,
             $modelCount,
         ));
-    }
-
-    public function authorizedToRun(Request $request, $model)
-    {
-        return $model instanceof PayableModel
-            && Payments::findOrder($model) !== null
-            && ! Payments::isCompleted($model)
-            && ! Payments::isCancelled($model);
     }
 }

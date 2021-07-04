@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
-use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
+use App\Helpers\Arr;
 use App\Models\Shop\Order;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -78,33 +77,34 @@ class ShipOrder extends Action
 
     public function handle(ActionFields $fields, Collection $models)
     {
-        foreach ($models as $order) {
-            // Get the inner order
-            if ($order instanceof NovaOrder) {
-                $order = $order->model();
-            }
+        // Find the first order, we're only acting on one.
+        $order = Arr::first($models);
 
-            // Check type
-            \assert($order instanceof Order);
-            $order->loadMissing('user');
-
-            if (
-                Payments::isCompleted($order) ||
-                Payments::isCancelled($order) ||
-                ! Payments::isPaid($order)
-            ) {
-                continue;
-            }
-
-            Payments::shipAll(
-                $order,
-                $fields->trackingCode ? $fields->carrier : null,
-                $fields->trackingCode,
-            );
-
-            $order->shipped_at = Date::now();
-            $order->save();
+        // Get the inner order
+        if ($order instanceof NovaOrder) {
+            $order = $order->model();
         }
+
+        // Check type
+        \assert($order instanceof Order);
+        $order->loadMissing('user');
+
+        if (
+            Payments::isCompleted($order) ||
+            Payments::isCancelled($order) ||
+            ! Payments::isPaid($order)
+        ) {
+            return Action::danger('Deze bestelling kon niet worden gemarkeerd als verzonden.');
+        }
+
+        Payments::shipAll(
+            $order,
+            $fields->trackingCode ? $fields->carrier : null,
+            $fields->trackingCode,
+        );
+
+        $order->shipped_at = Date::now();
+        $order->save();
 
         return Action::message('Bestelling gemarkeerd als verzonden.');
     }
@@ -133,14 +133,5 @@ class ShipOrder extends Action
                     'send' => __('Send'),
                 ])),
         ];
-    }
-
-    public function authorizedToRun(Request $request, $model)
-    {
-        return $model instanceof PayableModel
-            && Payments::findOrder($model) !== null
-            && Payments::isPaid($model)
-            && ! Payments::isCompleted($model)
-            && ! Payments::isCancelled($model);
     }
 }
