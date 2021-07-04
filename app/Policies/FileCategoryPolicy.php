@@ -10,7 +10,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FileCategoryPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     /**

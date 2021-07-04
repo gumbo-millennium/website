@@ -14,7 +14,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class FileDownloadPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     /**

@@ -72,19 +72,15 @@ trait UserDataForm
                 $duplicateRule,
             ],
             'error_messages' => [
-                // phpcs:disable Generic.Files.LineLength.TooLong
                 'alias.min' => 'Je alias moet minimaal 4 tekens lang zijn',
                 'alias.regex' => 'Je alias mag alleen bestaan uit letters, cijfers en eventueel streepjes in het midden',
                 'alias.unique' => 'Deze alias is al in gebruik door een andere gebruiker.',
-                // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'help_block' => [
-                // phpcs:disable Generic.Files.LineLength.TooLong
                 'text' => <<<'HTML'
                 Kies een optionele nickname die wordt getoond op de site in plaats van je voornaam<br />
                 Je kunt a-z, A-Z, 0-9 en eventueel leestekens in het midden gebruiken.
                 HTML,
-                // phpcs:enable Generic.Files.LineLength.TooLong
             ],
             'attr' => [
                 'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]',

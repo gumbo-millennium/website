@@ -14,7 +14,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class ActivityPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const CREATE_PERMISSION = 'activity-create';

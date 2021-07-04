@@ -43,6 +43,7 @@
   },
   "scripts": {
     "start": "npx mix watch",
+    "poll": "npx mix watch -- --watch-options-poll=1000",
     "dev": "npx mix build",
     "build": "npx mix build -p",
     "postinstall": "resources/bin/install-font-awesome"

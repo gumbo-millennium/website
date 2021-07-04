@@ -63,9 +63,6 @@ const colors = {
     // Our colors
     gray: grayColors,
     brand: brandColors,
-
-    // April fools ;)
-    'brand-alt': brandColorsAlternative
   },
 
   // Disable some colors

@@ -10,7 +10,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class NewsItemPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'content-admin';

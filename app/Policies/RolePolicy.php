@@ -13,7 +13,6 @@ use Spatie\Permission\Models\Role;
  */
 class RolePolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'role-admin';

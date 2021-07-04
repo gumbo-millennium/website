@@ -60,6 +60,8 @@ if ($activity->is_cancelled) {
 }
 $urlClass = implode(' ', $urlClass);
 
+$features = $activity->expanded_features;
+
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
@@ -70,13 +72,8 @@ $urlClass = implode(' ', $urlClass);
             srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
         @else
         <div class="card__figure-wrapper">
-            @event ('april-fools')
-            <img src="{{ mix('images/logo-text-april-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
-            <img src="{{ mix('images/logo-text-april-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
-            @else
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
             <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
-            @endevent
         </div>
         @endif
 
@@ -93,6 +90,18 @@ $urlClass = implode(' ', $urlClass);
                 <span class="card__figure-badge card__figure-badge--brand">Alleen online</span>
             @endif
         </div>
+
+        {{-- Icons --}}
+        @if ($features->isNotEmpty())
+        <div class="absolute bottom-4 right-4 rounded-lg bg-white flex items-center space-x-2 p-2">
+            @foreach ($features as $feature)
+            @icon("solid/$feature->icon", [
+                'class' => 'icon h-4 card__figure-icon',
+                'title' => $feature->title
+            ])
+            @endforeach
+        </div>
+        @endif
     </div>
 
     <div class="card__body">

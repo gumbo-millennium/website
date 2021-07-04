@@ -6,14 +6,16 @@ namespace App\Nova\Resources\Shop;
 
 use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
+use App\Nova\Actions\Shop\CancelOrder;
+use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Filters\PayableStatusFilter;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\ActionRequest;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Order extends Resource
 {
     /**
@@ -64,7 +66,10 @@ class Order extends Resource
     public function fields(Request $request)
     {
         return [
-            Fields\ID::make(__('Order Number'), 'number'),
+            Fields\ID::make(__('ID'), 'id')
+                ->onlyOnDetail(),
+
+            Fields\Text::make(__('Order Number'), 'number'),
 
             Fields\DateTime::make(__('Paid at'), 'paid_at')
                 ->onlyOnDetail(),
@@ -117,8 +122,8 @@ class Order extends Resource
     public function actions(Request $request)
     {
         return [
-            // new ShipOrder(),
-            // new CancelOrder(),
+            new ShipOrder(),
+            new CancelOrder(),
         ];
     }
 
@@ -132,5 +137,33 @@ class Order extends Resource
         return [
             new PayableStatusFilter(),
         ];
+    }
+
+    /**
+     * Determine if the current user can update the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current user can delete the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
     }
 }

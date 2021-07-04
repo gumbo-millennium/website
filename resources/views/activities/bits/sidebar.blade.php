@@ -242,6 +242,30 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 {{-- Make some room --}}
 <hr class="border-gray-secondary-3 my-8" />
 
+{{-- Icons --}}
+@php($features = $activity->expanded_features)
+@if ($features->isNotEmpty())
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+    @foreach ($features as $feature)
+    <div class="flex items-center">
+        <div class="w-8">
+            @icon("solid/$feature->icon", [
+            'class' => 'icon h-4 card__figure-icon',
+            'title' => $feature->title,
+            'role' => 'none',
+            ])
+        </div>
+        <div>
+            {{ $feature->title }}
+        </div>
+    </div>
+    @endforeach
+</div>
+@endif
+
+{{-- Make some room --}}
+<hr class="border-gray-secondary-3 my-8" />
+
 {{-- Data --}}
 <dl class="grid grid-cols-2 gap-2">
     @foreach ($properties as $label => list($value, $icon))

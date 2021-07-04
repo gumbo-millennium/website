@@ -10,7 +10,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FileBundlePolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const USER_PERMISSION = 'file-view';

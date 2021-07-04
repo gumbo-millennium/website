@@ -10,7 +10,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SponsorPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'sponsor-admin';

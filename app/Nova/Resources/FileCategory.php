@@ -74,10 +74,8 @@ class FileCategory extends Resource
 
             new Panel('Statistieken', [
                 // List downloads, in time frames
-                // phpcs:disable Generic.Files.LineLength.TooLong
                 Number::make('Aantal downloads (48hrs)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count())->exceptOnForms(),
                 Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
-                // phpcs:enable
                 Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
             ]),
         ];

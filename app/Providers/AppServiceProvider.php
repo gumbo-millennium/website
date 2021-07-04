@@ -10,6 +10,7 @@ use App\Contracts\MarkdownServiceContract;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
+use App\Events\EventService;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
@@ -20,7 +21,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -64,13 +64,11 @@ class AppServiceProvider extends ServiceProvider
         // Components
         Blade::component('components.breadcrumbs', 'breadcrumbs');
 
-        // April Fools
-        Blade::if('event', static function ($event) {
-            if ($event === 'april-fools') {
-                return Date::today()->format('m-d') === '04-01';
-            }
+        // Special events
+        Blade::if('event', function ($event) {
+            $service = $this->app->make(EventService::class);
 
-            return false;
+            return $service->eventActive($event);
         });
     }
 
@@ -98,6 +96,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Markdown
         $this->app->singleton(MarkdownServiceContract::class, MarkdownService::class);
+
+        // Events
+        $this->app->singleton(EventService::class);
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
