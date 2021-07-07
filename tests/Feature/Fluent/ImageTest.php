@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Fluent;
 
-use App\Enums\ImageFitEnum;
-use App\Enums\ImageFormatEnum;
 use App\Fluent\Image;
 use DomainException;
 use Illuminate\Http\File;
@@ -18,7 +18,7 @@ class ImageTest extends TestCase
     {
         $this->assertSame(
             URL::signedRoute('image.render', ['path' => 'test']),
-            Image::make('test')->getUrl()
+            Image::make('test')->getUrl(),
         );
     }
 
@@ -42,13 +42,13 @@ class ImageTest extends TestCase
         $expected = URL::signedRoute('image.render', ['path' => 'test', 'w' => 500]);
         $actual = Image::make('test')->width(500);
 
-        $template = <<<HTML
+        $template = <<<'HTML'
         <img src="%s" alt="test" />
         HTML;
 
         $this->assertSame(
             sprintf($template, $expected),
-            sprintf($template, $actual)
+            sprintf($template, $actual),
         );
     }
 
@@ -56,7 +56,7 @@ class ImageTest extends TestCase
     {
         $this->assertSame(
             (string) Image::make('test'),
-            (string) image_asset('test')
+            (string) image_asset('test'),
         );
     }
 
@@ -67,7 +67,7 @@ class ImageTest extends TestCase
             Image::make('test')
                 ->width(500)
                 ->height(250)
-                ->getUrl()
+                ->getUrl(),
         );
     }
 
@@ -77,7 +77,7 @@ class ImageTest extends TestCase
             URL::signedRoute('image.render', ['path' => 'test', 'w' => 500, 'h' => 500, 'fit' => 'crop']),
             Image::make('test')
                 ->square(500)
-                ->getUrl()
+                ->getUrl(),
         );
     }
 
@@ -108,14 +108,14 @@ class ImageTest extends TestCase
             URL::signedRoute('image.render', ['path' => 'test', 'q' => 30]),
             Image::make('test')
                 ->quality(30)
-                ->getUrl()
+                ->getUrl(),
         );
 
         $this->assertSame(
             URL::signedRoute('image.render', ['path' => 'test', 'q' => 100, 'fm' => 'jpg']),
             Image::make('test')
                 ->jpg(100)
-                ->getUrl()
+                ->getUrl(),
         );
 
         $this->expectException(OutOfRangeException::class);
@@ -127,7 +127,7 @@ class ImageTest extends TestCase
      */
     public function test_set_fit(string $fit, bool $valid): void
     {
-        if (!$valid) {
+        if (! $valid) {
             $this->expectException(DomainException::class);
 
             Image::make('test')->fit($fit);
@@ -137,7 +137,7 @@ class ImageTest extends TestCase
             URL::signedRoute('image.render', ['path' => 'test', 'fit' => $fit]),
             Image::make('test')
                 ->fit($fit)
-                ->getUrl()
+                ->getUrl(),
         );
     }
 
@@ -146,7 +146,7 @@ class ImageTest extends TestCase
      */
     public function test_set_format(string $format, bool $valid, ?string $method = null): void
     {
-        if (!$valid) {
+        if (! $valid) {
             $this->expectException(DomainException::class);
 
             Image::make('test')->format($format);
@@ -156,7 +156,7 @@ class ImageTest extends TestCase
             URL::signedRoute('image.render', ['path' => 'test', 'fm' => $format]),
             Image::make('test')
                 ->format($format)
-                ->getUrl()
+                ->getUrl(),
         );
 
         if (! $method) {
@@ -166,8 +166,8 @@ class ImageTest extends TestCase
         $this->assertStringContainsString(
             URL::route('image.render', ['path' => 'test', 'fm' => $format]),
             Image::make('test')
-                ->$method()
-                ->getUrl()
+                ->{$method}()
+                ->getUrl(),
         );
     }
 
