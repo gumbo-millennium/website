@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\Activity;
+use App\Models\Sponsor;
 use Czim\Paperclip\Contracts\AttachableInterface;
 use Czim\Paperclip\Contracts\AttachmentInterface;
 use Exception;
@@ -49,6 +50,10 @@ class MigratePaperclipToAttachments extends Command
         $this->line('Migrating activities...', null, OutputInterface::VERBOSITY_VERBOSE);
         $this->migrateClass(Activity::class, 'image', 'poster');
         $this->info('Migrated activities.');
+
+        $this->line('Migrating sponsors...', null, OutputInterface::VERBOSITY_VERBOSE);
+        $this->migrateClass(Sponsor::class, 'backdrop', 'background_image');
+        $this->info('Migrated sponsors.');
     }
 
     /**
