@@ -47,7 +47,7 @@ abstract class Command extends TelegramCommand
             'locale' => 'nl_NL',
             'contentfilter' => 'medium',
             'media_filter' => 'minimal',
-            'limit' => 1,
+            'limit' => 15,
         ]);
 
         $result = $http->get($searchUrl);
@@ -59,24 +59,18 @@ abstract class Command extends TelegramCommand
         }
 
         if ($result->getStatusCode() !== 200 || ! $body) {
-            dump('no ok');
-            dump($body);
-
             return null;
         }
 
-        $imageId = Arr::get($body, 'results.0.id');
-        $imagePublicUrl = Arr::get($body, 'results.0.url');
-        $imageUrl = Arr::get($body, 'results.0.media.0.mp4.url');
+        // Pick a random image from the results
+        $availableImages = Arr::get($body, 'results', []);
+        $chosenImage = Arr::random($availableImages);
+
+        $imageId = Arr::get($chosenImage, 'id');
+        $imagePublicUrl = Arr::get($chosenImage, 'url');
+        $imageUrl = Arr::get($chosenImage, 'media.0.mp4.url');
 
         if (! $imageId || ! filter_var($imageUrl, FILTER_VALIDATE_URL)) {
-            dump([
-                'no id',
-                $imageId,
-                $imageUrl,
-                $body,
-            ]);
-
             return null;
         }
 
