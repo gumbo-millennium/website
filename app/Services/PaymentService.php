@@ -152,7 +152,7 @@ class PaymentService implements PaymentServiceContract
             return null;
         }
 
-        $link = object_get($order->_links, 'dashboard._href')
+        $link = object_get($order->_links, 'dashboard.href')
             ?? object_get($order->_links, 'dashboard');
 
         return is_string($link) ? $link : null;
