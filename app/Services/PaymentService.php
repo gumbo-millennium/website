@@ -152,7 +152,10 @@ class PaymentService implements PaymentServiceContract
             return null;
         }
 
-        return object_get($order->_links, 'dashboard');
+        $link = object_get($order->_links, 'dashboard._href')
+            ?? object_get($order->_links, 'dashboard');
+
+        return is_string($link) ? $link : null;
     }
 
     public function getRedirectUrl(PayableModel $model): ?string
