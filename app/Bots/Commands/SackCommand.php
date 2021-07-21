@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use Telegram\Bot\Actions;
+
 class SackCommand extends Command
 {
     /**
@@ -42,6 +44,9 @@ class SackCommand extends Command
         if ($this->rateLimit('sack', '🚷 Je mag nog geen nieuw royatieverzoek doen.', 'PT15M')) {
             return;
         }
+
+        // Send upload status
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
         $target = ucwords(trim($this->arguments['custom'] ?? ''));
