@@ -8,6 +8,7 @@ use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
 use App\Nova\Actions\Shop\CancelOrder;
 use App\Nova\Actions\Shop\ShipOrder;
+use App\Nova\Actions\Shop\UpdateOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Filters\PayableStatusFilter;
 use App\Nova\Resources\Resource;
@@ -122,6 +123,7 @@ class Order extends Resource
     public function actions(Request $request)
     {
         return [
+            new UpdateOrder(),
             new ShipOrder(),
             new CancelOrder(),
         ];
