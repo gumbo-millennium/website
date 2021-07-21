@@ -7,6 +7,7 @@ namespace App\Nova\Actions\Shop;
 use App\Jobs\Shop\UpdateOrderJob;
 use App\Models\Shop\Order;
 use App\Nova\Resources\Shop\Order as NovaOrder;
+use Error;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -86,7 +87,7 @@ class UpdateOrder extends Action
                     'order' => $order->number,
                     'exception' => $exception,
                 ]);
-            } catch (\Error $error) {
+            } catch (Error $error) {
                 Log::error('Server error for {order}: {exception}.', [
                     'order' => $order->number,
                     'exception' => $error,
