@@ -1,6 +1,0 @@
-#
-# Exclude .sql files in the Docker library
-#
-exclude_paths:
-  - library/docker/mariadb/*.sql
-  - LICENSE.md
