@@ -62,6 +62,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
+        "deployer/deployer": "^6.8",
         "facade/ignition": "^1.16",
         "friendsofphp/php-cs-fixer": "^3.0",
         "fzaninotto/faker": "^1.9",
