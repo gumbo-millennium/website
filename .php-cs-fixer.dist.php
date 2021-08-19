@@ -6,23 +6,15 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
-    ->exclude([
-        'vendor',
-        'node_modules',
-        'storage',
-        'library/composer'
-    ])
-    ->notName([
-        '_ide_helper*',
-    ])
-    ->notPath([
-        'bootstrap/cache',
-        'bootstrap/app.php',
-        'public/index.php',
-        'server.php',
-        'artisan',
-    ])
-    ->in(__DIR__);
+    ->in([
+        '.deploy',
+        'app',
+        'config',
+        'database',
+        'resources/lang',
+        'routes',
+        'tests',
+    ]);
 
 return (new Config())
     ->setFinder($finder)
