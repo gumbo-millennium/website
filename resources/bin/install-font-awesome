@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+INSTALL_TARGET="${1:-local}"
+
 # Computed directories
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_PATH="$( git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null )"
@@ -12,6 +14,12 @@ fi
 # Directories
 FA_DIR="${ROOT_PATH}/storage/app/font-awesome"
 NODE_DIR="${ROOT_PATH}/node_modules"
+
+# Check for a deployment
+if [ "$INSTALL_TARGET" = "deployment" ]; then
+    echo "Switching over to use server repository..."
+    NODE_DIR="${HOME}/repository/node_modules"
+fi
 
 if [ ! -d "$FA_DIR" ]; then
     mkdir -p "$FA_DIR"
