@@ -1,9 +1,12 @@
 <footer class="footer container">
-    <div class="grid grid-cols-1 md:grid-cols-3">
-        <div class="hidden md:block">&nbsp;</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+        <div class="hidden xl:block">&nbsp;</div>
 
-        <div class="text-center">
-            <p>© Gumbo Millennium {{ today()->year }}. Alle rechten voorbehouden.</p>
+        <div class="text-center md:text-left xl:text-center">
+            <p class="md:flex flex-col items-start xl:block">
+                <span>© Gumbo Millennium {{ today()->year }}.</span>
+                <span>Alle rechten voorbehouden.</span>
+            </p>
         </div>
 
         <div class="hidden md:flex items-center justify-end text-gray-300">
