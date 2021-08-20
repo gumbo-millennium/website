@@ -48,7 +48,6 @@ class RedirectInstruction extends Model
 
     /**
      * Ensure the slug starts with a slash.
-     * @return void
      */
     public function setSlugAttribute(?string $slug): void
     {
@@ -57,7 +56,6 @@ class RedirectInstruction extends Model
 
     /**
      * Ensure the path is absolute.
-     * @return void
      */
     public function setPathAttribute(?string $path): void
     {
