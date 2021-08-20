@@ -12,7 +12,9 @@ use App\Models\Page;
 use App\Models\Sponsor;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class PageController extends Controller
 {
@@ -93,7 +95,13 @@ class PageController extends Controller
      */
     public function fallback(Request $request)
     {
-        return $this->render(null, trim($request->path(), '/\\'));
+        try {
+            // Rnder the page
+            return $this->render(null, trim($request->path(), '/\\'));
+        } catch (ModelNotFoundException $pageNotFound) {
+            // Try to see if it might be a redirect.
+            return App::call(RedirectController::class . '@fallback');
+        }
     }
 
     /**
