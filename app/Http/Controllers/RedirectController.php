@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Str;
 use App\Models\RedirectInstruction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
@@ -23,7 +24,7 @@ class RedirectController extends Controller
     {
         URL::forceRootUrl(Config::get('app.url'));
 
-        $slug = trim($slug, '/');
+        $slug = Str::start(trim($slug, '/'), '/');
 
         /** @var RedirectInstruction $redirectInstruction */
         $redirectInstruction = RedirectInstruction::query()
@@ -32,7 +33,7 @@ class RedirectController extends Controller
             ->first();
 
         if (! $redirectInstruction) {
-            return Response::redirectTo(URL::to("/{$slug}"), RedirectResponse::HTTP_FOUND);
+            return Response::redirectTo(URL::to($slug), RedirectResponse::HTTP_FOUND);
         }
 
         abort_if($redirectInstruction->trashed(), RedirectResponse::HTTP_GONE);

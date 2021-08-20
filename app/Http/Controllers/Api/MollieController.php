@@ -47,7 +47,7 @@ class MollieController extends Controller
     private function handleMollieResponse(Request $request, $model): void
     {
         $id = $request->post('id');
-        if (! $id || Str::len($id) > 40) {
+        if (! $id || Str::length($id) > 40) {
             throw new BadRequestHttpException();
         }
 
