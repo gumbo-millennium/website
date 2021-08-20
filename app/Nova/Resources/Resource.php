@@ -18,7 +18,7 @@ abstract class Resource extends NovaResource
      *
      * @var null|string
      */
-    public static $defaultSort = null;
+    public static $defaultSort;
 
     /**
      * Get the displayable label of the resource.
