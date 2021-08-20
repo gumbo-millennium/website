@@ -103,6 +103,9 @@ board:
     # Allow shop administration
     - shop-admin
 
+    # Allow managing custom redirects
+    - redirects-manage
+
 # Digital committee
 dc:
   title: Digitale Commissie

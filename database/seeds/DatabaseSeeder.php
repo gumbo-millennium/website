@@ -18,5 +18,8 @@ class DatabaseSeeder extends Seeder
 
         // Required pages
         $this->call(PageSeeder::class);
+
+        // Redirects
+        $this->call(RedirectInstructionSeeder::class);
     }
 }
