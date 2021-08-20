@@ -31,12 +31,13 @@ class RedirectController extends Controller
             ->where('slug', $slug)
             ->first();
 
-        abort_if($redirectInstruction->trashed(), RedirectResponse::HTTP_GONE);
 
-        if ($redirectInstruction) {
-            return Response::redirectTo(URL::to($redirectInstruction->path), RedirectResponse::HTTP_FOUND);
+        if (!$redirectInstruction) {
+            return Response::redirectTo(URL::to("/{$slug}"), RedirectResponse::HTTP_FOUND);
         }
 
-        return Response::redirectTo(URL::to("/{$slug}"), RedirectResponse::HTTP_FOUND);
+        abort_if($redirectInstruction->trashed(), RedirectResponse::HTTP_GONE);
+
+        return Response::redirectTo(URL::to($redirectInstruction->path), RedirectResponse::HTTP_FOUND);
     }
 }

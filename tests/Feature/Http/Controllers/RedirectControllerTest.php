@@ -28,7 +28,7 @@ class RedirectControllerTest extends TestCase
      */
     public function test_get_found(): void
     {
-        RedirectInstruction::firstOrCreate([
+        RedirectInstruction::updateOrCreate([
             'slug' => 'my-test/route',
         ], [
             'path' => '/cake',
@@ -37,6 +37,20 @@ class RedirectControllerTest extends TestCase
         $this->get('http://gumbo.nu/my-test/route')
             ->assertRedirect($this->computeExpectedURL('/cake'))
             ->assertStatus(Response::HTTP_FOUND);
+    }
+    /**
+     * A basic feature test example.
+     */
+    public function test_get_deleted(): void
+    {
+        RedirectInstruction::updateOrCreate([
+            'slug' => 'removed-route',
+        ], [
+            'path' => '/cake',
+        ])->delete();
+
+        $this->get('http://gumbo.nu/removed-route')
+            ->assertStatus(Response::HTTP_GONE);
     }
 
     /**
