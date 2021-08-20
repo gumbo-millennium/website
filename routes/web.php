@@ -3,14 +3,25 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\FileExportController;
+use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
     App\Http\Policy\LoginPolicy::class,
 ]);
+
+// Bind redirects as very, very first.
+foreach (Config::get('gumbo.redirect-domains') as $domain) {
+    Route::domain($domain)->group(function () {
+        Route::get('/', [RedirectController::class, 'index']);
+        Route::get('/{slug}', [RedirectController::class, 'redirect'])
+            ->where('slug', '.+');
+    });
+}
 
 // Home
 Route::get('/', 'PageController@homepage')->name('home');

@@ -147,5 +147,10 @@
   "All orders have been updated.": "Alle bestellingen zijn bijgewerkt.",
   ":updated of :total order(s) have been updated.": ":updated van :total bestellingen zijn bijgewerkt.",
 
+  "Path": "Pad",
+  "Target path": "Doelpad",
+  "Redirect Instruction": "Doorverwijzing",
+  "Redirect Instructions": "Doorverwijzingen",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

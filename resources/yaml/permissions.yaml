@@ -39,6 +39,9 @@ payment-admin: Beheer van transacties
 # Shop permissions
 shop-admin: Webwinkel beheren
 
+# Redirects
+redirects-manage: Manage redirections
+
 # System admin permissions
 devops: Toegang tot status dashboards
 impersonate: Inloggen als andere gebruikers

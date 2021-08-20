@@ -19,6 +19,15 @@ return [
         ],
     ],
 
+    // Redirect domanis
+    'redirect-domains' => [
+        // Bind gumbo.nu
+        'gumbo.nu',
+
+        // And bind to <redirect>.<your-domain-name> for testing
+        sprintf('redirect.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
+    ],
+
     // Page groups
     'page-groups' => [
         'commissies' => 'Commissies',
