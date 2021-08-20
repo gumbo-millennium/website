@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\RedirectInstruction;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\Yaml\Yaml;
 
 class RedirectInstructionSeeder extends Seeder
@@ -20,11 +21,17 @@ class RedirectInstructionSeeder extends Seeder
                 continue;
             }
 
+            $slug = Arr::get($redirect, 'slug');
+            $path = Arr::get($redirect, 'path');
+
+            $slug = Str::start(trim($slug, '/'), '/');
+            $path = URL::to($path);
+
             $redirectInstance = RedirectInstruction::query()
                 ->withoutGlobalScopes()
                 ->firstOrNew(
-                    ['slug' => Arr::get($redirect, 'slug')],
-                    ['path' => Arr::get($redirect, 'path')],
+                    ['slug' => $slug],
+                    ['path' => $path],
                 );
 
             if (! $redirectInstance->exists) {

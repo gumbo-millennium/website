@@ -14,7 +14,7 @@ use Tests\TestCase;
 class RedirectControllerTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * Tests redirect homepage.
      */
     public function test_get_index(): void
     {
@@ -24,7 +24,7 @@ class RedirectControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * Tests a redirect works.
      */
     public function test_get_found(): void
     {
@@ -40,7 +40,7 @@ class RedirectControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * Test a deleted redirect throws a 410.
      */
     public function test_get_deleted(): void
     {
@@ -55,13 +55,53 @@ class RedirectControllerTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * Test a missing redirect falls through.
      */
     public function test_get_missing(): void
     {
         $this->get('http://gumbo.nu/random-url')
             ->assertRedirect($this->computeExpectedURL('/random-url'))
             ->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test the fallback on the main route.
+     */
+    public function test_main_fallback_valid(): void
+    {
+        RedirectInstruction::updateOrCreate([
+            'slug' => 'random-fallback-url',
+        ], [
+            'path' => '/test-ok',
+        ]);
+
+        $this->get('/random-fallback-url')
+            ->assertRedirect($this->computeExpectedURL('/test-ok'))
+            ->assertStatus(Response::HTTP_FOUND);
+    }
+
+    /**
+     * Test the fallback on the main route.
+     */
+    public function test_main_fallback_gone(): void
+    {
+        RedirectInstruction::updateOrCreate([
+            'slug' => 'random-gone-fallback-url',
+        ], [
+            'path' => '/test-ok',
+        ])->delete();
+
+        $this->get('/random-gone-fallback-url')
+            ->assertStatus(Response::HTTP_GONE);
+    }
+
+    /**
+     * Test the fallback on the main route.
+     */
+    public function test_main_fallback_missing(): void
+    {
+        $this->get('/missing-but-still-random-url')
+            ->assertNotFound();
     }
 
     /**
