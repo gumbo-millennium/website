@@ -38,6 +38,7 @@ class RedirectControllerTest extends TestCase
             ->assertRedirect($this->computeExpectedURL('/cake'))
             ->assertStatus(Response::HTTP_FOUND);
     }
+
     /**
      * A basic feature test example.
      */

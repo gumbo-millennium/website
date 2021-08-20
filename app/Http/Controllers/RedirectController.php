@@ -31,8 +31,7 @@ class RedirectController extends Controller
             ->where('slug', $slug)
             ->first();
 
-
-        if (!$redirectInstruction) {
+        if (! $redirectInstruction) {
             return Response::redirectTo(URL::to("/{$slug}"), RedirectResponse::HTTP_FOUND);
         }
 
