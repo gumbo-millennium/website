@@ -27,7 +27,7 @@ return [
     |
     */
 
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,13 +67,13 @@ return [
             'visibility' => 'public',
         ],
 
-        's3' => [
+        'scaleway' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'key' => env('SCALEWAY_ACCESS_KEY_ID'),
+            'secret' => env('SCALEWAY_SECRET_ACCESS_KEY'),
+            'region' => env('SCALEWAY_DEFAULT_REGION'),
+            'bucket' => env('SCALEWAY_BUCKET'),
+            'url' => env('SCALEWAY_URL'),
         ],
     ],
 ];
