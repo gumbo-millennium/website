@@ -17,6 +17,7 @@ class CreateDataExportsTable extends Migration
     {
         Schema::create('data_exports', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('token', 20);
             $table->unsignedBigInteger('user_id');
 
             $table->string('path')->nullable()->default(null);

@@ -72,4 +72,13 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
     @endif
 </div>
+
+{{-- Data Exports --}}
+<div class="card card--padded">
+    <h3 class="heading-3 mt-0">Inzageverzoeken</h3>
+    <div class="flex flex-row items-center">
+        <p class="leading-none m-0 mr-4 flex-grow">Bekijk jouw gegevens binnen de site</p>
+        <a href="{{ route('account.export.index') }}" class="btn my-0">Naar overzicht</a>
+    </div>
+</div>
 @endsection

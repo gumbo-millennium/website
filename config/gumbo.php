@@ -103,4 +103,7 @@ return [
     'activity-features' => [
         // Don't add content here.
     ],
+
+    // Data Exports
+    'export-expire-days' => 30,
 ];
