@@ -15,11 +15,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -174,7 +175,7 @@ class FileController extends Controller
      * @throws InvalidUrlGenerator
      * @throws InvalidConversion
      */
-    public function downloadSingle(Request $request, SpatieMedia $media): BinaryFileResponse
+    public function downloadSingle(Request $request, SpatieMedia $media): StreamedResponse
     {
         $bundle = $media->model;
         if (! $bundle instanceof FileBundle) {
@@ -191,7 +192,7 @@ class FileController extends Controller
         $this->log($request, $bundle, $media);
 
         // Send single file
-        return response()
+        return Storage::disk($media->disk)
             ->download($media->getPath(), $media->file_name)
             ->setPrivate();
     }
