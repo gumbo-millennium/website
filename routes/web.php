@@ -199,7 +199,7 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
 
     // Data Exports
     Route::get('/inzageverzoek', [Controllers\Account\DataExportController::class, 'index'])->name('export.index');
-    Route::post('/inzageverzoek', [Controllers\Account\DataExportController::class, 'store']);
+    Route::post('/inzageverzoek', [Controllers\Account\DataExportController::class, 'store'])->name('export.store');
     Route::get('/inzageverzoek/{id}/{token}', [Controllers\Account\DataExportController::class, 'show'])->name('export.show');
     Route::get('/inzageverzoek/{id}/{token}/download', [Controllers\Account\DataExportController::class, 'download'])->name('export.download');
 });

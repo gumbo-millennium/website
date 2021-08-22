@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Jobs\Avg\CreateUserDataExport;
 use App\Models\DataExport;
@@ -88,12 +87,7 @@ class DataExportController extends Controller
 
         abort_if($export->is_expired, 410, __('This export is no longer available.'));
 
-        $filename = __('Data Export :name (:date)', [
-            'name' => Str::ascii($user->name),
-            'date' => $export->created_at->format('Y-m-d H:i:s'),
-        ]) . '.' .  Str::afterLast($export->path, '.');
-
-        return Storage::disk('local')->download($export->path, $filename, [
+        return Storage::disk('local')->download($export->path, $export->file_name, [
             'Cache-Control' => 'no-cache, no-store, no-transform',
             'Max-Age' => 0,
             'Pragma' => 'no-cache',

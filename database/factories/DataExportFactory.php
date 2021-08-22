@@ -13,11 +13,15 @@ $factory->define(DataExport::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterMakingState(DataExport::class, 'with_data', function (DataExport $dataExport, Faker $faker) {
-    $dataExport->path = Storage::put("user-export/data/{$faker->uuid}.json", json_encode([
-        'user-id' => $faker->id,
+$factory->afterMakingState(DataExport::class, 'with-data', function (DataExport $dataExport, Faker $faker) {
+    $path = "user-export/data/{$faker->uuid}.json";
+
+    Storage::put($path, json_encode([
+        'user-id' => optional($dataExport->user)->id,
         'name' => $faker->name,
     ]));
+
+    $dataExport->path = $path;
 });
 
 $factory->afterCreatingState(DataExport::class, 'expired', function (DataExport $dataExport, Faker $faker) {

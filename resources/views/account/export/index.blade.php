@@ -18,14 +18,14 @@
 
   <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
     @if ($exports->isEmpty())
-        <div class="text-center py-12">
+        <div class="text-center py-12" data-x-group="no-export-card">
             <h3 class="mt-2 text-sm font-medium text-gray-900">Geen gegevensexporten</h3>
             <p class="mt-1 text-sm text-gray-500">
                 Het lijk er op dat je nog geen geen gegevensexporten hebt aangevraagd.
             </p>
         </div>
     @else
-    <div class="py-8 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+    <div class="py-8 align-middle inline-block min-w-full sm:px-6 lg:px-8" data-x-group="has-exports">
         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -64,7 +64,7 @@
             </table>
 
             @if ($exports->hasPages())
-            <div class="mt-4 px-4 py-2">
+            <div class="mt-4 px-4 py-2" data-x-group="has-pages">
                 <div class="mx-auto">
                     {{ $exports->links() }}
                 </div>
@@ -76,7 +76,7 @@
 </div>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
-<form action="" method="POST" class="bg-white shadow sm:rounded-lg" id="request-form">
+<form action="{{ route('account.export.store') }}" method="POST" class="bg-white shadow sm:rounded-lg" id="request-form" data-x-group="request-form">
     @csrf
     <div class="px-4 py-5 sm:p-6">
         <h3 class="text-lg leading-6 font-medium text-gray-900">

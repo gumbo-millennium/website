@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Date;
  * @property \Illuminate\Support\Carbon $expires_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property-read bool $is_expired
+ * @property-read bool $file_name
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newQuery()
@@ -81,5 +82,17 @@ class DataExport extends Model
     public function getIsExpiredAttribute(): bool
     {
         return ! $this->expires_at || $this->expires_at->isPast();
+    }
+
+    public function getFileNameAttribute(): string
+    {
+        $extension = Str::afterLast($this->path, '.');
+
+        $localName = __('Data Export :name (:date)', [
+            'name' => Str::ascii(optional($this->user)->name),
+            'date' => $this->created_at->format('Y-m-d H:i:s'),
+        ]);
+
+        return "${localName}.${extension}";
     }
 }

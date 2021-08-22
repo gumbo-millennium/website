@@ -2,7 +2,7 @@
 
 @php($data = [
     'Aangemaakt op' => $export->created_at->isoFormat('LLL'),
-    'Afgerond op' => $export->path ? $export->completed_at->isoFormat('LLL') : 'Nog niet afgerond',
+    'Afgerond op' => optional($export->completed_at)->isoFormat('LLL') ?? 'Nog niet afgerond',
     'Verloopt op' => $export->expires_at->isoFormat('LLL'),
 ])
 
