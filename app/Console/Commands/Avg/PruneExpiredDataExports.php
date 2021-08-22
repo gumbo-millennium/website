@@ -9,14 +9,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 
-class PurgeExpiredDataExports extends Command
+class PruneExpiredDataExports extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'gumbo:avg:purge-exports';
+    protected $signature = 'gumbo:avg:prune-exports';
 
     /**
      * The console command description.
@@ -30,7 +30,7 @@ class PurgeExpiredDataExports extends Command
      */
     public function handle()
     {
-        $exports = DataExport::quey()
+        $exports = DataExport::query()
             ->where('expires_at', '<', Date::now())
             ->get();
 
@@ -38,7 +38,10 @@ class PurgeExpiredDataExports extends Command
             if ($export->path) {
                 Storage::exists($export->path) && Storage::delete($export->path);
 
-                $export->path = false;
+                $this->info("Deleted file for {$export->id}");
+
+                $export->path = null;
+                $export->save();
             }
 
             $export->delete();

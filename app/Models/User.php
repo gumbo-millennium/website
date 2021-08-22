@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Contracts\ConvertsToStripe;
 use App\Helpers\Arr;
+use App\Models\Shop\Order;
 use App\Notifications\VerifyEmail;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Auth\MustVerifyEmail;
@@ -177,6 +178,16 @@ class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailC
     public function hostedActivities(): Relation
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Returns the shop orders.
+     *
+     * @return Relation
+     */
+    public function orders(): Relation
+    {
+        return $this->hasMany(Order::class);
     }
 
     /**

@@ -53,8 +53,28 @@ class CreateUserDataExport implements ShouldQueue
             return;
         }
 
+        // Get user
+        $user = $export->user;
+        $user->loadMissing([
+            'enrollments',
+            'enrollments.activity:name,slug',
+            'downloads',
+            'files:name,slug',
+            'orders',
+            'orders.variants:name,slug',
+        ]);
+
         // Prep data
-        $data = [];
+        $data = [
+            'user-data' => $export->user->withoutRelations()->toArray(),
+            'activity-enrollments' => $export->user->enrollments->toArray(),
+            'file-downloads' => $export->user->downloads->map(fn ($download) => $download->withoutRelations()->toArray()),
+            'file-uploads' => $export->user->files->map(fn ($file) => $file->withoutRelations()->toArray()),
+            'shop-orders' => $export->user->orders->map(fn ($order) => array_merge(
+                $order->withoutRelations()->toArray(),
+                $order->variants->map(fn ($variant) => $variant->withoutRelations()->toArray())->toArray(),
+            )),
+        ];
 
         // TODO: Implement handle() method.
 
