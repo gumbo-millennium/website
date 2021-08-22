@@ -42,7 +42,7 @@ return [
 
     's3' => [
         // The domain that should be prepended when generating urls.
-        'domain' => 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com',
+        'domain' => env('SCALEWAY_URL', 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com'),
     ],
 
     'remote' => [
