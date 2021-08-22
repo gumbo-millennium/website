@@ -7,8 +7,6 @@ namespace App\Console\Commands\Avg;
 use App\Jobs\Avg\CreateUserDataExport;
 use App\Models\DataExport;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Storage;
 
 class UpdateMissedDataExports extends Command
 {

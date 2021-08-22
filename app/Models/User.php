@@ -182,8 +182,6 @@ class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailC
 
     /**
      * Returns the shop orders.
-     *
-     * @return Relation
      */
     public function orders(): Relation
     {
