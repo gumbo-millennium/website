@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\URL;
 use Spatie\MediaLibrary\UrlGenerator\LocalUrlGenerator;
 use Spatie\MediaLibrary\UrlGenerator\UrlGenerator;
 
-class ProtectedFileUrlGenerator extends LocalUrlGenerator implements UrlGenerator
+class ProtectedLocalFileUrlGenerator extends LocalUrlGenerator implements UrlGenerator
 {
     /**
      * Get the URL for the profile of a media item.

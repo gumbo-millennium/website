@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
@@ -195,6 +196,12 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'Account\TelegramController@store');
     Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');
+
+    // Data Exports
+    Route::get('/inzageverzoek', [Controllers\Account\DataExportController::class, 'index'])->name('export.index');
+    Route::post('/inzageverzoek', [Controllers\Account\DataExportController::class, 'store'])->name('export.store');
+    Route::get('/inzageverzoek/{id}/{token}', [Controllers\Account\DataExportController::class, 'show'])->name('export.show');
+    Route::get('/inzageverzoek/{id}/{token}/download', [Controllers\Account\DataExportController::class, 'download'])->name('export.download');
 });
 
 // Onboarding URLs

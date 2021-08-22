@@ -82,7 +82,10 @@ const colors = {
   orange: buildNightModeCapable('orange'),
   green: buildNightModeCapable('green'),
   blue: buildNightModeCapable('blue'),
-  brand: buildNightModeCapable('brand')
+  brand: {
+    ...buildNightModeCapable('brand'),
+    ...brandColors,
+  }
 }
 
 module.exports = {

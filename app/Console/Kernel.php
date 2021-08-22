@@ -69,6 +69,9 @@ class Kernel extends ConsoleKernel
         // Shop expiration and reminders
         $schedule->command('shop:send-reminders')->hourlyAt(20);
         $schedule->command('shop:cancel-expired')->twiceDaily(2, 14);
+
+        // Clear expired data exports
+        $schedule->command('gumbo:avg:prune-exports')->weekly();
     }
 
     /**

@@ -152,5 +152,22 @@
   "Redirect Instruction": "Doorverwijzing",
   "Redirect Instructions": "Doorverwijzingen",
 
+  "Data Access Request": "Inzageverzoek",
+  "Data Access Requests": "Inzageverzoeken",
+  "Get access to your personal data": "Bekijk jouw gegevens binnen de site",
+
+  "No data exports": "Geen gegevensexporten",
+  "You don't seem to have any data exports yet.": "Het lijk er op dat je nog geen geen gegevensexporten hebt aangevraagd.",
+
+
+  "Request a data export": "Vraag een gegevensexport aan",
+  "The export will be downloadable for :days days after completion.": "De export is beschikbaar voor :days dagen na het aanmaken.",
+
+  "A data export has been requested. It may take a while for it to be ready.": "Er is een gegevensexport aangevraagd. Het kan even duren voordat deze klaar is.",
+
+  "This export is still being built.": "De export wordt nog gebouwd.",
+  "This export is ready to download.": "De export is klaar om te downloaden.",
+  "This export is no longer available.": "De export is niet langer beschikbaar.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
