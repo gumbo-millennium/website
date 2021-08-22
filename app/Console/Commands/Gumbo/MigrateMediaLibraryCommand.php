@@ -46,6 +46,12 @@ class MigrateMediaLibraryCommand extends Command
         // Report start
         $this->line('Migrating existing files to the cloud environment...');
 
+        if (! $localDisk->exists('medialibrary/media')) {
+            $this->error('Cannot find source directory on disk.');
+
+            return 1;
+        }
+
         /** @var Media $mediaItem */
         foreach ($localDisk->allFiles('medialibrary/media') as $mediaFile) {
             $mediaItemName = sprintf('%s/<info>%s</>', dirname($mediaFile), basename($mediaFile));

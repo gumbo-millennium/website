@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Console\Commands\Gumbo;
 
-use App\Models\FileBundle;
+use App\Helpers\Str;
+use App\Models\MediaLibrary\LocalPathGenerator;
+use Exception;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use Tests\TestCase;
 
 class MigrateMediaLibraryCommandTest extends TestCase
 {
-    private const LOCAL_DISK = 'test-local';
+    use WithFaker;
 
-    private const CLOUD_DISK = 'test-cloud';
+    private const LOCAL_DISK = 'local';
+
+    private const CLOUD_DISK = 'paperclip';
 
     /**
      * @before
@@ -21,27 +27,11 @@ class MigrateMediaLibraryCommandTest extends TestCase
     public function fakeStoragesBeforeTest(): void
     {
         $this->afterApplicationCreated(function () {
-            Config::set('filesystems.disks.' . self::LOCAL_DISK, [
-                'driver' => 'local',
-                'root' => $localRoot = storage_path('app/testing/local'),
-            ]);
-
-            Config::set('filesystems.disks.' . self::CLOUD_DISK, [
-                'driver' => 'local',
-                'root' => $cloudRoot = storage_path('app/testing/cloud'),
-            ]);
-
-            is_dir($localRoot) || mkdir($localRoot, 0777, true);
-            is_dir($cloudRoot) || mkdir($cloudRoot, 0777, true);
-
             Config::set([
                 'filesystems.default' => self::LOCAL_DISK,
                 'filesystems.cloud' => self::CLOUD_DISK,
                 'medialibrary.disk_name' => self::LOCAL_DISK,
             ]);
-
-            Storage::fake('test-local');
-            Storage::fake('test-cloud');
         });
     }
 
@@ -59,20 +49,19 @@ class MigrateMediaLibraryCommandTest extends TestCase
      */
     public function test_with_local_only(): void
     {
-        $bundle = $this->getDummyFileBundle();
-        $localPath = $bundle->getFirstMedia()->path;
+        $filePath = $this->getDummyFilePath();
 
         $localDisk = Storage::disk(self::LOCAL_DISK);
         $cloudDisk = Storage::disk(self::CLOUD_DISK);
 
-        $localDisk->assertExists($localPath);
-        $cloudDisk->assertMissing($localPath);
+        $localDisk->assertExists($filePath);
+        $cloudDisk->assertMissing($filePath);
 
         $this->artisan('gumbo:migrate-media-library')
             ->assertExitCode(0);
 
-        $localDisk->assertExists($localPath);
-        $cloudDisk->assertExists($localPath);
+        $localDisk->assertExists($filePath);
+        $cloudDisk->assertExists($filePath);
     }
 
     /**
@@ -80,23 +69,22 @@ class MigrateMediaLibraryCommandTest extends TestCase
      */
     public function test_with_remote_only(): void
     {
-        $bundle = $this->getDummyFileBundle();
-        $localPath = $bundle->getFirstMedia()->path;
+        $filePath = $this->getDummyFilePath();
 
         $localDisk = Storage::disk(self::LOCAL_DISK);
         $cloudDisk = Storage::disk(self::CLOUD_DISK);
 
-        $localDisk->delete($localPath);
-        $cloudDisk->put($localPath, 'test');
+        $localDisk->delete($filePath);
+        $cloudDisk->put($filePath, 'test');
 
-        $localDisk->assertMissing($localPath);
-        $cloudDisk->assertExists($localPath);
+        $localDisk->assertMissing($filePath);
+        $cloudDisk->assertExists($filePath);
 
         $this->artisan('gumbo:migrate-media-library')
             ->assertExitCode(0);
 
-        $localDisk->assertMissing($localPath);
-        $cloudDisk->assertExists($localPath);
+        $localDisk->assertMissing($filePath);
+        $cloudDisk->assertExists($filePath);
     }
 
     /**
@@ -104,46 +92,36 @@ class MigrateMediaLibraryCommandTest extends TestCase
      */
     public function test_with_both_existing(): void
     {
-        $bundle = $this->getDummyFileBundle();
-        $localPath = $bundle->getFirstMedia()->path;
+        $filePath = $this->getDummyFilePath();
 
         $localDisk = Storage::disk(self::LOCAL_DISK);
         $cloudDisk = Storage::disk(self::CLOUD_DISK);
 
-        $cloudDisk->put($localPath, 'test');
+        $cloudDisk->put($filePath, 'test');
 
-        $localDisk->assertExists($localPath);
-        $cloudDisk->assertExists($localPath);
+        $localDisk->assertExists($filePath);
+        $cloudDisk->assertExists($filePath);
 
         $this->artisan('gumbo:migrate-media-library')
             ->assertExitCode(0);
 
-        $localDisk->assertExists($localPath);
-        $cloudDisk->assertExists($localPath);
+        $localDisk->assertExists($filePath);
+        $cloudDisk->assertExists($filePath);
     }
 
-    private function getDummyFileBundle(): FileBundle
+    /**
+     * Returns the path of an existing file.
+     * @throws InvalidArgumentException
+     * @throws Exception
+     */
+    private function getDummyFilePath(): string
     {
-        /** @var FileBundle $instance */
-        $instance = factory(FileBundle::class)->create();
+        $disk = Config::get('medialibrary.disk_name');
 
-        $instance->addMedia(resource_path('test-assets/pdf/chicken.pdf'))
-            ->preservingOriginal()
-            ->withManipulations([])
-            ->toMediaCollection();
+        $path = Str::finish(LocalPathGenerator::BASE_PATH, '/') . "{$this->faker->md5}/{$this->faker->slug}.pdf";
 
-        $this->assertNotNull($instance->getFirstMedia());
+        Storage::disk($disk)->put($path, $this->faker->sentence);
 
-        $localDisk = Storage::disk(self::LOCAL_DISK);
-
-        $localPath = $instance->getFirstMedia()->path;
-
-        if (! $localDisk->exists($localPath)) {
-            $localDisk->put($localPath, 'test');
-        }
-
-        return FileBundle::query()
-            ->with(['media'])
-            ->find($instance->id);
+        return $path;
     }
 }
