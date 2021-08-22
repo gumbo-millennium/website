@@ -59,7 +59,8 @@ class CreateUserDataExport implements ShouldQueue
             'enrollments',
             'enrollments.activity:name,slug',
             'downloads',
-            'files:name,slug',
+            'files:id,title,slug',
+            'files.category:title,slug',
             'orders',
             'orders.variants:name,slug',
         ]);
@@ -72,7 +73,7 @@ class CreateUserDataExport implements ShouldQueue
             'file-uploads' => $export->user->files->map(fn ($file) => $file->withoutRelations()->toArray()),
             'shop-orders' => $export->user->orders->map(fn ($order) => array_merge(
                 $order->withoutRelations()->toArray(),
-                $order->variants->map(fn ($variant) => $variant->withoutRelations()->toArray())->toArray(),
+                ['products' => $order->variants->map(fn ($variant) => $variant->withoutRelations()->toArray())->toArray()],
             )),
         ];
 
