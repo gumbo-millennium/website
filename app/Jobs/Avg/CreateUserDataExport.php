@@ -83,7 +83,7 @@ class CreateUserDataExport implements ShouldQueue
 
         // Create zip
         $zip = new ZipArchive();
-        $zip->open($zipFile, ZipArchive::CREATE);
+        $zip->open($zipFile, ZipArchive::OVERWRITE);
         $zip->addFromString('data.json', json_encode($data, JSON_PRETTY_PRINT));
         $zip->close();
 
