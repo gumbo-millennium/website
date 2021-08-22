@@ -22,6 +22,7 @@ $factory->afterMakingState(DataExport::class, 'with-data', function (DataExport 
     ]));
 
     $dataExport->path = $path;
+    $dataExport->completed_at = $faker->dateTimeBetween('-1 year', 'now');
 });
 
 $factory->afterCreatingState(DataExport::class, 'expired', function (DataExport $dataExport, Faker $faker) {
