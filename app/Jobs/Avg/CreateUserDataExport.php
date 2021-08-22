@@ -8,8 +8,13 @@ use App\Models\DataExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\File;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 /**
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(DataExport $export)
@@ -42,6 +47,48 @@ class CreateUserDataExport implements ShouldQueue
      */
     public function handle()
     {
+        // Check if eligible
+        $export = $this->export;
+        if ($export->is_expired || $export->path !== null) {
+            return;
+        }
+
+        // Prep data
+        $data = [];
+
         // TODO: Implement handle() method.
+
+        // Get file
+        $zipFile = tempnam(sys_get_temp_dir(), 'zip');
+
+        // Create zip
+        $zip = new ZipArchive();
+        $zip->open($zipFile, ZipArchive::CREATE);
+        $zip->addFromString('data.json', json_encode($data, JSON_PRETTY_PRINT));
+        $zip->close();
+
+        // Save file
+        $exportPath = Storage::putFile('user-exports', new File($zipFile));
+
+        // Delete the source file
+        unlink($zipFile);
+
+        // Refresh export
+        $export = $this->export->refresh();
+        if ($export->path !== null) {
+            Storage::delete($exportPath);
+
+            return;
+        }
+
+        // Assign to export
+        $this->export->path = $exportPath;
+
+        // Update dates
+        $this->export->completed_at = Date::now();
+        $this->export->expires_at = Date::now()->addDays(Config::get('gumbo.export-expire-days'));
+
+        // Save
+        $this->export->save();
     }
 }
