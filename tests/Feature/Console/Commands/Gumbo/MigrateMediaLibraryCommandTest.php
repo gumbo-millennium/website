@@ -40,6 +40,10 @@ class MigrateMediaLibraryCommandTest extends TestCase
      */
     public function test_empty()
     {
+        // Required since the target folder doesn't exist by default
+        $filePath = $this->getDummyFilePath();
+        Storage::disk(self::LOCAL_DISK)->delete($filePath);
+
         $this->artisan('gumbo:migrate-media-library')
             ->assertExitCode(0);
     }
