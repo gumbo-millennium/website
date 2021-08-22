@@ -6,7 +6,6 @@ namespace App\Console\Commands\Gumbo;
 
 use App\Models\Media;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,9 +39,6 @@ class MigrateMediaLibraryCommand extends Command
             return 1;
         }
 
-        // Alter medialibrary package to use the local disk
-        Config::set('medialibrary.disk_name', $localDiskName);
-
         // Assing instances
         $cloudDisk = Storage::disk($cloudDiskName);
         $localDisk = Storage::disk($localDiskName);
@@ -51,38 +47,30 @@ class MigrateMediaLibraryCommand extends Command
         $this->line('Migrating existing files to the cloud environment...');
 
         /** @var Media $mediaItem */
-        foreach (Media::query()->cursor() as $mediaItem) {
-            $mediaItemName = "<info>{$mediaItem->id}</> (<comment>{$mediaItem->file_name}</>)";
+        foreach ($localDisk->allFiles('medialibrary/media') as $mediaFile) {
+            $mediaItemName = sprintf('%s/<info>%s</>', dirname($mediaFile), basename($mediaFile));
             $this->line("Checking file ${mediaItemName}", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
-            $basicPath = $mediaItem->getPath();
-            $existsLocally = $localDisk->exists($basicPath);
-            $existsOnCloud = $cloudDisk->exists($basicPath);
-            if ($existsLocally && $existsOnCloud) {
-                $this->line("Media file for ${mediaItemName} appears to be missing!");
-                $this->line("Media path: <info>{$basicPath}</>", null, OutputInterface::VERBOSITY_VERBOSE);
-
-                continue;
-            }
+            $existsOnCloud = $cloudDisk->exists($mediaFile);
 
             if ($existsOnCloud) {
-                $this->line("Media file for {$mediaItemName} already exists on the cloud.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->line("Media file {$mediaItemName} already exists on the cloud.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
                 continue;
             }
 
             // Report
-            $this->line("Migrating file {$mediaItemName} to the cloud.", null, OutputInterface::VERBOSITY_VERBOSE);
+            $this->line("Copying file {$mediaItemName} to the cloud.", null, OutputInterface::VERBOSITY_VERBOSE);
 
             // Need to copy via streams
-            $localReadStream = $localDisk->readStream($basicPath);
-            if ($cloudDisk->putStream($basicPath, $localReadStream)) {
-                $this->info("Successfully migrated file {$mediaItemName} to the cloud.", OutputInterface::VERBOSITY_VERBOSE);
+            $localReadStream = $localDisk->readStream($mediaFile);
+            if ($cloudDisk->putStream($mediaFile, $localReadStream)) {
+                $this->info("Successfully migrated {$mediaItemName} to the cloud.", OutputInterface::VERBOSITY_VERBOSE);
 
                 continue;
             }
 
-            $this->line("Failed to migrate file {$mediaItemName} to the cloud.");
+            $this->line("Failed to migrate {$mediaItemName} to the cloud.");
         }
     }
 }
