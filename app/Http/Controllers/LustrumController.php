@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
@@ -14,7 +16,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
@@ -48,7 +49,7 @@ class LustrumController extends Controller
                 'scheme' => parse_url($rootUrl, PHP_URL_SCHEME),
                 'host' => parse_url($rootUrl, PHP_URL_HOST),
                 'path' => '/',
-            ])
+            ]),
         );
 
         return Response::view('minisite.lustrum', [
