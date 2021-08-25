@@ -96,7 +96,7 @@
         {{-- Toggle --}}
         <label for="navbar-toggle" class="navbar__toggle">
             <span class="sr-only">Toon navigatie</span>
-            @icon('bars', 'navbar__toggle-icon')
+            @icon('solid/bars', 'navbar__toggle-icon')
         </label>
 
         {{-- The actual toggle (without JS) --}}

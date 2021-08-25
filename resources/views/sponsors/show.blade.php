@@ -17,7 +17,7 @@
                 <div class="sponsor-single__header-text">
                     <h1 class="sponsor-single__header-title">{{ $sponsor->contents_title ?? $sponsor->name }}</h1>
                     <p class="sponsor-single__header-subtitle">
-                        @icon('ad', 'h-4 mr-2')
+                        @icon('solid/ad', 'h-4 mr-2')
                         <span>Gesponsord door {{ $sponsor->name }}</span>
                     </p>
                 </div>

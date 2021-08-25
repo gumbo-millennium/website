@@ -51,4 +51,4 @@ function copy_node() {
 # Make directories
 copy_node free brands brands
 copy_node free regular regular
-copy_node free solid .
+copy_node free solid solid
