@@ -29,7 +29,8 @@ foreach (Config::get('gumbo.redirect-domains') as $domain) {
 foreach (Config::get('gumbo.lustrum-domains') as $domain) {
     Route::domain($domain)->group(function () {
         Route::get('/', [LustrumController::class, 'index']);
-        Route::fallback(fn () => abort(404));
+        Route::get('/{any}', [LustrumController::class, 'other'])
+            ->where('any', '.+');
     });
 }
 

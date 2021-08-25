@@ -60,4 +60,27 @@ class LustrumController extends Controller
                 ->first(),
         ]);
     }
+
+    /**
+     * Ensures all other minisite pages throw a 404, but
+     * with the right nav.
+     */
+    public function other(Request $request): HttpResponse
+    {
+        $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
+        if (App::environment('local')) {
+            $lustrumRoot = sprintf('http://%s', $request->getHost());
+        }
+
+        // Ensure assets load locally, but all links are egress
+
+        Config::set('app.mix_url', $lustrumRoot);
+        Config::set('app.asset_url', $lustrumRoot);
+
+        URL::forceRootUrl(Config::get('app.url'));
+
+        return Response::view('errors.404', [
+            'lustrumNav' => true,
+        ], HttpResponse::HTTP_NOT_FOUND);
+    }
 }
