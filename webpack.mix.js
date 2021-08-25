@@ -1,5 +1,6 @@
 // Main
 const mix = require('laravel-mix')
+const path = require('path')
 
 // Webpack plugins
 const ImageminPlugin = require('imagemin-webpack-plugin').default
@@ -45,6 +46,42 @@ const imageAssets = [
 mix
   .copy(imageAssets, 'public/images/')
   .version(imageAssets)
+
+/**
+ * Aliases
+ */
+mix.alias({
+  '@': path.resolve(__dirname, 'resources/js'),
+  '@images': path.resolve(__dirname, 'resources/assets/images')
+})
+
+mix.override(webpack => {
+  // Allow webpack loaders, except those handling images
+  const allowedWebpackLoaders = webpack.module.rules
+    .filter(rule => !(rule.test && rule.test instanceof RegExp && rule.test.test('@images/test.jpg')))
+
+  // Push the responsive-loader
+  allowedWebpackLoaders.push({
+    test: /\.(jpe?g|png|gif|webp)$/,
+    loader: 'responsive-loader',
+    options: {
+      // Save using the original filename, but add a hash for cache-busting
+      name: '[name]-[width].[hash:6].[ext]',
+
+      // Default quality is 85, which is too low
+      quality: 90,
+
+      // Use sharp, since we're using webp
+      adapter: require('responsive-loader/sharp'),
+    }
+  })
+
+  // Override the ruleset
+  webpack.module.rules = allowedWebpackLoaders
+
+  // Done
+  return webpack
+})
 
 // Push plugins
 mix.webpackConfig({
