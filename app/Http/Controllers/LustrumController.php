@@ -8,7 +8,6 @@ use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;
 use Artesaos\SEOTools\Facades\SEOMeta;
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -23,10 +22,17 @@ class LustrumController extends Controller
 {
     public function index(Request $request): HttpResponse
     {
-        $rootUrl = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
-        if (! App::environment('local')) {
-            URL::forceRootUrl($rootUrl);
+        $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
+        if (App::environment('local')) {
+            $lustrumRoot = sprintf('http://%s', $request->getHost());
         }
+
+        // Ensure assets load locally, but all links are egress
+
+        Config::set('app.mix_url', $lustrumRoot);
+        Config::set('app.asset_url', $lustrumRoot);
+
+        URL::forceRootUrl(Config::get('app.url'));
 
         try {
             $activityHost = Role::findByName('lucie');
@@ -44,15 +50,10 @@ class LustrumController extends Controller
             $activities = Collection::make();
         }
 
-        SEOMeta::setCanonical(
-            (string) Uri::fromParts([
-                'scheme' => parse_url($rootUrl, PHP_URL_SCHEME),
-                'host' => parse_url($rootUrl, PHP_URL_HOST),
-                'path' => '/',
-            ]),
-        );
+        SEOMeta::setCanonical($lustrumRoot);
 
         return Response::view('minisite.lustrum', [
+            'lustrumNav' => true,
             'activities' => $activities,
             'page' => Page::query()
                 ->where('slug', 'lustrum')

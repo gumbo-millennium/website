@@ -27,6 +27,7 @@
         </ul>
 
         {{-- User info --}}
+        @unless ($lustrumNav ?? false)
         <ul class="userbar__links userbar__links--user">
             @auth
             {{-- Shopping cart --}}
@@ -77,6 +78,7 @@
 
             @endauth
         </ul>
+        @endunless
     </div>
 </div>
 
@@ -104,6 +106,14 @@
 
         {{-- Main section --}}
         <ul class="navbar__nav" data-content="navigation" data-toggle-class="navbar__nav--visible">
+            @if (($lustrumNav ?? false))
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="/">Lustrum</a>
+            </li>
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="{{ route('home') }}">Gumbo Millennium website</a>
+            </li>
+            @else
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('home') }}">Home</a>
             </li>
@@ -151,6 +161,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
         </ul>
     </div>
 </nav>
