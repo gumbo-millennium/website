@@ -29,21 +29,13 @@ class LustrumController extends Controller
         // Disable sponsors
         $sponsorService->hideSponsor();
 
-        try {
-            $activityHost = Role::findByName('lucie');
-            assert($activityHost instanceof Role);
+        // Get the page
+        $page = $this->getPage();
 
-            $activities = Activity::query()
-                ->whereHas('role', fn (Builder $query) => $query->where('role_id', $activityHost->getKey()))
-                ->whereAvailable()
-                ->where('start_date', '>', now())
-                ->whereNull('cancelled_at')
-                ->orderBy('start_date')
-                ->take(2)
-                ->get();
-        } catch (RoleDoesNotExist $roleNotFoundError) {
-            // Present an empty array of activities
-            $activities = Collection::make();
+        // Assign SEO data
+        if ($page) {
+            SEOMeta::setTitle("{$page->title} - Gumbo Millennium");
+            SEOMeta::setDescription($page->summary);
         }
 
         // Assign canonical link, to prevent duplicate content
@@ -54,8 +46,8 @@ class LustrumController extends Controller
 
         return Response::view('minisite.lustrum', [
             'lustrumNav' => true,
-            'activities' => $activities,
-            'page' => Page::findBySlug('lustrum'),
+            'activities' => $this->getActivities(),
+            'page' => $page,
         ]);
     }
 
@@ -71,5 +63,30 @@ class LustrumController extends Controller
         return Response::view('errors.404', [
             'lustrumNav' => true,
         ], HttpResponse::HTTP_NOT_FOUND);
+    }
+
+    private function getPage(): ?Page
+    {
+        return Page::findBySlug('lustrum');
+    }
+
+    private function getActivities(): Collection
+    {
+        try {
+            $activityHost = Role::findByName('lucie');
+            assert($activityHost instanceof Role);
+
+            return Activity::query()
+                ->whereHas('role', fn (Builder $query) => $query->where('role_id', $activityHost->getKey()))
+                ->whereAvailable()
+                ->where('start_date', '>', now())
+                ->whereNull('cancelled_at')
+                ->orderBy('start_date')
+                ->get()
+                ->toBase();
+        } catch (RoleDoesNotExist $roleNotFoundError) {
+            // Present an empty array of activities
+            return Collection::make();
+        }
     }
 }

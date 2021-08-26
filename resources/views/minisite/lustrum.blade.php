@@ -29,6 +29,7 @@
     </div>
 </div>
 
+{{-- Year counter --}}
 <div class="bg-brand-600 py-8">
     <div class="container">
         <div class="text-3xl lg:text-5xl font-medium text-white font-title text-center">
@@ -41,9 +42,11 @@
 @if ($page && !empty($page->html))
 <div class="py-8 bg-gray-100">
     <div class="container">
+        {{-- Title --}}
         <p class="text-center text-gray-primary-1 mb-4">{{ $page->summary }}</p>
         <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
 
+        {{-- Page body --}}
         <div class="plain-content">
             {!! $page->html !!}
         </div>
@@ -52,13 +55,14 @@
 @endif
 
 {{-- Activities --}}
+@if ($activities->isNotEmpty())
 <div class="py-8">
     <div class="container">
-        {{-- Upcoming --}}
-        @if ($activities->isNotEmpty())
         <div class="container pt-8">
+            {{-- Title --}}
             <p class="text-center text-gray-primary-1 mb-4">Bomvol met activiteiten</p>
             <h2 class="text-3xl text-medium font-title mb-8 text-center">Activiteiten</h2>
+
             {{-- Activity cards --}}
             <div class="card-grid">
                 @foreach ($activities as $activity)
@@ -68,7 +72,7 @@
                 @endforeach
             </div>
         </div>
-        @endif
     </div>
 </div>
+@endif
 @endsection
