@@ -22,13 +22,13 @@ class LustrumController extends Controller
 {
     public function index(Request $request): HttpResponse
     {
+        $requestHost = $request->getHost() ?? $request->getHttpHost();
         $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
         if (App::environment('local')) {
-            $lustrumRoot = sprintf('http://%s', $request->getHost());
+            $lustrumRoot = sprintf('http://%s', $requestHost);
         }
 
         // Ensure assets load locally, but all links are egress
-
         Config::set('app.mix_url', $lustrumRoot);
         Config::set('app.asset_url', $lustrumRoot);
 
