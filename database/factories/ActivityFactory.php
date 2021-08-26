@@ -10,7 +10,7 @@ $scandir = require __DIR__ . '/../helpers/files.php';
 $imageOptions = $scandir('test-assets/images', 'jpg');
 
 $factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
-    $eventStart = $faker->dateTimeBetween(today()->subMonths(3), today()->addYear(1));
+    $eventStart = $faker->dateTimeBetween(today()->addDay(1), today()->addYear(1));
     $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
 
     $eventEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(2), $eventStartCarbon->addHours(8));
