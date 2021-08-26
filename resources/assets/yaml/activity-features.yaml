@@ -6,7 +6,7 @@
 
 coronacheck:
   title: Testen voor Toegang
-  icon: qrcode
+  icon: solid/qrcode
   mail:
     send: PT48H
     subject: Heb jij al een coronatoegangsbewijs voor {name}?
@@ -27,13 +27,13 @@ coronacheck:
 
 has-own-bar:
   title: Met eigen bar
-  icon: coins
+  icon: solid/coins
 
 car-required:
   title: Auto vereist
-  icon: car-alt
+  icon: solid/car-alt
   mail: P3D
 
 first-aid:
   title: EHBO aanwezig
-  icon: hand-holding-medical
+  icon: solid/hand-holding-medical

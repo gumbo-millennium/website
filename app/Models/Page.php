@@ -57,6 +57,7 @@ class Page extends SluggableModel implements AttachableInterface
         'error-404' => 'Not Found',
         'over' => 'Over gumbo',
         'word-lid' => 'Nieuw lid pagina',
+        'lustrum' => 'Over het Lustrum',
     ];
 
     public const SLUG_HOMEPAGE = 'home';

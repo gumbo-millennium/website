@@ -287,13 +287,13 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 @if ($nextLink === 'activity')
 <a href="{{ route('activity.show', compact('activity')) }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @icon('solid/chevron-left', 'mr-2')
     Terug naar details
 </a>
 @elseif ($activity === 'list')
 <a href="{{ route('activity.index') }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @icon('solid/chevron-left', 'mr-2')
     Terug naar overzicht
 </a>
 @endif

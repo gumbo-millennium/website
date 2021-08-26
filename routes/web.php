@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers;
 use App\Http\Controllers\FileExportController;
+use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
@@ -21,6 +22,15 @@ foreach (Config::get('gumbo.redirect-domains') as $domain) {
         Route::get('/', [RedirectController::class, 'index']);
         Route::get('/{slug}', [RedirectController::class, 'redirect'])
             ->where('slug', '.+');
+    });
+}
+
+// Bind Lustrum minisite
+foreach (Config::get('gumbo.lustrum-domains') as $domain) {
+    Route::domain($domain)->group(function () {
+        Route::get('/', [LustrumController::class, 'index']);
+        Route::get('/{any}', [LustrumController::class, 'other'])
+            ->where('any', '.+');
     });
 }
 

@@ -39,6 +39,8 @@
     "postcss-css-variables": "^0.17.0",
     "postcss-import": "^14.0.2",
     "postcss-rem": "^1.1.5",
+    "responsive-loader": "^2.3.0",
+    "sharp": "^0.29.0",
     "tailwindcss": "^2.2.4"
   },
   "scripts": {

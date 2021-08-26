@@ -1,0 +1,28 @@
+.lustrum-header {
+  background-color: rgb(44,181,199);
+  background-image: url('@images/lustrum-header.jpg?size=640x250'), linear-gradient(24deg, rgb(255, 197, 110) 20%, rgb(49, 94, 58) 60%, rgb(198, 200, 194) 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+@screen sm {
+  .lustrum-header {
+    background-image: url('@images/lustrum-header.jpg?size=768x250'), linear-gradient(24deg, rgb(255, 197, 110) 20%, rgb(49, 94, 58) 60%, rgb(198, 200, 194) 100%);
+  }
+}
+
+@screen md {
+  .lustrum-header {
+    background-image: url('@images/lustrum-header.jpg?size=1024x450'), linear-gradient(24deg, rgb(255, 197, 110) 20%, rgb(49, 94, 58) 60%, rgb(198, 200, 194) 100%);
+  }
+}
+
+@screen lg {
+  .lustrum-header {
+    background-image: url('@images/lustrum-header.jpg?size=1920x500'), linear-gradient(24deg, rgb(255, 197, 110) 20%, rgb(49, 94, 58) 60%, rgb(198, 200, 194) 100%);
+  }
+}
+
+.lustrum-header__inner {
+  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 1) 100%);
+}

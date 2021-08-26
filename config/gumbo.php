@@ -28,6 +28,15 @@ return [
         sprintf('redirect.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
     ],
 
+    // Lustrum mini-site
+    'lustrum-domains' => [
+        'gumbolustrum.nl',
+        'langzalgumboleven.nl',
+
+        // And bind to <redirect>.<your-domain-name> for testing
+        sprintf('lustrum.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
+    ],
+
     // Page groups
     'page-groups' => [
         'commissies' => 'Commissies',
