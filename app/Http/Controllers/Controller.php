@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\MutatesResponseCsp;
 use App\Http\Policy\AppPolicy;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -20,6 +21,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests;
     use DispatchesJobs;
+    use MutatesResponseCsp;
     use ValidatesRequests;
 
     /**
@@ -39,20 +41,10 @@ class Controller extends BaseController
 
     /**
      * Whitelists the given image URLs with the image content policy.
+     * @deprecated use addToCsp instead
      */
     protected function addImageUrlsToCspPolicy(iterable $imageUrls): void
     {
-        $hosts = [];
-        foreach ($imageUrls as $url) {
-            if (! filter_var($url, FILTER_VALIDATE_URL)) {
-                continue;
-            }
-
-            $urlSchema = parse_url($url);
-            $hosts[] = sprintf('%s://%s', $urlSchema['scheme'], $urlSchema['host']);
-        }
-
-        $this->alterCspPolicy()
-            ->addDirective(Directive::IMG, array_unique($hosts));
+        $this->addToCsp($imageUrls, Directive::IMG);
     }
 }

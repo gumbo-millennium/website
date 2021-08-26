@@ -249,7 +249,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
     @foreach ($features as $feature)
     <div class="flex items-center">
         <div class="w-8">
-            @icon("solid/$feature->icon", [
+            @icon("solid/{$feature->icon}", [
             'class' => 'icon h-4 card__figure-icon',
             'title' => $feature->title,
             'role' => 'none',
@@ -272,7 +272,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
     <dt class="font-bold">{{ $label }}</dt>
     <dd class="text-sm">
         @if ($icon)
-            @icon($icon, 'mr-2')
+            @icon("solid/{$icon}", 'mr-2')
         @endif
         {{ $value }}
     </dd>

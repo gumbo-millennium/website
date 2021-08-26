@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|string $summary
  * @property null|array $contents
  * @property null|int $author_id
+ * @property bool|int $hidden
  * @property null|string $image_file_name image name
  * @property null|int $image_file_size image size (in bytes)
  * @property null|string $image_content_type image content type
@@ -79,6 +80,7 @@ class Page extends SluggableModel implements AttachableInterface
      */
     protected $casts = [
         'user_id' => 'int',
+        'hidden' => 'bool',
     ];
 
     /**

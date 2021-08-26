@@ -13,6 +13,7 @@ use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -97,6 +98,9 @@ class Page extends Resource
             // Show timestamps
             DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
             DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
+
+            // Hidden flag
+            Boolean::make('Verbergen', 'hidden'),
 
             // Group / Slug, for index
             Text::make('Samenvatting', 'summary')

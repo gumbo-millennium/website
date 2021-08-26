@@ -95,7 +95,7 @@ $features = $activity->expanded_features;
         @if ($features->isNotEmpty())
         <div class="absolute bottom-4 right-4 rounded-lg bg-white flex items-center space-x-2 p-2">
             @foreach ($features as $feature)
-            @icon("solid/$feature->icon", [
+            @icon("solid/{$feature->icon}", [
                 'class' => 'icon h-4 card__figure-icon',
                 'title' => $feature->title
             ])

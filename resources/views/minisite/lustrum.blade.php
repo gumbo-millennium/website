@@ -29,6 +29,7 @@
     </div>
 </div>
 
+{{-- Year counter --}}
 <div class="bg-brand-600 py-8">
     <div class="container">
         <div class="text-3xl lg:text-5xl font-medium text-white font-title text-center">
@@ -41,9 +42,11 @@
 @if ($page && !empty($page->html))
 <div class="py-8 bg-gray-100">
     <div class="container">
+        {{-- Title --}}
         <p class="text-center text-gray-primary-1 mb-4">{{ $page->summary }}</p>
         <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
 
+        {{-- Page body --}}
         <div class="plain-content">
             {!! $page->html !!}
         </div>
@@ -52,13 +55,14 @@
 @endif
 
 {{-- Activities --}}
+@if ($activities->isNotEmpty())
 <div class="py-8">
     <div class="container">
-        {{-- Upcoming --}}
-        @if ($activities->isNotEmpty())
         <div class="container pt-8">
+            {{-- Title --}}
             <p class="text-center text-gray-primary-1 mb-4">Bomvol met activiteiten</p>
             <h2 class="text-3xl text-medium font-title mb-8 text-center">Activiteiten</h2>
+
             {{-- Activity cards --}}
             <div class="card-grid">
                 @foreach ($activities as $activity)
@@ -68,7 +72,37 @@
                 @endforeach
             </div>
         </div>
-        @endif
     </div>
 </div>
+@endif
+
+{{-- Merchandise --}}
+@if ($merchandise->isNotEmpty())
+<div class="bg-brand-800 bg-gradient-to-tr from-brand-700 to-brand-800 py-8">
+    <div class="container">
+        <div class="container pt-8">
+            {{-- Title --}}
+            <h2 class="text-center" aria-label="Uniek feest, Unieke merchandise">
+                <div class="text-center text-gray-200 mb-4">Uniek feest</div>
+                <div class="sr-only">,</div>
+                <div class="text-3xl text-medium text-white font-title mb-8 text-center">Unieke merchandise</div>
+            </h2>
+
+            {{-- Product cards --}}
+            <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                @foreach ($merchandise as $product)
+                <div class="relative">
+                    @component('components.shop-item', ['product' => $product])
+                    @endcomponent
+                </div>
+                @endforeach
+            </div>
+
+            <div class="row text-center mt-4">
+                <a href="{{ route('shop.home') }}" class="w-full sm:mx-auto sm:w-auto btn btn--brand">Bekijk alle merch</a>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
