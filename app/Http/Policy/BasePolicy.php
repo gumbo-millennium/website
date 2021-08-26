@@ -62,10 +62,12 @@ abstract class BasePolicy extends BasicPolicy
 
         // Get URLs
         $appUrl = Config::get('app.url');
+        $appHost = parse_url($appUrl, PHP_URL_HOST);
+
         $assetUrl = Config::get('app.asset_url') ?? $appUrl;
         $assetHost = parse_url($assetUrl, PHP_URL_HOST);
-        $appHost = parse_url($assetUrl, PHP_URL_HOST);
-        $requestHost = Request::getHost() ?? Request::getHttpHost();
+
+        $requestHost = Request::getHost() ?? Request::getHttpHost() ?? $appHost;
 
         // Add asset host in case it's different from the current request
         if ($assetHost !== $requestHost) {

@@ -40,11 +40,13 @@
 {{-- Information page --}}
 @if ($page && !empty($page->html))
 <div class="py-8 bg-gray-100">
-    <p class="text-center text-gray-primary-1 mb-4">{{ $page->lead }}</p>
-    <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
+    <div class="container">
+        <p class="text-center text-gray-primary-1 mb-4">{{ $page->summary }}</p>
+        <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
 
-    <div class="plain-content">
-        {!! $page->html !!}
+        <div class="plain-content">
+            {!! $page->html !!}
+        </div>
     </div>
 </div>
 @endif

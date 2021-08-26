@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Contracts\SponsorService;
 use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;
@@ -20,7 +21,7 @@ use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 class LustrumController extends Controller
 {
-    public function index(Request $request): HttpResponse
+    public function index(Request $request, SponsorService $sponsorService): HttpResponse
     {
         $requestHost = $request->getHost() ?? $request->getHttpHost();
         $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
@@ -31,14 +32,17 @@ class LustrumController extends Controller
         // Ensure assets load locally, but all links are egress
         Config::set('app.mix_url', $lustrumRoot);
         Config::set('app.asset_url', $lustrumRoot);
-
         URL::forceRootUrl(Config::get('app.url'));
+
+        // Disable sponsors
+        $sponsorService->hideSponsor();
 
         try {
             $activityHost = Role::findByName('lucie');
+            assert($activityHost instanceof Role);
 
             $activities = Activity::query()
-                ->whereHas('role', fn (Builder $query) => $query->where('role.id', $activityHost->id))
+                ->whereHas('role', fn (Builder $query) => $query->where('role_id', $activityHost->getKey()))
                 ->whereAvailable()
                 ->where('start_date', '>', now())
                 ->whereNull('cancelled_at')
@@ -55,9 +59,7 @@ class LustrumController extends Controller
         return Response::view('minisite.lustrum', [
             'lustrumNav' => true,
             'activities' => $activities,
-            'page' => Page::query()
-                ->where('slug', 'lustrum')
-                ->first(),
+            'page' => Page::findBySlug('lustrum'),
         ]);
     }
 
