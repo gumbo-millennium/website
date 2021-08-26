@@ -4,7 +4,7 @@
 <div class="sponsor-single">
     <div class="container container--md">
         <a href="{{ route('sponsors.index') }}" class="sponsor-single__back" rel="parent">
-            @icon('chevron-left', 'h-4 mr-2')
+            @icon('solid/chevron-left', 'h-4 mr-2')
             <span>Terug naar sponsoren</span>
         </a>
 

@@ -15,7 +15,7 @@ name without `icon-` and a CSS class name (or multiple, they're used in `class="
 
 ```blade
 <div class="message">
-    @icon('fa-info-circle', 'message__icon')
+    @icon('solid/fa-info-circle', 'message__icon')
     <span class="message_text">…</span>
 </div>
 ```
