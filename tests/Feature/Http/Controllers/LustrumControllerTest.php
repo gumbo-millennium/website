@@ -7,6 +7,8 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;
+use App\Models\Shop\Category;
+use App\Models\Shop\Product;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
@@ -69,6 +71,27 @@ class LustrumControllerTest extends TestCase
             ->assertSee($lustrumPage->title)
             ->assertSee($lustrumPage->summary)
             ->assertSee($lustrumPage->html);
+    }
+
+    public function test_with_merchandise(): void
+    {
+        $shopCategory = factory(Category::class)->create([
+            'visible' => true,
+            'slug' => 'lustrum',
+        ]);
+
+        $shopProducts = factory(Product::class, 4)->state('with-variants')->create([
+            'category_id' => $shopCategory->id,
+            'visible' => true,
+        ]);
+
+        $result = $this->get($this->host)
+            ->assertOk();
+
+        foreach ($shopProducts as $product) {
+            $result->assertSeeText($product->name);
+            $result->assertSee(route('shop.product', $product));
+        }
     }
 
     public function test_get_main_site_routes(): void

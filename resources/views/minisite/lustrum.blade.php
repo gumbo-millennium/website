@@ -75,4 +75,34 @@
     </div>
 </div>
 @endif
+
+{{-- Merchandise --}}
+@if ($merchandise->isNotEmpty())
+<div class="bg-brand-800 bg-gradient-to-tr from-brand-700 to-brand-800 py-8">
+    <div class="container">
+        <div class="container pt-8">
+            {{-- Title --}}
+            <h2 class="text-center" aria-label="Uniek feest, Unieke merchandise">
+                <div class="text-center text-gray-200 mb-4">Uniek feest</div>
+                <div class="sr-only">,</div>
+                <div class="text-3xl text-medium text-white font-title mb-8 text-center">Unieke merchandise</div>
+            </h2>
+
+            {{-- Product cards --}}
+            <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                @foreach ($merchandise as $product)
+                <div class="relative">
+                    @component('components.shop-item', ['product' => $product])
+                    @endcomponent
+                </div>
+                @endforeach
+            </div>
+
+            <div class="row text-center mt-4">
+                <a href="{{ route('shop.home') }}" class="w-full sm:mx-auto sm:w-auto btn btn--brand">Bekijk alle merch</a>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
