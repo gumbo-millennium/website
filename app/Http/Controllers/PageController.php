@@ -115,6 +115,7 @@ class PageController extends Controller
         $pages = Page::where(compact('group'))->get();
         $lastModified = $pages->max('updated_at');
         $page = Page::where([
+            'hidden' => false,
             'group' => null,
             'slug' => $group,
         ])->first();
@@ -149,6 +150,7 @@ class PageController extends Controller
         $page = Page::query()
             ->whereGroup($group)
             ->whereSlug($slug)
+            ->whereHidden(false)
             ->firstOrFail();
 
         // Set SEO
