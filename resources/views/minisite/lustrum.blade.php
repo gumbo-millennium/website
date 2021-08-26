@@ -64,11 +64,9 @@
             <h2 class="text-3xl text-medium font-title mb-8 text-center">Activiteiten</h2>
 
             {{-- Activity cards --}}
-            <div class="card-grid">
+            <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($activities as $activity)
-                <div class="card-grid__item">
-                    @include('activities.bits.single')
-                </div>
+                @include('activities.bits.single')
                 @endforeach
             </div>
         </div>
