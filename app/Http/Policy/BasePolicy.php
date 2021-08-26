@@ -79,7 +79,7 @@ abstract class BasePolicy extends BasicPolicy
 
             $this->addDirective(Directive::DEFAULT, $assetCspRoot);
             $this->addDirective(Directive::STYLE, $assetCspRoot);
-            $this->addDirective(Directive::MEDIA, $assetCspRoot);
+            $this->addDirective(Directive::IMG, $assetCspRoot);
             $this->addDirective(Directive::SCRIPT, $assetCspRoot);
         }
 
