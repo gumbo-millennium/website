@@ -14,16 +14,14 @@ use App\Models\States\Enrollment\State as EnrollmentState;
 class EnrollmentObserver
 {
     /**
-     * Ensure an expire date is present if required
-     *
-     * @param Enrollment $enrollment
-     * @return void
+     * Ensure an expire date is present if required.
      */
     public function saving(Enrollment $enrollment): void
     {
         // Post-start enrollments don't expire
         if ($enrollment->activity->start_date < now()) {
             $enrollment->expire = null;
+
             return;
         }
 
@@ -54,6 +52,7 @@ class EnrollmentObserver
         $minExpireDate = now()->addHour(1);
         if ($startDate < $minExpireDate) {
             $enrollment->expire = $minExpireDate;
+
             return;
         }
 
@@ -61,6 +60,7 @@ class EnrollmentObserver
         $maxExpireDate = now()->addWeek();
         if ($startDate > $maxExpireDate) {
             $enrollment->expire = $maxExpireDate;
+
             return;
         }
 

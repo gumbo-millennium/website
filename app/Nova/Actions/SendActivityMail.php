@@ -46,10 +46,6 @@ class SendActivityMail extends Action
 
     /**
      * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
@@ -87,7 +83,7 @@ class SendActivityMail extends Action
                 ->options(
                     collect(ActivityMessage::VALID_AUDIENCES)->mapWithKeys(static fn ($val) => [
                         $val => __("gumbo.target-audiences.{$val}"),
-                    ])->toArray()
+                    ])->toArray(),
                 )
                 ->rules([
                     'required',

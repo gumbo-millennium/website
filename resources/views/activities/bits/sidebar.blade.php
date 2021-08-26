@@ -242,11 +242,35 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 {{-- Make some room --}}
 <hr class="border-gray-secondary-3 my-8" />
 
+{{-- Icons --}}
+@php($features = $activity->expanded_features)
+@if ($features->isNotEmpty())
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+    @foreach ($features as $feature)
+    <div class="flex items-center">
+        <div class="w-8">
+            @icon("solid/$feature->icon", [
+            'class' => 'icon h-4 card__figure-icon',
+            'title' => $feature->title,
+            'role' => 'none',
+            ])
+        </div>
+        <div>
+            {{ $feature->title }}
+        </div>
+    </div>
+    @endforeach
+</div>
+@endif
+
+{{-- Make some room --}}
+<hr class="border-gray-secondary-3 my-8" />
+
 {{-- Data --}}
-<dl class="flex flex-row flex-wrap row">
+<dl class="grid grid-cols-2 gap-2">
     @foreach ($properties as $label => list($value, $icon))
-    <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
-    <dd class="col w-2/3 flex-none mb-2 text-sm">
+    <dt class="font-bold">{{ $label }}</dt>
+    <dd class="text-sm">
         @if ($icon)
             @icon($icon, 'mr-2')
         @endif
@@ -263,13 +287,13 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 @if ($nextLink === 'activity')
 <a href="{{ route('activity.show', compact('activity')) }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @icon('solid/chevron-left', 'mr-2')
     Terug naar details
 </a>
 @elseif ($activity === 'list')
 <a href="{{ route('activity.index') }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('chevron-left', 'mr-2')
+    @icon('solid/chevron-left', 'mr-2')
     Terug naar overzicht
 </a>
 @endif

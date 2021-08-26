@@ -27,7 +27,7 @@ class EmailList extends Resource
     public static $title = 'name';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -53,7 +53,7 @@ class EmailList extends Resource
                 ->exceptOnForms(),
 
             Text::make('E-mailadres', 'email')
-            ->readonly()
+                ->readonly()
                 ->exceptOnForms(),
 
             Text::make('Service ID', 'service_id')
@@ -64,7 +64,8 @@ class EmailList extends Resource
                     if (empty($values)) {
                         return null;
                     }
-                    return array_map(static fn ($val) => "* $val\n", $values);
+
+                    return array_map(static fn ($val) => "* ${val}\n", $values);
                 })
                 ->readonly()
                 ->onlyOnDetail(),
@@ -74,9 +75,10 @@ class EmailList extends Resource
                     if (empty($values)) {
                         return null;
                     }
+
                     return \implode("\n", \array_map(
                         static fn ($val) => "- {$val['email']} ({$val['role']})",
-                        $values
+                        $values,
                     ));
                 })
                 ->readonly()

@@ -9,21 +9,18 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Spatie\Permission\Models\Role;
 
 /**
- * Handle Role modifications
+ * Handle Role modifications.
  */
 class RolePolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'role-admin';
+
     public const USER_PERMISSION = 'role';
 
     /**
      * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -33,9 +30,7 @@ class RolePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Role  $role
-     * @return mixed
+     * @param \App\Models\Role $role
      */
     public function view(User $user, Role $role)
     {
@@ -44,9 +39,6 @@ class RolePolicy
 
     /**
      * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -56,9 +48,7 @@ class RolePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Role  $role
-     * @return mixed
+     * @param \App\Models\Role $role
      */
     public function update(User $user, Role $role)
     {
@@ -68,9 +58,7 @@ class RolePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Role  $role
-     * @return mixed
+     * @param \App\Models\Role $role
      */
     public function delete(User $user, Role $role)
     {
@@ -80,9 +68,7 @@ class RolePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Role  $role
-     * @return mixed
+     * @param \App\Models\Role $role
      */
     public function restore(User $user, Role $role)
     {
@@ -92,9 +78,7 @@ class RolePolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Role  $role
-     * @return mixed
+     * @param \App\Models\Role $role
      */
     public function forceDelete(User $user, Role $role)
     {
@@ -102,10 +86,8 @@ class RolePolicy
     }
 
     /**
-     * Allow attaching permissions if admin
+     * Allow attaching permissions if admin.
      *
-     * @param User $user
-     * @param Permission $permission
      * @return bool
      */
     public function attachPermission(User $user, Role $role, Permission $permission)
@@ -115,10 +97,8 @@ class RolePolicy
 
     /**
      * Allow attaching users if admin or if granted
-     * management access
+     * management access.
      *
-     * @param User $user
-     * @param Permission $permission
      * @return bool
      */
     public function attachUser(User $user, Role $role, User $model)
@@ -128,10 +108,8 @@ class RolePolicy
 
     /**
      * Allow attaching users if admin or if granted
-     * management access
+     * management access.
      *
-     * @param User $user
-     * @param Permission $permission
      * @return bool
      */
     public function detachUser(User $user, Role $role, User $model)
@@ -140,10 +118,7 @@ class RolePolicy
     }
 
     /**
-     * Can the given user admin all roles
-     *
-     * @param User $user
-     * @return bool
+     * Can the given user admin all roles.
      */
     public function admin(User $user): bool
     {

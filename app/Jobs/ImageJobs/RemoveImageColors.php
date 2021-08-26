@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Jobs\ImageJobs;
 
 use App\Helpers\Str;
+use DOMDocument;
 use SSNepenthe\ColorUtils\Exceptions\InvalidArgumentException as ColorException;
-
 use function SSNepenthe\ColorUtils\is_bright;
 
 class RemoveImageColors extends SvgJob
 {
     private const TARGET_COLOR = 'currentColor';
+
     private const NO_COLOR = 'transparent';
 
     /**
-     * Nodes that aren't expected to have child nodes
+     * Nodes that aren't expected to have child nodes.
      */
     private const SVG_END_NODES = [
         'circle',
@@ -29,7 +30,7 @@ class RemoveImageColors extends SvgJob
     ];
 
     /**
-     * Nodes which we can recurse into
+     * Nodes which we can recurse into.
      */
     private const SVG_RECURSABLE = [
         'svg',
@@ -48,7 +49,7 @@ class RemoveImageColors extends SvgJob
         $filePath = $file->getPathname();
 
         // Prep a document reader
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->preserveWhiteSpace = false;
         $doc->strictErrorChecking = false;
 
@@ -62,8 +63,9 @@ class RemoveImageColors extends SvgJob
         \libxml_use_internal_errors(false);
 
         // Remove if conversion failed
-        if (!$loadOk) {
+        if (! $loadOk) {
             $this->updateAttribute(null);
+
             return;
         }
 
@@ -85,12 +87,12 @@ class RemoveImageColors extends SvgJob
             $nodeName = Str::lower($node->nodeName);
 
             // Check whitelist
-            if (\in_array($nodeName, $whitelistNodes)) {
+            if (\in_array($nodeName, $whitelistNodes, true)) {
                 continue;
             }
 
             // Check if parent still exists
-            if (!$node->parentNode) {
+            if (! $node->parentNode) {
                 continue;
             }
 
@@ -100,7 +102,6 @@ class RemoveImageColors extends SvgJob
 
         // Check recursively for colors in elements, in a safe method
         $this->recurseColorCheck($doc->documentElement);
-
 
         // Remove
 
@@ -114,17 +115,15 @@ class RemoveImageColors extends SvgJob
     }
 
     /**
-     * Recurses into nodes
+     * Recurses into nodes.
      *
      * @param DOMElement $root The root element we're inspecting
-     * @param string|null $currentColor The active color, if any
-     * @return void
      */
     private function recurseColorCheck(\DOMElement $root): void
     {
         foreach ($root->childNodes as $node) {
             // Skip non-element nodes
-            if (!$node instanceof \DOMElement) {
+            if (! $node instanceof \DOMElement) {
                 continue;
             }
 
@@ -133,10 +132,10 @@ class RemoveImageColors extends SvgJob
 
             // Check type
             $hasChildren = $node->hasChildNodes();
-            $isEndNode = \in_array($nodeName, self::SVG_END_NODES);
+            $isEndNode = \in_array($nodeName, self::SVG_END_NODES, true);
 
             // We're at the end of the tree, and no color is set, so assign a new one
-            if (($isEndNode || !$hasChildren) && $this->hasNoConfiguredFill($node)) {
+            if (($isEndNode || ! $hasChildren) && $this->hasNoConfiguredFill($node)) {
                 $node->setAttribute('fill', self::TARGET_COLOR);
             }
 
@@ -145,12 +144,12 @@ class RemoveImageColors extends SvgJob
             $this->updateColorAttribute($node, 'stroke');
 
             // Skip if no child nodes
-            if (!$hasChildren) {
+            if (! $hasChildren) {
                 continue;
             }
 
             // Only recurse if allowed by standard
-            if (!\in_array($nodeName, self::SVG_RECURSABLE)) {
+            if (! \in_array($nodeName, self::SVG_RECURSABLE, true)) {
                 continue;
             }
 
@@ -160,10 +159,7 @@ class RemoveImageColors extends SvgJob
     }
 
     /**
-     * Returns the color this element should recieve (currentColor or transparent)
-     *
-     * @param string $color
-     * @return string
+     * Returns the color this element should recieve (currentColor or transparent).
      */
     private function determineColor(string $color): string
     {
@@ -184,11 +180,9 @@ class RemoveImageColors extends SvgJob
     }
 
     /**
-     * Determines attribute value for $attributeName
+     * Determines attribute value for $attributeName.
      *
      * @param DOMElement $element
-     * @param string $attributeName
-     * @return void
      */
     private function updateColorAttribute(\DOMElement $element, string $attributeName): void
     {
@@ -203,10 +197,9 @@ class RemoveImageColors extends SvgJob
     }
 
     /**
-     * Returns true if this element has no fill
+     * Returns true if this element has no fill.
      *
      * @param DOMElement $element
-     * @return bool
      */
     private function hasNoConfiguredFill(\DOMElement $element): bool
     {

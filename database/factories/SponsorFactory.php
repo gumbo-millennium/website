@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Models\Sponsor;
 use App\Models\SponsorClick;
 use Faker\Generator as Faker;
@@ -15,7 +13,6 @@ $colorSponsors = $scandir('test-assets/images/logos/src/logos/color', 'svg');
 $grayscaleSponsors = $scandir('test-assets/images/logos/src/logos/grayscale', 'svg');
 $backdropImage = $scandir('test-assets/images', 'jpg');
 $editorjs = require __DIR__ . '/../helpers/editorjs.php';
-
 
 // Generate sponsor
 // phpcs:ignore Generic.Files.LineLength.TooLong

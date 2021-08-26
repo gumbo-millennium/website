@@ -16,8 +16,11 @@ class SimplifyGuestSystemOnActivities extends Migration
     public function up()
     {
         Schema::table('activities', static function (Blueprint $table) {
-            $table->dropColumn('public_seats');
             $table->boolean('is_public')->default(1)->after('seats');
+        });
+
+        Schema::table('activities', static function (Blueprint $table) {
+            $table->dropColumn('public_seats');
         });
     }
 

@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Shop;
 
+use App\Contracts\Payments\PayableModel;
 use App\Models\Shop\Order as Model;
+use App\Nova\Actions\Shop\CancelOrder;
+use App\Nova\Actions\Shop\ShipOrder;
+use App\Nova\Actions\Shop\UpdateOrder;
 use App\Nova\Fields\Price;
+use App\Nova\Filters\PayableStatusFilter;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\ActionRequest;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Order extends Resource
 {
     /**
@@ -56,40 +57,122 @@ class Order extends Resource
     ];
 
     /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = [
+        'user',
+        'variants',
+    ];
+
+    /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
     {
         return [
-            ID::make(),
-
-            DateTime::make(__('Paid at'), 'paid_at')
+            Fields\ID::make(__('ID'), 'id')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Shipped at'), 'shipped_at')
+            Fields\Text::make(__('Order Number'), 'number'),
+
+            Fields\DateTime::make(__('Paid at'), 'paid_at')
                 ->onlyOnDetail(),
 
-            BelongsTo::make(__('User'), 'user', User::class)
+            Fields\DateTime::make(__('Shipped at'), 'shipped_at')
+                ->onlyOnDetail(),
+
+            Fields\DateTime::make(__('Cancelled at'), 'cancelled_at')
+                ->onlyOnDetail(),
+
+            Fields\DateTime::make(__('Expires at'), 'expires_at')
+                ->onlyOnDetail(),
+
+            Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
 
-            Badge::make(__('Status'), 'status')
+            Fields\Badge::make(__('Status'), 'payment_status')
                 ->onlyOnIndex()
-                ->displayUsing(static fn ($status) => __(ucfirst($status)))
+                ->displayUsing(static fn ($status) => __("gumbo.payment-status.{$status}"))
                 ->map([
-                    __('Sent') => 'success',
-                    __('Paid') => 'info',
-                    __('Pending') => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_UNKNOWN) => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_OPEN) => 'warning',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_PAID) => 'info',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_CANCELLED) => 'danger',
+                    __('gumbo.payment-status.' . PayableModel::STATUS_COMPLETED) => 'success',
                 ]),
 
             Price::make(__('Price'), 'price')
                 ->sortable()
                 ->min(1.00),
 
-            BelongsToMany::make(__('Products'), 'products', ProductVariant::class)
+            Price::make(__('Fees'), 'fee')
+                ->sortable()
+                ->min(0.00)
+                ->hideFromIndex(),
+
+            Fields\Number::make(__('Number of products'), fn () => $this->variants->sum('pivot.quantity'))
+                ->onlyOnIndex(),
+
+            Fields\BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
                 ->fields(new OrderProductFields()),
         ];
+    }
+
+    /**
+     * Get the actions available on the entity.
+     *
+     * @return array
+     */
+    public function actions(Request $request)
+    {
+        return [
+            new UpdateOrder(),
+            new ShipOrder(),
+            new CancelOrder(),
+        ];
+    }
+
+    /**
+     * Get the filters available on the entity.
+     *
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [
+            new PayableStatusFilter(),
+        ];
+    }
+
+    /**
+     * Determine if the current user can update the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current user can delete the given resource.
+     *
+     * @return bool
+     */
+    public function authorizedToDelete(Request $request)
+    {
+        if ($request instanceof ActionRequest) {
+            return true;
+        }
+
+        return false;
     }
 }

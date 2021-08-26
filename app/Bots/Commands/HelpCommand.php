@@ -34,7 +34,7 @@ class HelpCommand extends Command
     protected $description = 'Toont de beschikbare commando\'s';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -48,7 +48,7 @@ class HelpCommand extends Command
             \assert($command instanceof CommandInterface);
 
             // Skip hiddens
-            if (\in_array($command->getName(), $hidden)) {
+            if (\in_array($command->getName(), $hidden, true)) {
                 continue;
             }
 

@@ -10,20 +10,16 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Spatie\Permission\Models\Permission;
 
 /**
- * Handles editing permissions
+ * Handles editing permissions.
  */
 class PermissionPolicy
 {
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter
     use HandlesAuthorization;
 
     public const ADMIN_PERMISSION = 'role-admin';
 
     /**
      * Determine whether the user can view any models.
-     *
-     * @param User $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -32,10 +28,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @param User $user
-     * @param Permission $permission
-     * @return mixed
      */
     public function view(User $user, Permission $permission)
     {
@@ -44,9 +36,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can create models.
-     *
-     * @param User $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -55,10 +44,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @param User $user
-     * @param Permission $permission
-     * @return mixed
      */
     public function update(User $user, Permission $permission)
     {
@@ -67,10 +52,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can delete the model.
-     *
-     * @param User $user
-     * @param Permission $permission
-     * @return mixed
      */
     public function delete(User $user, Permission $permission)
     {
@@ -79,10 +60,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can restore the model.
-     *
-     * @param User $user
-     * @param Permission $permission
-     * @return mixed
      */
     public function restore(User $user, Permission $permission)
     {
@@ -91,10 +68,6 @@ class PermissionPolicy
 
     /**
      * Determine whether the user can permanently delete the model.
-     *
-     * @param User $user
-     * @param Permission $permission
-     * @return mixed
      */
     public function forceDelete(User $user, Permission $permission)
     {
@@ -103,10 +76,8 @@ class PermissionPolicy
 
     /**
      * Allow attaching users if admin or if granted
-     * management access
+     * management access.
      *
-     * @param User $user
-     * @param Permission $permission
      * @return bool
      */
     public function attachUser(User $user, Permission $permission)
@@ -116,10 +87,8 @@ class PermissionPolicy
 
     /**
      * Allow attaching users if admin or if granted
-     * management access
+     * management access.
      *
-     * @param User $user
-     * @param Permission $permission
      * @return bool
      */
     public function detachUser(User $user, Permission $permission)
@@ -128,10 +97,7 @@ class PermissionPolicy
     }
 
     /**
-     * Can the given user manage permissions
-     *
-     * @param User $user
-     * @return bool
+     * Can the given user manage permissions.
      */
     public function manage(User $user): bool
     {

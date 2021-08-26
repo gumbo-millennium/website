@@ -16,7 +16,7 @@ class AddSummaryToPages extends Migration
     public function up()
     {
         Schema::table('pages', static function (Blueprint $table) {
-            $table->string('summary', 120)->after('type');
+            $table->string('summary', 120)->after('type')->default('');
         });
     }
 

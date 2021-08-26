@@ -30,8 +30,6 @@ class UpdateCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -43,6 +41,7 @@ class UpdateCommand extends Command
         $commands = $bot->getCommands();
         if (empty($commands)) {
             $this->error('This bot has no commands');
+
             return 1;
         }
 
@@ -75,11 +74,13 @@ class UpdateCommand extends Command
 
             // And report OK
             $this->info('Commands updated');
+
             return 0;
         } catch (TelegramSDKException $e) {
             // Fail 😢
             $this->line('Webhook could not be removed:');
             $this->error($e->getMessage());
+
             return 1;
         }
     }

@@ -12,7 +12,6 @@ trait RequiresNova
      * Skip the test if Nova is only available as dummy.
      *
      * @before
-     * @return void
      */
     public function ensureNovaIsAvailableBeforehand(): void
     {

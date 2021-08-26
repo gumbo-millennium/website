@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Http\Policy\AppPolicy;
 
 return [
-
     /*
      * A policy will determine which CSP headers will be set. A valid CSP policy is
      * any class that extends `Spatie\Csp\Policies\Policy`
@@ -26,13 +25,9 @@ return [
      */
     'report_uri' => env('CSP_REPORT_URI', ''),
 
-    /*
-     * Headers will only be added if this setting is set to true.
-     */
+    // Headers will only be added if this setting is set to true.
     'enabled' => env('CSP_ENABLED', true),
 
-    /*
-     * The class responsible for generating the nonces used in inline tags and headers.
-     */
+    // The class responsible for generating the nonces used in inline tags and headers.
     'nonce_generator' => Spatie\Csp\Nonce\RandomString::class,
 ];

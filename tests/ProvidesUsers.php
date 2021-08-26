@@ -7,21 +7,20 @@ namespace Tests;
 use App\Models\User;
 
 /**
- * Provides users with various ranks
+ * Provides users with various ranks.
  */
 trait ProvidesUsers
 {
     /**
-     * All users created during this request
+     * All users created during this request.
      *
      * @var array<User>
      */
     private $createdUsers = [];
 
     /**
-     * Delete users after the class is done testing
+     * Delete users after the class is done testing.
      *
-     * @return void
      * @after
      */
     public function tearDownUsers(): void
@@ -36,10 +35,7 @@ trait ProvidesUsers
     }
 
     /**
-     * Creates a user with the given roles
-     *
-     * @param array|null $roles
-     * @return User
+     * Creates a user with the given roles.
      */
     public function getTemporaryUser(?array $roles = null): User
     {
@@ -48,7 +44,7 @@ trait ProvidesUsers
         \assert($user instanceof User);
 
         // Assign roles, if any
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             $user->assignRole($roles);
         }
 
@@ -60,9 +56,7 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that's only granted guest permissions
-     *
-     * @return User
+     * Returns a user that's only granted guest permissions.
      */
     public function getGuestUser(): User
     {
@@ -70,9 +64,7 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that's granted member permissions
-     *
-     * @return User
+     * Returns a user that's granted member permissions.
      */
     public function getMemberUser(): User
     {
@@ -80,9 +72,7 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that's member of the Activiteiten Commissie
-     *
-     * @return User
+     * Returns a user that's member of the Activiteiten Commissie.
      */
     public function getCommissionUser(): User
     {
@@ -90,9 +80,7 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that's a board member
-     *
-     * @return User
+     * Returns a user that's a board member.
      */
     public function getBoardUser(): User
     {
@@ -100,14 +88,13 @@ trait ProvidesUsers
     }
 
     /**
-     * Returns a user that has super admin rights
-     *
-     * @return User
+     * Returns a user that has super admin rights.
      */
     public function getSuperAdminUser(): User
     {
         $user = $this->getTemporaryUser();
         $user->givePermissionTo('super-admin');
+
         return $user;
     }
 }

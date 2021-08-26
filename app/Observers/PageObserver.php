@@ -11,13 +11,13 @@ class PageObserver
     /**
      * Handle the page "created" event.
      *
-     * @param  \App\Page  $page
+     * @param \App\Page $page
      * @return void
      */
     public function saving(Page $page)
     {
         // Assign changing user to object
-        if (!$user = auth()->user()) {
+        if (! $user = auth()->user()) {
             return;
         }
 

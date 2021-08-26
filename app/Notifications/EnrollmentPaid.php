@@ -85,7 +85,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         }
 
         // Add PDF, but only if $link is missing
-        if (!$link && $pdf) {
+        if (! $link && $pdf) {
             $mail = $mail
                 ->line('In de bijlage vind je een kopie van de factuur.')
                 ->attachData(Storage::get($pdf), basename($pdf), ['mime' => 'application/pdf']);
@@ -102,15 +102,12 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Send the mail with the final goodbye
         return $mail
-            ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, $tail.");
+            ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, ${tail}.");
     }
 
-
     /**
-     * Returns link to Stripe's receipt page
+     * Returns link to Stripe's receipt page.
      *
-     * @param Enrollment $enrollment
-     * @return string|null
      * @throws BindingResolutionException
      */
     public function getReceiptLink(Enrollment $enrollment): ?string
@@ -120,20 +117,19 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Get charge
         $charge = $stripeService->getCharge($enrollment);
-        if (!$charge) {
+        if (! $charge) {
             return null;
         }
 
         // Get link
         $receiptLink = $charge->receipt_url;
-        return !empty($receiptLink) ? $receiptLink : null;
+
+        return ! empty($receiptLink) ? $receiptLink : null;
     }
 
     /**
-     * Returns path to the PDF, or null if missing
+     * Returns path to the PDF, or null if missing.
      *
-     * @param Enrollment $enrollment
-     * @return string|null
      * @throws BindingResolutionException
      */
     private function getInvoicePdf(Enrollment $enrollment): ?string
@@ -143,13 +139,13 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Get invoice
         $invoice = $stripeService->getInvoice($enrollment, StripeServiceContract::OPT_NO_CREATE);
-        if (!$invoice) {
+        if (! $invoice) {
             return null;
         }
 
         // Skip if PDF path is missing
         $pdfUri = $invoice->invoice_pdf;
-        if (!$pdfUri) {
+        if (! $pdfUri) {
             return null;
         }
 
@@ -184,12 +180,12 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         } catch (ConnectException $exception) {
             logger()->warning(
                 'Failed to connect to Stripe for Invoice PDF',
-                compact('exception', 'enrollment', 'invoice')
+                compact('exception', 'enrollment', 'invoice'),
             );
         } catch (ClientException $exception) {
             logger()->warning(
                 'Failed to get Invoice PDF from Stripe server',
-                compact('exception', 'enrollment', 'invoice')
+                compact('exception', 'enrollment', 'invoice'),
             );
         }
 

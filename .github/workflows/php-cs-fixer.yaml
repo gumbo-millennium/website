@@ -1,0 +1,36 @@
+name: Check & fix code style
+
+on:
+  push:
+    branches-ignore:
+      - master
+    paths:
+      - app/**/*.php
+      - config/**/*.php
+      - database/**/*.php
+      - routes/**/*.php
+      - tests/**/*.php
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.4'
+          tools: php-cs-fixer
+
+      - name: Run PHP CS Fixer
+        run: php-cs-fixer fix
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Fixed code style using PHP-CS-Fixer

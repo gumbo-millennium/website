@@ -53,7 +53,6 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
             ->refresh()
             ->loadMissing(['user', 'activity', 'activity.role:id,title']);
 
-
         // Get some shorthands
         $user = $enrollment->user;
         $activity = $enrollment->activity;

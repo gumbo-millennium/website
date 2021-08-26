@@ -32,8 +32,6 @@ class LinkCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -48,15 +46,16 @@ class LinkCommand extends Command
         $info = $bot->getWebhookInfo();
 
         // Skip if unset
-        if (!empty($info['url'])) {
+        if (! empty($info['url'])) {
             $setDomain = parse_url($info['url'], \PHP_URL_HOST);
             $expectDomain = parse_url($webhookUrl, \PHP_URL_HOST);
 
             if ($setDomain !== $expectDomain) {
                 $this->line("Webhook bound to [{$info['url']}], which doesn't match the app's domain.");
 
-                if (!$this->option('force')) {
+                if (! $this->option('force')) {
                     $this->error('Aborting command');
+
                     return 1;
                 }
 
@@ -79,11 +78,13 @@ class LinkCommand extends Command
 
             // And report OK
             $this->info('Webhook set');
+
             return 0;
         } catch (TelegramSDKException $e) {
             // Fail 😢
             $this->line('Webhook could not be set:');
             $this->error($e->getMessage());
+
             return 1;
         }
     }

@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\SponsorService;
+use App\Http\Controllers\Shop\ProductController;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Page;
 use App\Models\Sponsor;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class PageController extends Controller
 {
@@ -23,7 +26,7 @@ class PageController extends Controller
     }
 
     /**
-     * Renders the homepage
+     * Renders the homepage.
      *
      * @return Response
      */
@@ -69,27 +72,41 @@ class PageController extends Controller
                 ->keyBy('activity_id');
         }
 
+        if ($advertisedProduct = ProductController::getAdvertisedProduct()) {
+            $this->addImageUrlsToCspPolicy([$advertisedProduct->valid_image_url]);
+        }
+
         // Return view
         return response()
-            ->view('content.home.layout', compact('homeSponsors', 'nextEvents', 'enrollments'))
+            ->view('content.home.layout', [
+                'homeSponsors' => $homeSponsors,
+                'nextEvents' => $nextEvents,
+                'enrollments' => $enrollments,
+                'advertisedProduct' => $advertisedProduct,
+            ])
             ->setPublic()
             ->setMaxAge(60 * 15); // Cache for 15 min max
     }
 
     /**
-     * Handles fallback routes
+     * Handles fallback routes.
      *
      * @return Response
      */
     public function fallback(Request $request)
     {
-        return $this->render(null, trim($request->path(), '/\\'));
+        try {
+            // Rnder the page
+            return $this->render(null, trim($request->path(), '/\\'));
+        } catch (ModelNotFoundException $pageNotFound) {
+            // Try to see if it might be a redirect.
+            return App::call(RedirectController::class . '@fallback');
+        }
     }
 
     /**
-     * Group overview page
+     * Group overview page.
      *
-     * @param string $group
      * @return JsonResponse
      * @throws InvalidArgumentException
      */
@@ -111,10 +128,8 @@ class PageController extends Controller
     }
 
     /**
-     * Group detail page
+     * Group detail page.
      *
-     * @param string $group
-     * @param string $slug
      * @return App\Http\Controllers\Response
      * @throws HttpResponseException
      */
@@ -124,9 +139,8 @@ class PageController extends Controller
     }
 
     /**
-     * Renders a single page, if possible
+     * Renders a single page, if possible.
      *
-     * @param string $slug
      * @return Response
      */
     protected function render(?string $group, string $slug)

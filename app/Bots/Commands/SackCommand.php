@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use Illuminate\Support\Facades\Cache;
+use Telegram\Bot\Actions;
 
 class SackCommand extends Command
 {
@@ -23,49 +23,71 @@ class SackCommand extends Command
     protected $description = 'Stuurt iemand De Laan uit';
 
     /**
-     * Command Argument Pattern
+     * Command Argument Pattern.
      *
      * @var string
      */
     protected $pattern = '[^\s].+';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
-        // Get TG user
-        $tgUser = $this->getTelegramUser();
-
-        // Rate limit
-        $cacheKey = sprintf('tg.sack.%s', $tgUser->id);
-        if (Cache::get($cacheKey) > now()) {
-            $this->replyWithMessage([
-                'text' => '⏸ Rate limited (1x per ALV)',
-            ]);
-            return;
-        }
-
-        // Prep rate limit
-        Cache::put($cacheKey, now()->addMinute(), now()->addWeek());
-
         // Get user and check member rights
         $user = $this->getUser();
-        if (!$this->ensureIsMember($user)) {
+        if (! $this->ensureIsMember($user)) {
             return;
         }
+
+        // Rate limit early, to prevent chat spam.
+        if ($this->rateLimit('sack', '🚷 Je mag nog geen nieuw royatieverzoek doen.', 'PT15M')) {
+            return;
+        }
+
+        // Send upload status
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
         $target = ucwords(trim($this->arguments['custom'] ?? ''));
+
+        // Send a gif if wrong
+        if (empty($target)) {
+            $gif = $this->getReplyGifUrl('wrong');
+
+            if ($gif) {
+                $this->replyWithAnimation([
+                    'animation' => $gif,
+                ]);
+            }
+
+            $this->replyWithMessage([
+                'text' => <<<'MARKDOWN'
+                Nee, **fout** 😠
+                Het commando is `/royatieverzoek <tekst>`, of wil je soms jezelf royeren?
+                MARKDOWN,
+                'parse_mode' => 'MarkdownV2',
+            ]);
+
+            $this->forgetRateLimit('sack');
+
+            return;
+        }
 
         // Get random lines
         $format = sprintf(
             '😡 %s dient een royatieverzoek in voor %s.',
             $user->name,
-            $target
+            $target,
         );
 
-        // Send as-is
+        // Send as-is, but with a gif
+        if ($gif = $this->getReplyGifUrl('kicked out')) {
+            $this->replyWithAnimation([
+                'animation' => $gif,
+            ]);
+        }
+
         $this->replyWithMessage([
             'text' => $format,
         ]);

@@ -62,14 +62,14 @@ class QuoteCommand extends Command
     protected $description = 'Stuur een wist-je-datje of quote in.';
 
     /**
-     * Command Argument Pattern
+     * Command Argument Pattern.
      *
      * @var string
      */
     protected $pattern = '.+';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -84,6 +84,7 @@ class QuoteCommand extends Command
                 'text' => $this->formatText(self::REPLY_INVALID),
                 'parse_mode' => 'HTML',
             ]);
+
             return;
         }
 
@@ -94,13 +95,13 @@ class QuoteCommand extends Command
         $cacheToken = sprintf('tg.quotes.rate-limit.%s', $tgUser->id);
 
         // Reject if rate-limited
-        if (!$user && Cache::get($cacheToken) > now()) {
+        if (! $user && Cache::get($cacheToken) > now()) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_GUEST_THROTTLED),
             ]);
+
             return;
         }
-
 
         // Build quote
         $quote = new BotQuote();
@@ -110,11 +111,12 @@ class QuoteCommand extends Command
         $quote->save();
 
         // Render guest response
-        if (!$user) {
+        if (! $user) {
             Cache::put($cacheToken, now()->addDay()->setTime(6, 0));
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_GUEST),
             ]);
+
             return;
         }
 
@@ -124,7 +126,7 @@ class QuoteCommand extends Command
             Keyboard::inlineButton([
                 'text' => 'Bekijk mijn wist-je-datjes',
                 'url' => route('account.quotes'),
-            ])
+            ]),
         );
 
         // Return message

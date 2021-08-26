@@ -17,14 +17,13 @@ class ActivityForm extends Form
     /**
      * Returns the activity for this form, throws an error if it's not set.
      *
-     * @return Activity
      * @throws RuntimeException
      */
     public function getActivity(): Activity
     {
         $activity = $this->formOptions['activity'] ?? null;
 
-        if (!$activity || !$activity instanceof Activity) {
+        if (! $activity || ! $activity instanceof Activity) {
             throw new RuntimeException('Activity is not set or invalid');
         }
 
@@ -32,7 +31,7 @@ class ActivityForm extends Form
     }
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {
@@ -46,7 +45,7 @@ class ActivityForm extends Form
                 $formField->getType(),
                 array_merge([
                     'value' => $this->getData($formField->getName()),
-                ], $formField->getOptions())
+                ], $formField->getOptions()),
             );
         }
 

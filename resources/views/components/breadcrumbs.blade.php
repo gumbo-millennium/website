@@ -10,10 +10,18 @@
             <li>
                 @icon('solid/chevron-right', 'h-4')
             </li>
+            @if (is_int($url))
+            <li>
+                <span class="breadcrumbs__item cursor-default">
+                    {{ $text }}
+                </span>
+            </li>
+            @else
             <li>
                 <a href="{{ $url }}" class="no-underline hover:underline breadcrumbs__item">
                     {{ $text }}
                 </a>
             </li>
+            @endif
         @endforeach
 </div>

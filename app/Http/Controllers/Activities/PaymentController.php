@@ -23,21 +23,14 @@ use Stripe\Source;
  *
  * Note that usually, the webhooks will have validated the
  * payment a long time before the user returns here.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class PaymentController extends Controller
 {
     use HasEnrollments;
 
     /**
-     * Show the form to choose a bank for the iDEAL payment
+     * Show the form to choose a bank for the iDEAL payment.
      *
-     * @param StripeServiceContract $stripeService
-     * @param IdealBankService $bankService
-     * @param Request $request
-     * @param Activity $activity
      * @return Illuminate\Http\RedirectResponse|Illuminate\Http\Response
      * @throws RouteNotFoundException
      */
@@ -53,6 +46,7 @@ class PaymentController extends Controller
         // Redirect to the display view if the user is already enrolled
         if ($enrollment->state->is(Paid::class)) {
             flash('Je hebt al betaald. Je inschrijving is bevestigd.', 'info');
+
             return redirect()->route('activity.show', compact('activity'));
         }
 
@@ -70,7 +64,7 @@ class PaymentController extends Controller
         return response()
             ->view(
                 'activities.enrollments.payment',
-                compact('enrollment', 'activity', 'form', 'invoiceLines', 'invoiceCoupon')
+                compact('enrollment', 'activity', 'form', 'invoiceLines', 'invoiceCoupon'),
             )
             ->setPrivate();
     }
@@ -78,7 +72,6 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
      * @return Response
      */
     public function store(FormBuilder $formBuilder, Request $request, Activity $activity)
@@ -87,8 +80,9 @@ class PaymentController extends Controller
         $enrollment = $this->findActiveEnrollmentOrFail($request, $activity);
 
         // Ensure the user actually needs to pay for this
-        if (!$enrollment->price) {
+        if (! $enrollment->price) {
             logger()->warning('Tried to "pay" for an enrollment that\'s free.', compact('activity', 'enrollment'));
+
             return response()
                 ->redirectToRoute('enroll.show', compact('activity'))
                 ->setPrivate();
@@ -115,11 +109,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Try to start iDEAL
+     * Try to start iDEAL.
      *
-     * @param Request $request
-     * @param StripeService $stripeService
-     * @param Activity $activity
      * @return RedirectResponse|Response
      * @throws EnrollmentNotFoundException
      * @throws InvalidArgumentException
@@ -137,6 +128,7 @@ class PaymentController extends Controller
         // Redirect if expired
         if ($requestExpire < now() || empty($requestBank)) {
             logger()->warning('The payment request for {enrollment} has expired.', compact('activity', 'enrollment'));
+
             return response()
                 ->redirectToRoute('enroll.show', compact('activity'))
                 ->setPrivate();
@@ -156,6 +148,7 @@ class PaymentController extends Controller
         $redirect = $stripeService->getSourceRedirect($source);
         if ($redirect) {
             logger()->info('And away we go! Redirecting to Stripe.');
+
             return $redirect;
         }
 
@@ -170,10 +163,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Callback from Stripe
+     * Callback from Stripe.
      *
-     * @param Request $request
-     * @param Activity $activity
      * @return Response
      */
     public function complete(Request $request, Activity $activity)
@@ -191,11 +182,8 @@ class PaymentController extends Controller
     }
 
     /**
-     * Perform the actual validation
+     * Perform the actual validation.
      *
-     * @param Request $request
-     * @param StripeServiceContract $service
-     * @param Activity $activity
      * @return RedirectResponse
      * @throws EnrollmentNotFoundException
      */
@@ -218,13 +206,14 @@ class PaymentController extends Controller
                 'user' => $enrollment->user,
                 'code' => $enrollment->payment_invoice,
             ]);
-            flash("Er is iets bijzonder fout gegaan, probeer het opnieuw.", 'warning');
+            flash('Er is iets bijzonder fout gegaan, probeer het opnieuw.', 'warning');
+
             return response()
                 ->redirectToRoute('activity.show', compact('activity'))
                 ->setPrivate();
         }
 
-        if (in_array($source->status, [Source::STATUS_CANCELED, Source::STATUS_FAILED])) {
+        if (in_array($source->status, [Source::STATUS_CANCELED, Source::STATUS_FAILED], true)) {
             $result = $source->status === Source::STATUS_CANCELED ? 'geannuleerd' : 'mislukt';
             flash("De betaling voor {$activity->name} is {$result}.", 'info');
 
@@ -250,6 +239,7 @@ class PaymentController extends Controller
                     'code' => $enrollment->payment_invoice,
                 ]);
                 flash("Je bent succesvol ingeschreven voor {$activity->name}.", 'success');
+
                 return response()
                     ->redirectToRoute('activity.show', compact('activity'))
                     ->setPrivate();
@@ -264,6 +254,7 @@ class PaymentController extends Controller
                     'code' => $enrollment->payment_invoice,
                 ]);
                 flash("Je staat niet meer ingeschreven voor {$activity->name}.", 'warning');
+
                 return response()
                     ->redirectToRoute('activity.show', compact('activity'))
                     ->setPrivate();
@@ -274,7 +265,8 @@ class PaymentController extends Controller
         } while ($timeout > now());
 
         // Redirect
-        flash("De controle duurt wat lang. Je krijgt een mailtje zodra de betaling is gecontroleerd.", 'info');
+        flash('De controle duurt wat lang. Je krijgt een mailtje zodra de betaling is gecontroleerd.', 'info');
+
         return response()
             ->redirectToRoute('activity.show', compact('activity'))
             ->setPrivate();

@@ -19,7 +19,7 @@
   "whoCanApproveMembers": "NONE_CAN_APPROVE",
   "whoCanBanUsers": "NONE",
   "whoCanModerateMembers": "NONE",
-  "whoCanModerateContent": "ALL_MEMBERS",
+  "whoCanModerateContent": "OWNERS_AND_MANAGERS",
   "whoCanAssistContent": "ALL_MEMBERS",
   "enableCollaborativeInbox": true,
   "whoCanDiscoverGroup": "ALL_IN_DOMAIN_CAN_DISCOVER"

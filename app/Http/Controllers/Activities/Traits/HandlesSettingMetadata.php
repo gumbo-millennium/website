@@ -13,10 +13,7 @@ use Artesaos\SEOTools\Facades\SEOTools;
 trait HandlesSettingMetadata
 {
     /**
-     * Assigns active meta
-     *
-     * @param Activity $activity
-     * @return void
+     * Assigns active meta.
      */
     public function setActivityMeta(Activity $activity): void
     {
@@ -57,15 +54,14 @@ trait HandlesSettingMetadata
     }
 
     /**
-     * Location meta
+     * Location meta.
      *
-     * @param Activity $activity
-     * @return array<string>|string|null
+     * @return null|array<string>|string
      */
     public function buildLocationMeta(Activity $activity)
     {
         // Return null if there's no location
-        if (!$activity->location) {
+        if (! $activity->location) {
             return null;
         }
 
@@ -91,10 +87,7 @@ trait HandlesSettingMetadata
     }
 
     /**
-     * Get activity URL
-     *
-     * @param Activity $activity
-     * @return string
+     * Get activity URL.
      */
     private function getCanonical(Activity $activity): string
     {
@@ -102,10 +95,7 @@ trait HandlesSettingMetadata
     }
 
     /**
-     * Returns metadata for this activity
-     *
-     * @param Activity $activity
-     * @return array
+     * Returns metadata for this activity.
      */
     private function getActivityJsonMeta(Activity $activity): array
     {
@@ -142,9 +132,11 @@ trait HandlesSettingMetadata
         switch ($activity->location_type) {
             case Activity::LOCATION_ONLINE:
                 $data['eventAttendanceMode'] = 'OnlineEventAttendanceMode';
+
                 break;
             case Activity::LOCATION_MIXED:
                 $data['eventAttendanceMode'] = 'MixedEventAttendanceMode';
+
                 break;
             default:
                 $data['eventAttendanceMode'] = 'OfflineEventAttendanceMode';
@@ -166,7 +158,7 @@ trait HandlesSettingMetadata
         $data['offers'] = $this->buildPricingAndTicketMeta($activity);
 
         // Add seat count, if applicable
-        if (!$activity->is_cancelled && $activity->seats > 0 && $activity->available_seats > 0) {
+        if (! $activity->is_cancelled && $activity->seats > 0 && $activity->available_seats > 0) {
             $data['remainingAttendeeCapacity'] = $activity->available_seats;
         }
 
@@ -175,14 +167,12 @@ trait HandlesSettingMetadata
     }
 
     /**
-     * Adds pricing info
+     * Adds pricing info.
      *
-     * @param Activity $activity
      * @return void
      */
     private function buildPricingAndTicketMeta(Activity $activity): ?array
     {
-
         // Add price info
         JsonLd::addValue('isAccessibleForFree', $activity->is_free);
 

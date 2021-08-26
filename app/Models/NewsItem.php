@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A news article
+ * A news article.
  *
  * @property-read AttachmentInterface $image
  * @property int $id
@@ -23,24 +23,24 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property string $title
  * @property string $slug
  * @property string $category
- * @property string|null $sponsor
- * @property string|null $headline
- * @property array|null $contents
- * @property int|null $author_id
- * @property string|null $image_file_name image name
- * @property int|null $image_file_size image size (in bytes)
- * @property string|null $image_content_type image content type
- * @property string|null $image_updated_at image update timestamp
- * @property array|null $image_variants image variants (json)
- * @property-read User|null $author
- * @property-read string|null $html
+ * @property null|string $sponsor
+ * @property null|string $headline
+ * @property null|array $contents
+ * @property null|int $author_id
+ * @property null|string $image_file_name image name
+ * @property null|int $image_file_size image size (in bytes)
+ * @property null|string $image_content_type image content type
+ * @property null|string $image_updated_at image update timestamp
+ * @property null|array $image_variants image variants (json)
+ * @property-read null|User $author
+ * @property-read null|string $html
  */
 class NewsItem extends SluggableModel implements AttachableInterface
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
+    use HasPaperclip;
     use HasSimplePaperclippedMedia;
+    use PaperclipTrait;
 
     /**
      * @inheritDoc
@@ -71,9 +71,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     ];
 
     /**
-     * Generate the slug based on the title property
-     *
-     * @return array
+     * Generate the slug based on the title property.
      */
     public function sluggable(): array
     {
@@ -86,7 +84,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the owning user, if present
+     * Returns the owning user, if present.
      *
      * @return BelongsTo
      */
@@ -96,9 +94,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Converts contents to HTML
-     *
-     * @return string|null
+     * Converts contents to HTML.
      */
     public function getHtmlAttribute(): ?string
     {
@@ -106,9 +102,8 @@ class NewsItem extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Scope to available posts
+     * Scope to available posts.
      *
-     * @param Builder $query
      * @return Illuminate\Database\Eloquent\Builder
      * @throws InvalidArgumentException
      */
@@ -123,9 +118,7 @@ class NewsItem extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     *
-     * @return void
+     * Binds paperclip files.
      */
     protected function bindPaperclip(): void
     {

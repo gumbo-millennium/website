@@ -7,17 +7,12 @@ namespace App\Console\Commands\Traits;
 use App\Models\User;
 
 /**
- * Finds users in the {user} argument
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Finds users in the {user} argument.
  */
 trait FindsUserTrait
 {
     /**
-     * Finds the user mentioned in the 'user' argument, either by ID, e-mail or alias
-     *
-     * @return User|null
+     * Finds the user mentioned in the 'user' argument, either by ID, e-mail or alias.
      */
     protected function getUserArgument(): ?User
     {

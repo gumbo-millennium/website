@@ -1,10 +1,12 @@
-name: "Build, test and deploy Laravel"
+name: Test and deploy
 
 on:
   pull_request:
+
   push:
     branches:
     - master
+    - develop
 
 jobs:
   laravel-frontend:
@@ -13,25 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache node_modules
-        id: cache-node
-        uses: actions/cache@v1
+      - name: Setup NodeJS and cache
+        uses: actions/setup-node@v2
         with:
-          path: node_modules
-          key: node-build-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-build-${{ env.cache-name }}-
-            node-build-
+          node-version: '14'
+          cache: 'npm'
 
       - name: Copy environment config
         run: cp .github/actions.env .env
 
-      - name: Install Yarn dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+      - name: Install Node dependencies
+        run: npm clean-install
 
       - name: Build Front-end
-        run: yarn build
+        run: npm run build
 
       - name: Publish front-end
         uses: actions/upload-artifact@master
@@ -41,15 +38,23 @@ jobs:
 
   laravel-backend:
     name: "Back-end build and test"
-    needs: [laravel-frontend]
     runs-on: 'ubuntu-latest'
+
+    needs:
+      - laravel-frontend
+
     strategy:
       matrix:
         php:
           - '7.4'
+          - '8.0'
+        include:
+          - php: '7.4'
+            main: true
+
     services:
       database:
-        image: mysql:5
+        image: mysql:8
         ports:
           - 13306:3306
         env:
@@ -57,6 +62,7 @@ jobs:
           MYSQL_DATABASE: laravel
           MYSQL_USER: laravel
           MYSQL_PASSWORD: laravel
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
@@ -77,17 +83,14 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup NodeJS and cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+
       - name: Check for Gumbo Millennium typos
         run: .github/find-typos.sh
-
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: node-build-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-build-${{ env.cache-name }}-
-            node-build-
 
       - name: Copy environment config
         run: cp .github/actions.env .env
@@ -96,6 +99,9 @@ jobs:
         uses: ramsey/composer-install@v1
         with:
           composer-options: "--ignore-platform-req=php"
+
+      - name: Install Node dependencies
+        run: npm clean-install
 
       - name: Wait for MySQL to get ready
         timeout-minutes: 5
@@ -111,14 +117,8 @@ jobs:
       - name: Install an application key
         run: php artisan key:generate
 
-      - name: Download front-end
-        uses: actions/download-artifact@master
-        with:
-          name: front-end
-          path: public/
-
       - name: Install Font Awesome icons
-        run: yarn run postinstall
+        run: npm run postinstall
 
       - name: Run linters
         run: composer run lint
@@ -132,7 +132,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover coverage-clover.xml
 
       - name: Report test results to CodeClimate
-        if: matrix.php == '7.4'
+        if: ${{ matrix.main == true }}
         run: |
           curl -o ./cc-test-reporter -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
           chmod +x ./cc-test-reporter
@@ -143,97 +143,81 @@ jobs:
         continue-on-error: true
 
   deploy:
-    name: "Deploy application"
-    needs: [laravel-frontend, laravel-backend]
+    name: Deploy application
     runs-on: ubuntu-latest
-    if: |
-      (
-        github.event_name == 'push'
-      ) || (
-        github.event_name == 'pull_request' &&
-        github.event.action == 'synchronize' &&
-        github.event.pull_request.draft != true &&
-        github.event.pull_request.base.repo.full_name == 'gumbo-millennium/website' &&
-        github.event.pull_request.head.repo.full_name == 'gumbo-millennium/website'
-      )
+    if: ${{ github.event_name == 'push' }}
+    needs:
+      - laravel-frontend
+      - laravel-backend
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
         with:
           php-version: '7.4'
-          extensions: exif,json,mbstring
+          tools: deployer
 
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 5
 
-      - name: Determine data for environment
-        id: deployment-data
-        run: .github/bin/prep-env.sh "${{ github.repository }}" "${{ github.event_name }}" "${{ github.head_ref }}" "${{ github.ref }}"
+      - name: Download front-end
+        uses: actions/download-artifact@master
+        with:
+          name: front-end
+          path: public/
 
-      - name: Install Laravel Envoy
-        run: |
-          composer global require --no-progress laravel/envoy
-          echo "$HOME/.composer/vendor/bin/" >> $GITHUB_PATH
+      - name: Determine name of deployment
+        id: env
+        run: .github/bin/determine-target.sh
 
       - name: Configure SSH connection
         run: |
-          mkdir -p ${HOME}/.ssh
-          echo "$SSH_PRIVATE_KEY" > ${HOME}/.ssh/id_deploy
-          chmod 0600 ${HOME}/.ssh/id_deploy
-          echo "Host *" > ${HOME}/.ssh/config
-          echo "    StrictHostKeyChecking no" >> ${HOME}/.ssh/config
-          echo "Host deploy.local" >> ${HOME}/.ssh/config
-          echo "    HostName ${SSH_HOST}" >> ${HOME}/.ssh/config
-          echo "    Port ${SSH_PORT}" >> ${HOME}/.ssh/config
-          echo "    User ${SSH_USER}" >> ${HOME}/.ssh/config
-          echo "    IdentityFile ${HOME}/.ssh/id_deploy" >> ${HOME}/.ssh/config
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SSH_USER: ${{ secrets.SSH_USER }}
+          test -d ~/.ssh || mkdir ~/.ssh
+
+          echo "Installing deploy host key"
+          ssh-keygen -R ${{ secrets.DEPLOY_HOST }} || true
+          ssh-keyscan -H -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+          echo "Installing SSH host alias"
+          echo "Host ${{ steps.env.outputs.name }}.env.gumbo-millennium.nl" >> ~/.ssh/config
+          echo "    HostName ${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/config
+          echo "    Port ${{ secrets.DEPLOY_PORT }}" >> ~/.ssh/config
+          echo "    User ${{ secrets.DEPLOY_USER }}" >> ~/.ssh/config
+
+          echo "Installing SSH key"
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 0700 ~/.ssh
+          chmod 0600 ~/.ssh/id_ed25519 ~/.ssh/config
+
+          echo "Fingerprint of installed key:"
+          ssh-keygen -l -f ~/.ssh/id_ed25519
 
       - name: Start Deployment
         uses: bobheadxi/deployments@v0.4.0
         id: deployment-start
         with:
           step: start
-          env: ${{ steps.deployment-data.outputs.name }}
+          env: ${{ steps.env.outputs.name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Envoy
-        id: deployment-envoy
-        run: |
-          envoy run deploy \
-            --branch="${{ steps.deployment-data.outputs.branch }}" \
-            --remote="${{ steps.deployment-data.outputs.remote }}" \
-            --hash="${{ steps.deployment-data.outputs.hash }}"
+      - name: Run deployer
+        id: deploy
+        run: deployer deploy ${{ steps.env.outputs.name }} -vv
 
-      - name: Finish Deployment (failure)
+      - name: Finish Deployment
         uses: bobheadxi/deployments@v0.4.0
-        if: failure()
+        if: always()
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
-          env_url: "null"
-          status: ${{ job.status }}
-          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
-
-      - name: Finish Deployment (success)
-        uses: bobheadxi/deployments@v0.4.0
-        if: success()
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env_url: ${{ steps.deployment-data.outputs.app_url }}
+          env_url: "${{ steps.deploy.outputs.url }}/"
           status: ${{ job.status }}
           deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
-        if: success()
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}

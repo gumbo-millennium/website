@@ -13,7 +13,7 @@ class MediaUploadListener
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param object $event
      * @return void
      */
     public function handle(MediaHasBeenAdded $event)
@@ -22,7 +22,7 @@ class MediaUploadListener
         $model = $media->model;
 
         // Skip if wrong type
-        if (!$model instanceof FileBundle) {
+        if (! $model instanceof FileBundle) {
             return;
         }
 

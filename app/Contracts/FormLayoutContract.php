@@ -13,8 +13,6 @@ interface FormLayoutContract
 {
     /**
      * Converts a field to a formfield.
-     *
-     * @return FormLayout
      */
     public function toFormField(): FormLayout;
 }

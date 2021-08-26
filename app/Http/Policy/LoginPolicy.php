@@ -9,12 +9,12 @@ use Spatie\Csp\Keyword;
 
 /**
  * Login form Content-Security-Policy.
- * Disallows all Javascript
+ * Disallows all Javascript.
  */
 class LoginPolicy extends BasePolicy
 {
     /**
-     * Configure CSP directives
+     * Configure CSP directives.
      *
      * @return void
      */

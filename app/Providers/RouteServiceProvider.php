@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         // Check if locally developing, and then set the root URL if required
-        if (!$this->app->environment('local')) {
+        if (! $this->app->environment('local')) {
             return;
         }
 
@@ -75,28 +75,27 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->name('api.')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->name('api.')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 
     /**
      * Updates the URL generator's root URL if a HMR program is running an an X-Forwarded-Host is provided.
-     *
-     * @return void
      */
     protected function updateRootUrl(): void
     {
         // We /really/ don't want this in production.
-        if (!$this->app->environment('local')) {
+        if (! $this->app->environment('local')) {
             $exception = new LogicException('An attempt to update the root URL on a non-local environment was issued.');
-            logger()->critical("Security violation: {exception}", compact('exception'));
+            logger()->critical('Security violation: {exception}', compact('exception'));
+
             throw $exception;
         }
 
         // Only run when HMR is active
-        if (!\file_exists(\public_path('hot'))) {
+        if (! \file_exists(\public_path('hot'))) {
             return;
         }
 
@@ -108,7 +107,7 @@ class RouteServiceProvider extends ServiceProvider
 
         // Get URL handler and check type
         $urlGenerator = app('url');
-        if (!$urlGenerator instanceof LaravelUrlGenerator && !method_exists($urlGenerator, 'forceRootUrl')) {
+        if (! $urlGenerator instanceof LaravelUrlGenerator && ! method_exists($urlGenerator, 'forceRootUrl')) {
             return;
         }
 
@@ -116,7 +115,7 @@ class RouteServiceProvider extends ServiceProvider
         $urlGenerator->forceRootUrl("http://{$newUrl}/");
 
         // Log result
-        logger()->debug("Replaced host with user-provided path.", [
+        logger()->debug('Replaced host with user-provided path.', [
             'new-host' => $newUrl,
         ]);
     }

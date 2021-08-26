@@ -9,21 +9,21 @@ use App\Models\FormLayout;
 class FormTextArea extends FormField
 {
     /**
-     * The layout's unique identifier
+     * The layout's unique identifier.
      *
      * @var string
      */
     protected $name = 'text-area';
 
     /**
-     * The displayed title
+     * The displayed title.
      *
      * @var string
      */
     protected $title = 'Text Area';
 
     /**
-     * Converts a field to a formfield
+     * Converts a field to a formfield.
      *
      * @return array
      */

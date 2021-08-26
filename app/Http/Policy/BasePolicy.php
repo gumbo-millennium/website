@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Policy;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
 use Spatie\Csp\Policies\Basic as BasicPolicy;
@@ -13,21 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base Content-Security-Policy.
- * Allows most local elements and Google Fonts
+ * Allows most local elements and Google Fonts.
  */
 abstract class BasePolicy extends BasicPolicy
 {
     /**
-     * Don't act on Nova paths
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * Don't act on Nova paths.
      */
-    public function shouldBeApplied(Request $request, Response $response): bool
+    public function shouldBeApplied(HttpRequest $request, Response $response): bool
     {
         // Local checks
-        if (app()->isLocal()) {
+        if (App::isLocal()) {
             // Dont apply on Whoops
             if (property_exists($response, 'exception') && $response->exception) {
                 return false;
@@ -44,7 +43,7 @@ abstract class BasePolicy extends BasicPolicy
     }
 
     /**
-     * Configure CSP directives
+     * Configure CSP directives.
      *
      * @return void
      */
@@ -57,8 +56,43 @@ abstract class BasePolicy extends BasicPolicy
         $this->addDirective(Directive::MANIFEST, Keyword::SELF);
 
         // Prevent mixed content from loading on production (testing has no HTTPS)
-        if (app()->isProduction()) {
+        if (App::isProduction()) {
             $this->addDirective(Directive::BLOCK_ALL_MIXED_CONTENT, Value::NO_VALUE);
+        }
+
+        // Get URLs
+        $appUrl = Config::get('app.url');
+        $appHost = parse_url($appUrl, PHP_URL_HOST);
+
+        $assetUrl = Config::get('app.asset_url') ?? $appUrl;
+        $assetHost = parse_url($assetUrl, PHP_URL_HOST);
+
+        $requestHost = Request::getHost() ?? Request::getHttpHost() ?? $appHost;
+
+        // Add asset host in case it's different from the current request
+        if ($assetHost !== $requestHost) {
+            $assetCspRoot = sprintf(
+                '%s://%s',
+                parse_url($assetUrl, PHP_URL_SCHEME),
+                parse_url($assetUrl, PHP_URL_HOST),
+            );
+
+            $this->addDirective(Directive::DEFAULT, $assetCspRoot);
+            $this->addDirective(Directive::STYLE, $assetCspRoot);
+            $this->addDirective(Directive::IMG, $assetCspRoot);
+            $this->addDirective(Directive::SCRIPT, $assetCspRoot);
+        }
+
+        // Add the main host in case it's different from the current request
+        if ($appHost !== $requestHost) {
+            $appCspRoot = sprintf(
+                '%s://%s',
+                parse_url($appUrl, PHP_URL_SCHEME),
+                parse_url($appUrl, PHP_URL_HOST),
+            );
+
+            $this->addDirective(Directive::CONNECT, $appCspRoot);
+            $this->addDirective(Directive::FORM_ACTION, $appCspRoot);
         }
 
         // Google Fonts

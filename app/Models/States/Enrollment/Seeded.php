@@ -10,12 +10,12 @@ namespace App\Models\States\Enrollment;
 class Seeded extends State
 {
     /**
-     * Name of the state
+     * Name of the state.
      */
     public const NAME = 'seeded';
 
     /**
-     * Name of the state, as human-readable version
+     * Name of the state, as human-readable version.
      *
      * @var string
      */

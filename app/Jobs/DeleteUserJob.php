@@ -23,7 +23,7 @@ class DeleteUserJob implements ShouldQueue
     use SerializesModels;
 
     /**
-     * User to remove
+     * User to remove.
      */
     protected User $user;
 
@@ -36,7 +36,7 @@ class DeleteUserJob implements ShouldQueue
     }
 
     /**
-     * Execute the deletion
+     * Execute the deletion.
      */
     public function handle(): void
     {
@@ -48,7 +48,7 @@ class DeleteUserJob implements ShouldQueue
     }
 
     /**
-     * Deletes associations of a file, but not the files themselves
+     * Deletes associations of a file, but not the files themselves.
      */
     protected function deleteFileAssociations(User $user): void
     {

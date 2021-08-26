@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Configuration
@@ -30,7 +29,6 @@ return [
     */
 
     'model' => [
-
         // Mark which columns should be filled on the model by default.
         // These attributes are prefixed by <attribute name>_.
         'attributes' => [
@@ -41,7 +39,6 @@ return [
             // JSON information about stored variants.
             'variants'     => false,
         ],
-
     ],
 
     /*
@@ -54,7 +51,6 @@ return [
     */
 
     'storage' => [
-
         // The Laravel storage disk to use.
         'disk' => 'paperclip',
     ],
@@ -69,7 +65,6 @@ return [
     */
 
     'path' => [
-
         // The class that generates the paths
         'interpolator' => \Czim\Paperclip\Path\Interpolator::class,
 
@@ -97,7 +92,6 @@ return [
 
     // Variant processing configuration
     'variants' => [
-
         'aliases' => [
             'auto-orient' => \Czim\FileHandling\Variant\Strategies\ImageAutoOrientStrategy::class,
             'resize'      => \Czim\FileHandling\Variant\Strategies\ImageResizeStrategy::class,
@@ -160,5 +154,4 @@ return [
     'processing' => [
         'chunk-size' => 500,
     ],
-
 ];

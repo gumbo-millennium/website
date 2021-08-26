@@ -90,7 +90,84 @@
   "Full markdown support. HTML will be removed.": "Markdown is ondersteund, HTML wordt verwijderd.",
   "Field": "Veld",
 
+  "Fees": "Transactiekosten",
+
   "My Account": "Mijn account",
+
+  "Your cart is empty": "Je winkelwagen is leeg",
+
+  ":Product was already in your cart, so we've added :count more.": ":Product zat al in je winkelwagen, aantal bijgewerkt.",
+  ":Product was already in your cart and you've already hit the order limit for this item.":
+    ":Product zat al in je winkelwagen, en je hebt al het maximum aantal artikelen bereikt.",
+  ":Product was added to your cart.": ":Product is toegevoegd aan je winkelwagen.",
+
+  ":Product has been updated": ":Product has been updated",
+  ":Product was removed from your cart": ":Product is uit je winkelwagen weggehaald",
+  "1 product|:count products": "1 product|:count producten",
+
+  "A fresh verification link has been sent to your email address.":
+    "Een versgebakken verificatielink is verstuurd naar je e-mailadres.",
+
+  "Your previous payment is still pending, or this order cannot be paid right now. Try again later.":
+    "Je vorige betaling wordt nog verwerkt, of het is momenteel niet mogelijk om te betalen. Probeer het later opnieuw.",
+  "The payment didn't go through or is still processing.":
+    "Je betaling is mislukt of wordt nog verwerkt. Check later nog eens.",
+
+  "Order Number": "Bestelnummer",
+  "Cancelled at": "Geannuleerd op",
+  "Expires at": "Verloopt op",
+
+  "Shipping Provider": "Bezorgdienst",
+  "Track-and-Trace code": "Track\u00a0&\u00a0Trace code",
+
+  "Shipping information": "Verzendinformatie",
+  "If you shipped this order, please fill in the fields below. If you handed the order off in person, skip 'em":
+    "Indien je deze bestelling per post hebt verstuurd, kan je hieronder de trackinginformatie opgeven.",
+  "Only required if you actually shipped this order, otherwise just click :send":
+    "Vul alleen in als je deze bestelling op de post hebt gedaan, anders klik je gewoon op :send.",
+
+  "Ship": "Versturen",
+  "Ship order": "Bestelling versturen",
+
+  "Are you sure you want to cancel this order? The user will be issued a refund if they've completed payment.":
+    "Weet je zeker dat je deze bestelling wilt annuleren? De besteller krijgt het geld teruggestort indien er al betaald is.",
+
+  "Advertise on homepage and shop landing":
+    "Adverteren op homepage en shop startpagina.",
+  "The category and the product need to be visible for the advertisement to show.":
+    "De categorie en het product dient hiervoor zichtbaar te zijn.",
+
+  "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:":
+    "Als je problemen ervaart met de \":actionText\" knop,\nkopieer en plak dan de volgende URL in je browser:\n",
+
+  "Update": "Bijwerken",
+  "Update order": "Bestelling bijwerken",
+  "This will force an update from Mollie, in case the order has gotten out-of-sync for some reason.":
+    "Dit forceert dat een update wordt opgehaald vanuit Mollie. In het geval dat de bestelling bijvoorbeeld niet correct is bijgewerkt.",
+  "All orders have been updated.": "Alle bestellingen zijn bijgewerkt.",
+  ":updated of :total order(s) have been updated.": ":updated van :total bestellingen zijn bijgewerkt.",
+
+  "Path": "Pad",
+  "Target path": "Doelpad",
+  "Redirect Instruction": "Doorverwijzing",
+  "Redirect Instructions": "Doorverwijzingen",
+
+  "Data Access Request": "Inzageverzoek",
+  "Data Access Requests": "Inzageverzoeken",
+  "Get access to your personal data": "Bekijk jouw gegevens binnen de site",
+
+  "No data exports": "Geen gegevensexporten",
+  "You don't seem to have any data exports yet.": "Het lijk er op dat je nog geen geen gegevensexporten hebt aangevraagd.",
+
+
+  "Request a data export": "Vraag een gegevensexport aan",
+  "The export will be downloadable for :days days after completion.": "De export is beschikbaar voor :days dagen na het aanmaken.",
+
+  "A data export has been requested. It may take a while for it to be ready.": "Er is een gegevensexport aangevraagd. Het kan even duren voordat deze klaar is.",
+
+  "This export is still being built.": "De export wordt nog gebouwd.",
+  "This export is ready to download.": "De export is klaar om te downloaden.",
+  "This export is no longer available.": "De export is niet langer beschikbaar.",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

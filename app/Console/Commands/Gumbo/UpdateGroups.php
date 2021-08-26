@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Gumbo;
 
 use App\Console\Commands\Traits\FindsUserTrait;
-use App\Contracts\ConscriboServiceContract;
+use App\Contracts\ConscriboService;
 use App\Helpers\Str;
 use App\Models\Role;
 use Illuminate\Console\Command;
@@ -13,10 +13,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Adds a role via CLI
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Adds a role via CLI.
  */
 class UpdateGroups extends Command
 {
@@ -53,10 +50,8 @@ class UpdateGroups extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(ConscriboServiceContract $service)
+    public function handle(ConscriboService $service)
     {
         // Get all roles
         $systemRoles = Role::get();
@@ -70,7 +65,7 @@ class UpdateGroups extends Command
         }
 
         // Prune excess groups
-        if (!$this->option('prune')) {
+        if (! $this->option('prune')) {
             return;
         }
 
@@ -78,10 +73,7 @@ class UpdateGroups extends Command
     }
 
     /**
-     * Converts a value to a slugged value we can compare
-     *
-     * @param string $value
-     * @return string
+     * Converts a value to a slugged value we can compare.
      */
     private function slugged(string $value): string
     {
@@ -89,9 +81,7 @@ class UpdateGroups extends Command
     }
 
     /**
-     * Returns a group name
-     *
-     * @return string
+     * Returns a group name.
      */
     private function named(array $role): string
     {
@@ -100,18 +90,13 @@ class UpdateGroups extends Command
 
     /**
      * Match existing groups that don't have a conscribo_id yet.
-     *
-     * @param Collection $systemRoles
-     * @param Collection $adminRoles
-     * @return void
      */
     private function matchExistingGroups(Collection $systemRoles, Collection $adminRoles): void
     {
-
         // Find roles without a Conscribo ID
         foreach ($systemRoles->whereNull('conscribo_id') as $role) {
             // Skip if the role is required
-            if (\in_array($role->name, Role::REQUIRED_GROUPS)) {
+            if (\in_array($role->name, Role::REQUIRED_GROUPS, true)) {
                 continue;
             }
 
@@ -135,7 +120,7 @@ class UpdateGroups extends Command
                     $role->title,
                     $role->name,
                     $adminRole['naam'],
-                    $role->conscribo_id
+                    $role->conscribo_id,
                 ), null, OutputInterface::VERBOSITY_VERBOSE);
 
                 // Continue to next item
@@ -146,17 +131,13 @@ class UpdateGroups extends Command
             $this->line(sprintf(
                 'Could not find suitable role for <error>%s</> (<comment>%s</>)!',
                 $role->title,
-                $role->name
+                $role->name,
             ));
         }
     }
 
     /**
-     * Update the titles of groups that are linked to a Conscribo group
-     *
-     * @param Collection $systemRoles
-     * @param Collection $adminRoles
-     * @return void
+     * Update the titles of groups that are linked to a Conscribo group.
      */
     private function updateGroupTitles(Collection $systemRoles, Collection $adminRoles): void
     {
@@ -169,10 +150,11 @@ class UpdateGroups extends Command
 
             // If a role no longer exists, warn and ignore
             if ($adminRole === null) {
-                if (!$shownPrune) {
+                if (! $shownPrune) {
                     $this->line('<question>Roles exist that are no longer in Conscribo, consider pruning.</>');
                     $shownPrune = true;
                 }
+
                 continue;
             }
 
@@ -199,9 +181,6 @@ class UpdateGroups extends Command
     /**
      * Create roles for all Conscribo groups that don't yet exist.
      *
-     * @param Collection $systemRoles
-     * @param Collection $adminRoles
-     * @return void
      * @throws RoleAlreadyExists
      */
     private function createMissingGroups(Collection $systemRoles, Collection $adminRoles): void
@@ -240,11 +219,7 @@ class UpdateGroups extends Command
     }
 
     /**
-     * Remove groups whose code is no longer in Conscribo and which aren't essential
-     *
-     * @param Collection $systemRoles
-     * @param Collection $adminRoles
-     * @return void
+     * Remove groups whose code is no longer in Conscribo and which aren't essential.
      */
     private function pruneGroups(Collection $systemRoles, Collection $adminRoles): void
     {

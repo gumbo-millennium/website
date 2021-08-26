@@ -31,16 +31,13 @@ use Kris\LaravelFormBuilder\FormBuilder;
 /**
  * Handles sign ups to the student community. Presents a whole form and
  * isn't very user-friendly.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class JoinController extends Controller
 {
     private const SESSION_NAME = 'join.submission';
 
     /**
-     * E-mail address and name of the board
+     * E-mail address and name of the board.
      */
     private const TO_BOARD = [[
         'name' => 'Bestuur Gumbo Millennium',
@@ -48,14 +45,12 @@ class JoinController extends Controller
     ]];
 
     /**
-     * A useful form builder
+     * A useful form builder.
      */
     private FormBuilder $formBuilder;
 
     /**
-     * Creates a new controller with form builder
-     *
-     * @param FormBuilder $builder
+     * Creates a new controller with form builder.
      */
     public function __construct(FormBuilder $builder)
     {
@@ -64,10 +59,8 @@ class JoinController extends Controller
     }
 
     /**
-     * Shows the registration form
+     * Shows the registration form.
      *
-     * @param SessionStore $session
-     * @param Router $router
      * @return Response
      */
     public function index(SessionStore $session, Router $router)
@@ -89,7 +82,7 @@ class JoinController extends Controller
         $pageTemplate = 'join.form';
 
         // Return a message if there's no intro right now
-        if ($isIntro && ($introActivity === null || !$introActivity->enrollment_open)) {
+        if ($isIntro && ($introActivity === null || ! $introActivity->enrollment_open)) {
             return response()
                 ->view('join.no-intro', ['intro' => $introActivity])
                 ->setPublic();
@@ -112,7 +105,7 @@ class JoinController extends Controller
     }
 
     /**
-     * Handle registration
+     * Handle registration.
      *
      * @param SignUpRequest $request
      * @return Response
@@ -161,7 +154,7 @@ class JoinController extends Controller
         ]);
 
         // Validate the submission was created
-        if (!$submission->exists()) {
+        if (! $submission->exists()) {
             return redirect()
                 ->back()
                 ->withInput()
@@ -179,7 +172,7 @@ class JoinController extends Controller
         Session::put(self::SESSION_NAME, $submission);
 
         // Check if the user wants to join the introduction
-        if (!$introActivity || empty($userValues['join-intro'])) {
+        if (! $introActivity || empty($userValues['join-intro'])) {
             // Send redirect reply
             return \redirect()
                 ->route('join.complete')
@@ -189,24 +182,24 @@ class JoinController extends Controller
         // Get user
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             $user = $this->createJoinUser($userValues);
 
-        // No user means an existing user was found, request login.
-            if (!$user) {
+            // No user means an existing user was found, request login.
+            if (! $user) {
                 // Set next URL
                 \redirect()->setIntendedUrl(
-                    \route('activity.show', ['activity' => $introActivity])
+                    \route('activity.show', ['activity' => $introActivity]),
                 );
 
-                    // Flash message
-                    \flash(<<<'EOL'
+                // Flash message
+                \flash(<<<'EOL'
                     Je hebt al een account op de site, dus om je in
                     te schrijven voor de intro moet je even inloggen.
                     EOL);
 
-                    // Redirect to login
-                    return \redirect()->route('login');
+                // Redirect to login
+                return \redirect()->route('login');
             }
 
             Auth::login($user);
@@ -220,11 +213,11 @@ class JoinController extends Controller
         );
 
         // No enrollment means enrolling was blocked
-        if (!$enrollment) {
+        if (! $enrollment) {
             // Flash failure
             \flash(
                 'Je aanmelding is ontvangen, maar je kon helaas niet ingeschreven worden op de introductieweek.',
-                'warning'
+                'warning',
             );
 
             // Redirect to welcome
@@ -235,7 +228,7 @@ class JoinController extends Controller
         }
 
         // Flash OK
-        \flash("Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.", "success");
+        \flash('Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.', 'success');
 
         // Redirect to proper location
         return \response()
@@ -244,16 +237,15 @@ class JoinController extends Controller
     }
 
     /**
-     * Request completed
+     * Request completed.
      *
-     * @param Request $request
      * @return View
      */
     public function complete()
     {
         // Redirect to form if they're reloading the page
         // and the submission was removed
-        if (!Session::has(self::SESSION_NAME)) {
+        if (! Session::has(self::SESSION_NAME)) {
             return redirect()->route('join.form');
         }
 
@@ -268,7 +260,7 @@ class JoinController extends Controller
     }
 
     /**
-     * Returns the introduction week, matching by slug
+     * Returns the introduction week, matching by slug.
      */
     private function getIntroActivity(): ?Activity
     {
@@ -281,17 +273,14 @@ class JoinController extends Controller
             ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
 
             // Get the one that starts soonest
-            ->orderBy('start_date')
+            ->orderByDesc('start_date')
 
             // Return first
             ->first();
     }
 
     /**
-     * Finds or creates a user that matches the data in this enrollment
-     *
-     * @param array $data
-     * @return User|null
+     * Finds or creates a user that matches the data in this enrollment.
      */
     private function createJoinUser(array $data): ?User
     {
@@ -306,7 +295,7 @@ class JoinController extends Controller
         ]);
 
         // Return null if the user already exists
-        if (!$user->wasRecentlyCreated) {
+        if (! $user->wasRecentlyCreated) {
             return null;
         }
 
@@ -322,13 +311,9 @@ class JoinController extends Controller
     }
 
     /**
-     * Returns a redirect for the data supplied
+     * Returns a redirect for the data supplied.
      *
-     * @param EnrollmentServiceContract $enrollService
-     * @param Request $request
-     * @param Activity $activity
-     * @param array $data
-     * @return RedirectResponse|null
+     * @return null|RedirectResponse
      */
     private function joinIntroActivity(
         EnrollmentServiceContract $enrollService,
@@ -346,7 +331,7 @@ class JoinController extends Controller
             optional($lock)->block(15);
 
             // Check if the user can actually enroll
-            if (!$enrollService->canEnroll($activity, $user)) {
+            if (! $enrollService->canEnroll($activity, $user)) {
                 Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
                     'user' => $user,
                     'activity' => $activity,

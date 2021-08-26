@@ -14,10 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
- * Generates sitemaps for activities,
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Generates sitemaps for activities,.
  */
 class SitemapController extends Controller
 {
@@ -27,9 +24,7 @@ class SitemapController extends Controller
     ];
 
     /**
-     * Make sure the request has a valid type before sending it
-     *
-     * @param Request $request
+     * Make sure the request has a valid type before sending it.
      */
     public function __construct(Request $request)
     {
@@ -37,22 +32,21 @@ class SitemapController extends Controller
         abort_unless(
             $request->accepts('text/xml'),
             Response::HTTP_NOT_ACCEPTABLE,
-            'You need to be able to understand XML sitemaps'
+            'You need to be able to understand XML sitemaps',
         );
     }
 
     /**
-     * Present index sitemap on homepage
+     * Present index sitemap on homepage.
      *
-     * @param Request $request
      * @return Response
      */
     public function index(Request $request)
     {
         // Reject if the user can't handle XML
-        if (!$request->accepts('text/xml')) {
+        if (! $request->accepts('text/xml')) {
             return new NotAcceptableHttpException(
-                'Sitemap is only available as XML, but you don\'t seem to want that.'
+                'Sitemap is only available as XML, but you don\'t seem to want that.',
             );
         }
 
@@ -64,7 +58,7 @@ class SitemapController extends Controller
         $map->setCache('laravel.sitemap', now()->addHour());
 
         // Create new map if not cached or debugging
-        if (!$map->isCached() || config('app.debug', false)) {
+        if (! $map->isCached() || config('app.debug', false)) {
             $this->buildSitemap($map);
         }
 
@@ -82,7 +76,7 @@ class SitemapController extends Controller
 
         // Add other pages
         foreach (Page::cursor() as $page) {
-            if (in_array($page->slug, self::SKIPPED_PAGES) || empty($page->html)) {
+            if (in_array($page->slug, self::SKIPPED_PAGES, true) || empty($page->html)) {
                 continue;
             }
 
@@ -101,15 +95,15 @@ class SitemapController extends Controller
         $mostRecent = (clone $query)->max('updated_at');
 
         // Index page
-        $sitemap->add(route("$base.index"), $mostRecent, '0.9', 'daily');
+        $sitemap->add(route("${base}.index"), $mostRecent, '0.9', 'daily');
 
         // Item page
         foreach ($query->cursor() as $model) {
             $sitemap->add(
-                route("$base.show", [$field => $model]),
+                route("${base}.show", [$field => $model]),
                 $model->updated_at,
                 '0.8',
-                'weekly'
+                'weekly',
             );
         }
     }

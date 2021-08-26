@@ -52,7 +52,7 @@ class LoginCommand extends Command
     protected $description = 'Koppel je Telegram account';
 
     /**
-     * Handle the activity
+     * Handle the activity.
      */
     public function handle()
     {
@@ -71,6 +71,7 @@ class LoginCommand extends Command
                 'text' => sprintf(self::LOGOUT_MSG, $user->alias ?? $user->first_name),
                 'parse_mode' => 'HTML',
             ]);
+
             return;
         }
 
@@ -86,16 +87,31 @@ class LoginCommand extends Command
                     'url' => route('account.tg.link'),
                     'request_write_access' => false,
                 ],
-            ])
+            ]),
         );
+
+        $loginMessage = [
+            'text' => $this->formatText(self::LOGIN_MSG),
+            'parse_mode' => 'HTML',
+            'reply_markup' => $keyboard,
+        ];
 
         // Return message
         try {
-            $this->replyWithMessage([
-                'text' => $this->formatText(self::LOGIN_MSG),
-                'parse_mode' => 'HTML',
-                'reply_markup' => $keyboard,
-            ]);
+            // Send as DM if in group chat
+            if ($this->isInGroupChat()) {
+                $this->getTelegram()->sendMessage(array_merge($loginMessage, [
+                    'chat_id' => $this->getTelegramUser()->id,
+                ]));
+
+                $this->replyWithMessage([
+                    'text' => 'Een link om mee in te loggen is verstuurd naar je DMs.',
+                ]);
+
+                return;
+            }
+
+            $this->replyWithMessage($loginMessage);
         } catch (TelegramSDKException $e) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::LOGIN_MSG_FAIL),

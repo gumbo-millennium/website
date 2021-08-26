@@ -9,9 +9,7 @@ use App\Forms\Traits\UseTemplateStrings;
 use Kris\LaravelFormBuilder\Form;
 
 /**
- * Registration form
- *
- * @package App\Forms
+ * Registration form.
  */
 class RegisterForm extends Form
 {
@@ -19,7 +17,7 @@ class RegisterForm extends Form
     use UseTemplateStrings;
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {
@@ -68,9 +66,7 @@ class RegisterForm extends Form
                     'minlength' => '10',
                 ],
                 'help_block' => [
-                    // phpcs:disable Generic.Files.LineLength.TooLong
                     'text' => '<strong>Minimaal 10 tekens</strong>. Probeer een beetje origineel te zijn (gebruik niet je Google wachtwoord, bijvoorbeeld)',
-                    // phpcs:enable Generic.Files.LineLength.TooLong
                 ],
             ])
             ->addAlias()

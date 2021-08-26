@@ -9,17 +9,15 @@ use App\Models\NewsItem;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOTools;
+use Illuminate\Support\Facades\Date;
 
 /**
- * Renders user-generated news articles
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Renders user-generated news articles.
  */
 class NewsController extends Controller
 {
     /**
-     * Renders a news index, per 15 pages
+     * Renders a news index, per 15 pages.
      *
      * @return Response
      */
@@ -82,13 +80,14 @@ class NewsController extends Controller
     }
 
     /**
-     * Renders a single item
+     * Renders a single item.
      *
-     * @param NewsItem $item
      * @return Response
      */
     public function show(NewsItem $item)
     {
+        abort_if($item->published_at > Date::now(), 404);
+
         // meta
         $title = $item->title;
         $description = $item->summary;

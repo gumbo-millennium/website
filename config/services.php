@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -63,6 +62,11 @@ return [
             'activiteiten.gumbo-millennium.nl',
             'organen.gumbo-millennium.nl',
         ],
+    ],
+
+    // Tenor gif search
+    'tenor' => [
+        'api-key' => env('TENOR_API_KEY'),
     ],
 
     /*

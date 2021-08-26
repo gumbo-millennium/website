@@ -29,16 +29,16 @@ $properties = [
     <a class="@stack('files.download-class')" href="{{ route('files.download', compact('bundle')) }}">Alles downloaden</a>
 
     {{-- Data --}}
-    <dl class="my-8 py-8 border-gray-secondary-3 border-t border-b flex flex-row flex-wrap row">
+    <dl class="my-8 py-8 border-gray-secondary-3 border-t border-b grid gap-2 grid-cols-2">
         @foreach ($properties as $label => $value)
-        <dt class="col w-1/3 flex-none mb-2 font-bold">{{ $label }}</dt>
-        <dd class="col w-2/3 flex-none mb-2 text-sm font-gray-primary-1">{{ $value }}</dd>
+        <dt class="font-bold">{{ $label }}</dt>
+        <dd class="text-sm font-gray-primary-1">{{ $value }}</dd>
         @endforeach
     </dl>
 
     {{-- Back link --}}
     <a href="{{ route('files.category', ['category' => $bundle->category]) }}" class="inline-block mb-4 no-underline p-4 text-sm">
-        @icon('chevron-left', 'mr-2')
+        @icon('solid/chevron-left', 'mr-2')
         Terug naar {{ $bundle->category->title }}
     </a>
 @endsection

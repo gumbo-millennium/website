@@ -22,9 +22,11 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -36,7 +38,7 @@ use Laravel\Nova\Panel;
 use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
- * An activity resource, highly linked
+ * An activity resource, highly linked.
  */
 class Activity extends Resource
 {
@@ -55,7 +57,7 @@ class Activity extends Resource
     public static $title = 'name';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -65,7 +67,6 @@ class Activity extends Resource
      * @inheritDoc
      */
     public static $defaultSort = 'start_date';
-
 
     /**
      * The columns that should be searched.
@@ -80,10 +81,9 @@ class Activity extends Resource
     ];
 
     /**
-     * Make sure the user can only see enrollments he/she is allowed to see
+     * Make sure the user can only see enrollments he/she is allowed to see.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
@@ -96,8 +96,7 @@ class Activity extends Resource
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)
@@ -108,8 +107,7 @@ class Activity extends Resource
     /**
      * Build a Scout search query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Scout\Builder  $query
+     * @param \Laravel\Scout\Builder $query
      * @return \Laravel\Scout\Builder
      */
     public static function scoutQuery(NovaRequest $request, $query)
@@ -119,10 +117,9 @@ class Activity extends Resource
 
     /**
      * Return query that is filtered on allowed activities, IF the user is
-     * not allowed to view them all
+     * not allowed to view them all.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     private static function queryAllOrManaged(NovaRequest $request, $query)
@@ -158,19 +155,52 @@ class Activity extends Resource
         return sprintf('%s (%s - %s)', $startDate, $startTime, $endTime);
     }
 
-
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
+        $featuresMap = collect(Config::get('gumbo.activity-features', []))
+            ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
+            ->all();
+
         return [
             $this->mainFields($request),
+
+            new Panel('Evenement-details', [
+                Text::make('Weergavenaam locatie', 'location')
+                    ->hideFromIndex()
+                    ->rules('required', 'string', 'between:2,64')
+                    ->help('Weergavenaam van de locatie.'),
+
+                Text::make('Adres locatie', 'location_address')
+                    ->hideFromIndex()
+                    ->rules('required_unless:location_type,online', 'max:190')
+                    ->help(<<<'LOCATION'
+                        Het adres van de locatie, indien niet geheel online.
+                        Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
+                    LOCATION),
+
+                Select::make('Type locatie', 'location_type')
+                    ->hideFromIndex()
+                    ->options([
+                        ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
+                        ActivityModel::LOCATION_ONLINE => 'Geheel online',
+                        ActivityModel::LOCATION_MIXED => 'Gemixt',
+                    ])
+                    ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
+                    ->rules('required'),
+
+                BooleanGroup::make('Eigenschappen', 'features')
+                    ->options($featuresMap)
+                    ->help('Extra eigenschappen om aan deze activiteit toe te voegen.'),
+            ]),
+
             new Panel('Datum en prijs-instellingen', $this->pricingFields()),
+
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
             HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
@@ -181,7 +211,7 @@ class Activity extends Resource
     public function mainFields(Request $request): MergeValue
     {
         $user = $request->user();
-        $groupRules = $user->can('admin', Activity::class) ? 'nullable' : 'required';
+        $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
 
         return $this->merge([
             ID::make()->sortable(),
@@ -194,40 +224,24 @@ class Activity extends Resource
             Slug::make('Pad', 'slug')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
-                ->readonly(fn () => $this->exists),
+                ->readonly(fn () => $this->exists)
+                ->hideFromIndex(),
 
             Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
                 ->help('Korte slagzin om de activiteit te omschrijven')
                 ->rules('nullable', 'string', 'between:4,255'),
 
+            BelongsTo::make('Groep', 'role', Role::class)
+                ->help('Groep of commissie die deze activiteit beheert')
+                ->rules($groupRules)
+                ->hideFromIndex()
+                ->nullable(),
+
             Text::make('Incasso-omschrijving', 'statement')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,16')
                 ->help('2-16 tekens lange omschrijng, welke op het iDEAL afschrift getoond wordt.'),
-
-            Text::make('Weergavenaam locatie', 'location')
-                ->hideFromIndex()
-                ->rules('required', 'string', 'between:2,64')
-                ->help('Weergavenaam van de locatie.'),
-
-            Text::make('Adres locatie', 'location_address')
-                ->hideFromIndex()
-                ->rules('required_unless:location_type,online', 'max:190')
-                ->help(<<<'LOCATION'
-                    Het adres van de locatie, indien niet geheel online.
-                    Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
-                LOCATION),
-
-            Select::make('Type locatie', 'location_type')
-                ->hideFromIndex()
-                ->options([
-                    ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
-                    ActivityModel::LOCATION_ONLINE => 'Geheel online',
-                    ActivityModel::LOCATION_MIXED => 'Gemixt',
-                ])
-                ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
-                ->rules('required'),
 
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
@@ -250,7 +264,7 @@ class Activity extends Resource
                         ->maxWidth(3072)
                         ->maxHeight(1024)
                         ->minWidth(768)
-                        ->minHeight(256)
+                        ->minHeight(256),
                 ),
 
             DateTime::make('Aangemaakt op', 'created_at')
@@ -268,19 +282,11 @@ class Activity extends Resource
             Text::make('Geannuleerd om', 'cancelled_reason')
                 ->readonly()
                 ->onlyOnDetail(),
-
-            BelongsTo::make('Groep', 'role', Role::class)
-                ->help('Groep of commissie die deze activiteit beheert')
-                ->rules($groupRules)
-                ->hideFromIndex()
-                ->nullable(),
         ]);
     }
 
     /**
-     * Pricing fields
-     *
-     * @return array
+     * Pricing fields.
      */
     public function pricingFields(): array
     {
@@ -387,10 +393,8 @@ class Activity extends Resource
     /**
      * Get the actions available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function actions(Request $request)
     {
         return [
@@ -404,7 +408,6 @@ class Activity extends Resource
     /**
      * Get the filters available on the entity.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)

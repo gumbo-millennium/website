@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Helpers\Str;
 
-if (!function_exists('mix_file')) {
+if (! function_exists('mix_file')) {
     function mix_file(string $file): ?string
     {
         // Ask Laravel Mix for the file
@@ -29,7 +29,7 @@ if (!function_exists('mix_file')) {
 
         // Convert to public path
         $fullPath = public_path($path);
-        if (!file_exists($fullPath)) {
+        if (! file_exists($fullPath)) {
             return null;
         }
 

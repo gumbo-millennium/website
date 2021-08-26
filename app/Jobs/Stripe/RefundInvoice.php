@@ -13,7 +13,7 @@ use UnderflowException;
 class RefundInvoice extends StripeJob
 {
     /**
-     * Undocumented variable
+     * Undocumented variable.
      */
     protected Enrollment $enrollment;
 
@@ -36,15 +36,16 @@ class RefundInvoice extends StripeJob
         $enrollment = $this->enrollment;
 
         // Stop if enrollment is free or not cancelled
-        if (!$enrollment->payment_invoice) {
+        if (! $enrollment->payment_invoice) {
             logger()->info('Enrollment {enrollment} does not have an invoice.', [
                 'enrollment' => $enrollment,
             ]);
+
             return;
         }
 
         // Mark as cancelled if not yet so
-        if (!($enrollment->state instanceof Cancelled)) {
+        if (! ($enrollment->state instanceof Cancelled)) {
             $enrollment->transitionTo(Cancelled::class, 'state');
             $enrollment->save();
         }

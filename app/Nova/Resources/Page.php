@@ -19,7 +19,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
 /**
- * Add page
+ * Add page.
  */
 class Page extends Resource
 {
@@ -38,7 +38,7 @@ class Page extends Resource
     public static $title = 'title';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -73,6 +73,7 @@ class Page extends Resource
                         if ($this->group === null) {
                             return $query->whereNull('group');
                         }
+
                         return $query->where('group', $this->group);
                     }),
                 ]),
@@ -116,7 +117,7 @@ class Page extends Resource
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140),
                 ),
 
             // Add type

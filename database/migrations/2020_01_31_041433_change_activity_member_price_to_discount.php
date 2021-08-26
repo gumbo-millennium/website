@@ -18,8 +18,9 @@ class ChangeActivityMemberPriceToDiscount extends Migration
     {
         // Move column
         Schema::table('activities', static function (Blueprint $table) {
-            // Change price to discount
             $table->renameColumn('price_member', 'member_discount');
+        });
+        Schema::table('activities', static function (Blueprint $table) {
             $table->renameColumn('price_guest', 'price');
         });
 
@@ -44,6 +45,7 @@ class ChangeActivityMemberPriceToDiscount extends Migration
      */
     public function down()
     {
+        // Not SQLite proof
         Schema::table('activities', static function (Blueprint $table) {
             $table->renameColumn('member_discount', 'price_member');
             $table->renameColumn('price', 'price_guest');

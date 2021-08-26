@@ -27,8 +27,21 @@
         </ul>
 
         {{-- User info --}}
+        @unless ($lustrumNav ?? false)
         <ul class="userbar__links userbar__links--user">
             @auth
+            {{-- Shopping cart --}}
+            @unless (Cart::isEmpty())
+            <li class="userbar__links-link cursor-default">
+                <a href="{{ route('shop.cart') }}" class="userbar__links-item">
+                    @icon('solid/shopping-cart', ['aria-label' => 'Winkelwagentje'])
+                    <span>
+                        {{ Lang::choice('1 product|:count products', Cart::getContent()->sum('quantity')) }}
+                    </span>
+                </a>
+            </li>
+            @endif
+
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
                 <a href="{{ route('account.index') }}" class="userbar__links-item">
@@ -65,6 +78,7 @@
 
             @endauth
         </ul>
+        @endunless
     </div>
 </div>
 
@@ -72,17 +86,10 @@
 <nav class="@stack('header.navbar-class')">
     <div class="container navbar__container">
         <a href="{{ route('home') }}" class="logo-wrapper">
-            @event ('april-fools')
-            <img src="{{ mix('images/logo-text-april-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
-                class="logo block dark:hidden" width="160" height="64" />
-            <img src="{{ mix('images/logo-text-april-night.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
-                class="logo hidden dark:block" width="160" height="64" />
-            @else
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
                 class="logo block dark:hidden" width="160" height="64" />
             <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" aria-label="Logo Gumbo Millennium"
                 class="logo hidden dark:block" width="160" height="64" />
-            @endevent
         </a>
 
         {{-- Push everything to the right --}}
@@ -91,7 +98,7 @@
         {{-- Toggle --}}
         <label for="navbar-toggle" class="navbar__toggle">
             <span class="sr-only">Toon navigatie</span>
-            @icon('bars', 'navbar__toggle-icon')
+            @icon('solid/bars', 'navbar__toggle-icon')
         </label>
 
         {{-- The actual toggle (without JS) --}}
@@ -99,6 +106,14 @@
 
         {{-- Main section --}}
         <ul class="navbar__nav" data-content="navigation" data-toggle-class="navbar__nav--visible">
+            @if (($lustrumNav ?? false))
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="/">Lustrum</a>
+            </li>
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="{{ route('home') }}">Gumbo Millennium website</a>
+            </li>
+            @else
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('home') }}">Home</a>
             </li>
@@ -129,6 +144,14 @@
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('files.index') }}">Bestanden</a>
             </li>
+            <li class="navbar__nav-item">
+                <a class="navbar__nav-link" href="{{ route('shop.home') }}">Shop</a>
+                <ul class="navbar__dropdown">
+                    <li class="navbar__dropdown-item">
+                        <a href="{{ route('shop.order.index') }}" class="navbar__dropdown-link">Bestellingen</a>
+                    </li>
+                </ul>
+            </li>
             @endif
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('news.index') }}">Nieuws</a>
@@ -138,15 +161,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
         </ul>
     </div>
 </nav>
-
-{{-- Flashed messages --}}
-@if (flash()->message)
-<div class="container mt-2" role="alert">
-    <div class="notice {{ flash()->class }}">
-        <p>{{ flash()->message }}</p>
-    </div>
-</div>
-@endif

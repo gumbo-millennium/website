@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Nova\Metrics;
 
 use App\Models\User;
+use DateInterval;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Partition;
 
@@ -19,9 +21,6 @@ class MemberRatio extends Partition
 
     /**
      * Calculate the value of the metric.
-     *
-     * @param Request $request
-     * @return mixed
      */
     public function calculate(Request $request) // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     {
@@ -39,7 +38,7 @@ class MemberRatio extends Partition
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return DateInterval|DateTimeInterface|float|int
      */
     public function cacheFor()
     {

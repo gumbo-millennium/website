@@ -9,32 +9,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
 /**
- * A default ordering scope, used to add a sort order if no order is specified yet
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * A default ordering scope, used to add a sort order if no order is specified yet.
  */
 class DefaultOrderScope implements Scope
 {
     /**
-     * Order column
+     * Order column.
      *
      * @var string
      */
     private $column;
 
     /**
-     * Order direction
+     * Order direction.
      *
      * @var string
      */
     private $direction;
 
     /**
-     * Add a default sorting order
-     *
-     * @param string $column
-     * @param string $direction
+     * Add a default sorting order.
      */
     public function __construct(string $column, string $direction = 'asc')
     {
@@ -43,17 +37,15 @@ class DefaultOrderScope implements Scope
     }
 
     /**
-     * Apply the default sort order
+     * Apply the default sort order.
      *
-     * @param Builder $builder
-     * @param Model $model
      * @return void
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function apply(Builder $builder, Model $model)
     {
         // Check if no orders are set yet
-        if (!empty($builder->getQuery()->orders)) {
+        if (! empty($builder->getQuery()->orders)) {
             return;
         }
 

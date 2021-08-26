@@ -6,17 +6,37 @@ namespace App\Services\Mail;
 
 use Google_Service_Groupssettings_Groups as GroupSettings;
 use InvalidArgumentException;
+use JsonException;
 use LogicException;
 
 class GooglePermissionFactory
 {
     public const CONFIG_DEFAULT = 'default';
+
     public const CONFIG_ACTIVITY = 'activity';
 
     public const REPLY_SENDER = 'REPLY_TO_SENDER';
+
     public const REPLY_CUSTOM = 'REPLY_TO_CUSTOM';
+
     public const REPLY_MANAGERS = 'REPLY_TO_MANAGERS';
+
     private const EMAIL_CONFIG_BASE = 'assets/json/mail';
+
+    /**
+     * Foundational config.
+     */
+    private array $baseConfig;
+
+    /**
+     * Configs added via `append()`.
+     */
+    private array $additionalConfigs = [];
+
+    /**
+     * User-level changes.
+     */
+    private array $userConfig = [];
 
     public static function make(?string $append = null)
     {
@@ -42,16 +62,16 @@ class GooglePermissionFactory
 
     /**
      * Handles fetching a config in a safe manner.
-     * Validates config name, config existence, config data and returns an array on success
+     * Validates config name, config existence, config data and returns an array on success.
      *
      * @param string $configName Config name
-     * @return array<string|int> Settings
+     * @return array<int|string> Settings
      * @throws InvalidArgumentException
      */
     protected static function getConfig(string $configName): array
     {
         // Validate name
-        if (!\preg_match('/^[a-z-]{2,30}$/', $configName)) {
+        if (! \preg_match('/^[a-z-]{2,30}$/', $configName)) {
             throw new InvalidArgumentException('Config name is invalid');
         }
 
@@ -65,8 +85,8 @@ class GooglePermissionFactory
         $configPath = \resource_path(self::EMAIL_CONFIG_BASE . \DIRECTORY_SEPARATOR . $fileName);
 
         // Throw a fit if file is missing
-        if (!\file_exists($configPath) || !\is_file($configPath)) {
-            throw new InvalidArgumentException("Config named [$configName] does not exist at [$configPath]");
+        if (! \file_exists($configPath) || ! \is_file($configPath)) {
+            throw new InvalidArgumentException("Config named [${configName}] does not exist at [${configPath}]");
         }
 
         // Get contents
@@ -75,31 +95,10 @@ class GooglePermissionFactory
         try {
             // Decode contents on receive
             return \json_decode($contents, true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $exception) {
-            throw new InvalidArgumentException("Config named [$configName] is invalid", 0, $exception);
+        } catch (JsonException $exception) {
+            throw new InvalidArgumentException("Config named [${configName}] is invalid", 0, $exception);
         }
     }
-
-    /**
-     * Foundational config
-     *
-     * @var array
-     */
-    private array $baseConfig;
-
-    /**
-     * Configs added via `append()`
-     *
-     * @var array
-     */
-    private array $additionalConfigs = [];
-
-    /**
-     * User-level changes
-     *
-     * @var array
-     */
-    private array $userConfig = [];
 
     protected function __construct(array $config)
     {
@@ -107,9 +106,8 @@ class GooglePermissionFactory
     }
 
     /**
-     * Adds a set of configs
+     * Adds a set of configs.
      *
-     * @param string $configName
      * @return exit
      * @throws InvalidArgumentException
      */
@@ -123,9 +121,8 @@ class GooglePermissionFactory
     }
 
     /**
-     * Appends raw settings
+     * Appends raw settings.
      *
-     * @param array $options
      * @return GooglePermissionFactory
      * @throws InvalidArgumentException
      */
@@ -133,11 +130,11 @@ class GooglePermissionFactory
     {
         // Validate each key
         foreach ($options as $key => $value) {
-            if (!is_string($key)) {
-                throw new InvalidArgumentException("Config key [$key] is invalid");
+            if (! is_string($key)) {
+                throw new InvalidArgumentException("Config key [${key}] is invalid");
             }
-            if (!is_scalar($value) && $value !== null) {
-                throw new InvalidArgumentException("Config value on [$key] is invalid");
+            if (! is_scalar($value) && $value !== null) {
+                throw new InvalidArgumentException("Config value on [${key}] is invalid");
             }
         }
 
@@ -149,21 +146,19 @@ class GooglePermissionFactory
     }
 
     /**
-     * Sets how users reply to this list
+     * Sets how users reply to this list.
      *
-     * @param string $policy
-     * @param string|null $replyTo
      * @return void
      */
     public function setReplyPolicy(string $policy, ?string $replyTo = null): self
     {
         // Only allow valid options
         if (
-            !in_array($policy, [
-            self::REPLY_SENDER,
-            self::REPLY_CUSTOM,
-            self::REPLY_MANAGERS,
-            ])
+            ! in_array($policy, [
+                self::REPLY_SENDER,
+                self::REPLY_CUSTOM,
+                self::REPLY_MANAGERS,
+            ], true)
         ) {
             throw new InvalidArgumentException('Invalid reply policy');
         }
@@ -174,7 +169,7 @@ class GooglePermissionFactory
         }
 
         // Require email on custom
-        if ($policy === self::REPLY_CUSTOM && !$replyTo) {
+        if ($policy === self::REPLY_CUSTOM && ! $replyTo) {
             throw new InvalidArgumentException('A custom, valid reply-to address is required with REPLY_CUSTOM');
         }
 
@@ -192,9 +187,8 @@ class GooglePermissionFactory
     }
 
     /**
-     * Sets footer on all inbound mail
+     * Sets footer on all inbound mail.
      *
-     * @param string|null $footer
      * @return GooglePermissionFactory
      */
     public function setFooter(?string $footer): self
@@ -203,17 +197,16 @@ class GooglePermissionFactory
         $footer = trim($footer);
 
         // Save
-        $this->userConfig['includeCustomFooter'] = !empty($footer);
-        $this->userConfig['customFooterText'] = !empty($footer) ? $footer : '';
+        $this->userConfig['includeCustomFooter'] = ! empty($footer);
+        $this->userConfig['customFooterText'] = ! empty($footer) ? $footer : '';
 
         // Chain
         return $this;
     }
 
     /**
-     * Sets message sent when an e-mail is bounced
+     * Sets message sent when an e-mail is bounced.
      *
-     * @param string|null $reply
      * @return GooglePermissionFactory
      */
     public function setDenyReply(?string $reply): self
@@ -222,17 +215,16 @@ class GooglePermissionFactory
         $reply = trim($reply);
 
         // Save
-        $this->userConfig['sendMessageDenyNotification'] = !empty($reply);
-        $this->userConfig['defaultMessageDenyNotificationText'] = !empty($reply) ? $reply : '';
+        $this->userConfig['sendMessageDenyNotification'] = ! empty($reply);
+        $this->userConfig['defaultMessageDenyNotificationText'] = ! empty($reply) ? $reply : '';
 
         // Chain
         return $this;
     }
 
     /**
-     * Builds settings as Google object
+     * Builds settings as Google object.
      *
-     * @return GroupSettings
      * @throws LogicException
      */
     public function build(): GroupSettings
@@ -241,9 +233,7 @@ class GooglePermissionFactory
     }
 
     /**
-     * Constructs the settings
-     *
-     * @return array
+     * Constructs the settings.
      */
     public function toArray(): array
     {
@@ -252,17 +242,17 @@ class GooglePermissionFactory
 
         foreach ($config as $key => $value) {
             // Re-check keys
-            if (!\is_string($key)) {
-                throw new LogicException("Key [$key] is not a string, filtering is failing.");
+            if (! \is_string($key)) {
+                throw new LogicException("Key [${key}] is not a string, filtering is failing.");
             }
 
             // Re-check values
-            if (!\is_scalar($value) && !\is_null($value)) {
-                throw new LogicException("Value at [$key] is not scalar or null, filtering is failing.");
+            if (! \is_scalar($value) && null !== $value) {
+                throw new LogicException("Value at [${key}] is not scalar or null, filtering is failing.");
             }
 
             // Format value
-            if (\is_null($value)) {
+            if (null === $value) {
                 $value = '';
             } elseif (\is_bool($value)) {
                 $value = $value ? 'true' : 'false';

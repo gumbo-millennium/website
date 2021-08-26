@@ -17,16 +17,16 @@ class FormFieldTest extends TestCase
     use RequiresNova;
     use WithFaker;
 
-    public function testConversion(): void
+    public function test_conversion(): void
     {
         $key = Str::random(16);
         $help = $this->faker->paragraph;
         $label = $this->faker->words(3, true);
 
         $layout = new FormField(null, null, null, $key, [
-            "help" => $help,
-            "label" => $label,
-            "required" => true,
+            'help' => $help,
+            'label' => $label,
+            'required' => true,
         ]);
 
         $result = $layout->toFormField();
@@ -52,7 +52,7 @@ class FormFieldTest extends TestCase
      *
      * @return void
      */
-    public function testFormFieldConversion()
+    public function test_form_field_conversion()
     {
         $this->markTestSkipped('Test is broken');
 
@@ -60,21 +60,21 @@ class FormFieldTest extends TestCase
         $activity = factory(Activity::class)->create([
             'enrollment_questions' => json_encode([
                 [
-                    "key" => "54fd249d9b4fc488",
-                    "layout" => "text-field",
-                    "attributes" => [
-                        "help" => "This is a help text",
-                        "label" => "Alpha Field",
-                        "required" => true,
+                    'key' => '54fd249d9b4fc488',
+                    'layout' => 'text-field',
+                    'attributes' => [
+                        'help' => 'This is a help text',
+                        'label' => 'Alpha Field',
+                        'required' => true,
                     ],
                 ],
                 [
-                    "key" => "9zVMHhtWNpTAnBGf",
-                    "layout" => "text-field",
-                    "attributes" => [
-                        "help" => null,
-                        "label" => "Bravo Field",
-                        "required" => false,
+                    'key' => '9zVMHhtWNpTAnBGf',
+                    'layout' => 'text-field',
+                    'attributes' => [
+                        'help' => null,
+                        'label' => 'Bravo Field',
+                        'required' => false,
                     ],
                 ],
             ]),

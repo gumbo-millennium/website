@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 use App\Models\Media;
 use App\Models\MediaLibrary\LocalPathGenerator;
-use App\Models\MediaLibrary\ProtectedFileUrlGenerator;
+use App\Models\MediaLibrary\ProtectedCloudFileUrlGenerator;
+use App\Models\MediaLibrary\ProtectedLocalFileUrlGenerator;
 use Spatie\ImageOptimizer\Optimizers\Gifsicle;
 use Spatie\ImageOptimizer\Optimizers\Jpegoptim;
 use Spatie\ImageOptimizer\Optimizers\Optipng;
@@ -18,13 +19,14 @@ use Spatie\MediaLibrary\ImageGenerators\FileTypes\Webp;
 use Spatie\MediaLibrary\ResponsiveImages\TinyPlaceholderGenerator\Blurred;
 use Spatie\MediaLibrary\ResponsiveImages\WidthCalculator\FileSizeOptimizedWidthCalculator;
 
-return [
+$diskName = env('MEDIA_DISK', 'public');
 
+return [
     /*
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name' => env('MEDIA_DISK', 'public'),
+    'disk_name' => $diskName,
 
     /*
      * The maximum file size of an item in bytes.
@@ -38,16 +40,12 @@ return [
      */
     'queue_name' => '',
 
-    /*
-     * The fully qualified class name of the media model.
-     */
+    // The fully qualified class name of the media model.
     'media_model' => Media::class,
 
     's3' => [
-        /*
-         * The domain that should be prepended when generating urls.
-         */
-        'domain' => 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com',
+        // The domain that should be prepended when generating urls.
+        'domain' => env('SCALEWAY_URL', 'https://' . env('AWS_BUCKET') . '.s3.amazonaws.com'),
     ],
 
     'remote' => [
@@ -65,7 +63,6 @@ return [
     ],
 
     'responsive_images' => [
-
         /*
          * This class is responsible for calculating the target widths of the responsive
          * images. By default we optimize for filesize and create variations that each are 20%
@@ -92,7 +89,9 @@ return [
      * When urls to files get generated, this class will be called. Leave empty
      * if your files are stored locally above the site root or on s3.
      */
-    'url_generator' => ProtectedFileUrlGenerator::class,
+    'url_generator' => $diskName === 'local'
+        ? ProtectedLocalFileUrlGenerator::class
+        : ProtectedCloudFileUrlGenerator::class,
 
     /*
      * Whether to activate versioning when urls to files get generated.
@@ -100,9 +99,7 @@ return [
      */
     'version_urls' => false,
 
-    /*
-     * The class that contains the strategy for determining a media file's path.
-     */
+    // The class that contains the strategy for determining a media file's path.
     'path_generator' => LocalPathGenerator::class,
 
     /*
@@ -132,9 +129,7 @@ return [
         ],
     ],
 
-    /*
-     * These generators will be used to create an image of media files.
-     */
+    // These generators will be used to create an image of media files.
     'image_generators' => [
         Image::class,
         Webp::class,

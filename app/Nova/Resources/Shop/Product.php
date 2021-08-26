@@ -15,7 +15,6 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 
-// phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
 class Product extends Resource
 {
     /**
@@ -53,7 +52,6 @@ class Product extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -85,6 +83,9 @@ class Product extends Resource
                 ->max(100),
 
             Boolean::make(__('Visible'), 'visible'),
+
+            Boolean::make(__('Advertise on homepage and shop landing'), 'advertise_on_home')
+                ->help(__('The category and the product need to be visible for the advertisement to show.')),
 
             BelongsTo::make(__('Category'), 'category', Category::class)
                 ->searchable(),

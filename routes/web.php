@@ -2,17 +2,37 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers;
 use App\Http\Controllers\FileExportController;
-use App\Http\Controllers\ShopController;
+use App\Http\Controllers\LustrumController;
+use App\Http\Controllers\RedirectController;
+use App\Http\Controllers\Shop;
 use App\Http\Middleware\VerifiedIfFree;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
-
-// phpcs:disable Generic.Files.LineLength.TooLong
 
 $loginCsp = vsprintf('%s:%s', [
     Spatie\Csp\AddCspHeaders::class,
     App\Http\Policy\LoginPolicy::class,
 ]);
+
+// Bind redirects as very, very first.
+foreach (Config::get('gumbo.redirect-domains') as $domain) {
+    Route::domain($domain)->group(function () {
+        Route::get('/', [RedirectController::class, 'index']);
+        Route::get('/{slug}', [RedirectController::class, 'redirect'])
+            ->where('slug', '.+');
+    });
+}
+
+// Bind Lustrum minisite
+foreach (Config::get('gumbo.lustrum-domains') as $domain) {
+    Route::domain($domain)->group(function () {
+        Route::get('/', [LustrumController::class, 'index']);
+        Route::get('/{any}', [LustrumController::class, 'other'])
+            ->where('any', '.+');
+    });
+}
 
 // Home
 Route::get('/', 'PageController@homepage')->name('home');
@@ -29,20 +49,20 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 // Route::get('/search/{query}', 'SearchController@search')->name('search');
 
 /**
- * Plazacam routes
+ * Plazacam routes.
  */
 Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
 /**
- * Export route
+ * Export route.
  */
 Route::get('admin/download-export/{export}', [FileExportController::class, 'download'])
     ->name('export.download');
 
 /**
- * Files route
+ * Files route.
  */
 Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->group(static function () {
     // Main route
@@ -63,7 +83,7 @@ Route::middleware(['auth', 'member'])->prefix('bestanden')->name('files.')->grou
 });
 
 /**
- * Activities
+ * Activities.
  */
 Route::prefix('activiteiten')->name('activity.')->group(static function () {
     // USER ROUTES
@@ -85,7 +105,7 @@ Route::permanentRedirect('/activity', '/activiteiten');
 Route::permanentRedirect('/activiteit', '/activiteiten');
 
 /**
- * Enrollments
+ * Enrollments.
  */
 Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
     // Actioon view
@@ -128,7 +148,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 });
 
 /**
- * News
+ * News.
  */
 Route::prefix('nieuws')->name('news.')->group(static function () {
     // Main route
@@ -139,7 +159,7 @@ Route::prefix('nieuws')->name('news.')->group(static function () {
 });
 
 /**
- * Join controller
+ * Join controller.
  */
 Route::prefix('word-lid')->name('join.')->group(static function () {
     // Join form (normal and intro)
@@ -186,6 +206,12 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'Account\TelegramController@store');
     Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');
+
+    // Data Exports
+    Route::get('/inzageverzoek', [Controllers\Account\DataExportController::class, 'index'])->name('export.index');
+    Route::post('/inzageverzoek', [Controllers\Account\DataExportController::class, 'store'])->name('export.store');
+    Route::get('/inzageverzoek/{id}/{token}', [Controllers\Account\DataExportController::class, 'show'])->name('export.show');
+    Route::get('/inzageverzoek/{id}/{token}/download', [Controllers\Account\DataExportController::class, 'download'])->name('export.download');
 });
 
 // Onboarding URLs
@@ -201,15 +227,37 @@ Route::prefix('sponsoren')->name('sponsors.')->middleware('no-sponsor')->group(s
 });
 
 /**
- * Webshop
+ * Webshop.
  */
-Route::prefix('shop')->name('shop.')->group(static function () {
-    Route::get('/', [ShopController::class, 'index'])->name('home');
+Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(static function () {
+    // Homepage
+    Route::get('/', [Shop\ProductController::class, 'index'])->name('home');
 
-    Route::get('/item/{product}', [ShopController::class, 'showProduct'])->name('product');
-    Route::get('/item/{product}/{variant}', [ShopController::class, 'showProductVariant'])->name('product-variant');
+    // Single item display
+    Route::get('/item/{product}', [Shop\ProductController::class, 'showProduct'])->name('product');
+    Route::get('/item/{product}/{variant}', [Shop\ProductController::class, 'showProductVariant'])->name('product-variant');
 
-    Route::get('/{category}', [ShopController::class, 'showCategory'])->name('category');
+    // Shopping cart
+    Route::get('/winkelwagen', [Shop\CartController::class, 'index'])->name('cart');
+    Route::post('/winkelwagen', [Shop\CartController::class, 'add'])->name('cart.add');
+    Route::patch('/winkelwagen', [Shop\CartController::class, 'update'])->name('cart.update');
+
+    Route::get('/plaats-bestelling', [Shop\OrderController::class, 'create'])->name('order.create');
+    Route::post('/plaats-bestelling', [Shop\OrderController::class, 'store'])->name('order.store');
+
+    Route::get('/bestellingen', [Shop\OrderController::class, 'index'])->name('order.index');
+
+    Route::get('/bestellingen/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
+
+    Route::get('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
+    Route::get('/bestellingen/{order}/betalen/go', [Shop\OrderController::class, 'payRedirect'])->name('order.pay-redirect');
+    Route::get('/bestellingen/{order}/betalen/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+
+    Route::get('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancelShow'])->name('order.cancel');
+    Route::post('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancel']);
+
+    // Category
+    Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });
 
 // Common mistakes handler
@@ -227,11 +275,11 @@ $groupRegex = sprintf(
     '^(%s)$',
     implode('|', array_map(
         static fn ($key) => preg_quote($key, '/'),
-        array_keys(config('gumbo.page-groups'))
-    ))
+        array_keys(config('gumbo.page-groups')),
+    )),
 );
-Route::get("{group}", 'PageController@group')->where('group', $groupRegex)->name('group.index');
-Route::get("{group}/{slug}", 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
+Route::get('{group}', 'PageController@group')->where('group', $groupRegex)->name('group.index');
+Route::get('{group}/{slug}', 'PageController@groupPage')->where('group', $groupRegex)->name('group.show');
 
 // Redirects
 Route::redirect('corona', '/coronavirus');

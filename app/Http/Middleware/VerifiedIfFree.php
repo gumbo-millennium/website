@@ -12,9 +12,7 @@ class VerifiedIfFree
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
      */
     public function handle($request, Closure $next)
     {
@@ -31,14 +29,14 @@ class VerifiedIfFree
         }
 
         // Skip if non-free
-        if (!$activity || !$activity->is_free) {
+        if (! $activity || ! $activity->is_free) {
             return $next($request);
         }
 
         // Flash message
         \flash(
             "Je moet eerst je e-mailadres bevestigen, voordat je kan inschrijven voor {$activity->name}.",
-            "warning"
+            'warning',
         );
 
         // Redirect back to activity

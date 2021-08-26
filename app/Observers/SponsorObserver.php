@@ -14,37 +14,37 @@ use Illuminate\Support\Facades\Storage;
 class SponsorObserver
 {
     private const TRACKING_QUERY_PARAMS = [
-        "/^utm(_[a-zA-Z]*)?/",
-        "/^ga_[a-zA-Z_]+/",
-        "/^yclid/",
-        "/^_openstat/",
-        "/^fb_action_ids/",
-        "/^fb_action_types/",
-        "/^fb_source/",
-        "/^fb_ref/",
-        "/^fbclid/",
-        "/^action_object_map/",
-        "/^action_type_map/",
-        "/^action_ref_map/",
-        "/^gs_l/",
-        "/^mkt_tok/",
-        "/^hmb_campaign/",
-        "/^hmb_medium/",
-        "/^hmb_source/",
-        "/^ref[\\_]?/",
-        "/^gclid/",
-        "/^otm_[a-zA-Z_]*/",
-        "/^cmpid/",
-        "/^os_ehash/",
-        "/^_ga/",
-        "/^__twitter_impression/",
-        "/^wt_?z?mc/",
-        "/^wtrid/",
-        "/^[a-zA-Z]?mc/",
-        "/^dclid/",
-        "/^x/",
-        "/^spm/",
-        "/^vn(_[a-zA-Z]*)+/",
+        '/^utm(_[a-zA-Z]*)?/',
+        '/^ga_[a-zA-Z_]+/',
+        '/^yclid/',
+        '/^_openstat/',
+        '/^fb_action_ids/',
+        '/^fb_action_types/',
+        '/^fb_source/',
+        '/^fb_ref/',
+        '/^fbclid/',
+        '/^action_object_map/',
+        '/^action_type_map/',
+        '/^action_ref_map/',
+        '/^gs_l/',
+        '/^mkt_tok/',
+        '/^hmb_campaign/',
+        '/^hmb_medium/',
+        '/^hmb_source/',
+        '/^ref[\\_]?/',
+        '/^gclid/',
+        '/^otm_[a-zA-Z_]*/',
+        '/^cmpid/',
+        '/^os_ehash/',
+        '/^_ga/',
+        '/^__twitter_impression/',
+        '/^wt_?z?mc/',
+        '/^wtrid/',
+        '/^[a-zA-Z]?mc/',
+        '/^dclid/',
+        '/^x/',
+        '/^spm/',
+        '/^vn(_[a-zA-Z]*)+/',
     ];
 
     public function saving(Sponsor $sponsor): void
@@ -53,21 +53,18 @@ class SponsorObserver
         $logos = ['logo_gray', 'logo_color'];
         foreach ($logos as $logo) {
             if (
-                !$sponsor->wasChanged($logo) ||
-                Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->$logo)
+                ! $sponsor->wasChanged($logo) ||
+                Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->{$logo})
             ) {
                 continue;
             }
 
-            $sponsor->$logo = null;
+            $sponsor->{$logo} = null;
         }
     }
 
     /**
-     * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs
-     *
-     * @param Sponsor $sponsor
-     * @return void
+     * Dispatches an SVG update if the logos were changed, and remove trackers from the URLs.
      */
     public function saved(Sponsor $sponsor): void
     {
@@ -88,7 +85,7 @@ class SponsorObserver
         }
 
         // Clean URL from trackers
-        if (!$sponsor->wasChanged('url')) {
+        if (! $sponsor->wasChanged('url')) {
             return;
         }
 

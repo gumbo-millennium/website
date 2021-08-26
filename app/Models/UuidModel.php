@@ -9,21 +9,10 @@ use Ramsey\Uuid\Uuid;
 
 /**
  * A model that has a slug property, which is used to generate unique
- * looking URLs
+ * looking URLs.
  */
 abstract class UuidModel extends Model
 {
-    /**
-     *  Setup model event hooks
-     */
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(static function ($model) {
-            $model->id = (string) Uuid::uuid4();
-        });
-    }
-
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -36,5 +25,16 @@ abstract class UuidModel extends Model
      *
      * @var string
      */
-    protected $keyType = "uuid";
+    protected $keyType = 'uuid';
+
+    /**
+     *  Setup model event hooks.
+     */
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(static function ($model) {
+            $model->id = (string) Uuid::uuid4();
+        });
+    }
 }

@@ -11,7 +11,7 @@ use Tests\TestCase;
 class TestEmailValidation extends TestCase
 {
     /**
-     * Returns the trait
+     * Returns the trait.
      *
      * @return MockObject|ValidatesEmailRequests
      */
@@ -28,11 +28,9 @@ class TestEmailValidation extends TestCase
     }
 
     /**
-     * Tests if mutating emails restricts to non-org emails
-     *
-     * @return void
+     * Tests if mutating emails restricts to non-org emails.
      */
-    public function testAllowEmailMutation(): void
+    public function test_allow_email_mutation(): void
     {
         // Get mock
         $mock = $this->getValidationMock();
@@ -49,11 +47,9 @@ class TestEmailValidation extends TestCase
     }
 
     /**
-     * Tests if processing is limited to top-level domains
-     *
-     * @return void
+     * Tests if processing is limited to top-level domains.
      */
-    public function testProcessList(): void
+    public function test_process_list(): void
     {
         // Get mock
         $mock = $this->getValidationMock();
@@ -70,13 +66,10 @@ class TestEmailValidation extends TestCase
     }
 
     /**
-     * Tests if names match the expected form
-     *
-     * @return void
+     * Tests if names match the expected form.
      */
-    public function testValidateName(): void
+    public function test_validate_name(): void
     {
-        // phpcs:disable Generic.Files.LineLength.TooLong
         // Get mock
         $mock = $this->getValidationMock();
 
@@ -101,6 +94,5 @@ class TestEmailValidation extends TestCase
         // Validate invalid project group
         $this->assertFalse($mock->validateListNameAgainstEmail('Projectgroep - Public Relations', 'prpg@example.com'));
         $this->assertFalse($mock->validateListNameAgainstEmail('BBQPG', 'bbqpg@example.com'));
-        // phpcs:enable
     }
 }

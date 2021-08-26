@@ -23,6 +23,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
     use UsesStripePaymentData;
 
     protected Enrollment $enrollment;
+
     protected User $oldUser;
 
     /**
@@ -58,7 +59,6 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
         $enrollment = $this->enrollment
             ->refresh()
             ->loadMissing(['user', 'activity', 'activity.role:id,title']);
-
 
         // Get some shorthands
         $activity = $enrollment->activity;
@@ -100,7 +100,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
             Het wordt *nóg* beter, aangezien {$oldUser->first_name} al heeft betaald voor deze inschrijving.
             Je mag lekker zelf regelen hoe dat geld terugkomt bij {$oldUser->first_name}.
             MARKDOWN);
-        } elseif (!$enrollment->state->isStable() && $enrollment->expire) {
+        } elseif (! $enrollment->state->isStable() && $enrollment->expire) {
             $exprireDate = $enrollment->expire->isoFormat('D MMM Y, HH:mm (z)');
             $mail->line(<<<MARKDOWN
             **Let op**: deze inschrijving is niet afgerond. Dit betekend dat je tot {$exprireDate} hebt

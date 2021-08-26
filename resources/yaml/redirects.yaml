@@ -1,0 +1,45 @@
+redirects:
+  - slug: discord
+    path: https://discord.gg/na7geNv
+
+  - slug: facebook
+    path: https://facebook.com/gumbo-millennium
+
+  - slug: insta
+    path: https://instagram.com/gumbomillennium
+
+  - slug: instagram
+    path: https://instagram.com/gumbomillennium
+
+  - slug: twitch
+    path: https://twitch.tv/gumbomillennium
+
+  - slug: bestuurspublicaties
+    path: https://example.com/
+
+  - slug: acpublicaties
+    path: https://example.com/
+
+  - slug: vrijwilligers
+    path: https://example.com/
+
+  - slug: bestuurpublicaties
+    path: /bestuurspublicaties
+
+  - slug: bestuurspublicatie
+    path: /bestuurspublicaties
+
+  - slug: bestuurpublicatie
+    path: /bestuurspublicaties
+
+  - slug: stemmen
+    path: https://e-voting.gumbo-millennium.nl/
+
+  - slug: stem
+    path: https://e-voting.gumbo-millennium.nl/
+
+  - slug: vote
+    path: https://e-voting.gumbo-millennium.nl/
+
+  - slug: github
+    path: https://github.com/gumbo-millennium

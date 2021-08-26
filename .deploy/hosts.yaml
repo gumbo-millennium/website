@@ -1,0 +1,9 @@
+production.env.gumbo-millennium.nl:
+  stage: production
+  roles: app
+  deploy_path: ~/domains/gumbo
+
+acceptance.env.gumbo-millennium.nl:
+  stage: acceptance
+  roles: app
+  deploy_path: ~/domains/gumbo-acc

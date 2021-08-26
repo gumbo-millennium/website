@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Updates all users from Conscribo
+ * Updates all users from Conscribo.
  */
 class UpdateEmailLists extends Command
 {

@@ -15,47 +15,48 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Gumbo Millennium sponsors
+ * Gumbo Millennium sponsors.
  *
  * @property-read AttachmentInterface $backdrop
  * @property int $id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $deleted_at
+ * @property null|\Illuminate\Support\Date $deleted_at
  * @property string $name Sponsor name
  * @property string $slug
  * @property string $url URL of sponsor landing page
- * @property \Illuminate\Support\Date|null $starts_at
- * @property \Illuminate\Support\Date|null $ends_at
- * @property int|null $has_page
+ * @property null|\Illuminate\Support\Date $starts_at
+ * @property null|\Illuminate\Support\Date $ends_at
+ * @property null|int $has_page
  * @property int $view_count Number of showings
- * @property string|null $backdrop_file_name backdrop name
- * @property int|null $backdrop_file_size backdrop size (in bytes)
- * @property string|null $backdrop_content_type backdrop content type
- * @property string|null $backdrop_updated_at backdrop update timestamp
- * @property mixed|null $backdrop_variants backdrop variants (json)
- * @property string|null $caption
- * @property string|null $logo_gray
- * @property string|null $logo_color
- * @property string|null $contents_title
- * @property mixed|null $contents
+ * @property null|string $backdrop_file_name backdrop name
+ * @property null|int $backdrop_file_size backdrop size (in bytes)
+ * @property null|string $backdrop_content_type backdrop content type
+ * @property null|string $backdrop_updated_at backdrop update timestamp
+ * @property null|mixed $backdrop_variants backdrop variants (json)
+ * @property null|string $caption
+ * @property null|string $logo_gray
+ * @property null|string $logo_color
+ * @property null|string $contents_title
+ * @property null|mixed $contents
  * @property-read \Illuminate\Database\Eloquent\Collection<SponsorClick> $clicks
  * @property-read mixed $click_count
- * @property-read string|null $content_html
+ * @property-read null|string $content_html
  * @property-read bool $is_active
  * @property-read bool $is_classic
- * @property-read string|null $logo_color_url
- * @property-read string|null $logo_gray_url
+ * @property-read null|string $logo_color_url
+ * @property-read null|string $logo_gray_url
  */
 class Sponsor extends SluggableModel implements AttachableInterface
 {
+    use HasEditorJsContent;
     use HasPaperclip;
     use HasSimplePaperclippedMedia;
     use PaperclipTrait;
-    use HasEditorJsContent;
     use SoftDeletes;
 
     public const LOGO_DISK = 'public';
+
     public const LOGO_PATH = 'sponsors/logos';
 
     /**
@@ -103,9 +104,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     ];
 
     /**
-     * Generate the slug based on the display_title property
-     *
-     * @return array
+     * Generate the slug based on the display_title property.
      */
     public function sluggable(): array
     {
@@ -119,10 +118,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns sponsors that are available right now
-     *
-     * @param Builder $builder
-     * @return Builder
+     * Returns sponsors that are available right now.
      */
     public function scopeWhereAvailable(Builder $builder): Builder
     {
@@ -143,20 +139,16 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if this should be a classic view
-     *
-     * @return bool
+     * Returns if this should be a classic view.
      */
     public function getIsClassicAttribute(): bool
     {
-        return !$this->backdrop->exists()
+        return ! $this->backdrop->exists()
             || empty($this->caption);
     }
 
     /**
-     * Returns if this sponsor is active
-     *
-     * @return bool
+     * Returns if this sponsor is active.
      */
     public function getIsActiveAttribute(): bool
     {
@@ -165,30 +157,30 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns URL to the grayscale (currentColor) logo
+     * Returns URL to the grayscale (currentColor) logo.
      *
-     * @return string|null
      * @throws InvalidArgumentException
      */
     public function getLogoGrayUrlAttribute(): ?string
     {
-        if (!$this->logo_gray) {
+        if (! $this->logo_gray) {
             return null;
         }
+
         return Storage::disk(self::LOGO_DISK)->url($this->logo_gray);
     }
 
     /**
-     * Returns URL to the full color logo
+     * Returns URL to the full color logo.
      *
-     * @return string|null
      * @throws InvalidArgumentException
      */
     public function getLogoColorUrlAttribute(): ?string
     {
-        if (!$this->logo_color) {
+        if (! $this->logo_color) {
             return null;
         }
+
         return Storage::disk(self::LOGO_DISK)->url($this->logo_color);
     }
 
@@ -198,9 +190,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the number of clicks
-     *
-     * @return mixed
+     * Returns the number of clicks.
      */
     public function getClickCountAttribute()
     {
@@ -208,9 +198,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Converts contents to HTML
-     *
-     * @return string|null
+     * Converts contents to HTML.
      */
     public function getContentHtmlAttribute(): ?string
     {
@@ -218,9 +206,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Binds paperclip files
-     *
-     * @return void
+     * Binds paperclip files.
      */
     protected function bindPaperclip(): void
     {

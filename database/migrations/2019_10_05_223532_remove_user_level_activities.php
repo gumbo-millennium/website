@@ -16,7 +16,6 @@ class RemoveUserLevelActivities extends Migration
     public function up()
     {
         Schema::table('activities', static function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
     }

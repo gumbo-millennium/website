@@ -5,109 +5,55 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\NewsItem;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
-/**
- * Tests the following flow
- *
- * - Loading the news page
- * - Creating a new news item and checking if it's shown
- * - Reading our generated news item
- * - Deleting our news item and checking if the page sends a 404
- * - Ensuring the index doesn't have our item anymore
- */
 class NewsItemTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testIndex(): void
+    public function test_empty_index(): void
     {
         // Get news index
-        $response = $this->get(route('news.index'));
-
-        // Ensure it loads
-        $response->assertOk();
+        $this->get(route('news.index'))
+            ->assertOk();
     }
 
-    /**
-     * Tests if the newly created news item is shown
-     *
-     * @return NewsItem
-     * @depends testIndex
-     */
-    public function testIndexWithItem(): NewsItem
+    public function test_valid_news_items_are_shown(): void
     {
-        // Create random item with a unique title
-        $item = factory(NewsItem::class, 1)->create([
-            'title' => Str::title(sprintf('Help, op %s kreeg ik tieten', now()->toIso8601String())),
-        ])->first();
+        $item = $this->getTestNewsItem();
 
         // Get news index
-        $response = $this->get(route('news.index'));
+        $this->get(route('news.index'))
+            ->assertOk()
+            ->assertSeeText($item->title);
 
-        // Ensure it loads
-        $response->assertOk();
-
-        // Check if we have our article
-        $response->assertSeeText($item->title);
-
-        // Return item
-        return $item;
+        // Get news display
+        $this
+            ->get(route('news.show', $item))
+            ->assertOk()
+            ->assertSeeText($item->title);
     }
 
-    /**
-     * Tests if the item can be seen
-     *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
-     */
-    public function testViewItem(NewsItem $item): void
+    public function test_item_deletion(): void
     {
-        // Get news index
-        $response = $this->get(route('news.show', ['news' => $item]));
-
-        // Ensure it loads
-        $response->assertOk();
-
-        // Check if we see our article's title
-        $response->assertSeeText($item->title);
-    }
-
-    /**
-     * Tests if an item that's deleted, returns a 404
-     *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
-     */
-    public function testViewDeletedItem(NewsItem $item): void
-    {
-        // Delete item
+        $item = $this->getTestNewsItem();
         $item->delete();
 
         // Get news index
-        $response = $this->get(route('news.show', ['news' => $item]));
+        $this->get(route('news.index'))
+            ->assertOk()
+            ->assertDontSeeText($item->title);
 
-        // Ensure it loads
-        $response->assertNotFound();
+        // Get news display
+        $this
+            ->get(route('news.show', $item))
+            ->assertNotFound();
     }
 
-    /**
-     * Tests if an item that's deleted, isn't shown on the cover (of Vogue)
-     *
-     * @param NewsItem $item
-     * @return void
-     * @depends testIndexWithItem
-     * @depends testViewItem
-     */
-    public function testIndexWithoutDeletedItem(NewsItem $item): void
+    public function test_index_without_deleted_item(): void
     {
+        $item = $this->getTestNewsItem();
+        $item->delete();
+
         // Get news index
         $response = $this->get(route('news.index'));
 
@@ -116,5 +62,35 @@ class NewsItemTest extends TestCase
 
         // Check if we cannot see our article
         $response->assertDontSeeText($item->title);
+    }
+
+    public function test_publication_dates(): void
+    {
+        $published = $this->getTestNewsItem([
+            'published_at' => Date::now()->subHour(),
+        ]);
+        $unpublished = $this->getTestNewsItem([
+            'published_at' => Date::now()->addHour(),
+        ]);
+
+        // Get news index
+        $this->get(route('news.index'))
+            ->assertOk()
+            ->assertSeeText($published->title)
+            ->assertDontSeeText($unpublished->title);
+
+        // Get published item
+        $this->get(route('news.show', $published))
+            ->assertOk()
+            ->assertSeeText($published->title);
+
+        // Get unpublished item
+        $this->get(route('news.show', $unpublished))
+            ->assertNotFound();
+    }
+
+    private function getTestNewsItem(array $attributes = []): NewsItem
+    {
+        return factory(NewsItem::class)->create($attributes);
     }
 }

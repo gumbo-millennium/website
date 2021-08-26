@@ -9,16 +9,16 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource as NovaResource;
 
 /**
- * Generic resource
+ * Generic resource.
  */
 abstract class Resource extends NovaResource
 {
     /**
-     * Column to sort by
+     * Column to sort by.
      *
-     * @var string|null
+     * @var null|string
      */
-    public static $defaultSort = null;
+    public static $defaultSort;
 
     /**
      * Get the displayable label of the resource.
@@ -43,14 +43,14 @@ abstract class Resource extends NovaResource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
         if (static::$defaultSort && empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
+
             return $query->orderBy(static::$defaultSort);
         }
 
@@ -60,8 +60,7 @@ abstract class Resource extends NovaResource
     /**
      * Build a Scout search query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Laravel\Scout\Builder  $query
+     * @param \Laravel\Scout\Builder $query
      * @return \Laravel\Scout\Builder
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
@@ -73,8 +72,7 @@ abstract class Resource extends NovaResource
     /**
      * Build a "detail" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function detailQuery(NovaRequest $request, $query)
@@ -87,8 +85,7 @@ abstract class Resource extends NovaResource
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)

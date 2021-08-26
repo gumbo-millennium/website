@@ -18,7 +18,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
 /**
- * News Items
+ * News Items.
  */
 class NewsItem extends Resource
 {
@@ -37,7 +37,7 @@ class NewsItem extends Resource
     public static $title = 'title';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -57,6 +57,7 @@ class NewsItem extends Resource
     public function fields(Request $request)
     {
         $options = config('gumbo.news-categories', ['Nieuws']);
+
         return [
             ID::make()->sortable(),
 
@@ -105,7 +106,7 @@ class NewsItem extends Resource
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140)
+                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140),
                 ),
 
             // Add data

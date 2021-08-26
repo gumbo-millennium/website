@@ -16,7 +16,7 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 
 /**
- * Users of our system
+ * Users of our system.
  */
 class User extends Resource
 {
@@ -74,9 +74,7 @@ class User extends Resource
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}')
-                ->hideFromIndex(function (Request $request) {
-                    return Gate::denies('view', $this->model);
-                }),
+                ->hideFromIndex(fn (Request $request) => Gate::denies('view', $this->model)),
 
             Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
@@ -100,7 +98,6 @@ class User extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter

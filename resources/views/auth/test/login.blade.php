@@ -10,7 +10,7 @@
         <div class="flex flex-col md:flex-row md:items-center">
             <div class="flex-grow mb-4 md:mb-0">
                 {{-- Field --}}
-                <select name="email" id="user" class="form-select w-full">
+                <select name="email" id="user" class="form-select w-full text-dark">
                     @foreach ($testUsers as $user)
                     <option value="{{ $user->email }}">{{ $user->name }}</option>
                     @endforeach

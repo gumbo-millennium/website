@@ -14,6 +14,7 @@ use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Mime\MimeTypes;
@@ -36,14 +37,12 @@ class RestoreImages extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
         // Get filename
         $filename = $this->argument('file');
-        if (!preg_match('/^[a-z0-9_-]+\.zip$/', $filename)) {
+        if (! preg_match('/^[a-z0-9_-]+\.zip$/', $filename)) {
             $this->error('File does not seem valid');
         }
 
@@ -90,10 +89,9 @@ class RestoreImages extends Command
     }
 
     /**
-     * Maps the archive to an array
+     * Maps the archive to an array.
      *
      * @param ZipArchive $zip
-     * @return array
      */
     public function mapArchive(\ZipArchive $zip): array
     {
@@ -106,7 +104,7 @@ class RestoreImages extends Command
             $file = $zip->getNameIndex($index);
 
             // Skip if invalid URL
-            if (!\preg_match('/^\/?([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+)\//', $file)) {
+            if (! \preg_match('/^\/?([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+)\//', $file)) {
                 continue;
             }
 
@@ -114,12 +112,12 @@ class RestoreImages extends Command
             [$model, $primaryKey, $property] = explode('/', $file, 4);
 
             // Make model map
-            if (!isset($result[$model])) {
+            if (! isset($result[$model])) {
                 $result[$model] = [];
             }
 
             // Make primaryKey map
-            if (!isset($result[$primaryKey])) {
+            if (! isset($result[$primaryKey])) {
                 $result[$model][$primaryKey] = [];
             }
 
@@ -146,19 +144,19 @@ class RestoreImages extends Command
         $classDisplay = \ucwords(Str::snake(\class_basename($className), ' '));
 
         // Skip
-        if (!isset($map[$pathName])) {
+        if (! isset($map[$pathName])) {
             $this->line(
                 "No items for <info>{$classDisplay}</>.",
                 null,
-                OutputInterface::VERBOSITY_VERBOSE
+                OutputInterface::VERBOSITY_VERBOSE,
             );
+
             return;
         }
 
         // Prep a base
         $baseClass = new $className();
         \assert($baseClass instanceof Model);
-
 
         // Get affected models
         $classCursor = $className::query()
@@ -169,7 +167,7 @@ class RestoreImages extends Command
         $this->line(
             "Updating <info>{$classDisplay}</>...",
             null,
-            OutputInterface::VERBOSITY_VERY_VERBOSE
+            OutputInterface::VERBOSITY_VERY_VERBOSE,
         );
         $updateCount = 0;
 
@@ -181,19 +179,20 @@ class RestoreImages extends Command
             // Iterate values
             foreach ($newValues as $propertyName => $fileIndex) {
                 // Skip if not an attachment
-                if (!$model->$propertyName instanceof AttachmentInterface) {
+                if (! $model->{$propertyName} instanceof AttachmentInterface) {
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
                         null,
-                        OutputInterface::VERBOSITY_VERY_VERBOSE
+                        OutputInterface::VERBOSITY_VERY_VERBOSE,
                     );
+
                     continue;
                 }
 
                 $this->line(
                     "Updating <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>...",
                     null,
-                    OutputInterface::VERBOSITY_DEBUG
+                    OutputInterface::VERBOSITY_DEBUG,
                 );
 
                 // Prep a tempfle
@@ -207,15 +206,14 @@ class RestoreImages extends Command
                 $mimeType = $mimeTypes->guessMimeType($tempFile);
                 $extension = $mimeTypes->getExtensions($mimeType)[0] ?? 'bin';
 
-
                 // Build custom file
                 $customFile = new SplFileInfoStorableFile();
-                $customFile->setData(new \SplFileInfo($tempFile));
+                $customFile->setData(new SplFileInfo($tempFile));
                 $customFile->setMimeType($mimeType);
                 $customFile->setName(sprintf('%s.%s', \hash_file('sha256', $tempFile), $extension));
 
                 // Assign file
-                $model->$propertyName = $customFile;
+                $model->{$propertyName} = $customFile;
 
                 // Save it
                 $model->save([$propertyName]);
@@ -224,7 +222,7 @@ class RestoreImages extends Command
                 $this->line(
                     "Updated <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
                     null,
-                    OutputInterface::VERBOSITY_VERBOSE
+                    OutputInterface::VERBOSITY_VERBOSE,
                 );
                 $updateCount++;
 
@@ -237,15 +235,13 @@ class RestoreImages extends Command
         $this->line(
             "Updated <info>{$updateCount}</> on <comment>{$classDisplay}</>.",
             null,
-            OutputInterface::VERBOSITY_NORMAL
+            OutputInterface::VERBOSITY_NORMAL,
         );
     }
 
     /**
-     * Asks for the backup if none is specified
+     * Asks for the backup if none is specified.
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return void
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -253,7 +249,7 @@ class RestoreImages extends Command
     {
         // Check for msising arguments
         $fileName = $this->argument('file');
-        if (!empty($fileName)) {
+        if (! empty($fileName)) {
             return;
         }
 
@@ -264,7 +260,7 @@ class RestoreImages extends Command
         $zipFiles = [];
         foreach ($files as $file) {
             $file = \basename($file);
-            if (!preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
+            if (! preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
                 continue;
             }
 
@@ -273,15 +269,16 @@ class RestoreImages extends Command
 
         // Add zipfile
         if (empty($zipFiles)) {
-            $this->warn("There are no backups available");
+            $this->warn('There are no backups available');
+
             return;
         }
 
         // Ask what
-        $file = $this->choice("What backup to apply?", $zipFiles);
+        $file = $this->choice('What backup to apply?', $zipFiles);
 
         // Save it
-        if (!$file) {
+        if (! $file) {
             return;
         }
 

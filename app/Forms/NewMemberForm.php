@@ -15,7 +15,7 @@ class NewMemberForm extends Form
     use UseTemplateStrings;
 
     /**
-     * Builds the form
+     * Builds the form.
      */
     public function buildForm()
     {
@@ -190,7 +190,7 @@ class NewMemberForm extends Form
                         <a href="%s" target="_blank">Lees het Privacybeleid</a>
                         (opent in een nieuw tabblad).
                         HTML,
-                        url('/privacy-policy')
+                        url('/privacy-policy'),
                     ),
                 ],
             ]);
@@ -201,10 +201,10 @@ class NewMemberForm extends Form
                 'label' => 'Aanmelden',
             ]);
     }
+
     /**
-     * Adds the intro fields, if possible
+     * Adds the intro fields, if possible.
      *
-     * @return void
      * @throws InvalidArgumentException
      */
     private function addIntro(): void
@@ -214,7 +214,7 @@ class NewMemberForm extends Form
         $activity = $this->getFormOption('intro-activity');
 
         // Skip if no intro
-        if (!$activity instanceof Activity || !$activity->enrollment_open) {
+        if (! $activity instanceof Activity || ! $activity->enrollment_open) {
             return;
         }
 

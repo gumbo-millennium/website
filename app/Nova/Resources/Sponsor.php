@@ -23,7 +23,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 
 /**
- * Add sponsor
+ * Add sponsor.
  */
 class Sponsor extends Resource
 {
@@ -42,7 +42,7 @@ class Sponsor extends Resource
     public static $title = 'name';
 
     /**
-     * Name of the group
+     * Name of the group.
      *
      * @var string
      */
@@ -73,7 +73,6 @@ class Sponsor extends Resource
                 ->rules(['min:3', 'unique:sponsors,slug'])
                 ->help('Kan niet worden aangepast na aanmaken'),
 
-
             // Counts
             Number::make('Aantal weergaven', 'view_count')
                 ->onlyOnDetail(),
@@ -84,10 +83,10 @@ class Sponsor extends Resource
 
             // Advert info
             new Panel('Contract', [
-                DateTime::make("Weergeven vanaf", 'starts_at')
+                DateTime::make('Weergeven vanaf', 'starts_at')
                     ->required(),
                 DateTime::make('Weergeven tot', 'ends_at'),
-                ]),
+            ]),
 
             new Panel('Advertentie', [
                 Logo::make('Logo (kleur)', 'logo_color'),
@@ -116,7 +115,7 @@ class Sponsor extends Resource
                         'image',
                         'mimes:jpeg,png',
                         'max:2048',
-                        Rule::dimensions()->ratio(2 / 1)
+                        Rule::dimensions()->ratio(2 / 1),
                     ),
 
                 Heading::make('Pagina-advertentie'),
@@ -130,7 +129,7 @@ class Sponsor extends Resource
                     ->hideFromIndex()
                     ->stacked()
                     ->help('Inhoud van detailpagina'),
-                ]),
+            ]),
         ];
     }
 

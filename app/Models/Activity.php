@@ -25,51 +25,53 @@ use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
- * A hosted activity
+ * A hosted activity.
  *
  * @property-read AttachmentInterface $image
  * @property int $id
  * @property \Illuminate\Support\Date $created_at
  * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date|null $deleted_at
- * @property \Illuminate\Support\Date|null $published_at
- * @property \Illuminate\Support\Date|null $cancelled_at
+ * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|\Illuminate\Support\Date $published_at
+ * @property null|\Illuminate\Support\Date $cancelled_at
  * @property string $name
  * @property string $slug
- * @property string|null $tagline
- * @property array|null $description
- * @property string|null $statement
- * @property string|null $location
- * @property string|null $location_address
+ * @property null|string $tagline
+ * @property null|array $description
+ * @property null|string $statement
+ * @property null|string $location
+ * @property null|string $location_address
  * @property string $location_type
  * @property \Illuminate\Support\Date $start_date Start date and time
  * @property \Illuminate\Support\Date $end_date End date and time
- * @property int|null $seats
+ * @property null|int $seats
  * @property bool $is_public
- * @property int|null $member_discount
- * @property int|null $discount_count
- * @property string|null $stripe_coupon_id
- * @property int|null $price
- * @property \Illuminate\Support\Date|null $enrollment_start
- * @property \Illuminate\Support\Date|null $enrollment_end
- * @property string|null $payment_type
- * @property string|null $cancelled_reason
- * @property \Illuminate\Support\Date|null $rescheduled_from
- * @property string|null $rescheduled_reason
- * @property \Illuminate\Support\Date|null $postponed_at
- * @property string|null $postponed_reason
- * @property mixed|null $enrollment_questions
- * @property int|null $role_id
- * @property string|null $image_file_name image name
- * @property int|null $image_file_size image size (in bytes)
- * @property string|null $image_content_type image content type
- * @property string|null $image_updated_at image update timestamp
- * @property mixed|null $image_variants image variants (json)
+ * @property null|int $member_discount
+ * @property null|int $discount_count
+ * @property null|string $stripe_coupon_id
+ * @property null|int $price
+ * @property null|\Illuminate\Support\Date $enrollment_start
+ * @property null|\Illuminate\Support\Date $enrollment_end
+ * @property null|string $payment_type
+ * @property null|string $cancelled_reason
+ * @property null|\Illuminate\Support\Date $rescheduled_from
+ * @property null|string $rescheduled_reason
+ * @property null|\Illuminate\Support\Date $postponed_at
+ * @property null|string $postponed_reason
+ * @property null|mixed $enrollment_questions
+ * @property null|int $role_id
+ * @property null|string $image_file_name image name
+ * @property null|int $image_file_size image size (in bytes)
+ * @property null|string $image_content_type image content type
+ * @property null|string $image_updated_at image update timestamp
+ * @property null|mixed $image_variants image variants (json)
+ * @property array $features
+ * @property-read \Illuminate\Support\Collection $expanded_features
  * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
  * @property-read int $available_seats
- * @property-read string|null $description_html
- * @property-read int|null $discount_price
- * @property-read int|null $discounts_available
+ * @property-read null|string $description_html
+ * @property-read null|int $discount_price
+ * @property-read null|int $discounts_available
  * @property-read bool $enrollment_open
  * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
  * @property-read string $full_statement
@@ -79,54 +81,42 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read bool $is_postponed
  * @property-read bool $is_published
  * @property-read bool $is_rescheduled
- * @property-read string|null $location_url
- * @property-read string|null $organiser
+ * @property-read null|string $location_url
+ * @property-read null|string $organiser
  * @property-read string $price_label
- * @property-read int|null $total_discount_price
- * @property-read int|null $total_price
+ * @property-read null|int $total_discount_price
+ * @property-read null|int $total_price
  * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
- * @property-read Role|null $role
- * @property-read array<FormLayout>|null $form
- * @property-read bool|null $form_is_medical True if the form contains field that are not to be exported
+ * @property-read null|Role $role
+ * @property-read null|array<FormLayout> $form
+ * @property-read null|bool $form_is_medical True if the form contains field that are not to be exported
  */
 class Activity extends SluggableModel implements AttachableInterface
 {
-    use PaperclipTrait;
-    use HasPaperclip;
     use HasEditorJsContent;
     use HasFlexible;
+    use HasPaperclip;
     use HasSimplePaperclippedMedia;
+    use PaperclipTrait;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
+
     public const PAYMENT_TYPE_BILLING = 'billing';
 
     public const LOCATION_OFFLINE = 'offline';
+
     public const LOCATION_ONLINE = 'online';
+
     public const LOCATION_MIXED = 'mixed';
 
     /**
-     * Lists the next up activities
+     * The model's attributes.
      *
-     * @param User|null $user
-     * @return Builder
-     * @throws InvalidArgumentException
+     * @var array
      */
-    public static function getNextActivities(?User $user): Builder
-    {
-        return self::query()
-            ->where(static function (Builder $query) {
-                $query
-                    // Get non-ended activities...
-                    ->where('end_date', '>', Date::now())
-                    // ... or where the event is postponed, but only postponed
-                    ->orWhere(static fn (Builder $query) => $query
-                        ->whereNotNull('postponed_at')
-                        ->whereNull('cancelled_at')
-                        ->whereNull('rescheduled_from'));
-            })
-            ->orderBy('start_date')
-            ->whereAvailable($user);
-    }
+    protected $attributes = [
+        'features' => '[]',
+    ];
 
     /**
      * @inheritDoc
@@ -170,12 +160,35 @@ class Activity extends SluggableModel implements AttachableInterface
         'member_discount' => 'int',
         'discount_count' => 'int',
         'price' => 'int',
+
+        // Features
+        'features' => 'json',
     ];
 
     /**
-     * Generate the slug based on the title property
+     * Lists the next up activities.
      *
-     * @return array
+     * @throws InvalidArgumentException
+     */
+    public static function getNextActivities(?User $user): Builder
+    {
+        return self::query()
+            ->where(static function (Builder $query) {
+                $query
+                    // Get non-ended activities...
+                    ->where('end_date', '>', Date::now())
+                    // ... or where the event is postponed, but only postponed
+                    ->orWhere(static fn (Builder $query) => $query
+                    ->whereNotNull('postponed_at')
+                    ->whereNull('cancelled_at')
+                    ->whereNull('rescheduled_from'), );
+            })
+            ->orderBy('start_date')
+            ->whereAvailable($user);
+    }
+
+    /**
+     * Generate the slug based on the title property.
      */
     public function sluggable(): array
     {
@@ -188,7 +201,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the associated role, if any
+     * Returns the associated role, if any.
      *
      * @return BelongsTo
      */
@@ -198,7 +211,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns all enrollments (both pending and active)
+     * Returns all enrollments (both pending and active).
      *
      * @return HasMany
      */
@@ -208,7 +221,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns all made payments for this event
+     * Returns all made payments for this event.
      *
      * @return HasMany
      */
@@ -218,9 +231,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the name of the organiser, either committee or user
-     *
-     * @return string|null
+     * Returns the name of the organiser, either committee or user.
      */
     public function getOrganiserAttribute(): ?string
     {
@@ -228,9 +239,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the number of remaining seats
-     *
-     * @return int
+     * Returns the number of remaining seats.
      */
     public function getAvailableSeatsAttribute(): int
     {
@@ -249,7 +258,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the enrollment is still open
+     * Returns if the enrollment is still open.
      *
      * @return bool
      */
@@ -267,8 +276,9 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->end_date < $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets after activity end',
-                ['activity' => $this]
+                ['activity' => $this],
             );
+
             return false;
         }
 
@@ -276,8 +286,9 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->enrollment_end !== null && $this->enrollment_end < $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets after enrollment closure',
-                ['activity' => $this]
+                ['activity' => $this],
             );
+
             return false;
         }
 
@@ -285,8 +296,9 @@ class Activity extends SluggableModel implements AttachableInterface
         if ($this->enrollment_start !== null && $this->enrollment_start > $now) {
             logger()->info(
                 'Enrollments on {activity} closed:  Cannot sell tickets before enrollment start',
-                ['activity' => $this]
+                ['activity' => $this],
             );
+
             return false;
         }
 
@@ -295,9 +307,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Converts contents to HTML
-     *
-     * @return string|null
+     * Converts contents to HTML.
      */
     public function getDescriptionHtmlAttribute(): ?string
     {
@@ -305,14 +315,14 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Enrollment form
+     * Enrollment form.
      *
      * @return Whitecube\NovaFlexibleContent\Layouts\Collection
      */
     public function getFlexibleContentAttribute()
     {
         // Return empty collection if Nova is disabled
-        if (!Config::get('services.features.enable-nova')) {
+        if (! Config::get('services.features.enable-nova')) {
             return new Collection();
         }
 
@@ -328,14 +338,12 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the price for people with discounts
-     *
-     * @return int|null
+     * Returns the price for people with discounts.
      */
     public function getDiscountPriceAttribute(): ?int
     {
         // Return null if no discounts are available
-        if (!$this->member_discount) {
+        if (! $this->member_discount) {
             return null;
         }
 
@@ -344,14 +352,12 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns member price with transfer costs
-     *
-     * @return int|null
+     * Returns member price with transfer costs.
      */
     public function getTotalDiscountPriceAttribute(): ?int
     {
         // Return null if no discounts are available
-        if (!$this->member_discount) {
+        if (! $this->member_discount) {
             return null;
         }
 
@@ -365,14 +371,12 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns the number of discounts available, if any
-     *
-     * @return int|null
+     * Returns the number of discounts available, if any.
      */
     public function getDiscountsAvailableAttribute(): ?int
     {
         // None if no discount is available
-        if (!$this->member_discount || !$this->discount_count) {
+        if (! $this->member_discount || ! $this->discount_count) {
             return null;
         }
 
@@ -387,9 +391,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns guest price with transfer cost
-     *
-     * @return int|null
+     * Returns guest price with transfer cost.
      */
     public function getTotalPriceAttribute(): ?int
     {
@@ -398,8 +400,6 @@ class Activity extends SluggableModel implements AttachableInterface
 
     /**
      * Returns human-readable summary of the ticket price.
-     *
-     * @return string
      */
     public function getPriceLabelAttribute(): string
     {
@@ -425,9 +425,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if members can go for free
-     *
-     * @return bool
+     * Returns if members can go for free.
      */
     public function getIsFreeForMemberAttribute(): bool
     {
@@ -436,9 +434,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns true if the activity is free
-     *
-     * @return bool
+     * Returns true if the activity is free.
      */
     public function getIsFreeAttribute(): bool
     {
@@ -446,9 +442,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the activity has been cancelled
-     *
-     * @return bool
+     * Returns if the activity has been cancelled.
      */
     public function getIsCancelledAttribute(): bool
     {
@@ -456,9 +450,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the activity was rescheduled to a different date
-     *
-     * @return bool
+     * Returns if the activity was rescheduled to a different date.
      */
     public function getIsRescheduledAttribute(): bool
     {
@@ -466,9 +458,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the activity was postponed to an as-of-yet unknown date
-     *
-     * @return bool
+     * Returns if the activity was postponed to an as-of-yet unknown date.
      */
     public function getIsPostponedAttribute(): bool
     {
@@ -476,9 +466,7 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns if the activity is published
-     *
-     * @return bool
+     * Returns if the activity is published.
      */
     public function getIsPublishedAttribute(): bool
     {
@@ -486,9 +474,30 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Only return activities available to this user
+     * Returns collection of applied icons, with label and icon.
+     */
+    public function getExpandedFeaturesAttribute(): Collection
+    {
+        $featureIcons = collect();
+
+        foreach (collect($this->features)->filter()->keys() as $feature) {
+            $featureIcon = Config::get("gumbo.activity-features.{$feature}.icon");
+            if (! file_exists(storage_path("app/font-awesome/{$featureIcon}.svg"))) {
+                continue;
+            }
+
+            $featureIcons->push((object) [
+                'icon' => $featureIcon,
+                'title' => Config::get("gumbo.activity-features.{$feature}.title"),
+            ]);
+        }
+
+        return $featureIcons;
+    }
+
+    /**
+     * Only return activities available to this user.
      *
-     * @param Builder $query
      * @param User $user
      * @return Illuminate\Database\Eloquent\Builder
      */
@@ -498,7 +507,7 @@ class Activity extends SluggableModel implements AttachableInterface
         \assert($user === null || $user instanceof User);
 
         // Add public-only when not a member
-        if (!$user || !$user->is_member) {
+        if (! $user || ! $user->is_member) {
             $query = $query->whereIsPublic(true);
         }
 
@@ -507,23 +516,19 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Only return published activities
+     * Only return published activities.
      *
-     * @param Builder $query
-     * @param User $user
      * @return Illuminate\Database\Eloquent\Builder
      */
     public function scopeWherePublished(Builder $query): Builder
     {
         return $query->where(static fn (Builder $query) => $query
-                ->whereNull('published_at')
-                ->orWhere('published_at', '<', \now()));
+            ->whereNull('published_at')
+            ->orWhere('published_at', '<', \now()), );
     }
 
     /**
-     * Returns url to map provider for the given address
-     *
-     * @return string|null
+     * Returns url to map provider for the given address.
      */
     public function getLocationUrlAttribute(): ?string
     {
@@ -535,20 +540,19 @@ class Activity extends SluggableModel implements AttachableInterface
         // Build HERE maps link
         return sprintf(
             'https://www.qwant.com/maps/?%s',
-            \http_build_query(['q' => $this->location_address])
+            \http_build_query(['q' => $this->location_address]),
         );
     }
 
     /**
-     * Returns a complete statement, up to 22 characters long
-     *
-     * @return string
+     * Returns a complete statement, up to 22 characters long.
      */
     public function getFullStatementAttribute(): string
     {
-        if (!empty($this->statement)) {
+        if (! empty($this->statement)) {
             return Str::limit(Str::ascii("Gumbo {$this->statement}", 'nl'), 22, '');
         }
+
         return 'Gumbo Millennium';
     }
 
@@ -560,14 +564,14 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * Returns the form fields interpreted as a form field.
      *
-     * @return array<FormLayout>|null
+     * @return null|array<FormLayout>
      */
     public function getFormAttribute(): ?array
     {
         $fields = [];
 
         foreach ($this->flexible_content ?? [] as $field) {
-            if (!$field instanceof FormLayoutContract) {
+            if (! $field instanceof FormLayoutContract) {
                 continue;
             }
 
@@ -580,8 +584,6 @@ class Activity extends SluggableModel implements AttachableInterface
     /**
      * If the form contains medical data, we can't export the data.
      * This method should check that somehow.
-     *
-     * @return bool|null
      */
     public function getFormIsMedicalAttribute(): ?bool
     {
@@ -594,7 +596,7 @@ class Activity extends SluggableModel implements AttachableInterface
         foreach ($this->form as $field) {
             $fieldLabel = Arr::get($field->getOptions(), 'label');
 
-            if (!$fieldLabel || $field->getType() === 'static') {
+            if (! $fieldLabel || $field->getType() === 'static') {
                 continue;
             }
 
@@ -607,10 +609,18 @@ class Activity extends SluggableModel implements AttachableInterface
         return false;
     }
 
+    public function scopeWhereHasFeature(Builder $query, string $feature): Builder
+    {
+        return $query->where("features.{$feature}", '=', true);
+    }
+
+    public function hasFeature(string $feature): bool
+    {
+        return (bool) Arr::get($this->features ?? [], $feature, false);
+    }
+
     /**
-     * Binds paperclip files
-     *
-     * @return void
+     * Binds paperclip files.
      */
     protected function bindPaperclip(): void
     {

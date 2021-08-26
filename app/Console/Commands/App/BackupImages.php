@@ -13,6 +13,7 @@ use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use SplFileInfo;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class BackupImages extends Command
@@ -35,8 +36,6 @@ class BackupImages extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -44,7 +43,7 @@ class BackupImages extends Command
         $tempname = \tempnam(\sys_get_temp_dir(), 'zipfile');
 
         // Out file
-        $outFile = sprintf("backup-%s.zip", date('Y-m-d_H-i-s'));
+        $outFile = sprintf('backup-%s.zip', date('Y-m-d_H-i-s'));
 
         // Get zip handle
         $zip = new \ZipArchive();
@@ -52,8 +51,8 @@ class BackupImages extends Command
 
         // Add archive comment
         $zip->setArchiveComment(sprintf(
-            "Image backup generated on %s.",
-            date('l, dS \o\f F Y \a\t H:is (T)')
+            'Image backup generated on %s.',
+            date('l, dS \o\f F Y \a\t H:is (T)'),
         ));
 
         // Get all activities
@@ -73,7 +72,7 @@ class BackupImages extends Command
         $zip->close();
 
         // Store it
-        if ($path = Storage::putFileAs(self::BASE_PATH, new \SplFileInfo($tempname), $outFile)) {
+        if ($path = Storage::putFileAs(self::BASE_PATH, new SplFileInfo($tempname), $outFile)) {
             $this->line("Wrote backup as <info>{$path}</>.");
         }
 
@@ -82,12 +81,9 @@ class BackupImages extends Command
     }
 
     /**
-     * Stores images on the $propeties on $className in $zip
+     * Stores images on the $propeties on $className in $zip.
      *
      * @param ZipArchive $zip
-     * @param string $className
-     * @param array $properties
-     * @return void
      */
     public function storeImages(\ZipArchive &$zip, string $className, array $properties): void
     {
@@ -106,16 +102,17 @@ class BackupImages extends Command
 
             // Iterate requested properties
             foreach ($properties as $propertyName) {
-                $property = $item->$propertyName;
+                $property = $item->{$propertyName};
                 \assert($property instanceof AttachmentInterface);
 
                 // Skip if missing
-                if (!$property->exists()) {
+                if (! $property->exists()) {
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$baseName} #{$itemId}</>.",
                         null,
-                        OutputInterface::VERBOSITY_DEBUG
+                        OutputInterface::VERBOSITY_DEBUG,
                     );
+
                     continue;
                 }
 
@@ -131,7 +128,7 @@ class BackupImages extends Command
                     $item->getKey(),
                     $propertyName,
                     $attachmentName,
-                    $attachmentExt
+                    $attachmentExt,
                 );
 
                 // Get storage
@@ -146,7 +143,7 @@ class BackupImages extends Command
                 $this->line(
                     "Wrote <info>{$propertyName}</> from <comment>{$baseName} #{$itemId}</> as <info>{$filename}</>.",
                     null,
-                    OutputInterface::VERBOSITY_DEBUG
+                    OutputInterface::VERBOSITY_DEBUG,
                 );
 
                 // Raise count

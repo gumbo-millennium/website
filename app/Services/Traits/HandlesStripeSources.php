@@ -14,7 +14,7 @@ use Stripe\Source;
 trait HandlesStripeSources
 {
     /**
-     * Sources retrieved from API
+     * Sources retrieved from API.
      *
      * @var array<Source>
      */
@@ -24,8 +24,6 @@ trait HandlesStripeSources
      * Returns a single source for the given enrollment, as long as it has the
      * same bank.
      *
-     * @param Enrollment $enrollment
-     * @param string|null $bank
      * @param int $options Bitwise options, see OPT_ constants
      * @return App\Contracts\Source
      */
@@ -41,7 +39,7 @@ trait HandlesStripeSources
                 $this->sourceCache[$enrollment->payment_source] = $source;
 
                 // Validation disabled, return most-recent source
-                if (!$bank) {
+                if (! $bank) {
                     return $source;
                 }
 
@@ -60,7 +58,7 @@ trait HandlesStripeSources
         }
 
         // Allow no-create
-        if (!$bank || ($options & StripeServiceContract::OPT_NO_CREATE)) {
+        if (! $bank || ($options & StripeServiceContract::OPT_NO_CREATE)) {
             return null;
         }
 
@@ -108,9 +106,6 @@ trait HandlesStripeSources
 
     /**
      * Builds a redirect to fulfill the Source's payment, if applicable.
-     *
-     * @param Source $source
-     * @return RedirectResponse|null
      */
     public function getSourceRedirect(Source $source): ?RedirectResponse
     {

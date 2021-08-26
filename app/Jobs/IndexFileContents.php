@@ -23,20 +23,20 @@ class IndexFileContents implements ShouldQueue
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
-    use SerializesModels;
     use RunsCliCommands;
+    use SerializesModels;
 
     protected Media $media;
 
     /**
-     * Try job 3 times
+     * Try job 3 times.
      *
      * @var int
      */
     protected $tries = 3;
 
     /**
-     * Allow 1 minute to get metadata
+     * Allow 1 minute to get metadata.
      *
      * @var int
      */
@@ -55,8 +55,6 @@ class IndexFileContents implements ShouldQueue
 
     /**
      * Get the tags that should be assigned to the job.
-     *
-     * @return array
      */
     public function tags(): array
     {
@@ -75,8 +73,9 @@ class IndexFileContents implements ShouldQueue
         if ($media->mime_type !== 'application/pdf') {
             logger()->notice(
                 "Will not process file of type {$media->mime_type} present on {media}",
-                compact('media')
+                compact('media'),
             );
+
             return;
         }
 
@@ -87,9 +86,10 @@ class IndexFileContents implements ShouldQueue
         // Compare file size
         if (\filesize($tempfile) !== $media->size) {
             logger()->warning(
-                "Copying media to temp file resulted in different sizes",
-                compact('media', 'tempfile')
+                'Copying media to temp file resulted in different sizes',
+                compact('media', 'tempfile'),
             );
+
             return;
         }
 
@@ -100,7 +100,7 @@ class IndexFileContents implements ShouldQueue
         } catch (Throwable $exception) {
             logger()->error(
                 'Retrieving PDF contents failed: {exception}',
-                compact('media', 'exception')
+                compact('media', 'exception'),
             );
         }
 
@@ -111,7 +111,7 @@ class IndexFileContents implements ShouldQueue
         } catch (Throwable $exception) {
             logger()->error(
                 'Retrieving PDF contents failed: {exception}',
-                compact('media', 'exception')
+                compact('media', 'exception'),
             );
         }
 
@@ -126,7 +126,7 @@ class IndexFileContents implements ShouldQueue
         // Log result
         logger()->notice(
             'Updated PDF metadata of {media}',
-            compact('media')
+            compact('media'),
         );
     }
 
@@ -146,11 +146,13 @@ class IndexFileContents implements ShouldQueue
         $hasTool = Cache::remember('cli.pff.has-exiftool', now()->addDay(), function () {
             $command = ['which', 'exiftool'];
             $result = $this->runCliCommand($command);
+
             return (bool) $result;
         });
 
-        if (!$hasTool) {
+        if (! $hasTool) {
             logger()->notice('Exif tool not installed on device');
+
             return null;
         }
 
@@ -166,15 +168,15 @@ class IndexFileContents implements ShouldQueue
             ['exiftool'],
             ['-a', '-G1', '-json'],
             $requestList->toArray(),
-            [$file]
+            [$file],
         );
 
         // Run meta command
         $ok = $this->runCliCommand($command, $stdout, $stderr);
 
         // Check if everything went OK
-        if (!$ok) {
-            echo "Exif failed";
+        if (! $ok) {
+            echo 'Exif failed';
             logger()->notice('Failed to retrieve metadata from [{filename}].', [
                 'filename' => $this->media->name,
                 'media' => $this->media,
@@ -204,11 +206,12 @@ class IndexFileContents implements ShouldQueue
             return $metaFields;
         } catch (JsonException $e) {
             logger()->notice('Failed to parse JSON metadata for [{filename}].', [
-            'filename' => $this->media->name,
-            'media' => $this->media,
-            'output' => $stdout,
+                'filename' => $this->media->name,
+                'media' => $this->media,
+                'output' => $stdout,
             ]);
         }
+
         return null;
     }
 }

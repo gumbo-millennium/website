@@ -54,10 +54,6 @@ class CancelActivity extends Action
 
     /**
      * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
@@ -75,6 +71,7 @@ class CancelActivity extends Action
             // Skip already cancelled or ended
             if ($activity->is_cancelled) {
                 $skipCount++;
+
                 continue;
             }
 
@@ -84,7 +81,7 @@ class CancelActivity extends Action
             $activity->save();
 
             // Refund all, if requested
-            if (!$cancelRefund) {
+            if (! $cancelRefund) {
                 continue;
             }
 
@@ -113,7 +110,7 @@ class CancelActivity extends Action
         return Action::message(sprintf(
             '%d van de %d %s activiteiten zijn geannuleerd',
             $totalCount - $skipCount,
-            $totalCount
+            $totalCount,
         ));
     }
 

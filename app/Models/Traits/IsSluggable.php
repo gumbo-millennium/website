@@ -21,7 +21,12 @@ trait IsSluggable
     protected $slugKeyName = 'slug';
 
     /**
-     * Return 'slug' as key name
+     * Returns a sluggable definition for this model.
+     */
+    abstract public function sluggable(): array;
+
+    /**
+     * Return 'slug' as key name.
      *
      * @return string
      */
@@ -29,11 +34,4 @@ trait IsSluggable
     {
         return 'slug';
     }
-
-    /**
-     * Returns a sluggable definition for this model
-     *
-     * @return array
-     */
-    abstract public function sluggable(): array;
 }

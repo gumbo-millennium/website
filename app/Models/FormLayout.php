@@ -6,6 +6,12 @@ namespace App\Models;
 
 class FormLayout
 {
+    protected string $name;
+
+    protected string $type;
+
+    protected array $options;
+
     public static function merge(
         self $existingLayout,
         ?string $name = null,
@@ -15,13 +21,9 @@ class FormLayout
         return new self(
             $name ?? $existingLayout->getName(),
             $type ?? $existingLayout->getType(),
-            array_merge($existingLayout->getOptions(), $options ?? [])
+            array_merge($existingLayout->getOptions(), $options ?? []),
         );
     }
-
-    protected string $name;
-    protected string $type;
-    protected array $options;
 
     public function __construct(string $name, string $type, array $options)
     {
@@ -29,7 +31,6 @@ class FormLayout
         $this->type = $type;
         $this->options = $options;
     }
-
 
     public function getName(): string
     {

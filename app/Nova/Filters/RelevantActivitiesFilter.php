@@ -7,9 +7,6 @@ namespace App\Nova\Filters;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
-/**
- * phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
- */
 class RelevantActivitiesFilter extends BooleanFilter
 {
     /**
@@ -22,9 +19,7 @@ class RelevantActivitiesFilter extends BooleanFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply(Request $request, $query, $value)
@@ -34,7 +29,7 @@ class RelevantActivitiesFilter extends BooleanFilter
 
         // Cancelled or not
         $method = $value['show_cancelled'] ? 'whereNotNull' : 'whereNull';
-        $query = $query->$method('cancelled_at');
+        $query = $query->{$method}('cancelled_at');
 
         // Return
         return $query;
@@ -43,7 +38,6 @@ class RelevantActivitiesFilter extends BooleanFilter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)

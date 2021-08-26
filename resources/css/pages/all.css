@@ -6,5 +6,8 @@
 @import 'login.css';
 @import 'payment-redirect.css';
 @import "shop.css";
+@import "shop-cart.css";
 @import "sponsors.css";
 @import "sponsor-single.css";
+
+@import "minipage-lustrum.css";

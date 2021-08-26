@@ -7,28 +7,33 @@ namespace App\Providers;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\MarkdownServiceContract;
+use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Contracts\StripeServiceContract;
+use App\Events\EventService;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
+use App\Services\PaymentService;
 use App\Services\SponsorService;
 use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
 use Stripe\Stripe as StripeClient;
+use Symfony\Component\Yaml\Yaml;
 
 class AppServiceProvider extends ServiceProvider
 {
+    private const ACTIVITY_FEATURES_FILE = 'assets/yaml/activity-features.yaml';
+
     /**
-     * Singleton bindings
+     * Singleton bindings.
      *
      * @var array<string>
      */
@@ -39,6 +44,8 @@ class AppServiceProvider extends ServiceProvider
         StripeServiceContract::class => StripeService::class,
         // Enrollment service
         EnrollmentServiceContract::class => EnrollmentService::class,
+        // Mollie Payment service
+        PaymentServiceContract::class => PaymentService::class,
     ];
 
     /**
@@ -57,13 +64,11 @@ class AppServiceProvider extends ServiceProvider
         // Components
         Blade::component('components.breadcrumbs', 'breadcrumbs');
 
-        // April Fools
-        Blade::if('event', static function ($event) {
-            if ($event === 'april-fools') {
-                return Date::today()->format('m-d') === '04-01';
-            }
+        // Special events
+        Blade::if('event', function ($event) {
+            $service = $this->app->make(EventService::class);
 
-            return false;
+            return $service->eventActive($event);
         });
     }
 
@@ -91,6 +96,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Markdown
         $this->app->singleton(MarkdownServiceContract::class, MarkdownService::class);
+
+        // Events
+        $this->app->singleton(EventService::class);
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
@@ -129,29 +137,43 @@ class AppServiceProvider extends ServiceProvider
 
         // Boot flash settings
         Flash::levels([
-            'info' => "notice notice--info",
-            'error' => "notice notice--warning",
-            'warning' => "notice notice--warning",
-            'success' => "notice notice--brand",
+            'info' => 'notice notice--info',
+            'error' => 'notice notice--warning',
+            'warning' => 'notice notice--warning',
+            'success' => 'notice notice--brand',
         ]);
+
+        // Bind feature config
+        if (! $this->app->configurationIsCached()) {
+            foreach (Yaml::parseFile(resource_path(self::ACTIVITY_FEATURES_FILE)) as $feature => $options) {
+                $options = array_merge([
+                    'title' => null,
+                    'icon' => null,
+                    'mail' => null,
+                ], $options);
+
+                Config::set("gumbo.activity-features.{$feature}", $options);
+            }
+        }
 
         // Registrer Laravel Nova
         $this->registerNova();
     }
 
     /**
-     * Safely registers Nova if it's enabled and available
+     * Safely registers Nova if it's enabled and available.
      */
     private function registerNova(): void
     {
         // Check if Nova is enabled to begin with
-        if (!Config::get('services.features.enable-nova')) {
+        if (! Config::get('services.features.enable-nova')) {
             return;
         }
 
         // Check if Nova is available, disable if not
-        if (!class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
+        if (! class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
             Config::set('services.features.enable-nova', false);
+
             return;
         }
 

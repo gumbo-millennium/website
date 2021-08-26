@@ -10,22 +10,21 @@ use App\Models\FileCategory;
 use App\Models\FileDownload;
 use App\Models\Media;
 use Artesaos\SEOTools\Facades\SEOTools;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class FileController extends Controller
 {
@@ -40,7 +39,7 @@ class FileController extends Controller
         $this->middleware(['auth', 'permission:file-view']);
 
         // Ensure all responses are private
-        $this->middleware(static function ($request, \Closure $next) {
+        $this->middleware(static function ($request, Closure $next) {
             // Forward
             $response = $next($request);
 
@@ -58,9 +57,7 @@ class FileController extends Controller
     }
 
     /**
-     * Homepage
-     *
-     * @return Response
+     * Homepage.
      */
     public function index(): Response
     {
@@ -68,7 +65,7 @@ class FileController extends Controller
         $categoryQuery = FileCategory::whereAvailable();
 
         // Ignore if that's impossible
-        if (!(clone $categoryQuery)->exists()) {
+        if (! (clone $categoryQuery)->exists()) {
             $categoryQuery = FileCategory::query();
         }
 
@@ -88,7 +85,6 @@ class FileController extends Controller
         SEOTools::setTitle('Bestanden');
         SEOTools::setCanonical(route('files.index'));
 
-
         // Show view
         return response()
             ->view('files.index', compact('categories'))
@@ -96,9 +92,8 @@ class FileController extends Controller
     }
 
     /**
-     * Shows all the files in a given category, ordered by newest
+     * Shows all the files in a given category, ordered by newest.
      *
-     * @param FileCategory $category
      * @return Response
      */
     public function category(FileCategory $category)
@@ -120,15 +115,13 @@ class FileController extends Controller
     }
 
     /**
-     * Returns a single file's detail page
+     * Returns a single file's detail page.
      *
-     * @param Request $request
-     * @param FileBundle $bundle
      * @return Response
      */
     public function show(FileBundle $bundle)
     {
-        if (!$bundle->is_available) {
+        if (! $bundle->is_available) {
             throw new NotFoundHttpException();
         }
 
@@ -149,16 +142,15 @@ class FileController extends Controller
     }
 
     /**
-     * Streams a zipfile to the user
-     *
-     * @param Request $request
-     * @param FileBundle $bundle
-     * @return SymfonyResponse
+     * Streams a zipfile to the user.
      */
     public function download(Request $request, FileBundle $bundle): SymfonyResponse
     {
         // Check permissions
         $this->authorize('download', $bundle);
+
+        // Softfail if not published
+        abort_unless($bundle->is_available, 404);
 
         // Log bundle download
         $this->log($request, $bundle, null);
@@ -177,38 +169,37 @@ class FileController extends Controller
     }
 
     /**
-     * Returns a single file download
+     * Returns a single file download.
      *
-     * @param Request $request
      * @param Media $media
-     * @return BinaryFileResponse
      * @throws InvalidUrlGenerator
      * @throws InvalidConversion
      */
-    public function downloadSingle(Request $request, SpatieMedia $media): BinaryFileResponse
+    public function downloadSingle(Request $request, SpatieMedia $media): StreamedResponse
     {
         $bundle = $media->model;
-        if (!$bundle instanceof FileBundle) {
+        if (! $bundle instanceof FileBundle) {
             throw new NotFoundHttpException();
         }
 
         // Check permissions
         $this->authorize('download', $bundle);
 
+        // Softfail if not published
+        abort_unless($bundle->is_available, 404);
+
         // Log bundle download
         $this->log($request, $bundle, $media);
 
         // Send single file
-        return response()
+        return Storage::disk($media->disk)
             ->download($media->getPath(), $media->file_name)
             ->setPrivate();
     }
 
     /**
-     * Finds files
+     * Finds files.
      *
-     * @param Request $request
-     * @param string $searchQuery
      * @return Response
      */
     public function search(Request $request)
@@ -224,7 +215,6 @@ class FileController extends Controller
         SEOTools::setTitle("{$searchQuery} - Zoeken - Bestanden");
         SEOTools::setCanonical(route('files.search', ['query' => $searchQuery]));
 
-
         // Only return files in available bundles
         $constraint = Media::query()
             ->with('model')
@@ -232,7 +222,7 @@ class FileController extends Controller
             ->whereIn('model_id', Cache::remember(
                 'files.search.file-ids',
                 Date::now()->addHour(),
-                static fn () => FileBundle::whereAvailable()->pluck('id')
+                static fn () => FileBundle::whereAvailable()->pluck('id'),
             ));
 
         // Perform the search query
@@ -250,12 +240,9 @@ class FileController extends Controller
     }
 
     /**
-     * Logs a download
+     * Logs a download.
      *
-     * @param Request $request
-     * @param FileBundle|null $bundle
-     * @param Media|null $media
-     * @return void
+     * @param null|Media $media
      * @throws LogicException
      * @throws ConflictingHeadersException
      */

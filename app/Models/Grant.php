@@ -7,7 +7,9 @@ namespace App\Models;
 class Grant
 {
     public string $key;
+
     public string $name;
+
     public string $description;
 
     public function __construct(

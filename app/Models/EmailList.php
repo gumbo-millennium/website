@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Date $updated_at
  * @property string $email
  * @property string $service_id
- * @property string|null $name
+ * @property null|string $name
  * @property array<string> $aliases
  * @property array<string> $members
  */
@@ -27,6 +27,7 @@ class EmailList extends Model
         'aliases' => 'json',
         'members' => 'json',
     ];
+
     /**
      * The attributes that should be hidden for serialization.
      *

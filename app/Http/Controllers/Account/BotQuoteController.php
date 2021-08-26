@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class BotQuoteController extends Controller
 {
     /**
-     * Force auth
+     * Force auth.
      */
     public function __construct()
     {
@@ -49,7 +49,6 @@ class BotQuoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BotQuote  $quote
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
@@ -67,6 +66,7 @@ class BotQuoteController extends Controller
         // Skip if sent
         if ($quote->submitted_at !== null) {
             flash('Dit wist-je-datje is al verzonden.', 'warning');
+
             return response()
                 ->redirectToRoute('account.quotes')
                 ->setPrivate();
@@ -77,6 +77,7 @@ class BotQuoteController extends Controller
 
         // Redirect back
         flash('Wist-je-datje verwijderd.', 'success');
+
         return response()
             ->redirectToRoute('account.quotes')
             ->setPrivate();

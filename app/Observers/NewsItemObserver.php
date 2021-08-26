@@ -9,9 +9,8 @@ use App\Models\NewsItem;
 class NewsItemObserver
 {
     /**
-     * Try to make sure a news article has an author
+     * Try to make sure a news article has an author.
      *
-     * @param NewsItem $newsArticle
      * @return void
      */
     public function saving(NewsItem $newsArticle)

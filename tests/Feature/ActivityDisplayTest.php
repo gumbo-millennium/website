@@ -5,79 +5,62 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Activity;
-use App\Models\User;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class ActivityDisplayTest extends TestCase
 {
-
     /**
-     * Ensures there are some activities
-     *
-     * @return void
+     * Get test route.
      */
-    public function seedBefore(): void
+    public function test_various_routes(): void
     {
-        $this->seed('ActivitySeeder');
-    }
+        $publicEvent = factory(Activity::class)->create([
+            'is_public' => true,
+            'published_at' => Date::today()->subYear(),
+            'start_date' => Date::today()->addWeeks(1),
+            'end_date' => Date::today()->addWeeks(1)->addHours(5),
+        ]);
 
-    /**
-     * Get test route
-     *
-     * @param string $route
-     * @param User|null $user
-     * @param Activity|null $activity
-     * @return void
-     * @dataProvider provideTestRoutes
-     */
-    public function testVariousRoutes(string $route, ?User $user, ?Activity $activity): void
-    {
-        // Run proper command
-        $response = $user ? ($this->actingAs($user)->get($route)) : $this->get($route);
+        $privateEvent = factory(Activity::class)->create([
+            'is_public' => false,
+            'published_at' => Date::today()->subYear(),
+            'start_date' => Date::today()->addWeeks(2),
+            'end_date' => Date::today()->addWeeks(2)->addHours(5),
+        ]);
 
-        // Run user-level command
-        $response->assertStatus(200);
+        $this->get(route('activity.show', $publicEvent))
+            ->assertOk();
 
-        // Check if a title should be set
-        if (!$activity) {
-            return;
-        }
+        $this->get(route('activity.show', $privateEvent))
+            ->assertRedirect(route('login'));
 
-        $response->assertSeeText($activity->title);
-    }
+        $this->get(route('activity.index'))
+            ->assertSeeText($publicEvent->name)
+            ->assertDontSeeText($privateEvent->name);
 
-    /**
-     * Provides a list of test routes
-     *
-     * @return array<array<string>>
-     */
-    public function provideTestRoutes()
-    {
-        // Ensure theres an app exists
-        $this->ensureApplicationExists();
+        $this->actingAs($this->getGuestUser());
 
-        // Get users
-        $guest = $this->getGuestUser();
-        $member = $this->getMemberUser();
+        $this->get(route('activity.show', $publicEvent))
+            ->assertOk();
 
-        // get activity
-        $getFirstActivity = static fn ($user) => Activity::getNextActivities($user)->first();
+        $this->get(route('activity.show', $privateEvent))
+            ->assertForbidden();
 
-        // Get routes
-        $activityAnon = $getFirstActivity(null);
-        $activityGuest = $getFirstActivity($guest);
-        $activityMember = $getFirstActivity($member);
+        $this->get(route('activity.index'))
+            ->assertSeeText($publicEvent->name)
+            ->assertDontSeeText($privateEvent->name);
 
-        return [
-            // Index page
-            'Index (anonymous)' => [route('activity.index'), null, $activityAnon],
-            'Index (guest)' => [route('activity.index'), $guest, $activityGuest],
-            'Index (member)' => [route('activity.index'), $member, $activityMember],
+        $this->actingAs($this->getMemberUser());
 
-            // Details page
-            'Detail (anonymous)' => [route('activity.show', ['activity' => $activityAnon]), null, null],
-            'Detail (guest)' => [route('activity.show', ['activity' => $activityGuest]), $guest, null],
-            'Detail (member)' => [route('activity.show', ['activity' => $activityMember]), $member, null],
-        ];
+        $this->get(route('activity.show', $publicEvent))
+            ->assertOk();
+
+        $this->get(route('activity.show', $privateEvent))
+            ->assertOk();
+
+        $this->get(route('activity.index'))
+            ->assertSeeText($publicEvent->name)
+            ->assertSeeText($privateEvent->name);
     }
 }

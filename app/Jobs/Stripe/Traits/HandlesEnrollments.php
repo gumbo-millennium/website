@@ -8,18 +8,13 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 
 /**
- * Utility methods for Charge objects
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
+ * Utility methods for Charge objects.
  */
 trait HandlesEnrollments
 {
     /**
-     * Cancels the given enrollment. A refund will be automatically generated
+     * Cancels the given enrollment. A refund will be automatically generated.
      *
-     * @param Enrollment $enrollment
-     * @return void
      * @throws InvalidConfig
      * @throws CouldNotPerformTransition
      */
@@ -28,8 +23,9 @@ trait HandlesEnrollments
         if ($enrollment->state instanceof Cancelled) {
             logger()->info(
                 'Tried to cancel already-cancelled enrollment {enrollment}',
-                compact('enrollment')
+                compact('enrollment'),
             );
+
             return;
         }
 
@@ -40,7 +36,7 @@ trait HandlesEnrollments
         // Log result
         logger()->info(
             'Marked {enrollment} as cancelled.',
-            compact('enrollment')
+            compact('enrollment'),
         );
     }
 }

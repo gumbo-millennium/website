@@ -10,31 +10,24 @@ use App\Models\Activity;
 
 /**
  * Ensures values on the activity model are up to snuff.
- *
- * @author Roelof Roos <github@roelof.io>
- * @license MPL-2.0
  */
 class ActivityObserver
 {
     /**
-     * Validates values of an Activity. Has a high complexity but isn't run too often
+     * Validates values of an Activity. Has a high complexity but isn't run too often.
      *
-     * @param  \App\App\Models\Activity  $activity
+     * @param \App\App\Models\Activity $activity
      * @return void
      */
     public function saving(Activity $activity)
     {
-        /*
-            Normalize seats
-        */
+        // Normalize seats
         // Make sure the seats aren't below or equal to zero, it should be null
         if ($activity->seats !== null && $activity->seats <= 0) {
             $activity->seats = null;
         }
 
-        /*
-            Normalize prices
-        */
+        // Normalize prices
         // Ensure ticket prices are null or positive
         if ($activity->member_discount !== null && $activity->member_discount <= 0) {
             $activity->member_discount = null;
@@ -52,10 +45,8 @@ class ActivityObserver
             }
         }
 
-        /*
-            Normalize enrollment dates
-        */
-        $notOpenFree = $activity->seats !== null || !$activity->is_free;
+        // Normalize enrollment dates
+        $notOpenFree = $activity->seats !== null || ! $activity->is_free;
 
         // Cap enrollment end on the end date of the activity end
         if ($activity->enrollment_end > $activity->end_date) {
@@ -87,9 +78,8 @@ class ActivityObserver
     }
 
     /**
-     * Update the coupon
+     * Update the coupon.
      *
-     * @param Activity $activity
      * @return void
      */
     public function saved(Activity $activity)

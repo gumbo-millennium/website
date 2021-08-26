@@ -25,6 +25,7 @@ class LoginController extends Controller
     use AuthenticatesUsers {
         logout as private doLogout;
     }
+
     use RedirectsToHomepage;
 
     /**
@@ -45,7 +46,6 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)

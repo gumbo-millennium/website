@@ -56,16 +56,13 @@ const colors = {
   source: {
     // Default colors
     red: defaultTheme.colors.red,
-    orange: defaultTheme.colors.orange,
+    orange: defaultTheme.colors.yellow,
     green: defaultTheme.colors.green,
     blue: defaultTheme.colors.blue,
 
     // Our colors
     gray: grayColors,
     brand: brandColors,
-
-    // April fools ;)
-    'brand-alt': brandColorsAlternative
   },
 
   // Disable some colors
@@ -85,12 +82,12 @@ const colors = {
   orange: buildNightModeCapable('orange'),
   green: buildNightModeCapable('green'),
   blue: buildNightModeCapable('blue'),
-  brand: buildNightModeCapable('brand')
+  brand: {
+    ...buildNightModeCapable('brand'),
+    ...brandColors,
+  }
 }
 
 module.exports = {
   colors: colors,
-  plugins: [
-    require('@tailwindcss/custom-forms')
-  ]
 }

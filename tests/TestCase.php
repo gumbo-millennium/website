@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Traits\RefreshDatabase;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use ProvidesUsers;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
         // Forward
         parent::setUp();
+
+        // Disable Mix
+        $this->withoutMix();
     }
 
     /**
-     * Creates an application if one isn't set
-     *
-     * @return void
+     * Creates an application if one isn't set.
      */
     public function ensureApplicationExists(): void
     {

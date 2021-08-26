@@ -14,11 +14,9 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-
     /**
      * Define the application's command schedule.
      *
-     * @param Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -45,10 +43,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('gumbo:update-sponsor-logos')->dailyAt('05:00');
 
         // Update shop twice a day
-        $schedule->command('gumbo:update-shop')->twiceDaily(11, 23);
+        $schedule->command('shop:update')->twiceDaily(11, 23);
 
-        // Send required mails every hour
-        // $schedule->command('gumbo:send-activity-covid-mails')->hourly();
+        // Send feature mails on common times
+        $schedule->command('gumbo:send-activity-feature-mails')->cron('15 2,7,12,16,21 * * *');
 
         // Updated maillists every other night
         $schedule->job(ConstructGoogleActionList::class)->days(1, 3, 5)->dailyAt('06:00');
@@ -61,6 +59,19 @@ class Kernel extends ConsoleKernel
 
         // Send quotes weekly
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
+
+        // Fix broken Mollie invoices a couple times a day
+        $schedule->command('shop:repair-orders')->cron('45 */2 * * *');
+
+        // Manually check for payments every hour
+        $schedule->command('shop:update-orders')->hourlyAt(15);
+
+        // Shop expiration and reminders
+        $schedule->command('shop:send-reminders')->hourlyAt(20);
+        $schedule->command('shop:cancel-expired')->twiceDaily(2, 14);
+
+        // Clear expired data exports
+        $schedule->command('gumbo:avg:prune-exports')->weekly();
     }
 
     /**
