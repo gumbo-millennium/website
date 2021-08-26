@@ -23,15 +23,7 @@ class LustrumController extends Controller
 {
     public function index(Request $request, SponsorService $sponsorService): HttpResponse
     {
-        $requestHost = $request->getHost() ?? $request->getHttpHost();
-        $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
-        if (App::environment('local')) {
-            $lustrumRoot = sprintf('http://%s', $requestHost);
-        }
-
-        // Ensure assets load locally, but all links are egress
-        Config::set('app.mix_url', $lustrumRoot);
-        Config::set('app.asset_url', $lustrumRoot);
+        // Ensure all links are egress
         URL::forceRootUrl(Config::get('app.url'));
 
         // Disable sponsors
@@ -54,7 +46,11 @@ class LustrumController extends Controller
             $activities = Collection::make();
         }
 
-        SEOMeta::setCanonical($lustrumRoot);
+        // Assign canonical link, to prevent duplicate content
+        if (! App::isLocal()) {
+            $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
+            SEOMeta::setCanonical($lustrumRoot);
+        }
 
         return Response::view('minisite.lustrum', [
             'lustrumNav' => true,
@@ -69,16 +65,7 @@ class LustrumController extends Controller
      */
     public function other(Request $request): HttpResponse
     {
-        $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
-        if (App::environment('local')) {
-            $lustrumRoot = sprintf('http://%s', $request->getHost());
-        }
-
-        // Ensure assets load locally, but all links are egress
-
-        Config::set('app.mix_url', $lustrumRoot);
-        Config::set('app.asset_url', $lustrumRoot);
-
+        // Ensure all links are egress
         URL::forceRootUrl(Config::get('app.url'));
 
         return Response::view('errors.404', [
