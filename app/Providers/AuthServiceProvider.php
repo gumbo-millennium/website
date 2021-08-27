@@ -4,47 +4,14 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Activity;
-use App\Models\ActivityMessage;
-use App\Models\EmailList;
-use App\Models\Enrollment;
-use App\Models\FileBundle;
-use App\Models\FileCategory;
-use App\Models\FileDownload;
-use App\Models\JoinSubmission;
-use App\Models\NewsItem;
-use App\Models\Page;
-use App\Models\Payment;
-use App\Models\Shop\Category;
-use App\Models\Shop\Order;
-use App\Models\Shop\Product;
-use App\Models\Shop\ProductVariant;
-use App\Models\Sponsor;
+use App\Models;
+use App\Models\Shop as ShopModels;
 use App\Models\User;
-use App\Policies\ActivityMessagePolicy;
-use App\Policies\ActivityPolicy;
-use App\Policies\EmailListPolicy;
-use App\Policies\EnrollmentPolicy;
-use App\Policies\FileBundlePolicy;
-use App\Policies\FileCategoryPolicy;
-use App\Policies\FileDownloadPolicy;
-use App\Policies\JoinSubmissionPolicy;
-use App\Policies\NewsItemPolicy;
-use App\Policies\PagePolicy;
-use App\Policies\PaymentPolicy;
-use App\Policies\PermissionPolicy;
-use App\Policies\RolePolicy;
-use App\Policies\Shop\CategoryPolicy;
-use App\Policies\Shop\OrderPolicy;
-use App\Policies\Shop\ProductPolicy;
-use App\Policies\Shop\ProductVariantPolicy;
-use App\Policies\SponsorPolicy;
-use App\Policies\UserPolicy;
+use App\Policies;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -54,27 +21,27 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Activity::class => ActivityPolicy::class,
-        ActivityMessage::class => ActivityMessagePolicy::class,
-        EmailList::class => EmailListPolicy::class,
-        Enrollment::class => EnrollmentPolicy::class,
-        FileBundle::class => FileBundlePolicy::class,
-        FileCategory::class => FileCategoryPolicy::class,
-        FileDownload::class => FileDownloadPolicy::class,
-        JoinSubmission::class => JoinSubmissionPolicy::class,
-        NewsItem::class => NewsItemPolicy::class,
-        Page::class => PagePolicy::class,
-        Payment::class => PaymentPolicy::class,
-        Permission::class => PermissionPolicy::class,
-        Role::class => RolePolicy::class,
-        Sponsor::class => SponsorPolicy::class,
-        User::class => UserPolicy::class,
+        Models\Activity::class => Policies\ActivityPolicy::class,
+        Models\ActivityMessage::class => Policies\ActivityMessagePolicy::class,
+        Models\EmailList::class => Policies\EmailListPolicy::class,
+        Models\Enrollment::class => Policies\EnrollmentPolicy::class,
+        Models\FileBundle::class => Policies\FileBundlePolicy::class,
+        Models\FileCategory::class => Policies\FileCategoryPolicy::class,
+        Models\FileDownload::class => Policies\FileDownloadPolicy::class,
+        Models\JoinSubmission::class => Policies\JoinSubmissionPolicy::class,
+        Models\NewsItem::class => Policies\NewsItemPolicy::class,
+        Models\Page::class => Policies\PagePolicy::class,
+        Models\Payment::class => Policies\PaymentPolicy::class,
+        Models\Permission::class => Policies\PermissionPolicy::class,
+        Models\Role::class => Policies\RolePolicy::class,
+        Models\Sponsor::class => Policies\SponsorPolicy::class,
+        Models\User::class => Policies\UserPolicy::class,
 
         // Shop
-        Order::class => OrderPolicy::class,
-        Category::class => CategoryPolicy::class,
-        Product::class => ProductPolicy::class,
-        ProductVariant::class => ProductVariantPolicy::class,
+        ShopModels\Order::class => ShopPolicies\OrderPolicy::class,
+        ShopModels\Category::class => ShopPolicies\CategoryPolicy::class,
+        ShopModels\Product::class => ShopPolicies\ProductPolicy::class,
+        ShopModels\ProductVariant::class => ShopPolicies\ProductVariantPolicy::class,
     ];
 
     /**
