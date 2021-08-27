@@ -36,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         Models\Role::class => Policies\RolePolicy::class,
         Models\Sponsor::class => Policies\SponsorPolicy::class,
         Models\User::class => Policies\UserPolicy::class,
+        Models\RedirectInstruction::class => Policies\RedirectInstructionPolicy::class,
 
         // Shop
         ShopModels\Order::class => ShopPolicies\OrderPolicy::class,

@@ -17,7 +17,10 @@ class RedirectInstructionPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('redirects-manage');
+        return $user->hasAnyPermission([
+            'redirects-view',
+            'redirects-manage',
+        ]);
     }
 
     /**
@@ -27,7 +30,10 @@ class RedirectInstructionPolicy
      */
     public function view(User $user, RedirectInstruction $redirectInstruction)
     {
-        return $user->hasPermissionTo('redirects-manage');
+        return $user->hasAnyPermission([
+            'redirects-view',
+            'redirects-manage',
+        ]);
     }
 
     /**

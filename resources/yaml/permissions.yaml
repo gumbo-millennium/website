@@ -40,6 +40,7 @@ payment-admin: Beheer van transacties
 shop-admin: Webwinkel beheren
 
 # Redirects
+redirects-view: View redirections
 redirects-manage: Manage redirections
 
 # System admin permissions

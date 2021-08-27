@@ -30,6 +30,9 @@ member:
     # Allow enrolling on private events
     - activity-private
 
+    # Allow viewing rediects
+    - redirects-view
+
 # Activiteiten Committee
 ac:
   title: Activiteiten Commissie
@@ -116,3 +119,6 @@ dc:
 
     # Allow becoming other users
     - impersonate
+
+    # Allow managing custom redirects
+    - redirects-manage
