@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\TestResponse;
 use Tests\Traits\RefreshDatabase;
 
 abstract class TestCase extends BaseTestCase
@@ -20,6 +21,16 @@ abstract class TestCase extends BaseTestCase
 
         // Disable Mix
         $this->withoutMix();
+
+        // Bind response helper
+        TestResponse::macro('dumpOnError', function () {
+            /** @var TestResponse $this */
+            if ($this->getStatusCode() >= 500) {
+                $this->dump();
+            }
+
+            return $this;
+        });
     }
 
     /**

@@ -96,7 +96,7 @@ $location = new HtmlString('<span class="text-gray-primary-1">Onbekend</span>');
 $locationIcon = null;
 if (!empty($activity->location) && $activity->location_type === Activity::LOCATION_ONLINE) {
     $location = $activity->location;
-    $locationIcon = 'solid/globe-europe';
+    $locationIcon = 'globe-europe';
 } elseif (!empty($activity->location) && !empty($activity->location_url)) {
     $location = new HtmlString(sprintf(
         '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
