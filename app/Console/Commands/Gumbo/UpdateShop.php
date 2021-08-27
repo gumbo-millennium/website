@@ -81,10 +81,12 @@ class UpdateShop extends Command
 
             $model->fill([
                 'name' => Arr::get($product, 'name'),
-                'description' => Arr::get($product, 'description'),
                 'etag' => Arr::get($product, 'etag'),
                 'vat_rate' => (int) Arr::get($product, 'vatPercentage'),
             ]);
+
+            // Assign the description if none is set
+            $model->description ??= Arr::get($product, 'description');
 
             // Safely get image
             $model->image_url = Arr::get($product, 'presentation.imageUrl');
