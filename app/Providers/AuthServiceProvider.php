@@ -8,6 +8,7 @@ use App\Models;
 use App\Models\Shop as ShopModels;
 use App\Models\User;
 use App\Policies;
+use App\Policies\Shop as ShopPolicies;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
