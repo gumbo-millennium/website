@@ -14,6 +14,7 @@ use App\Nova\Filters\PayableStatusFilter;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\ActionRequest;
 
@@ -93,6 +94,18 @@ class Order extends Resource
 
             Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
+
+            Fields\Text::make('Mollie link', function () {
+                if (! $this->payment_id) {
+                    return null;
+                }
+
+                return sprintf(
+                    '<a href="%s" target="_blank">%s</a>',
+                    URL::route('admin.mollie.orders', $this->id),
+                    __('View order in Mollie'),
+                );
+            })->onlyOnDetail()->asHtml(),
 
             Fields\Badge::make(__('Status'), 'payment_status')
                 ->onlyOnIndex()

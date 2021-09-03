@@ -149,6 +149,9 @@
   "All orders have been updated.": "Alle bestellingen zijn bijgewerkt.",
   ":updated of :total order(s) have been updated.": ":updated van :total bestellingen zijn bijgewerkt.",
 
+  "View enrollment in Mollie": "Bekijk inschrijving in Mollie",
+  "View order in Mollie": "Bekijk bestelling in Mollie",
+
   "Path": "Pad",
   "Target path": "Doelpad",
   "Redirect Instruction": "Doorverwijzing",

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers;
+use App\Http\Controllers\Admin as AdminControllers;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
@@ -56,10 +57,18 @@ Route::get('plazacam/{image}', 'PlazaCamController@image')
     ->name('plazacam');
 
 /**
- * Export route.
+ * Admin routes.
  */
-Route::get('admin/download-export/{export}', [FileExportController::class, 'download'])
-    ->name('export.download');
+Route::prefix('admin/')->group(function () {
+    Route::get('download-export/{export}', [FileExportController::class, 'download'])
+        ->name('export.download');
+
+    Route::get('mollie/enrollments/{enrollment}', [AdminControllers\MollieRedirectController::class, 'enrollment'])
+        ->name('admin.mollie.enrollments');
+
+    Route::get('mollie/orders/{order}', [AdminControllers\MollieRedirectController::class, 'order'])
+        ->name('admin.mollie.orders');
+});
 
 /**
  * Files route.
