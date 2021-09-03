@@ -176,7 +176,7 @@ class Enrollment extends Resource
                 }
 
                 return sprintf(
-                    '<a href="%s" target="_blank">%s</a>',
+                    '<a href="%s" class="no-underline font-bold dim text-primary" target="_blank">%s</a>',
                     URL::route('admin.mollie.enrollments', $this->id),
                     __('View payment in Mollie'),
                 );

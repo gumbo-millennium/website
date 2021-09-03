@@ -101,7 +101,7 @@ class Order extends Resource
                 }
 
                 return sprintf(
-                    '<a href="%s" target="_blank">%s</a>',
+                    '<a href="%s" class="no-underline font-bold dim text-primary" target="_blank">%s</a>',
                     URL::route('admin.mollie.orders', $this->id),
                     __('View order in Mollie'),
                 );
