@@ -17,6 +17,7 @@ use App\Nova\Metrics\ConfirmedEnrollments;
 use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -168,6 +169,18 @@ class Enrollment extends Resource
                 ->onlyOnIndex()
                 ->showOnDetail()
                 ->help('Prijs in euro, incl. transactiekosten'),
+
+            Text::make('Mollie link', function () {
+                if (! $this->mollie_id) {
+                    return null;
+                }
+
+                return sprintf(
+                    '<a href="%s" target="_blank">%s</a>',
+                    URL::route('admin.mollie.enrollments', $this->id),
+                    __('View payment in Mollie'),
+                );
+            })->onlyOnDetail()->asHtml(),
 
             Text::make('Status', fn () => $this->state->title)
                 ->hideWhenCreating()
