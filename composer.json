@@ -113,6 +113,12 @@
             "touch library/composer/nova/src/aliases.php",
             "composer install"
         ],
+        "remove-nova": [
+            "git checkout library/composer/nova",
+            "git clean -dfx library/composer/nova",
+            "git ls-files library/composer/nova | xargs git update-index --no-assume-unchanged",
+            "composer install"
+        ],
         "post-install-cmd": [
             "@php artisan vendor:publish --tag=nova-assets || true",
             "@php artisan horizon:assets",
