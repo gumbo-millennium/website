@@ -15,9 +15,9 @@ class OrderProductFields
     public function __invoke()
     {
         return [
-            Price::make(__('Price'), 'price')
+            Number::make(__('Quantity'), 'quantity')
                 ->onlyOnDetail(),
-            Number::make(__('VAT'), 'vat_rate')
+            Price::make(__('Total price'), fn ($orderItem) => ($orderItem->price * $orderItem->quantity) / 100)
                 ->onlyOnDetail(),
         ];
     }

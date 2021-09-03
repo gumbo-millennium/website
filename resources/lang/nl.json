@@ -50,6 +50,7 @@
   "Paid": "Betaald",
   "Pending": "Niet betaald",
   "Price": "Prijs",
+  "Total price": "Totaalprijs",
 
   "Failed to render body, sorry.": "De content kan helaas niet goed getoond worden, sorry.",
 
@@ -116,6 +117,7 @@
   "Order Number": "Bestelnummer",
   "Cancelled at": "Geannuleerd op",
   "Expires at": "Verloopt op",
+  "Quantity": "Aantal",
 
   "Shipping Provider": "Bezorgdienst",
   "Track-and-Trace code": "Track\u00a0&\u00a0Trace code",
