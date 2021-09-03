@@ -246,10 +246,15 @@ class PaymentService implements PaymentServiceContract
             return Arr::first($order->shipments());
         }
 
+        $trackingOptions = $carrier && $trackingCode ? [
+            'carrier' => $carrier,
+            'code' => $trackingCode,
+        ] : null;
+
         // Ship everything
-        return $order->shipAll([
-            '',
-        ]);
+        return $order->shipAll(array_filter([
+            'tracking' => $trackingOptions,
+        ]));
     }
 
     public function refundAll(PayableModel $model): ?Refund
