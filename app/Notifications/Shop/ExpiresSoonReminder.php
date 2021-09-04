@@ -40,9 +40,9 @@ class ExpiresSoonReminder extends ShopNotification implements TelegramNotificati
         $order = $this->order;
         $value = Str::price($this->order->price);
 
-        $expiration = $order->expires_at->isoFormat('dddd DD MMMM, \o\m H:mm');
-        $orderDate = $this->order->created_at->isoFormat('dddd DD MMMM');
-        $orderTime = $this->order->created_at->isoFormat('H:mm');
+        $expiration = $order->expires_at->isoFormat('dddd D MMMM, \o\m HH:mm');
+        $orderDate = $this->order->created_at->isoFormat('dddd D MMMM');
+        $orderTime = $this->order->created_at->isoFormat('HH:mm');
 
         return (new MailMessage())
             ->subject('Je webwinkel bestelling verloopt bijna!')

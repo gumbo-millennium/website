@@ -6,13 +6,13 @@
 @section('shop-title', "Bestelling {$order->number}")
 @section('shop-subtitle')
 @if ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_CANCELLED)
-Geannuleerd op {{ $order->cancelled_at->isoFormat('dddd DD MMMM') }}.
+Geannuleerd op {{ $order->cancelled_at->isoFormat('dddd D MMMM') }}.
 @elseif ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_COMPLETED)
-Afgerond op {{ $order->shipped_at->isoFormat('dddd DD MMMM') }}.
+Afgerond op {{ $order->shipped_at->isoFormat('dddd D MMMM') }}.
 @elseif ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_PAID)
-Betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM') }}.
+Betaald op {{ $order->paid_at->isoFormat('dddd D MMMM') }}.
 @else
-Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd DD MMMM, HH:mm') }}.
+Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') }}.
 @endif
 @endsection
 
@@ -48,7 +48,7 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd DD MMMM, HH:mm')
         <strong class="text-lg font-title font-bold">Afhalen bij het bestuur</strong>
         <p>
             @if ($order->shipped_at)
-            Je hebt je bestelling afgehaald op {{ $order->shipped_at->isoFormat('dddd DD MMMM') }}.
+            Je hebt je bestelling afgehaald op {{ $order->shipped_at->isoFormat('dddd D MMMM') }}.
             @else
             Het bestuur neemt contact met je op voor het afhalen van je bestelling.
             @endif
@@ -62,9 +62,9 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd DD MMMM, HH:mm')
         <strong class="text-lg font-title font-bold">iDEAL</strong>
         <p class="mb-2">
             @if ($order->paid_at)
-            Je hebt je bestelling betaald op {{ $order->paid_at->isoFormat('dddd DD MMMM') }}.
+            Je hebt je bestelling betaald op {{ $order->paid_at->isoFormat('dddd D MMMM') }}.
             @else
-            Je moet deze bestelling betalen voor {{ $order->expires_at->isoFormat('dddd DD MMMM') }}.
+            Je moet deze bestelling betalen voor {{ $order->expires_at->isoFormat('dddd D MMMM') }}.
             @endif
         </p>
     </div>

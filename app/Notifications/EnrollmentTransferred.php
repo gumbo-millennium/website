@@ -101,7 +101,7 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
             Je mag lekker zelf regelen hoe dat geld terugkomt bij {$oldUser->first_name}.
             MARKDOWN);
         } elseif (! $enrollment->state->isStable() && $enrollment->expire) {
-            $exprireDate = $enrollment->expire->isoFormat('D MMM Y, HH:mm (z)');
+            $exprireDate = $enrollment->expire->isoFormat('D MMM YYYY, HH:mm (z)');
             $mail->line(<<<MARKDOWN
             **Let op**: deze inschrijving is niet afgerond. Dit betekend dat je tot {$exprireDate} hebt
             om hem af te ronden, anders wordt hij geannuleerd en is alle moeite van {$oldUser->name} voor

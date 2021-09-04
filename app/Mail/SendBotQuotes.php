@@ -144,7 +144,7 @@ class SendBotQuotes extends Mailable
             // Create entry if missing
             if (! isset($quotesList[$quoteKey])) {
                 $quotesList[$quoteKey] = [
-                    'title' => $quoteDate->isoFormat('ddd DD MMMM'),
+                    'title' => $quoteDate->isoFormat('dddd D MMMM'),
                     'quotes' => [],
                 ];
             }

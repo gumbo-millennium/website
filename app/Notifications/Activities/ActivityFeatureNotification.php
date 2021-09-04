@@ -92,7 +92,7 @@ class ActivityFeatureNotification extends Notification implements ShouldQueue
         $replaceMap = [
             '{user}' => $notifiable->first_name ?? $notifiable->name ?? $notifiable->alias ?? 'ontvanger',
             '{name}' => $this->activity->name,
-            '{date}' => $this->activity->start_date->isoFormat('dddd DD MMMMM'),
+            '{date}' => $this->activity->start_date->isoFormat('dddd D MMMMM'),
             '{link}' => $this->getLink(),
         ];
 

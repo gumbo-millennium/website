@@ -28,7 +28,7 @@ class OrderCancelled extends ShopNotification
     public function toMail($notifiable)
     {
         $order = $this->order;
-        $date = $order->created_at->isoFormat('dddd DD MMMM');
+        $date = $order->created_at->isoFormat('dddd D MMMM');
 
         return (new MailMessage())
             ->subject("Bestelling {$order->number} geannuleerd")

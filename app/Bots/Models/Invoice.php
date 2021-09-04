@@ -29,7 +29,7 @@ class Invoice extends TelegramObject
             ->values()
             ->toArray();
 
-        $date = $order->created_at->isoFormat('dddd DD MMMM, HH:mm');
+        $date = $order->created_at->isoFormat('dddd D MMMM, HH:mm');
         $value = Str::price($order->price);
 
         return static::make([
