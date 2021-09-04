@@ -1,4 +1,4 @@
-@php
+<?php
 // Enrollment open
 $isOpen = $activity->enrollment_open;
 $isStable = optional($enrollment)->is_stable;
@@ -23,10 +23,12 @@ if ($user && $is_enrolled && !$isStable) {
 $whenOpen = null;
 if (!$isOpen && $activity->enrollment_start > now()) {
     $whenOpen = $activity->enrollment_start->isoFormat('[Opent op] D MMM [om] HH:mm');
-} elseif ($isOpen && $activity->enrollment_end > now()) {
-$whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
+} elseif ($isOpen && $activity->enrollment_end == $activity->start_date) {
+    $whenOpen = 'Sluit bij aanvang';
+} else if ($isOpen && $activity->enrollment_end > now()) {
+    $whenOpen = $activity->enrollment_end->isoFormat('[Sluit op] D MMM [om] HH:mm');
 }
-@endphp
+?>
 
 <div class="flex flex-row mb-4">
 <div class="flex flex-col items-center">
