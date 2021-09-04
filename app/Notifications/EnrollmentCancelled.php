@@ -70,7 +70,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
 
         if ($enrollment->deleted_reason === 'timeout') {
             $expire = $enrollment->expire ?? now();
-            $expireText = $expire->isoFormat('DDD MMMM Y, H:i');
+            $expireText = $expire->isoFormat('D MMM YYYY, HH:mm (z)');
             $mail
                 ->line(<<<TEXT
                 Om plek vrij te houden voor andere deelnemers, is er een

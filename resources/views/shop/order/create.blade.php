@@ -60,7 +60,7 @@
     <div class="bg-gray-50 rounded-lg p-4 mb-4">
         <p>
             Je hebt na plaatsing van je bestelling tot
-            <time datetime="{{ $expiry->format('Y-m-d') }}" class="font-bold">{{ $expiry->isoFormat('dddd DD MMMM') }}</time>
+            <time datetime="{{ $expiry->format('Y-m-d') }}" class="font-bold">{{ $expiry->isoFormat('dddd D MMMM') }}</time>
             om te betalen, anders wordt je bestelling geannuleerd.
         </p>
     </div>

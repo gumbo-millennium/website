@@ -37,7 +37,7 @@ class RecoveredFromLimbo extends ShopNotification implements TelegramNotificatio
      */
     public function toMail($notifiable)
     {
-        $orderDate = $this->order->created_at->isoFormat('dddd DD MMMM');
+        $orderDate = $this->order->created_at->isoFormat('dddd D MMMM');
 
         return (new MailMessage())
             ->subject('je kunt nu betalen!')
