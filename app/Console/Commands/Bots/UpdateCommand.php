@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Bots;
 
+use App\Helpers\Str;
 use Illuminate\Console\Command;
 use Telegram\Bot\Api;
 use Telegram\Bot\Commands\CommandInterface;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class UpdateCommand extends Command
@@ -52,16 +54,31 @@ class UpdateCommand extends Command
         $mapping = [];
         foreach ($commands as $command) {
             \assert($command instanceof CommandInterface);
-            $template = [
-                'command' => $command->getName(),
-                'description' => $command->getDescription(),
-            ];
-            $mapping[] = $template;
-            foreach ($command->getAliases() as $alias) {
-                $mapping[] = array_merge($template, ['command' => $alias]);
+            $subcommands = [$command->getName(), ...$command->getAliases()];
+
+            foreach ($subcommands as $commandName) {
+                if (method_exists($command, 'getDescriptionFor')) {
+                    $mapping[] = [
+                        'command' => $commandName,
+                        'description' => $command->getDescriptionFor($commandName),
+                    ];
+
+                    continue;
+                }
+
+                $mapping[] = [
+                    'command' => $commandName,
+                    'description' => $command->getDescription(),
+                ];
             }
         }
 
+        // Ensure all commands end with a period
+        foreach ($mapping as &$map) {
+            $map['description'] = Str::finish($map['description'], '.');
+        }
+
+        // Write all descriptions
         foreach ($mapping as $map) {
             $this->line("<info>/{$map['command']}</>: {$map['description']}");
         }
@@ -76,10 +93,10 @@ class UpdateCommand extends Command
             $this->info('Commands updated');
 
             return 0;
-        } catch (TelegramSDKException $e) {
+        } catch (TelegramSDKException $botException) {
             // Fail 😢
-            $this->line('Webhook could not be removed:');
-            $this->error($e->getMessage());
+            $this->line('Failed to update commands:');
+            $this->error($botException->getMessage());
 
             return 1;
         }
