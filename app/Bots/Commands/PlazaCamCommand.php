@@ -6,6 +6,7 @@ namespace App\Bots\Commands;
 
 use App\Helpers\Str;
 use App\Models\Webcam;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Actions;
@@ -93,7 +94,13 @@ class PlazaCamCommand extends Command
 
         // Get image
         $requested = Str::slug($this->getName() ?? 'plazacam');
-        $webcam = Webcam::findBySlug($requested);
+        $webcam = Webcam::query()
+            ->where(function (Builder $query) use ($requested) {
+                $query
+                    ->where('slug', $requested)
+                    ->orWhere('command', $requested);
+            })
+            ->first();
 
         if (! $webcam) {
             $this->replyWithMessage([
