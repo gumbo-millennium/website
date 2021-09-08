@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Shop;
 
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
@@ -13,7 +12,6 @@ use Tests\Traits\TestsMembersOnlyRoutes;
 
 class CartControllerTest extends TestCase
 {
-    use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
     use TestsShop;
 
@@ -243,5 +241,112 @@ class CartControllerTest extends TestCase
             'quantity' => self::SHOP_ORDER_LIMIT + 1,
         ])->assertSessionHasNoErrors()
             ->assertRedirect(route('shop.cart'));
+    }
+
+    public function test_increased_custom_order_limits(): void
+    {
+        $this->actingAs($this->getMemberUser());
+
+        $variant = $this->getProductVariant([
+            'price' => 10_00,
+            'order_limit' => 10,
+        ]);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 10,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertCartPrice(10 * $variant->price + self::SHOP_FEE);
+        $this->assertCartQuantity(10);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 11,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertSame(10, Cart::getContent()->first()->quantity);
+    }
+
+    public function test_decreased_order_limit(): void
+    {
+        $this->actingAs($this->getMemberUser());
+
+        $variant = $this->getProductVariant([
+            'price' => 10_00,
+            'order_limit' => 3,
+        ]);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 3,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertCartPrice(3 * $variant->price + self::SHOP_FEE);
+        $this->assertCartQuantity(3);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 4,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertSame(3, Cart::getContent()->first()->quantity);
+    }
+
+    public function test_local_order_limit(): void
+    {
+        $this->actingAs($this->getMemberUser());
+
+        $variant = $this->getProductVariant([
+            'price' => 10_00,
+            'order_limit' => 3,
+        ]);
+
+        $variant->product->order_limit = 10;
+        $variant->product->save();
+
+        $variant2 = $this->getProductVariant([
+            'price' => 5_00,
+        ], $variant->product);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 3,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertCartPrice(3 * $variant->price + self::SHOP_FEE);
+        $this->assertCartQuantity(3);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant2->id,
+            'quantity' => 6,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertCartPrice(3 * $variant->price + 6 * $variant2->price + self::SHOP_FEE);
+        $this->assertCartQuantity(3 + 6);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant->id,
+            'quantity' => 4,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        // 3 + 6 instead of 4 + 6
+        $this->assertCartQuantity(3 + 6);
+
+        $this->post(route('shop.cart.add'), [
+            'variant' => $variant2->id,
+            'quantity' => 16,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        // 3 + 10, instead of 3 + 16
+        $this->assertCartQuantity(3 + 10);
     }
 }
