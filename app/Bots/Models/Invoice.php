@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Config;
  * @method self disableNotification(bool $disableNotification)
  * @method self allowSendingWithoutReply(bool $allowSendingWithoutReply)
  * @method static self make(array|string $title = [], ?string $description = null)
+ * @codeCoverageIgnore
  */
 class Invoice extends TelegramObject
 {

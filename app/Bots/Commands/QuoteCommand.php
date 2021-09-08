@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Cache;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Keyboard\Keyboard;
 
+/**
+ * @codeCoverageIgnore
+ */
 class QuoteCommand extends Command
 {
     private const REPLY_INVALID = <<<'MSG'

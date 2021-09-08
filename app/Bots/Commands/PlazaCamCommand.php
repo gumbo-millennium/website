@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Actions;
 use Telegram\Bot\FileUpload\InputFile;
 
+/**
+ * @codeCoverageIgnore
+ */
 class PlazaCamCommand extends Command
 {
     private const REPLY_GUEST = <<<'MSG'

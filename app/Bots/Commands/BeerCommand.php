@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Date;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * @codeCoverageIgnore
+ */
 class BeerCommand extends Command
 {
     private const BEER_CONFIG_TEMPLATE = 'assets/yaml/%s.yaml';

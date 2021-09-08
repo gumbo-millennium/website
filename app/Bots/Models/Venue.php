@@ -10,6 +10,7 @@ namespace App\Bots\Models;
  * @method self longitude(float $longitude)
  * @method self address(string $address)
  * @method static self make(array|string $title = [])
+ * @codeCoverageIgnore
  */
 class Venue extends TelegramObject
 {

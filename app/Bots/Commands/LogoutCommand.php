@@ -7,6 +7,9 @@ namespace App\Bots\Commands;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LogoutCommand extends Command
 {
     private const LOGOUT_OK = <<<'TEXT'
