@@ -27,38 +27,38 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 /**
  * A hosted activity.
  *
- * @property-read AttachmentInterface $image
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $deleted_at
- * @property null|\Illuminate\Support\Date $published_at
- * @property null|\Illuminate\Support\Date $cancelled_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property null|\Illuminate\Support\Carbon $published_at
+ * @property null|\Illuminate\Support\Carbon $cancelled_at
  * @property string $name
  * @property string $slug
  * @property null|string $tagline
+ * @property null|string $poster
  * @property null|array $description
  * @property null|string $statement
  * @property null|string $location
  * @property null|string $location_address
  * @property string $location_type
- * @property \Illuminate\Support\Date $start_date Start date and time
- * @property \Illuminate\Support\Date $end_date End date and time
+ * @property \Illuminate\Support\Carbon $start_date Start date and time
+ * @property \Illuminate\Support\Carbon $end_date End date and time
  * @property null|int $seats
  * @property bool $is_public
  * @property null|int $member_discount
  * @property null|int $discount_count
  * @property null|string $stripe_coupon_id
  * @property null|int $price
- * @property null|\Illuminate\Support\Date $enrollment_start
- * @property null|\Illuminate\Support\Date $enrollment_end
+ * @property null|\Illuminate\Support\Carbon $enrollment_start
+ * @property null|\Illuminate\Support\Carbon $enrollment_end
  * @property null|string $payment_type
  * @property null|string $cancelled_reason
- * @property null|\Illuminate\Support\Date $rescheduled_from
+ * @property null|\Illuminate\Support\Carbon $rescheduled_from
  * @property null|string $rescheduled_reason
- * @property null|\Illuminate\Support\Date $postponed_at
+ * @property null|\Illuminate\Support\Carbon $postponed_at
  * @property null|string $postponed_reason
- * @property null|mixed $enrollment_questions
+ * @property null|array $enrollment_questions
  * @property null|int $role_id
  * @property null|string $image_file_name image name
  * @property null|int $image_file_size image size (in bytes)
@@ -66,14 +66,16 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property null|string $image_updated_at image update timestamp
  * @property null|mixed $image_variants image variants (json)
  * @property array $features
- * @property-read \Illuminate\Support\Collection $expanded_features
- * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
+ * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
  * @property-read int $available_seats
  * @property-read null|string $description_html
  * @property-read null|int $discount_price
  * @property-read null|int $discounts_available
  * @property-read bool $enrollment_open
+ * @property-read Collection $expanded_features
  * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
+ * @property-read null|\App\Models\array<FormLayout> $form
+ * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
  * @property-read bool $is_cancelled
  * @property-read bool $is_free
@@ -86,10 +88,18 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read string $price_label
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
- * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
+ * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
+ * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|Role $role
- * @property-read null|array<FormLayout> $form
- * @property-read null|bool $form_is_medical True if the form contains field that are not to be exported
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|Activity newModelQuery()
+ * @method static Builder|Activity newQuery()
+ * @method static Builder|Activity query()
+ * @method static Builder|Activity whereAvailable(?\App\Models\User $user = null)
+ * @method static Builder|Activity whereHasFeature(string $feature)
+ * @method static Builder|Activity wherePublished()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @mixin \Eloquent
  */
 class Activity extends SluggableModel implements AttachableInterface
 {

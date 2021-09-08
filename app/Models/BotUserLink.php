@@ -14,7 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $driver
  * @property string $driver_id
  * @property null|string $name
- * @property-read User $user
+ * @property-read \App\Models\User $user
+ * @method static Builder|BotUserLink newModelQuery()
+ * @method static Builder|BotUserLink newQuery()
+ * @method static Builder|BotUserLink query()
+ * @method static Builder|BotUserLink whereDriverId(string $driver, string $driverId)
+ * @mixin \Eloquent
  */
 class BotUserLink extends UuidModel
 {

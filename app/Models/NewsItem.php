@@ -15,25 +15,31 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * A news article.
  *
- * @property-read AttachmentInterface $image
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date $published_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon $published_at
  * @property string $title
  * @property string $slug
  * @property string $category
  * @property null|string $sponsor
  * @property null|string $headline
- * @property null|array $contents
+ * @property null|mixed $contents
  * @property null|int $author_id
  * @property null|string $image_file_name image name
  * @property null|int $image_file_size image size (in bytes)
  * @property null|string $image_content_type image content type
  * @property null|string $image_updated_at image update timestamp
- * @property null|array $image_variants image variants (json)
- * @property-read null|User $author
+ * @property null|mixed $image_variants image variants (json)
+ * @property-read null|\App\Models\User $author
  * @property-read null|string $html
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|NewsItem newModelQuery()
+ * @method static Builder|NewsItem newQuery()
+ * @method static Builder|NewsItem query()
+ * @method static Builder|NewsItem whereAvailable()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @mixin \Eloquent
  */
 class NewsItem extends SluggableModel implements AttachableInterface
 {

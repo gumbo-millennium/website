@@ -21,13 +21,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * A user enrollment for an activity. Optionally has payments.
  *
- * @property States\Enrollment\State $state
  * @property string $id
  * @property int $user_id
  * @property int $activity_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property string $state
  * @property null|string $deleted_reason
  * @property null|int $price
  * @property null|int $total_price
@@ -35,19 +35,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|string $payment_invoice
  * @property null|string $payment_source
  * @property string $user_type
- * @property null|\Illuminate\Support\Date $expire
+ * @property null|\Illuminate\Support\Carbon $expire
  * @property null|string $transfer_secret
- * @property null|\Illuminate\Support\Collection $data
- * @property-read Activity $activity
+ * @property null|array $data
+ * @property-read \App\Models\Activity $activity
+ * @property-read null|array $form
+ * @property-read mixed $form_data
  * @property-read bool $is_discounted
+ * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
  * @property-read bool $requires_payment
- * @property-read null|States\Enrollment\State $wanted_state
- * @property-read \Illuminate\Database\Eloquent\Collection<Payment> $payments
- * @property-read User $user
- * @property-read null|array<scalar> $form The form data ready for export
- * @property-read null|array<scalar> $form_data The form data to supply to the form builder
- * @property-read null|bool $is_form_exportable True if the form can be exported
+ * @property-read null|\App\Models\States\Enrollment\State $wanted_state
+ * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereNotState(string $column, $states)
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereState(string $column, $states)
+ * @method static \Illuminate\Database\Query\Builder|Enrollment withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
+ * @mixin \Eloquent
  */
 class Enrollment extends UuidModel
 {

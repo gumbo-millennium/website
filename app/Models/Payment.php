@@ -13,16 +13,22 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $transaction_id
  * @property int $user_id
  * @property string $enrollment_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $completed_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $completed_at
  * @property string $status
  * @property int $amount In cents
- * @property null|\Illuminate\Support\Date $refunded_at
+ * @property null|\Illuminate\Support\Carbon $refunded_at
  * @property null|int $refunded_amount
  * @property null|\Illuminate\Support\Collection $data
  * @property-read bool $is_completed
  * @property-read bool $is_refunded
+ * @method static Builder|Payment completed()
+ * @method static Builder|Payment newModelQuery()
+ * @method static Builder|Payment newQuery()
+ * @method static Builder|Payment query()
+ * @method static Builder|Payment refunded()
+ * @mixin \Eloquent
  */
 class Payment extends UuidModel
 {

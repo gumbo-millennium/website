@@ -13,15 +13,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * A shop category.
  *
  * @property string $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
  * @property bool $visible
  * @property array $meta
  * @property-read string $valid_image_url
- * @property-read \Illuminate\Database\Eloquent\Collection<Product> $products
+ * @property-read \App\Models\Shop\Product[]|\Illuminate\Database\Eloquent\Collection $products
+ * @method static \Illuminate\Database\Eloquent\Builder|Category findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereSlug(string $slug)
+ * @mixin \Eloquent
  */
 class Category extends Model
 {

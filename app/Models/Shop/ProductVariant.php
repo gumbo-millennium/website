@@ -18,22 +18,30 @@ use Illuminate\Support\HtmlString;
  *
  * @property string $id
  * @property string $product_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
+ * @property int $order
  * @property null|string $image_url
  * @property null|string $sku
  * @property null|int $price
  * @property array $options
  * @property array $meta
- * @property-read string $url
+ * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read string $display_name
+ * @property-read string $url
  * @property-read string $valid_image_url
+ * @property-read \App\Models\Shop\Order[]|\Illuminate\Database\Eloquent\Collection $orders
  * @property-read \App\Models\Shop\Product $product
- * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
- * @property-read null|string $description_html
+ * @method static Builder|ProductVariant findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|ProductVariant newModelQuery()
+ * @method static Builder|ProductVariant newQuery()
+ * @method static Builder|ProductVariant query()
+ * @method static Builder|ProductVariant whereSlug(string $slug)
+ * @method static Builder|ProductVariant withUniqueSlugConstraints(\self $model, $attribute, $config, $slug)
+ * @mixin \Eloquent
  */
 class ProductVariant extends Model
 {

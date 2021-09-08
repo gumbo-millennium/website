@@ -15,15 +15,19 @@ use Spatie\MediaLibrary\Models\Media;
  * the user, the timestamp, the IP from which the user downloaded and the user agent used.
  *
  * @property string $id
- * @property \Illuminate\Support\Date $created_at
+ * @property null|\Illuminate\Support\Carbon $created_at
  * @property int $user_id
  * @property int $bundle_id
  * @property null|int $media_id
  * @property string $ip
  * @property string $user_agent
- * @property-read FileBundle $bundle
+ * @property-read \App\Models\FileBundle $bundle
  * @property-read null|Media $media
- * @property-read User $user
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|FileDownload newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FileDownload newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FileDownload query()
+ * @mixin \Eloquent
  */
 class FileDownload extends Pivot
 {

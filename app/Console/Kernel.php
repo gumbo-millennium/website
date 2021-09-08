@@ -59,6 +59,7 @@ class Kernel extends ConsoleKernel
 
         // Send quotes weekly
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
+        $schedule->command('bot:update')->hourly();
 
         // Fix broken Mollie invoices a couple times a day
         $schedule->command('shop:repair-orders')->cron('45 */2 * * *');
@@ -72,6 +73,9 @@ class Kernel extends ConsoleKernel
 
         // Clear expired data exports
         $schedule->command('gumbo:avg:prune-exports')->weekly();
+
+        // Clear expired webcam images
+        $schedule->command('gumbo:prune-webcams')->hourly();
     }
 
     /**

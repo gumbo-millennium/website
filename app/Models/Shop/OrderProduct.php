@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property int $quantity
  * @property-read \App\Models\Shop\Order $order
  * @property-read \App\Models\Shop\ProductVariant $variant
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderProduct query()
+ * @mixin \Eloquent
  */
 class OrderProduct extends Pivot
 {

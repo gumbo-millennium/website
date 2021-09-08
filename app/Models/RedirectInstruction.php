@@ -18,12 +18,6 @@ use Illuminate\Support\Facades\URL;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction newQuery()
  * @method static \Illuminate\Database\Query\Builder|RedirectInstruction onlyTrashed()

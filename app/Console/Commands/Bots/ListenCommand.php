@@ -44,6 +44,10 @@ class ListenCommand extends Command
             return 1;
         }
 
+        // Send current command list
+        $this->line('Reporting command list');
+        $this->call('bot:update', ['bot' => $this->argument('bot')]);
+
         // Report and start
         $this->line('Now listening for updates');
         do {

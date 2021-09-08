@@ -12,13 +12,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * A quote sent by a user via the Telegram bot.
  *
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $submitted_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $submitted_at
  * @property null|int $user_id
  * @property string $display_name
  * @property string $quote
- * @property-read null|User $user
+ * @property-read null|\App\Models\User $user
+ * @method static Builder|BotQuote newModelQuery()
+ * @method static Builder|BotQuote newQuery()
+ * @method static Builder|BotQuote notSubmitted()
+ * @method static Builder|BotQuote outdated()
+ * @method static Builder|BotQuote query()
+ * @mixin \Eloquent
  */
 class BotQuote extends Model
 {

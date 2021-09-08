@@ -23,8 +23,8 @@ use Illuminate\Support\Facades\Date;
  * @property null|\Illuminate\Support\Carbon $completed_at
  * @property \Illuminate\Support\Carbon $expires_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property-read string $file_name
  * @property-read bool $is_expired
- * @property-read bool $file_name
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newQuery()

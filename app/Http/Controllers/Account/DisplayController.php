@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
+use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\BotUserLink;
+use App\Models\Webcam;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
@@ -45,62 +47,50 @@ class DisplayController extends Controller
     /**
      * API urls for the user to (ab)use.
      */
-    public function viewUrls(Request $request): HttpResponse
+    public function showUrls(Request $request): HttpResponse
     {
         // Shorthands
         $user = $request->user();
-        $urlExpire = Date::now()->addYear()->diffInSeconds();
-
         $urls = new Collection();
 
-        // Plazacam view
+        // Webcam view
         if ($request->user()->hasPermissionTo('plazacam-view')) {
-            // Plazacam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Plazacam',
-                'url' => URL::signedRoute('api.plazacam.view', [
-                    'user' => $user->id,
-                    'image' => 'plaza',
-                ], $urlExpire),
-            ]);
-
-            // Coffeecam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Koffiecam',
-                'url' => URL::signedRoute('api.plazacam.view', [
-                    'user' => $user->id,
-                    'image' => 'coffee',
-                ], $urlExpire),
-            ]);
+            $urlExpire = Date::now()->addMonths(6);
+            foreach (Webcam::all() as $webcam) {
+                $urls->push([
+                    'id' => Str::slug("view-cam-{$webcam->id}"),
+                    'group' => 'Webcams',
+                    'expires' => $urlExpire,
+                    'title' => $webcam->name,
+                    'url' => URL::signedRoute('api.webcam.view', [
+                        'user' => $user,
+                        'webcam' => $webcam,
+                    ], $urlExpire),
+                ]);
+            }
         }
 
-        // Plazacam update
+        // Webcam update
         if ($request->user()->hasPermissionTo('plazacam-update')) {
-            // Plazacam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Plazacam (update)',
-                'url' => URL::signedRoute('api.plazacam.store', [
-                    'user' => $user->id,
-                    'image' => 'plaza',
-                ], $urlExpire),
-            ]);
-
-            // Coffeecam
-            $urls->push([
-                'expires' => true,
-                'title' => 'Koffiecam (update)',
-                'url' => URL::signedRoute('api.plazacam.store', [
-                    'user' => $user->id,
-                    'image' => 'coffee',
-                ], $urlExpire),
-            ]);
+            $urlExpire = Date::now()->addMonths(3);
+            foreach (Webcam::all() as $webcam) {
+                $urls->push([
+                    'id' => Str::slug("update-cam-{$webcam->id}"),
+                    'group' => 'Webcams (bijwerken)',
+                    'expires' => $urlExpire,
+                    'title' => "{$webcam->name} (update)",
+                    'url' => URL::signedRoute('api.webcam.store', [
+                        'user' => $user,
+                        'webcam' => $webcam,
+                    ], $urlExpire),
+                ]);
+            }
         }
 
         // Render view
-        return Response::view('account.urls', compact('urls'))
+        return Response::view('account.urls', [
+            'urls' => $urls->groupBy('group'),
+        ])
             ->setPrivate()
             ->setMaxAge(60);
     }

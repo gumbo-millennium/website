@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * Encrypted submission to Gumbo.
  *
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|string $first_name
  * @property null|string $insert
  * @property string $last_name
@@ -25,11 +25,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property null|string $city Encrypted city
  * @property null|string $postal_code Encrypted zipcode
  * @property null|string $country Encrypted country
- * @property bool $windesheim_student
- * @property bool $newsletter
- * @property null|bool $granted
+ * @property int $windesheim_student
+ * @property int $newsletter
+ * @property null|int $granted
  * @property null|string $referrer
  * @property-read string $name
+ * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission query()
+ * @mixin \Eloquent
  */
 class JoinSubmission extends Model
 {

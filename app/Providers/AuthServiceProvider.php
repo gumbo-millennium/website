@@ -38,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
         Models\Sponsor::class => Policies\SponsorPolicy::class,
         Models\User::class => Policies\UserPolicy::class,
         Models\RedirectInstruction::class => Policies\RedirectInstructionPolicy::class,
+        Models\Webcam::class => Policies\WebcamPolicy::class,
+        Models\WebcamUpdate::class => Policies\WebcamUpdatePolicy::class,
 
         // Shop
         ShopModels\Order::class => ShopPolicies\OrderPolicy::class,

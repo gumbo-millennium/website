@@ -15,8 +15,12 @@ use InvalidArgumentException;
  * @property int $id
  * @property int $sponsor_id
  * @property int $count
- * @property \Illuminate\Support\Date $date
- * @property-read Sponsor $sponsor
+ * @property \Illuminate\Support\Carbon $date
+ * @property-read \App\Models\Sponsor $sponsor
+ * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick query()
+ * @mixin \Eloquent
  */
 class SponsorClick extends Model
 {

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App\Http\Controllers\PlazaCamController;
+use App\Helpers\Str;
+use App\Models\Webcam;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Actions;
 use Telegram\Bot\FileUpload\InputFile;
@@ -12,7 +14,7 @@ use Telegram\Bot\FileUpload\InputFile;
 class PlazaCamCommand extends Command
 {
     private const REPLY_GUEST = <<<'MSG'
-    🔒 De %s is alleen toegankelijk voor leden.
+    🔒 Deze camera is alleen toegankelijk voor leden.
 
     Log in via /login.
     MSG;
@@ -24,16 +26,13 @@ class PlazaCamCommand extends Command
     en kan daarom niet meer worden opgevraagd.
     MSG;
 
-    private const COMMAND_IMAGE_MAP = [
-        'coffeecam' => 'coffee',
-        'koffiecam' => 'coffee',
-        'plazacam' => 'plaza',
-    ];
+    private const REPLY_NO_SUCH_CAMERA = <<<'MSG'
+    🔒 Deze camera is niet beschikbaar.
 
-    private const NAME_LABEL_MAP = [
-        'coffee' => 'Koffiecam',
-        'plaza' => 'Plazacam',
-    ];
+    De opgevraagde camera kon niet worden gevonden.
+    MSG;
+
+    protected ?Collection $cams = null;
 
     /**
      * The name of the Telegram command.
@@ -43,16 +42,6 @@ class PlazaCamCommand extends Command
     protected $name = 'plazacam';
 
     /**
-     * Command Aliases - Helpful when you want to trigger command with more than one name.
-     *
-     * @var array<string>
-     */
-    protected $aliases = [
-        'koffiecam',
-        'coffeecam',
-    ];
-
-    /**
      * The Telegram command description.
      *
      * @var string
@@ -60,30 +49,64 @@ class PlazaCamCommand extends Command
     protected $description = 'Toont de plaza of koffiecam';
 
     /**
+     * Get Command Aliases.
+     *
+     * Helpful when you want to trigger command with more than one name.
+     */
+    public function getAliases(): array
+    {
+        $cameras = $this->getCameras()
+            ->where('slug', '!=', $this->getName());
+
+        return Collection::make()
+            ->merge($cameras->pluck('slug'))
+            ->merge($cameras->pluck('command'))
+            ->map(fn ($value) => Str::slug($value))
+            ->reject(fn ($value) => $value === $this->getName() || ! Str::endsWith($value, 'cam'))
+            ->unique()
+            ->toArray();
+    }
+
+    public function getDescriptionFor(string $command): string
+    {
+        $targetCamera = $this->getCameras()
+            ->filter(fn ($row) => Str::slug($row->command) === $command || Str::slug($row->slug) === $command)
+            ->first();
+
+        return $targetCamera ? "Toont de {$targetCamera->name}" : $this->description;
+    }
+
+    /**
      * Handle the activity.
      */
     public function handle()
     {
-        // Get image name
-        $image = self::COMMAND_IMAGE_MAP[$this->getName()] ?? 'plazacam';
-        $imageName = self::NAME_LABEL_MAP[$image];
-
         // Get user
         $user = $this->getUser();
 
         // Reject if rate-limited
         if (! $user) {
+            $this->replyWithMessage(['text' => self::REPLY_GUEST]);
+
+            return;
+        }
+
+        // Get image
+        $requested = Str::slug($this->getName() ?? 'plazacam');
+        $webcam = Webcam::findBySlug($requested);
+
+        if (! $webcam) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST, $imageName),
+                'text' => $this->formatText(self::REPLY_NO_SUCH_CAMERA, e(strip_tags($requested))),
             ]);
 
             return;
         }
 
         // Check if expired
-        if (PlazaCamController::isExpired($image)) {
+        if ($webcam->is_expired) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_EXPIRED, $imageName),
+                'text' => $this->formatText(self::REPLY_EXPIRED, $webcam->name),
             ]);
 
             return;
@@ -93,16 +116,20 @@ class PlazaCamCommand extends Command
         $this->replyWithChatAction(['action' => Actions::UPLOAD_PHOTO]);
 
         // Get file
-        $file = PlazaCamController::getPlazacamPath($image);
-        $steam = Storage::readStream($file);
+        $stream = Storage::readStream($webcam->path);
 
         // Prep file
-        $file = new InputFile($steam, strtolower("${image}.jpg"));
+        $file = new InputFile($stream, strtolower("{$webcam->slug}.jpg"));
 
         // Return message
         $this->replyWithPhoto([
             'photo' => $file,
-            'caption' => $imageName,
+            'caption' => sprintf('%s van %s', $webcam->name, $webcam->lastUpdate->created_at->isoFormat('ddd D MMM YYYY, HH:mm (z)')),
         ]);
+    }
+
+    protected function getCameras(): Collection
+    {
+        return $this->cams ??= Webcam::all();
     }
 }

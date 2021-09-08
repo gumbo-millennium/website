@@ -18,21 +18,28 @@ use Spatie\MediaLibrary\Models\Media;
  *
  * @property int $id
  * @property null|int $category_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property \Illuminate\Support\Date $published_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon $published_at
  * @property null|int $owner_id
  * @property string $title
  * @property string $slug
  * @property null|string $description
  * @property int $total_size
  * @property string $sort_order
- * @property-read null|FileCategory $category
- * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property-read null|\App\Models\FileCategory $category
+ * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
  * @property-read bool $is_available
  * @property-read null|string $url
- * @property-read \Illuminate\Database\Eloquent\Collection<Media> $media
- * @property-read null|User $owner
+ * @property-read \App\Models\Media[]|\Illuminate\Database\Eloquent\Collection $media
+ * @property-read null|\App\Models\User $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|FileBundle newModelQuery()
+ * @method static Builder|FileBundle newQuery()
+ * @method static Builder|FileBundle query()
+ * @method static Builder|FileBundle whereAvailable()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @mixin \Eloquent
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
