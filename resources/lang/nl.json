@@ -51,6 +51,12 @@
   "Pending": "Niet betaald",
   "Price": "Prijs",
   "Total price": "Totaalprijs",
+  "Features": "Eigenschappen",
+  "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
+
+  "Order limit": "Bestellinglimiet",
+  "The max count of this variant that can be added to a single order.": "Het maximaal aantal van deze variant dat aan een enkele bestelling kan worden toegevoegd.",
+  "Can be overruled on the variant level.": "Kan worden overschreven op het variant-niveau",
 
   "Failed to render body, sorry.": "De content kan helaas niet goed getoond worden, sorry.",
 

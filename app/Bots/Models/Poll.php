@@ -14,6 +14,7 @@ use InvalidArgumentException;
  * @method self allowsMultipleAnswers(bool $allowsMultipleAnswers)
  * @method self openPeriod(int $openPeriod)
  * @method static self make(array|string $question = [])
+ * @codeCoverageIgnore
  */
 class Poll extends TelegramObject
 {

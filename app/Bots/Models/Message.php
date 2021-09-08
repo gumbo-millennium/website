@@ -11,6 +11,7 @@ namespace App\Bots\Models;
  * @method self disableNotification(bool $disableNotification)
  * @method self allowSendingWithoutReply(bool $allowSendingWithoutReply)
  * @method static self make(array|string $text = [])
+ * @codeCoverageIgnore
  */
 class Message extends TelegramObject
 {

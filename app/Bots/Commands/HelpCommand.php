@@ -6,6 +6,9 @@ namespace App\Bots\Commands;
 
 use Telegram\Bot\Commands\CommandInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class HelpCommand extends Command
 {
     private const MSG = <<<'TEXT'

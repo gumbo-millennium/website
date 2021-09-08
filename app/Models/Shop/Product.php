@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Helpers\Arr;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -24,12 +27,18 @@ use Illuminate\Support\HtmlString;
  * @property null|string $image_url
  * @property null|string $etag
  * @property int $vat_rate
+ * @property null|int $order_limit
  * @property bool $visible
  * @property bool $advertise_on_home
  * @property array $meta
+ * @property array $features
  * @property-read null|\App\Models\Shop\Category $category
+ * @property-read int $applied_order_limit
  * @property-read null|\App\Models\Shop\ProductVariant $default_variant
  * @property-read null|\Illuminate\Support\HtmlString $description_html
+ * @property-read Collection $detail_feature_icons
+ * @property-read Collection $feature_icons
+ * @property-read Collection $feature_warnings
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
  * @method static \Illuminate\Database\Eloquent\Builder|Product findSimilarSlugs(string $attribute, array $config, string $slug)
@@ -47,14 +56,26 @@ class Product extends Model
     protected $table = 'shop_products';
 
     protected $casts = [
+        // Visibility
         'visible' => 'bool',
         'advertise_on_home' => 'bool',
+
+        // Tax rate (not really used)
         'vat_rate' => 'int',
+
+        // Max number of items per order (applied per variant)
+        'order_limit' => 'int',
+
+        // Random metadata
         'meta' => 'json',
+
+        // Features
+        'features' => 'json',
     ];
 
     protected $attributes = [
         'meta' => '[]',
+        'features' => '[]',
     ];
 
     /**
@@ -101,5 +122,42 @@ class Product extends Model
         }
 
         return new HtmlString(nl2br(e(strip_tags($this->description))));
+    }
+
+    public function getFeatureIconsAttribute(): Collection
+    {
+        return $this->getEnrichedFeatures()
+            ->mapWithKeys(fn ($feature) => [$feature['icon'] => $feature['title']]);
+    }
+
+    public function getDetailFeatureIconsAttribute(): Collection
+    {
+        return $this->getEnrichedFeatures()
+            ->reject(fn ($row) => Arr::has($row, 'notice.text'))
+            ->mapWithKeys(fn ($feature) => [$feature['icon'] => $feature['title']]);
+    }
+
+    public function getFeatureWarningsAttribute(): Collection
+    {
+        return $this->getEnrichedFeatures()
+            ->filter(fn ($row) => Arr::has($row, 'notice.text'));
+    }
+
+    public function getAppliedOrderLimitAttribute(): int
+    {
+        if ($this->order_limit > 0) {
+            return $this->order_limit;
+        }
+
+        return Config::get('gumbo.shop.order-limit');
+    }
+
+    private function getEnrichedFeatures(): Collection
+    {
+        return collect($this->features)
+            ->map(fn ($value, $key) => $value ? $key : null)
+            ->filter()
+            ->map(fn ($feature) => Config::get("gumbo.shop.features.{$feature}", null))
+            ->filter();
     }
 }

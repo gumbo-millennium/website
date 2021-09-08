@@ -18,6 +18,10 @@ $factory->define(Product::class, static function (Faker $faker) {
     ];
 });
 
+$factory->state(Product::class, 'order-limit', fn (Faker $faker) => [
+    'order_limit' => $faker->numberBetween(1, 10),
+]);
+
 $factory->afterCreatingState(Product::class, 'with-variants', static function (Product $product, Faker $faker) {
     factory(ProductVariant::class, $faker->numberBetween(1, 5))->create([
         'product_id' => $product->id,

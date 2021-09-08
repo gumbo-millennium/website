@@ -86,7 +86,10 @@ return [
 
     // Shop settings
     'shop' => [
-        'max-quantity' => (int) env('GUMBO_SHOP_MAX_QUANTITY', 5),
+        'order-limit' => (int) env('GUMBO_SHOP_MAX_QUANTITY', 5),
+
+        // Seeded from resources/yaml/shop-features.yaml
+        'features' => [],
     ],
 
     'mail-recipients' => [

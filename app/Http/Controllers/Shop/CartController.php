@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Str;
+use Spatie\Csp\Directive;
 
 class CartController extends Controller
 {
@@ -22,8 +23,9 @@ class CartController extends Controller
     {
         $cartItems = Cart::getContent()->sortBy('metadata.sort-key');
 
-        $this->addImageUrlsToCspPolicy(
+        $this->addToCsp(
             $cartItems->map(fn ($item) => $item->associatedModel->valid_image_url)->toArray(),
+            Directive::IMG,
         );
 
         return ResponseFacade::view('shop.cart', [
@@ -52,7 +54,7 @@ class CartController extends Controller
 
         // If an item is matched, simply increase the count
         if ($matchedItem) {
-            $maxCount = $request->getMaxQuantity();
+            $maxCount = $variant->applied_order_limit;
             $addedQuantity = min($maxCount - $matchedItem->quantity, $request->quantity);
 
             if ($addedQuantity > 0) {
@@ -85,6 +87,7 @@ class CartController extends Controller
             'metadata' => [
                 // For some reason IDs are a reflection of the order
                 'sort-key' => "{$product->id}_{$variant->id}",
+                'limit' => $variant->applied_order_limit,
             ],
         ]);
 
@@ -123,11 +126,14 @@ class CartController extends Controller
             return ResponseFacade::redirectToRoute('shop.cart');
         }
 
+        // Get the max quantity from the cart
+        $maxQuantity = $entry->associatedModel->applied_order_limit;
+
         // Update quantity but treat it as an absolute
         Cart::update($entry->id, [
             'quantity' => [
                 'relative' => false,
-                'value' => $quantity,
+                'value' => min($quantity, $maxQuantity),
             ],
         ]);
 

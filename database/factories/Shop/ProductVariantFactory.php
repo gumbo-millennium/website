@@ -17,3 +17,7 @@ $factory->define(ProductVariant::class, static function (Faker $faker) {
         'order' => $faker->numerify(1, 10),
     ];
 });
+
+$factory->state(ProductVariant::class, 'order-limit', fn (Faker $faker) => [
+    'order_limit' => $faker->numberBetween(1, 10),
+]);

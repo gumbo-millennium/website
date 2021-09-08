@@ -3,7 +3,7 @@
 {{-- Header --}}
 @section('shop-title', 'Gumbo Millennium Webshop')
 @section('shop-subtitle')
-    het is geen Black Friday, maar deze shit is goed ge<i>prei</i>st.
+    Gumbo Merch tot je groen en geel ziet <span class="text-sm">(maar voornamelijk groen)</span>
 @endsection
 
 @section('shop-adverts')

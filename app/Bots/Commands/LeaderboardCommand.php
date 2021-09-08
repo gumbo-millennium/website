@@ -8,6 +8,9 @@ use App\Models\MemberReferral;
 use Illuminate\Support\Facades\DB;
 use Telegram\Bot\Actions;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LeaderboardCommand extends Command
 {
     private const EMOJI = ['🥇', '🥈', '🥉'];

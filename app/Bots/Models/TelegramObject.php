@@ -13,6 +13,7 @@ use Telegram\Bot\Keyboard\Keyboard;
  * @method self disableNotification(bool $disableNotification)
  * @method self replyToMessageId(string $replyToMessageId)
  * @method self allowSendingWithoutReply(bool $allowSendingWithoutReply)
+ * @codeCoverageIgnore
  */
 abstract class TelegramObject extends Fluent
 {

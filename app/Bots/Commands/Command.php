@@ -18,6 +18,9 @@ use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\User as TelegramUser;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class Command extends TelegramCommand
 {
     /**

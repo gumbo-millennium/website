@@ -8,8 +8,10 @@ use App\Models\Shop\Product as Model;
 use App\Nova\Resources\Resource;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -57,6 +59,10 @@ class Product extends Resource
      */
     public function fields(Request $request)
     {
+        $featuresMap = collect(Config::get('gumbo.shop.features', []))
+            ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
+            ->all();
+
         return [
             ID::make(),
 
@@ -87,6 +93,19 @@ class Product extends Resource
                 ->hideFromIndex()
                 ->min(0)
                 ->max(100),
+
+            Number::make(__('Order limit'), 'order_limit')
+                ->nullable()
+                ->min(1)
+                ->max(255)
+                ->help(implode(' ', [
+                    __('The max count of this variant that can be added to a single order. Counted per variant.'),
+                    __('Can be overruled on the variant level.'),
+                ])),
+
+            BooleanGroup::make(__('Features'), 'features')
+                ->options($featuresMap)
+                ->help(__('Additional properties to add to (variants of) this product.')),
 
             Boolean::make(__('Visible'), 'visible'),
 

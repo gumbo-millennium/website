@@ -20,7 +20,7 @@ class CartUpdateRequest extends CartRequest
             ],
             'quantity' => [
                 'required',
-                "between:0,{$this->getMaxQuantity()}",
+                'min:0',
             ],
         ];
     }

@@ -6,6 +6,9 @@ namespace App\Bots\Commands;
 
 use Telegram\Bot\Actions;
 
+/**
+ * @codeCoverageIgnore
+ */
 class SackCommand extends Command
 {
     /**

@@ -9,6 +9,9 @@ use Telegram\Bot\Actions;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Keyboard\Keyboard;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LoginCommand extends Command
 {
     private const LOGOUT_MSG = <<<'TEXT'

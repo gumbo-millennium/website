@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Keyboard\Keyboard;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ActivitiesCommand extends Command
 {
     private const ACTIVITY_URL = 'https://gumbo.nu/acpublicaties';
