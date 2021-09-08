@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
 
         // Redirects
         $this->call(RedirectInstructionSeeder::class);
+
+        // Webcams
+        $this->call(RequiredWebcamSeeder::class);
     }
 }

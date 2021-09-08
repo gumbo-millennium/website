@@ -72,6 +72,9 @@ class Kernel extends ConsoleKernel
 
         // Clear expired data exports
         $schedule->command('gumbo:avg:prune-exports')->weekly();
+
+        // Clear expired webcam images
+        $schedule->command('gumbo:prune-webcams')->hourly();
     }
 
     /**
