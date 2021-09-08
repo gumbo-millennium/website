@@ -37,7 +37,7 @@
         </div>
 
         {{-- Desc --}}
-        <p class="mb-4 leading-relaxed">{{ $variant->description ?? $product->description }}</p>
+        <p class="mb-4 leading-relaxed">{{ $variant->description_html ?? $product->description_html }}</p>
 
         {{-- Variants --}}
         @if ($variants->count() > 1 )

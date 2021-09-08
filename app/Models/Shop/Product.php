@@ -9,6 +9,7 @@ use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\HtmlString;
 
 /**
  * A single product.
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read null|ProductVariant $default_variant
  * @property-read null|\App\Models\Shop\Category $category
  * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
+ * @property-read null|string $description_html
  */
 class Product extends Model
 {
@@ -84,5 +86,14 @@ class Product extends Model
     {
         return $this->variants
             ->first();
+    }
+
+    public function getDescriptionHtmlAttribute(): ?HtmlString
+    {
+        if (! $this->description) {
+            return null;
+        }
+
+        return new HtmlString(nl2br(e(strip_tags($this->description))));
     }
 }

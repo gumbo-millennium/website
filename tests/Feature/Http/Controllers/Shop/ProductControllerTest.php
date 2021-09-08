@@ -8,6 +8,7 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
 use Tests\Traits\TestsMembersOnlyRoutes;
@@ -17,6 +18,7 @@ class ProductControllerTest extends TestCase
     use DatabaseTransactions;
     use TestsMembersOnlyRoutes;
     use TestsShop;
+    use WithFaker;
 
     public function test_index()
     {
@@ -144,10 +146,12 @@ class ProductControllerTest extends TestCase
         $product = factory(Product::class)->state('with-variants')->create([
             'category_id' => $category->id,
             'visible' => 1,
+            'description' => implode("\n", $this->faker->sentences(4)),
         ]);
 
         $variants = factory(ProductVariant::class, 5)->create([
             'product_id' => $product->id,
+            'description' => null,
         ]);
 
         $product->refresh();
@@ -170,7 +174,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertSee($category->name);
         $response->assertSee($product->name);
-        $response->assertSee($variant->description ?? $product->description);
+        $response->assertSee($variant->description_html ?? $product->description_html);
 
         foreach ($variants as $variant) {
             $response->assertSeeText($variant->name);
