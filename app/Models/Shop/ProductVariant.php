@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\HtmlString;
 
 /**
  * A variant of the product, like size or color.
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Product $product
  * @property-read \Illuminate\Database\Eloquent\Collection<Order> $orders
+ * @property-read null|string $description_html
  */
 class ProductVariant extends Model
 {
@@ -137,5 +139,14 @@ class ProductVariant extends Model
             'product' => $this->product,
             'variant' => $this,
         ]);
+    }
+
+    public function getDescriptionHtmlAttribute(): ?HtmlString
+    {
+        if (! $this->description) {
+            return null;
+        }
+
+        return new HtmlString(nl2br(e(strip_tags($this->description))));
     }
 }

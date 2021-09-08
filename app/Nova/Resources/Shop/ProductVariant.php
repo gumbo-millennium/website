@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class ProductVariant extends Resource
 {
@@ -64,9 +65,14 @@ class ProductVariant extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            Text::make(__('Description'), 'description')
+            Textarea::make(__('Description'), 'description')
                 ->hideFromIndex()
-                ->nullable(),
+                ->nullable()
+                ->rows(5)
+                ->rules([
+                    'nullable',
+                    'max:65536',
+                ]),
 
             Text::make('SKU', 'sku')
                 ->hideFromIndex()

@@ -9,7 +9,7 @@ $factory->define(ProductVariant::class, static function (Faker $faker) {
     return [
         'id' => $faker->uuid,
         'name' => $faker->words(3, true),
-        'description' => $faker->optional()->sentence,
+        'description' => $faker->optional()->sentences($faker->numberBetween(1, 6), true),
         'image_url' => $faker->optional(0.25)
             ->passthrough(sprintf('https://loremflickr.com/320/240?lock=%s', $faker->randomNumber(6))),
         'sku' =>  $faker->ean13,

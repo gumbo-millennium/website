@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class Product extends Resource
 {
@@ -66,9 +67,14 @@ class Product extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            Text::make(__('Description'), 'description')
+            Textarea::make(__('Description'), 'description')
                 ->hideFromIndex()
-                ->nullable(),
+                ->nullable()
+                ->rows(5)
+                ->rules([
+                    'nullable',
+                    'max:65536',
+                ]),
 
             Text::make(__('Image URL'), 'image_url')
                 ->hideFromIndex()

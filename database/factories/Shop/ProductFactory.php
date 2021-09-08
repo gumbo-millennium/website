@@ -10,7 +10,7 @@ $factory->define(Product::class, static function (Faker $faker) {
     return [
         'id' => $faker->uuid,
         'name' => $faker->words(3, true),
-        'description' => $faker->optional()->sentence,
+        'description' => $faker->optional()->sentences($faker->numberBetween(1, 6), true),
         'visible' => $faker->boolean(),
         'image_url' => sprintf('https://loremflickr.com/320/240?lock=%s', $faker->randomNumber(6)),
         'etag' => $faker->md5,
