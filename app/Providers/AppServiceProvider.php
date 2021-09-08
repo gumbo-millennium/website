@@ -144,20 +144,36 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         // Bind feature config
-        if (! $this->app->configurationIsCached()) {
-            foreach (Yaml::parseFile(resource_path(self::ACTIVITY_FEATURES_FILE)) as $feature => $options) {
-                $options = array_merge([
-                    'title' => null,
-                    'icon' => null,
-                    'mail' => null,
-                ], $options);
-
-                Config::set("gumbo.activity-features.{$feature}", $options);
-            }
-        }
+        $this->mapFeatures();
 
         // Registrer Laravel Nova
         $this->registerNova();
+    }
+
+    /**
+     * Maps features from Yaml files to config.
+     */
+    private function mapFeatures(): void
+    {
+        if ($this->app->configurationIsCached()) {
+            return;
+        }
+
+        $fileMap = [
+            self::ACTIVITY_FEATURES_FILE => 'gumbo.activity-features',
+        ];
+
+        foreach ($fileMap as $file => $configKey) {
+            foreach (Yaml::parseFile(resource_path($file)) as $feature => $options) {
+                $options = array_merge([
+                    'title' => null,
+                    'icon' => null,
+                    'notice' => null,
+                ], $options);
+
+                Config::set("{$configKey}.{$feature}", $options);
+            }
+        }
     }
 
     /**
