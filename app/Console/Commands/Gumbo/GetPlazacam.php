@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Gumbo;
 
 use App\Models\User;
+use App\Models\Webcam;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\URL;
 
@@ -65,20 +66,22 @@ class GetPlazacam extends Command
 
         // Update
         $this->line('Update cam');
-        foreach (self::CAMERA_NAMES as $cam) {
-            $this->line(sprintf('<info>%s</>: (PUT) <comment>%s</>', $cam, URL::signedRoute('api.plazacam.store', [
-                'image' => $cam,
-                'user' => $user,
-            ])));
+        foreach (Webcam::all() as $webcam) {
+            $this->line(sprintf(
+                '<info>%s</>: (PUT) <comment>%s</>',
+                $webcam->name,
+                URL::signedRoute('api.webcam.store', [$webcam, $user]),
+            ));
         }
 
         // View
         $this->line("\nView cam");
-        foreach (self::CAMERA_NAMES as $cam) {
-            $this->line(sprintf('<info>%s</>: (GET) <comment>%s</>', $cam, URL::signedRoute('api.plazacam.view', [
-                'image' => $cam,
-                'user' => $user,
-            ])));
+        foreach (Webcam::all() as $webcam) {
+            $this->line(sprintf(
+                '<info>%s</>: (GET) <comment>%s</>',
+                $webcam->name,
+                URL::signedRoute('api.webcam.view', [$webcam, $user]),
+            ));
         }
     }
 }

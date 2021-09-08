@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api;
 use App\Http\Controllers\Api\MollieController;
-use App\Http\Controllers\PlazaCamController;
 use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,14 +23,14 @@ use Illuminate\Support\Facades\Route;
 // });
 
 // Plazacam submission
-Route::put('plazacam/{user}/{image}', [PlazaCamController::class, 'store'])
+Route::put('plazacam/{user}/{webcam}', [Api\WebcamController::class, 'store'])
     ->middleware('signed')
-    ->name('plazacam.store');
+    ->name('webcam.store');
 
 // Plazacam viewing via API
-Route::get('plazacam/{user}/{image}', [PlazaCamController::class, 'api'])
+Route::get('plazacam/{user}/{webcam}', [Api\WebcamController::class, 'show'])
     ->middleware('signed')
-    ->name('plazacam.view');
+    ->name('webcam.view');
 
 // Register API for Stripe endpoints
 Route::stripeWebhooks('payments/stripe/handle');
