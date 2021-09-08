@@ -32,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
 {
     private const ACTIVITY_FEATURES_FILE = 'assets/yaml/activity-features.yaml';
 
+    private const SHOP_FEATURES_FILE = 'assets/yaml/shop-features.yaml';
+
     /**
      * Singleton bindings.
      *
@@ -161,6 +163,7 @@ class AppServiceProvider extends ServiceProvider
 
         $fileMap = [
             self::ACTIVITY_FEATURES_FILE => 'gumbo.activity-features',
+            self::SHOP_FEATURES_FILE => 'gumbo.shop.features',
         ];
 
         foreach ($fileMap as $file => $configKey) {
@@ -168,6 +171,7 @@ class AppServiceProvider extends ServiceProvider
                 $options = array_merge([
                     'title' => null,
                     'icon' => null,
+                    'mail' => null,
                     'notice' => null,
                 ], $options);
 

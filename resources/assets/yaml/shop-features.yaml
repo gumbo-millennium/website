@@ -1,0 +1,18 @@
+#
+# Shop feature icons
+#
+# Owner-selectable mails with icons and optionally mail parts.
+#
+
+alcohol:
+  title: Product bevat alcohol
+  icon: solid/wine-bottle
+  notice:
+    type: warning
+    text: |
+      Dit product bevat alcohol. Ben je nog geen 18, dan mag je dit product niet bestellen.
+      We controleren je leeftijd bij afgifte van je bestelling.
+
+limited-edition:
+  title: Limited edition
+  icon: solid/certificate

@@ -25,15 +25,25 @@
 
     <div class="col col-12 md:col-5 lg:col-4 mt-8 md:mt-0">
         {{-- Title --}}
-        <div class="flex flex-row">
-            <div class="mb-8 flex-grow">
-                <h1 class="text-3xl font-title mb-4 font-bold">{{ $product->name }}</h1>
-                <h2 class="text-lg font-title font-grey-2">{{ $variant->name }}</h2>
+        <div class="mb-8">
+            <div class="flex flex-row">
+                <div class="flex-grow">
+                    <h1 class="text-3xl font-title mb-4 font-bold">{{ $product->name }}</h1>
+                    <h2 class="text-lg font-title font-grey-2">{{ $variant->name }}</h2>
+                </div>
             </div>
 
-            {{-- <div class="flex-none mt-1">
-                <data class="text-2xl font-title py-2 px-4 rounded border-gray-primary-1 border mb-4 font-bold"></data>
-            </div> --}}
+            {{-- Features --}}
+            @if ($product->detail_feature_icons)
+            <div class="flex items-center flex-wrap mt-2">
+                @foreach ($product->detail_feature_icons as $icon => $feature)
+                <div class="flex items-center mr-4 mb-4 p-2 bg-gray-100 rounded">
+                    @icon($icon, 'h-4 mr-2')
+                    <span class="text-sm">{{ $feature }}</span>
+                </div>
+                @endforeach
+            </div>
+            @endif
         </div>
 
         {{-- Desc --}}
@@ -48,6 +58,19 @@
                 class="shop-detail__variant {{ $variant->is($productVariant) ? 'shop-detail__variant--active' : '' }} mb-2">
                 {{ $productVariant->name }}
             </a>
+            @endforeach
+        </div>
+        @endif
+
+        {{-- Warning notices, if any --}}
+        @if ($product->feature_warnings)
+        <div class="mb-2 grid grid-cols-1 grid-gap-2">
+            @foreach ($product->feature_warnings as $feature)
+            <div class="notice notice--{{ Arr::get($feature, 'notice.type', 'info') }} notice--large">
+                <h3 class="notice__title">{{ Arr::get($feature, 'title') }}</h3>
+
+                {{ Arr::get($feature, 'notice.text') }}
+            </div>
             @endforeach
         </div>
         @endif
