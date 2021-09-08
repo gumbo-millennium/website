@@ -20,6 +20,6 @@ abstract class CartRequest extends StoreRequest
      */
     public function getMaxQuantity(): int
     {
-        return Config::get('gumbo.shop.max-quantity', 5);
+        return Config::get('gumbo.shop.order-limit', 5);
     }
 }
