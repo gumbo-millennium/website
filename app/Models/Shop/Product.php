@@ -27,11 +27,13 @@ use Illuminate\Support\HtmlString;
  * @property null|string $image_url
  * @property null|string $etag
  * @property int $vat_rate
+ * @property null|int $order_limit
  * @property bool $visible
  * @property bool $advertise_on_home
  * @property array $meta
  * @property array $features
  * @property-read null|\App\Models\Shop\Category $category
+ * @property-read int $applied_order_limit
  * @property-read null|\App\Models\Shop\ProductVariant $default_variant
  * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read Collection $detail_feature_icons
@@ -60,6 +62,9 @@ class Product extends Model
 
         // Tax rate (not really used)
         'vat_rate' => 'int',
+
+        // Max number of items per order (applied per variant)
+        'order_limit' => 'int',
 
         // Random metadata
         'meta' => 'json',
@@ -136,6 +141,15 @@ class Product extends Model
     {
         return $this->getEnrichedFeatures()
             ->filter(fn ($row) => Arr::has($row, 'notice.text'));
+    }
+
+    public function getAppliedOrderLimitAttribute(): int
+    {
+        if ($this->order_limit > 0) {
+            return $this->order_limit;
+        }
+
+        return Config::get('gumbo.shop.order-limit');
     }
 
     private function getEnrichedFeatures(): Collection

@@ -87,6 +87,10 @@
                 {{ Str::price($variant->price) }}
             </button>
 
+            <p class="text-center text-sm text-gray-primary-2 mb-2 mt-n1">
+                Maximaal {{ $variant->applied_order_limit }} per bestelling
+            </p>
+
             <p class="text-center text-gray-primary-2">
                 <strong>Let op:</strong>
                 Je kan webshop aankopen alleen afhalen

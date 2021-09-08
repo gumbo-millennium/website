@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Models\Shop;
+namespace Tests\Feature\Models\Shop;
 
 use App\Models\Shop\Product;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 use Tests\TestCase;
 
@@ -27,6 +28,25 @@ class ProductTest extends TestCase
 
         $this->assertInstanceOf(HtmlString::class, $model->description_html);
         $this->assertSame($output, (string) $model->description_html);
+    }
+
+    public function test_computing_of_order_limit(): void
+    {
+        Config::set('gumbo.shop.order-limit', 4);
+
+        $model = factory(Product::class)->create();
+
+        $this->assertSame(4, $model->refresh()->applied_order_limit);
+
+        $model->order_limit = 8;
+        $model->save();
+
+        $this->assertSame(8, $model->refresh()->applied_order_limit);
+
+        $model->order_limit = 2;
+        $model->save();
+
+        $this->assertSame(2, $model->refresh()->applied_order_limit);
     }
 
     public function htmlTestProvider(): array

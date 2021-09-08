@@ -27,7 +27,7 @@ class CartControllerTest extends TestCase
     public function ensureConsistentConfig(): void
     {
         $this->afterApplicationCreated(fn () => Config::set([
-            'gumbo.transfer-fee', self::SHOP_FEE,
+            'gumbo.transfer-fee' => self::SHOP_FEE,
             'gumbo.shop.order-limit' => self::SHOP_ORDER_LIMIT,
         ]));
     }
@@ -110,6 +110,9 @@ class CartControllerTest extends TestCase
             'quantity' => self::SHOP_ORDER_LIMIT,
         ])->assertRedirect(route('shop.cart'));
 
+        $this->assertCartPrice(self::SHOP_ORDER_LIMIT * $variant->price + self::SHOP_FEE);
+        $this->assertCartQuantity(self::SHOP_ORDER_LIMIT);
+
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => 1,
@@ -130,7 +133,8 @@ class CartControllerTest extends TestCase
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => 2,
-        ])->assertRedirect(route('shop.cart'));
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->assertCartPrice(2 * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity(2);
@@ -140,10 +144,20 @@ class CartControllerTest extends TestCase
         $this->patch(route('shop.cart.update'), [
             'id' => $firstItemId,
             'quantity' => 4,
-        ])->assertRedirect(route('shop.cart'));
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->assertCartPrice(4 * $variant->price + self::SHOP_FEE);
         $this->assertCartQuantity(4);
+
+        $this->patch(route('shop.cart.update'), [
+            'id' => $firstItemId,
+            'quantity' => self::SHOP_ORDER_LIMIT + 2,
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
+
+        $this->assertCartPrice(self::SHOP_ORDER_LIMIT * $variant->price + self::SHOP_FEE);
+        $this->assertCartQuantity(self::SHOP_ORDER_LIMIT);
     }
 
     public function test_updating_to_zero_works(): void
@@ -161,12 +175,14 @@ class CartControllerTest extends TestCase
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => 2,
-        ])->assertRedirect(route('shop.cart'));
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->post(route('shop.cart.add'), [
             'variant' => $variant2->id,
             'quantity' => 1,
-        ])->assertRedirect(route('shop.cart'));
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->assertCartPrice(2 * $variant->price + 1 * $variant2->price + self::SHOP_FEE);
         $this->assertCartQuantity(3);
@@ -176,7 +192,8 @@ class CartControllerTest extends TestCase
         $this->patch(route('shop.cart.update'), [
             'id' => $firstItemId,
             'quantity' => 0,
-        ])->assertRedirect(route('shop.cart'));
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->assertCartPrice(1 * $variant2->price + self::SHOP_FEE);
         $this->assertCartQuantity(1);
@@ -196,19 +213,20 @@ class CartControllerTest extends TestCase
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => self::SHOP_ORDER_LIMIT + 1,
-        ])->assertSessionHasErrors(['quantity']);
+        ])->assertSessionHasNoErrors();
 
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => 1,
-        ])->assertSessionDoesntHaveErrors();
+        ])->assertSessionHasNoErrors();
 
         $item = Cart::getContent()->first()->id;
 
         $this->post(route('shop.cart.add'), [
             'id' => $item,
             'quantity' => self::SHOP_ORDER_LIMIT * 50,
-        ])->assertSessionHasErrors(['quantity']);
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
 
         $this->post(route('shop.cart.add'), [
             'id' => $item,
@@ -223,6 +241,7 @@ class CartControllerTest extends TestCase
         $this->post(route('shop.cart.add'), [
             'variant' => $variant->id,
             'quantity' => self::SHOP_ORDER_LIMIT + 1,
-        ])->assertSessionHasErrors(['quantity']);
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('shop.cart'));
     }
 }

@@ -45,13 +45,13 @@
                     {{ $item->quantity }}
                 </data>
 
-                @if ($item->quantity >= 5)
+                @if ($item->quantity >= $item->associatedModel->applied_order_limit)
                     <div role="presentation"
                         class="flex items-center justify-center appearance-none rounded-full h-6 w-6 shadow bg-gray-100 text-gray-500 cursor-not-allowed">
                         @svg('solid/plus', 'h-2')
                     </div>
                 @else
-                    <button name="quantity" value="{{ min($item->quantity + 1, 5) }}"
+                    <button name="quantity" value="{{ min($item->quantity + 1, $item->associatedModel->applied_order_limit) }}"
                         class="flex items-center justify-center appearance-none rounded-full h-6 w-6 shadow bg-brand-primary-1 text-white">
                         @svg('solid/plus', 'h-2')
                     </button>

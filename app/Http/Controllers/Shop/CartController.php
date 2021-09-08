@@ -54,7 +54,7 @@ class CartController extends Controller
 
         // If an item is matched, simply increase the count
         if ($matchedItem) {
-            $maxCount = $request->getMaxQuantity();
+            $maxCount = $variant->applied_order_limit;
             $addedQuantity = min($maxCount - $matchedItem->quantity, $request->quantity);
 
             if ($addedQuantity > 0) {
@@ -87,6 +87,7 @@ class CartController extends Controller
             'metadata' => [
                 // For some reason IDs are a reflection of the order
                 'sort-key' => "{$product->id}_{$variant->id}",
+                'limit' => $variant->applied_order_limit,
             ],
         ]);
 
@@ -125,11 +126,14 @@ class CartController extends Controller
             return ResponseFacade::redirectToRoute('shop.cart');
         }
 
+        // Get the max quantity from the cart
+        $maxQuantity = $entry->associatedModel->applied_order_limit;
+
         // Update quantity but treat it as an absolute
         Cart::update($entry->id, [
             'quantity' => [
                 'relative' => false,
-                'value' => $quantity,
+                'value' => min($quantity, $maxQuantity),
             ],
         ]);
 

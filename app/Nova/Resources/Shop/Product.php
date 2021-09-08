@@ -94,6 +94,15 @@ class Product extends Resource
                 ->min(0)
                 ->max(100),
 
+            Number::make(__('Order limit'), 'order_limit')
+                ->nullable()
+                ->min(1)
+                ->max(255)
+                ->help(implode(' ', [
+                    __('The max count of this variant that can be added to a single order. Counted per variant.'),
+                    __('Can be overruled on the variant level.'),
+                ])),
+
             BooleanGroup::make(__('Features'), 'features')
                 ->options($featuresMap)
                 ->help(__('Additional properties to add to (variants of) this product.')),

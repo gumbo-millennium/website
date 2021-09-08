@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 
@@ -81,6 +82,12 @@ class ProductVariant extends Resource
             Price::make(__('Price'), 'price')
                 ->sortable()
                 ->min(1.00),
+
+            Number::make(__('Order limit'), 'order_limit')
+                ->nullable()
+                ->min(1)
+                ->max(255)
+                ->help(__('The max count of this variant that can be added to a single order.')),
 
             BelongsTo::make(__('Product'), 'product', Product::class)
                 ->searchable(),

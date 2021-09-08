@@ -27,8 +27,10 @@ use Illuminate\Support\HtmlString;
  * @property null|string $image_url
  * @property null|string $sku
  * @property null|int $price
+ * @property null|int $order_limit
  * @property array $options
  * @property array $meta
+ * @property-read int $applied_order_limit
  * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read string $display_name
  * @property-read string $url
@@ -67,6 +69,10 @@ class ProductVariant extends Model
     protected $table = 'shop_product_variants';
 
     protected $casts = [
+        // Max number of items per order
+        'order_limit' => 'int',
+
+        // Options and metadata
         'options' => 'json',
         'meta' => 'json',
     ];
@@ -156,5 +162,14 @@ class ProductVariant extends Model
         }
 
         return new HtmlString(nl2br(e(strip_tags($this->description))));
+    }
+
+    public function getAppliedOrderLimitAttribute(): int
+    {
+        if ($this->order_limit > 0) {
+            return $this->order_limit;
+        }
+
+        return $this->product->applied_order_limit;
     }
 }
