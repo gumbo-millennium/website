@@ -10,13 +10,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * A referral by a user, managed by the Intro Committee.
  *
+ * @property int $id
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $subject
  * @property string $referred_by
- * @property int $user_id
- * @property-read null|User $user
- * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|int $user_id
+ * @property-read null|\App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral query()
+ * @mixin \Eloquent
  */
 class MemberReferral extends Model
 {

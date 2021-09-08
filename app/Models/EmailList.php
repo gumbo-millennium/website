@@ -7,14 +7,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * App\Models\EmailList.
+ *
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $email
  * @property string $service_id
  * @property null|string $name
- * @property array<string> $aliases
- * @property array<string> $members
+ * @property array $aliases
+ * @property array $members
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailList newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailList newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailList query()
+ * @mixin \Eloquent
  */
 class EmailList extends Model
 {

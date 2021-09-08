@@ -24,9 +24,9 @@ use Spatie\Permission\Traits\HasRoles;
  * Our users.
  *
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property null|string $stripe_id
  * @property null|int $conscribo_id
  * @property null|string $telegram_id
@@ -35,7 +35,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $last_name
  * @property null|string $name
  * @property string $email
- * @property null|\Illuminate\Support\Date $email_verified_at
+ * @property null|\Illuminate\Support\Carbon $email_verified_at
  * @property string $password
  * @property null|string $remember_token
  * @property null|string $alias
@@ -43,18 +43,29 @@ use Spatie\Permission\Traits\HasRoles;
  * @property null|string $gender
  * @property null|array $address
  * @property null|string $phone
- * @property-read string $leaderboard_name
- * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $activities
- * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
- * @property-read \Illuminate\Database\Eloquent\Collection<Enrollment> $enrollments
- * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $files
- * @property-read array<int> $hosted_activity_ids
+ * @property-read \App\Models\Activity[]|\Illuminate\Database\Eloquent\Collection $activities
+ * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
+ * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
+ * @property-read \App\Models\FileBundle[]|\Illuminate\Database\Eloquent\Collection $files
+ * @property-read null|\Illuminate\Support\HtmlString $address_string
+ * @property-read \App\Models\Collection $hosted_activity_ids
  * @property-read bool $is_member
+ * @property-read string $leaderboard_name
  * @property-read null|string $public_name
- * @property-read \Illuminate\Database\Eloquent\Collection<Activity> $hosted_activities
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<\Illuminate\Notifications\DatabaseNotification> $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection<\Spatie\Permission\Models\Permission> $permissions
- * @property-read \Illuminate\Database\Eloquent\Collection<Role> $roles
+ * @property-read \App\Models\Activity[]|\Illuminate\Database\Eloquent\Collection $hostedActivities
+ * @property-read \Illuminate\Notifications\DatabaseNotification[]|\Illuminate\Notifications\DatabaseNotificationCollection $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|Order[] $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
+ * @method static Builder|User permission($permissions)
+ * @method static Builder|User query()
+ * @method static Builder|User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Query\Builder|User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
+ * @mixin \Eloquent
  */
 class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailContract
 {

@@ -12,18 +12,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\LazyCollection;
 
 /**
+ * App\Models\ActivityMessage.
+ *
  * @property int $id
  * @property int $activity_id
- * @property int $sender_id
+ * @property null|int $sender_id
  * @property string $target_audience
  * @property string $subject
  * @property string $body
- * @property int $receipients
- * @property \Carbon\CarbonInterface $created_at
- * @property \Carbon\CarbonInterface $updated_at
- * @property \Carbon\CarbonInterface $sent_at
- * @property-read Activity $activity
- * @property-read null|User $sender
+ * @property null|int $receipients
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $sent_at
+ * @property-read \App\Models\Activity $activity
+ * @property-read null|\App\Models\User $sender
+ * @method static Builder|ActivityMessage newModelQuery()
+ * @method static Builder|ActivityMessage newQuery()
+ * @method static Builder|ActivityMessage query()
+ * @method static Builder|ActivityMessage unsent()
+ * @mixin \Eloquent
  */
 class ActivityMessage extends Model
 {

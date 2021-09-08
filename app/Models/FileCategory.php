@@ -14,12 +14,20 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * A file category, containing file bundles.
  *
  * @property int $id
- * @property string $created_at
- * @property string $updated_at
+ * @property null|string $created_at
+ * @property null|string $updated_at
  * @property null|string $title
  * @property string $slug
- * @property-read \Illuminate\Database\Eloquent\Collection<FileBundle> $bundles
- * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property-read \App\Models\FileBundle[]|\Illuminate\Database\Eloquent\Collection $bundles
+ * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|FileCategory newModelQuery()
+ * @method static Builder|FileCategory newQuery()
+ * @method static Builder|FileCategory query()
+ * @method static Builder|FileCategory whereAvailable()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static Builder|FileCategory withAvailable()
+ * @mixin \Eloquent
  */
 class FileCategory extends SluggableModel
 {

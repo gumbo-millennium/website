@@ -23,15 +23,23 @@ use Illuminate\Support\Facades\URL;
  * @property string $number
  * @property int $user_id
  * @property null|string $payment_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $expires_at
- * @property null|\Illuminate\Support\Date $paid_at
- * @property null|\Illuminate\Support\Date $shipped_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $expires_at
+ * @property null|\Illuminate\Support\Carbon $paid_at
+ * @property null|\Illuminate\Support\Carbon $shipped_at
+ * @property null|\Illuminate\Support\Carbon $cancelled_at
  * @property int $price
+ * @property int $fee
+ * @property-read string $payment_status
  * @property-read string $status
- * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
- * @property-read \App\Models\User $user
+ * @property-read User $user
+ * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
+ * @method static Builder|Order newModelQuery()
+ * @method static Builder|Order newQuery()
+ * @method static Builder|Order query()
+ * @method static Builder|Order wherePaymentStatus(string $status)
+ * @mixin \Eloquent
  */
 class Order extends Model implements PayableModel
 {

@@ -16,8 +16,8 @@ use Illuminate\Support\HtmlString;
  *
  * @property string $id
  * @property null|string $category_id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
@@ -27,11 +27,17 @@ use Illuminate\Support\HtmlString;
  * @property bool $visible
  * @property bool $advertise_on_home
  * @property array $meta
- * @property-read string $valid_image_url
- * @property-read null|ProductVariant $default_variant
  * @property-read null|\App\Models\Shop\Category $category
- * @property-read \Illuminate\Database\Eloquent\Collection<ProductVariant> $variants
- * @property-read null|string $description_html
+ * @property-read null|\App\Models\Shop\ProductVariant $default_variant
+ * @property-read null|\Illuminate\Support\HtmlString $description_html
+ * @property-read string $valid_image_url
+ * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
+ * @method static \Illuminate\Database\Eloquent\Builder|Product findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug(string $slug)
+ * @mixin \Eloquent
  */
 class Product extends Model
 {

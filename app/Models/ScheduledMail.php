@@ -16,9 +16,15 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property string $group
  * @property string $name
- * @property \Illuminate\Support\Date $scheduled_for
- * @property null|\Illuminate\Support\Date $sent_at
+ * @property \Illuminate\Support\Carbon $scheduled_for
+ * @property null|\Illuminate\Support\Carbon $sent_at
  * @property bool $is_sent
+ * @method static Builder|ScheduledMail newModelQuery()
+ * @method static Builder|ScheduledMail newQuery()
+ * @method static Builder|ScheduledMail query()
+ * @method static Builder|ScheduledMail whereNotSent()
+ * @method static Builder|ScheduledMail whereSent()
+ * @mixin \Eloquent
  */
 class ScheduledMail extends Model
 {

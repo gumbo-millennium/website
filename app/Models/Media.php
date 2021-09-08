@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helpers\Arr;
+use Eloquent;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
@@ -25,14 +26,19 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
  * @property array $custom_properties
  * @property array $responsive_images
  * @property null|int $order_column
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<FileDownload> $downloads
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
  * @property-read null|\App\Models\FileBundle $bundle
  * @property-read string $extension
  * @property-read string $human_readable_size
  * @property-read string $type
- * @property-read \Illuminate\Database\Eloquent\Model $model
+ * @property-read Eloquent|\Illuminate\Database\Eloquent\Model $model
+ * @method static \Illuminate\Database\Eloquent\Builder|Media newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder|Media query()
+ * @mixin \Eloquent
  */
 class Media extends BaseMedia
 {

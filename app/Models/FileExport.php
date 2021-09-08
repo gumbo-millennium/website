@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use DateTimeInterface;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,17 +15,24 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
+ * App\Models\FileExport.
+ *
  * @property int $id
  * @property string $urlkey
- * @property int $owner_id
+ * @property null|int $owner_id
  * @property string $path
  * @property string $filename
- * @property-read User $owner
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $expires_at
  * @property-read bool $is_expired
  * @property-read bool $is_valid_export
- * @property-read DateTimeInterface $created_at
- * @property-read DateTimeInterface $updated_at
- * @property-read DateTimeInterface $expires_at
+ * @property-read null|\App\Models\User $owner
+ * @method static Builder|FileExport newModelQuery()
+ * @method static Builder|FileExport newQuery()
+ * @method static Builder|FileExport query()
+ * @method static Builder|FileExport wherePurgeable()
+ * @mixin \Eloquent
  */
 class FileExport extends Model implements Responsable
 {

@@ -17,16 +17,15 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Gumbo Millennium sponsors.
  *
- * @property-read AttachmentInterface $backdrop
  * @property int $id
- * @property \Illuminate\Support\Date $created_at
- * @property \Illuminate\Support\Date $updated_at
- * @property null|\Illuminate\Support\Date $deleted_at
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name Sponsor name
  * @property string $slug
  * @property string $url URL of sponsor landing page
- * @property null|\Illuminate\Support\Date $starts_at
- * @property null|\Illuminate\Support\Date $ends_at
+ * @property null|\Illuminate\Support\Carbon $starts_at
+ * @property null|\Illuminate\Support\Carbon $ends_at
  * @property null|int $has_page
  * @property int $view_count Number of showings
  * @property null|string $backdrop_file_name backdrop name
@@ -37,15 +36,26 @@ use Illuminate\Support\Facades\Storage;
  * @property null|string $caption
  * @property null|string $logo_gray
  * @property null|string $logo_color
+ * @property null|string $background_image
  * @property null|string $contents_title
  * @property null|mixed $contents
- * @property-read \Illuminate\Database\Eloquent\Collection<SponsorClick> $clicks
+ * @property-read \App\Models\SponsorClick[]|\Illuminate\Database\Eloquent\Collection $clicks
  * @property-read mixed $click_count
  * @property-read null|string $content_html
  * @property-read bool $is_active
  * @property-read bool $is_classic
  * @property-read null|string $logo_color_url
  * @property-read null|string $logo_gray_url
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|Sponsor newModelQuery()
+ * @method static Builder|Sponsor newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Sponsor onlyTrashed()
+ * @method static Builder|Sponsor query()
+ * @method static Builder|Sponsor whereAvailable()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static \Illuminate\Database\Query\Builder|Sponsor withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Sponsor withoutTrashed()
+ * @mixin \Eloquent
  */
 class Sponsor extends SluggableModel implements AttachableInterface
 {
