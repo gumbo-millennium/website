@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Str;
+use Spatie\Csp\Directive;
 
 class CartController extends Controller
 {
@@ -22,8 +23,9 @@ class CartController extends Controller
     {
         $cartItems = Cart::getContent()->sortBy('metadata.sort-key');
 
-        $this->addImageUrlsToCspPolicy(
+        $this->addToCsp(
             $cartItems->map(fn ($item) => $item->associatedModel->valid_image_url)->toArray(),
+            Directive::IMG,
         );
 
         return ResponseFacade::view('shop.cart', [
