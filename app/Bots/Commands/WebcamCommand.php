@@ -9,13 +9,14 @@ use App\Models\Webcam;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Telegram\Bot\Actions;
 use Telegram\Bot\FileUpload\InputFile;
 
 /**
  * @codeCoverageIgnore
  */
-class PlazaCamCommand extends Command
+class WebcamCommand extends Command
 {
     private const REPLY_GUEST = <<<'MSG'
     🔒 Deze camera is alleen toegankelijk voor leden.
@@ -34,6 +35,13 @@ class PlazaCamCommand extends Command
     🔒 Deze camera is niet beschikbaar.
 
     De opgevraagde camera kon niet worden gevonden.
+    MSG;
+
+    private const REPLY_FILE_LOST = <<<'MSG'
+    De-… de foto is zoek 🥺
+
+    Sorry, er moet een recente foto van deze camera zijn,
+    maar hij lijkt niet meer te bestaan.
     MSG;
 
     protected ?Collection $cams = null;
@@ -124,6 +132,19 @@ class PlazaCamCommand extends Command
 
         // Send upload status
         $this->replyWithChatAction(['action' => Actions::UPLOAD_PHOTO]);
+
+        // Check if image exists
+        if (Storage::missing($webcam->path)) {
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::REPLY_FILE_LOST),
+            ]);
+
+            report(new RuntimeException(
+                "Failed to retrieve photo file [{$webcam->path}] for webcam [{$webcam->id}]!",
+            ));
+
+            return;
+        }
 
         // Get file
         $stream = Storage::readStream($webcam->path);
