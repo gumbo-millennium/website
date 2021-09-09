@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use App\Helpers\Str;
 use App\Models\BotQuote;
 use Illuminate\Support\Facades\Cache;
 use Telegram\Bot\Actions;
@@ -80,7 +81,7 @@ class QuoteCommand extends Command
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
-        $quoteText = trim($this->arguments['custom'] ?? '');
+        $quoteText = trim(Str::after($this->getCommandName(), $this->getUpdate()->getMessage()->getText()));
 
         if (empty($quoteText)) {
             $this->replyWithMessage([
