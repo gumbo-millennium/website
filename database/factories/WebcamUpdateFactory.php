@@ -19,5 +19,5 @@ $factory->define(WebcamUpdate::class, function (Faker $faker) {
 
 $factory->afterMakingState(WebcamUpdate::class, 'with-image', function (WebcamUpdate $webcamUpdate, Faker $faker) {
     $image = new File($faker->image(null, 64, 64));
-    $webcamUpdate->path = Storage::put("webcams/images/{$faker->uuid}.jpg", $image);
+    $webcamUpdate->path = Storage::putFile(WebcamUpdate::STORAGE_LOCATION, $image);
 });

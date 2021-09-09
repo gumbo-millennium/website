@@ -7,10 +7,21 @@ namespace Tests\Feature\Console\Commands;
 use App\Models\Webcam;
 use App\Models\WebcamUpdate;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PruneWebcamUpdatesTest extends TestCase
 {
+    /**
+     * @before
+     */
+    public function fakeStorageBeforeTest(): void
+    {
+        $this->afterApplicationCreated(function () {
+            Storage::fake();
+        });
+    }
+
     public function test_pruning(): void
     {
         [$cam] = $this->createTestWebcam(30);
@@ -55,6 +66,52 @@ class PruneWebcamUpdatesTest extends TestCase
         $this->assertNull(WebcamUpdate::find($old->id));
         $this->assertNotNull(WebcamUpdate::find($new->id));
 
+        $this->assertCount(1, $cam->refresh()->updates);
+    }
+
+    public function test_pruning_oprhans(): void
+    {
+        /** @var Webcam $cam */
+        [$cam] = $this->createTestWebcam(0);
+
+        $factory = factory(WebcamUpdate::class)->state('with-image');
+
+        $fourMonthOld = $factory->make(['created_at' => Date::now()->subMonths(4)]);
+        $twoMonthOld = $factory->make(['created_at' => Date::now()->subMonths(2)]);
+        $oneMonthOld = $factory->make(['created_at' => Date::now()->subMonth()]);
+        $oneHourOld = $factory->make(['created_at' => Date::now()->subHour()]);
+
+        $cam->updates()->saveMany([$fourMonthOld, $twoMonthOld, $oneMonthOld, $oneHourOld]);
+
+        $this->assertCount(4, $cam->refresh()->updates);
+
+        // Delete two resources without deleting their images
+        WebcamUpdate::withoutEvents(fn () => $fourMonthOld->delete());
+
+        // Ensure the filesystem has the images
+        Storage::assertExists($fourMonthOld->image_path);
+        Storage::assertExists($twoMonthOld->image_path);
+        Storage::assertExists($oneMonthOld->image_path);
+        Storage::assertExists($oneHourOld->image_path);
+
+        // Prune the other two cams too
+        $this->artisan('gumbo:prune-webcams', ['--keep' => 1]);
+
+        // Ensure the proper models were removed
+        $this->assertNull(WebcamUpdate::find($oneMonthOld->id));
+        $this->assertNotNull(WebcamUpdate::find($oneHourOld->id));
+
+        // Ensure the floating images were removed
+        Storage::assertMissing($fourMonthOld->image_path);
+        Storage::assertMissing($twoMonthOld->image_path);
+
+        // Ensure the removed-items images were removed
+        Storage::assertMissing($oneMonthOld->image_path);
+
+        // Ensure the last image is still there
+        Storage::assertExists($oneHourOld->image_path);
+
+        // Last sanity check
         $this->assertCount(1, $cam->refresh()->updates);
     }
 
