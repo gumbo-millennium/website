@@ -104,7 +104,7 @@ class WebcamCommand extends Command
         }
 
         // Get image
-        $requested = Str::slug($this->getName() ?? 'plazacam');
+        $requested = Str::slug($this->getCommandName() ?? $this->getName());
         $webcam = Webcam::query()
             ->where(function (Builder $query) use ($requested) {
                 $query

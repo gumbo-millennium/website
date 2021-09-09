@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use App\Helpers\Arr;
+use App\Helpers\Str;
 use App\Models\User;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Uri;
@@ -187,6 +188,19 @@ abstract class Command extends TelegramCommand
         Cache::put($cacheKey, $next, $next->addWeek());
 
         return false;
+    }
+
+    protected function getCommandName(): ?string
+    {
+        $message = $this->getUpdate()->getMessage()->getText();
+
+        $options = [$this->getName(), ...$this->getAliases()];
+
+        foreach ($options as $commandName) {
+            if (Str::contains($message, "/{$commandName}")) {
+                return $commandName;
+            }
+        }
     }
 
     private function getRateLimitKey(string $key): string
