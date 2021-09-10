@@ -78,7 +78,7 @@ class PruneWebcamUpdates extends Command
 
         $orphans = 0;
         foreach ($files as $file) {
-            if (! $fileLocations->has($file)) {
+            if (! $fileLocations->contains($file)) {
                 Storage::delete($file);
 
                 $this->line("Removed orphaned file <comment>{$file}</>.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
