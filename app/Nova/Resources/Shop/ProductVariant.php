@@ -60,10 +60,12 @@ class ProductVariant extends Resource
         return [
             ID::make(),
 
-            Text::make(__('Name'), 'name'),
+            Text::make(__('Name'), 'name')
+                ->readonly(),
+
             Slug::make(__('Slug'), 'slug')
                 ->disableAutoUpdateWhenUpdating()
-                ->hideFromIndex()
+                ->onlyOnDetail()
                 ->nullable(),
 
             Textarea::make(__('Description'), 'description')
@@ -76,12 +78,13 @@ class ProductVariant extends Resource
                 ]),
 
             Text::make('SKU', 'sku')
-                ->hideFromIndex()
+                ->onlyOnDetail()
                 ->nullable(),
 
             Price::make(__('Price'), 'price')
+                ->onlyOnDetail()
                 ->sortable()
-                ->min(1.00),
+                ->help(__('Price changes need to be entered in Zettle, you cannot update the product price here.')),
 
             Number::make(__('Order limit'), 'order_limit')
                 ->nullable()

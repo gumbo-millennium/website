@@ -52,6 +52,8 @@
   "Price": "Prijs",
   "Total price": "Totaalprijs",
   "Features": "Eigenschappen",
+  "Price changes need to be entered in Zettle, you cannot update the product price here.":
+    "Prijsveranderingen moet je invoeren in Zettle. Je kunt de prijs hier niet aanpassen.",
   "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
 
   "Order limit": "Bestellinglimiet",
