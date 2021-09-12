@@ -65,7 +65,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('shop:repair-orders')->cron('45 */2 * * *');
 
         // Manually check for payments every hour
-        $schedule->command('shop:update-orders')->hourlyAt(15);
+        $schedule->command('shop:update-orders')->everyFifteenMinutes();
 
         // Shop expiration and reminders
         $schedule->command('shop:send-reminders')->hourlyAt(20);

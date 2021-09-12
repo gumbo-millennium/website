@@ -90,7 +90,7 @@ class Product extends Resource
                 ->onlyOnDetail(),
 
             Number::make(__('VAT'), 'vat_rate')
-                ->hideFromIndex()
+                ->onlyOnDetail()
                 ->min(0)
                 ->max(100),
 
@@ -99,7 +99,7 @@ class Product extends Resource
                 ->min(1)
                 ->max(255)
                 ->help(implode(' ', [
-                    __('The max count of this variant that can be added to a single order. Counted per variant.'),
+                    __('The max count of this variant that can be added to a single order.'),
                     __('Can be overruled on the variant level.'),
                 ])),
 
