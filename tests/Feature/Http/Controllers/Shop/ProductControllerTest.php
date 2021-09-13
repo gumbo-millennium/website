@@ -20,7 +20,7 @@ class ProductControllerTest extends TestCase
     use TestsShop;
     use WithFaker;
 
-    public function test_index()
+    public function test_index(): void
     {
         $invisible = factory(Category::class, 5)->create([
             'visible' => 0,
@@ -60,7 +60,7 @@ class ProductControllerTest extends TestCase
             ->assertSeeText($product->name);
     }
 
-    public function test_category()
+    public function test_category(): void
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -116,7 +116,7 @@ class ProductControllerTest extends TestCase
         }
     }
 
-    public function test_variant_requirement()
+    public function test_variant_requirement(): void
     {
         $category = factory(Category::class)->create([
             'visible' => 1,
@@ -137,7 +137,7 @@ class ProductControllerTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_display()
+    public function test_display(): void
     {
         $category = factory(Category::class)->create([
             'visible' => 1,

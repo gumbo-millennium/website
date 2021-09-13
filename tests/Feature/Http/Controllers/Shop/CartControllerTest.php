@@ -197,7 +197,7 @@ class CartControllerTest extends TestCase
         $this->assertCartQuantity(1);
     }
 
-    public function test_add_quantity_limits()
+    public function test_add_quantity_limits(): void
     {
         $this->actingAs($this->getMemberUser());
 

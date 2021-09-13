@@ -34,7 +34,7 @@ class BotQuoteControllerTest extends FeatureTestCase
     /**
      * Tests if the deletion is shown for the quotes only.
      */
-    public function test_delete_button_appearance()
+    public function test_delete_button_appearance(): void
     {
         $user = $this->getGuestUser();
         $this->actingAs($user);

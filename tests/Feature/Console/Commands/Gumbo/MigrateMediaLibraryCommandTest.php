@@ -38,7 +38,7 @@ class MigrateMediaLibraryCommandTest extends TestCase
     /**
      * Test the base loop.
      */
-    public function test_empty()
+    public function test_empty(): void
     {
         // Required since the target folder doesn't exist by default
         $filePath = $this->getDummyFilePath();

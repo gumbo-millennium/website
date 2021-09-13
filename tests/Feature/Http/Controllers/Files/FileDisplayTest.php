@@ -106,10 +106,8 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
-     *
-     * @return void
      */
-    public function test_view_bundle()
+    public function test_view_bundle(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -149,10 +147,8 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
-     *
-     * @return void
      */
-    public function test_download_bundle()
+    public function test_download_bundle(): void
     {
         $this->actingAs($this->getMemberUser());
 
@@ -188,10 +184,8 @@ class FileDisplayTest extends TestCase
 
     /**
      * Test if we're seeing the right bundles when looking at an existing category.
-     *
-     * @return void
      */
-    public function test_download_bundle_file()
+    public function test_download_bundle_file(): void
     {
         $this->actingAs($this->getMemberUser());
 
