@@ -195,9 +195,9 @@ class Enrollment extends UuidModel
 
     public function getRequiresPaymentAttribute(): bool
     {
-        return $this->exists &&
-            $this->total_price &&
-            ! ($this->state instanceof CancelledState);
+        return $this->exists
+            && $this->total_price
+            && ! ($this->state instanceof CancelledState);
     }
 
     /**

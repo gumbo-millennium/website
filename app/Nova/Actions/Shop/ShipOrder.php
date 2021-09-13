@@ -90,9 +90,9 @@ class ShipOrder extends Action
         $order->loadMissing('user');
 
         if (
-            Payments::isCompleted($order) ||
-            Payments::isCancelled($order) ||
-            ! Payments::isPaid($order)
+            Payments::isCompleted($order)
+            || Payments::isCancelled($order)
+            || ! Payments::isPaid($order)
         ) {
             return Action::danger('Deze bestelling kon niet worden gemarkeerd als verzonden.');
         }

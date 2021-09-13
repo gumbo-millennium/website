@@ -1,5 +1,5 @@
 <div class="shop-header">
-    <img role="none" class="shop-header-image" src="{{ $product->valid_image_url }}" />
+    <img role="none" class="shop-header-image" src="{{ $product->valid_image->width(1024)->jpg() }}" />
 
     <div class="shop-header-gradient"></div>
 

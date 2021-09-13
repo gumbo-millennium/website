@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Fluent\Image;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $slug
  * @property bool $visible
  * @property array $meta
+ * @property-read Image $valid_image
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Product[]|\Illuminate\Database\Eloquent\Collection $products
  * @method static \Illuminate\Database\Eloquent\Builder|Category findSimilarSlugs(string $attribute, array $config, string $slug)
@@ -69,6 +71,17 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function getValidImageAttribute(): Image
+    {
+        $productsWithImages = $this->products->whereNotNull('image_url')->where('active', '=', 1)->first();
+        $firstProduct = $this->products->where('active', '=', 1)->first();
+        $fallback = Image::make(url(mix('images/geen-foto.jpg')));
+
+        return optional($productsWithImages)->valid_image
+            ?? optional($firstProduct)->valid_image
+            ?? $fallback;
     }
 
     public function getValidImageUrlAttribute(): string

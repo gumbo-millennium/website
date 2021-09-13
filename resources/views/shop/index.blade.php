@@ -19,7 +19,7 @@
     <div class="col col-12 md:col-6">
         <div class="card mb-4">
             <div class="card__figure hidden md:block" role="presentation">
-                <img class="card__figure-image" src="{{ $category->valid_image_url }}" title="Foto van {{ $category->valid_image_url }}">
+                <img class="card__figure-image" src="{{ $category->valid_image->width(300) }}" title="Foto van {{ $category->name }}">
             </div>
             <div class="card__body">
                 <h2 class="card__body-title mb-0">

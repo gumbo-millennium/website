@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands\Gumbo;
+namespace App\Console\Commands\Shop;
 
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
@@ -12,13 +12,13 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Console\Command;
+use Illuminate\Http\File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateShop extends Command
 {
-    private const FALLBACK_FILE = 'images/geen-foto.jpg';
-
     /**
      * The name and signature of the console command.
      *
@@ -37,8 +37,6 @@ class UpdateShop extends Command
     protected $description = 'Updates the shop products and variants';
 
     protected ?GuzzleClient $client = null;
-
-    private string $fallbackFile;
 
     /**
      * Execute the console command.
@@ -89,8 +87,10 @@ class UpdateShop extends Command
             $model->description ??= Arr::get($product, 'description');
 
             // Safely get image
-            $model->image_url = Arr::get($product, 'presentation.imageUrl');
-            $model->image_url = $this->validateImageUrl($model->image_url);
+            $imagePath = $this->downloadImageUrl(Arr::get($product, 'presentation.imageUrl'));
+            if ($imagePath) {
+                $model->image_path = $imagePath;
+            }
 
             $category = Arr::get($product, 'category');
             if ($category) {
@@ -158,8 +158,10 @@ class UpdateShop extends Command
             $model->price = Arr::get($variant, 'price.amount');
 
             // Safely get image
-            $model->image_url = Arr::get($variant, 'presentation.imageUrl');
-            $model->image_url = $this->validateImageUrl($model->image_url);
+            $imagePath = $this->downloadImageUrl(Arr::get($product, 'presentation.imageUrl'));
+            if ($imagePath) {
+                $model->image_path = $imagePath;
+            }
 
             // Enure pairing
             $model->product()->associate($product);
@@ -184,26 +186,37 @@ class UpdateShop extends Command
      * @param string $url
      * @return string
      */
-    private function validateImageUrl(?string $url): ?string
+    private function downloadImageUrl(?string $url): ?string
     {
         if (! $url) {
             return null;
         }
 
-        $this->line("Checking [<info>{$url}</>] for existence...", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->line("Downloading file from [<info>{$url}</>]...", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+
+        $sinkFile = tempnam(sys_get_temp_dir(), 'zettle-shop-image');
 
         try {
-            $response = $this->client->head($url, [
-                RequestOptions::TIMEOUT => 2,
+            $response = $this->client->get($url, [
+                RequestOptions::TIMEOUT => 5,
+                RequestOptions::SINK => $sinkFile,
+                RequestOptions::ALLOW_REDIRECTS => [
+                    'max' => 3,
+                    'referer' => true,
+                ],
             ]);
 
-            if ($response->getStatusCode() === 200) {
-                return $url;
+            if ($response->getStatusCode() !== 200) {
+                return null;
             }
 
-            return null;
+            return Storage::disk('public')->putFile('shop/images', new File($sinkFile));
         } catch (GuzzleException $exception) {
             return null;
+        } finally {
+            if (file_exists($sinkFile)) {
+                @unlink($sinkFile);
+            }
         }
     }
 }

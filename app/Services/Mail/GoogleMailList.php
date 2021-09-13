@@ -89,11 +89,11 @@ class GoogleMailList implements JsonSerializable, MailList
         // Check members
         foreach ($members as $key => $member) {
             if (
-                count($member) !== 2 ||
-                ! \is_string($member[0]) ||
-                ! \is_string($member[1]) ||
-                ! \filter_var($member[0], \FILTER_VALIDATE_EMAIL) ||
-                ! \in_array($member[1], ['MEMBER', 'MANAGER', 'OWNER'], true)
+                count($member) !== 2
+                || ! \is_string($member[0])
+                || ! \is_string($member[1])
+                || ! \filter_var($member[0], \FILTER_VALIDATE_EMAIL)
+                || ! \in_array($member[1], ['MEMBER', 'MANAGER', 'OWNER'], true)
             ) {
                 throw new InvalidArgumentException("Member at index {$key} is invalid");
             }
@@ -105,8 +105,8 @@ class GoogleMailList implements JsonSerializable, MailList
         // Check aliases
         foreach ($aliases as $key => $alias) {
             if (
-                ! \is_string($alias) ||
-                ! \filter_var($alias, \FILTER_VALIDATE_EMAIL)
+                ! \is_string($alias)
+                || ! \filter_var($alias, \FILTER_VALIDATE_EMAIL)
             ) {
                 throw new InvalidArgumentException("Alias at index {$key} is invalid");
             }
@@ -115,8 +115,8 @@ class GoogleMailList implements JsonSerializable, MailList
         // Check locked aliases
         foreach ($lockedAliases as $key => $alias) {
             if (
-                ! \is_string($alias) ||
-                ! \filter_var($alias, \FILTER_VALIDATE_EMAIL)
+                ! \is_string($alias)
+                || ! \filter_var($alias, \FILTER_VALIDATE_EMAIL)
             ) {
                 throw new InvalidArgumentException("Locked alias at index {$key} is invalid");
             }
@@ -320,7 +320,7 @@ class GoogleMailList implements JsonSerializable, MailList
     {
         return [
             'email' => $this->getEmail(),
-            'service-id' =>  $this->getServiceId(),
+            'service-id' => $this->getServiceId(),
             'aliases' => $this->listAliases(),
             'members' => sprintf('[REDACTED (%d items)]', count($this->listEmails())),
         ];

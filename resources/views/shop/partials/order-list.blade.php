@@ -4,7 +4,7 @@
         <div class="flex bg-gray-50 rounded-lg items-center space-x-4 p-2">
             <img
                 class="flex-shrink-0 rounded-sm h-16 w-16 object-cover"
-                src="{{ $item->valid_image_url }}"
+                src="{{ $item->valid_image->width(128) }}"
                 alt="Afbeelding van {{ $item->display_name }}"
             />
 

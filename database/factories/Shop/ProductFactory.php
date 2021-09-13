@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Faker\Generator as Faker;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 $factory->define(Product::class, static function (Faker $faker) {
     return [
@@ -12,7 +14,7 @@ $factory->define(Product::class, static function (Faker $faker) {
         'name' => $faker->words(3, true),
         'description' => $faker->optional()->sentences($faker->numberBetween(1, 6), true),
         'visible' => $faker->boolean(),
-        'image_url' => sprintf('https://loremflickr.com/320/240?lock=%s', $faker->randomNumber(6)),
+        'image_path' => Storage::disk('public')->putFile('shop/images', new File(resource_path('test-assets/images/protest.jpg'))),
         'etag' => $faker->md5,
         'vat_rate' => $faker->optional(0.5, 21)->randomElement([0, 6, 21]),
     ];

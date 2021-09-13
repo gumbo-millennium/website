@@ -44,15 +44,6 @@ class ProductController extends Controller
 
         $advertisedProduct = self::getAdvertisedProduct();
 
-        // Add to CSP
-        $images = $categories
-            ->pluck('valid_image_url')
-            ->push(object_get($advertisedProduct, 'default_variant.valid_image_url'))
-            ->filter()
-            ->toArray();
-
-        $this->addImageUrlsToCspPolicy($images);
-
         return Response::view('shop.index', [
             'categories' => $categories,
             'advertisedProduct' => $advertisedProduct,
@@ -72,9 +63,6 @@ class ProductController extends Controller
             ->withCount('variants')
             ->has('variants')
             ->get();
-
-        // Add to CSP
-        $this->addImageUrlsToCspPolicy($products->pluck('valid_image_url'));
 
         // TODO: show category
         return Response::view('shop.category', [

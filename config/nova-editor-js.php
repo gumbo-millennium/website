@@ -133,8 +133,8 @@ return [
             'list' => [
                 'style' => [
                     'type' => 'string',
-                    'canBeOnly' =>
-                        [
+                    'canBeOnly'
+                        => [
                             0 => 'ordered',
                             1 => 'unordered',
                         ],

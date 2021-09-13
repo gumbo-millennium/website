@@ -109,7 +109,7 @@ trait HandlesStripeRefunds
             'metadata' => [
                 'enrollment-id' => $enrollment->id,
                 'user-id' => $enrollment->user->id,
-                'invoice-id' =>  $invoice->number,
+                'invoice-id' => $invoice->number,
             ],
         ];
 
@@ -163,7 +163,7 @@ trait HandlesStripeRefunds
             'metadata' => [
                 'enrollment-id' => $enrollment->id,
                 'user-id' => $enrollment->user->id,
-                'invoice-id' =>  $invoice->number,
+                'invoice-id' => $invoice->number,
             ],
         ];
 

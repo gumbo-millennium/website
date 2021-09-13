@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers;
 use App\Http\Controllers\Admin as AdminControllers;
 use App\Http\Controllers\FileExportController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
@@ -293,6 +294,9 @@ Route::get('{group}/{slug}', 'PageController@groupPage')->where('group', $groupR
 // Redirects
 Route::redirect('corona', '/coronavirus');
 Route::redirect('covid', '/coronavirus');
+
+// Images
+Route::get('/img/{path}', [ImageController::class, 'render'])->name('image.render')->where('path', '.+');
 
 // Page fallback
 Route::fallback('PageController@fallback');

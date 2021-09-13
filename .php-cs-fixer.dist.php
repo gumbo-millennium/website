@@ -136,9 +136,14 @@ return (new Config())
         'list_syntax' => ['syntax' => 'short'],
 
         // Operator
+        'binary_operator_spaces' => true,
+        'concat_space' => ['spacing' => 'one'],
         'not_operator_with_successor_space' => true,
+        'object_operator_without_whitespace' => true,
+        'operator_linebreak' => true,
         'standardize_not_equals' => true,
         'ternary_to_null_coalescing' => true,
+        'unary_operator_spaces' => true,
 
         // PHPUnit
         'php_unit_method_casing' => ['case' => 'snake_case'],

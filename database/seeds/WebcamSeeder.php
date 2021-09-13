@@ -24,7 +24,7 @@ class WebcamSeeder extends Seeder
             ]);
 
             $images = $faker->numberBetween(5, 20);
-            for ($i=0; $i < $images; $i++) {
+            for ($i = 0; $i < $images; $i++) {
                 factory(WebcamUpdate::class)->state('with-image')->create([
                     'webcam_id' => $cam->id,
                     'created_at' => $date = $faker->dateTimeBetween('-1 day', 'now'),

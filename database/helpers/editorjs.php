@@ -59,7 +59,7 @@ return static function (Faker $faker) use ($getBlock) {
     ];
 
     // determine count
-    $count  = $faker->numberBetween(2, 15);
+    $count = $faker->numberBetween(2, 15);
 
     // make blocks
     for ($i = 0; $i < $count; $i++) {

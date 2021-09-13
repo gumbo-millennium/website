@@ -267,7 +267,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             'line1' => $firstLine,
             'line2' => null,
             'postal_code' => $notEmptyGet('postcode'),
-            'city' =>  $notEmptyGet('plaats'),
+            'city' => $notEmptyGet('plaats'),
             'country' => 'nl',
         ];
 

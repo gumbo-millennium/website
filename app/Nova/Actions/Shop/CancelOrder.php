@@ -86,8 +86,8 @@ class CancelOrder extends Action
             $order->loadMissing('user');
 
             if (
-                Payments::isCompleted($order) ||
-                Payments::isCancelled($order)
+                Payments::isCompleted($order)
+                || Payments::isCancelled($order)
             ) {
                 $blockedItems++;
 

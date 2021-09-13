@@ -9,12 +9,7 @@ use App\Nova\Fields\Price;
 use App\Nova\Resources\Resource;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields;
 
 class ProductVariant extends Resource
 {
@@ -58,9 +53,9 @@ class ProductVariant extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(),
+            Fields\ID::make(),
 
-            Text::make(__('Name'), 'name')
+            Fields\Text::make(__('Name'), 'name')
                 ->readonly(),
 
             Slug::make(__('Slug'), 'slug')
@@ -68,7 +63,7 @@ class ProductVariant extends Resource
                 ->onlyOnDetail()
                 ->nullable(),
 
-            Textarea::make(__('Description'), 'description')
+            Fields\Textarea::make(__('Description'), 'description')
                 ->hideFromIndex()
                 ->nullable()
                 ->rows(5)
@@ -77,7 +72,12 @@ class ProductVariant extends Resource
                     'max:65536',
                 ]),
 
-            Text::make('SKU', 'sku')
+            Fields\Image::make(__('Image'), 'image_path')
+                ->thumbnail(fn () => $this->image->square(64))
+                ->preview(fn () => $this->image->width(300))
+                ->nullable(),
+
+            Fields\Text::make('SKU', 'sku')
                 ->onlyOnDetail()
                 ->nullable(),
 
@@ -86,16 +86,16 @@ class ProductVariant extends Resource
                 ->sortable()
                 ->help(__('Price changes need to be entered in Zettle, you cannot update the product price here.')),
 
-            Number::make(__('Order limit'), 'order_limit')
+            Fields\Number::make(__('Order limit'), 'order_limit')
                 ->nullable()
                 ->min(1)
                 ->max(255)
                 ->help(__('The max count of this variant that can be added to a single order.')),
 
-            BelongsTo::make(__('Product'), 'product', Product::class)
+            Fields\BelongsTo::make(__('Product'), 'product', Product::class)
                 ->searchable(),
 
-            BelongsToMany::make(__('Orders'), 'orders', Order::class)
+            Fields\BelongsToMany::make(__('Orders'), 'orders', Order::class)
                 ->fields(new OrderProductFields()),
         ];
     }

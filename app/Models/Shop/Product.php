@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Fluent\Image;
 use App\Helpers\Arr;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
@@ -24,7 +25,7 @@ use Illuminate\Support\HtmlString;
  * @property string $name
  * @property null|string $description
  * @property string $slug
- * @property null|string $image_url
+ * @property null|string $image_path
  * @property null|string $etag
  * @property int $vat_rate
  * @property null|int $order_limit
@@ -39,6 +40,9 @@ use Illuminate\Support\HtmlString;
  * @property-read Collection $detail_feature_icons
  * @property-read Collection $feature_icons
  * @property-read Collection $feature_warnings
+ * @property-read Image $image
+ * @property-read null|string $image_url
+ * @property-read Image $valid_image
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
  * @method static \Illuminate\Database\Eloquent\Builder|Product findSimilarSlugs(string $attribute, array $config, string $slug)
@@ -106,7 +110,12 @@ class Product extends Model
 
     public function getValidImageUrlAttribute(): string
     {
-        return $this->image_url ?? (string) mix('images/geen-foto.jpg');
+        return $this->valid_image->getUrl();
+    }
+
+    public function getValidImageAttribute(): Image
+    {
+        return $this->image_path ? $this->image : Image::make(url((string) mix('images/geen-foto.jpg')));
     }
 
     public function getDefaultVariantAttribute(): ?ProductVariant
@@ -150,6 +159,20 @@ class Product extends Model
         }
 
         return Config::get('gumbo.shop.order-limit');
+    }
+
+    public function getImageAttribute(): Image
+    {
+        return Image::make($this->image_path);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image_path) {
+            return null;
+        }
+
+        return $this->image->getUrl();
     }
 
     private function getEnrichedFeatures(): Collection
