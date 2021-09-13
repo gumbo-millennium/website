@@ -20,7 +20,7 @@
     @foreach ($products as $product)
     <div class="col col-12 md:col-6 lg:col-4">
         <div class="mb-4 relative">
-            @component('components.shop-item', ['product' => $product])
+            @component('components.shop.product-card', ['product' => $product])
             @endcomponent
         </div>
     </div>
