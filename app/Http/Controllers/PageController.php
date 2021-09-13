@@ -72,9 +72,7 @@ class PageController extends Controller
                 ->keyBy('activity_id');
         }
 
-        if ($advertisedProduct = ProductController::getAdvertisedProduct()) {
-            $this->addImageUrlsToCspPolicy([$advertisedProduct->valid_image_url]);
-        }
+        $advertisedProduct = ProductController::getAdvertisedProduct();
 
         // Return view
         return response()

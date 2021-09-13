@@ -9,14 +9,7 @@ use App\Nova\Resources\Resource;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BooleanGroup;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields;
 
 class Product extends Resource
 {
@@ -64,16 +57,16 @@ class Product extends Resource
             ->all();
 
         return [
-            ID::make(),
+            Fields\ID::make(),
 
-            Text::make(__('Name'), 'name'),
+            Fields\Text::make(__('Name'), 'name'),
             Slug::make(__('Slug'), 'slug')
                 ->disableAutoUpdateWhenUpdating()
                 ->showUrlPreview(url('/shop/<category>/'))
                 ->hideFromIndex()
                 ->nullable(),
 
-            Textarea::make(__('Description'), 'description')
+            Fields\Textarea::make(__('Description'), 'description')
                 ->hideFromIndex()
                 ->nullable()
                 ->rows(5)
@@ -82,19 +75,21 @@ class Product extends Resource
                     'max:65536',
                 ]),
 
-            Text::make(__('Image URL'), 'image_url')
-                ->hideFromIndex()
+            Fields\Image::make(__('Image'), 'image_path')
+                ->thumbnail(fn () => $this->image->square(64))
+                ->preview(fn () => $this->image->width(300))
                 ->nullable(),
 
-            Text::make(__('Entity Tag'), 'etag')
+            Fields\Text::make(__('Entity Tag'), 'etag')
                 ->onlyOnDetail(),
 
-            Number::make(__('VAT'), 'vat_rate')
+            Fields\Number::make(__('VAT'), 'vat_rate')
                 ->onlyOnDetail()
                 ->min(0)
                 ->max(100),
 
-            Number::make(__('Order limit'), 'order_limit')
+            Fields\Number::make(__('Order limit'), 'order_limit')
+                ->hideFromIndex()
                 ->nullable()
                 ->min(1)
                 ->max(255)
@@ -103,19 +98,19 @@ class Product extends Resource
                     __('Can be overruled on the variant level.'),
                 ])),
 
-            BooleanGroup::make(__('Features'), 'features')
+            Fields\BooleanGroup::make(__('Features'), 'features')
                 ->options($featuresMap)
                 ->help(__('Additional properties to add to (variants of) this product.')),
 
-            Boolean::make(__('Visible'), 'visible'),
+            Fields\Boolean::make(__('Visible'), 'visible'),
 
-            Boolean::make(__('Advertise on homepage and shop landing'), 'advertise_on_home')
+            Fields\Boolean::make(__('Advertise on homepage and shop landing'), 'advertise_on_home')
                 ->help(__('The category and the product need to be visible for the advertisement to show.')),
 
-            BelongsTo::make(__('Category'), 'category', Category::class)
+            Fields\BelongsTo::make(__('Category'), 'category', Category::class)
                 ->searchable(),
 
-            HasMany::make(__('Variants'), 'variants', ProductVariant::class),
+            Fields\HasMany::make(__('Variants'), 'variants', ProductVariant::class),
         ];
     }
 }

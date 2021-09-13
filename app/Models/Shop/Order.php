@@ -159,7 +159,7 @@ class Order extends Model implements PayableModel
                     $variant->pivot->price,
                 )
                     ->sku($variant->sku)
-                    ->imageUrl(URL::to($variant->valid_image_url))
+                    ->imageUrl((string) $variant->valid_image->width(512))
                     ->productUrl($variant->url),
             );
         }

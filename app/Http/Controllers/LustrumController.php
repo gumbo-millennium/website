@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
-use Spatie\Csp\Directive;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 class LustrumController extends Controller
@@ -51,11 +50,8 @@ class LustrumController extends Controller
             SEOMeta::setCanonical($lustrumRoot);
         }
 
-        // Get merchandise and add images to CSP if not empty
+        // Get merchandise
         $merchandise = $this->getMerchandise();
-        if ($merchandise->isNotEmpty()) {
-            $this->addToCsp($merchandise->pluck('valid_image_url'), Directive::IMG);
-        }
 
         return Response::view('minisite.lustrum', [
             'lustrumNav' => true,

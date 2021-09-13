@@ -19,7 +19,7 @@
 @section('shop-content')
 <div class="row">
     <div class="col col-12 md:col">
-        <img class="w-full rounded" src="{{ $variant->valid_image_url ?? $product->valid_image_url }}"
+        <img class="w-full rounded" src="{{ $variant->valid_image->width(840) }}"
             title="Afbeelding van {{ $product->name }}" />
     </div>
 

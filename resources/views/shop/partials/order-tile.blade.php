@@ -1,7 +1,7 @@
 <div class="flex bg-gray-50 rounded-lg items-center p-2">
     @if ($firstVariant = $order->variants->first())
     <img class="flex-shrink-0 rounded-sm h-16 w-16 object-cover mr-4"
-        src="{{ $firstVariant->valid_image_url }}" alt="Afbeelding van {{ $firstVariant->display_name }}" />
+        src="{{ $firstVariant->valid_image->width(128) }}" alt="Afbeelding van {{ $firstVariant->display_name }}" />
     @else
     <div class="flex-shrink-0 rounded-sm h-16 w-16 object-cover mr-4 bg-gray-200"></div>
     @endif

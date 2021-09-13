@@ -43,15 +43,6 @@ class OrderController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        // Whitelist images
-        $this->addImageUrlsToCspPolicy(
-            $orders->map(
-                fn (Order $order) => optional(
-                    $order->variants->first(),
-                )->valid_image_url,
-            )->toArray(),
-        );
-
         return ResponseFacade::view('shop.order.index', [
             'totalOrders' => $orders->count(),
             'openOrders' => $orders->where('payment_status', PayableModel::STATUS_OPEN),
@@ -76,13 +67,6 @@ class OrderController extends Controller
         if (Cart::getTotalQuantity() === 0) {
             return ResponseFacade::redirectToRoute('shop.cart');
         }
-
-        // Whitelist images
-        $this->addImageUrlsToCspPolicy(
-            Cart::getContent()
-                ->map(fn ($item) => $item->associatedModel->valid_image_url)
-                ->toArray(),
-        );
 
         // Show confirmation page
         return ResponseFacade::view('shop.order.create', [
@@ -169,11 +153,6 @@ class OrderController extends Controller
 
         // Hungry, Hungry, Model
         $order->hungry();
-
-        // Whitelist images
-        $this->addImageUrlsToCspPolicy(
-            $order->variants->pluck('valid_image_url')->toArray(),
-        );
 
         // Render it
         return ResponseFacade::view('shop.order.show', [
@@ -304,11 +283,6 @@ class OrderController extends Controller
         }
 
         $order->hungry();
-
-        // Whitelist images
-        $this->addImageUrlsToCspPolicy(
-            $order->variants->pluck('valid_image_url')->toArray(),
-        );
 
         // Find refund info
         $refundInfo = $this->getRefundInfo($order);

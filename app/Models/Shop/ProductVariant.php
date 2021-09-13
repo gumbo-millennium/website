@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use App\Fluent\Image;
 use App\Helpers\Str;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
@@ -24,7 +25,7 @@ use Illuminate\Support\HtmlString;
  * @property null|string $description
  * @property string $slug
  * @property int $order
- * @property null|string $image_url
+ * @property null|string $image_path
  * @property null|string $sku
  * @property null|int $price
  * @property null|int $order_limit
@@ -33,7 +34,10 @@ use Illuminate\Support\HtmlString;
  * @property-read int $applied_order_limit
  * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read string $display_name
+ * @property-read Image $image
+ * @property-read null|string $image_url
  * @property-read string $url
+ * @property-read Image $valid_image
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Order[]|\Illuminate\Database\Eloquent\Collection $orders
  * @property-read \App\Models\Shop\Product $product
@@ -137,7 +141,12 @@ class ProductVariant extends Model
 
     public function getValidImageUrlAttribute(): string
     {
-        return $this->image_url ?? $this->product->valid_image_url;
+        return $this->valid_image->getUrl();
+    }
+
+    public function getValidImageAttribute(): Image
+    {
+        return $this->image_path ? $this->image : $this->product->valid_image;
     }
 
     public function getDisplayNameAttribute(): string
@@ -171,5 +180,19 @@ class ProductVariant extends Model
         }
 
         return $this->product->applied_order_limit;
+    }
+
+    public function getImageAttribute(): Image
+    {
+        return Image::make($this->image_path);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image_path) {
+            return null;
+        }
+
+        return $this->image->getUrl();
     }
 }
