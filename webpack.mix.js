@@ -72,7 +72,7 @@ mix.override(webpack => {
       quality: 90,
 
       // Use sharp, since we're using webp
-      adapter: require('responsive-loader/sharp'),
+      adapter: require('responsive-loader/sharp')
     }
   })
 
@@ -100,3 +100,6 @@ mix.webpackConfig({
     })
   ]
 })
+
+// Stop repeat success notifications
+mix.disableSuccessNotifications()

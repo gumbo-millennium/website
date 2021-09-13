@@ -67,7 +67,7 @@ class CheckActivityFeatureMailsTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function test_activity_with_basic_mail()
+    public function test_activity_with_basic_mail(): void
     {
         Config::set('gumbo.activity-features.test-simple', [
             'title' => 'Test Simple',

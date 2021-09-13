@@ -26,12 +26,15 @@
     <div class="col col-12 md:col-5 lg:col-4 mt-8 md:mt-0">
         {{-- Title --}}
         <div class="mb-8">
-            <div class="flex flex-row">
-                <div class="flex-grow">
-                    <h1 class="text-3xl font-title mb-4 font-bold">{{ $product->name }}</h1>
-                    <h2 class="text-lg font-title font-grey-2">{{ $variant->name }}</h2>
+            <div class="flex flex-row items-center mb-4">
+                <h1 class="flex-grow text-3xl font-title font-bold">{{ $product->name }}</h1>
+
+                <div class="flex-none ml-2">
+                    <span class="text-xl font-title font-grey-2">{{ Str::price($variant->price) }}</span>
                 </div>
             </div>
+
+            <h2 class="text-lg font-title font-grey-2">{{ $variant->name }}</h2>
 
             {{-- Features --}}
             @if ($product->detail_feature_icons)
@@ -79,13 +82,21 @@
         <form action="{{ route('shop.cart.add') }}" method="POST" class="mt-8">
             @csrf
             <input type="hidden" name="variant" value="{{ $variant->id }}">
-            <input type="hidden" name="quantity" value="1">
 
-            <button class="btn btn--brand btn--wide w-full uppercase">
-                @icon('solid/shopping-cart', 'h-4 mr-2')
-                {{-- Start Ye' Plunder --}}
-                {{ Str::price($variant->price) }}
-            </button>
+            <div class="flex items-stretch mb-2">
+                <select name="quantity" class="mr-4 form-select rounded-md w-20 flex-none">
+                    @for ($i = 1; $i <= $variant->applied_order_limit; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+
+                <button class="btn btn--brand btn--wide w-full uppercase my-0">
+                    @icon('solid/shopping-cart', 'h-4 mr-2')
+                    {{-- Start Ye' Plunder --}}
+                    Toevoegen <span class="hidden 2xl:inline">aan winkelmand</span>
+                </button>
+            </div>
+
 
             <p class="text-center text-sm text-gray-primary-2 mb-2 mt-n1">
                 Maximaal {{ $variant->applied_order_limit }} per bestelling

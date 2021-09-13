@@ -49,10 +49,8 @@ class FormFieldTest extends TestCase
 
     /**
      * A basic feature test example.
-     *
-     * @return void
      */
-    public function test_form_field_conversion()
+    public function test_form_field_conversion(): void
     {
         $this->markTestSkipped('Test is broken');
 
