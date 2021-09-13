@@ -18,6 +18,13 @@ $factory->define(WebcamUpdate::class, function (Faker $faker) {
 });
 
 $factory->afterMakingState(WebcamUpdate::class, 'with-image', function (WebcamUpdate $webcamUpdate, Faker $faker) {
-    $image = new File($faker->image(sys_get_temp_dir(), 64, 64));
+    $image = new File(resource_path($faker->randomElement([
+        'test-assets/images/squares/square-red.png',
+        'test-assets/images/squares/square-green.png',
+        'test-assets/images/squares/square-blue.png',
+        'test-assets/images/squares/square-orange.png',
+        'test-assets/images/squares/square-yellow.png',
+    ])));
+
     $webcamUpdate->path = Storage::putFile(WebcamUpdate::STORAGE_LOCATION, $image);
 });
