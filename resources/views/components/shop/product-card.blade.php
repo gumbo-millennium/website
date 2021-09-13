@@ -36,7 +36,7 @@ if ($variants->count() === 2) {
         <div class="mr-4 flex-grow">
             <h2 class="text-xl font-title">
                 <a href="{{ route('shop.product-variant', [$product->slug, $product->variants->first()->slug]) }}" class="stretched-link no-underline">
-                    {{ $product->variants->first()->name }}
+                    {{ $product->name }}
                 </a>
             </h2>
 
