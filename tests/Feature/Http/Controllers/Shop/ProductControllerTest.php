@@ -161,7 +161,7 @@ class ProductControllerTest extends TestCase
         ]);
 
         $variant = $product->default_variant;
-        $productVariantUrl  = route('shop.product-variant', [
+        $productVariantUrl = route('shop.product-variant', [
             'product' => $product->slug,
             'variant' => $variant->slug,
         ]);

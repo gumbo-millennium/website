@@ -198,7 +198,7 @@ class GoogleMailListService implements MailListHandler
     public function save(MailList $list): void
     {
         // Get services
-        $aliasManager =  $this->getGoogleGroupAliasManager();
+        $aliasManager = $this->getGoogleGroupAliasManager();
         $memberManager = $this->getGoogleGroupMembersManager();
 
         // Update aliases

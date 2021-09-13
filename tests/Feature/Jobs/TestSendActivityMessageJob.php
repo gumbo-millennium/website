@@ -56,16 +56,16 @@ class TestSendActivityMessageJob extends TestCase
         Mail::assertQueued(
             ActivityMessageMail::class,
             static fn (ActivityMessageMail $mail) => (
-                $mail->hasTo($pendingUser->email) &&
-                $mail->getActivityMessage()->is($message)
+                $mail->hasTo($pendingUser->email)
+                && $mail->getActivityMessage()->is($message)
             ),
         );
 
         Mail::assertQueued(
             ActivityMessageMail::class,
             static fn (ActivityMessageMail $mail) => (
-                $mail->hasTo($confirmedUser->email) &&
-                $mail->getActivityMessage()->is($message)
+                $mail->hasTo($confirmedUser->email)
+                && $mail->getActivityMessage()->is($message)
             ),
         );
     }
@@ -97,8 +97,8 @@ class TestSendActivityMessageJob extends TestCase
         Mail::assertQueued(
             ActivityMessageMail::class,
             static fn (ActivityMessageMail $mail) => (
-                $mail->hasTo($pendingUser->email) &&
-                $mail->getActivityMessage()->is($message)
+                $mail->hasTo($pendingUser->email)
+                && $mail->getActivityMessage()->is($message)
             ),
         );
     }
@@ -130,8 +130,8 @@ class TestSendActivityMessageJob extends TestCase
         Mail::assertQueued(
             ActivityMessageMail::class,
             static fn (ActivityMessageMail $mail) => (
-                $mail->hasTo($confirmedUser->email) &&
-                $mail->getActivityMessage()->is($message)
+                $mail->hasTo($confirmedUser->email)
+                && $mail->getActivityMessage()->is($message)
             ),
         );
     }
@@ -165,8 +165,8 @@ class TestSendActivityMessageJob extends TestCase
         Mail::assertNotQueued(
             ActivityMessageMail::class,
             static fn (ActivityMessageMail $mail) => (
-                $mail->hasTo($cancelledUser->email) &&
-                $mail->getActivityMessage()->is($message)
+                $mail->hasTo($cancelledUser->email)
+                && $mail->getActivityMessage()->is($message)
             ),
         );
     }

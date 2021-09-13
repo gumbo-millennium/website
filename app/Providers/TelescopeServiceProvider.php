@@ -41,11 +41,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
             return $entries->contains(static function (IncomingEntry $entry) {
                 return
-                    $entry->isReportableException() ||
-                    $entry->isFailedRequest() ||
-                    $entry->isFailedJob() ||
-                    $entry->isScheduledTask() ||
-                    $entry->hasMonitoredTag();
+                    $entry->isReportableException()
+                    || $entry->isFailedRequest()
+                    || $entry->isFailedJob()
+                    || $entry->isScheduledTask()
+                    || $entry->hasMonitoredTag();
             });
         });
     }

@@ -53,8 +53,8 @@ class SponsorObserver
         $logos = ['logo_gray', 'logo_color'];
         foreach ($logos as $logo) {
             if (
-                ! $sponsor->wasChanged($logo) ||
-                Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->{$logo})
+                ! $sponsor->wasChanged($logo)
+                || Storage::disk(Sponsor::LOGO_DISK)->exists($sponsor->{$logo})
             ) {
                 continue;
             }

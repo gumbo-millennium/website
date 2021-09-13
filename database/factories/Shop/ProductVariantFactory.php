@@ -18,8 +18,8 @@ $factory->define(ProductVariant::class, static function (Faker $faker) {
         'name' => $faker->words(3, true),
         'description' => $faker->optional()->sentences($faker->numberBetween(1, 6), true),
         'image_path' => $image,
-        'sku' =>  $faker->ean13,
-        'price' =>  $faker->numberBetween(250, 3000),
+        'sku' => $faker->ean13,
+        'price' => $faker->numberBetween(250, 3000),
         'order' => $faker->numerify(1, 10),
     ];
 });

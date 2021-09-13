@@ -45,9 +45,9 @@ trait HandlesStripeSources
 
                 // Validation enabled, make sure we can use this source.
                 if (
-                    $bank &&
-                    object_get($source, 'ideal.bank') === $bank &&
-                    $source->status === Source::STATUS_PENDING
+                    $bank
+                    && object_get($source, 'ideal.bank') === $bank
+                    && $source->status === Source::STATUS_PENDING
                 ) {
                     return $source;
                 }

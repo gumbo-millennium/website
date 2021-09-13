@@ -439,8 +439,8 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getIsFreeForMemberAttribute(): bool
     {
-        return $this->is_free ||
-            ($this->member_discount === $this->price && $this->discount_count === null);
+        return $this->is_free
+            || ($this->member_discount === $this->price && $this->discount_count === null);
     }
 
     /**

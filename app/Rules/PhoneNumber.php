@@ -60,8 +60,8 @@ class PhoneNumber implements Rule
         // If a region is set, check if locally valid or an international number
         if ($this->region !== null) {
             return
-                $this->util->isValidNumberForRegion($number, $this->region) ||
-                $this->util->canBeInternationallyDialled($number);
+                $this->util->isValidNumberForRegion($number, $this->region)
+                || $this->util->canBeInternationallyDialled($number);
         }
 
         // Just validate the number otherwise

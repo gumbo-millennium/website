@@ -103,9 +103,9 @@ class UpdateGroups extends Command
             // Check all roles from Concribo for the role we're looking for
             foreach ($adminRoles as $adminRole) {
                 if (
-                    $this->named($adminRole) !== $this->slugged($role->name) &&
-                    $this->slugged($adminRole['naam']) !== $this->slugged($role->name) &&
-                    $this->slugged($adminRole['naam']) !== $this->slugged($role->title)
+                    $this->named($adminRole) !== $this->slugged($role->name)
+                    && $this->slugged($adminRole['naam']) !== $this->slugged($role->name)
+                    && $this->slugged($adminRole['naam']) !== $this->slugged($role->title)
                 ) {
                     continue;
                 }

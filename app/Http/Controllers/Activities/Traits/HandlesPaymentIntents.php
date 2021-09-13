@@ -128,8 +128,8 @@ trait HandlesPaymentIntents
     ): ?PaymentIntent {
         // Make sure it's still confirm-able
         if (
-            $intent->status !== PaymentIntent::STATUS_REQUIRES_PAYMENT_METHOD &&
-            $intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION
+            $intent->status !== PaymentIntent::STATUS_REQUIRES_PAYMENT_METHOD
+            && $intent->status !== PaymentIntent::STATUS_REQUIRES_ACTION
         ) {
             throw new InvalidArgumentException('Intent cannot be confirmed right now', 1);
         }

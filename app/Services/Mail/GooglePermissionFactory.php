@@ -76,7 +76,7 @@ class GooglePermissionFactory
         }
 
         // Get filename
-        $fileName  = "permissions-{$configName}.json";
+        $fileName = "permissions-{$configName}.json";
         if ($configName === self::CONFIG_DEFAULT) {
             $fileName = 'permissions.json';
         }
