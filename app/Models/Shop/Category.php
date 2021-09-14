@@ -7,8 +7,10 @@ namespace App\Models\Shop;
 use App\Fluent\Image;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\URL;
 
 /**
  * A shop category.
@@ -75,12 +77,28 @@ class Category extends Model
 
     public function getValidImageAttribute(): Image
     {
-        $productsWithImages = $this->products->whereNotNull('image_url')->where('active', '=', 1)->first();
-        $firstProduct = $this->products->where('active', '=', 1)->first();
-        $fallback = Image::make(url(mix('images/geen-foto.jpg')));
+        $productWithImage = $this->products()
+            // Only find visible
+            ->where('visible', true)
 
-        return optional($productsWithImages)->valid_image
-            ?? optional($firstProduct)->valid_image
+            // Only find products with an image or with
+            // a variant with an image.
+            ->where(
+                fn (Builder $query) => $query
+                    ->whereNotNull('image_path')
+                    ->orWhereHas('variants', function (Builder $query) {
+                        $query->whereNotNull('image_path');
+                    }),
+            );
+
+        // Also just find the first image
+        $firstProduct = $this->products->where('visible', true);
+
+        $fallback = Image::make(URL::to('/images/geen-foto.jpg'));
+
+        // We make the first()-call here, so prevent excessive queries
+        return optional($productWithImage->first())->valid_image
+            ?? optional($firstProduct->first())->valid_image
             ?? $fallback;
     }
 
