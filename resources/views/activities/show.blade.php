@@ -71,7 +71,7 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
         @icon('solid/percentage', 'notice__icon')
         <p>
             @if ($discountWarning->soldout)
-            De inschrijvingen met korting zijn allemaal vergeven, je betaald nu het normale tarief.
+            De inschrijvingen met korting zijn allemaal vergeven, je betaalt nu het normale tarief.
             @else
             Er geld een kortingstarief van {{ $discountWarning->price }}, deze is nog beschikbaar voor {{ $discountWarning->count }}.
             @endif
