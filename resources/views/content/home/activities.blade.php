@@ -11,5 +11,11 @@
         </div>
         @endforeach
     </div>
+
+    <div class="mt-4 text-center">
+        <a href="{{ route('activity.index') }}" class="btn btn--brand my-0">
+            Bekijk alle activiteiten
+        </a>
+    </div>
 </div>
 @endif
