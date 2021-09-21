@@ -203,6 +203,38 @@ abstract class Command extends TelegramCommand
         }
     }
 
+    protected function getBotUsername(): string
+    {
+        return Cache::remember('telegarm.bot.username', Date::now()->addDay(), function () {
+            $me = $this->getTelegram()->getMe();
+
+            return (string) ($me->username ?? $me->id);
+        });
+    }
+
+    protected function getCommandBody(): ?string
+    {
+        $command = $this->getCommandName();
+        $username = $this->getBotUsername();
+        $message = $this->getUpdate()->getMessage()->getText();
+
+        $fullCommand = "/{$command}@{$username}";
+        $shortCommand = "/{$command}";
+
+        $fullPosition = mb_stripos($message, $fullCommand);
+        $shortPosition = mb_stripos($message, $shortCommand);
+
+        if ($fullPosition !== false) {
+            return trim(mb_substr($message, $fullPosition + mb_strlen($fullCommand)));
+        }
+
+        if ($shortPosition !== false) {
+            return trim(mb_substr($message, $shortPosition + mb_strlen($shortCommand)));
+        }
+
+        return $message;
+    }
+
     private function getRateLimitKey(string $key): string
     {
         return sprintf('tg.rate-limits.%s.%s', $key, optional($this->getTelegramUser())->id ?? 'shared');
