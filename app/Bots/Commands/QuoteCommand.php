@@ -81,7 +81,7 @@ class QuoteCommand extends Command
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
-        $quoteText = trim(Str::after($this->getCommandName(), $this->getUpdate()->getMessage()->getText()));
+        $quoteText = trim(Str::after($this->getUpdate()->getMessage()->getText(), $this->getCommandName()));
 
         if (empty($quoteText)) {
             $this->replyWithMessage([
