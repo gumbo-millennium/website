@@ -7,6 +7,7 @@ namespace App\Bots\Commands;
 use App\Helpers\Str;
 use App\Models\BotQuote;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Keyboard\Keyboard;
 
@@ -81,7 +82,12 @@ class QuoteCommand extends Command
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
-        $quoteText = trim(Str::after($this->getCommandName(), $this->getUpdate()->getMessage()->getText()));
+        $quoteText = trim(Str::after($this->getUpdate()->getMessage()->getText(), $this->getCommandName()));
+
+        Log::info('Derrived quote {quote} from {message}.', [
+            'quote' => $quoteText,
+            'message' => $this->getUpdate()->getMessage()->getText(),
+        ]);
 
         if (empty($quoteText)) {
             $this->replyWithMessage([
