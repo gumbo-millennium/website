@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App\Helpers\Str;
 use App\Models\BotQuote;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -28,17 +27,21 @@ class QuoteCommand extends Command
     Log in via /login om deze beperking weg te halen.
     MSG;
 
-    private const REPLY_GUEST = <<<'MSG'
-    Je wist-je-datje is opgeslagen. 🤗
-
-    Je bent niet ingelogd, dus je kan maximaal 1 wist-je-datje per
-    dag insturen. Login via /login om deze limiet te verwijderen.
-    MSG;
-
-    private const REPLY_USER = <<<'MSG'
+    private const REPLY_OK = <<<'MSG'
     Je wist-je-datje is opgeslagen.
 
-    Wil je jouw wist-je-datje historie bekijken? Dat kan!
+    Je hebt het volgende ingestuurd:
+    %s
+    MSG;
+
+    private const REPLY_PUBLIC = <<<'MSG'
+    Wil je je wist-je-datjes voortaan in het geheim insturen?
+    Stuur ze dan als DM naar de bot 😉
+    MSG;
+
+    private const REPLY_GUEST = <<<'MSG'
+    Je bent niet ingelogd, dus je kan maximaal 1 wist-je-datje per
+    dag insturen. Login via /login om deze limiet te verwijderen.
     MSG;
 
     /**
@@ -81,8 +84,8 @@ class QuoteCommand extends Command
         // Send typing status
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
-        // Check the quote
-        $quoteText = trim(Str::after($this->getUpdate()->getMessage()->getText(), $this->getCommandName()));
+        // Check the quote, remove the @Username if found
+        $quoteText = $this->getCommandBody();
 
         Log::info('Derrived quote {quote} from {message}.', [
             'quote' => $quoteText,
@@ -120,29 +123,44 @@ class QuoteCommand extends Command
         $quote->user_id = optional($user)->id;
         $quote->save();
 
-        // Render guest response
-        if (! $user) {
-            Cache::put($cacheToken, now()->addDay()->setTime(6, 0));
+        $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);
+
+        if ($this->isInGroupChat()) {
+            $preparedMessage .= PHP_EOL . PHP_EOL . self::REPLY_PUBLIC;
+        }
+
+        // Send single user message
+        if ($user) {
+            $keyboard = (new Keyboard())->inline();
+            $keyboard->row(
+                Keyboard::inlineButton([
+                    'text' => 'Bekijk mijn wist-je-datjes',
+                    'url' => route('account.quotes'),
+                ]),
+            );
+
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST),
+                'text' => $preparedMessage,
+                'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
+                'reply_markup' => $keyboard,
             ]);
 
             return;
         }
 
-        // Prep a keyboard
-        $keyboard = (new Keyboard())->inline();
-        $keyboard->row(
-            Keyboard::inlineButton([
-                'text' => 'Bekijk mijn wist-je-datjes',
-                'url' => route('account.quotes'),
-            ]),
-        );
+        // Apply rate limit
+        Cache::put($cacheToken, now()->addDay()->setTime(6, 0));
 
-        // Return message
+        // Send messages
         $this->replyWithMessage([
-            'text' => $this->formatText(self::REPLY_USER),
-            'reply_markup' => $keyboard,
+            'text' => $preparedMessage,
+            'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
+        ]);
+
+        // Render guest response
+        $this->replyWithMessage([
+            'text' => $this->formatText(self::REPLY_GUEST),
+            'disable_notification' => true,
         ]);
     }
 }
