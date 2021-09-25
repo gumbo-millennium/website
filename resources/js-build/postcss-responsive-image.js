@@ -21,13 +21,13 @@ module.exports = (opts = {}) => {
       const tailwindConfig = tailwindResolve(require(path.resolve(process.cwd(), 'tailwind.config.js')))
       const screens = _.sortBy(
         _.get(tailwindConfig, 'theme.screens'),
-        value => Number.parseInt(value)
+        value => Number.parseInt(value),
       )
 
       const imageSizes = _.map(screens, (size, index, arr) => ({
         media: arr[index - 1] || null,
         normal: Number.parseInt(size),
-        double: Number.parseInt(size) * 2
+        double: Number.parseInt(size) * 2,
       }))
 
       // Get smallest size
@@ -51,13 +51,13 @@ module.exports = (opts = {}) => {
             // Add standard image
             decl({
               prop: 'background-image',
-              value: `url('${imagePath}?size=${defaultRes.normal}')`
+              value: `url('${imagePath}?size=${defaultRes.normal}')`,
             }),
             // Add high-res image via image-set
             decl({
               prop: 'background-image',
-              value: `image-set(url('${imagePath}?size=${defaultRes.normal}') 1x, url('${imagePath}?size=${defaultRes.double}') 2x)`
-            })
+              value: `image-set(url('${imagePath}?size=${defaultRes.normal}') 1x, url('${imagePath}?size=${defaultRes.double}') 2x)`,
+            }),
           ])
 
           // Always insert at the end
@@ -82,9 +82,9 @@ module.exports = (opts = {}) => {
             // Move next cursor
             insertAfter = newMedia
           })
-        }
+        },
       }
-    }
+    },
   }
 }
 

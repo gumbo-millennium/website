@@ -1,5 +1,3 @@
-const postcss = require('postcss')
-
 /*
   Remove dark modes from CSS, used for e-mail
 */
@@ -19,8 +17,8 @@ module.exports = () => {
 
         // Just remove the declaration
         atRule.remove()
-      }
-    }
+      },
+    },
   }
 }
 

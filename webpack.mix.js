@@ -41,7 +41,7 @@ if (mix.inProduction()) {
  */
 const imageAssets = [
   'resources/assets/images-mail/**/*.{svg,jpg,png}',
-  'resources/assets/images/**/*.{svg,jpg,webp,png}'
+  'resources/assets/images/**/*.{svg,jpg,webp,png}',
 ]
 mix
   .copy(imageAssets, 'public/images/')
@@ -52,7 +52,7 @@ mix
  */
 mix.alias({
   '@': path.resolve(__dirname, 'resources/js'),
-  '@images': path.resolve(__dirname, 'resources/assets/images')
+  '@images': path.resolve(__dirname, 'resources/assets/images'),
 })
 
 mix.override(webpack => {
@@ -72,8 +72,8 @@ mix.override(webpack => {
       quality: 90,
 
       // Use sharp, since we're using webp
-      adapter: require('responsive-loader/sharp')
-    }
+      adapter: require('responsive-loader/sharp'),
+    },
   })
 
   // Override the ruleset
@@ -89,16 +89,16 @@ mix.webpackConfig({
     // Minify images
     new ImageminPlugin({
       test: /\.(png|svg|jpg)$/,
-      disable: !mix.inProduction()
+      disable: !mix.inProduction(),
     }),
 
     // ESLint validation on build
     new ESLintPlugin({
       files: [
-        'resources/js/**/*.{js,vue}'
-      ]
-    })
-  ]
+        'resources/js/**/*.{js,vue}',
+      ],
+    }),
+  ],
 })
 
 // Stop repeat success notifications
