@@ -17,7 +17,7 @@ module.exports = {
 
   theme: {
     container: {
-      center: true
+      center: true,
     },
     extend: {
       spacing: {
@@ -30,36 +30,78 @@ module.exports = {
         10: '2.5rem',
         12: '3rem',
         14: '3.5rem',
-        16: '4rem'
+        16: '4rem',
       },
       fontFamily: {
-        title: ['Poppins'].concat(defaultTheme.fontFamily.sans)
+        title: ['Poppins'].concat(defaultTheme.fontFamily.sans),
       },
       fontSize: {
-        huge: '8rem'
+        huge: '8rem',
       },
       colors: gumboSettings.colors,
       backgroundPosition: {
-        center: 'center'
+        center: 'center',
       },
       cursor: {
         default: 'default',
-        pointer: 'pointer'
+        pointer: 'pointer',
       },
       fontWeight: {
         light: '300',
         normal: '400',
-        bold: '700'
+        bold: '700',
       },
       letterSpacing: {},
       objectPosition: {
         center: 'center',
-        top: 'top'
+        top: 'top',
       },
-    }
+    },
   },
 
   plugins: [
     require('@tailwindcss/forms'),
-  ]
+  ],
+
+  corePlugins: {
+    // Disable gradient (which introduces a lot of variables)
+    backgroundOrigin: false,
+    backgroundImage: false,
+    gradientColorStops: false,
+
+    // Effects
+    backgroundBlendMode: false,
+
+    // Disable all filters
+    filter: false,
+    blur: false,
+    brightness: false,
+    contrast: false,
+    grayscale: false,
+    hueRotate: false,
+    invert: false,
+    saturate: false,
+    sepia: false,
+
+    // Disable all backdrop filters
+    backdropFilter: false,
+    backdropBlur: false,
+    backdropBrightness: false,
+    backdropContrast: false,
+    backdropGrayscale: false,
+    backdropHueRotate: false,
+    backdropInvert: false,
+    backdropSaturate: false,
+    backdropSepia: false,
+
+    // Disable table layout
+    tableLayout: false,
+
+    // Ring stuff
+    ringColor: false,
+    ringOffsetColor: false,
+    ringOffsetWidth: false,
+    ringOpacity: false,
+    ringWidth: false,
+  },
 }

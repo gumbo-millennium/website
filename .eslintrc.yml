@@ -1,11 +1,11 @@
-{
-    "extends": [
-        "standard"
-    ],
-    "env": {
-        "browser": true
-    },
-    "rules": {
-        "no-prototype-builtins": "off"
-    }
-}
+extends:
+  - standard
+
+env:
+  browser: true
+
+rules:
+  no-prototype-builtins: "off"
+  comma-dangle:
+    - error
+    - always-multiline
