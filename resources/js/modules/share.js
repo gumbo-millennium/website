@@ -22,7 +22,7 @@ const getShareAction = (node) => {
 
     window.navigator.share({
       title: shareText,
-      url: shareLink
+      url: shareLink,
     })
   }
 }

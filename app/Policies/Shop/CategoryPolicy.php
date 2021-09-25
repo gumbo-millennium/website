@@ -65,6 +65,6 @@ class CategoryPolicy
      */
     public function forceDelete(User $user, Category $categoryPolicy)
     {
-        return $user->hasPermissionTo('shop-admin');
+        return false;
     }
 }

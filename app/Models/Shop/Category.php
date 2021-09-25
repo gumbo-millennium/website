@@ -10,6 +10,7 @@ use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
 
 /**
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\URL;
  * @property string $id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
@@ -37,6 +39,7 @@ class Category extends Model
 {
     use IsSluggable;
     use IsUuidModel;
+    use SoftDeletes;
 
     protected $table = 'shop_categories';
 

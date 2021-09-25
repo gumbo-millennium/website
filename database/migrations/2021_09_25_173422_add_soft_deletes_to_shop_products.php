@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameImageUrlToImagePathOnShopProductVariantsTable extends Migration
+class AddSoftDeletesToShopProducts extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class RenameImageUrlToImagePathOnShopProductVariantsTable extends Migration
      */
     public function up()
     {
-        Schema::table('shop_product_variants', function (Blueprint $table) {
-            $table->renameColumn('image_url', 'image_path');
+        Schema::table('shop_products', function (Blueprint $table) {
+            $table->softDeletes()->after('updated_at');
         });
     }
 
@@ -27,8 +27,8 @@ class RenameImageUrlToImagePathOnShopProductVariantsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shop_product_variants', function (Blueprint $table) {
-            $table->renameColumn('image_path', 'image_url');
+        Schema::table('shop_products', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 }

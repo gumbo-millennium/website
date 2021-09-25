@@ -20,7 +20,7 @@ class CartController extends Controller
 {
     public function index(): Response
     {
-        $cartItems = Cart::getContent()->sortBy('metadata.sort-key');
+        $cartItems = Cart::getContent()->sortBy('name');
 
         return ResponseFacade::view('shop.cart', [
             'cartItems' => $cartItems,

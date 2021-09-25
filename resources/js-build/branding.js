@@ -14,7 +14,7 @@ const buildNightModeCapable = (color) => {
     'primary-3': `var(--color-${color}-primary-3)`,
     'secondary-1': `var(--color-${color}-secondary-1)`,
     'secondary-2': `var(--color-${color}-secondary-2)`,
-    'secondary-3': `var(--color-${color}-secondary-3)`
+    'secondary-3': `var(--color-${color}-secondary-3)`,
   }
 }
 
@@ -28,7 +28,7 @@ const grayColors = {
   600: '#757575',
   700: '#616161',
   800: '#424242',
-  900: '#212121'
+  900: '#212121',
 }
 
 const brandColors = {
@@ -41,7 +41,7 @@ const brandColors = {
   600: '#137a11',
   700: '#006b00',
   800: '#005200',
-  900: '#003900'
+  900: '#003900',
 }
 
 const brandColorsAlternative = {}
@@ -85,7 +85,7 @@ const colors = {
   brand: {
     ...buildNightModeCapable('brand'),
     ...brandColors,
-  }
+  },
 }
 
 module.exports = {

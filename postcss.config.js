@@ -1,4 +1,7 @@
 /* eslint-disable quote-props */
+// Core
+const path = require('path')
+
 // Plugins
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
@@ -25,18 +28,20 @@ module.exports = ({ file, options, env }) => {
     tailwindcss(),
     responsiveImages(),
     postcssCalc({}),
-    autoprefixer()
+    autoprefixer(),
     // cssnano
   ]
 
   // Inline variables if required
-  if (file.basename === 'mail.css' && isProduction) {
+  if (path.basename(file) === 'mail.css') {
     // Remove dark, variables and convert rem to px
     plugins.splice(plugins.length - 1, 0, [
       removeDarkMode(),
-      postcssVariables(),
+      postcssVariables({
+        preserve: false,
+      }),
       postcssRem(remConfig),
-      pixrem({ replace: false })
+      pixrem({ replace: false }),
     ])
   }
 
@@ -47,6 +52,6 @@ module.exports = ({ file, options, env }) => {
 
   return {
     parser: false,
-    plugins: plugins
+    plugins: plugins,
   }
 }

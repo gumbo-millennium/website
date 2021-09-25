@@ -37,6 +37,7 @@ class OrderProduct extends Pivot
 
     public function variant(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::class, 'product_id');
+        return $this->belongsTo(ProductVariant::class, 'product_id')
+            ->withTrashed();
     }
 }
