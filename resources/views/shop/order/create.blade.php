@@ -1,7 +1,7 @@
 @extends('shop.layout')
 
 @php($user = Auth::user())
-@php($expiry = Carbon\Carbon::today()->addDay(2));
+@php($expiry = Carbon\Carbon::today()->addDay(2))
 
 {{-- Header --}}
 @section('shop-title', 'Bestelling plaatsen')
