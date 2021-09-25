@@ -4,9 +4,9 @@
 
 .btn {
   @apply inline-block mx-0 my-4 py-4 px-10;
-  @apply rounded border-none;
+  @apply rounded border border-gray-500;
   @apply font-bold no-underline;
-  @apply bg-gray-secondary-2 text-gray-primary-3;
+  @apply bg-white text-gray-700;
 }
 
 .btn:hover, .btn:active {
@@ -23,6 +23,7 @@
 
 .btn--brand {
   @apply bg-brand-primary-1 border-brand-primary-2 text-light;
+  @apply border-none;
 }
 
 .btn--brand:hover, .btn--brand:active {
