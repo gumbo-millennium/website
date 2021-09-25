@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -21,6 +22,7 @@ use Illuminate\Support\HtmlString;
  * @property string $product_id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
@@ -53,6 +55,7 @@ class ProductVariant extends Model
 {
     use IsSluggable;
     use IsUuidModel;
+    use SoftDeletes;
 
     protected const ORDER_KEYS = [
         '4xs',

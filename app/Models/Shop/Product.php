@@ -11,6 +11,7 @@ use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
@@ -22,6 +23,7 @@ use Illuminate\Support\HtmlString;
  * @property null|string $category_id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name
  * @property null|string $description
  * @property string $slug
@@ -56,6 +58,7 @@ class Product extends Model
 {
     use IsSluggable;
     use IsUuidModel;
+    use SoftDeletes;
 
     protected $table = 'shop_products';
 

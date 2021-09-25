@@ -75,6 +75,6 @@ class ProductVariantPolicy
      */
     public function forceDelete(User $user, ProductVariant $productVariant)
     {
-        return $user->hasPermissionTo('shop-admin');
+        return false;
     }
 }
