@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Request;
  * @property string $path
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
- * @property string $taken_at
+ * @property \Illuminate\Support\Carbon $taken_at
  * @property-read \App\Models\Photos\Album $album
  * @property-read null|User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Photo newModelQuery()
@@ -31,6 +31,15 @@ use Illuminate\Support\Facades\Request;
  */
 class Photo extends Model
 {
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'taken_at' => 'datetime',
+    ];
+
     public static function boot(): void
     {
         parent::boot();
@@ -46,11 +55,17 @@ class Photo extends Model
         });
     }
 
+    /**
+     * The album this photo belongs to.
+     */
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
     }
 
+    /**
+     * The user who uploaded this photo.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
