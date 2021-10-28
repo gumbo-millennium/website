@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models\Photos;
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
+
+/**
+ * App\Models\Photos\Photo.
+ *
+ * @property int $id
+ * @property int $album_id
+ * @property null|int $user_id
+ * @property string $caption
+ * @property string $disk
+ * @property string $path
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property string $taken_at
+ * @property-read \App\Models\Photos\Album $album
+ * @property-read null|User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Photo query()
+ * @mixin \Eloquent
+ */
+class Photo extends Model
+{
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (self $photo) {
+            // Save disk
+            $photo->disk = Config::get('gumbo.photos.storage-disk');
+
+            // Save user, if any
+            if ($user = Request::instance()->user()) {
+                $photo->user()->associate($user);
+            }
+        });
+    }
+
+    public function album(): BelongsTo
+    {
+        return $this->belongsTo(Album::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}

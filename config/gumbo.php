@@ -118,4 +118,9 @@ return [
 
     // Data Exports
     'export-expire-days' => 30,
+
+    // Photo albums
+    'photos' => [
+        'storage-disk' => env('GUMBO_PHOTO_DISK', 'local'),
+    ],
 ];
