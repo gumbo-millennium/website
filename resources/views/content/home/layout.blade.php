@@ -23,7 +23,7 @@ SEOMeta::setCanonical(url('/'));
 @include('content.home.sponsors')
 
 {{-- Grote Clubactie --}}
-@includeWhen(now() < Carbon::parse('2020-12-10T00:00:00'), 'content.home.clubactie')
+@includeWhen(now() < Carbon::parse('2021-12-08')->startOfDay(), 'content.home.clubactie')
 
 {{-- Shop --}}
 @if ($advertisedProduct)
