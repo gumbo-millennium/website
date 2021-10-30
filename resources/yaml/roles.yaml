@@ -33,6 +33,9 @@ member:
     # Allow viewing rediects
     - redirects-view
 
+    # Allow editing albums
+    - photo-album-edit
+
 # Activiteiten Committee
 ac:
   title: Activiteiten Commissie
@@ -108,6 +111,9 @@ board:
 
     # Allow managing custom redirects
     - redirects-manage
+
+    # Allow managing albums
+    - photo-album-admin
 
 # Digital committee
 dc:

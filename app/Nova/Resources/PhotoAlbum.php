@@ -52,19 +52,19 @@ class PhotoAlbum extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\Text::make('Name')
+            Fields\Text::make(__('Name'), 'name')
                 ->sortable()
                 ->rules([
                     'required', 'max:255',
                 ]),
 
-            Fields\Textarea::make('Description')
+            Fields\Textarea::make(__('Description'), 'description')
                 ->nullable()
                 ->rules([
                     'max:255',
                 ]),
 
-            Fields\Select::make('Visibility')
+            Fields\Select::make(__('Visibility'), 'visibility')
                 ->options([
                     AlbumVisibility::HIDDEN => __('Hidden'),
                     AlbumVisibility::MEMBERS_ONLY => __('Members Only'),

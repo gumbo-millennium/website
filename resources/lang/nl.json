@@ -190,5 +190,16 @@
   "Image": "Afbeelding",
   "The bot command that will show the cam, must end with \"cam\".": "Het bot commando dat de camera zal tonen, moet eindigen met \"cam\".",
 
+  "Photo": "Foto",
+  "Photos": "Foto's",
+  "Photo Album": "Fotoalbum",
+  "Photo Albums": "Fotoalbums",
+  "Visibility": "Zichtbaarheid",
+
+  "Hidden": "Verborgen",
+  "Members Only": "Alleen voor leden",
+  "Users Only": "Alleen voor ingelogde gebruikers",
+  "Public": "Publiek",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

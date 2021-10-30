@@ -54,5 +54,5 @@ super-admin: Super Admin
 verfied: E-mail geverifiëerd (alleen UI)
 
 # Photo albums
-photo-album-admin: Beheer fotoalbums
-photo-album-view: Bekijken fotoalbums
+photo-album-edit: Fotoalbums bewerken
+photo-album-admin: Fotoalbums beheren

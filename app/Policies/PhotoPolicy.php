@@ -9,6 +9,7 @@ use App\Models\Photo;
 use App\Models\PhotoAlbum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Gate;
 
 class PhotoPolicy
 {
@@ -36,7 +37,7 @@ class PhotoPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create', PhotoAlbum::class);
+        return Gate::allows('create', PhotoAlbum::class);
     }
 
     /**
@@ -44,7 +45,7 @@ class PhotoPolicy
      */
     public function update(User $user, Photo $photo): bool
     {
-        return $user->can('update', $photo->album);
+        return Gate::allows('update', $photo->album);
     }
 
     /**
@@ -52,6 +53,6 @@ class PhotoPolicy
      */
     public function delete(User $user, Photo $photo): bool
     {
-        return $this->update($user, $photo);
+        return Gate::allows('update', $photo->album);
     }
 }
