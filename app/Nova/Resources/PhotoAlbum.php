@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Resources\Photos;
+namespace App\Nova\Resources;
 
 use App\Enums\AlbumVisibility;
-use App\Models\Photos\Album as AlbumModel;
-use App\Nova\Resources\Resource;
+use App\Models\PhotoAlbum as PhotoAlbumModel;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 
-class Album extends Resource
+class PhotoAlbum extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = AlbumModel::class;
+    public static $model = PhotoAlbumModel::class;
 
     /**
      * The logical group associated with the resource.

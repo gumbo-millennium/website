@@ -2,21 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Policies\Photos;
+namespace App\Policies;
 
 use App\Enums\AlbumVisibility;
-use App\Models\Photos\Album;
+use App\Models\PhotoAlbum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AlbumPolicy
+class PhotoAlbumPolicy
 {
     use HandlesAuthorization;
 
     /**
      * Determine whether the user can view any albums.
+     * Type hint User as optional to ensure guests are granted too.
+     *
+     * @param null|User $user User to check, must be nullable /and/ present
      */
-    public function viewAny(): bool
+    public function viewAny(?User $user): bool
     {
         return true;
     }
@@ -24,7 +27,7 @@ class AlbumPolicy
     /**
      * Determine whether the user can view the album.
      */
-    public function view(?User $user, Album $album): bool
+    public function view(?User $user, PhotoAlbum $album): bool
     {
         switch ($album->visibility) {
             case AlbumVisibility::WORLD:
@@ -55,7 +58,7 @@ class AlbumPolicy
     /**
      * Determine whether the user can update the album.
      */
-    public function update(User $user, Album $album): bool
+    public function update(User $user, PhotoAlbum $album): bool
     {
         return ($user->hasPermissionTo('photo-album-edit') && $user->is($album->user))
             || ($user->hasPermissionTo('photo-album-admin'));
@@ -64,7 +67,7 @@ class AlbumPolicy
     /**
      * Determine whether the user can delete the album.
      */
-    public function delete(User $user, Album $album): bool
+    public function delete(User $user, PhotoAlbum $album): bool
     {
         return $this->update($user, $album);
     }

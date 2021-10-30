@@ -27,7 +27,7 @@ class CreatePhotosTable extends Migration
             $table->timestamps();
             $table->timestamp('taken_at');
 
-            $table->foreign('album_id')->references('id')->on('albums')->onDelete('restrict');
+            $table->foreign('album_id')->references('id')->on('photo_albums')->onDelete('restrict');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }

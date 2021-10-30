@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Photos;
+namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 
 /**
- * App\Models\Photos\Photo.
+ * App\Models\Photo.
  *
  * @property int $id
  * @property int $album_id
@@ -22,7 +21,7 @@ use Illuminate\Support\Facades\Request;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon $taken_at
- * @property-read \App\Models\Photos\Album $album
+ * @property-read \App\Models\Album $album
  * @property-read null|User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Photo newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Photo newQuery()
@@ -60,7 +59,7 @@ class Photo extends Model
      */
     public function album(): BelongsTo
     {
-        return $this->belongsTo(Album::class);
+        return $this->belongsTo(PhotoAlbum::class, 'id', 'album_id');
     }
 
     /**

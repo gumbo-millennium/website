@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Policies\Photos;
+namespace App\Policies;
 
 use App\Enums\AlbumVisibility;
-use App\Models\Photos\Album;
-use App\Models\Photos\Photo;
+use App\Models\Photo;
+use App\Models\PhotoAlbum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -36,7 +36,7 @@ class PhotoPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create', Album::class);
+        return $user->can('create', PhotoAlbum::class);
     }
 
     /**

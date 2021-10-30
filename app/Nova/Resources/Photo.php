@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Resources\Photos;
+namespace App\Nova\Resources;
 
-use App\Models\Photos\Photo as PhotoModel;
-use App\Nova\Resources\Resource;
+use App\Models\Photo as PhotoModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;

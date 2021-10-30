@@ -12,7 +12,6 @@ use App\Policies\Shop as ShopPolicies;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Models\Permission;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -46,6 +45,10 @@ class AuthServiceProvider extends ServiceProvider
         ShopModels\Category::class => ShopPolicies\CategoryPolicy::class,
         ShopModels\Product::class => ShopPolicies\ProductPolicy::class,
         ShopModels\ProductVariant::class => ShopPolicies\ProductVariantPolicy::class,
+
+        // Photo albums
+        Models\Album::class => Policies\PhotoAlbumPolicy::class,
+        Models\Photo::class => Policies\PhotoPolicy::class,
     ];
 
     /**
