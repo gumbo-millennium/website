@@ -32,7 +32,7 @@ class AlbumPolicy
             case AlbumVisibility::HIDDEN:
                 return $user && (
                     $user->id === $album->user_id
-                    || $user->hasPermissionTo('album.admin')
+                    || $user->hasPermissionTo('photo-album-admin')
                 );
 
             case AlbumVisibility::USERS:
@@ -49,7 +49,7 @@ class AlbumPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('album.edit');
+        return $user->hasPermissionTo('photo-album-edit');
     }
 
     /**
@@ -57,8 +57,8 @@ class AlbumPolicy
      */
     public function update(User $user, Album $album): bool
     {
-        return ($user->hasPermissionTo('album.edit') && $user->is($album->user))
-            || ($user->hasPermissionTo('album.admin'));
+        return ($user->hasPermissionTo('photo-album-edit') && $user->is($album->user))
+            || ($user->hasPermissionTo('photo-album-admin'));
     }
 
     /**

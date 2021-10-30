@@ -52,3 +52,7 @@ super-admin: Super Admin
 
 # Verified e-mails (for UI purposes, not for actual validaton)
 verfied: E-mail geverifiëerd (alleen UI)
+
+# Photo albums
+photo-album-admin: Beheer fotoalbums
+photo-album-view: Bekijken fotoalbums
