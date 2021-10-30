@@ -3,8 +3,8 @@
 # Get branch name
 BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
 
-# Flag master branch as production
-if [ "$BRANCH_NAME" = "master" ]; then
+# Flag main branch as production
+if [ "$BRANCH_NAME" = "main" ]; then
     echo "::set-output name=name::production"
     exit 0
 fi
