@@ -24,7 +24,7 @@ class Photo extends Resource
      *
      * @var string
      */
-    public static $group = 'Photo albums';
+    public static $group = 'Photo Albums';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -32,6 +32,20 @@ class Photo extends Resource
      * @var string
      */
     public static $title = 'name';
+
+    /**
+     * Indicates if the resource should be displayed in the sidebar.
+     *
+     * @var bool
+     */
+    public static $displayInNavigation = false;
+
+    /**
+     * Indicates if the resource should be globally searchable.
+     *
+     * @var bool
+     */
+    public static $globallySearchable = false;
 
     /**
      * The columns that should be searched.
@@ -53,26 +67,26 @@ class Photo extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\BelongsTo::make('album')
+            Fields\BelongsTo::make(__('Album'), 'album', PhotoAlbum::class)
                 ->hideWhenUpdating()
                 ->rules([
                     'required',
                 ]),
 
-            Fields\BelongsTo::make('user')
+            Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
 
-            Fields\Text::make('caption')
+            Fields\Text::make(__('Caption'), 'caption')
                 ->rules([
                     'required',
                     'max:255',
                 ]),
 
-            Fields\Image::make('path', __('Image'))
+            Fields\Image::make(__('Image'), 'path')
                 ->disk(Config::get('gumbo.photos.storage-disk'))
                 ->hideWhenUpdating()
                 ->prunable()
-                ->help('The highest resolution of the image you got, but at least 300x300.')
+                ->help(__('The highest resolution of the image you got, but at least 300x300.'))
                 ->rules([
                     'required',
                     'image',

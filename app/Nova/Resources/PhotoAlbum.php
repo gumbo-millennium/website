@@ -23,7 +23,7 @@ class PhotoAlbum extends Resource
      *
      * @var string
      */
-    public static $group = 'Photo albums';
+    public static $group = 'Photo Albums';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -70,11 +70,13 @@ class PhotoAlbum extends Resource
                     AlbumVisibility::MEMBERS_ONLY => __('Members Only'),
                     AlbumVisibility::USERS => __('Users Only'),
                     AlbumVisibility::WORLD => __('Public'),
-                ]),
+                ])
+                ->displayUsingLabels(),
 
-            Fields\HasMany::make('Photos'),
+            Fields\HasMany::make(__('Photos'), 'photos', Photo::class)
+                ->singularLabel(__('Photo')),
 
-            Fields\BelongsTo::make('User')
+            Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->onlyOnDetail(),
         ];
     }

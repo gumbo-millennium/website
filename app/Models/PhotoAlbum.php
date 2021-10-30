@@ -7,6 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Request;
 
 /**
  * App\Models\PhotoAlbum.
@@ -36,6 +38,19 @@ class PhotoAlbum extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (self $model) {
+            $model->published_at ??= Date::now();
+
+            if ($model->user === null) {
+                $model->user()->associate(Request::instance()->user());
+            }
+        });
+    }
 
     /**
      * The photos of this album.
