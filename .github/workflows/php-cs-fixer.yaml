@@ -3,7 +3,7 @@ name: Check & fix code style
 on:
   push:
     branches-ignore:
-      - master
+      - main
     paths:
       - app/**/*.php
       - config/**/*.php

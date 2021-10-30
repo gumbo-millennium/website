@@ -1,0 +1,98 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Stage to deploy
+        default: acceptance
+        required: true
+        type: string
+      deploy_host:
+        description: Hostname to deploy to
+        default: gumbo-millennium.nl
+        required: false
+        type: string
+
+    secrets:
+      # Deploy data
+      deploy_port:
+        required: true
+      deploy_user:
+        required: true
+      deploy_ssh_key:
+        required: true
+
+      # Sentry keys
+      sentry_auth_token:
+        required: false
+      sentry_org:
+        required: false
+      sentry_project:
+        required: false
+
+jobs:
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy.outputs.url }}
+
+    # Only allow one deployment at any given time
+    concurrency: deployment
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.4'
+          tools: deployer
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 5
+
+      - name: Download front-end
+        uses: actions/download-artifact@master
+        with:
+          name: front-end
+          path: public/
+
+      - name: Configure SSH connection
+        run: |
+          test -d ~/.ssh || mkdir ~/.ssh
+
+          echo "Installing deploy host key"
+          ssh-keygen -R ${{ inputs.deploy_host }} || true
+          ssh-keyscan -H -p ${{ secrets.deploy_port }} ${{ inputs.deploy_host }} >> ~/.ssh/known_hosts
+
+          echo "Installing SSH host alias"
+          echo "Host ${{ inputs.environment }}.env.gumbo-millennium.nl" >> ~/.ssh/config
+          echo "    HostName ${{ inputs.deploy_host }}" >> ~/.ssh/config
+          echo "    Port ${{ secrets.deploy_port }}" >> ~/.ssh/config
+          echo "    User ${{ secrets.deploy_user }}" >> ~/.ssh/config
+          echo "    IdentityFile ~/.ssh/github-deploy-key" >> ~/.ssh/config
+
+          echo "Installing SSH key"
+          echo "${{ secrets.deploy_ssh_key }}" > ~/.ssh/github-deploy-key
+          chmod 0700 ~/.ssh
+          chmod 0600 ~/.ssh/github-deploy-key ~/.ssh/config
+
+          echo "Fingerprint of installed key:"
+          ssh-keygen -l -f ~/.ssh/github-deploy-key
+
+      - name: Run deployer
+        id: deploy
+        run: deployer deploy ${{ inputs.environment }} --revision=${{ github.sha }}
+
+      - name: Create Sentry release
+        continue-on-error: true
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.sentry_auth_token }}
+          SENTRY_ORG: ${{ secrets.sentry_org }}
+          SENTRY_PROJECT: ${{ secrets.sentry_project }}
+        with:
+          environment: ${{ inputs.environment }}

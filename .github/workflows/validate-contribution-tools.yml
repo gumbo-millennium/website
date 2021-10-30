@@ -3,13 +3,26 @@ name: "Validate contributing workspace"
 on:
   push:
     branches:
-    - master
-    - develop
+      - main
+      - develop
+
+  pull_request:
+    types:
+      - synchronize
+
+    branches:
+      - main
+      - develop
+
 
 jobs:
   docker-build:
     name: Build Docker images
+
     runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -31,9 +44,12 @@ jobs:
 
       - name: Upload images
         run: docker-compose push
+
   validate-composer:
     name: Validate contribute command
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -60,5 +76,3 @@ jobs:
         run: |
           test -f .env
           curl -s -o /dev/null -D- -m 5 http://localhost:13370
-
-

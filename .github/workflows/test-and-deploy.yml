@@ -5,7 +5,7 @@ on:
 
   push:
     branches:
-    - master
+    - main
     - develop
 
 jobs:
@@ -39,9 +39,6 @@ jobs:
   laravel-backend:
     name: "Back-end build and test"
     runs-on: 'ubuntu-latest'
-
-    needs:
-      - laravel-frontend
 
     strategy:
       matrix:
@@ -154,85 +151,38 @@ jobs:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_ID }}
         continue-on-error: true
 
-  deploy:
-    name: Deploy application
-    runs-on: ubuntu-latest
+  deploy-acceptance:
+    name: Deploy to acceptance
+
     if: ${{ github.event_name == 'push' }}
+
     needs:
       - laravel-frontend
       - laravel-backend
 
-    steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@master
-        with:
-          php-version: '7.4'
-          tools: deployer
+    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@develop
+    with:
+      environment: acceptance
+    secrets:
+      deploy_port: ${{ secrets.DEPLOY_PORT }}
+      deploy_user: ${{ secrets.DEPLOY_USER }}
+      deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 5
+  deploy-production:
+    name: Deploy to production
 
-      - name: Download front-end
-        uses: actions/download-artifact@master
-        with:
-          name: front-end
-          path: public/
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
-      - name: Determine name of deployment
-        id: env
-        run: .github/bin/determine-target.sh
+    needs:
+      - deploy-acceptance
 
-      - name: Configure SSH connection
-        run: |
-          test -d ~/.ssh || mkdir ~/.ssh
-
-          echo "Installing deploy host key"
-          ssh-keygen -R ${{ secrets.DEPLOY_HOST }} || true
-          ssh-keyscan -H -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-          echo "Installing SSH host alias"
-          echo "Host ${{ steps.env.outputs.name }}.env.gumbo-millennium.nl" >> ~/.ssh/config
-          echo "    HostName ${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/config
-          echo "    Port ${{ secrets.DEPLOY_PORT }}" >> ~/.ssh/config
-          echo "    User ${{ secrets.DEPLOY_USER }}" >> ~/.ssh/config
-
-          echo "Installing SSH key"
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 0700 ~/.ssh
-          chmod 0600 ~/.ssh/id_ed25519 ~/.ssh/config
-
-          echo "Fingerprint of installed key:"
-          ssh-keygen -l -f ~/.ssh/id_ed25519
-
-      - name: Start Deployment
-        uses: bobheadxi/deployments@v0.4.0
-        id: deployment-start
-        with:
-          step: start
-          env: ${{ steps.env.outputs.name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run deployer
-        id: deploy
-        run: deployer deploy ${{ steps.env.outputs.name }} -vv
-
-      - name: Finish Deployment
-        uses: bobheadxi/deployments@v0.4.0
-        if: always()
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env_url: "${{ steps.deploy.outputs.url }}/"
-          status: ${{ job.status }}
-          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
-
-      - name: Create Sentry release
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          environment: ${{ steps.deployment-data.outputs.name }}
+    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@develop
+    with:
+      environment: production
+    secrets:
+      deploy_port: ${{ secrets.DEPLOY_PORT }}
+      deploy_user: ${{ secrets.DEPLOY_USER }}
+      deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      sentry_auth_token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      sentry_org: ${{ secrets.SENTRY_ORG }}
+      sentry_project: ${{ secrets.SENTRY_PROJECT }}
