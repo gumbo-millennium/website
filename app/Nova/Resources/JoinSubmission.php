@@ -8,11 +8,7 @@ use App\Models\JoinSubmission as JoinSubmissionModel;
 use App\Nova\Actions\HandleJoinSubmission;
 use App\Nova\Metrics\NewJoinSubmissions;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
 
 /**
@@ -62,72 +58,72 @@ class JoinSubmission extends Resource
 
         return [
             new Panel('Basisinformatie', [
-                ID::make()->sortable(),
+                Fields\ID::make()->sortable(),
 
-                DateTime::make('Ontvangen op', 'created_at')
+                Fields\DateTime::make('Ontvangen op', 'created_at')
                     ->onlyOnDetail(),
 
                 // Heading in form
-                Heading::make('Persoonsgegevens')->onlyOnForms(),
+                Fields\Heading::make('Persoonsgegevens')->onlyOnForms(),
 
                 // Name
-                Text::make('Naam', 'name')
+                Fields\Text::make('Naam', 'name')
                     ->sortable()
                     ->onlyOnIndex(),
 
                 // Full name
-                Text::make('Voornaam', 'first_name')
+                Fields\Text::make('Voornaam', 'first_name')
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'min:2']),
-                Text::make('Tussenvoegsel', 'insert')
+                Fields\Text::make('Tussenvoegsel', 'insert')
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'min:2']),
-                Text::make('Achternaam', 'last_name')
+                Fields\Text::make('Achternaam', 'last_name')
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'min:2']),
 
                 // Date of Brith
-                Text::make('Geboortedatum', 'date_of_birth')
+                Fields\Text::make('Geboortedatum', 'date_of_birth')
                     ->hideFromIndex()
                     ->help('Geboortedatum, in ISO 8601 (yyyy-mm-dd)')
                     ->rules(['required', 'date_format:Y-m-d', "before:{$sixteenYears}"]),
-                Text::make('Geslacht', 'gender')
+                Fields\Text::make('Geslacht', 'gender')
                     ->hideFromIndex()
                     ->help('Geslacht, in vrije vorm')
                     ->rules(['required']),
             ]),
             new Panel('Adres informatie', [
-                Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),
+                Fields\Text::make('Adres', fn () => "{$this->street} {$this->number}")->onlyOnDetail(),
 
                 // Heading in form
-                Heading::make('Adres')->onlyOnForms(),
+                Fields\Heading::make('Adres')->onlyOnForms(),
 
-                Text::make('Straat', 'street')
+                Fields\Text::make('Straat', 'street')
                     ->onlyOnForms()
                     ->rules(['required', 'string', 'regex:/\w+/']),
 
-                Text::make('Huisnummer', 'number')
+                Fields\Text::make('Huisnummer', 'number')
                     ->onlyOnForms()
                     ->rules(['required', 'string', 'regex:/^\d+/']),
 
-                Text::make('Postcode', 'postal_code')
+                Fields\Text::make('Postcode', 'postal_code')
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'regex:/^[0-9A-Z \.]+$/i']),
 
-                Text::make('Plaats', 'city')
+                Fields\Text::make('Plaats', 'city')
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'min:2']),
             ]),
 
             new Panel('Contact informatie', [
                 // Heading in form
-                Heading::make('Communicatie')->onlyOnForms(),
+                Fields\Heading::make('Communicatie')->onlyOnForms(),
 
-                Text::make('E-mailadres', 'email')
+                Fields\Text::make('E-mailadres', 'email')
                     ->withMeta(['type' => 'email'])
                     ->rules(['required', 'email']),
 
-                Text::make('Telefoonnummer', 'phone')
+                Fields\Text::make('Telefoonnummer', 'phone')
                     ->withMeta(['type' => 'phone'])
                     ->hideFromIndex()
                     ->rules(['required', 'string', 'regex:/^\+?([\s-\.]?\d){8,}/']),
@@ -135,13 +131,13 @@ class JoinSubmission extends Resource
 
             new Panel('Voorkeuren en inschrijvingsinformatie', [
                 // Heading in form
-                Heading::make('Voorkeuren en inschrijvingsinformatie')->onlyOnForms(),
+                Fields\Heading::make('Voorkeuren en inschrijvingsinformatie')->onlyOnForms(),
 
-                Boolean::make('Windesheim Student', 'windesheim_student')
+                Fields\Boolean::make('Windesheim Student', 'windesheim_student')
                     ->hideFromIndex(),
-                Boolean::make('Aanmelding Gumbode', 'newsletter')
+                Fields\Boolean::make('Aanmelding Gumbode', 'newsletter')
                     ->hideFromIndex(),
-                Text::make('Referentie', 'referrer')
+                Fields\Text::make('Referentie', 'referrer')
                     ->hideFromIndex(),
             ]),
         ];

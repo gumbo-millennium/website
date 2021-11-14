@@ -11,11 +11,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 
 /**
  * News Items.
@@ -59,36 +55,36 @@ class NewsItem extends Resource
         $options = config('gumbo.news-categories', ['Nieuws']);
 
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             TextWithSlug::make('Titel', 'title')->slug('slug'),
             Slug::make('Pad', 'slug')->nullable(false),
 
             // Category
-            Select::make('Categorie', 'category')
+            Fields\Select::make('Categorie', 'category')
                 ->required()
                 ->options(\array_combine($options, $options)),
 
             // Add sponsor field
-            Text::make('Headline', 'headline')
+            Fields\Text::make('Headline', 'headline')
                 ->nullable()
                 ->help('De headline van dit artikel, net zoals in de krant.')
                 ->hideFromIndex(),
 
             // Add multi selects
-            BelongsTo::make('Laatst bewerkt door', 'author', User::class)
+            Fields\BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
 
             // Add sponsor field
-            Text::make('Sponsor', 'sponsor')
+            Fields\Text::make('Sponsor', 'sponsor')
                 ->nullable()
                 ->help('De sponsor die voor deze post heeft betaald. Zet dit artikel om in een advertorial.')
                 ->hideFromIndex(),
 
             // Show timestamps
-            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
-            DateTime::make('Gepubliceerd op', 'published_at')
+            Fields\DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Gepubliceerd op', 'published_at')
                 ->nullable()
                 ->help('Datum waarop dit artikel gepubliceerd is of wordt')
                 ->hideFromIndex(),

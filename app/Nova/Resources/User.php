@@ -9,11 +9,7 @@ use App\Nova\Filters\UserRoleFilter;
 use App\Nova\Metrics\NewUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 
 /**
  * Users of our system.
@@ -51,47 +47,47 @@ class User extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
-            Text::make('Naam', 'name')
+            Fields\Text::make('Naam', 'name')
                 ->sortable()
                 ->onlyOnIndex(),
 
-            Text::make('Voornaam', 'first_name')
+            Fields\Text::make('Voornaam', 'first_name')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('Tussenvoegsel', 'insert')
+            Fields\Text::make('Tussenvoegsel', 'insert')
                 ->hideFromIndex()
                 ->rules('nullable', 'max:255'),
 
-            Text::make('Achternaam', 'last_name')
+            Fields\Text::make('Achternaam', 'last_name')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
 
-            Text::make('E-mailadres', 'email')
+            Fields\Text::make('E-mailadres', 'email')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}')
                 ->hideFromIndex(fn (Request $request) => Gate::denies('view', $this->model)),
 
-            Text::make('Alias', 'alias')
+            Fields\Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
 
-            Boolean::make('E-mailadres bevestigd', fn () => $this->hasVerifiedEmail())
+            Fields\Boolean::make('E-mailadres bevestigd', fn () => $this->hasVerifiedEmail())
                 ->onlyOnDetail(),
 
-            Boolean::make('Lid', fn () => $this->is_member)
+            Fields\Boolean::make('Lid', fn () => $this->is_member)
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
             // Permissions
-            MorphToMany::make('Rollen', 'roles', Role::class),
-            MorphToMany::make('Permissies', 'permissions', Permission::class),
+            Fields\MorphToMany::make('Rollen', 'roles', Role::class),
+            Fields\MorphToMany::make('Permissies', 'permissions', Permission::class),
 
             // Enrollments
-            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
+            Fields\HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
         ];
     }
 

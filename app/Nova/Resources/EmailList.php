@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Markdown;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields;
 
 class EmailList extends Resource
 {
@@ -46,20 +43,20 @@ class EmailList extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
-            Text::make('Lijst naam', 'name')
+            Fields\Text::make('Lijst naam', 'name')
                 ->readonly()
                 ->exceptOnForms(),
 
-            Text::make('E-mailadres', 'email')
+            Fields\Text::make('E-mailadres', 'email')
                 ->readonly()
                 ->exceptOnForms(),
 
-            Text::make('Service ID', 'service_id')
+            Fields\Text::make('Service ID', 'service_id')
                 ->readonly(),
 
-            Markdown::make('Aliassen', 'aliasses')
+            Fields\Markdown::make('Aliassen', 'aliasses')
                 ->resolveUsing(static function ($values) {
                     if (empty($values)) {
                         return null;
@@ -70,7 +67,7 @@ class EmailList extends Resource
                 ->readonly()
                 ->onlyOnDetail(),
 
-            Textarea::make('Accounts', 'members')
+            Fields\Textarea::make('Accounts', 'members')
                 ->resolveUsing(static function ($values) {
                     if (empty($values)) {
                         return null;

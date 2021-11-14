@@ -9,10 +9,7 @@ use App\Nova\Metrics\DownloadsPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
 
 class FileCategory extends Resource
@@ -52,7 +49,7 @@ class FileCategory extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             // Title and slug
             TextWithSlug::make('Titel', 'title')
@@ -66,17 +63,17 @@ class FileCategory extends Resource
                 ->updateRules('unique:file_categories,slug,{{resourceId}}'),
 
             // Show timestamps
-            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
 
             // Paired files
-            HasMany::make('Bundels', 'bundles', FileBundle::class),
+            Fields\HasMany::make('Bundels', 'bundles', FileBundle::class),
 
             new Panel('Statistieken', [
                 // List downloads, in time frames
-                Number::make('Aantal downloads (48hrs)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count())->exceptOnForms(),
-                Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
-                Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
+                Fields\Number::make('Aantal downloads (48hrs)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subDays(2))->count())->exceptOnForms(),
+                Fields\Number::make('Aantal downloads (1 week)', fn () => $this->downloads()->where('file_downloads.created_at', '>', now()->subWeek())->count())->onlyOnDetail(),
+                Fields\Number::make('Aantal downloads (all time)', fn () => $this->downloads()->count())->onlyOnDetail(),
             ]),
         ];
     }

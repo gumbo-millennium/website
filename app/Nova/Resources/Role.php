@@ -8,13 +8,7 @@ use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Spatie\Permission\Models\Role as RoleModel;
@@ -100,33 +94,33 @@ class Role extends Resource
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
 
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
-            Text::make('Naam', 'name')
+            Fields\Text::make('Naam', 'name')
                 ->rules(['required', 'string', 'max:255'])
                 ->creationRules('unique:roles')
                 ->updateRules('unique:roles,name,{{resourceId}}'),
 
-            Text::make('Titel', 'title')
+            Fields\Text::make('Titel', 'title')
                 ->rules(['required', 'string', 'max:255']),
 
-            Select::make('Guard Name', 'guard_name')
+            Fields\Select::make('Guard Name', 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)])
                 ->hideFromIndex(),
 
-            DateTime::make('Aangemaakt op', 'created_at')
+            Fields\DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'updated_at')
+            Fields\DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
 
-            Number::make('Aantal permissies', fn () => $this->permissions()->count())->onlyOnIndex(),
-            Number::make('Aantal gebruikers', fn () => $this->users()->count())->onlyOnIndex(),
+            Fields\Number::make('Aantal permissies', fn () => $this->permissions()->count())->onlyOnIndex(),
+            Fields\Number::make('Aantal gebruikers', fn () => $this->users()->count())->onlyOnIndex(),
 
-            BelongsToMany::make('permissies', 'permissions', Permission::class)
+            Fields\BelongsToMany::make('permissies', 'permissions', Permission::class)
                 ->searchable(),
 
-            MorphToMany::make('gebruikers', 'users', $userResource)
+            Fields\MorphToMany::make('gebruikers', 'users', $userResource)
                 ->searchable(),
         ];
     }

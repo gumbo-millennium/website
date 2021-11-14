@@ -18,12 +18,7 @@ use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
@@ -120,42 +115,42 @@ class Enrollment extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->hideFromIndex(),
+            Fields\ID::make()->hideFromIndex(),
 
             // Add multi selects
-            BelongsTo::make('Activiteit', 'activity', Activity::class)
+            Fields\BelongsTo::make('Activiteit', 'activity', Activity::class)
                 ->rules('required', static function ($activity) use ($request): void {
                     $request->can('manage', $activity);
                 })
                 ->hideWhenUpdating(),
 
-            Text::make('Gebruiker', fn () => optional($this->user)->name)
+            Fields\Text::make('Gebruiker', fn () => optional($this->user)->name)
                 ->onlyOnIndex()
                 ->showOnDetail(),
 
             // Add user
-            BelongsTo::make('Gebruiker', 'user', User::class)
+            Fields\BelongsTo::make('Gebruiker', 'user', User::class)
                 ->onlyOnForms()
                 ->hideWhenUpdating()
                 ->rules('required')
                 ->searchable(),
 
             // Add data
-            KeyValue::make('Metadata inschrijving', 'form')
+            Fields\KeyValue::make('Metadata inschrijving', 'form')
                 ->keyLabel(__('Field'))
                 ->valueLabel(__('Value'))
                 ->onlyOnDetail(),
 
             // Dates
-            DateTime::make('Aangemaakt op', 'created_at')
+            Fields\DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'updated_at')
+            Fields\DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->onlyOnDetail(),
-            DateTime::make('Verwijderd op', 'deleted_at')
+            Fields\DateTime::make('Verwijderd op', 'deleted_at')
                 ->onlyOnDetail(),
-            Text::make('Reden verwijdering', 'deleted_reason')
+            Fields\Text::make('Reden verwijdering', 'deleted_reason')
                 ->onlyOnDetail(),
-            DateTime::make('Afloopdatum', 'expire')
+            Fields\DateTime::make('Afloopdatum', 'expire')
                 ->onlyOnDetail(),
 
             // Pricing
@@ -170,7 +165,7 @@ class Enrollment extends Resource
                 ->showOnDetail()
                 ->help('Prijs in euro, incl. transactiekosten'),
 
-            Text::make('Mollie link', function () {
+            Fields\Text::make('Mollie link', function () {
                 if (! $this->mollie_id) {
                     return null;
                 }
@@ -182,11 +177,11 @@ class Enrollment extends Resource
                 );
             })->onlyOnDetail()->asHtml(),
 
-            Text::make('Status', fn () => $this->state->title)
+            Fields\Text::make('Status', fn () => $this->state->title)
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
-            Boolean::make('Betaald', fn () => $this->state instanceof Paid)
+            Fields\Boolean::make('Betaald', fn () => $this->state instanceof Paid)
                 ->onlyOnIndex()
                 ->showOnDetail()
                 ->help('Geeft aan of de inschrijving is betaald.'),

@@ -8,10 +8,7 @@ use App\Models\Shop\Category as Model;
 use App\Nova\Resources\Resource;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 
 class Category extends Resource
 {
@@ -55,18 +52,18 @@ class Category extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(),
+            Fields\ID::make(),
 
-            Text::make(__('Name'), 'name'),
+            Fields\Text::make(__('Name'), 'name'),
             Slug::make(__('Slug'), 'slug')
                 ->disableAutoUpdateWhenUpdating()
                 ->showUrlPreview(url('/shop/'))
                 ->hideFromIndex()
                 ->nullable(),
 
-            Boolean::make(__('Visible'), 'visible'),
+            Fields\Boolean::make(__('Visible'), 'visible'),
 
-            HasMany::make(__('Products'), 'products', Product::class),
+            Fields\HasMany::make(__('Products'), 'products', Product::class),
         ];
     }
 }

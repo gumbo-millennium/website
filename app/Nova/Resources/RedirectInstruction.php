@@ -7,7 +7,6 @@ namespace App\Nova\Resources;
 use App\Models\RedirectInstruction as RedirectInstructionModel;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
-use Laravel\Nova\Fields\Text;
 
 /**
  * Roles, for the Permission Framework.
@@ -70,7 +69,7 @@ class RedirectInstruction extends Resource
                 ->creationRules('unique:redirect_instructions')
                 ->updateRules('unique:redirect_instructions,slug,{{resourceId}}'),
 
-            Text::make(__('Target path'), 'path')
+            Fields\Text::make(__('Target path'), 'path')
                 ->rules([
                     'required',
                     'max:255',

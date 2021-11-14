@@ -11,13 +11,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
 
 /**
@@ -66,7 +60,7 @@ class FileBundle extends Resource
         );
 
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             // Title and slug
             TextWithSlug::make('Titel', 'title')
@@ -80,15 +74,15 @@ class FileBundle extends Resource
                 ->updateRules('unique:file_bundles,slug,{{resourceId}}'),
 
             // Owning category
-            BelongsTo::make('Categorie', 'category', FileCategory::class)
+            Fields\BelongsTo::make('Categorie', 'category', FileCategory::class)
                 ->help('Categorie waarin deze bundel thuis hoort')
                 ->rules('required'),
 
             // Data
-            Textarea::make('Omschrijving', 'description')
+            Fields\Textarea::make('Omschrijving', 'description')
                 ->nullable(),
 
-            Select::make('Sorteren op', 'sort_order')
+            Fields\Select::make('Sorteren op', 'sort_order')
                 ->options([
                     'asc' => 'Oplopend alfabetisch',
                     'desc' => 'Aflopend alfabetisch',
@@ -98,9 +92,9 @@ class FileBundle extends Resource
                 ->hideFromIndex(),
 
             // Show timestamps
-            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'updated_at')->onlyOnDetail(),
-            DateTime::make('Publicatiedatum', 'published_at')
+            Fields\DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Laatst bewerkt op', 'updated_at')->onlyOnDetail(),
+            Fields\DateTime::make('Publicatiedatum', 'published_at')
                 ->help('Datum waarop deze bundel openbaar wordt of is geworden.')
                 ->hideFromIndex(),
 
@@ -111,9 +105,9 @@ class FileBundle extends Resource
 
             // Read-only metadata
             new Panel('Metadata', [
-                Text::make('Totale bestandsgrootte', fn () => Str::filesize($this->total_size))
+                Fields\Text::make('Totale bestandsgrootte', fn () => Str::filesize($this->total_size))
                     ->onlyOnDetail(),
-                Number::make('Aantal downloads', 'downloads_count')
+                Fields\Number::make('Aantal downloads', 'downloads_count')
                     ->onlyOnDetail(),
             ]),
         ];

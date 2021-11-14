@@ -6,12 +6,7 @@ namespace App\Nova\Resources;
 
 use App\Models\ActivityMessage as ActivityMessageModel;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Markdown;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 
 /**
  * Messages sent from activities to users.
@@ -54,32 +49,32 @@ class ActivityMessage extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(),
+            Fields\ID::make(),
 
             // Add activity
-            BelongsTo::make(__('Activity'), 'activity', Activity::class),
+            Fields\BelongsTo::make(__('Activity'), 'activity', Activity::class),
 
-            Text::make(__('Sender'), fn () => optional($this->sender)->name),
+            Fields\Text::make(__('Sender'), fn () => optional($this->sender)->name),
 
             // Add data
-            Text::make(__('Target audience'), 'target_audience')
+            Fields\Text::make(__('Target audience'), 'target_audience')
                 ->displayUsing(static fn ($value) => __("gumbo.target-audiences.{$value}")),
 
-            Text::make(__('Mail title'), 'subject'),
+            Fields\Text::make(__('Mail title'), 'subject'),
 
-            Markdown::make(__('Mail body'), 'body'),
+            Fields\Markdown::make(__('Mail body'), 'body'),
 
             // Dates
-            DateTime::make(__('Created at'), 'created_at')
+            Fields\DateTime::make(__('Created at'), 'created_at')
                 ->onlyOnDetail(),
 
-            DateTime::make(__('Sent at'), 'sent_at')
+            Fields\DateTime::make(__('Sent at'), 'sent_at')
                 ->onlyOnDetail(),
 
-            Number::make(__('Number of recipients'), 'receipients')
+            Fields\Number::make(__('Number of recipients'), 'receipients')
                 ->onlyOnDetail(),
 
-            Text::make(__('Status'), fn () => $this->sent_at
+            Fields\Text::make(__('Status'), fn () => $this->sent_at
                 ? __('Sent to :count recipient(s)', ['count' => $this->receipients])
                 : __('Not yet sent'), )
                 ->onlyOnIndex(),

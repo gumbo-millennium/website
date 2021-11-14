@@ -24,15 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BooleanGroup;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Whitecube\NovaFlexibleContent\Flexible;
@@ -171,12 +163,12 @@ class Activity extends Resource
             $this->mainFields($request),
 
             new Panel('Evenement-details', [
-                Text::make('Weergavenaam locatie', 'location')
+                Fields\Text::make('Weergavenaam locatie', 'location')
                     ->hideFromIndex()
                     ->rules('required', 'string', 'between:2,64')
                     ->help('Weergavenaam van de locatie.'),
 
-                Text::make('Adres locatie', 'location_address')
+                Fields\Text::make('Adres locatie', 'location_address')
                     ->hideFromIndex()
                     ->rules('required_unless:location_type,online', 'max:190')
                     ->help(<<<'LOCATION'
@@ -184,7 +176,7 @@ class Activity extends Resource
                         Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
                     LOCATION),
 
-                Select::make('Type locatie', 'location_type')
+                Fields\Select::make('Type locatie', 'location_type')
                     ->hideFromIndex()
                     ->options([
                         ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
@@ -194,7 +186,7 @@ class Activity extends Resource
                     ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
                     ->rules('required'),
 
-                BooleanGroup::make('Eigenschappen', 'features')
+                Fields\BooleanGroup::make('Eigenschappen', 'features')
                     ->options($featuresMap)
                     ->help('Extra eigenschappen om aan deze activiteit toe te voegen.'),
             ]),
@@ -203,8 +195,8 @@ class Activity extends Resource
 
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
-            HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
-            HasMany::make(__('Messages'), 'messages', ActivityMessage::class),
+            Fields\HasMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
+            Fields\HasMany::make(__('Messages'), 'messages', ActivityMessage::class),
         ];
     }
 
@@ -214,7 +206,7 @@ class Activity extends Resource
         $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
 
         return $this->merge([
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             TextWithSlug::make('Titel', 'name')
                 ->sortable()
@@ -227,18 +219,18 @@ class Activity extends Resource
                 ->readonly(fn () => $this->exists)
                 ->hideFromIndex(),
 
-            Text::make('Slagzin', 'tagline')
+            Fields\Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
                 ->help('Korte slagzin om de activiteit te omschrijven')
                 ->rules('nullable', 'string', 'between:4,255'),
 
-            BelongsTo::make('Groep', 'role', Role::class)
+            Fields\BelongsTo::make('Groep', 'role', Role::class)
                 ->help('Groep of commissie die deze activiteit beheert')
                 ->rules($groupRules)
                 ->hideFromIndex()
                 ->nullable(),
 
-            Text::make('Incasso-omschrijving', 'statement')
+            Fields\Text::make('Incasso-omschrijving', 'statement')
                 ->hideFromIndex()
                 ->rules('nullable', 'string', 'between:2,16')
                 ->help('2-16 tekens lange omschrijng, welke op het iDEAL afschrift getoond wordt.'),
@@ -267,19 +259,19 @@ class Activity extends Resource
                         ->minHeight(256),
                 ),
 
-            DateTime::make('Aangemaakt op', 'created_at')
+            Fields\DateTime::make('Aangemaakt op', 'created_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
-            DateTime::make('Laatst bewerkt op', 'updated_at')
+            Fields\DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
-            DateTime::make('Geannuleerd op', 'cancelled_at')
+            Fields\DateTime::make('Geannuleerd op', 'cancelled_at')
                 ->readonly()
                 ->onlyOnDetail(),
 
-            Text::make('Geannuleerd om', 'cancelled_reason')
+            Fields\Text::make('Geannuleerd om', 'cancelled_reason')
                 ->readonly()
                 ->onlyOnDetail(),
         ]);
@@ -291,14 +283,14 @@ class Activity extends Resource
     public function pricingFields(): array
     {
         return [
-            DateTime::make('Aanvang activiteit', 'start_date')
+            Fields\DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
                 ->firstDayOfWeek(1)
                 // phpcs:ignore Generic.Files.LineLength.TooLong
                 ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
-            DateTime::make('Einde activiteit', 'end_date')
+            Fields\DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
@@ -330,7 +322,7 @@ class Activity extends Resource
                 ->help('In euro, inclusief transactiekosten')
                 ->onlyOnDetail(),
 
-            Number::make('Aantal kortingen', 'discount_count')
+            Fields\Number::make('Aantal kortingen', 'discount_count')
                 ->step(1)
                 ->nullable()
                 ->rules('nullable', 'numeric', 'min:1')
@@ -345,26 +337,26 @@ class Activity extends Resource
     public function enrollmentFields(): array
     {
         return [
-            DateTime::make('Publiceren op', 'published_at')
+            Fields\DateTime::make('Publiceren op', 'published_at')
                 // phpcs:ignore Generic.Files.LineLength.TooLong
                 ->help('Indien je de activiteit nog even wilt verbergen. Dit werkt hetzelfde als een ‘unlisted’ video op YouTube')
                 ->rules('nullable', 'date', 'before:start_date')
                 ->nullable()
                 ->hideFromIndex(),
 
-            DateTime::make('Opening inschrijvingen', 'enrollment_start')
+            Fields\DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
+            Fields\DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->hideFromIndex()
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-            Text::make('Status inschrijvingen', function () {
+            Fields\Text::make('Status inschrijvingen', function () {
                 // Edge case for no-enrollment events
                 if ($this->enrollment_start === null && $this->enrollment_end === null) {
                     return 'n.v.t.';
@@ -382,10 +374,10 @@ class Activity extends Resource
                 ->rules('nullable', 'numeric', 'min:0'),
 
             // Public
-            Boolean::make('Openbare activiteit', 'is_public'),
+            Fields\Boolean::make('Openbare activiteit', 'is_public'),
 
             // Computed published flag
-            Boolean::make('Gepubliceerd', 'is_published')
+            Fields\Boolean::make('Gepubliceerd', 'is_published')
                 ->onlyOnIndex(),
         ];
     }

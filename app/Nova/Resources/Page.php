@@ -12,12 +12,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields;
 
 /**
  * Add page.
@@ -59,7 +54,7 @@ class Page extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             TextWithSlug::make('Titel', 'title')->slug('slug'),
             Slug::make('Deelpad', 'slug')
@@ -80,30 +75,30 @@ class Page extends Resource
                 ]),
 
             // Group
-            Select::make('Groep', 'group')
+            Fields\Select::make('Groep', 'group')
                 ->nullable()
                 ->hideFromIndex()
                 ->readonly(fn () => $this->exists)
                 ->options(config('gumbo.page-groups')),
 
             // Group / Slug, for index
-            Text::make('Pad', fn () => $this->group ? "{$this->group}/{$this->slug}" : $this->slug)
+            Fields\Text::make('Pad', fn () => $this->group ? "{$this->group}/{$this->slug}" : $this->slug)
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
             // Add multi selects
-            BelongsTo::make('Laatst bewerkt door', 'author', User::class)
+            Fields\BelongsTo::make('Laatst bewerkt door', 'author', User::class)
                 ->onlyOnDetail(),
 
             // Show timestamps
-            DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
-            DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Aangemaakt op', 'created_at')->onlyOnDetail(),
+            Fields\DateTime::make('Laatst bewerkt op', 'created_at')->onlyOnDetail(),
 
             // Hidden flag
-            Boolean::make('Verbergen', 'hidden'),
+            Fields\Boolean::make('Verbergen', 'hidden'),
 
             // Group / Slug, for index
-            Text::make('Samenvatting', 'summary')
+            Fields\Text::make('Samenvatting', 'summary')
                 ->nullable()
                 ->rules('nullable', 'string', 'min:5', 'max:90')
                 ->hideFromIndex()
@@ -125,7 +120,7 @@ class Page extends Resource
                 ),
 
             // Add type
-            Text::make('Type')->onlyOnDetail()->displayUsing(static fn ($value) => Str::title($value)),
+            Fields\Text::make('Type')->onlyOnDetail()->displayUsing(static fn ($value) => Str::title($value)),
 
             // Add data
             NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),

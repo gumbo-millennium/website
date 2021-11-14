@@ -13,13 +13,7 @@ use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Sparkline;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
 
 /**
@@ -62,7 +56,7 @@ class Sponsor extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            Fields\ID::make()->sortable(),
 
             // Name and slug
             TextWithSlug::make('Naam', 'name')->slug('slug'),
@@ -74,18 +68,18 @@ class Sponsor extends Resource
                 ->help('Kan niet worden aangepast na aanmaken'),
 
             // Counts
-            Number::make('Aantal weergaven', 'view_count')
+            Fields\Number::make('Aantal weergaven', 'view_count')
                 ->onlyOnDetail(),
-            Number::make('Totaal aantal kliks', 'click_count')
+            Fields\Number::make('Totaal aantal kliks', 'click_count')
                 ->onlyOnDetail(),
-            Sparkline::make('Aantal kliks')
+            Fields\Sparkline::make('Aantal kliks')
                 ->data(new SponsorClicksPerDay(null, $this->model())),
 
             // Advert info
             new Panel('Contract', [
-                DateTime::make('Weergeven vanaf', 'starts_at')
+                Fields\DateTime::make('Weergeven vanaf', 'starts_at')
                     ->required(),
-                DateTime::make('Weergeven tot', 'ends_at'),
+                Fields\DateTime::make('Weergeven tot', 'ends_at'),
             ]),
 
             new Panel('Advertentie', [
@@ -94,14 +88,14 @@ class Sponsor extends Resource
                     ->hideFromIndex(),
 
                 // URL
-                Text::make('URL', 'url')
+                Fields\Text::make('URL', 'url')
                     ->required()
                     ->rules('required', 'url')
                     ->hideFromIndex(),
 
                 // Text and backdrop
-                Heading::make('Site-brede advertentie'),
-                Textarea::make('Advertentietekst', 'caption')
+                Fields\Heading::make('Site-brede advertentie'),
+                Fields\Textarea::make('Advertentietekst', 'caption')
                     ->help('Tekst in de advertentie, maximaal 40 woorden.'),
                 PaperclipImage::make('Achtergrond', 'backdrop')
                     ->deletable()
@@ -118,9 +112,9 @@ class Sponsor extends Resource
                         Rule::dimensions()->ratio(2 / 1),
                     ),
 
-                Heading::make('Pagina-advertentie'),
+                Fields\Heading::make('Pagina-advertentie'),
                 // Add title
-                Text::make('Titel', 'contents_title')
+                Fields\Text::make('Titel', 'contents_title')
                     ->help('Titel van de detailpagina')
                     ->hideFromIndex(),
 
