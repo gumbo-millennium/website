@@ -379,6 +379,11 @@ class Activity extends Resource
             // Computed published flag
             Fields\Boolean::make('Gepubliceerd', 'is_published')
                 ->onlyOnIndex(),
+
+            // Ticket
+            Fields\HasMany::make(__('Tickets'), 'tickets', Ticket::class)
+                ->nullable()
+                ->hideFromIndex(),
         ];
     }
 

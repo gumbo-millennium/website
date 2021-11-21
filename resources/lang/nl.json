@@ -190,5 +190,15 @@
   "Image": "Afbeelding",
   "The bot command that will show the cam, must end with \"cam\".": "Het bot commando dat de camera zal tonen, moet eindigen met \"cam\".",
 
+  "Ticket": "Ticket",
+  "Tickets": "Tickets",
+  "Availability": "Beschikbaarheid",
+  "Pricing and quantity": "Prijs en aantal",
+  "Regular ticket": "Regulier ticket",
+  "Member ticket": "Ledenticket",
+  "Available From": "Beschikbaar vanaf",
+  "Available Until": "Beschikbaar tot",
+  "Max Quantity": "Maximaal aantal",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

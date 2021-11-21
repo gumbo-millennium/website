@@ -12,6 +12,7 @@ use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\States\Enrollment\Seeded as SeededState;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $id
  * @property int $user_id
  * @property int $activity_id
+ * @property null|int $ticket_id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
@@ -47,6 +49,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read bool $requires_payment
  * @property-read null|\App\Models\States\Enrollment\State $wanted_state
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
+ * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
@@ -150,6 +153,14 @@ class Enrollment extends UuidModel
     public function activity(): Relation
     {
         return $this->belongsTo(Activity::class);
+    }
+
+    /**
+     * The ticket associated with this enrollment.
+     */
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo(Ticket::class);
     }
 
     /**

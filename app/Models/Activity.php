@@ -91,6 +91,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|Role $role
+ * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Activity newModelQuery()
  * @method static Builder|Activity newQuery()
@@ -228,6 +229,11 @@ class Activity extends SluggableModel implements AttachableInterface
     public function enrollments(): Relation
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
     }
 
     /**
