@@ -49,16 +49,19 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
+
+        // Add web routes
+        if (App::runningUnitTests()) {
+            $this->mapTestRoutes();
+        }
     }
 
     /**
      * Define the "web" routes for the application.
      *
      * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
      */
-    protected function mapWebRoutes()
+    protected function mapWebRoutes(): void
     {
         // Web routes
         Route::middleware('web')
@@ -70,16 +73,26 @@ class RouteServiceProvider extends ServiceProvider
      * Define the "api" routes for the application.
      *
      * These routes are typically stateless.
-     *
-     * @return void
      */
-    protected function mapApiRoutes()
+    protected function mapApiRoutes(): void
     {
         Route::prefix('api')
             ->middleware('api')
             ->name('api.')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the testing routes for the application.
+     *
+     * Only mounted when the app is running tests.
+     */
+    protected function mapTestRoutes(): void
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/test.php'));
     }
 
     /**
