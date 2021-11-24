@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\EnrollmentServiceContract;
+use App\Exceptions\EnrollmentFailedException;
 use App\Jobs\Stripe\CreateInvoiceJob;
 use App\Jobs\Stripe\VoidInvoice;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Paid;
+use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
@@ -27,7 +28,9 @@ class EnrollmentService implements EnrollmentServiceContract
 
         return $user
             ->enrollments()
-            ->whereNull('cancelled_at')
+            ->whereNotState('state', [
+                States\Cancelled::class,
+            ])
             ->whereHas('activity', fn ($query) => $query->where('id', $activity->id))
             ->first();
     }
@@ -76,6 +79,28 @@ class EnrollmentService implements EnrollmentServiceContract
             ->all();
     }
 
+    public function createEnrollment(Activity $activity, Ticket $ticket): Enrollment
+    {
+        throw_unless($user = Auth::user(), new LogicException('There is no user logged in'));
+
+        abort_if($this->getEnrollment($activity), new EnrollmentFailedException("You're already enrolled for this activity"));
+
+        abort_unless($ticket->is_being_sold, new EnrollmentFailedException('This ticket is no longer being sold'));
+
+        $ticket->refresh();
+
+        abort_if($ticket->quantity_available === 0, new EnrollmentFailedException('This ticket is sold out'));
+
+        $enrollment = $activity->enrollments()->make();
+        $enrollment->ticket()->associate($ticket);
+        $enrollment->user()->associate($user);
+
+        $enrollment->price = $ticket->total_price;
+        $enrollment->save();
+
+        return $enrollment;
+    }
+
     /**
      * Transfers an enrollment to the new user, sending proper mails and
      * invoicing jobs.
@@ -110,7 +135,7 @@ class EnrollmentService implements EnrollmentServiceContract
         $reciever->notify(new EnrollmentTransferred($enrollment, $giver));
 
         // If not yet paid, make a new invoice
-        if (! $enrollment->state instanceof Paid && $enrollment->price > 0) {
+        if (! $enrollment->state instanceof States\Paid && $enrollment->price > 0) {
             VoidInvoice::withChain([
                 new CreateInvoiceJob($enrollment),
             ])->dispatch($enrollment);

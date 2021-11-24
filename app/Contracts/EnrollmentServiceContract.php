@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
+use App\Exceptions\EnrollmentFailedException;
+use App\Facades\Enroll;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Ticket;
@@ -30,6 +32,12 @@ interface EnrollmentServiceContract
      * in, a non-member user will be assumed.
      */
     public function canEnroll(Activity $activity): bool;
+
+    /**
+     * Enroll the user into the activity. Throw an error if it fails.
+     * @throws EnrollmentFailedException
+     */
+    public function createEnrollment(Activity $activity, Ticket $ticket): Enrollment;
 
     /**
      * Transfers an enrollment to the new user, sending proper mails and

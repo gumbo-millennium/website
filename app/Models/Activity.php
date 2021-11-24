@@ -77,6 +77,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read null|\App\Models\array<FormLayout> $form
  * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
+ * @property-read string $human_readable_dates
  * @property-read bool $is_cancelled
  * @property-read bool $is_free
  * @property-read bool $is_free_for_member
@@ -419,25 +420,24 @@ class Activity extends SluggableModel implements AttachableInterface
      */
     public function getPriceLabelAttribute(): string
     {
-        if ($this->is_free || $this->total_price <= 0) {
-            // If it's free, mention it
+        $ticketOptions = $this->tickets()->get(['price']);
+
+        if (count($ticketOptions) == 0) {
+            return 'n/a';
+        }
+
+        $minPrice = $ticketOptions->min('total_price');
+        $maxPrice = $ticketOptions->max('total_price');
+
+        if ($maxPrice === null) {
             return 'gratis';
         }
 
-        // No discount
-        if ($this->total_discount_price === null) {
-            // Return total price as single price point
-            return Str::price($this->total_price);
+        if ($minPrice === $maxPrice) {
+            return Str::price($minPrice);
         }
 
-        // Members might have free entry
-        if ($this->total_discount_price === 0) {
-            // Free for all members
-            return 'gratis voor leden';
-        }
-
-        // Discounted for all members
-        return sprintf('Vanaf %s', Str::price($this->total_discount_price ?? $this->total_price));
+        return sprintf('vanaf %s', Str::price($minPrice));
     }
 
     /**
@@ -509,6 +509,36 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         return $featureIcons;
+    }
+
+    /**
+     * Return a nice-to-display date indication of the activity.
+     */
+    public function getHumanReadableDatesAttribute(): string
+    {
+        $activityDistance = $this->start_date->diffInHours($this->end_date);
+        if ($activityDistance <= 8) {
+            return sprintf(
+                '%s - %s',
+                $this->start_date->isoFormat('D MMMM, HH:mm'),
+                $this->end_date->isoFormat('HH:mm'),
+            );
+        }
+
+        if ($activityDistance > 48) {
+            return sprintf(
+                '%s - %s, vanaf %s',
+                $this->start_date->isoFormat('D MMMM'),
+                $this->end_date->isoFormat('D MMMM'),
+                $this->start_date->isoFormat('HH:mm'),
+            );
+        }
+
+        return sprintf(
+            '%s - %s',
+            $this->start_date->isoFormat('D MMMM, HH:mm'),
+            $this->end_date->isoFormat('D MMMM, HH:mm'),
+        );
     }
 
     /**

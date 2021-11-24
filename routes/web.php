@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 use App\Http\Controllers;
 use App\Http\Controllers\Admin as AdminControllers;
+use App\Http\Controllers\EnrollNew\EnrollmentController;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
-use App\Http\Middleware\VerifiedIfFree;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -117,33 +117,23 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments.
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
-    // Actioon view
-    Route::get('/', 'Activities\\TunnelController@get')->name('show');
+Route::prefix('/activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth'])->group(function () {
+    Route::get('/', [EnrollmentController::class, 'show'])->name('show');
 
-    // Enroll start
-    Route::post('/', 'Activities\\EnrollmentController@create')->name('create');
+    // Create basic enrollment
+    Route::get('/ticket', 'EnrollNew\\EnrollmentController@create')->name('create');
+    Route::post('/ticket', 'EnrollNew\\EnrollmentController@store')->name('store');
 
-    // Enroll form
-    Route::patch('/', 'Activities\\FormController@save')->name('edit');
+    // Answer form questions
+    Route::get('/form', 'EnrollNew\\EnrollmentController@form')->name('form');
+    Route::post('/form', 'EnrollNew\\EnrollmentController@formStore')->name('formStore');
 
-    // Enroll payment start
-    Route::post('/betaling', 'Activities\\PaymentController@store')->name('pay');
-
-    // Enroll payment start
-    Route::get('/betaling', 'Activities\\PaymentController@start')->name('pay-wait');
-
-    // Enroll payment return
-    Route::get('/betaling/afronden', 'Activities\\PaymentController@complete')->name('pay-return');
-
-    // Enroll payment validation
-    Route::get('/betaling/validatie', 'Activities\\PaymentController@completeVerify')->name('pay-validate');
-
-    // Enroll form
-    Route::get('/uitschrijven', 'Activities\\EnrollmentController@delete')->name('remove');
-
-    // Enroll form (do)
-    Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
+    // Enter payment info
+    Route::get('/pay', 'EnrollNew\\EnrollmentController@pay')->name('pay');
+    Route::post('/pay', 'EnrollNew\\EnrollmentController@payStore')->name('payStore');
+    // Enter payment info
+    Route::get('/pay/return', 'EnrollNew\\EnrollmentController@payReturn')->name('payReturn');
+    Route::get('/pay/verify', 'EnrollNew\\EnrollmentController@payVerify')->name('payVerify');
 
     // Transfer form
     Route::get('/overdragen', 'Activities\\TransferController@sender')->name('transfer');

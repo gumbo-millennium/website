@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Services;
 
 use App\Facades\Enroll;
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
@@ -58,7 +59,8 @@ class EnrollmentServiceTest extends TestCase
     {
         $activity = factory(Activity::class)->create();
 
-        [$beforePublicTicket, $beforeMemberTicket] = $activity->tickets()->createMany([
+        $seededTickets = $activity->tickets()->createMany([
+            // Before tickets
             [
                 'title' => 'Before for everyone',
                 'available_until' => Date::now()->subHour(),
@@ -69,9 +71,8 @@ class EnrollmentServiceTest extends TestCase
                 'available_until' => Date::now()->subHour(),
                 'members_only' => true,
             ],
-        ]);
 
-        [$currentPublicTicket, $currentMemberTicket] = $activity->tickets()->createMany([
+            // Current tickets
             [
                 'title' => 'Current for everyone',
                 'available_from' => Date::now()->subHour(),
@@ -84,9 +85,8 @@ class EnrollmentServiceTest extends TestCase
                 'available_until' => Date::now()->addHour(),
                 'members_only' => true,
             ],
-        ]);
 
-        [$afterPublicTicket, $afterMemberTicket] = $activity->tickets()->createMany([
+            // After tickets
             [
                 'title' => 'After for everyone',
                 'available_from' => Date::now()->addHour(),
@@ -98,6 +98,10 @@ class EnrollmentServiceTest extends TestCase
                 'members_only' => true,
             ],
         ]);
+
+        // Get the middle tickets
+        $currentPublicTicket = $seededTickets->firstWhere('title', 'Current for everyone');
+        $currentMemberTicket = $seededTickets->firstWhere('title', 'Current for members');
 
         // Try with guest
         $tickets = Enroll::findTicketsForActivity($activity);
@@ -132,7 +136,35 @@ class EnrollmentServiceTest extends TestCase
             'quantity' => 2,
         ]);
 
-        $user = factory(User::class)->create()->enrollments();
+        [$user1, $user2, $user3] = factory(User::class, 3)->create();
+
+        $this->actingAs($user1);
+        $this->assertTrue(Enroll::canEnroll($activity));
+
+        $enrollment1 = Enroll::createEnrollment($activity, $ticket);
+        $this->assertInstanceOf(Enrollment::class, $enrollment1);
+
+        $this->actingAs($user2);
+        $this->assertTrue(Enroll::canEnroll($activity));
+
+        $enrollment2 = Enroll::createEnrollment($activity, $ticket);
+        $this->assertInstanceOf(Enrollment::class, $enrollment2);
+
+        $this->actingAs($user3);
+        $this->assertFalse(Enroll::canEnroll($activity));
+
+        // Check count
+        $ticket->refresh();
+        $this->assertSame(0, $ticket->quantity_available);
+
+        // Transition enrollment
+        $enrollment1->transitionTo(States\Cancelled::class);
+        $enrollment1->save();
+
+        // Re-check count
+        $ticket->refresh();
+        $this->assertSame(1, $ticket->quantity_available);
+        $this->assertTrue(Enroll::canEnroll($activity));
     }
 
     public function test_public_with_infinite_seats(): void
@@ -216,13 +248,90 @@ class EnrollmentServiceTest extends TestCase
         $this->assertTrue(Enroll::canEnroll($activity));
     }
 
+    public function test_transfer_to_self(): void
+    {
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+
+        $activity = factory(Activity::class)->create();
+
+        $enrollment = $user1->enrollments()->make([
+            'state' => States\Confirmed::class,
+        ]);
+        $enrollment->activity()->associate($activity);
+        $enrollment->transfer_secret = Str::random(32);
+        $enrollment->save();
+
+        $this->assertTrue($user1->is($enrollment->user), 'Failed assserting user1 is the owner');
+
+        $this->expectException(LogicException::class);
+        Enroll::transferEnrollment($enrollment, $user1);
+    }
+
+    public function test_transfer_unstable_enrollment(): void
+    {
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+
+        $activity = factory(Activity::class)->create();
+
+        $enrollment = $user1->enrollments()->make([
+            'state' => States\Seeded::class,
+        ]);
+        $enrollment->activity()->associate($activity);
+        $enrollment->transfer_secret = Str::random(32);
+        $enrollment->save();
+
+        $this->assertNotNull($enrollment->expire, 'Failed asserting that the enrollment was assigned expiry');
+
+        $beforeExpiration = $enrollment->expire;
+
+        Date::setTestNow(Date::now()->addMinutes(35));
+
+        Enroll::transferEnrollment($enrollment, $user2);
+
+        $enrollment->refresh();
+
+        $this->assertGreaterThanOrEqual(
+            $beforeExpiration,
+            $enrollment->expire,
+            'Failed asserting that the enrollment expiration was updated',
+        );
+    }
+
+    public function test_transfer_stable_enrollment(): void
+    {
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+
+        $activity = factory(Activity::class)->create();
+
+        $enrollment = $user1->enrollments()->make([
+            'state' => States\Confirmed::class,
+        ]);
+        $enrollment->activity()->associate($activity);
+        $enrollment->transfer_secret = Str::random(32);
+        $enrollment->save();
+
+        $this->assertTrue($user1->is($enrollment->user), 'Failed assserting user1 is the owner');
+
+        Enroll::transferEnrollment($enrollment, $user2);
+
+        $enrollment->refresh();
+
+        $this->assertFalse($user1->is($enrollment->user), 'Failed assserting user1 is no longer the owner');
+        $this->assertTrue($user2->is($enrollment->user), 'Failed asserting user2 is the owner');
+
+        $this->assertNull($enrollment->transfer_secret, 'Failed asserting transfer secret is cleared');
+    }
+
     public function enrollmentOptions(): array
     {
         return [
             'no user' => [false, false],
             'not enrolled' => [false, true, null],
             'enrolled' => [false, true, [
-                'state' => States\Confirmed::class,
+                'state' => States\Seeded::class,
             ]],
             'confirmed' => [false, true, [
                 'state' => States\Confirmed::class,

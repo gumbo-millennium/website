@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\States\Enrollment as States;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 
 /**
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read bool $is_being_sold
  * @property-read null|int $quantity_available
  * @property-read int $quantity_sold
+ * @property-read null|int $total_price
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()
@@ -97,7 +100,9 @@ class Ticket extends Model
 
     public function getQuantitySoldAttribute(): int
     {
-        return $this->enrollments()->count();
+        return $this->enrollments()->whereNotState('state', [
+            States\Cancelled::class,
+        ])->count();
     }
 
     public function getQuantityAvailableAttribute(): ?int
@@ -107,5 +112,14 @@ class Ticket extends Model
         }
 
         return $this->quantity - $this->quantity_sold;
+    }
+
+    public function getTotalPriceAttribute(): ?int
+    {
+        if (($price = $this->price) === null) {
+            return null;
+        }
+
+        return $price + Config::get('gumbo.transfer-fee');
     }
 }

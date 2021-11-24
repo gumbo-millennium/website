@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\States\Enrollment\Cancelled as CancelledState;
-use App\Models\States\Enrollment\Confirmed as ConfirmedState;
-use App\Models\States\Enrollment\Created as CreatedState;
-use App\Models\States\Enrollment\Paid as PaidState;
-use App\Models\States\Enrollment\Refunded as RefundedState;
-use App\Models\States\Enrollment\Seeded as SeededState;
+use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
- * @property string $state
+ * @property \App\Models\States\Enrollment\State $state
  * @property null|string $deleted_reason
  * @property null|int $price
  * @property null|int $total_price
@@ -82,18 +77,27 @@ class Enrollment extends UuidModel
      * @inheritDoc
      */
     protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'expire' => 'datetime',
         'data' => 'json',
         'paid' => 'bool',
     ];
 
     /**
-     * @inheritDoc
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'expire',
+    protected $fillable = [
+        'user_id',
+        'activity_id',
+        'ticket_id',
+        'state',
+        'deleted_reason',
+        'price',
+        'total_price',
     ];
 
     /**
@@ -105,7 +109,7 @@ class Enrollment extends UuidModel
             ->withoutTrashed()
             ->whereUserId($user->id)
             ->whereActivityId($activity->id)
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
+            ->whereNotState('state', [States\Cancelled::class, States\Refunded::class])
             ->with(['activity'])
             ->first();
     }
@@ -168,7 +172,7 @@ class Enrollment extends UuidModel
      */
     public function getIsStableAttribute(): bool
     {
-        return $this->state instanceof ConfirmedState;
+        return $this->state instanceof States\Confirmed;
     }
 
     /**
@@ -189,16 +193,16 @@ class Enrollment extends UuidModel
     {
         // First check for any transition
         $options = $this->state->transitionableStates();
-        if (in_array(SeededState::$name, $options, true) && $this->activity->form) {
-            return new SeededState($this);
+        if (in_array(States\Seeded::$name, $options, true) && $this->activity->form) {
+            return new States\Seeded($this);
         }
 
-        if (in_array(PaidState::$name, $options, true) && $this->price) {
-            return new PaidState($this);
+        if (in_array(States\Paid::$name, $options, true) && $this->price) {
+            return new States\Paid($this);
         }
 
-        if (in_array(ConfirmedState::$name, $options, true)) {
-            return new ConfirmedState($this);
+        if (in_array(States\Confirmed::$name, $options, true)) {
+            return new States\Confirmed($this);
         }
 
         return null;
@@ -208,7 +212,7 @@ class Enrollment extends UuidModel
     {
         return $this->exists
             && $this->total_price
-            && ! ($this->state instanceof CancelledState);
+            && ! ($this->state instanceof States\Cancelled);
     }
 
     /**
@@ -287,27 +291,27 @@ class Enrollment extends UuidModel
             ->addState('state', EnrollmentState::class)
 
             // Default to Created
-            ->default(CreatedState::class)
+            ->default(States\Created::class)
 
             // Create → Seeded
-            ->allowTransition(CreatedState::class, SeededState::class)
+            ->allowTransition(States\Created::class, States\Seeded::class)
 
             // Created, Seeded → Confirmed
-            ->allowTransition([CreatedState::class, SeededState::class], ConfirmedState::class)
+            ->allowTransition([States\Created::class, States\Seeded::class], States\Confirmed::class)
 
             // Created, Seeded, Confirmed → Paid
-            ->allowTransition([CreatedState::class, SeededState::class, ConfirmedState::class], PaidState::class)
+            ->allowTransition([States\Created::class, States\Seeded::class, States\Confirmed::class], States\Paid::class)
 
             // Created, Seeded, Confirmed, Paid → Cancelled
             ->allowTransition(
-                [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
-                CancelledState::class,
+                [States\Created::class, States\Seeded::class, States\Confirmed::class, States\Paid::class],
+                States\Cancelled::class,
             )
 
             // Paid, Cancelled → Refunded
             ->allowTransition(
-                [PaidState::class, CancelledState::class],
-                RefundedState::class,
+                [States\Paid::class, States\Cancelled::class],
+                States\Refunded::class,
             );
     }
 }
