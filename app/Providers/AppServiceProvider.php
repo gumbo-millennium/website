@@ -44,10 +44,18 @@ class AppServiceProvider extends ServiceProvider
         SponsorServiceContract::class => SponsorService::class,
         // Stripe service
         StripeServiceContract::class => StripeService::class,
-        // Enrollment service
-        EnrollmentServiceContract::class => EnrollmentService::class,
         // Mollie Payment service
         PaymentServiceContract::class => PaymentService::class,
+    ];
+
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array<string>
+     */
+    public $bindings = [
+        // Enrollment service
+        EnrollmentServiceContract::class => EnrollmentService::class,
     ];
 
     /**

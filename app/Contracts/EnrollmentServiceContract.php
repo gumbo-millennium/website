@@ -6,47 +6,34 @@ namespace App\Contracts;
 
 use App\Models\Activity;
 use App\Models\Enrollment;
+use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Contracts\Cache\Lock;
-use LogicException;
 
 interface EnrollmentServiceContract
 {
     /**
-     * Returns true if the service uses locks and apps should support it.
+     * Returns the current active enrollment for this activity for the current
+     * user. If no user is logged in, returns null.
      */
-    public function useLocks(): bool;
+    public function getEnrollment(Activity $activity): ?Enrollment;
 
     /**
-     * Returns a lock to enroll the given user.
+     * Returns a list of tickets available for the current user for the given
+     * activity.  If no user is logged in, a non-member user will be assumed.
      *
-     * @throws LogicException if locsk are not supported
+     * @return array<Ticket>
      */
-    public function getLock(Activity $activity): Lock;
+    public function findTicketsForActivity(Activity $activity): array;
 
     /**
-     * Returns true if the activity allows new enrollments and the user is allowed to enroll (if given).
+     * Checks if the user can enroll in this activity.  If no user is logged
+     * in, a non-member user will be assumed.
      */
-    public function canEnroll(Activity $activity, ?User $user): bool;
+    public function canEnroll(Activity $activity): bool;
 
     /**
-     * Creates a new enrollment on the activity for the given user.
-     */
-    public function createEnrollment(Activity $activity, User $user): Enrollment;
-
-    /**
-     * Returns if the given enrollment can advance to the given state. If it's already on
-     * or past said state, it should always return false.
-     */
-    public function canAdvanceTo(Enrollment $enrollment, string $target): bool;
-
-    /**
-     * Transitions states where possible.
-     */
-    public function advanceEnrollment(Activity $activity, Enrollment &$enrollment): void;
-
-    /**
-     * Transfers an enrollment to the new user, sending proper mails and invoicing jobs.
+     * Transfers an enrollment to the new user, sending proper mails and
+     * invoicing jobs.
      */
     public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment;
 }
