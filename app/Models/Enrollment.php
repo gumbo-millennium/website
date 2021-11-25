@@ -81,8 +81,10 @@ class Enrollment extends UuidModel
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'expire' => 'datetime',
+
         'data' => 'json',
         'paid' => 'bool',
+        'price' => 'int',
     ];
 
     /**

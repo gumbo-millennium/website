@@ -122,7 +122,7 @@ class EnrollmentController extends Controller
 
         // Check if a form is required
         if ($activity->form !== null) {
-            return Response::redirectTo('enroll.form', [$activity]);
+            return Response::redirectToRoute('enroll.form', [$activity]);
         }
 
         // Transition across the seeded state
@@ -131,7 +131,7 @@ class EnrollmentController extends Controller
 
         // Check if we need payment
         if ($enrollment->price > 0) {
-            return Response::redirectTo('enroll.pay', [$activity]);
+            return Response::redirectToRoute('enroll.pay', [$activity]);
         }
 
         // No payment required, enrollment is done
