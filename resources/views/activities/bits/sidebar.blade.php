@@ -52,45 +52,6 @@ if ($durationIsLong && $durationIsMultiDay) {
     $dateData['Einde'] = [$endTimestamp->isoFormat('HH:mm (z)'), null];
 }
 
-$hasAnyDiscount = $activity->discount_price !== null;
-$hasDiscount = $activity->discount_price > 0;
-$hasRestrictedDiscount = $activity->discounts_available !== null;
-$hasSoldOutDiscount = $activity->discounts_available === 0;
-
-// Prep pricing info
-$priceData = [
-    'Prijs' => [Str::price($activity->total_price) ?? 'Gratis', null]
-];
-
-if ($hasAnyDiscount) {
-    $guestPrice = $priceData['Prijs'][0];
-    $memberPrice = Str::price($activity->total_discount_price) ?? 'Gratis';
-
-    $guestLabel = 'Prijs gasten';
-    $memberLabel = 'Prijs leden';
-
-    if ($hasRestrictedDiscount && $isMember) {
-        // Alter labels
-        $memberLabel = "Prijs korting (×{$activity->discount_count})";
-        $guestLabel = 'Prijs regulier';
-
-        // Alter values
-        if ($hasSoldOutDiscount) {
-            $memberPrice .= ' (uitverkocht)';
-        }
-    } elseif ($hasRestrictedDiscount && $hasDiscount) {
-        $memberPrice = sprintf("Vanaf %s", Str::lower($memberPrice));
-    } elseif ($hasRestrictedDiscount) {
-        $memberPrice = sprintf("Vanaf %s", Str::price(0));
-    }
-
-    // Add values
-    $priceData = [
-        $memberLabel => [$memberPrice, null],
-        $guestLabel => [$guestPrice, null]
-    ];
-}
-
 // Prep location
 $location = new HtmlString('<span class="text-gray-primary-1">Onbekend</span>');
 $locationIcon = null;
@@ -112,7 +73,9 @@ $locationData = [
 ];
 
 // Bundle properties
-$properties = array_merge($baseProperties, $dateData, $priceData, $locationData);
+$properties = array_merge($baseProperties, $dateData, [
+    __('Price') => [$activity->price_range, null],
+], $locationData);
 
 // Tagline
 $tagline = $activity->tagline ?? vsprintf('Op %s, van %s tot %s.', [

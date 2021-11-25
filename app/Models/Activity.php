@@ -87,6 +87,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read null|string $location_url
  * @property-read null|string $organiser
  * @property-read string $price_label
+ * @property-read string $price_range
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
@@ -539,6 +540,32 @@ class Activity extends SluggableModel implements AttachableInterface
             $this->start_date->isoFormat('D MMMM, HH:mm'),
             $this->end_date->isoFormat('D MMMM, HH:mm'),
         );
+    }
+
+    public function getPriceRangeAttribute(): string
+    {
+        $ticketCount = $this->tickets->count();
+        $minTicketPrice = $this->tickets->min('total_price');
+        $minNonZeroTicketPrice = $this->tickets->where('total_price', '>', 0)->min('total_price');
+        $maxTicketPrice = $this->tickets->max('total_price');
+
+        if ($ticketCount === 0) {
+            return __('Price unknown');
+        }
+
+        if ($ticketCount === 1 || $minTicketPrice === $maxTicketPrice) {
+            if ($minTicketPrice === null) {
+                return __('Free');
+            }
+
+            return Str::price($minTicketPrice);
+        }
+
+        if ($minTicketPrice === null) {
+            return __('Free, paid from :price', ['price' => Str::price($minNonZeroTicketPrice)]);
+        }
+
+        return __('From :price', ['price' => Str::price($minTicketPrice)]);
     }
 
     /**

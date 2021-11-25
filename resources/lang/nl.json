@@ -56,6 +56,10 @@
     "Prijsveranderingen moet je invoeren in Zettle. Je kunt de prijs hier niet aanpassen.",
   "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
 
+  "Price unknown": "Prijs onbekend",
+  "Free, paid from :price": "Gratis, betaald vanaf :price",
+  "From :price": "Vanaf :price",
+
   "Order limit": "Bestellinglimiet",
   "The max count of this variant that can be added to a single order.": "Het maximaal aantal van deze variant dat aan een enkele bestelling kan worden toegevoegd.",
   "Can be overruled on the variant level.": "Kan worden overschreven op het variant-niveau",
