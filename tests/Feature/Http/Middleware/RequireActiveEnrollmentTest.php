@@ -23,7 +23,6 @@ class RequireActiveEnrollmentTest extends TestCase
         ]);
 
         $this->get(route('test.active-enrollment-middleware', [$activity]))
-            ->dump()
             ->assertRedirect();
 
         $user = factory(User::class)->create();

@@ -37,8 +37,6 @@ abstract class Command extends TelegramCommand
     public function getReplyGifUrl(string $search): ?InputFile
     {
         if (! $apiKey = Config::get('services.tenor.api-key')) {
-            dump('no key');
-
             return null;
         }
 
