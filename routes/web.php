@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers;
+use App\Http\Controllers\Activities;
 use App\Http\Controllers\Admin as AdminControllers;
-use App\Http\Controllers\EnrollNew\EnrollmentController;
+use App\Http\Controllers\EnrollNew;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
@@ -118,33 +119,37 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
  * Enrollments.
  */
 Route::prefix('/activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth'])->group(function () {
-    Route::get('/', [EnrollmentController::class, 'show'])->name('show');
+    Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
 
     // Create basic enrollment
-    Route::get('/ticket', 'EnrollNew\\EnrollmentController@create')->name('create');
-    Route::post('/ticket', 'EnrollNew\\EnrollmentController@store')->name('store');
+    Route::get('/ticket', [EnrollNew\TicketController::class, 'create'])->name('create');
+    Route::post('/ticket', [EnrollNew\TicketController::class, 'store'])->name('store');
 
     // Answer form questions
-    Route::get('/form', 'EnrollNew\\EnrollmentController@form')->name('form');
-    Route::post('/form', 'EnrollNew\\EnrollmentController@formStore')->name('formStore');
+    Route::get('/form', [EnrollNew\FormController::class, 'edit'])->name('form');
+    Route::post('/form', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
-    // Enter payment info
-    Route::get('/pay', 'EnrollNew\\EnrollmentController@pay')->name('pay');
-    Route::post('/pay', 'EnrollNew\\EnrollmentController@payStore')->name('payStore');
-    // Enter payment info
-    Route::get('/pay/return', 'EnrollNew\\EnrollmentController@payReturn')->name('payReturn');
-    Route::get('/pay/verify', 'EnrollNew\\EnrollmentController@payVerify')->name('payVerify');
+    // Start payment
+    Route::get('/pay', [EnrollNew\PaymentController::class, 'edit'])->name('pay');
+    Route::post('/pay', [EnrollNew\PaymentController::class, 'update'])->name('payStore');
+
+    // Show payment loading
+    Route::get('/pay/show', [EnrollNew\PaymentController::class, 'show'])->name('payShow');
+
+    // Redirect to Mollie or verify payment
+    Route::get('/pay/redirect', [EnrollNew\PaymentController::class, 'redirect'])->name('payRedirect');
+    Route::get('/pay/verify', [EnrollNew\PaymentController::class, 'verify'])->name('payVerify');
 
     // Transfer form
-    Route::get('/overdragen', 'Activities\\TransferController@sender')->name('transfer');
+    Route::get('/overdragen', [Activities\TransferController::class, 'sender'])->name('transfer');
 
     // Transfer actions
-    Route::post('/overdragen', 'Activities\\TransferController@senderUpdate');
-    Route::delete('/overdragen', 'Activities\\TransferController@senderRemove');
+    Route::post('/overdragen', [Activities\TransferController::class, 'senderUpdate']);
+    Route::delete('/overdragen', [Activities\TransferController::class, 'senderRemove']);
 
     // Transfer acceptance form
-    Route::get('/overnemen/{token}', 'Activities\\TransferController@receiver')->name('transfer-view');
-    Route::post('/overnemen/{token}', 'Activities\\TransferController@receiverTake');
+    Route::get('/overnemen/{token}', [Activities\TransferController::class, 'receiver'])->name('transfer-view');
+    Route::post('/overnemen/{token}', [Activities\TransferController::class, 'receiverTake']);
 });
 
 /**

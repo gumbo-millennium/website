@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Trails;
 
+use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\Activity;
+use App\Models\Enrollment;
+use App\Models\FormLayout;
 use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
+use Faker\Generator as Faker;
+use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
 /**
@@ -18,12 +23,24 @@ class EnrollmentsTest extends TestCase
 {
     public function test_enrollments_trail()
     {
+        /** @var Faker $faker */
+        $faker = App::make(Faker::class);
+
         /** @var Activity $activity */
         $activity = factory(Activity::class)->states([
             'with-seats',
-            'with-form',
             'public',
-        ])->create();
+        ])->create([
+            'enrollment_questions' => [
+                'key' => $fieldName = $faker->sha1,
+                'layout' => 'text-field',
+                'attributes' => [
+                    'help' => null,
+                    'label' => $faker->sentence,
+                    'required' => true,
+                ],
+            ],
+        ]);
 
         /** @var Ticket $firstTicket */
         [$firstTicket, $secondTicket] = $activity->tickets()->createMany([
@@ -63,9 +80,10 @@ class EnrollmentsTest extends TestCase
             'ticket_id' => $firstTicket->id,
         ])
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('enroll.form', [$activity]));
+            ->assertRedirect($formUrl = route('enroll.form', [$activity]));
 
         // Ensure the enrollment was created
+        /** @var Enrollment $enrollment */
         $enrollment = $activity->enrollments()->with(['user', 'ticket'])->first();
         $this->assertNotNull($enrollment);
 
@@ -74,5 +92,33 @@ class EnrollmentsTest extends TestCase
 
         $this->assertInstanceOf(States\Created::class, $enrollment->state);
         $this->assertSame($firstTicket->total_price, $enrollment->price);
+
+        // Check that the form view loads properly
+        $this->get($formUrl)
+            ->assertOk()
+            ->assertSee(Arr::get($activity->enrollment_questions, '0.attributes.label'));
+
+        // Prep a form
+        $formField = $this->activity->form;
+        $submitFields = [];
+
+        /** @var FormLayout $field */
+        foreach ($formField as $field) {
+            $submitFields[$field->getName()] = $faker->sentence;
+        }
+
+        // Submit a form field
+        $this->post(route('enroll.form.store', [$activity]), $submitFields)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect($paymentUrl = route('enroll.pay', [$activity]));
+
+        // Check form was assigned
+        $enrollment->refresh();
+        $this->assertInstanceOf(States\Seeded::class, $enrollment->state);
+        $this->assertNotNull($enrollment->form);
+
+        // Check pay page loads properly
+        $this->get($paymentUrl)
+            ->assertOk();
     }
 }
