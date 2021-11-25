@@ -30,7 +30,7 @@ if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
 }
 
 // Determine price label
-$price = $activity->price_label;
+$price = $activity->price_range;
 $seats = 'Onbeperkt';
 if ($activity->seats > 0 && !$isSoldOut && ($activity->available_seats < 10)) {
     $seats = sprintf(

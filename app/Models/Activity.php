@@ -86,7 +86,6 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read bool $is_rescheduled
  * @property-read null|string $location_url
  * @property-read null|string $organiser
- * @property-read string $price_label
  * @property-read string $price_range
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
@@ -414,31 +413,6 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getTotalPriceAttribute(): ?int
     {
         return $this->price ? $this->price + config('gumbo.transfer-fee', 0) : $this->price;
-    }
-
-    /**
-     * Returns human-readable summary of the ticket price.
-     */
-    public function getPriceLabelAttribute(): string
-    {
-        $ticketOptions = $this->tickets()->get(['price']);
-
-        if (count($ticketOptions) == 0) {
-            return 'n/a';
-        }
-
-        $minPrice = $ticketOptions->min('total_price');
-        $maxPrice = $ticketOptions->max('total_price');
-
-        if ($maxPrice === null) {
-            return 'gratis';
-        }
-
-        if ($minPrice === $maxPrice) {
-            return Str::price($minPrice);
-        }
-
-        return sprintf('vanaf %s', Str::price($minPrice));
     }
 
     /**
