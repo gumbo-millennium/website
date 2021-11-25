@@ -86,6 +86,55 @@ $factory->state(Activity::class, 'paid', fn (Faker $faker) => [
     'price' => intdiv($faker->numberBetween(500, 6000), 25) * 25,
 ]);
 
+$factory->state(Activity::class, 'with-form', function (Faker $faker) {
+    $fieldCount = $faker->numberBetween(1, 5);
+
+    $fields = [];
+    for ($i = 0; $i < $fieldCount; $i++) {
+        $layout = $faker->randomElement([
+            'text-field',
+            'email',
+            'phone',
+            'select',
+            'checkbox',
+            'content',
+        ]);
+
+        $attributes = [
+            'help' => $faker->optional()->sentence(),
+            'label' => $faker->sentence(),
+            'required' => $faker->boolean(),
+        ];
+
+        if ($layout === 'select') {
+            $attributes['multiple'] = $faker->boolean();
+            $attributes['options'] = [];
+
+            $optionCount = $faker->numberBetween(1, 5);
+            for ($j = 0; $j < $optionCount; $j++) {
+                $attributes['options'][$faker->word] = $faker->sentence();
+            }
+        } elseif ($layout === 'phone') {
+            $attributes['country'] = $faker->countryCode();
+        } elseif ($layout === 'content') {
+            $attributes = [
+                'title' => $faker->sentence(),
+                'content' => $faker->paragraphs(3, true),
+            ];
+        }
+
+        $fields[] = [
+            'key' => Str::random(32),
+            'layout' => $layout,
+            'attributes' => $attributes,
+        ];
+    }
+
+    return [
+        'enrollment_questions' => $fields,
+    ];
+});
+
 $factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [
     'rescheduled_from' => $faker->dateTimeBetween(
         (clone $activity->start_date)->subMonth(),
