@@ -545,27 +545,28 @@ class Activity extends SluggableModel implements AttachableInterface
     public function getPriceRangeAttribute(): string
     {
         $ticketCount = $this->tickets->count();
-        $minTicketPrice = $this->tickets->min('total_price');
-        $minNonZeroTicketPrice = $this->tickets->where('total_price', '>', 0)->min('total_price');
-        $maxTicketPrice = $this->tickets->max('total_price');
+
+        $ticketPrices = $this->tickets->pluck('price')->sort()->values();
+
+        $hasFreeTickets = $ticketPrices->contains(null);
+
+        $minPrice = $ticketPrices->first();
+        $maxPrice = $ticketPrices->last();
+        $minNonZeroPrice = $ticketPrices->min();
 
         if ($ticketCount === 0) {
             return __('Price unknown');
         }
 
-        if ($ticketCount === 1 || $minTicketPrice === $maxTicketPrice) {
-            if ($minTicketPrice === null) {
-                return __('Free');
-            }
-
-            return Str::price($minTicketPrice);
+        if ($ticketCount === 1 || $maxPrice === $minPrice) {
+            return $hasFreeTickets ? __('Free') : Str::price($maxPrice);
         }
 
-        if ($minTicketPrice === null) {
-            return __('Free, paid from :price', ['price' => Str::price($minNonZeroTicketPrice)]);
+        if ($hasFreeTickets && $minNonZeroPrice) {
+            return __('Free, paid from :price', ['price' => Str::price($minNonZeroPrice)]);
         }
 
-        return __('From :price', ['price' => Str::price($minTicketPrice)]);
+        return __('From :price', ['price' => Str::price($minPrice)]);
     }
 
     /**
