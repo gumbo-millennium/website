@@ -118,7 +118,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments.
  */
-Route::prefix('/activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth'])->group(function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth'])->group(function () {
     Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
 
     // Create basic enrollment
@@ -126,19 +126,19 @@ Route::prefix('/activiteiten/{activity}/inschrijven')->name('enroll.')->middlewa
     Route::post('/ticket', [EnrollNew\TicketController::class, 'store'])->name('store');
 
     // Answer form questions
-    Route::get('/form', [EnrollNew\FormController::class, 'edit'])->name('form');
-    Route::post('/form', [EnrollNew\FormController::class, 'update'])->name('formStore');
+    Route::get('/gegevens', [EnrollNew\FormController::class, 'edit'])->name('form');
+    Route::post('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
     // Start payment
-    Route::get('/pay', [EnrollNew\PaymentController::class, 'edit'])->name('pay');
-    Route::post('/pay', [EnrollNew\PaymentController::class, 'update'])->name('payStore');
+    Route::get('/betalen', [EnrollNew\PaymentController::class, 'edit'])->name('pay');
+    Route::post('/betalen', [EnrollNew\PaymentController::class, 'update'])->name('payStore');
 
     // Show payment loading
-    Route::get('/pay/show', [EnrollNew\PaymentController::class, 'show'])->name('payShow');
+    Route::get('/betalen/go', [EnrollNew\PaymentController::class, 'show'])->name('payShow');
 
     // Redirect to Mollie or verify payment
-    Route::get('/pay/redirect', [EnrollNew\PaymentController::class, 'redirect'])->name('payRedirect');
-    Route::get('/pay/verify', [EnrollNew\PaymentController::class, 'verify'])->name('payVerify');
+    Route::get('/betalen/provider', [EnrollNew\PaymentController::class, 'redirect'])->name('payRedirect');
+    Route::get('/betalen/controle', [EnrollNew\PaymentController::class, 'verify'])->name('payVerify');
 
     // Transfer form
     Route::get('/overdragen', [Activities\TransferController::class, 'sender'])->name('transfer');

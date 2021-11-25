@@ -1,18 +1,28 @@
+<?php
+$details = array_filter([
+    $activity->location,
+    $activity->human_readable_dates,
+    $activity->price_range,
+]);
+?>
 <div class="flex flex-row mb-8 gap-4">
     <div class="flex flex-col gap-4">
         @if ($poster = $activity->poster)
-        <figure class="h-32 w-full overflow-hidden object-cover">
-            <img src="{{ image_asset($poster)->width(640)->height(128) }}" </figure>
-            @endif
-            <h1 class="font-title text-3xl">{{ $activity->name }}</h1>
+        <figure>
+            <img src="{{ image_asset($poster)->width(640)->height(128) }}" class="h-32 w-full object-cover" />
+        </figure>
+        @endif
 
-            <ul class="flex flex-wrap gap-4">
-                <p class="text-lg">{{ $activity->location }}</p>
-                <p class="text-lg">•</p>
-                <p class="text-lg">{{ $activity->human_readable_dates }}</p>
-                <p class="text-lg">•</p>
-                <p class="text-lg">{{ $activity->price_label }}</p>
-            </ul>
+        <h1 class="font-title text-3xl">{{ $activity->name }}</h1>
+
+        <ul class="flex flex-wrap gap-4">
+            @foreach ($details as $item)
+                <p class="text-lg">{{ $item }}</p>
+                @if (! $loop->last)
+                    <p class="text-lg">•</p>
+                @endif
+            @endforeach
+        </ul>
     </div>
 
     @if ($showCancel ?? false)

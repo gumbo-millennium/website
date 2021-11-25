@@ -26,8 +26,9 @@ class TicketController extends Controller
 
     /**
      * Create a new enrollment for the given activity.
+     * @return HttpResponse|RedirectResponse
      */
-    public function create(Request $request, Activity $activity): HttpResponse
+    public function create(Request $request, Activity $activity)
     {
         $enrollment = Enroll::getEnrollment($activity);
 

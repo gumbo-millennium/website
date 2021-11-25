@@ -20,9 +20,13 @@ class RequireActiveEnrollment
      */
     public function handle($request, Closure $next)
     {
-        $activity = Activity::query()
-            ->where((new Activity())->getRouteKeyName(), $request->route('activity'))
-            ->firstOrFail();
+        $activity = $request->route('activity');
+
+        if (is_string($activity)) {
+            $activity = Activity::query()
+                ->where((new Activity())->getRouteKeyName(), $request->route('activity'))
+                ->firstOrFail();
+        }
 
         if (! $enrollment = Enroll::getEnrollment($activity)) {
             flash()->warning(__(

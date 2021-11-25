@@ -16,7 +16,7 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class EnrollmentController extends Controller
+class FormController extends Controller
 {
     public function __construct()
     {
@@ -42,16 +42,15 @@ class EnrollmentController extends Controller
         }
 
         // No form for this activity, redirect to show page
-        if ($activity->form === null) {
+        if (! $activity->form) {
+            // Transition if required
+            if ($activity->state instanceof States\Created) {
+                $activity->transitionTo(States\Seeded::class);
+                $activity->save();
+            }
+
+            // Redirect to index
             return Response::redirectToRoute('enroll.show', [$activity]);
-        }
-
-        if ($enrollment->form === null && $activity->form !== null) {
-            return Response::redirectToRoute('enroll.form', [$activity]);
-        }
-
-        if ($enrollment->price > 0 && ! $enrollment->state instanceof States\Paid) {
-            return Response::redirectToRoute('enroll.pay', [$activity]);
         }
 
         throw new HttpException(501, 'Not implemented');
