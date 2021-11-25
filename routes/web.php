@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers;
 use App\Http\Controllers\Activities;
 use App\Http\Controllers\Admin as AdminControllers;
+use App\Http\Controllers\Auth;
 use App\Http\Controllers\EnrollNew;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
@@ -185,6 +186,11 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
     // Register privacy
     Route::get('/register/privacy', 'Auth\RegisterController@showPrivacy')->name('register.register-privacy');
     Route::post('/register/privacy', 'Auth\RegisterController@savePrivacy');
+
+    // Logout page
+    Route::get('/logged-out', [Auth\LoginController::class, 'showLoggedout'])
+        ->middleware('signed')
+        ->name('logout.done');
 });
 
 // My account

@@ -9,6 +9,10 @@ use App\Http\Controllers\Controller;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 
 class LoginController extends Controller
 {
@@ -53,5 +57,48 @@ class LoginController extends Controller
         return $this->doLogout($request)->withHeaders([
             'Clear-Site-Data' => ['"cache"', '"cookies"'],
         ]);
+    }
+
+    /**
+     * The user has logged out of the application.
+     *
+     * @return Response
+     */
+    public function showLoggedout(Request $request): HttpResponse
+    {
+        return Response::view('auth.logout', [
+            'next' => $request->input('next'),
+        ]);
+    }
+
+    /**
+     * The user has logged out of the application.
+     */
+    protected function loggedOut(Request $request)
+    {
+        $previousUrl = $request->input('next');
+
+        if (! $previousUrl) {
+            return Response::redirectTo(URL::temporarySignedRoute('logout.done', Date::now()->addMinute()));
+        }
+
+        $previousPath = parse_url($previousUrl, PHP_URL_PATH);
+        $previousHost = parse_url($previousUrl, PHP_URL_HOST);
+        if (! $previousPath) {
+            return Response::redirectTo(URL::temporarySignedRoute('logout.done', Date::now()->addMinute()));
+        }
+
+        $cleanUrl = url($previousPath);
+        $cleanHost = parse_url($cleanUrl, PHP_URL_HOST);
+
+        // Host is mismatching, abort!
+        if ($cleanHost !== $previousHost) {
+            return Response::redirectTo(URL::temporarySignedRoute('logout.done', Date::now()->addMinute()));
+        }
+
+        // Show logout page
+        return Response::redirectTo(URL::temporarySignedRoute('logout.done', Date::now()->addMinute(), [
+            'next' => $previousUrl,
+        ]));
     }
 }
