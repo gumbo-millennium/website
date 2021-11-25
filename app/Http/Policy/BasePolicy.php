@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Policy;
 
+use App\Helpers\Str;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -98,5 +99,33 @@ abstract class BasePolicy extends BasicPolicy
         // Google Fonts
         $this->addDirective(Directive::STYLE, 'https://fonts.googleapis.com/');
         $this->addDirective(Directive::FONT, 'https://fonts.gstatic.com/');
+
+        // Local
+        if (App::isLocal()) {
+            $this->removeNoncesForLocalDevelopment();
+        }
+    }
+
+    private function removeNoncesForLocalDevelopment(): void
+    {
+        // Remove nonces
+        foreach ($this->directives as $directive => $values) {
+            $this->directives[$directive] = array_filter(
+                $values,
+                fn ($val) => ! Str::contains($val, 'nonce-'),
+            );
+        }
+
+        // Add debugbar nonces
+        if (! class_exists(\DebugBar\DebugBar::class)) {
+            return;
+        }
+
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);
+
+        $this->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE);
+
+        $this->addDirective(Directive::FONT, 'data:');
     }
 }

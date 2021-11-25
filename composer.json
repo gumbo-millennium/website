@@ -8,6 +8,7 @@
         "advoor/nova-editor-js": "^0.6",
         "artesaos/seotools": "^0.16.0",
         "austinheap/laravel-database-encryption": "^0.3.0-rc1",
+        "barryvdh/laravel-debugbar": "^3.6",
         "benjaminhirsch/nova-slug-field": "^1.2",
         "blade-ui-kit/blade-icons": "^0.3",
         "cviebrock/eloquent-sluggable": "^6.0",
