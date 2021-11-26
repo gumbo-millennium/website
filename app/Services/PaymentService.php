@@ -8,7 +8,9 @@ use App\Contracts\Payments\PayableModel;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Helpers\Arr;
 use App\Helpers\Str;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Mollie\Api\Exceptions\ApiException;
@@ -276,5 +278,44 @@ class PaymentService implements PaymentServiceContract
 
         // Refund everything
         return $order->refundAll();
+    }
+
+    /**
+     * Returns iDEAL bank options. Should be keyed by bank ID, and
+     * the value should be the displayable bank name.
+     *
+     * @return array<string,string>
+     */
+    public function getIdealMethods(): array
+    {
+        return Cache::remember(
+            'payment-service.mollie.ideal-banks',
+            Date::now()->addDay(),
+            fn () => $this->doGetIdealMethods(),
+        );
+    }
+
+    /**
+     * Actually perform the request to Mollie to get the banks.
+     * Should be cached for a long time, it's not like new banks show up weekly.
+     *
+     * @return array<string,string>
+     */
+    private function doGetIdealMethods(): array
+    {
+        $methods = Mollie::api()->methods()->allActive([
+            'include' => 'issuers',
+            'sequenceType' => 'oneoff',
+            'locale' => 'nl_NL',
+            'billingCountry' => 'NL',
+        ]);
+
+        foreach ($methods as $method) {
+            if ($method->id === 'ideal') {
+                return Arr::pluck($method->issuers, 'name', 'id');
+            }
+        }
+
+        return [];
     }
 }

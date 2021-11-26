@@ -118,4 +118,11 @@ return [
 
     // Data Exports
     'export-expire-days' => 30,
+
+    // Preferred banks
+    'preferred-banks' => [
+        'ideal_RABONL2U',
+        'ideal_ABNANL2A',
+        'ideal_INGBNL2A',
+    ],
 ];

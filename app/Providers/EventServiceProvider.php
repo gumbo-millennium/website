@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Listeners\AddVerifiedPermission;
 use App\Listeners\CheckConscriboWhenVerified;
+use App\Listeners\EnrollmentStateListener;
 use App\Listeners\MediaUploadListener;
 use App\Models\Activity;
 use App\Models\Enrollment;
@@ -24,6 +25,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
+use Spatie\ModelStates\Events\StateChanged;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,9 @@ class EventServiceProvider extends ServiceProvider
         Verified::class => [
             CheckConscriboWhenVerified::class,
             AddVerifiedPermission::class,
+        ],
+        StateChanged::class => [
+            EnrollmentStateListener::class,
         ],
     ];
 

@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Mollie\Api\Resources\Refund|null refundAll(PayableModel $model)
  * @method static \Mollie\Api\Resources\Shipment|null shipAll(PayableModel $model, ?string $carrier = null, ?string $trackingCode = null)
  *
+ * @method static array<string,string> getIdealMethods()
+ *
  * @see \App\Contracts\Payments\ServiceContract
  * @see \App\Services\PaymentService
  */

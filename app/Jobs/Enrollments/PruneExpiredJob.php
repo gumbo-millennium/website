@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs;
+namespace App\Jobs\Enrollments;
 
+use App\Enums\EnrollmentCancellationReason;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Cancelled;
 use Illuminate\Bus\Queueable;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class PruneExpiredEnrollments implements ShouldQueue
+class PruneExpiredJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -44,7 +45,7 @@ class PruneExpiredEnrollments implements ShouldQueue
 
             // Cancel enrollment
             $enrollment->state->transitionTo(Cancelled::class);
-            $enrollment->deleted_reason = 'timeout';
+            $enrollment->deleted_reason = EnrollmentCancellationReason::TIMEOUT;
 
             // Save changes
             $enrollment->save();

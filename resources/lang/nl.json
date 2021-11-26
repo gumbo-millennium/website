@@ -59,7 +59,24 @@
   "Continue": "Doorgaan",
   "Homepage": "Homepage",
 
+  "Ticket Number": "Ticketnummer",
+  "Confirmed": "Bevestigd",
+  "Enrolled at": "Ingeschreven op",
+  "State": "Status",
+  "Yes": "Ja",
+  "No, expires at :expiration": "Nee, loopt ap of :expiration",
+
+  "Confirm Enrollment": "Inschrijving bevestigen",
+  "This action can only be used with one enrollment at a time": "Deze actie kan alleen worden gebruikt met één inschrijving tegelijk",
+  "This enrollment has been cancelled": "Deze inschrijving is geannuleerd",
+  "This enrollment has already been confirmed": "Deze inschrijving is al bevestigd",
+  "Enrollment confirmed": "Inschrijving bevestigd",
+
+  "Cancel Enrollment": "Inschrijving annuleren",
+  "Requested cancellation of :count enrollment(s)": "Annulering van :count inschrijving(en) aangemaakt",
+
   "Price unknown": "Prijs onbekend",
+  "Free": "Gratis",
   "Free, paid from :price": "Gratis, betaald vanaf :price",
   "From :price": "Vanaf :price",
 
@@ -94,6 +111,9 @@
   "The message has been scheduled.": "Het bericht is ingepland voor verzending.",
   "Body of the mail, basic markdown formatting is supported.":
     "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
+
+  "Your enrollment is being cancelled. This might take a bit, but we'll update you via email.":
+    "Je inschrijving wordt geannuleerd. Dit kan even duren, maar we sturen je een mailtje.",
 
   "Phone country": "Phone country",
   "Two-letter country code (upper case)":

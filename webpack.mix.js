@@ -27,7 +27,7 @@ mix
 /**
  * Enable sourcemaps on dev
  */
-mix.sourceMaps(false)
+mix.sourceMaps(false, 'source-map')
 
 /**
  * Add a version and extract vendor if in production

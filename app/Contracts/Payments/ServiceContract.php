@@ -6,7 +6,6 @@ namespace App\Contracts\Payments;
 
 use Mollie\Api\Resources\Order;
 use Mollie\Api\Resources\Payment;
-use Mollie\Api\Resources\Refund;
 use Mollie\Api\Resources\Shipment;
 
 interface ServiceContract
@@ -59,11 +58,6 @@ interface ServiceContract
     public function getCompletedPayment(PayableModel $model): ?Payment;
 
     /**
-     * Issue a full refund.
-     */
-    public function refundAll(PayableModel $model): ?Refund;
-
-    /**
      * Returns a single shipment, if there's any.
      */
     public function getShipment(PayableModel $model): ?Shipment;
@@ -73,4 +67,12 @@ interface ServiceContract
      * specifies a tracking code.
      */
     public function shipAll(PayableModel $model, ?string $carrier = null, ?string $trackingCode = null): ?Shipment;
+
+    /**
+     * Returns iDEAL bank options. Should be keyed by bank ID, and
+     * the value should be the displayable bank name.
+     *
+     * @return array<string,string>
+     */
+    public function getIdealMethods(): array;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Enums\EnrollmentCancellationReason;
 use App\Helpers\Str;
 use App\Models\Enrollment;
 use App\Notifications\Traits\UsesStripePaymentData;
@@ -68,7 +69,7 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
             ->line("Beste {$user->first_name},")
             ->line("Je inschrijving voor {$activity->name} is geannuleerd.");
 
-        if ($enrollment->deleted_reason === 'timeout') {
+        if ($enrollment->deleted_reason === EnrollmentCancellationReason::TIMEOUT) {
             $expire = $enrollment->expire ?? now();
             $expireText = $expire->isoFormat('D MMM YYYY, HH:mm (z)');
             $mail

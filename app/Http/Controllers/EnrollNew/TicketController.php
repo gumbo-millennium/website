@@ -9,7 +9,6 @@ use App\Facades\Enroll;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment as States;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -66,8 +65,8 @@ class TicketController extends Controller
         $ticket = $tickets->firstWhere('id', $valid['ticket_id']);
         abort_unless($ticket, HttpResponse::HTTP_BAD_REQUEST);
 
-        // Enroll using the given ticket
         try {
+            // Enroll using the given ticket
             $enrollment = Enroll::createEnrollment($activity, $ticket);
         } catch (EnrollmentFailedException $exception) {
             flash()->error(__(
@@ -75,40 +74,11 @@ class TicketController extends Controller
                 ['activity' => $activity->name],
             ));
 
+            // Return to the previous page, but explicitly specifying it
             return Response::redirectToRoute('enroll.ticket', [$activity]);
         }
 
-        // Flash success message
-        flash()->success(__(
-            "You're now enrolled into :activity for the next 15 minutes.",
-            ['activity' => $activity->name],
-        ));
-
-        // Check if a form is required
-        if ($activity->form !== null) {
-            return Response::redirectToRoute('enroll.form', [$activity]);
-        }
-
-        // Transition across the seeded state
-        $enrollment->transitionTo(States\Seeded::class);
-        $enrollment->save();
-
-        // Check if we need payment
-        if ($enrollment->price > 0) {
-            return Response::redirectToRoute('enroll.pay', [$activity]);
-        }
-
-        // No payment required, enrollment is done
-        flash()->success(__(
-            "You're now enrolled into :activity.",
-            ['activity' => $activity->name],
-        ));
-
-        // Transition across the seeded state
-        $enrollment->transitionTo(States\Confirmed::class);
-        $enrollment->save();
-
-        // Redirect to info
+        // Redirect to info, let that thing figure it out
         return Response::redirectToRoute('enroll.show', [$activity]);
     }
 }

@@ -51,8 +51,8 @@
         @endforeach
     </form>
 
-    <div class="text-left">
-        <a href="{{ route('activity.show', [$activity]) }}" class="btn btn--small">
+    <div class="w-full grid grid-cols-1 lg:block">
+        <a href="{{ route('activity.show', [$activity]) }}" class="btn btn--small text-center">
             Annuleren en terug naar activiteit
         </a>
     </div>

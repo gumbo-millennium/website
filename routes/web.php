@@ -119,7 +119,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments.
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth'])->group(function () {
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-sponsor'])->group(function () {
     Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
 
     // Create basic enrollment
@@ -131,8 +131,8 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
     Route::post('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
     // Start payment
-    Route::get('/betalen', [EnrollNew\PaymentController::class, 'edit'])->name('pay');
-    Route::post('/betalen', [EnrollNew\PaymentController::class, 'update'])->name('payStore');
+    Route::get('/betalen', [EnrollNew\PaymentController::class, 'create'])->name('pay');
+    Route::post('/betalen', [EnrollNew\PaymentController::class, 'store'])->name('payStore');
 
     // Show payment loading
     Route::get('/betalen/go', [EnrollNew\PaymentController::class, 'show'])->name('payShow');
@@ -151,6 +151,9 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
     // Transfer acceptance form
     Route::get('/overnemen/{token}', [Activities\TransferController::class, 'receiver'])->name('transfer-view');
     Route::post('/overnemen/{token}', [Activities\TransferController::class, 'receiverTake']);
+
+    // Cancel form
+    Route::post('/annuleren', [EnrollNew\CancelController::class, 'cancel'])->name('cancel');
 });
 
 /**

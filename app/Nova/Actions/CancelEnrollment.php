@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions;
 
-use App\Contracts\StripeServiceContract;
+use App\Jobs\Enrollments\CancelEnrollmentJob;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Cancelled;
-use App\Nova\Resources\Enrollment as NovaEnrollment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,7 +13,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use Laravel\Nova\Fields\Select;
 
 class CancelEnrollment extends Action
 {
@@ -28,46 +25,23 @@ class CancelEnrollment extends Action
      *
      * @var string
      */
-    public $name = 'Uitschrijven';
+    public $name = 'Cancel Enrollment';
 
     /**
      * Perform the action on the given models.
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        $skipCount = 0;
-        $cancelCount = 0;
+        $count = 0;
         foreach ($models as $model) {
-            if (! $model instanceof Enrollment && ! $model instanceof NovaEnrollment) {
-                $skipCount++;
+            CancelEnrollmentJob::dispatch($model, true);
 
-                continue;
-            }
-
-            // Flag deletion reason
-            $model->deleted_reason = (string) $fields->reason;
-
-            // Transition to cancellation
-            $model->state->transitionTo(Cancelled::class);
-
-            // Save the model
-            $model->save();
-
-            // Add count
-            $cancelCount++;
+            $count++;
         }
 
-        $totalCount = $skipCount + $cancelCount;
-
-        if ($cancelCount === 1 && $skipCount === 0) {
-            return Action::message("De inschrijving van {$model->user->name} is geannuleerd");
-        }
-
-        if ($cancelCount < $skipCount) {
-            return Action::danger("Slechts {$cancelCount} van de {$totalCount} inschrijvingen zijn geannuleerd");
-        }
-
-        return Action::danger("{$cancelCount} van de {$totalCount} inschrijvingen zijn geannuleerd");
+        return Action::message(__('Requested cancellation of :count enrollment(s)', [
+            'count' => $count,
+        ]));
     }
 
     /**
@@ -77,14 +51,7 @@ class CancelEnrollment extends Action
      */
     public function fields()
     {
-        return [
-            Select::make('Reden', 'reason')
-                ->options([
-                    StripeServiceContract::REFUND_REQUESTED_BY_CUSTOMER => 'Aangevraagd door gebruiker',
-                    StripeServiceContract::REFUND_DUPLICATE => 'Duplicaat',
-                    StripeServiceContract::REFUND_FRAUDULENT => 'Frauduleus',
-                ]),
-        ];
+        return [];
     }
 
     /**

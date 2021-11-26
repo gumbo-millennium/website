@@ -50,15 +50,13 @@ class EnrollmentController extends Controller
             return Response::redirectToRoute('enroll.form', [$activity]);
         }
 
-        if ($enrollment->price > 0 && ! $enrollment->state instanceof States\Paid) {
+        if ($enrollment->state instanceof States\Seeded) {
             return Response::redirectToRoute('enroll.pay', [$activity]);
         }
 
-        if ($enrollment->price === null && $activity->state instanceof States\Seeded) {
-            $activity->transitionTo(States\Confirmed::class);
-            $activity->save();
-        }
-
-        throw new HttpException(501, 'Not implemented');
+        return Response::view('enrollments.show', [
+            'activity' => $activity,
+            'enrollment' => $enrollment,
+        ]);
     }
 }
