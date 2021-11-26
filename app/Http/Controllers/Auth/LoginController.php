@@ -29,7 +29,6 @@ class LoginController extends Controller
     use AuthenticatesUsers {
         logout as private doLogout;
     }
-
     use RedirectsToHomepage;
 
     /**
