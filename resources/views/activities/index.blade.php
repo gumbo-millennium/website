@@ -14,11 +14,11 @@ $firstActivity = $past ? null : $activities->first();
 
 @section('title', "{$title} - Gumbo Millennium")
 
-@if ($firstActivity && $firstActivity->image->exists())
+@if ($firstActivity && $firstActivity->poster)
 @push('css')
 <style nonce="@nonce">
 .header--activity {
-    background-image: url("{{ $firstActivity->image->url('banner') }}");
+    background-image: url("{{ image_url($firstActivity->poster)->preset('banner') }}");
 }
 </style>
 @endpush

@@ -62,14 +62,17 @@ $urlClass = implode(' ', $urlClass);
 
 $features = $activity->expanded_features;
 
+$bannerImage = image_url($activity->poster)->preset('banner');
+$bannerImage2x = (clone $bannerImage)->dpr(2);
+
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
-        @if ($activity->image->exists())
+        @if ($activity->image)
         <img
             class="card__figure-image"
-            src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
+            src="{{ $bannerImage }}"
+            srcset="{{ $bannerImage }} 384w, {{ $bannerImage2x }} 768w">
         @else
         <div class="card__figure-wrapper">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

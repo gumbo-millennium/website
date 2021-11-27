@@ -18,12 +18,15 @@
     $postIso = $postTimestamp->toIso8601String();
     $postDate = $postTimestamp->isoFormat('DD MMM \'YY');
     $headline = $item->headline ?? Str::words(strip_tags($item->html), 10);
+
+    $bannerImage = image_url($item->poster)->preset('banner');
+    $bannerImage2x = (clone $bannerImage)->dpr(2);
     @endphp
     <article class="card-grid__item">
         <div class="card">
             <div class="card__figure" role="presentation">
-            @if ($item->image->exists())
-                <img class="card__figure-image" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
+            @if ($item->cover)
+                <img class="card__figure-image" src="{{ $bannerImage }}" srcset="{{ $bannerImage }} 384w,{{ $bannerImage2x }} 768w">
             @else
                 <div class="card__figure-wrapper">
                     <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

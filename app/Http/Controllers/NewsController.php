@@ -98,7 +98,8 @@ class NewsController extends Controller
         SEOTools::setDescription($description);
         SEOTools::setCanonical($url);
         SEOTools::addImages([
-            $item->image->url('social'),
+            image_asset($item->cover)->preset('social'),
+            image_asset($item->cover)->preset('social')->dpi(2),
         ]);
 
         // Set Open Graph

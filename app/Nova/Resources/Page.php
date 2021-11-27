@@ -9,7 +9,6 @@ use App\Helpers\Str;
 use App\Models\Page as PageModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
@@ -104,19 +103,18 @@ class Page extends Resource
                 ->hideFromIndex()
                 ->help('Wordt getoond op kaarten en in Google / Facebook'),
 
-            PaperclipImage::make('Afbeelding', 'image')
+            Fields\Image::make('Afbeelding', 'cover')
+                ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
+                ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                 ->deletable()
                 ->nullable()
-                ->mimes(['png', 'jpeg', 'jpg'])
-                ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt. Maximaal 2MB')
-                ->minWidth(640)
-                ->minHeight(480)
+                ->acceptedTypes(['image/jpeg', 'image/png'])
+                ->help('Afbeelding die bij de pagina en op Social Media getoond wordt. Maximaal 2MB')
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
-                    Rule::dimensions()->maxWidth(3840)->maxHeight(2140),
                 ),
 
             // Add type

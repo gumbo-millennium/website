@@ -19,7 +19,6 @@ use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Config;
@@ -240,21 +239,20 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->stacked(),
 
-            PaperclipImage::make('Afbeelding', 'image')
+            Fields\Image::make('Afbeelding', 'poster')
+                ->disk('public')
+                ->thumbnail(fn () => (string) image_asset($this->poster)->preset('nova-thumbnail'))
+                ->preview(fn () => (string) image_asset($this->poster)->preset('nova-preview'))
                 ->deletable()
                 ->nullable()
-                ->mimes(['png', 'jpeg', 'jpg'])
+                ->acceptedTypes(['image/png', 'image/jpeg'])
                 ->help('Afbeelding die bij de activiteit en op Social Media getoond wordt, in 3:1 verhouding')
-                ->minWidth(640)
-                ->minHeight(480)
                 ->rules(
                     'nullable',
                     'image',
                     'mimes:jpeg,png',
                     'max:2048',
                     Rule::dimensions()
-                        ->maxWidth(3072)
-                        ->maxHeight(1024)
                         ->minWidth(768)
                         ->minHeight(256),
                 ),

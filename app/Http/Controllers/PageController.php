@@ -155,7 +155,9 @@ class PageController extends Controller
         SEOTools::setCanonical($page->url);
         SEOTools::setTitle($page->title);
         SEOTools::setDescription($page->description);
-        SEOTools::addImages([$page->image->url('social')]);
+        SEOTools::addImages([
+            image_asset($page->image)->preset('social'),
+        ]);
 
         // Show view
         return response()

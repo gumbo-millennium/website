@@ -36,13 +36,18 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
 @endcomponent
 @endsection
 
+@php
+    $bannerImage = image_url($activity->poster)->preset('banner');
+    $bannerImage2x = (clone $bannerImage)->dpr(2);
+@endphp
+
 {{-- Set main --}}
 @section('two-col.left')
     {{-- Image --}}
     <div class="h-64 bg-gray-secondary-2 rounded mb-4 overflow-hidden" role="presentation">
-        @if ($activity->image->exists())
-        <img class="w-full h-64 object-cover" src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w,{{ $activity->image->url('cover-2x') }} 768w">
+        @if ($activity->image)
+        <img class="w-full h-64 object-cover" src="{{ $bannerImage }}"
+            srcset="{{ $bannerImage }} 384w,{{ $bannerImage2x }} 768w">
         @else
         <div class="w-full h-64 flex items-center">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block dark:hidden">

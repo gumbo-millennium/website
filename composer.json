@@ -85,7 +85,9 @@
             "app/Helpers/helpers.php"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Database\\Migrations\\": "database/migrations/",
+            "Database\\Seeds\\": "database/seeds/"
         }
     },
     "autoload-dev": {

@@ -37,11 +37,15 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
 
     {{-- Add all pages --}}
     @foreach ($pages as $item)
+    @php
+    $bannerImage = image_url($item->cover)->preset('banner');
+    $bannerImage2x = (clone $bannerImage)->dpr(2);
+    @endphp
     <article class="col w-full flex-none md:w-1/2 mb-8">
     <div class="card">
         <div class="card__figure" role="presentation">
-        @if ($item->image->exists())
-            <img class="card__figure-image" src="{{ $item->image->url('cover') }}" srcset="{{ $item->image->url('cover') }} 384w,{{ $item->image->url('cover-2x') }} 768w">
+        @if ($item->cover)
+            <img class="card__figure-image" src="{{ $bannerImage }}" srcset="{{ $bannerImage }} 384w,{{ $bannerImage2x }} 768w">
         @else
         <div class="card__figure-wrapper">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

@@ -153,8 +153,7 @@ class Sponsor extends SluggableModel implements AttachableInterface
      */
     public function getIsClassicAttribute(): bool
     {
-        return ! $this->backdrop->exists()
-            || empty($this->caption);
+        return ! $this->cover || ! $this->caption;
     }
 
     /**

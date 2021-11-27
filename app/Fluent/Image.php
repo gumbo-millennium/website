@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Fluent;
 
 use DomainException;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Fluent;
 use JsonSerializable;
@@ -66,6 +67,14 @@ final class Image extends Fluent implements JsonSerializable, Stringable
      * alternative in <figure> tags.
      */
     public const FORMAT_WEBP = 'webp';
+
+    private const ATTRIBUTE_MAP = [
+        'width' => 'w',
+        'height' => 'h',
+        'fit' => 'fit',
+        'quality' => 'q',
+        'format' => 'fm',
+    ];
 
     private const VALID_FITS = [
         self::FIT_CONTAIN,
@@ -202,6 +211,28 @@ final class Image extends Fluent implements JsonSerializable, Stringable
     public function png(): self
     {
         return $this->format(self::FORMAT_PNG);
+    }
+
+    /**
+     * Apply a preset from the config.
+     */
+    public function preset(string $preset): self
+    {
+        // Get key
+        $key = "gumbo.image-presets.{$preset}";
+        if (! Config::has($key)) {
+            throw new DomainException("Invalid preset [${preset}] specified.");
+        }
+
+        // Apply config and map it locally
+        $preset = Config::get($key);
+        foreach ($preset as $key => $value) {
+            $property = self::ATTRIBUTE_MAP[$key] ?? $key;
+            $this->attributes[$property] = $value;
+        }
+
+        // Done
+        return $this;
     }
 
     /**
