@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
-use App\Facades\Payments;
 use App\Models\Shop\Order;
 use App\Nova\Resources\Shop\Order as NovaOrder;
 use Illuminate\Bus\Queueable;
@@ -85,10 +84,7 @@ class CancelOrder extends Action
             \assert($order instanceof Order);
             $order->loadMissing('user');
 
-            if (
-                Payments::isCompleted($order)
-                || Payments::isCancelled($order)
-            ) {
+            if ($order->paid_at || $order->cancelled_at) {
                 $blockedItems++;
 
                 continue;
@@ -96,12 +92,6 @@ class CancelOrder extends Action
 
             $order->cancelled_at = Date::now();
             $order->save();
-
-            Payments::cancelOrder($order);
-
-            if (Payments::isPaid($order)) {
-                Payments::refundAll($order);
-            }
         }
 
         $modelCount = $models->count();

@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
-use App\Contracts\Payments\PayableModel;
-use App\Models\Traits\IsPayable;
+use App\Contracts\Payments\Payable;
+use App\Enums\PaymentStatus;
+use App\Fluent\Payment as PaymentFluent;
+use App\Models\Traits\HasPayments;
 use App\Models\User;
-use App\Services\Payments\Order as FluentOrder;
-use App\Services\Payments\OrderLine;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\URL;
+use RuntimeException;
 
 /**
- * A user's order.
+ * App\Models\Shop\Order.
  *
  * @property int $id
  * @property string $number
@@ -33,17 +33,23 @@ use Illuminate\Support\Facades\URL;
  * @property int $fee
  * @property-read string $payment_status
  * @property-read string $status
+ * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read User $user
  * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
+ * @method static Builder|Order cancelled()
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
+ * @method static Builder|Order paid()
  * @method static Builder|Order query()
- * @method static Builder|Order wherePaymentStatus(string $status)
+ * @method static Builder|Order unpaid()
+ * @method static Builder|Order whereCancelled()
+ * @method static Builder|Order whereExpired()
+ * @method static Builder|Order wherePaid()
  * @mixin \Eloquent
  */
-class Order extends Model implements PayableModel
+class Order extends Model implements Payable
 {
-    use IsPayable;
+    use HasPayments;
 
     protected $table = 'shop_orders';
 
@@ -85,11 +91,7 @@ class Order extends Model implements PayableModel
         $targetDate = $order->created_at ?? Date::now();
 
         // Get invoice number
-        $startOfMonth = Date::parse(sprintf(
-            'first day of %s %d',
-            $targetDate->format('F'),
-            $targetDate->year,
-        ));
+        $startOfMonth = Date::now()->firstOfMonth();
 
         $orderCount = self::query()
             ->whereBetween('created_at', [$startOfMonth, $targetDate])
@@ -113,17 +115,24 @@ class Order extends Model implements PayableModel
     public function variants(): BelongsToMany
     {
         return $this->belongsToMany(ProductVariant::class, 'shop_order_product_variant')
+            ->withoutGlobalScopes()
             ->using(OrderProduct::class)
             ->withPivot(['quantity', 'price']);
     }
 
     public function getStatusAttribute(): string
     {
-        if ($this->shipped_at) {
-            return 'sent';
+        if ($this->paid_at) {
+            return PaymentStatus::PAID;
+        }
+        if ($this->cancelled_at) {
+            return PaymentStatus::CANCELLED;
+        }
+        if ($this->expires_at !== null && $this->expires_at < Date::now()) {
+            return PaymentStatus::EXPIRED;
         }
 
-        return $this->paid_at ? 'paid' : 'pending';
+        return PaymentStatus::OPEN;
     }
 
     /**
@@ -139,69 +148,46 @@ class Order extends Model implements PayableModel
         ]);
     }
 
-    /**
-     * Returns a Mollie order from this model.
-     */
-    public function toMollieOrder(): FluentOrder
+    public function toPayment(): PaymentFluent
     {
-        $order = FluentOrder::make($this->price, $this->number);
-
-        $address = $this->getPaymentAddressForUser($this->user);
-        $order
-            ->billingAddress($address)
-            ->shippingAddress($address);
+        $payment = PaymentFluent::make()
+            ->withDescription("Webshop bestelling {$this->number}")
+            ->withModel($this)
+            ->withNumber($this->number)
+            ->withUser($this->user);
 
         foreach ($this->variants as $variant) {
-            $order->addLine(
-                OrderLine::make(
-                    $variant->display_name,
-                    $variant->pivot->quantity,
-                    $variant->pivot->price,
-                )
-                    ->sku($variant->sku)
-                    ->imageUrl((string) $variant->valid_image->width(512))
-                    ->productUrl($variant->url),
+            $payment->addLine(
+                $variant->display_name,
+                $variant->pivot->price,
+                $variant->pivot->quantity,
             );
         }
 
-        $order->addLine(
-            OrderLine::make(
-                'Transactiekosten',
-                1,
-                (int) $this->fee,
-                'surcharge',
-            ),
-        );
+        $payment->addLine(__('Fees'), (int) $this->fee);
 
-        $order
-            ->redirectUrl(URL::route('shop.order.pay-return', $this));
+        throw_unless($payment->getSum() === $this->price, RuntimeException::class, 'Price mismatch');
 
-        $isLocal = in_array(parse_url(URL::to('/'), PHP_URL_HOST), [
-            'localhost',
-            '127.0.0.1',
-            '[::1]',
-        ], true);
-
-        if (! $isLocal) {
-            $order
-                ->webhookUrl(URL::route('api.webhooks.shop'));
-        }
-
-        $order
-            ->method('ideal')
-            ->locale('nl_NL');
-
-        $order
-            ->expiresAt($this->expires_at->addDays(5));
-
-        return $order;
+        return $payment;
     }
 
-    /**
-     * Returns the field to store when the object was shipped.
-     */
-    public function getCompletedAtField(): string
+    public function scopeUnpaid(Builder $query): void
     {
-        return 'shipped_at';
+        $query
+            ->whereNull('paid_at')
+            ->whereNull('cancelled_at');
+    }
+
+    public function scopePaid(Builder $query): void
+    {
+        $query
+            ->whereNotNull('paid_at')
+            ->whereNull('cancelled_at');
+    }
+
+    public function scopeCancelled(Builder $query): void
+    {
+        $query
+            ->whereNotNull('cancelled_at');
     }
 }

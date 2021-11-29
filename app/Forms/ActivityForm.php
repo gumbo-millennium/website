@@ -6,6 +6,7 @@ namespace App\Forms;
 
 use App\Models\Activity;
 use App\Models\FormLayout;
+use Illuminate\Support\HtmlString;
 use Kris\LaravelFormBuilder\Form;
 use RuntimeException;
 
@@ -48,6 +49,19 @@ class ActivityForm extends Form
                 ], $formField->getOptions()),
             );
         }
+
+        // Add an "Accept Terms" button
+        $this
+            ->add('accept-terms', 'checkbox', [
+                'label' => __('I accept the privacy policy and understand how my data will be processed.'),
+                'rules' => 'required',
+                'help_block' => [
+                    'text' => new HtmlString(sprintf(
+                        '<a href="/privacy-policy" target="_blank">%s</a>',
+                        __('Read the Privacy Policy'),
+                    )),
+                ],
+            ]);
 
         // Always add a submit button
         $this

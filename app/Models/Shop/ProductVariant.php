@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\HtmlString;
 
 /**
- * A variant of the product, like size or color.
+ * App\Models\Shop\ProductVariant.
  *
  * @property string $id
  * @property string $product_id
@@ -46,9 +46,12 @@ use Illuminate\Support\HtmlString;
  * @method static Builder|ProductVariant findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|ProductVariant newModelQuery()
  * @method static Builder|ProductVariant newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ProductVariant onlyTrashed()
  * @method static Builder|ProductVariant query()
  * @method static Builder|ProductVariant whereSlug(string $slug)
+ * @method static \Illuminate\Database\Query\Builder|ProductVariant withTrashed()
  * @method static Builder|ProductVariant withUniqueSlugConstraints(\self $model, $attribute, $config, $slug)
+ * @method static \Illuminate\Database\Query\Builder|ProductVariant withoutTrashed()
  * @mixin \Eloquent
  */
 class ProductVariant extends Model
@@ -133,7 +136,8 @@ class ProductVariant extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)
+            ->withoutGlobalScopes();
     }
 
     public function orders(): BelongsToMany

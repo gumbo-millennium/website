@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Fluent\Image;
+
 return [
     // Application status, based on URL
     'beta' => env('GUMBO_BETA', env('APP_URL', 'http://localhost') !== 'https://www.gumbo-millennium.nl'),
@@ -26,6 +28,14 @@ return [
 
         // And bind to <redirect>.<your-domain-name> for testing
         sprintf('redirect.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
+    ],
+
+    // Payment settings
+    'payments' => [
+        'default' => \App\Services\Payments\MolliePaymentService::getName(),
+        'providers' => [
+            \App\Services\Payments\MolliePaymentService::class,
+        ],
     ],
 
     // Lustrum mini-site
@@ -118,4 +128,37 @@ return [
 
     // Data Exports
     'export-expire-days' => 30,
+
+    // Preferred banks
+    'preferred-banks' => [
+        'ideal_RABONL2U',
+        'ideal_ABNANL2A',
+        'ideal_INGBNL2A',
+    ],
+
+    // Presets
+    'image-presets' => [
+        'social' => [
+            'width' => 1200,
+            'height' => 630,
+            'fit' => Image::FIT_CROP,
+        ],
+        'banner' => [
+            'width' => 768,
+            'height' => 256,
+            'fit' => Image::FIT_CROP,
+        ],
+        'nova-thumbnail' => [
+            'dpr' => 2,
+            'width' => 32,
+            'height' => 32,
+            'fit' => Image::FIT_CROP,
+        ],
+        'nova-preview' => [
+            'dpr' => 2,
+            'width' => 320,
+            'height' => 500,
+            'fit' => Image::FIT_CROP,
+        ],
+    ],
 ];

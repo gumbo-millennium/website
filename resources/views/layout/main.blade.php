@@ -20,7 +20,7 @@
     {{-- Javascript (deferred) --}}
     @section('main.scripts')
     <script src="{{ mix('manifest.js') }}" defer></script>
-    {{-- <script src="{{ mix('vendor.js') }}" defer></script> --}}
+    <script src="{{ mix('vendor.js') }}" defer></script>
     <script src="{{ mix('app.js') }}" defer></script>
     @show
 </head>
@@ -34,7 +34,7 @@
     @section('main.header')
     @include('layout.header')
     @includeWhen(optional(Auth::user())->hasVerifiedEmail() === false, 'layout.verify-banner')
-    @include('layout.flash-message')
+    @includeUnless(!empty($hideFlash), 'layout.flash-message')
     @show
 
     {{-- Main content --}}

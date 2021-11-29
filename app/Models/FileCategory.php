@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A file category, containing file bundles.
+ * App\Models\FileCategory.
  *
  * @property int $id
  * @property null|string $created_at

@@ -5,11 +5,9 @@
 {{-- Header --}}
 @section('shop-title', "Bestelling {$order->number}")
 @section('shop-subtitle')
-@if ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_CANCELLED)
+@if ($order->cancelled_at)
 Geannuleerd op {{ $order->cancelled_at->isoFormat('dddd D MMMM') }}.
-@elseif ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_COMPLETED)
-Afgerond op {{ $order->shipped_at->isoFormat('dddd D MMMM') }}.
-@elseif ($order->payment_status === App\Contracts\Payments\PayableModel::STATUS_PAID)
+@elseif ($order->paid_at)
 Betaald op {{ $order->paid_at->isoFormat('dddd D MMMM') }}.
 @else
 Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') }}.
@@ -55,7 +53,7 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') 
         </p>
     </div>
 
-    @if ($needsPayment || Payments::isPaid($order))
+    @if ($needsPayment)
     <h3 class="text-xl font-title font-medium mb-4">Betaling</h3>
 
     <div class="bg-gray-50 rounded-lg p-4 mb-4">
@@ -71,12 +69,14 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') 
     @endif
 
     @if ($needsPayment)
-    <a href="{{ route('shop.order.pay', [$order]) }}" class="btn btn--brand text-center">
-        Betaal bestelling
-    </a>
-    @endif
+    <form method="POST" action="{{ route('shop.order.pay', [$order]) }}" id="pay-order">
+        @csrf
+    </form>
 
-    @if ($isCancellable)
+    <button method="submit" class="btn btn--brand text-center" form="pay-order" data-onclick="lock">
+        Betaal bestelling
+    </button>
+
     <a href="{{ route('shop.order.cancel', [$order]) }}" class="btn btn--link text-center">
         Annuleer bestelling
     </a>

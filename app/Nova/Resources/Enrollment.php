@@ -141,6 +141,10 @@ class Enrollment extends Resource
                 ->valueLabel(__('Value'))
                 ->onlyOnDetail(),
 
+            // Add ticket type
+            Fields\BelongsTo::make(__('Ticket'), 'ticket', Ticket::class)
+                ->hideWhenUpdating(),
+
             // Dates
             Fields\DateTime::make('Aangemaakt op', 'created_at')
                 ->onlyOnDetail(),

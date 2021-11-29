@@ -47,9 +47,6 @@ class AppPolicy extends BasePolicy
         // Allow data: images
         $this->addDirective(Directive::IMG, 'data:');
 
-        // Allow Stripe endpoints
-        $this->addDirective(Directive::CONNECT, 'https://api.stripe.com');
-
         // Load local stuff, if local
         if (! app()->isLocal()) {
             return;

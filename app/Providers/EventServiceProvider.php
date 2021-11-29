@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Events\Payments\PaymentPaid;
+use App\Listeners;
 use App\Listeners\AddVerifiedPermission;
 use App\Listeners\CheckConscriboWhenVerified;
+use App\Listeners\EnrollmentStateListener;
 use App\Listeners\MediaUploadListener;
+use App\Models;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\FileBundle;
 use App\Models\NewsItem;
 use App\Models\Sponsor;
 use App\Models\User;
+use App\Observers;
 use App\Observers\ActivityObserver;
 use App\Observers\EnrollmentObserver;
 use App\Observers\FileBundleObserver;
@@ -24,6 +29,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
+use Spatie\ModelStates\Events\StateChanged;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -43,6 +49,13 @@ class EventServiceProvider extends ServiceProvider
             CheckConscriboWhenVerified::class,
             AddVerifiedPermission::class,
         ],
+        StateChanged::class => [
+            EnrollmentStateListener::class,
+        ],
+        PaymentPaid::class => [
+            Listeners\Shop\PaymentPaidListener::class,
+            Listeners\Enrollments\PaymentPaidListener::class,
+        ],
     ];
 
     /**
@@ -61,6 +74,8 @@ class EventServiceProvider extends ServiceProvider
         NewsItem::observe(NewsItemObserver::class);
         Sponsor::observe(SponsorObserver::class);
         User::observe(UserObserver::class);
+
+        Models\Payment::observe(Observers\PaymentObserver::class);
     }
 
     /**

@@ -9,6 +9,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
+/**
+ * @group files
+ */
 class FileExportControllerTest extends TestCase
 {
     /**

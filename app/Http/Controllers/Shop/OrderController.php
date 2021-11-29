@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
-use App\Contracts\Payments\PayableModel;
+use App\Enums\PaymentStatus;
 use App\Facades\Payments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreOrderRequest;
+use App\Models\Payment;
 use App\Models\Shop\Order;
-use App\Notifications\Shop\OrderRefunded;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Facades\Session;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use UnexpectedValueException;
 
 class OrderController extends Controller
 {
@@ -45,14 +45,9 @@ class OrderController extends Controller
 
         return ResponseFacade::view('shop.order.index', [
             'totalOrders' => $orders->count(),
-            'openOrders' => $orders->where('payment_status', PayableModel::STATUS_OPEN),
-            'paidOrders' => $orders->where('payment_status', PayableModel::STATUS_PAID),
-            'completedOrders' => $orders->where('payment_status', PayableModel::STATUS_COMPLETED),
-            'restOrders' => $orders->whereNotIn('payment_status', [
-                PayableModel::STATUS_COMPLETED,
-                PayableModel::STATUS_PAID,
-                PayableModel::STATUS_OPEN,
-            ]),
+            'openOrders' => (clone $orders)->where('status', PaymentStatus::OPEN),
+            'paidOrders' => (clone $orders)->where('status', PaymentStatus::PAID),
+            'restOrders' => (clone $orders)->whereNotIn('status', [PaymentStatus::OPEN, PaymentStatus::PAID]),
         ])->header('Cache-Control', 'no-cache, no-store');
     }
 
@@ -125,7 +120,7 @@ class OrderController extends Controller
         Cart::clear();
 
         // Redirect to order
-        return ResponseFacade::redirectToRoute('shop.order.pay', $order);
+        return ResponseFacade::redirectToRoute('shop.order.show', $order);
     }
 
     /**
@@ -139,26 +134,13 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        try {
-            $isCancelled = Payments::isCancelled($order);
-            $isCompleted = Payments::isCompleted($order);
-            $isPaid = Payments::isPaid($order);
-        } catch (UnexpectedValueException $error) {
-            flash()->info(
-                __('Deze bestelling zit momenteel in limbo, we laten het je weten als hij beschikbaar is.'),
-            );
-
-            return ResponseFacade::redirectToRoute('shop.order.index');
-        }
-
         // Hungry, Hungry, Model
         $order->hungry();
 
         // Render it
         return ResponseFacade::view('shop.order.show', [
             'order' => $order,
-            'needsPayment' => ! ($isCompleted || $isCancelled || $isPaid),
-            'isCancellable' => ! ($isCompleted || $isCancelled),
+            'needsPayment' => $order->status === PaymentStatus::OPEN,
         ]);
     }
 
@@ -170,90 +152,27 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        // Check if cancelled
-        if (Payments::isCancelled($order)) {
-            flash()->info(
-                'Deze bestelling is geannuleerd, dus je kan \'m niet meer betalen.',
-            );
-
+        // Check if the order needs payment
+        $payment = $order->payments->first() ?? null;
+        if ($payment && $payment->is_stable) {
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        // Or paid
-        if (Payments::isPaid($order)) {
-            flash()->info(
-                'Deze bestelling is al betaald.',
-            );
+        // Create the order
+        if (! $payment) {
+            try {
+                $payment = Payments::create($order);
+            } catch (RuntimeException $exception) {
+                flash()->error(__('Failed to create order payment: :message', [
+                    'message' => $exception->getMessage(),
+                ]));
 
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+                return ResponseFacade::redirectToRoute('shop.order.show', $order);
+            }
         }
 
         // Redirect to 'please wait' page
-        return ResponseFacade::view('shop.order.pay')
-            ->header('Refresh', '0;url=' . route('shop.order.pay-redirect', $order))
-            ->header('Cache-Control', 'no-store, no-cache');
-    }
-
-    /**
-     * Redirect to Mollie to pay, or back if that's not neccesary.
-     */
-    public function payRedirect(Request $request, Order $order): RedirectResponse
-    {
-        // Only allowing viewing your own orders
-        abort_unless($request->user()->is($order->user), 404);
-
-        // Can't pay cancelled or paid orders
-        if (Payments::isCancelled($order) || Payments::isPaid($order)) {
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
-        }
-
-        sleep(2);
-
-        // Fetch order to check if set
-        $mollieOrder = Payments::findOrder($order);
-
-        // Create order with Mollie if it doesn't exist yet.
-        if (! $mollieOrder) {
-            $mollieOrder = Payments::createOrder($order);
-            $order->payment_id = $mollieOrder->id;
-            $order->save();
-        }
-
-        if ($next = Payments::getRedirectUrl($order)) {
-            return ResponseFacade::redirectTo($next);
-        }
-
-        if (! $next && Payments::isPaid($order)) {
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
-        }
-
-        flash()->info(
-            __('Your previous payment is still pending, or this order cannot be paid right now. Try agan later.'),
-        );
-
-        return ResponseFacade::redirectToRoute('shop.order.show', $order);
-    }
-
-    /**
-     * Quick redirect after the user returns from Mollie.
-     */
-    public function payReturn(Request $request, Order $order): RedirectResponse
-    {
-        \abort_if(! $order->user->is(Auth::user()), 404);
-
-        if (Payments::isPaid($order)) {
-            flash()->success(
-                'Je betaling is ontvangen. Het kan even duren voordat dit zichtbaar is...',
-            );
-
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
-        }
-
-        flash()->info(
-            'Je betaling is nog in behandeling of geannuleerd. Probeer het later nog eens.',
-        );
-
-        return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        return ResponseFacade::redirectToRoute('payment.show', [$payment]);
     }
 
     /**
@@ -266,7 +185,7 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        if (Payments::isCancelled($order)) {
+        if ($order->cancelled_at) {
             flash()->info(
                 'Deze bestelling is al geannuleerd. Is 1x annuleren niet genoeg?',
             );
@@ -274,7 +193,7 @@ class OrderController extends Controller
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        if (Payments::isCompleted($order)) {
+        if ($order->paid_at) {
             flash()->info(
                 'Deze bestelling is afgerond. Als je niet tevreden bent met je aankoop, mag je contact opnemen met het bestuur.',
             );
@@ -282,19 +201,10 @@ class OrderController extends Controller
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        $order->hungry();
-
-        // Find refund info
-        $refundInfo = $this->getRefundInfo($order);
-
         // Render it
         return ResponseFacade::view('shop.order.cancel', [
             'order' => $order,
-            'isPaid' => Payments::isPaid($order),
-            'refundAmount' => $refundInfo['amount'],
-            'isRefundable' => $refundInfo['isRefundable'],
-            'isFullyRefundable' => $refundInfo['isFullyRefundable'],
-            'refundInfo' => $refundInfo,
+            'isPaid' => $order->paid_at !== null,
         ]);
     }
 
@@ -304,7 +214,7 @@ class OrderController extends Controller
         abort_unless($request->user()->is($order->user), 404);
 
         // Check if cancellable
-        if (Payments::isCancelled($order)) {
+        if ($order->cancelled_at) {
             flash()->info(
                 'Deze bestelling is al geannuleerd. Is 1x annuleren niet genoeg?',
             );
@@ -312,7 +222,7 @@ class OrderController extends Controller
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        if (Payments::isCompleted($order)) {
+        if ($order->paid_at) {
             flash()->info(
                 'Deze bestelling is afgerond. Als je niet tevreden bent met je aankoop, mag je contact opnemen met het bestuur.',
             );
@@ -325,69 +235,15 @@ class OrderController extends Controller
         $order->save();
 
         // Cancel at Mollie
-        Payments::cancelOrder($order);
-
-        // Skip if not paid
-        if (! Payments::isPaid($order)) {
-            flash()->info(
-                'De bestelling is geannuleerd.',
-            );
-
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        foreach ($order->payments as $payment) {
+            Payments::find($payment->provider)->cancel($payment);
         }
 
-        // Refund
-        Payments::refundAll($order);
-
-        // Find refund info
-        $refundInfo = $this->getRefundInfo($order);
-
-        // Only notify if number is non-zero
-        if (! empty($refundInfo['accountNumber'])) {
-            $order->user->notify(new OrderRefunded(
-                $order,
-                $refundInfo['amount'],
-                $refundInfo['accountNumber'],
-            ));
-        }
-
+        // Done
         flash()->info(
-            'De bestelling is geannuleerd, je krijgt je geld binnen een paar dagen terug.',
+            'De bestelling is geannuleerd.',
         );
 
         return ResponseFacade::redirectToRoute('shop.order.show', $order);
-    }
-
-    private function getRefundInfo(Order $order): array
-    {
-        $completedPayment = optional(Payments::getCompletedPayment($order));
-
-        // Base info
-        $refundInfo = [
-            'amount' => $amount = (int) ($completedPayment->getAmountRemaining() * 100),
-            'isRefundable' => $completedPayment->canBeRefunded(),
-            'isFullyRefundable' => $amount === $order->price,
-            'type' => null,
-            'accountNumber' => null,
-        ];
-
-        // iDEAL refund info
-        if ($accountNumber = object_get($completedPayment, 'details.consumerAccount')) {
-            return array_merge($refundInfo, [
-                'type' => 'ideal',
-                'accountNumber' => substr($accountNumber, -4),
-            ]);
-        }
-
-        // Wire transfer refund info
-        if ($accountNumber = object_get($completedPayment, 'details.bankAccount')) {
-            return array_merge($refundInfo, [
-                'type' => 'banktransfer',
-                'accountNumber' => substr($accountNumber, -4),
-            ]);
-        }
-
-        // Unknown (default)
-        return $refundInfo;
     }
 }

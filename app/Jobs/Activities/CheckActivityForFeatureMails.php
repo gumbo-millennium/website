@@ -47,8 +47,6 @@ class CheckActivityForFeatureMails extends ActivityJob
 
             // Check against expected values
             if (! Arr::has($mailConfig, ['send', 'subject', 'body'])) {
-                dump("invalid feature ${feature}");
-
                 continue;
             }
 

@@ -2,6 +2,7 @@
   Button
 */
 
+.prose button,
 .btn {
   @apply inline-block mx-0 my-4 py-4 px-10;
   @apply rounded border border-gray-500;
@@ -9,6 +10,7 @@
   @apply bg-white text-gray-700;
 }
 
+.prose button:hover, .prose button:active,
 .btn:hover, .btn:active {
   @apply bg-gray-secondary-2 text-gray-primary-3;
 }
@@ -21,15 +23,18 @@
   @apply border-0 bg-transparent text-brand-primary-1;
 }
 
+.prose button[type="submit"],
 .btn--brand {
   @apply bg-brand-primary-1 border-brand-primary-2 text-light;
   @apply border-none;
 }
 
+.prose button[type="submit"]:hover, .prose button[type="submit"]:active,
 .btn--brand:hover, .btn--brand:active {
   @apply bg-brand-primary-2 border-brand-primary-3 text-white shadow-lg;
 }
 
+.prose button[disabled],
 .btn--disabled, .btn:disabled {
   opacity: 0.6;
   filter: grayscale(100%);
@@ -41,4 +46,8 @@
 
 .btn--small {
   @apply my-2 py-2 px-6;
+}
+
+.prose button {
+  @apply my-0;
 }

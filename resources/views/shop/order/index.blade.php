@@ -37,28 +37,14 @@
     </div>
 
     <div>
-        <h3 class="font-title text-xl mb-4">Te ontvangen bestellingen</h3>
+        <h3 class="font-title text-xl mb-4">Afgeronde bestellingen</h3>
 
         <div class="grid grid-cols-1 gap-4">
         @forelse ($paidOrders as $order)
             @include('shop.partials.order-tile', compact('order'))
         @empty
             @include('shop.partials.order-empty', [
-            'text' => 'Je hebt nog geen te-ontvangen bestellingen',
-            ])
-        @endforelse
-        </div>
-    </div>
-
-    <div>
-        <h3 class="font-title text-xl mb-4">Afgeronde bestellingen</h3>
-
-        <div class="grid grid-cols-1 gap-4">
-        @forelse ($completedOrders as $order)
-            @include('shop.partials.order-tile', compact('order'))
-        @empty
-            @include('shop.partials.order-empty', [
-                'text' => 'Je hebt nog geen bestellingen afgerond.',
+            'text' => 'Je hebt nog geen bestellingen afgerond',
             ])
         @endforelse
         </div>

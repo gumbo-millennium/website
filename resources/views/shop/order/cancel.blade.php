@@ -22,43 +22,6 @@
 <form class="grid grid-col-1" id="cancel-form" method="post" action="{{ route('shop.order.cancel', $order) }}">
     @csrf
 
-    <h3 class="text-xl font-title font-medium mb-4">Terugbetaling</h3>
-
-    <div class="bg-gray-50 rounded-lg p-4 mb-2">
-        @if ($isRefundable)
-        @if ($isFullyRefundable)
-            <strong class="text-lg font-title font-bold">Volledige terugbetaling</strong>
-            <p class="mb-2 leading-loose">
-                Je hebt recht op volledige teruggave van het aankoopbedrag.
-            </p>
-        @else
-            <strong class="text-lg font-title font-bold">Gedeeltelijke terugbetaling</strong>
-            <p class="mb-2 leading-loose">
-                Je hebt recht op volledige teruggave van het aankoopbedrag, maar een deel is al teruggeboekt.<br />
-                Je krijgt de resterende {{ Str::price($refundAmount) }} teruggeboekt zodra je annuleert.
-            </p>
-        @endif
-        @if ($bankAccount = $refundInfo['accountNumber'] ?? null)
-        <p class="mb-2 leading-loose">
-            Het bedrag zal enkele dagen na annulering teruggestort worden op je bankrekening eindigend op
-            {{ $bankAccount }}
-        </p>
-        @endif
-        @else
-        <strong class="text-lg font-title font-bold">Geen terugbetaling</strong>
-        @if (!$isPaid)
-        <p>
-            Je wordt niet terugbetaald, omdat je nog niet hebt betaald.
-        </p>
-        @else
-        <p>
-            Het is niet mogelijk het bedrag terug te betalen. Indien je hier toch recht
-            op hebt, moet je contact opnemen met het bestuur.
-        </p>
-        @endif
-        @endif
-    </div>
-
     <h3 class="text-xl font-title font-medium mb-4">Are you sure?</h3>
 
     <div class="bg-gray-50 rounded-lg p-4 mb-2">

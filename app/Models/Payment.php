@@ -4,89 +4,141 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
+use App\Facades\Payments;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Date;
 
 /**
- * A payment transaction.
+ * App\Models\Payment.
  *
- * @property string $id
- * @property string $transaction_id
- * @property int $user_id
- * @property string $enrollment_id
+ * @property int $id
+ * @property string $payable_type
+ * @property string $payable_id
+ * @property null|int $user_id
+ * @property string $provider
+ * @property null|string $transaction_id
+ * @property int $price In cents
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
- * @property null|\Illuminate\Support\Carbon $completed_at
- * @property string $status
- * @property int $amount In cents
- * @property null|\Illuminate\Support\Carbon $refunded_at
- * @property null|int $refunded_amount
- * @property null|\Illuminate\Support\Collection $data
- * @property-read bool $is_completed
- * @property-read bool $is_refunded
- * @method static Builder|Payment completed()
+ * @property null|\Illuminate\Support\Carbon $paid_at
+ * @property null|\Illuminate\Support\Carbon $expired_at
+ * @property null|\Illuminate\Support\Carbon $cancelled_at
+ * @property-read bool $is_stable
+ * @property-read string $status
+ * @property-read Eloquent|Model $payable
+ * @property-read null|\App\Models\User $user
  * @method static Builder|Payment newModelQuery()
  * @method static Builder|Payment newQuery()
+ * @method static Builder|Payment pending()
  * @method static Builder|Payment query()
- * @method static Builder|Payment refunded()
- * @mixin \Eloquent
+ * @method static Builder|Payment whereTransactionId(string $provider, string $platformId)
+ * @mixin Eloquent
  */
-class Payment extends UuidModel
+class Payment extends Model
 {
     /**
-     * @inheritDoc
-     */
-    protected $dates = [
-        'completed_at',
-        'refunded_at',
-    ];
-
-    /**
-     * @inheritDoc
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
     protected $casts = [
-        'amount' => 'int',
-        'refunded_amount' => 'int',
-        'data' => 'collection',
+        'price' => 'int',
+
+        'paid_at' => 'datetime',
+        'expired_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     /**
-     * Returns if the payment was refunded.
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
      */
-    public function getIsCompletedAttribute(): bool
-    {
-        return $this->completed_at !== null;
-    }
+    protected $hidden = [
+        'provider',
+        'transaction_id',
+    ];
 
     /**
-     * Returns if the payment was refunded.
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
-    public function getIsRefundedAttribute(): bool
+    protected $fillable = [
+        'price',
+        'status',
+        'provider',
+        'transaction_id',
+    ];
+
+    public static function boot()
     {
-        return $this->refunded_at !== null;
+        parent::boot();
+
+        self::saving(function (self $model) {
+            $model ??= Payments::getDefault();
+        });
     }
 
-    /**
-     * Returns true if the whole transaction was refunded.
-     */
-    public function isFullyRefunded(): bool
+    public function payable(): MorphTo
     {
-        return $this->amount === $this->refund_amount
-            && $this->amount > 0;
+        return $this->morphTo();
     }
 
-    /**
-     * Scopes the query to only return completed payments.
-     */
-    public function scopeCompleted(Builder $query): Builder
+    public function user(): BelongsTo
     {
-        return $query->whereNotNull('completed_at');
+        return $this->belongsTo(User::class);
     }
 
-    /**
-     * Scopes the query to only show refunded payments.
-     */
-    public function scopeRefunded(Builder $query): Builder
+    public function scopeWhereTransactionId(Builder $query, string $provider, string $platformId): void
     {
-        return $query->whereNotNull('refunded_at');
+        $query->where([
+            'provider' => $provider,
+            'transaction_id' => $platformId,
+        ]);
+    }
+
+    public function scopePending(Builder $query): void
+    {
+        $query
+            ->whereNull('paid_at')
+            ->whereNull('cancelled_at');
+
+        $query->where(
+            fn ($query) => $query
+                ->orWhere('expired_at', '>', Date::now())
+                ->orWhereNull('expired_at'),
+        );
+    }
+
+    public function getStatusAttribute(): string
+    {
+        if ($this->paid_at !== null) {
+            return PaymentStatus::PAID;
+        }
+
+        if ($this->cancelled_at !== null) {
+            return PaymentStatus::CANCELLED;
+        }
+
+        if ($this->expired_at !== null && $this->expired_at < Date::now()) {
+            return PaymentStatus::EXPIRED;
+        }
+
+        if ($this->transaction_id === null) {
+            return PaymentStatus::PENDING;
+        }
+
+        return PaymentStatus::OPEN;
+    }
+
+    public function getIsStableAttribute(): bool
+    {
+        return in_array($this->status, PaymentStatus::STABLE_STATES, true);
     }
 }

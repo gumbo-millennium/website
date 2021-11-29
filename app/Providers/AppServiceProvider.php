@@ -7,16 +7,16 @@ namespace App\Providers;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\MarkdownServiceContract;
+use App\Contracts\Payments\PaymentManager;
 use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
-use App\Contracts\StripeServiceContract;
 use App\Events\EventService;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
+use App\Services\Payments\PaymentServiceManager;
 use App\Services\PaymentService;
 use App\Services\SponsorService;
-use App\Services\StripeService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
@@ -25,7 +25,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
-use Stripe\Stripe as StripeClient;
 use Symfony\Component\Yaml\Yaml;
 
 class AppServiceProvider extends ServiceProvider
@@ -42,12 +41,18 @@ class AppServiceProvider extends ServiceProvider
     public $singletons = [
         // Sponsor service
         SponsorServiceContract::class => SponsorService::class,
-        // Stripe service
-        StripeServiceContract::class => StripeService::class,
-        // Enrollment service
-        EnrollmentServiceContract::class => EnrollmentService::class,
         // Mollie Payment service
         PaymentServiceContract::class => PaymentService::class,
+    ];
+
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array<string>
+     */
+    public $bindings = [
+        // Enrollment service
+        EnrollmentServiceContract::class => EnrollmentService::class,
     ];
 
     /**
@@ -81,18 +86,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Configure Stripe service
-        if ($apiKey = config('stripe.private_key')) {
-            // Set key
-            StripeClient::setApiKey($apiKey);
-
-            // Retry API calls, a bunch of times
-            StripeClient::setMaxNetworkRetries(5);
-
-            // Allow Telemetry (only includes response times)
-            StripeClient::setEnableTelemetry(true);
-        }
-
         // Conscribo API
         $this->app->singleton(ConscriboServiceContract::class, static fn () => ConscriboService::fromConfig());
 
@@ -101,6 +94,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Events
         $this->app->singleton(EventService::class);
+
+        // Payments
+        $this->app->singleton(PaymentManager::class, fn () => PaymentServiceManager::make(
+            Config::get('gumbo.payments.default'),
+            Config::get('gumbo.payments.providers', []),
+        ));
 
         // Add Paperclip macro to the database helper
         Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {

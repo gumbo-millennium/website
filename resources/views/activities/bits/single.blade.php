@@ -30,7 +30,7 @@ if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
 }
 
 // Determine price label
-$price = $activity->price_label;
+$price = $activity->price_range;
 $seats = 'Onbeperkt';
 if ($activity->seats > 0 && !$isSoldOut && ($activity->available_seats < 10)) {
     $seats = sprintf(
@@ -62,14 +62,17 @@ $urlClass = implode(' ', $urlClass);
 
 $features = $activity->expanded_features;
 
+$bannerImage = image_asset($activity->poster)->preset('banner');
+$bannerImage2x = (clone $bannerImage)->dpr(2);
+
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
-        @if ($activity->image->exists())
+        @if ($activity->poster)
         <img
             class="card__figure-image"
-            src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w, {{ $activity->image->url('cover-2x') }} 768w">
+            src="{{ $bannerImage }}"
+            srcset="{{ $bannerImage }} 384w, {{ $bannerImage2x }} 768w">
         @else
         <div class="card__figure-wrapper">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">

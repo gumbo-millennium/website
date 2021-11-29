@@ -61,11 +61,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
         $schedule->command('bot:update')->hourly();
 
-        // Fix broken Mollie invoices a couple times a day
-        $schedule->command('shop:repair-orders')->cron('45 */2 * * *');
-
-        // Manually check for payments every hour
-        $schedule->command('shop:update-orders')->everyFifteenMinutes();
+        // Manually check payments every 30 minutes
+        $schedule->command('payments:update', ['--all' => true])->everyThirtyMinutes();
 
         // Shop expiration and reminders
         $schedule->command('shop:send-reminders')->hourlyAt(20);

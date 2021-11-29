@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Jobs\Stripe\RefundInvoice;
-use App\Jobs\Stripe\VoidInvoice;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\Cancelled;
-use App\Models\States\Enrollment\Paid;
+use App\Models\States\Enrollment as States;
 use App\Notifications\EnrollmentCancelled;
+use App\Notifications\EnrollmentConfirmed;
+use App\Notifications\EnrollmentPaid;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use Spatie\ModelStates\Events\StateChanged;
 
-class EnrollmentStateListener
+class EnrollmentStateListener implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+    use InteractsWithQueue;
 
     /**
      * Handle the event.
@@ -41,21 +36,32 @@ class EnrollmentStateListener
         $finalState = $enrollment->state;
         $user = $enrollment->user;
 
-        // Handle cancellation
-        if (! ($finalState instanceof Cancelled)) {
+        // Handle payment completion
+        if ($finalState instanceof States\Paid) {
+            $user->notify(new EnrollmentPaid($enrollment));
+
             return;
         }
 
-        // Send cancellation notice
-        $user->notify(new EnrollmentCancelled($enrollment));
+        // Prevent queue racing
+        $cacheKey = "race-prevention.enroll.{$enrollment->id}.${finalState}";
+        if (Cache::has($cacheKey)) {
+            return;
+        }
+        Cache::put($cacheKey, 1, Date::now()->addMinutes(5));
 
-        // Check if paid
-        if ($event->initialState instanceof Paid) {
-            // Refund the invoice
-            RefundInvoice::dispatch($enrollment);
-        } elseif ($enrollment->payment_invoice) {
-            // Void the invoice if the enrollment wasn't paid yet
-            VoidInvoice::dispatch($enrollment);
+        // Handle non-payment confirmation (Paid extends Confirmed)
+        if ($finalState instanceof States\Confirmed) {
+            $user->notify(new EnrollmentConfirmed(($enrollment)));
+
+            return;
+        }
+
+        // Handle cancellation
+        if ($finalState instanceof States\Cancelled) {
+            $user->notify(new EnrollmentCancelled($enrollment));
+
+            return;
         }
     }
 }

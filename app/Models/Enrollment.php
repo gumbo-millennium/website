@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\States\Enrollment\Cancelled as CancelledState;
-use App\Models\States\Enrollment\Confirmed as ConfirmedState;
-use App\Models\States\Enrollment\Created as CreatedState;
-use App\Models\States\Enrollment\Paid as PaidState;
-use App\Models\States\Enrollment\Refunded as RefundedState;
-use App\Models\States\Enrollment\Seeded as SeededState;
+use App\Contracts\Payments\Payable;
+use App\Fluent\Payment as PaymentFluent;
+use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use App\Models\Traits\HasPayments;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use LogicException;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * A user enrollment for an activity. Optionally has payments.
+ * App\Models\Enrollment.
  *
  * @property string $id
  * @property int $user_id
  * @property int $activity_id
+ * @property null|int $ticket_id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
@@ -41,26 +42,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \App\Models\Activity $activity
  * @property-read null|array $form
  * @property-read mixed $form_data
+ * @property-read bool $has_been_paid
  * @property-read bool $is_discounted
  * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
+ * @property-read string $payment_status
  * @property-read bool $requires_payment
  * @property-read null|\App\Models\States\Enrollment\State $wanted_state
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
+ * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereCancelled()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereExpired()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereNotState(string $column, $states)
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment wherePaid()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereState(string $column, $states)
  * @method static \Illuminate\Database\Query\Builder|Enrollment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
  */
-class Enrollment extends UuidModel
+class Enrollment extends UuidModel implements Payable
 {
     use HasEncryptedAttributes;
+    use HasPayments;
     use HasStates;
     use SoftDeletes;
 
@@ -79,18 +87,29 @@ class Enrollment extends UuidModel
      * @inheritDoc
      */
     protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'expire' => 'datetime',
+
         'data' => 'json',
         'paid' => 'bool',
+        'price' => 'int',
     ];
 
     /**
-     * @inheritDoc
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'expire',
+    protected $fillable = [
+        'user_id',
+        'activity_id',
+        'ticket_id',
+        'state',
+        'deleted_reason',
+        'price',
+        'total_price',
     ];
 
     /**
@@ -102,7 +121,7 @@ class Enrollment extends UuidModel
             ->withoutTrashed()
             ->whereUserId($user->id)
             ->whereActivityId($activity->id)
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
+            ->whereNotState('state', [States\Cancelled::class, States\Refunded::class])
             ->with(['activity'])
             ->first();
     }
@@ -120,16 +139,6 @@ class Enrollment extends UuidModel
         }
 
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * An enrollment can have multiple payments (in case one failed, for example).
-     *
-     * @return HasMany
-     */
-    public function payments(): Relation
-    {
-        return $this->hasMany(Payment::class);
     }
 
     /**
@@ -153,11 +162,19 @@ class Enrollment extends UuidModel
     }
 
     /**
+     * The ticket associated with this enrollment.
+     */
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo(Ticket::class);
+    }
+
+    /**
      * Returns true if the state is stable and will not auto-delete.
      */
     public function getIsStableAttribute(): bool
     {
-        return $this->state instanceof ConfirmedState;
+        return $this->state instanceof States\Confirmed;
     }
 
     /**
@@ -166,6 +183,14 @@ class Enrollment extends UuidModel
     public function getIsDiscountedAttribute(): bool
     {
         return $this->price === $this->activity->discount_price;
+    }
+
+    /**
+     * Returns if the enrollment has been paid.
+     */
+    public function getHasBeenPaidAttribute(): bool
+    {
+        return $this->state instanceof States\Paid;
     }
 
     /**
@@ -178,16 +203,16 @@ class Enrollment extends UuidModel
     {
         // First check for any transition
         $options = $this->state->transitionableStates();
-        if (in_array(SeededState::$name, $options, true) && $this->activity->form) {
-            return new SeededState($this);
+        if (in_array(States\Seeded::$name, $options, true) && $this->activity->form) {
+            return new States\Seeded($this);
         }
 
-        if (in_array(PaidState::$name, $options, true) && $this->price) {
-            return new PaidState($this);
+        if (in_array(States\Paid::$name, $options, true) && $this->price) {
+            return new States\Paid($this);
         }
 
-        if (in_array(ConfirmedState::$name, $options, true)) {
-            return new ConfirmedState($this);
+        if (in_array(States\Confirmed::$name, $options, true)) {
+            return new States\Confirmed($this);
         }
 
         return null;
@@ -197,7 +222,7 @@ class Enrollment extends UuidModel
     {
         return $this->exists
             && $this->total_price
-            && ! ($this->state instanceof CancelledState);
+            && ! ($this->state instanceof States\Cancelled);
     }
 
     /**
@@ -266,6 +291,33 @@ class Enrollment extends UuidModel
         return Arr::get($this->data, 'form.medical', false) !== true;
     }
 
+    public function toPayment(): PaymentFluent
+    {
+        if ($this->price === null) {
+            throw new LogicException('Cannot create payment for enrollment without price');
+        }
+
+        $fees = $this->total_price - $this->price;
+
+        $payment = PaymentFluent::make()
+            ->withNumber("{$this->created_at->format('Y.m')}.{$this->id}")
+            ->withModel($this)
+            ->withUser($this->user)
+            ->withDescription("Inschrijving voor {$this->activity->name}")
+            ->addLine(__(':ticket for :activity', [
+                'ticket' => $this->ticket->title,
+                'activity' => $this->activity->name,
+            ]), $this->price);
+
+        if (($fees = $this->total_price - $this->price) > 0) {
+            $payment->addLine(__('Fees'), $fees);
+        }
+
+        throw_unless($payment->verifySum($this->total_price), new LogicException('Price mismatch'));
+
+        return $payment;
+    }
+
     /**
      * Register the states an enrollment can have.
      */
@@ -276,27 +328,27 @@ class Enrollment extends UuidModel
             ->addState('state', EnrollmentState::class)
 
             // Default to Created
-            ->default(CreatedState::class)
+            ->default(States\Created::class)
 
             // Create → Seeded
-            ->allowTransition(CreatedState::class, SeededState::class)
+            ->allowTransition(States\Created::class, States\Seeded::class)
 
             // Created, Seeded → Confirmed
-            ->allowTransition([CreatedState::class, SeededState::class], ConfirmedState::class)
+            ->allowTransition([States\Created::class, States\Seeded::class], States\Confirmed::class)
 
             // Created, Seeded, Confirmed → Paid
-            ->allowTransition([CreatedState::class, SeededState::class, ConfirmedState::class], PaidState::class)
+            ->allowTransition([States\Created::class, States\Seeded::class, States\Confirmed::class], States\Paid::class)
 
             // Created, Seeded, Confirmed, Paid → Cancelled
             ->allowTransition(
-                [CreatedState::class, SeededState::class, ConfirmedState::class, PaidState::class],
-                CancelledState::class,
+                [States\Created::class, States\Seeded::class, States\Confirmed::class, States\Paid::class],
+                States\Cancelled::class,
             )
 
             // Paid, Cancelled → Refunded
             ->allowTransition(
-                [PaidState::class, CancelledState::class],
-                RefundedState::class,
+                [States\Paid::class, States\Cancelled::class],
+                States\Refunded::class,
             );
     }
 }

@@ -21,7 +21,9 @@ class AddEnrollmentPaymentData extends Migration
 
             // Add Payment Intent ID
             $table->string('payment_intent')->nullable()->default(null)->after('price');
+        });
 
+        Schema::table('enrollments', static function (Blueprint $table) {
             // Remove Paid flag
             $table->dropColumn('paid');
         });

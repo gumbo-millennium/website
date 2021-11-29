@@ -73,8 +73,8 @@ class ProductVariant extends Resource
                 ]),
 
             Fields\Image::make(__('Image'), 'image_path')
-                ->thumbnail(fn () => $this->image->square(64))
-                ->preview(fn () => $this->image->width(300))
+                ->thumbnail(fn () => (string) $this->image->preset('nova-thumbnail'))
+                ->preview(fn () => (string) $this->image->preset('nova-preview'))
                 ->nullable(),
 
             Fields\Text::make('SKU', 'sku')

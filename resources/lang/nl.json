@@ -56,9 +56,34 @@
     "Prijsveranderingen moet je invoeren in Zettle. Je kunt de prijs hier niet aanpassen.",
   "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
 
+  "Continue": "Doorgaan",
+  "Homepage": "Homepage",
+
+  "Ticket Number": "Ticketnummer",
+  "Confirmed": "Bevestigd",
+  "Enrolled at": "Ingeschreven op",
+  "State": "Status",
+  "Yes": "Ja",
+  "No, expires at :expiration": "Nee, loopt ap of :expiration",
+
+  "Confirm Enrollment": "Inschrijving bevestigen",
+  "This action can only be used with one enrollment at a time": "Deze actie kan alleen worden gebruikt met één inschrijving tegelijk",
+  "This enrollment has been cancelled": "Deze inschrijving is geannuleerd",
+  "This enrollment has already been confirmed": "Deze inschrijving is al bevestigd",
+  "Enrollment confirmed": "Inschrijving bevestigd",
+
+  "Cancel Enrollment": "Inschrijving annuleren",
+  "Requested cancellation of :count enrollment(s)": "Annulering van :count inschrijving(en) aangemaakt",
+
+  "Price unknown": "Prijs onbekend",
+  "Free": "Gratis",
+  "Free, or paid starting at :price": "Gratis, of betaald vanaf :price",
+  "From :price": "Vanaf :price",
+
   "Order limit": "Bestellinglimiet",
   "The max count of this variant that can be added to a single order.": "Het maximaal aantal van deze variant dat aan een enkele bestelling kan worden toegevoegd.",
   "Can be overruled on the variant level.": "Kan worden overschreven op het variant-niveau",
+  "Failed to create order payment: :message": "Kon geen betaling aanmaken voor bestelling: :message",
 
   "Failed to render body, sorry.": "De content kan helaas niet goed getoond worden, sorry.",
 
@@ -87,6 +112,9 @@
   "The message has been scheduled.": "Het bericht is ingepland voor verzending.",
   "Body of the mail, basic markdown formatting is supported.":
     "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
+
+  "Your enrollment is being cancelled. This might take a bit, but we'll update you via email.":
+    "Je inschrijving wordt geannuleerd. Dit kan even duren, maar we sturen je een mailtje.",
 
   "Phone country": "Phone country",
   "Two-letter country code (upper case)":
@@ -189,6 +217,56 @@
   "Most recent image": "Meest recente afbeelding",
   "Image": "Afbeelding",
   "The bot command that will show the cam, must end with \"cam\".": "Het bot commando dat de camera zal tonen, moet eindigen met \"cam\".",
+
+  "Ticket": "Ticket",
+  "Tickets": "Tickets",
+  "Availability": "Beschikbaarheid",
+  "Pricing and quantity": "Prijs en aantal",
+  "Regular ticket": "Regulier ticket",
+  "Member ticket": "Ledenticket",
+  "Available From": "Beschikbaar vanaf",
+  "Available Until": "Beschikbaar tot",
+  "Max Quantity": "Maximaal aantal",
+
+  "No tickets available": "Geen tickets beschikbaar",
+  "Sorry, but there are currently no tickets available for this activity.": "Sorry, maar er zijn momenteel geen tickets beschikbaar voor deze activiteit.",
+  "The ticket options below are just for reference.": "De ticketopties hieronder zijn alleen ter referentie.",
+
+  "Enroll": "Inschrijven",
+  "Not Available": "Niet beschikbaar",
+  "Unenroll": "Uitschrijven",
+  "Cancel and return to activity": "Annuleren en terug naar activiteit",
+  "Unenroll and return to activity": "Uitschrijven en terug naar activiteit",
+
+  "Members Only": "Alleen voor leden",
+  "Public": "Openbaar",
+
+  "Available from :date": "Beschikbaar vanaf :date",
+  "Available until :date": "Beschikbaar tot :date",
+  "Freely available": "Beschikbaar tot einde activiteit",
+
+  "No ticket limit": "Geen limiet",
+  "Sold Out": "Uitverkocht",
+  ":quantity tickets, :available left": ":quantity tickets beschikbaar, :available over",
+
+  "Welcome Back": "Welkom terug",
+  "You've already submitted this form, but you can revise information to your liking.": "Je hebt dit formulier al ingediend, maar je kunt de informatie hieronder nog aanpassen.",
+  "Please check with the organisation after updating, since they might've taken out some information already.": "Check wel even na het aanpassen met de organisatie, voor het geval ze al wat hebben doorgegeven.",
+  "There was a problem submitting the form.": "Er is een probleem opgetreden bij het versturen van het formulier.",
+  "Please re-check all the fields below for errors.": "Controleer de velden hieronder op fouten.",
+
+  "Privacy Policy": "Privacybeleid",
+  "Read the Privacy Policy": "Lees het Privacybeleid",
+  "I accept the privacy policy and understand how my data will be processed.": "Ik accepteer het privacybeleid en begrijp hoe mijn gegevens worden verwerkt.",
+
+  "Transfer enrollment": "Inschrijving overdragen",
+  "Confirm Enrollment Transfer": "Inschrijving overnemen",
+  "You haven't requested a transfer code yet": "Je hebt nog geen overdraaglink aangevraagd",
+  "Transfer code disabled": "Je overdraaglink is uitgeschakeld",
+  "A new transfer code has been generated" : "Er is een nieuwe overdraaglink gegenereerd",
+  "A transfer code has been generated, you can now transfer your enrollment": "Er is een overdrachtcode gegenereerd, je kunt nu je inschrijving overdragen",
+  "This is your transfer link, you cannot transfer your enrollment to yourself.": "Dit is jouw eigen overdraaglink. Hoe graag je het ook wil, je kan niet jezelf jouw eigen inschrijving overdragen.",
+  "Hello, I'd like to transfer my enrollment for :activity to you.": "Hallo, ik wil mijn inschrijving voor :activity overdragen aan jou.",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

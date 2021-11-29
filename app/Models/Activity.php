@@ -25,7 +25,7 @@ use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
- * A hosted activity.
+ * App\Models\Activity.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at
@@ -36,9 +36,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property string $name
  * @property string $slug
  * @property null|string $tagline
- * @property null|string $poster
  * @property null|array $description
- * @property null|string $statement
+ * @property null|string $poster
  * @property null|string $location
  * @property null|string $location_address
  * @property string $location_type
@@ -46,13 +45,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property \Illuminate\Support\Carbon $end_date End date and time
  * @property null|int $seats
  * @property bool $is_public
- * @property null|int $member_discount
- * @property null|int $discount_count
- * @property null|string $stripe_coupon_id
- * @property null|int $price
  * @property null|\Illuminate\Support\Carbon $enrollment_start
  * @property null|\Illuminate\Support\Carbon $enrollment_end
- * @property null|string $payment_type
  * @property null|string $cancelled_reason
  * @property null|\Illuminate\Support\Carbon $rescheduled_from
  * @property null|string $rescheduled_reason
@@ -77,6 +71,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read null|\App\Models\array<FormLayout> $form
  * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
+ * @property-read string $human_readable_dates
  * @property-read bool $is_cancelled
  * @property-read bool $is_free
  * @property-read bool $is_free_for_member
@@ -85,12 +80,13 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property-read bool $is_rescheduled
  * @property-read null|string $location_url
  * @property-read null|string $organiser
- * @property-read string $price_label
+ * @property-read string $price_range
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|Role $role
+ * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Activity newModelQuery()
  * @method static Builder|Activity newQuery()
@@ -228,6 +224,11 @@ class Activity extends SluggableModel implements AttachableInterface
     public function enrollments(): Relation
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
     }
 
     /**
@@ -409,32 +410,6 @@ class Activity extends SluggableModel implements AttachableInterface
     }
 
     /**
-     * Returns human-readable summary of the ticket price.
-     */
-    public function getPriceLabelAttribute(): string
-    {
-        if ($this->is_free || $this->total_price <= 0) {
-            // If it's free, mention it
-            return 'gratis';
-        }
-
-        // No discount
-        if ($this->total_discount_price === null) {
-            // Return total price as single price point
-            return Str::price($this->total_price);
-        }
-
-        // Members might have free entry
-        if ($this->total_discount_price === 0) {
-            // Free for all members
-            return 'gratis voor leden';
-        }
-
-        // Discounted for all members
-        return sprintf('Vanaf %s', Str::price($this->total_discount_price ?? $this->total_price));
-    }
-
-    /**
      * Returns if members can go for free.
      */
     public function getIsFreeForMemberAttribute(): bool
@@ -503,6 +478,63 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         return $featureIcons;
+    }
+
+    /**
+     * Return a nice-to-display date indication of the activity.
+     */
+    public function getHumanReadableDatesAttribute(): string
+    {
+        $activityDistance = $this->start_date->diffInHours($this->end_date);
+        if ($activityDistance <= 8) {
+            return sprintf(
+                '%s - %s',
+                $this->start_date->isoFormat('D MMMM, HH:mm'),
+                $this->end_date->isoFormat('HH:mm'),
+            );
+        }
+
+        if ($activityDistance > 48) {
+            return sprintf(
+                '%s - %s, vanaf %s',
+                $this->start_date->isoFormat('D MMMM'),
+                $this->end_date->isoFormat('D MMMM'),
+                $this->start_date->isoFormat('HH:mm'),
+            );
+        }
+
+        return sprintf(
+            '%s - %s',
+            $this->start_date->isoFormat('D MMMM, HH:mm'),
+            $this->end_date->isoFormat('D MMMM, HH:mm'),
+        );
+    }
+
+    public function getPriceRangeAttribute(): string
+    {
+        $ticketCount = $this->tickets->count();
+
+        $ticketPrices = $this->tickets->pluck('total_price')->sort()->values();
+
+        $hasFreeTickets = $ticketPrices->contains(null);
+
+        $minPrice = $ticketPrices->first();
+        $maxPrice = $ticketPrices->last();
+        $minNonZeroPrice = $ticketPrices->min();
+
+        if ($ticketCount === 0) {
+            return __('Price unknown');
+        }
+
+        if ($ticketCount === 1 || $maxPrice === $minPrice) {
+            return $hasFreeTickets ? __('Free') : Str::price($maxPrice);
+        }
+
+        if ($hasFreeTickets && $minNonZeroPrice) {
+            return __('Free, or paid starting at :price', ['price' => Str::price($minNonZeroPrice)]);
+        }
+
+        return __('From :price', ['price' => Str::price($minPrice)]);
     }
 
     /**

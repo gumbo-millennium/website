@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
 
 /**
- * Redirect instructions, used for gumbo.nu and other domains.
+ * App\Models\RedirectInstruction.
  *
  * @property int $id
  * @property string $slug

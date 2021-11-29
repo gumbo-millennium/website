@@ -33,6 +33,7 @@
     "eslint-plugin-standard": "^4.1.0",
     "eslint-webpack-plugin": "^2.5.4",
     "imagemin-webpack-plugin": "^2.4.2",
+    "moment": "^2.29.1",
     "pixrem": "^5.0.0",
     "postcss": "^8.3.8",
     "postcss-calc": "^7.0.5",

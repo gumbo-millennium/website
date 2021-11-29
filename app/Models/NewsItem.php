@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A news article.
+ * App\Models\NewsItem.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at
@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property \Illuminate\Support\Carbon $published_at
  * @property string $title
  * @property string $slug
+ * @property null|string $cover
  * @property string $category
  * @property null|string $sponsor
  * @property null|string $headline

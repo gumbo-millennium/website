@@ -108,7 +108,7 @@ class ActivitiesCommand extends Command
             // Add price
             $suffixes = [];
             if ($activity->price > 0) {
-                $suffixes[] = $activity->price_label;
+                $suffixes[] = $activity->price_range;
             }
 
             // Add available seats

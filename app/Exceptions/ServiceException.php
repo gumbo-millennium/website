@@ -14,8 +14,6 @@ class ServiceException extends RuntimeException
 {
     public const SERVICE_CONSCRIBO = 'conscribo';
 
-    public const SERVICE_STRIPE = 'stripe';
-
     public const SERVICE_GOOGLE = 'google';
 
     /**

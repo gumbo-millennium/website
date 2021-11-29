@@ -10,7 +10,6 @@ use App\Nova\Fields\Logo;
 use App\Nova\Metrics\SponsorClicksPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
-use DanielDeWit\NovaPaperclip\PaperclipImage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
@@ -97,19 +96,20 @@ class Sponsor extends Resource
                 Fields\Heading::make('Site-brede advertentie'),
                 Fields\Textarea::make('Advertentietekst', 'caption')
                     ->help('Tekst in de advertentie, maximaal 40 woorden.'),
-                PaperclipImage::make('Achtergrond', 'backdrop')
+
+                Fields\Image::make('Achtergrond', 'cover')
+                    ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
+                    ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                     ->deletable()
-                    ->mimes(['png', 'jpeg', 'jpg'])
-                    ->help('Afbeelding achter de banner, verhouding 2:1, minimaal 640px breed')
-                    ->minWidth(640)
-                    ->minHeight(320)
-                    ->hideFromIndex()
+                    ->nullable()
+                    ->acceptedTypes(['image/jpeg', 'image/png'])
+                    ->help('Afbeelding achter de banner. Verhouding 2:1, minimaal 640px breed, maximaal 2MB')
                     ->rules(
                         'nullable',
                         'image',
                         'mimes:jpeg,png',
                         'max:2048',
-                        Rule::dimensions()->ratio(2 / 1),
+                        Rule::dimensions()->minWidth(640),
                     ),
 
                 Fields\Heading::make('Pagina-advertentie'),

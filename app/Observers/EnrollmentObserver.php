@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use Illuminate\Support\Facades\Date;
 
 /**
  * Listens for changes in enrollment elements. Sends users mails when they're
@@ -18,54 +19,24 @@ class EnrollmentObserver
      */
     public function saving(Enrollment $enrollment): void
     {
-        // Post-start enrollments don't expire
-        if ($enrollment->activity->start_date < now()) {
-            $enrollment->expire = null;
-
+        // Don't alter enrollments after the event has started
+        if ($enrollment->activity->start_date < Date::now()) {
             return;
         }
 
+        // Check if the enrollment is stable
         $isStable = $enrollment->state instanceof EnrollmentState && $enrollment->state->isStable();
 
-        // Keep it simple if the enrollment is stable
+        // Wipe expiration if the enrollment entered a stable state
         if ($isStable) {
-            // Unset enrollment if we need to
             if ($enrollment->expire !== null) {
                 $enrollment->expire = null;
             }
 
-            // Stop check
             return;
         }
 
-        // An expire date is already set, don't modify it.
-        if ($enrollment->expire !== null) {
-            return;
-        }
-
-        $activity = $enrollment->activity;
-
-        // Get an hour before the start of the activity
-        $startDate = (clone $activity->start_date)->subHour();
-
-        // If the activity starts within 1 hour, stretch it up to 1 hour.
-        $minExpireDate = now()->addHour(1);
-        if ($startDate < $minExpireDate) {
-            $enrollment->expire = $minExpireDate;
-
-            return;
-        }
-
-        // Enrollments expire in a week.
-        $maxExpireDate = now()->addWeek();
-        if ($startDate > $maxExpireDate) {
-            $enrollment->expire = $maxExpireDate;
-
-            return;
-        }
-
-        // The event starts in less than a week but more than an hour, so we
-        // just assign the (start date - 1hr) as expire date.
-        $enrollment->expire = $startDate;
+        // Expire enrollments in 1 hour, unless already set.
+        $enrollment->expire ??= Date::now()->addHour();
     }
 }

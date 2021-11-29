@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions\Shop;
 
-use App\Jobs\Shop\UpdateOrderJob;
+use App\Jobs\Payments\UpdatePaymentJob;
 use App\Models\Shop\Order;
 use App\Nova\Resources\Shop\Order as NovaOrder;
-use Error;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use RuntimeException;
 
 class UpdateOrder extends Action
 {
@@ -42,7 +39,7 @@ class UpdateOrder extends Action
      *
      * @var string
      */
-    public $confirmText = 'This will force an update from Mollie, in case the order has gotten out-of-sync for some reason.';
+    public $confirmText = 'This will force an update of all payments, in case the order has gotten out-of-sync for some reason.';
 
     /**
      * Indicates if this action is available on the resource index view.
@@ -76,23 +73,13 @@ class UpdateOrder extends Action
                 $order = $order->model();
             }
 
-            try {
-                // Trigger an update
-                UpdateOrderJob::dispatchNow($order);
-
-                // Done
-                $updatedItems++;
-            } catch (RuntimeException $exception) {
-                Log::warning('Manual update of {order} failed: {exception}.', [
-                    'order' => $order->number,
-                    'exception' => $exception,
-                ]);
-            } catch (Error $error) {
-                Log::error('Server error for {order}: {exception}.', [
-                    'order' => $order->number,
-                    'exception' => $error,
-                ]);
+            // Trigger an update for each payment
+            foreach ($order->payments as $payment) {
+                UpdatePaymentJob::dispatch($payment);
             }
+
+            // Done
+            $updatedItems++;
         }
 
         $totalItems = $models->count();

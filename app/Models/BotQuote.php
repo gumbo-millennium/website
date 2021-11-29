@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A quote sent by a user via the Telegram bot.
+ * App\Models\BotQuote.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

@@ -3,20 +3,22 @@
 declare(strict_types=1);
 
 use App\Http\Controllers;
+use App\Http\Controllers\Activities;
 use App\Http\Controllers\Admin as AdminControllers;
+use App\Http\Controllers\Auth;
+use App\Http\Controllers\EnrollNew;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
-use App\Http\Middleware\VerifiedIfFree;
+use App\Http\Policy\LoginPolicy;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Spatie\Csp\AddCspHeaders;
 
-$loginCsp = vsprintf('%s:%s', [
-    Spatie\Csp\AddCspHeaders::class,
-    App\Http\Policy\LoginPolicy::class,
-]);
+$loginCsp = vsprintf('%s:%s', [AddCspHeaders::class, LoginPolicy::class]);
 
 // Bind redirects as very, very first.
 foreach (Config::get('gumbo.redirect-domains') as $domain) {
@@ -64,11 +66,8 @@ Route::prefix('admin/')->group(function () {
     Route::get('download-export/{export}', [FileExportController::class, 'download'])
         ->name('export.download');
 
-    Route::get('mollie/enrollments/{enrollment}', [AdminControllers\MollieRedirectController::class, 'enrollment'])
-        ->name('admin.mollie.enrollments');
-
-    Route::get('mollie/orders/{order}', [AdminControllers\MollieRedirectController::class, 'order'])
-        ->name('admin.mollie.orders');
+    Route::get('mollie/dashboard/{payment}', [AdminControllers\MollieRedirectController::class, 'show'])
+        ->name('admin.mollie.show');
 });
 
 /**
@@ -117,44 +116,41 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
 /**
  * Enrollments.
  */
-Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-cache', VerifiedIfFree::class, 'no-sponsor'])->group(static function () {
-    // Actioon view
-    Route::get('/', 'Activities\\TunnelController@get')->name('show');
+Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-sponsor'])->group(function () {
+    Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
 
-    // Enroll start
-    Route::post('/', 'Activities\\EnrollmentController@create')->name('create');
+    // Create basic enrollment
+    Route::get('/ticket', [EnrollNew\TicketController::class, 'create'])->name('create');
+    Route::post('/ticket', [EnrollNew\TicketController::class, 'store'])->name('store');
 
-    // Enroll form
-    Route::patch('/', 'Activities\\FormController@save')->name('edit');
+    // Answer form questions
+    Route::get('/gegevens', [EnrollNew\FormController::class, 'edit'])->name('form');
+    Route::patch('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
-    // Enroll payment start
-    Route::post('/betaling', 'Activities\\PaymentController@store')->name('pay');
+    // Start payment
+    Route::get('/betalen', [EnrollNew\PaymentController::class, 'create'])->name('pay');
+    Route::post('/betalen', [EnrollNew\PaymentController::class, 'store'])->name('payStore');
 
-    // Enroll payment start
-    Route::get('/betaling', 'Activities\\PaymentController@start')->name('pay-wait');
+    // Show payment loading
+    Route::get('/betalen/go', [EnrollNew\PaymentController::class, 'show'])->name('payShow');
 
-    // Enroll payment return
-    Route::get('/betaling/afronden', 'Activities\\PaymentController@complete')->name('pay-return');
-
-    // Enroll payment validation
-    Route::get('/betaling/validatie', 'Activities\\PaymentController@completeVerify')->name('pay-validate');
-
-    // Enroll form
-    Route::get('/uitschrijven', 'Activities\\EnrollmentController@delete')->name('remove');
-
-    // Enroll form (do)
-    Route::delete('/uitschrijven', 'Activities\\EnrollmentController@destroy');
+    // Redirect to Mollie or verify payment
+    Route::get('/betalen/provider', [EnrollNew\PaymentController::class, 'redirect'])->name('payRedirect');
+    Route::get('/betalen/controle', [EnrollNew\PaymentController::class, 'verify'])->name('payVerify');
 
     // Transfer form
-    Route::get('/overdragen', 'Activities\\TransferController@sender')->name('transfer');
+    Route::get('/overdragen', [EnrollNew\TransferController::class, 'show'])->name('transfer');
 
     // Transfer actions
-    Route::post('/overdragen', 'Activities\\TransferController@senderUpdate');
-    Route::delete('/overdragen', 'Activities\\TransferController@senderRemove');
+    Route::post('/overdragen', [EnrollNew\TransferController::class, 'store']);
+    Route::delete('/overdragen', [EnrollNew\TransferController::class, 'destroy']);
 
     // Transfer acceptance form
-    Route::get('/overnemen/{token}', 'Activities\\TransferController@receiver')->name('transfer-view');
-    Route::post('/overnemen/{token}', 'Activities\\TransferController@receiverTake');
+    Route::get('/overnemen/{secret}', [EnrollNew\TransferController::class, 'showConsume'])->name('transfer-view');
+    Route::post('/overnemen/{secret}', [EnrollNew\TransferController::class, 'storeConsume']);
+
+    // Cancel form
+    Route::post('/annuleren', [EnrollNew\CancelController::class, 'cancel'])->name('cancel');
 });
 
 /**
@@ -190,6 +186,11 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
     // Register privacy
     Route::get('/register/privacy', 'Auth\RegisterController@showPrivacy')->name('register.register-privacy');
     Route::post('/register/privacy', 'Auth\RegisterController@savePrivacy');
+
+    // Logout page
+    Route::get('/logged-out', [Auth\LoginController::class, 'showLoggedout'])
+        ->middleware('signed')
+        ->name('logout.done');
 });
 
 // My account
@@ -259,9 +260,7 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
 
     Route::get('/bestellingen/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
 
-    Route::get('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
-    Route::get('/bestellingen/{order}/betalen/go', [Shop\OrderController::class, 'payRedirect'])->name('order.pay-redirect');
-    Route::get('/bestellingen/{order}/betalen/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+    Route::post('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
 
     Route::get('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancelShow'])->name('order.cancel');
     Route::post('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancel']);
@@ -270,12 +269,20 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
 });
 
+// Payments
+Route::prefix('/betalingen/{payment}')->middleware(['auth'])->group(static function () {
+    Route::get('/', [Controllers\PaymentController::class, 'show'])->name('payment.show');
+
+    Route::get('/redirect', [Controllers\PaymentController::class, 'redirect'])->name('payment.redirect');
+    Route::get('/verify', [Controllers\PaymentController::class, 'verify'])->name('payment.verify');
+});
+
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
 
 // Styling pages
-if (app()->isLocal()) {
+if (App::isLocal()) {
     Route::view('/test/colors', 'tests.colors');
     Route::view('/test/loading', 'tests.loading');
 }

@@ -22,10 +22,12 @@
 
 .userbar__links--contact {
   @apply hidden order-1;
+  @apply justify-start;
 }
 
 .userbar__links--user {
   @apply order-2;
+  @apply justify-end;
 }
 
 @screen md {

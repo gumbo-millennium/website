@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Contracts\ConvertsToStripe;
 use App\Helpers\Arr;
 use App\Models\Shop\Order;
 use App\Notifications\VerifyEmail;
@@ -21,7 +20,7 @@ use Illuminate\Support\HtmlString;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * Our users.
+ * App\Models\User.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at
@@ -67,7 +66,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailContract
+class User extends Authenticatable implements MustVerifyEmailContract
 {
     use HasEncryptedAttributes;
     use HasRoles;
@@ -105,7 +104,6 @@ class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailC
      * @var array
      */
     protected $hidden = [
-        'stripe_id',
         'conscribo_id',
         'password',
         'remember_token',
@@ -269,31 +267,6 @@ class User extends Authenticatable implements ConvertsToStripe, MustVerifyEmailC
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail());
-    }
-
-    /**
-     * Returns Stripe-ready array.
-     */
-    public function toStripeCustomer(): array
-    {
-        // Build base data
-        $data = [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
-        ];
-
-        // Add shipping with subset of data
-        $data['shipping'] = Arr::only($data, ['name', 'phone', 'address']);
-
-        // Remove shipping address if empty, since the Stripe API doesn't allow changing it
-        if (Arr::get($data, 'shipping.address') === null) {
-            Arr::forget($data, 'shipping');
-        }
-
-        // Return new data
-        return $data;
     }
 
     /**

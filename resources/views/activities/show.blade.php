@@ -36,13 +36,18 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
 @endcomponent
 @endsection
 
+@php
+    $bannerImage = image_asset($activity->poster)->preset('banner');
+    $bannerImage2x = (clone $bannerImage)->dpr(2);
+@endphp
+
 {{-- Set main --}}
 @section('two-col.left')
     {{-- Image --}}
     <div class="h-64 bg-gray-secondary-2 rounded mb-4 overflow-hidden" role="presentation">
-        @if ($activity->image->exists())
-        <img class="w-full h-64 object-cover" src="{{ $activity->image->url('cover') }}"
-            srcset="{{ $activity->image->url('cover') }} 384w,{{ $activity->image->url('cover-2x') }} 768w">
+        @if ($activity->poster)
+        <img class="w-full h-64 object-cover" src="{{ $bannerImage }}"
+            srcset="{{ $bannerImage }} 384w,{{ $bannerImage2x }} 768w">
         @else
         <div class="w-full h-64 flex items-center">
             <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block dark:hidden">
@@ -62,20 +67,6 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
     @if (!$activity->is_published)
     <div class="notice notice--warning">
         Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
-    </div>
-    @endif
-
-    {{-- Discount banner --}}
-    @if ($discountWarning->show)
-    <div class="notice notice--brand">
-        @icon('solid/percentage', 'notice__icon')
-        <p>
-            @if ($discountWarning->soldout)
-            De inschrijvingen met korting zijn allemaal vergeven, je betaalt nu het normale tarief.
-            @else
-            Er geld een kortingstarief van {{ $discountWarning->price }}, deze is nog beschikbaar voor {{ $discountWarning->count }}.
-            @endif
-        </p>
     </div>
     @endif
 

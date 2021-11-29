@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api;
-use App\Http\Controllers\Api\MollieController;
 use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,12 +31,8 @@ Route::get('plazacam/{user}/{webcam}', [Api\WebcamController::class, 'show'])
     ->middleware('signed')
     ->name('webcam.view');
 
-// Register API for Stripe endpoints
-Route::stripeWebhooks('payments/stripe/handle');
-
 // Register Telegram webhooks
 Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('bots.telegram');
 
 // Register Mollie webhook URL
-Route::post('/mollie/hooks/activities', [MollieController::class, 'activity'])->name('webhooks.shop');
-Route::post('/mollie/hooks/shop', [MollieController::class, 'shop'])->name('webhooks.shop');
+Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name('webhooks.mollie');

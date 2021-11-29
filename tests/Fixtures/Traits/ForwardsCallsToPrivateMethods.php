@@ -18,8 +18,6 @@ trait ForwardsCallsToPrivateMethods
         try {
             return parent::__call($name, $args);
         } catch (Error $error) {
-            dd($error->getMessage());
-
             $self = static::class;
 
             throw new LogicException("Method {$name} not found on {$self}");
