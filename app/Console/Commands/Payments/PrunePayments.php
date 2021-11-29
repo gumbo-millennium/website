@@ -68,8 +68,8 @@ class PrunePayments extends Command
                     ->orWhereNotNull('cancelled_at')
                     ->orWhere(
                         fn ($query) => $query
-                    ->whereNotNull('expires_at')
-                    ->where('expires_at', '<', Date::now()),
+                            ->whereNotNull('expires_at')
+                            ->where('expires_at', '<', Date::now()),
                     );
             })
             ->whereHas('payments', fn (Builder $query) => $query->pending())

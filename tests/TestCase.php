@@ -6,6 +6,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Support\Facades\Route;
 use Tests\Traits\RefreshDatabase;
 
 abstract class TestCase extends BaseTestCase
@@ -21,6 +22,11 @@ abstract class TestCase extends BaseTestCase
 
         // Disable Mix
         $this->withoutMix();
+
+        // Add routes
+        Route::middleware('web')
+            ->namespace('App\\Controllers')
+            ->group(base_path('routes/test.php'));
 
         // Bind response helper
         TestResponse::macro('dumpOnError', function () {

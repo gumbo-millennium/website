@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands\Shop;
 
 use App\Enums\PaymentStatus;
-use App\Facades\Payments;
 use App\Models\Shop\Order;
 use App\Notifications\Shop\OrderExpired;
 use Illuminate\Console\Command;

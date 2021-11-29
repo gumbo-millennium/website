@@ -12,6 +12,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -282,7 +283,7 @@ Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
 
 // Styling pages
-if (app()->isLocal()) {
+if (App::isLocal()) {
     Route::view('/test/colors', 'tests.colors');
     Route::view('/test/loading', 'tests.loading');
 }

@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use LogicException;
 
@@ -49,11 +48,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-
-        // Add web routes
-        if (App::runningUnitTests()) {
-            $this->mapTestRoutes();
-        }
     }
 
     /**
@@ -81,18 +75,6 @@ class RouteServiceProvider extends ServiceProvider
             ->name('api.')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
-    }
-
-    /**
-     * Define the testing routes for the application.
-     *
-     * Only mounted when the app is running tests.
-     */
-    protected function mapTestRoutes(): void
-    {
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/test.php'));
     }
 
     /**
