@@ -41,6 +41,11 @@ interface EnrollmentServiceContract
     public function createEnrollment(Activity $activity, Ticket $ticket): Enrollment;
 
     /**
+     * Checks if the user can transfer their enrollment to this activity.
+     */
+    public function canTransfer(Enrollment $enrollment): bool;
+
+    /**
      * Transfers an enrollment to the new user, sending proper mails and
      * invoicing jobs.
      */

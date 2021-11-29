@@ -53,7 +53,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
         // Check if there are any tickets left that this user can buy
         $tickets = $this->findTicketsForActivity($activity);
-        if (empty($tickets)) {
+        if ($tickets->isEmpty()) {
             return false;
         }
 
@@ -79,11 +79,15 @@ class EnrollmentService implements EnrollmentServiceContract
 
         throw_if($this->getEnrollment($activity), new EnrollmentFailedException("You're already enrolled for this activity"));
 
-        throw_unless($ticket->is_being_sold, new EnrollmentFailedException('This ticket is no longer being sold'));
+        throw_unless($ticket->isAvailableFor($user), new EnrollmentFailedException('This ticket is not available'));
 
         $ticket->refresh();
 
         throw_if($ticket->quantity_available === 0, new EnrollmentFailedException('This ticket is sold out'));
+
+        throw_if($ticket->activity->refresh()->available_seats === 0, new EnrollmentFailedException('This activity is sold out'));
+
+        throw_unless($this->canEnroll($activity), new EnrollmentFailedException('You cannot enroll for this activity'));
 
         $enrollment = $activity->enrollments()->make();
         $enrollment->ticket()->associate($ticket);
@@ -96,10 +100,20 @@ class EnrollmentService implements EnrollmentServiceContract
         return $enrollment;
     }
 
-    /**
-     * Transfers an enrollment to the new user, sending proper mails and
-     * invoicing jobs.
-     */
+    public function canTransfer(Enrollment $enrollment): bool
+    {
+        if ($enrollment->state instanceof States\Cancelled || $enrollment->trashed()) {
+            return false;
+        }
+
+        $activity = $enrollment->activity;
+        if ($activity->start_date < Date::now()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment
     {
         // Get current

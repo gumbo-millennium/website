@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static null|Enrollment getEnrollment(Activity $activity)
  * @method static Collection<Enrollment> findTicketsForActivity(Activity $activity)
  * @method static bool canEnroll(Activity $activity)
+ * @method static bool canTransfer(Enrollment $enrollment)
  * @method static Enrollment transferEnrollment(Enrollment $enrollment, User $reciever)
  * @method static Enrollment createEnrollment(Activity $activity, Ticket $ticket)
  * @see \App\Contracts\EnrollmentServiceContract

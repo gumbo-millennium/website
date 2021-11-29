@@ -83,7 +83,7 @@ class Ticket extends Model
     public function getMembersOnlyAttribute(): bool
     {
         // Tickets can be members only
-        if ($this->attributes['members_only']) {
+        if ($this->attributes['members_only'] ?? false) {
             return true;
         }
 
