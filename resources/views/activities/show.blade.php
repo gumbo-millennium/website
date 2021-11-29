@@ -45,7 +45,7 @@ $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
 @section('two-col.left')
     {{-- Image --}}
     <div class="h-64 bg-gray-secondary-2 rounded mb-4 overflow-hidden" role="presentation">
-        @if ($activity->image)
+        @if ($activity->poster)
         <img class="w-full h-64 object-cover" src="{{ $bannerImage }}"
             srcset="{{ $bannerImage }} 384w,{{ $bannerImage2x }} 768w">
         @else

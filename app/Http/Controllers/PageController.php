@@ -156,7 +156,7 @@ class PageController extends Controller
         SEOTools::setTitle($page->title);
         SEOTools::setDescription($page->description);
         SEOTools::addImages([
-            image_asset($page->image)->preset('social'),
+            image_asset($page->cover)->preset('social'),
         ]);
 
         // Show view

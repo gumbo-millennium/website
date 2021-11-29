@@ -68,7 +68,7 @@ $bannerImage2x = (clone $bannerImage)->dpr(2);
 @endphp
 <div class="card">
     <div class="card__figure" role="presentation">
-        @if ($activity->image)
+        @if ($activity->poster)
         <img
             class="card__figure-image"
             src="{{ $bannerImage }}"
