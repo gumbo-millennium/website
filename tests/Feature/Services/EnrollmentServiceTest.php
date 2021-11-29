@@ -69,12 +69,12 @@ class EnrollmentServiceTest extends TestCase
             [
                 'title' => 'Before for everyone',
                 'available_until' => Date::now()->subHour(),
-                'members_only' => false,
+                'is_public' => true,
             ],
             [
                 'title' => 'Before for members',
                 'available_until' => Date::now()->subHour(),
-                'members_only' => true,
+                'is_public' => false,
             ],
 
             // Current tickets
@@ -82,25 +82,25 @@ class EnrollmentServiceTest extends TestCase
                 'title' => 'Current for everyone',
                 'available_from' => Date::now()->subHour(),
                 'available_until' => Date::now()->addHour(),
-                'members_only' => false,
+                'is_public' => true,
             ],
             [
                 'title' => 'Current for members',
                 'available_from' => Date::now()->subHour(),
                 'available_until' => Date::now()->addHour(),
-                'members_only' => true,
+                'is_public' => false,
             ],
 
             // After tickets
             [
                 'title' => 'After for everyone',
                 'available_from' => Date::now()->addHour(),
-                'members_only' => false,
+                'is_public' => true,
             ],
             [
                 'title' => 'After for members',
                 'available_from' => Date::now()->addHour(),
-                'members_only' => true,
+                'is_public' => false,
             ],
         ]);
 
@@ -180,7 +180,7 @@ class EnrollmentServiceTest extends TestCase
 
         $ticket = $activity->tickets()->create([
             'title' => 'Guest ticket',
-            'members_only' => false,
+            'is_public' => true,
         ]);
 
         // Guest
@@ -217,7 +217,7 @@ class EnrollmentServiceTest extends TestCase
 
         $activity->tickets()->create([
             'title' => 'Member ticket',
-            'members_only' => true,
+            'is_public' => false,
         ]);
 
         $this->assertFalse(Enroll::canEnroll($activity));
@@ -239,7 +239,7 @@ class EnrollmentServiceTest extends TestCase
 
         $activity->tickets()->create([
             'title' => 'Member ticket',
-            'members_only' => true,
+            'is_public' => false,
         ]);
 
         Auth::logout();

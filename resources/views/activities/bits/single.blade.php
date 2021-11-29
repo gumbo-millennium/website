@@ -89,9 +89,6 @@ $bannerImage2x = (clone $bannerImage)->dpr(2);
             @elseif ($activity->is_postponed)
                 <span class="card__figure-badge card__figure-badge--warning">Uitgesteld</span>
             @endif
-            @if ($activity->location_type === Activity::LOCATION_ONLINE)
-                <span class="card__figure-badge card__figure-badge--brand">Alleen online</span>
-            @endif
         </div>
 
         {{-- Icons --}}

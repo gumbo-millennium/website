@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Filters;
 
-use App\Contracts\Payments\PayableModel;
 use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Filters\Filter;
 
-class PayableStatusFilter extends Filter
+class PaymentStatusFilter extends Filter
 {
     /**
      * The displayable name of the filter.
@@ -37,15 +37,18 @@ class PayableStatusFilter extends Filter
         return $query->where(function (Builder $query) use ($value) {
             switch ($value) {
                 case PaymentStatus::PAID:
-                    return $query->wherePaid();
+                    return $query->whereHas('payments', fn ($builder) => $builder->whereNotNull('paid_at'));
                 case PaymentStatus::CANCELLED:
-                    return $query->whereCancelled();
+                    return $query->whereHas('payments', fn ($builder) => $builder->whereNotNull('cancelled_at'));
                 case PaymentStatus::EXPIRED:
-                    return $query->whereExpired();
+                    return $query->whereHas('payments', fn ($builder) => $builder->where(function ($query) {
+                        $query->whereNotNull('expires_at')
+                            ->where('expires_at', '<', Date::now());
+                    }));
                 case PaymentStatus::PENDING:
-                    return $query->wherePending();
+                    return $query->whereHas('payments', fn ($builder) => $builder->whereNull('transaction_id'));
                 case PaymentStatus::OPEN:
-                    return $query->whereOpen();
+                    return $query->whereHas('payments', fn ($builder) => $builder->pending());
             }
         });
     }
@@ -73,6 +76,6 @@ class PayableStatusFilter extends Filter
      */
     public function default()
     {
-        return PayableModel::STATUS_PAID;
+        return PaymentStatus::PAID;
     }
 }

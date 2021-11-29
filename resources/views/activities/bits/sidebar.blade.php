@@ -55,8 +55,12 @@ if ($durationIsLong && $durationIsMultiDay) {
 // Prep location
 $location = new HtmlString('<span class="text-gray-primary-1">Onbekend</span>');
 $locationIcon = null;
-if (!empty($activity->location) && $activity->location_type === Activity::LOCATION_ONLINE) {
-    $location = $activity->location;
+if (!empty($activity->location) && filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
+    $location = new HtmlString(sprintf(
+        '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
+        e($activity->location_url),
+        e($activity->location)
+    ));
     $locationIcon = 'globe-europe';
 } elseif (!empty($activity->location) && !empty($activity->location_url)) {
     $location = new HtmlString(sprintf(

@@ -83,9 +83,13 @@ class TicketTest extends TestCase
         /** @var Ticket $ticket */
         $ticket = $activity->tickets()->create([
             'title' => 'Test',
-            'members_only' => false,
+            'is_public' => true,
         ]);
 
+        // Is public is form the DB
+        $this->assertTrue($ticket->is_public);
+
+        // Members only is computed
         $this->assertTrue($ticket->members_only);
     }
 }

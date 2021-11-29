@@ -74,7 +74,7 @@ class ActivitySeeder extends Seeder
                     'title' => __('Ticket :number', ['number' => $index + 1]),
                 ], [
                     'price' => $price,
-                    'members_only' => (bool) $memberOnly,
+                    'is_public' => ! $memberOnly,
                     'quantity' => $quantity,
                 ]);
             }

@@ -175,7 +175,7 @@ class TicketControllerTest extends TestCase
         [$publicTicket, $privateTicket] = $activity->tickets()->saveMany([
             factory(Ticket::class)->make(),
             factory(Ticket::class)->make([
-                'members_only' => true,
+                'is_public' => false,
             ]),
         ]);
 
@@ -223,7 +223,7 @@ class TicketControllerTest extends TestCase
         $activity = factory(Activity::class)->create();
         $privateTicket = $activity->tickets()->save(
             factory(Ticket::class)->make([
-                'members_only' => true,
+                'is_public' => false,
             ]),
         );
 
@@ -273,7 +273,7 @@ class TicketControllerTest extends TestCase
                 'available_from' => Date::now()->addWeek(1),
             ]),
             factory(Ticket::class)->make([
-                'members_only' => true,
+                'is_public' => false,
             ]),
         ]);
 

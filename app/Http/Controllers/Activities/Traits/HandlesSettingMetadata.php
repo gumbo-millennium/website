@@ -9,6 +9,7 @@ use App\Models\Activity;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOTools;
+use Illuminate\Support\Facades\URL;
 
 trait HandlesSettingMetadata
 {
@@ -68,12 +69,12 @@ trait HandlesSettingMetadata
             return null;
         }
 
-        // Online-only
-        if ($activity->location_type === Activity::LOCATION_ONLINE) {
+        // Check if online
+        if (filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
             return [
                 '@type' => 'VirtualLocation',
                 'name' => $activity->location,
-                'url' => \secure_url('/'),
+                'url' => URL::to($activity->location_address),
             ];
         }
 
@@ -132,17 +133,8 @@ trait HandlesSettingMetadata
         ];
 
         // Add location
-        switch ($activity->location_type) {
-            case Activity::LOCATION_ONLINE:
-                $data['eventAttendanceMode'] = 'OnlineEventAttendanceMode';
-
-                break;
-            case Activity::LOCATION_MIXED:
-                $data['eventAttendanceMode'] = 'MixedEventAttendanceMode';
-
-                break;
-            default:
-                $data['eventAttendanceMode'] = 'OfflineEventAttendanceMode';
+        if (filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
+            $data['eventAttendanceMode'] = 'OnlineEventAttendanceMode';
         }
 
         if ($activity->is_cancelled) {

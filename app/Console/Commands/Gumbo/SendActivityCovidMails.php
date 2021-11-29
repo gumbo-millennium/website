@@ -42,11 +42,17 @@ class SendActivityCovidMails extends Command
      */
     public function handle()
     {
+        if (false === true) {
+            $this->line('Covid mails are disabled');
+            $this->info('Skipping execution');
+
+            return;
+        }
+
         // Get all activities that take place soon
         $activities = Activity::query()
             ->whereBetween('start_date', [now()->addHours(6), now()->addHours(26)])
             ->whereNull('cancelled_at')
-            ->where('location_type', '!=', Activity::LOCATION_ONLINE)
             ->get();
 
         // Loop

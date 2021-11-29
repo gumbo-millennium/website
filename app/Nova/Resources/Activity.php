@@ -155,7 +155,6 @@ class Activity extends Resource
      *
      * @return array
      */
-    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function fields(Request $request)
     {
         $featuresMap = collect(Config::get('gumbo.activity-features', []))
@@ -173,28 +172,19 @@ class Activity extends Resource
 
                 Fields\Text::make('Adres locatie', 'location_address')
                     ->hideFromIndex()
-                    ->rules('required_unless:location_type,online', 'max:190')
-                    ->help(<<<'LOCATION'
-                        Het adres van de locatie, indien niet geheel online.
-                        Houd, indien onbekend of geheim, "Zwolle, Netherlands" aan.
-                    LOCATION),
-
-                Fields\Select::make('Type locatie', 'location_type')
-                    ->hideFromIndex()
-                    ->options([
-                        ActivityModel::LOCATION_OFFLINE => 'Geheel offline',
-                        ActivityModel::LOCATION_ONLINE => 'Geheel online',
-                        ActivityModel::LOCATION_MIXED => 'Gemixt',
+                    ->rules([
+                        'max:190',
                     ])
-                    ->help('Het type locatie, kan iemand vanuit huis meedoen of alleen op locatie?')
-                    ->rules('required'),
+                    ->help(<<<'LOCATION'
+                        Adres van de locatie, mag een webadres zijn.
+                    LOCATION),
 
                 Fields\BooleanGroup::make('Eigenschappen', 'features')
                     ->options($featuresMap)
                     ->help('Extra eigenschappen om aan deze activiteit toe te voegen.'),
             ]),
 
-            new Panel('Datum en prijs-instellingen', $this->pricingFields()),
+            new Panel('Datums', $this->dateFields()),
 
             new Panel('Inschrijf-instellingen', $this->enrollmentFields()),
 
@@ -271,27 +261,37 @@ class Activity extends Resource
             Fields\Text::make('Geannuleerd om', 'cancelled_reason')
                 ->readonly()
                 ->onlyOnDetail(),
+
+            Fields\DateTime::make('Publiceren op', 'published_at')
+                ->help('Indien je de activiteit nog even wilt verbergen. Dit werkt hetzelfde als een ‘unlisted’ video op YouTube')
+                ->rules('nullable', 'date', 'before:start_date')
+                ->nullable()
+                ->hideFromIndex(),
         ]);
     }
 
     /**
      * Pricing fields.
      */
-    public function pricingFields(): array
+    public function dateFields(): array
     {
         return [
             Fields\DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
                 ->firstDayOfWeek(1)
-                // phpcs:ignore Generic.Files.LineLength.TooLong
                 ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             Fields\DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
+        ];
+    }
 
+    public function enrollmentFields(): array
+    {
+        return [
             Fields\Number::make(__('Ticket Count'), 'tickets_count')
                 ->exceptOnForms()
                 ->help(__('Number of different tickets available.')),
@@ -299,18 +299,6 @@ class Activity extends Resource
             Flexible::make('Form', 'enrollment_questions')
                 ->confirmRemove('Removing a field does not remove submitted data')
                 ->preset(ActivityForm::class),
-        ];
-    }
-
-    public function enrollmentFields(): array
-    {
-        return [
-            Fields\DateTime::make('Publiceren op', 'published_at')
-                // phpcs:ignore Generic.Files.LineLength.TooLong
-                ->help('Indien je de activiteit nog even wilt verbergen. Dit werkt hetzelfde als een ‘unlisted’ video op YouTube')
-                ->rules('nullable', 'date', 'before:start_date')
-                ->nullable()
-                ->hideFromIndex(),
 
             Fields\DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
@@ -334,12 +322,13 @@ class Activity extends Resource
                 return $this->enrollment_open ? 'Geopend' : 'Gesloten';
             })->onlyOnIndex(),
 
-            Seats::make('Aantal plekken', 'seats')
+            Seats::make('Maximaal aantal plekken', 'seats')
                 ->min(0)
                 ->step(1)
                 ->nullable()
                 ->nullValues(['', '0'])
-                ->rules('nullable', 'numeric', 'min:0'),
+                ->rules('nullable', 'numeric', 'min:0')
+                ->help('Het absolute maximum aantal plekken, indien je dit niet met tickets wil doen.'),
 
             // Public
             Fields\Boolean::make('Openbare activiteit', 'is_public'),
@@ -385,7 +374,6 @@ class Activity extends Resource
     /**
      * @inheritdoc
      */
-    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function cards(Request $request)
     {
         return [

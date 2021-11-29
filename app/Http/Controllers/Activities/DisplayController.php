@@ -16,6 +16,8 @@ use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 
 /**
  * Handles showing activity lists, activities and the schedule route.
@@ -98,8 +100,7 @@ class DisplayController extends Controller
     {
         // Redirect if not public and not logged in
         if (! $activity->is_public && ! $request->user()) {
-            return \redirect()
-                ->guest(route('login'));
+            return Redirect::guest(route('login'));
         }
 
         // Ensure the user can see this
@@ -109,8 +110,8 @@ class DisplayController extends Controller
             abort(403, 'activities.errors.no-access');
         }
 
-        // Load enrollments
-        $activity->load(['enrollments']);
+        // Load tickets and enrollments
+        $activity->load(['tickets', 'enrollments']);
 
         // Set meta
         $this->setActivityMeta($activity);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Jobs\Payments\UpdatePaymentJob;
 use App\Models\Payment;
@@ -16,11 +17,11 @@ class WebhookController extends Controller
 {
     public function mollie(Request $request): HttpResponse
     {
-        $paymentId = $request->input('id');
+        $paymentId = (string) $request->input('id');
 
         $paymentModel = Payment::whereTransactionId(
             MolliePaymentService::getName(),
-            $paymentId,
+            $paymentId ?: Str::random(64),
         )->first();
 
         if ($paymentModel) {

@@ -197,6 +197,14 @@ class ActivityPolicy
     }
 
     /**
+     * Allow adding tickets when the activity is being managed by the user.
+     */
+    public function addTicket(User $user, Activity $activity): bool
+    {
+        return $user->can('manage', $activity);
+    }
+
+    /**
      * Can the given user manage the given activities or activities in general.
      */
     public function manage(User $user, ?Activity $activity = null): bool
