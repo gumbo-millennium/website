@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Model\Payment;
+use App\Models;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -26,7 +27,9 @@ class PaymentPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('manage', Payment::class);
+        return $user->can('manage', Payment::class)
+            || $user->can('viewAny', Models\Enrollment::class)
+            || $user->can('viewAny', Models\Shop\Order::class);
     }
 
     /**
@@ -36,7 +39,8 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        return $user->can('manage', Payment::class);
+        return $user->can('manage', Payment::class)
+            || ($payment->payable && $user->can('view', $payment->payable));
     }
 
     /**
@@ -66,7 +70,7 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        return $user->can('admin', Payment::class) && $payment->created_at < today()->subYear(7);
+        return false;
     }
 
     /**

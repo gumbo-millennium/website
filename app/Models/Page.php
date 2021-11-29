@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property string $title
  * @property string $slug
+ * @property null|string $cover
  * @property null|string $group
  * @property string $type
  * @property null|string $summary

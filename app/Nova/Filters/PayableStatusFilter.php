@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Nova\Filters;
 
 use App\Contracts\Payments\PayableModel;
+use App\Enums\PaymentStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
@@ -32,7 +34,20 @@ class PayableStatusFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->wherePaymentStatus($value);
+        return $query->where(function (Builder $query) use ($value) {
+            switch ($value) {
+                case PaymentStatus::PAID:
+                    return $query->wherePaid();
+                case PaymentStatus::CANCELLED:
+                    return $query->whereCancelled();
+                case PaymentStatus::EXPIRED:
+                    return $query->whereExpired();
+                case PaymentStatus::PENDING:
+                    return $query->wherePending();
+                case PaymentStatus::OPEN:
+                    return $query->whereOpen();
+            }
+        });
     }
 
     /**
@@ -43,11 +58,11 @@ class PayableStatusFilter extends Filter
     public function options(Request $request)
     {
         return collect([
-            PayableModel::STATUS_UNKNOWN,
-            PayableModel::STATUS_OPEN,
-            PayableModel::STATUS_PAID,
-            PayableModel::STATUS_CANCELLED,
-            PayableModel::STATUS_COMPLETED,
+            PaymentStatus::PENDING,
+            PaymentStatus::OPEN,
+            PaymentStatus::PAID,
+            PaymentStatus::CANCELLED,
+            PaymentStatus::EXPIRED,
         ])->mapWithKeys(fn ($val) => [__("gumbo.payment-status.{$val}") => $val])->all();
     }
 

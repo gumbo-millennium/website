@@ -6,17 +6,11 @@ namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Activity as ActivityModel;
-use App\Nova\Actions\CancelActivity;
-use App\Nova\Actions\PostponeActivity;
-use App\Nova\Actions\RescheduleActivity;
-use App\Nova\Actions\SendActivityMail;
-use App\Nova\Fields\Price;
+use App\Nova\Actions;
 use App\Nova\Fields\Seats;
-use App\Nova\Filters\RelevantActivitiesFilter;
+use App\Nova\Filters;
 use App\Nova\Flexible\Presets\ActivityForm;
-use App\Nova\Metrics\ConfirmedEnrollments;
-use App\Nova\Metrics\NewEnrollments;
-use App\Nova\Metrics\PendingEnrollments;
+use App\Nova\Metrics;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
@@ -46,6 +40,16 @@ class Activity extends Resource
      * @var string
      */
     public static $title = 'name';
+
+    /**
+     * The relationships that should be eager loaded when performing an index query.
+     *
+     * @var array
+     */
+    public static $with = [
+        'tickets',
+        'enrollments',
+    ];
 
     /**
      * Name of the group.
@@ -229,11 +233,6 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            Fields\Text::make('Incasso-omschrijving', 'statement')
-                ->hideFromIndex()
-                ->rules('nullable', 'string', 'between:2,16')
-                ->help('2-16 tekens lange omschrijng, welke op het iDEAL afschrift getoond wordt.'),
-
             NovaEditorJs::make('Omschrijving', 'description')
                 ->nullable()
                 ->hideFromIndex()
@@ -293,38 +292,9 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->firstDayOfWeek(1),
 
-            Price::make('Netto prijs', 'price')
-                ->min(2.50)
-                ->max(200)
-                ->step(0.25)
-                ->nullable()
-                ->nullValues([''])
-                ->rules('nullable', 'numeric', 'min:2.50')
-                ->help('In euro, exclusief transactiekosten'),
-
-            Price::make('Totaalprijs', 'total_price')
-                ->help('In euro, inclusief transactiekosten')
-                ->onlyOnDetail(),
-
-            Price::make('Korting leden', 'member_discount')
-                ->min(0)
-                ->max(200)
-                ->step(0.25)
-                ->nullable()
-                ->nullValues([''])
-                ->rules('nullable', 'numeric', 'min:0.50', 'lte:price')
-                ->help('In euro')
-                ->onlyOnForms(),
-
-            Price::make('Totaalprijs korting', 'total_discount_price')
-                ->help('In euro, inclusief transactiekosten')
-                ->onlyOnDetail(),
-
-            Fields\Number::make('Aantal kortingen', 'discount_count')
-                ->step(1)
-                ->nullable()
-                ->rules('nullable', 'numeric', 'min:1')
-                ->help('Beperkt het aantal keer dat de korting wordt verleend.'),
+            Fields\Number::make(__('Ticket Count'), 'tickets_count')
+                ->exceptOnForms()
+                ->help(__('Number of different tickets available.')),
 
             Flexible::make('Form', 'enrollment_questions')
                 ->confirmRemove('Removing a field does not remove submitted data')
@@ -393,10 +363,10 @@ class Activity extends Resource
     public function actions(Request $request)
     {
         return [
-            new CancelActivity(),
-            new PostponeActivity(),
-            new RescheduleActivity(),
-            new SendActivityMail(),
+            new Actions\CancelActivity(),
+            new Actions\PostponeActivity(),
+            new Actions\RescheduleActivity(),
+            new Actions\SendActivityMail(),
         ];
     }
 
@@ -408,7 +378,7 @@ class Activity extends Resource
     public function filters(Request $request)
     {
         return [
-            new RelevantActivitiesFilter(),
+            new Filters\RelevantActivitiesFilter(),
         ];
     }
 
@@ -419,9 +389,9 @@ class Activity extends Resource
     public function cards(Request $request)
     {
         return [
-            new NewEnrollments(),
-            new PendingEnrollments(),
-            new ConfirmedEnrollments(),
+            new Metrics\NewEnrollments(),
+            new Metrics\PendingEnrollments(),
+            new Metrics\ConfirmedEnrollments(),
         ];
     }
 }

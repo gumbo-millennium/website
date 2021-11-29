@@ -18,31 +18,38 @@ $settings = array_filter([
     __('Ticket') => $enrollment->ticket->title,
 ])
 ?>
-
 @section('content')
-<div class="container container--sm py-8">
-    @component('components.events.enroll-header', ['activity' => $activity])
-    @endcomponent
-
-    <div class="my-8 leading-relaxed text-lg flex flex-col gap-y-4">
+<div class="bg-gray-50">
+    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
+    <div class="pt-8 leading-relaxed text-lg flex flex-col gap-y-4">
         <p>
-            Hieronder zie je de details van je inschrijving.
+            Je bent ingeschreven voor {{ $activity->name }}.
+        </p>
+        <p>
+            Hieronder vind je de details van je inschrijving.
         </p>
     </div>
+    @endcomponent
 
-    <dl class="grid grid-cols-3 gap-4 mb-8">
-        @foreach ($settings as $title => $detail)
-        <dt class="font-bold">{{ $title }}</dt>
-        <dd class="col-start-2 col-end-4">{{ $detail }}</dd>
-        @endforeach
-    </dl>
+    <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
 
-    <form action="{{ route('enroll.cancel', [$activity]) }}" method="POST">
-        @csrf
+        @include('enrollments.partials.enrollment-data')
 
-        <button type="submit" class="btn btn--small">
-            Inschrijving annuleren
-        </a>
-    </form>
+        <hr class="my-8 bg-gray-400" />
+
+        @if ($enrollment->state instanceof \App\Models\States\Enrollment\Paid)
+        <p class="notice notice--warning">
+            Je kan je niet uitschrijven voor deze activiteit.
+        </p>
+        @else
+        <form formaction="{{ route('enroll.cancel', [$activity]) }}" method="POST">
+            @csrf
+
+            <button type="submit" class="w-full btn btn--small m-0 text-center">
+                @lang('Unenroll')
+            </button>
+        </form>
+        @endif
+    </div>
 </div>
 @endsection

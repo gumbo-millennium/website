@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 use App\Models\Activity;
+use App\Models\Ticket;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 $scandir = require __DIR__ . '/../helpers/files.php';
 $imageOptions = $scandir('test-assets/images', 'jpg');
 
-$factory->define(Activity::class, static function (Faker $faker) use ($imageOptions) {
+$factory->define(Activity::class, static function (Faker $faker) {
     $eventStart = $faker->dateTimeBetween(today()->addDay(1), today()->addYear(1));
     $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
 
@@ -22,7 +24,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
     $enrollEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
     $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
 
-    $factoryData = [
+    return [
         // Sometimes add a publish date
         'published_at' => $faker->optional()->dateTimeBetween('-1 year', '-5 minutes'),
 
@@ -36,6 +38,9 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
         'enrollment_start' => $enrollStartCarbon,
         'enrollment_end' => $enrollEndCarbon,
 
+        // Mark public by default
+        'is_public' => true,
+
         // Location
         'location' => $faker->company,
         'location_address' => $faker->address,
@@ -44,17 +49,7 @@ $factory->define(Activity::class, static function (Faker $faker) use ($imageOpti
             Activity::LOCATION_ONLINE,
             Activity::LOCATION_MIXED,
         ]),
-
-        // Pricing
-        'price' => null,
-        'member_discount' => null,
-        'discount_count' => null,
-
-        // Image
-        'image' => $faker->optional(0.2)->passthrough($imageOptions->random()),
     ];
-
-    return $factoryData;
 });
 
 $factory->state(Activity::class, 'cancelled', fn (Faker $faker) => [
@@ -82,10 +77,6 @@ $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
     'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
 ]);
 
-$factory->state(Activity::class, 'paid', fn (Faker $faker) => [
-    'price' => intdiv($faker->numberBetween(500, 6000), 25) * 25,
-]);
-
 $factory->state(Activity::class, 'with-form', function (Faker $faker) {
     $fieldCount = $faker->numberBetween(1, 5);
 
@@ -95,8 +86,6 @@ $factory->state(Activity::class, 'with-form', function (Faker $faker) {
             'text-field',
             'email',
             'phone',
-            'select',
-            'checkbox',
             'content',
         ]);
 
@@ -106,17 +95,7 @@ $factory->state(Activity::class, 'with-form', function (Faker $faker) {
             'required' => $faker->boolean(),
         ];
 
-        if ($layout === 'select') {
-            $attributes['multiple'] = $faker->boolean();
-            $attributes['options'] = [];
-
-            $optionCount = $faker->numberBetween(1, 5);
-            for ($j = 0; $j < $optionCount; $j++) {
-                $attributes['options'][$faker->word] = $faker->sentence();
-            }
-        } elseif ($layout === 'phone') {
-            $attributes['country'] = $faker->countryCode();
-        } elseif ($layout === 'content') {
+        if ($layout === 'content') {
             $attributes = [
                 'title' => $faker->sentence(),
                 'content' => $faker->paragraphs(3, true),
@@ -124,7 +103,7 @@ $factory->state(Activity::class, 'with-form', function (Faker $faker) {
         }
 
         $fields[] = [
-            'key' => Str::random(32),
+            'key' => Str::random(16),
             'layout' => $layout,
             'attributes' => $attributes,
         ];
@@ -142,3 +121,14 @@ $factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activit
     ),
     'rescheduled_reason' => $faker->optional(0.80)->sentence,
 ]);
+
+$factory->afterMakingState(Activity::class, 'with-image', function (Activity $activity) use ($imageOptions) {
+    $activity->poster = Storage::disk('public')->putFile('seeded/activities/', $imageOptions->random());
+});
+
+$factory->afterCreatingState(Activity::class, 'with-tickets', function (Activity $activity) {
+    $activity->tickets()->saveMany([
+        factory(Ticket::class)->make(),
+        factory(Ticket::class)->make(['members_only' => true]),
+    ]);
+});

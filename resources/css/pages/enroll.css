@@ -1,0 +1,30 @@
+.enroll-column {
+  @apply max-w-md md:max-w-3xl lg:max-w-5xl;
+  @apply mx-auto px-4 pt-8;
+}
+
+.enroll-card {
+  @apply rounded bg-white shadow py-4 px-8;
+}
+
+.enroll-list {
+  @apply grid gap-2 grid-cols-1;
+}
+
+.enroll-list dt {
+  @apply font-bold;
+}
+
+@screen lg {
+  .enroll-list {
+    grid-template-columns: 1fr 4fr;
+  }
+
+  .enroll-list dt {
+    @apply col-start-1;
+  }
+
+  .enroll-list dd {
+    @apply col-start-2;
+  }
+}

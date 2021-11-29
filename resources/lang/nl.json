@@ -77,7 +77,7 @@
 
   "Price unknown": "Prijs onbekend",
   "Free": "Gratis",
-  "Free, paid from :price": "Gratis, betaald vanaf :price",
+  "Free, or paid starting at :price": "Gratis, of betaald vanaf :price",
   "From :price": "Vanaf :price",
 
   "Order limit": "Bestellinglimiet",
@@ -226,6 +226,37 @@
   "Available From": "Beschikbaar vanaf",
   "Available Until": "Beschikbaar tot",
   "Max Quantity": "Maximaal aantal",
+
+  "No tickets available": "Geen tickets beschikbaar",
+  "Sorry, but there are currently no tickets available for this activity.": "Sorry, maar er zijn momenteel geen tickets beschikbaar voor deze activiteit.",
+  "The ticket options below are just for reference.": "De ticketopties hieronder zijn alleen ter referentie.",
+
+  "Enroll": "Inschrijven",
+  "Not Available": "Niet beschikbaar",
+  "Unenroll": "Uitschrijven",
+  "Cancel and return to activity": "Annuleren en terug naar activiteit",
+  "Unenroll and return to activity": "Uitschrijven en terug naar activiteit",
+
+  "Members Only": "Alleen voor leden",
+  "Public": "Openbaar",
+
+  "Available from :date": "Beschikbaar vanaf :date",
+  "Available until :date": "Beschikbaar tot :date",
+  "Freely available": "Beschikbaar tot einde activiteit",
+
+  "No ticket limit": "Geen limiet",
+  "Sold Out": "Uitverkocht",
+  ":quantity tickets, :available left": ":quantity tickets beschikbaar, :available over",
+
+  "Welcome Back": "Welkom terug",
+  "You've already submitted this form, but you can revise information to your liking.": "Je hebt dit formulier al ingediend, maar je kunt de informatie hieronder nog aanpassen.",
+  "Please check with the organisation after updating, since they might've taken out some information already.": "Check wel even na het aanpassen met de organisatie, voor het geval ze al wat hebben doorgegeven.",
+  "There was a problem submitting the form.": "Er is een probleem opgetreden bij het versturen van het formulier.",
+  "Please re-check all the fields below for errors.": "Controleer de velden hieronder op fouten.",
+
+  "Privacy Policy": "Privacybeleid",
+  "Read the Privacy Policy": "Lees het Privacybeleid",
+  "I accept the privacy policy and understand how my data will be processed.": "Ik accepteer het privacybeleid en begrijp hoe mijn gegevens worden verwerkt.",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

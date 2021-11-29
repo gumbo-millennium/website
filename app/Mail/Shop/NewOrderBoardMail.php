@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mail\Shop;
 
-use App\Facades\Payments;
 use App\Models\Shop\Order;
 
 /**
@@ -24,9 +23,7 @@ class NewOrderBoardMail extends BaseShopMail
      */
     public function build()
     {
-        return $this->markdown('mail.shop.board', [
-            'dashboardUrl' => Payments::getDashboardUrl($this->order),
-        ]);
+        return $this->markdown('mail.shop.board');
     }
 
     /**

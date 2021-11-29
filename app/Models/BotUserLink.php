@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A connection from Telegram to our website, used for the name basically.
+ * App\Models\BotUserLink.
  *
  * @property string $id
  * @property string $driver

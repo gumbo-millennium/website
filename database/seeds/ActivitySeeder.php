@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Helpers\Str;
 use App\Models\Activity;
+use App\Models\Ticket;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -43,13 +44,20 @@ class ActivitySeeder extends Seeder
 
         // Iterate
         foreach ($sets as $slug => $tickets) {
-            $tickets = Collection::make($tickets);
-            $name = Str::studly($slug);
+            // Increase the dates
+            $startDate = $startDate->addDay();
+            $endDate = $endDate->addDay();
 
-            $activity = Activity::firstOrCreate([
-                'slug' => $slug,
-            ], [
+            $tickets = Collection::make($tickets);
+            $name = Str::title(str_replace('-', ' ', $slug));
+
+            if (Activity::query()->whereSlug($slug)->exists()) {
+                continue;
+            }
+
+            $activity = factory(Activity::class)->states(['with-image'])->create([
                 'name' => "[test] {$name}",
+                'slug' => $slug,
                 'tagline' => optional($faker)->sentence,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
@@ -70,10 +78,30 @@ class ActivitySeeder extends Seeder
                     'quantity' => $quantity,
                 ]);
             }
+        }
 
-            // Increase both
-            $startDate = $startDate->addDay();
-            $endDate = $endDate->addDay();
+        // Seed an activity with a form
+        if (! Activity::query()->whereSlug('with-form')->exists()) {
+            $activity = factory(Activity::class)->states(['with-image', 'with-form'])->create([
+                'name' => '[test] With Form',
+                'slug' => 'with-form',
+                'tagline' => optional($faker)->sentence,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+            ]);
+
+            $activity->tickets()->saveMany([
+                factory(Ticket::class)->make([
+                    'price' => 25_00,
+                ]),
+                factory(Ticket::class)->states(['private'])->make([
+                    'quantity' => 5,
+                    'price' => 10_00,
+                ]),
+                factory(Ticket::class)->states(['private'])->make([
+                    'price' => 15_00,
+                ]),
+            ]);
         }
     }
 }

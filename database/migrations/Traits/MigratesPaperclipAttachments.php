@@ -6,8 +6,8 @@ namespace Database\Migrations\Traits;
 
 use App\Helpers\Str;
 use Czim\Paperclip\Attachment\Attachment;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\Exception;
 
 trait MigratesPaperclipAttachments
 {
@@ -44,12 +44,10 @@ trait MigratesPaperclipAttachments
                     $activity->{$toField} = $imageName;
                     $activity->save();
                 }
-            } catch (Exception $filesystemException) {
-                report($filesystemException);
-
+            } catch (FileNotFoundException $filesystemException) {
                 // Ignore
             } finally {
-                if (is_resource($imageStream)) {
+                if (isset($imageStream) && is_resource($imageStream)) {
                     @fclose($imageStream);
                 }
             }

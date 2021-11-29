@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Enrollment;
+use App\Models\Payment;
 use App\Models\Shop\Order;
+use App\Services\Payments\MolliePaymentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
 use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Resources\Order as MollieOrder;
 use Mollie\Laravel\Facades\Mollie;
 
 class MollieRedirectController extends Controller
@@ -21,19 +23,20 @@ class MollieRedirectController extends Controller
         $this->middleware('auth');
     }
 
-    public function enrollment(Enrollment $enrollment, Request $request): RedirectResponse
+    public function show(Payment $payment, Request $request): RedirectResponse
     {
-        Gate::authorize('view', $enrollment);
+        Gate::authorize('view', $payment);
 
         // Fail if not a Mollie payment
-        abort_unless($enrollment->mollie_id, 404);
+        abort_unless($payment->provider === MolliePaymentService::getName(), 404);
 
         try {
             // Find order
-            $mollieOrder = Mollie::api()->payments()->get($enrollment->mollie_id);
+            /** @var MollieOrder $mollieOrder */
+            $mollieOrder = Mollie::api()->orders()->get($payment->transaction_id);
 
             // Find dashboard link
-            $dashboardLink = object_get($mollieOrder, '_links.dashboard.href');
+            $dashboardLink = (string) object_get($mollieOrder, '_links.dashboard.href');
 
             // Fail if no dashboard link
             abort_unless($dashboardLink, 404);

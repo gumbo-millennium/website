@@ -10,6 +10,7 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 interface EnrollmentServiceContract
 {
@@ -23,9 +24,9 @@ interface EnrollmentServiceContract
      * Returns a list of tickets available for the current user for the given
      * activity.  If no user is logged in, a non-member user will be assumed.
      *
-     * @return array<Ticket>
+     * @return Collection<Ticket>
      */
-    public function findTicketsForActivity(Activity $activity): array;
+    public function findTicketsForActivity(Activity $activity): Collection;
 
     /**
      * Checks if the user can enroll in this activity.  If no user is logged

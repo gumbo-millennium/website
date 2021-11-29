@@ -38,7 +38,7 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
     {{-- Add all pages --}}
     @foreach ($pages as $item)
     @php
-    $bannerImage = image_url($item->cover)->preset('banner');
+    $bannerImage = image_asset($item->cover)->preset('banner');
     $bannerImage2x = (clone $bannerImage)->dpr(2);
     @endphp
     <article class="col w-full flex-none md:w-1/2 mb-8">

@@ -9,11 +9,12 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static null|Enrollment getEnrollment(Activity $activity)
- * @method static array findTicketsForActivity(Activity $activity)
+ * @method static Collection<Enrollment> findTicketsForActivity(Activity $activity)
  * @method static bool canEnroll(Activity $activity)
  * @method static Enrollment transferEnrollment(Enrollment $enrollment, User $reciever)
  * @method static Enrollment createEnrollment(Activity $activity, Ticket $ticket)

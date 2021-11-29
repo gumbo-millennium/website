@@ -8,7 +8,6 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Paid;
 use App\Models\User;
-use App\Notifications\Traits\UsesStripePaymentData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Action;
@@ -20,7 +19,6 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
-    use UsesStripePaymentData;
 
     protected Enrollment $enrollment;
 

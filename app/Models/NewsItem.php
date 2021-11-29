@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property \Illuminate\Support\Carbon $published_at
  * @property string $title
  * @property string $slug
+ * @property null|string $cover
  * @property string $category
  * @property null|string $sponsor
  * @property null|string $headline

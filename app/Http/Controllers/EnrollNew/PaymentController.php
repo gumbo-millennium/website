@@ -13,10 +13,8 @@ use App\Models\Activity;
 use App\Models\States\Enrollment as States;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaymentController extends Controller
@@ -52,86 +50,36 @@ class PaymentController extends Controller
             return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
-        // Get banks
-        $banks = Collection::make(Payments::getIdealMethods());
-
-        // Get "highlighted" banks
-        $highlightedBanks = $banks->only(Config::get('gumbo.preferred-banks'))->sortKeys();
-        $banks = $banks->except(Config::get('gumbo.preferred-banks'))->sortKeys();
-
         // Show the view
         return Response::view('enrollments.payment', [
             'enrollment' => $enrollment,
             'activity' => $activity,
-            'banks' => $banks,
-            'highlightedBanks' => $highlightedBanks,
         ]);
     }
 
     public function store(Request $request, Activity $activity): RedirectResponse
     {
-        $validated = $request->validate([
-            'bank' => [
-                'required',
-                'string',
-                Rule::in(array_keys(Payments::getIdealMethods())),
-            ],
-        ]);
-
-        // TODO
-        throw new HttpException(501, 'Not implemented');
-    }
-
-    /**
-     * Show payment, which basically renders a view that redirects to the
-     * redirect route that connects to the payment provider, or redirects
-     * to the verification route that actively verifies the payment.
-     */
-    public function show(Request $request, Activity $activity)
-    {
         // Find enrollment
         $enrollment = Enroll::getEnrollment($activity);
 
-        // Redirect to details if already paid
-        if ($enrollment->state instanceof States\Paid) {
-            flash()->success(__(
-                'Your payment for :activity has been verified.',
-                ['activity' => $activity->name],
-            ));
-
+        // Fail if invalid
+        abort_if($enrollment->price === null, HttpResponse::HTTP_BAD_REQUEST);
+        if ($enrollment->paid_at !== null) {
             return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
-        // Redirect to verification if returning from payment
-        if ($request->has('verify')) {
-            return Response::view('enroll.payment.wait', [
-                'activity' => $activity,
-                'enrollment' => $enrollment,
-                'verify' => true,
-            ], 200, [
-                'Refresh' => sprintf('0; url=%s', route('enroll.verify', [$activity])),
-            ]);
+        // Check if the order needs payment
+        $payment = $enrollment->payments->first() ?? null;
+        if ($payment && $payment->is_stable) {
+            return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
-        // Redirect to the route that actually creates the payment
-        return Response::view('enroll.payment.wait', [
-            'activity' => $activity,
-            'enrollment' => $enrollment,
-            'verify' => true,
-        ], 200, [
-            'Refresh' => sprintf('0; url=%s', route('enroll.verify', [$activity])),
-        ]);
-    }
+        // Create the order
+        if (! $payment) {
+            $payment = Payments::create($enrollment);
+        }
 
-    public function redirect(Request $request, Activity $activity): RedirectResponse
-    {
-        // TODO
-        throw new HttpException(501, 'Not implemented');
-    }
-
-    public function verify(Request $request, Activity $activity): RedirectResponse
-    {
-        // TODO
-        throw new HttpException(501, 'Not implemented');
+        // Redirect to 'please wait' page
+        return Response::redirectToRoute('payment.show', [$payment]);
     }
 }

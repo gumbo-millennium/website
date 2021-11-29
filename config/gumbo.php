@@ -30,6 +30,14 @@ return [
         sprintf('redirect.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
     ],
 
+    // Payment settings
+    'payments' => [
+        'default' => \App\Services\Payments\MolliePaymentService::getName(),
+        'providers' => [
+            \App\Services\Payments\MolliePaymentService::class,
+        ],
+    ],
+
     // Lustrum mini-site
     'lustrum-domains' => [
         'gumbolustrum.nl',

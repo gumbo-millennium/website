@@ -50,20 +50,6 @@
         </div>
     </div>
 
-    <div>
-        <h3 class="font-title text-xl mb-4">Afgeronde bestellingen</h3>
-
-        <div class="grid grid-cols-1 gap-4">
-        @forelse ($completedOrders as $order)
-            @include('shop.partials.order-tile', compact('order'))
-        @empty
-            @include('shop.partials.order-empty', [
-                'text' => 'Je hebt nog geen bestellingen afgerond.',
-            ])
-        @endforelse
-        </div>
-    </div>
-
     @if($restOrders->isNotEmpty())
     <div>
         <h3 class="font-title text-xl mb-4">Overige bestellingen</h3>

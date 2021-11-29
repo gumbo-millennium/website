@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
-use App\Contracts\Payments\PayableModel;
 use App\Facades\Payments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreOrderRequest;
+use App\Models\Payment;
 use App\Models\Shop\Order;
 use App\Notifications\Shop\OrderRefunded;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
@@ -17,11 +17,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use UnexpectedValueException;
 
 class OrderController extends Controller
 {
@@ -40,19 +40,13 @@ class OrderController extends Controller
                 return $query->where('cancelled_at', '>', Date::now()->subMonth())
                     ->orWhereNull('cancelled_at');
             })
-            ->orderBy('created_at')
-            ->get();
+            ->orderBy('created_at');
 
         return ResponseFacade::view('shop.order.index', [
             'totalOrders' => $orders->count(),
-            'openOrders' => $orders->where('payment_status', PayableModel::STATUS_OPEN),
-            'paidOrders' => $orders->where('payment_status', PayableModel::STATUS_PAID),
-            'completedOrders' => $orders->where('payment_status', PayableModel::STATUS_COMPLETED),
-            'restOrders' => $orders->whereNotIn('payment_status', [
-                PayableModel::STATUS_COMPLETED,
-                PayableModel::STATUS_PAID,
-                PayableModel::STATUS_OPEN,
-            ]),
+            'openOrders' => (clone $orders)->unpaid()->get(),
+            'paidOrders' => (clone $orders)->paid()->get(),
+            'restOrders' => (clone $orders)->cancelled()->get(),
         ])->header('Cache-Control', 'no-cache, no-store');
     }
 
@@ -139,17 +133,9 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        try {
-            $isCancelled = Payments::isCancelled($order);
-            $isCompleted = Payments::isCompleted($order);
-            $isPaid = Payments::isPaid($order);
-        } catch (UnexpectedValueException $error) {
-            flash()->info(
-                __('Deze bestelling zit momenteel in limbo, we laten het je weten als hij beschikbaar is.'),
-            );
-
-            return ResponseFacade::redirectToRoute('shop.order.index');
-        }
+        // Get payment
+        /** @var Payment $payment */
+        $payment = $order->payments->first() ?? $order->payments()->make();
 
         // Hungry, Hungry, Model
         $order->hungry();
@@ -157,8 +143,7 @@ class OrderController extends Controller
         // Render it
         return ResponseFacade::view('shop.order.show', [
             'order' => $order,
-            'needsPayment' => ! ($isCompleted || $isCancelled || $isPaid),
-            'isCancellable' => ! ($isCompleted || $isCancelled),
+            'needsPayment' => ! $payment->is_stable,
         ]);
     }
 
@@ -170,28 +155,19 @@ class OrderController extends Controller
         // Only allowing viewing your own orders
         abort_unless($request->user()->is($order->user), 404);
 
-        // Check if cancelled
-        if (Payments::isCancelled($order)) {
-            flash()->info(
-                'Deze bestelling is geannuleerd, dus je kan \'m niet meer betalen.',
-            );
-
+        // Check if the order needs payment
+        $payment = $order->payments->first() ?? null;
+        if ($payment && $payment->is_stable) {
             return ResponseFacade::redirectToRoute('shop.order.show', $order);
         }
 
-        // Or paid
-        if (Payments::isPaid($order)) {
-            flash()->info(
-                'Deze bestelling is al betaald.',
-            );
-
-            return ResponseFacade::redirectToRoute('shop.order.show', $order);
+        // Create the order
+        if (! $payment) {
+            $payment = Payments::create($order);
         }
 
         // Redirect to 'please wait' page
-        return ResponseFacade::view('shop.order.pay')
-            ->header('Refresh', '0;url=' . route('shop.order.pay-redirect', $order))
-            ->header('Cache-Control', 'no-store, no-cache');
+        return ResponseFacade::redirectToRoute('payment.show', [$payment]);
     }
 
     /**

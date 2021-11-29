@@ -36,9 +36,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property string $name
  * @property string $slug
  * @property null|string $tagline
- * @property null|string $poster
  * @property null|array $description
- * @property null|string $statement
+ * @property null|string $poster
  * @property null|string $location
  * @property null|string $location_address
  * @property string $location_type
@@ -46,13 +45,8 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property \Illuminate\Support\Carbon $end_date End date and time
  * @property null|int $seats
  * @property bool $is_public
- * @property null|int $member_discount
- * @property null|int $discount_count
- * @property null|string $stripe_coupon_id
- * @property null|int $price
  * @property null|\Illuminate\Support\Carbon $enrollment_start
  * @property null|\Illuminate\Support\Carbon $enrollment_end
- * @property null|string $payment_type
  * @property null|string $cancelled_reason
  * @property null|\Illuminate\Support\Carbon $rescheduled_from
  * @property null|string $rescheduled_reason
@@ -537,7 +531,7 @@ class Activity extends SluggableModel implements AttachableInterface
         }
 
         if ($hasFreeTickets && $minNonZeroPrice) {
-            return __('Free, paid from :price', ['price' => Str::price($minNonZeroPrice)]);
+            return __('Free, or paid starting at :price', ['price' => Str::price($minNonZeroPrice)]);
         }
 
         return __('From :price', ['price' => Str::price($minPrice)]);

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name Sponsor name
  * @property string $slug
+ * @property null|string $cover
  * @property string $url URL of sponsor landing page
  * @property null|\Illuminate\Support\Carbon $starts_at
  * @property null|\Illuminate\Support\Carbon $ends_at
@@ -36,7 +37,6 @@ use Illuminate\Support\Facades\Storage;
  * @property null|string $caption
  * @property null|string $logo_gray
  * @property null|string $logo_color
- * @property null|string $background_image
  * @property null|string $contents_title
  * @property null|mixed $contents
  * @property-read \App\Models\SponsorClick[]|\Illuminate\Database\Eloquent\Collection $clicks

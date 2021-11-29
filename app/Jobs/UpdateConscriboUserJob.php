@@ -6,7 +6,6 @@ namespace App\Jobs;
 
 use App\Contracts\ConscriboService;
 use App\Helpers\Arr;
-use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -82,9 +81,6 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Save it
             $user->save();
 
-            // Trigger update
-            $this->maybeIssueStripeUpdate($user);
-
             // End job
             return;
         }
@@ -96,9 +92,6 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Update credentials
         $this->updateUserDetails($user, $accountingUser);
-
-        // Trigger update
-        $this->maybeIssueStripeUpdate($user);
 
         // Assign member role
         $this->assignMemberRole($user, $accountingUser);
@@ -147,20 +140,6 @@ class UpdateConscriboUserJob implements ShouldQueue
                 'member-ended' => $memberEnded,
             ],
         ]);
-    }
-
-    /**
-     * Issues an update on Stripe if any visible data was changed.
-     */
-    private function maybeIssueStripeUpdate(User $user): void
-    {
-        // Check for changes
-        if (empty($user->wasChanged(['first_name', 'insert', 'last_name', 'phone', 'address']))) {
-            return;
-        }
-
-        // Issue a Stripe customer update
-        CustomerUpdateJob::dispatch($user);
     }
 
     /**

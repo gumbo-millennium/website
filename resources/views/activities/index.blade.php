@@ -18,7 +18,7 @@ $firstActivity = $past ? null : $activities->first();
 @push('css')
 <style nonce="@nonce">
 .header--activity {
-    background-image: url("{{ image_url($firstActivity->poster)->preset('banner') }}");
+    background-image: url("{{ image_asset($firstActivity->poster)->preset('banner') }}");
 }
 </style>
 @endpush

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Shop;
 
-use App\Contracts\Payments\PayableModel;
+use App\Enums\PaymentStatus;
 use App\Models\Shop\Order as Model;
 use App\Nova\Actions\Shop\CancelOrder;
 use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Actions\Shop\UpdateOrder;
 use App\Nova\Fields\Price;
 use App\Nova\Filters\PayableStatusFilter;
+use App\Nova\Resources\Payment;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\ActionRequest;
 
@@ -83,9 +83,6 @@ class Order extends Resource
             Fields\DateTime::make(__('Paid at'), 'paid_at')
                 ->onlyOnDetail(),
 
-            Fields\DateTime::make(__('Shipped at'), 'shipped_at')
-                ->onlyOnDetail(),
-
             Fields\DateTime::make(__('Cancelled at'), 'cancelled_at')
                 ->onlyOnDetail(),
 
@@ -95,27 +92,15 @@ class Order extends Resource
             Fields\BelongsTo::make(__('User'), 'user', User::class)
                 ->exceptOnForms(),
 
-            Fields\Text::make('Mollie link', function () {
-                if (! $this->payment_id) {
-                    return null;
-                }
-
-                return sprintf(
-                    '<a href="%s" class="no-underline font-bold dim text-primary" target="_blank">%s</a>',
-                    URL::route('admin.mollie.orders', $this->id),
-                    __('View order in Mollie'),
-                );
-            })->onlyOnDetail()->asHtml(),
-
             Fields\Badge::make(__('Status'), 'payment_status')
                 ->onlyOnIndex()
                 ->displayUsing(static fn ($status) => __("gumbo.payment-status.{$status}"))
                 ->map([
-                    __('gumbo.payment-status.' . PayableModel::STATUS_UNKNOWN) => 'warning',
-                    __('gumbo.payment-status.' . PayableModel::STATUS_OPEN) => 'warning',
-                    __('gumbo.payment-status.' . PayableModel::STATUS_PAID) => 'info',
-                    __('gumbo.payment-status.' . PayableModel::STATUS_CANCELLED) => 'danger',
-                    __('gumbo.payment-status.' . PayableModel::STATUS_COMPLETED) => 'success',
+                    __('gumbo.payment-status.' . PaymentStatus::PENDING) => 'warning',
+                    __('gumbo.payment-status.' . PaymentStatus::OPEN) => 'info',
+                    __('gumbo.payment-status.' . PaymentStatus::PAID) => 'success',
+                    __('gumbo.payment-status.' . PaymentStatus::CANCELLED) => 'danger',
+                    __('gumbo.payment-status.' . PaymentStatus::EXPIRED) => 'danger',
                 ]),
 
             Price::make(__('Price'), 'price')
@@ -132,6 +117,8 @@ class Order extends Resource
 
             Fields\BelongsToMany::make(__('Products'), 'variants', ProductVariant::class)
                 ->fields(new OrderProductFields()),
+
+            Fields\MorphMany::make(__('Betalingen'), 'payments', Payment::class),
         ];
     }
 

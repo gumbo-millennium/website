@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Payments\Payable;
+use App\Fluent\Payment as PaymentFluent;
 use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use App\Models\Traits\HasPayments;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use LogicException;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * A user enrollment for an activity. Optionally has payments.
+ * App\Models\Enrollment.
  *
  * @property string $id
  * @property int $user_id
@@ -24,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
- * @property \App\Models\States\Enrollment\State $state
+ * @property string $state
  * @property null|string $deleted_reason
  * @property null|int $price
  * @property null|int $total_price
@@ -41,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read bool $is_discounted
  * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
+ * @property-read string $payment_status
  * @property-read bool $requires_payment
  * @property-read null|\App\Models\States\Enrollment\State $wanted_state
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
@@ -50,15 +55,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereCancelled()
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereExpired()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereNotState(string $column, $states)
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment wherePaid()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereState(string $column, $states)
  * @method static \Illuminate\Database\Query\Builder|Enrollment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
  */
-class Enrollment extends UuidModel
+class Enrollment extends UuidModel implements Payable
 {
     use HasEncryptedAttributes;
+    use HasPayments;
     use HasStates;
     use SoftDeletes;
 
@@ -129,16 +138,6 @@ class Enrollment extends UuidModel
         }
 
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * An enrollment can have multiple payments (in case one failed, for example).
-     *
-     * @return HasMany
-     */
-    public function payments(): Relation
-    {
-        return $this->hasMany(Payment::class);
     }
 
     /**
@@ -281,6 +280,33 @@ class Enrollment extends UuidModel
         }
 
         return Arr::get($this->data, 'form.medical', false) !== true;
+    }
+
+    public function toPayment(): PaymentFluent
+    {
+        if ($this->price === null) {
+            throw new LogicException('Cannot create payment for enrollment without price');
+        }
+
+        $fees = $this->total_price - $this->price;
+
+        $payment = PaymentFluent::make()
+            ->withNumber("{$this->created_at->format('Y.m')}.{$this->id}")
+            ->withModel($this)
+            ->withUser($this->user)
+            ->withDescription("Inschrijving voor {$this->activity->name}")
+            ->addLine(__(':ticket for :activity', [
+                'ticket' => $this->ticket->title,
+                'activity' => $this->activity->name,
+            ]), $this->price);
+
+        if (($fees = $this->total_price - $this->price) > 0) {
+            $payment->addLine(__('Fees'), $fees);
+        }
+
+        throw_unless($payment->verifySum($this->total_price), new LogicException('Price mismatch'));
+
+        return $payment;
     }
 
     /**

@@ -62,7 +62,7 @@ $urlClass = implode(' ', $urlClass);
 
 $features = $activity->expanded_features;
 
-$bannerImage = image_url($activity->poster)->preset('banner');
+$bannerImage = image_asset($activity->poster)->preset('banner');
 $bannerImage2x = (clone $bannerImage)->dpr(2);
 
 @endphp

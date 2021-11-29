@@ -38,7 +38,7 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
  * @method static \Illuminate\Database\Eloquent\Builder|Media newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Media ordered()
  * @method static \Illuminate\Database\Eloquent\Builder|Media query()
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Media extends BaseMedia
 {

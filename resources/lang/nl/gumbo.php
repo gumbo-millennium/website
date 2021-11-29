@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Contracts\Payments\PayableModel;
+use App\Enums\PaymentStatus;
 use App\Models\ActivityMessage;
 
 return [
@@ -13,10 +13,10 @@ return [
     ],
 
     'payment-status' => [
-        PayableModel::STATUS_UNKNOWN => 'Onbekend',
-        PayableModel::STATUS_OPEN => 'Open',
-        PayableModel::STATUS_PAID => 'Betaald',
-        PayableModel::STATUS_CANCELLED => 'Geannuleerd',
-        PayableModel::STATUS_COMPLETED => 'Afgerond',
+        PaymentStatus::PENDING => 'In behandeling',
+        PaymentStatus::OPEN => 'Open',
+        PaymentStatus::PAID => 'Betaald',
+        PaymentStatus::CANCELLED => 'Geannuleerd',
+        PaymentStatus::EXPIRED => 'Verlopen',
     ],
 ];

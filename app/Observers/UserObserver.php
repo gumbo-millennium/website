@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
-use App\Jobs\Stripe\CustomerUpdateJob;
 use App\Models\User;
 
 class UserObserver
@@ -23,8 +22,5 @@ class UserObserver
         if (! $user->wasRecentlyCreated && ! $user->wasChanged(['first_name', 'insert', 'last_name', 'email'])) {
             return;
         }
-
-        // Create or update the customer on Stripe
-        dispatch(new CustomerUpdateJob($user));
     }
 }

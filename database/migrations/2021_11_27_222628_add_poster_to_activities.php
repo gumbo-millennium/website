@@ -19,9 +19,11 @@ class AddPosterToActivities extends Migration
      */
     public function up()
     {
-        Schema::table('activities', function (Blueprint $table) {
-            $table->string('poster')->nullable()->after('description');
-        });
+        if (! Schema::hasColumn('activities', 'poster')) {
+            Schema::table('activities', function (Blueprint $table) {
+                $table->string('poster')->nullable()->after('description');
+            });
+        }
 
         $this->migrateAttachments(Activity::class, 'image', 'poster');
     }

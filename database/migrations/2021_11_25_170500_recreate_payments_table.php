@@ -17,12 +17,12 @@ class RecreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('payable');
+            $table->uuidMorphs('payable');
+            $table->unsignedBigInteger('user_id')->nullable();
 
-            $table->string('status', 20);
             $table->string('provider', 20);
-            $table->string('transaction_id', 180);
-            $table->unsignedSmallInteger('amount')->comment('In cents');
+            $table->string('transaction_id', 180)->nullable();
+            $table->unsignedSmallInteger('price')->comment('In cents');
 
             // Regular timestamps
             $table->timestamps();

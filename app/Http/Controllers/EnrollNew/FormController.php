@@ -50,10 +50,13 @@ class FormController extends Controller
             return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
+        // Preserve session
+        $request->session()->reflash();
+
         // Build the real form
         $form = $this->getForm($activity, [
             'method' => 'PATCH',
-            'url' => route('enroll.edit', [$activity]),
+            'url' => route('enroll.formStore', [$activity]),
             'data' => $enrollment->form_data,
         ]);
 
@@ -67,6 +70,7 @@ class FormController extends Controller
             'activity' => $activity,
             'enrollment' => $enrollment,
             'form' => $form,
+            'submitted' => ! empty($enrollment->form),
         ]);
     }
 
@@ -84,22 +88,21 @@ class FormController extends Controller
         $form = $this->getForm($activity);
 
         // Validate form
-        $form->redirectIfNotValid(route('enroll.show', [$activity]));
+        $form->redirectIfNotValid(route('enroll.form', [$activity]));
 
         // Assign values
         $enrollment->setFormData($form->getFieldValues());
 
+        // Advance stage to seeded, if not yet seeded
+        if ($enrollment->canTransitionTo(States\Seeded::class)) {
+            $enrollment->transitionTo(States\Seeded::class);
+        }
+
         // Store changes
         $enrollment->save();
 
-        // Advance stage to seeded, if not yet seeded
-        if ($enrollment->state instanceof States\Created) {
-            $enrollment->transitionTo(States\Seeded::class);
-            $enrollment->save();
-        }
-
         // Redirect to show, that'll determine the next target
-        return Response::redirectToRoute('activity.show', [$activity]);
+        return Response::redirectToRoute('enroll.show', [$activity]);
     }
 
     /**

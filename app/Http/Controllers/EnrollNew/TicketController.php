@@ -20,7 +20,7 @@ class TicketController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'can:view,activity']);
     }
 
     /**
@@ -30,18 +30,43 @@ class TicketController extends Controller
     public function create(Request $request, Activity $activity)
     {
         $enrollment = Enroll::getEnrollment($activity);
-
         if ($enrollment) {
             return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
-        // Get tickets
-        $tickets = Enroll::findTicketsForActivity($activity);
+        // Get user
+        $user = $request->user();
+
+        // Get all tickets and all available tickets
+        $availableTickets = Enroll::findTicketsForActivity($activity);
+        $allTickets = $activity->tickets;
+
+        // Store available and then unavailable
+        $ticketSets = [[], []];
+
+        // Find all available tickets
+        foreach ($allTickets as $ticket) {
+            // Ticket is for sale
+            if ($availableTickets->contains($ticket)) {
+                $ticketSets[0][] = $ticket;
+
+                continue;
+            }
+
+            // Ticket is not for sale and not visible to the user
+            if ((! optional($user)->is_member) && $ticket->members_only) {
+                continue;
+            }
+
+            // Ticket is not for sale, but show it anyway
+            $ticketSets[1][] = $ticket;
+        }
 
         // Done
         return Response::view('enrollments.tickets', [
             'activity' => $activity,
-            'tickets' => $tickets,
+            'hasTickets' => $availableTickets->isNotEmpty(),
+            'tickets' => Collection::make($ticketSets)->collapse(),
         ]);
     }
 
@@ -50,8 +75,13 @@ class TicketController extends Controller
      */
     public function store(Request $request, Activity $activity): RedirectResponse
     {
+        // Redirect if enrolled
+        if (Enroll::getEnrollment($activity)) {
+            return Response::redirectToRoute('enroll.show', [$activity]);
+        }
+
         // Get tickets
-        $tickets = Collection::make(Enroll::findTicketsForActivity($activity));
+        $tickets = Enroll::findTicketsForActivity($activity);
 
         // Validate request
         $valid = $request->validate([

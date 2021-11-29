@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Date;
  * @property null|string $deleted_at
  * @property-read null|\App\Models\Activity $activity
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
+ * @property-read string $available_range
  * @property-read bool $is_being_sold
  * @property-read null|int $quantity_available
  * @property-read int $quantity_sold
@@ -82,12 +83,12 @@ class Ticket extends Model
     public function getMembersOnlyAttribute(): bool
     {
         // Tickets can be members only
-        if ($this->attributes['members_only'] === true) {
+        if ($this->attributes['members_only']) {
             return true;
         }
 
         // If a ticket is public but the activity is members only, the ticket is also members only
-        return ! $this->activity->is_public;
+        return $this->activity && ! $this->activity->is_public;
     }
 
     public function getIsBeingSoldAttribute(): bool
@@ -121,5 +122,29 @@ class Ticket extends Model
         }
 
         return $price + Config::get('gumbo.transfer-fee');
+    }
+
+    public function getAvailableRangeAttribute(): string
+    {
+        if ($this->available_from && $this->available_from > Date::now()) {
+            return __('Available from :date', [
+                'date' => $this->available_from->isoFormat('ddd DD MMM, HH:mm'),
+            ]);
+        }
+
+        if ($this->available_until) {
+            return __('Available until :date', [
+                'date' => $this->available_until->isoFormat('ddd DD MMM, HH:mm'),
+            ]);
+        }
+
+        return __('Freely available');
+    }
+
+    public function isAvailableFor(?User $user): bool
+    {
+        return $this->is_being_sold
+            && $this->quantity_available !== 0
+            && (! $this->members_only || optional($user)->is_member);
     }
 }

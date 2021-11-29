@@ -66,11 +66,8 @@ Route::prefix('admin/')->group(function () {
     Route::get('download-export/{export}', [FileExportController::class, 'download'])
         ->name('export.download');
 
-    Route::get('mollie/enrollments/{enrollment}', [AdminControllers\MollieRedirectController::class, 'enrollment'])
-        ->name('admin.mollie.enrollments');
-
-    Route::get('mollie/orders/{order}', [AdminControllers\MollieRedirectController::class, 'order'])
-        ->name('admin.mollie.orders');
+    Route::get('mollie/dashboard/{payment}', [AdminControllers\MollieRedirectController::class, 'show'])
+        ->name('admin.mollie.show');
 });
 
 /**
@@ -128,7 +125,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 
     // Answer form questions
     Route::get('/gegevens', [EnrollNew\FormController::class, 'edit'])->name('form');
-    Route::post('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
+    Route::patch('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
     // Start payment
     Route::get('/betalen', [EnrollNew\PaymentController::class, 'create'])->name('pay');
@@ -263,15 +260,21 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'member'])->group(stat
 
     Route::get('/bestellingen/{order}', [Shop\OrderController::class, 'show'])->name('order.show');
 
-    Route::get('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
-    Route::get('/bestellingen/{order}/betalen/go', [Shop\OrderController::class, 'payRedirect'])->name('order.pay-redirect');
-    Route::get('/bestellingen/{order}/betalen/back', [Shop\OrderController::class, 'payReturn'])->name('order.pay-return');
+    Route::post('/bestellingen/{order}/betalen', [Shop\OrderController::class, 'pay'])->name('order.pay');
 
     Route::get('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancelShow'])->name('order.cancel');
     Route::post('/bestellingen/{order}/annuleren', [Shop\OrderController::class, 'cancel']);
 
     // Category
     Route::get('/{category}', [Shop\ProductController::class, 'showCategory'])->name('category');
+});
+
+// Payments
+Route::prefix('/betalingen/{payment}')->middleware(['auth'])->group(static function () {
+    Route::get('/', [Controllers\PaymentController::class, 'show'])->name('payment.show');
+
+    Route::get('/redirect', [Controllers\PaymentController::class, 'redirect'])->name('payment.redirect');
+    Route::get('/verify', [Controllers\PaymentController::class, 'verify'])->name('payment.verify');
 });
 
 // Common mistakes handler
