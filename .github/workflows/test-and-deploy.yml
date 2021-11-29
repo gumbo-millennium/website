@@ -40,15 +40,20 @@ jobs:
     name: "Back-end build and test"
     runs-on: 'ubuntu-latest'
 
+    continue-on-error: ${{ matrix.experimental == true }}
+
     strategy:
       fail-fast: false
       matrix:
         php:
           - '7.4'
           - '8.0'
+          - '8.1'
         include:
           - php: '7.4'
             main: true
+          - php: '8.1'
+            experimental: true
 
     services:
       database:
