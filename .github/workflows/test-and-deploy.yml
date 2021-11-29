@@ -36,11 +36,34 @@ jobs:
           name: front-end
           path: public/
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.4'
+          tools: php-parallel-lint/php-parallel-lint
+
+      - name: Lint PHP code
+        run: parallel-lint  --exclude vendor --exclude node_modules .
+
+      - name: Check for Gumbo Millennium typos
+        run: .github/find-typos.sh
+
   laravel-backend:
     name: "Back-end build and test"
     runs-on: 'ubuntu-latest'
 
     continue-on-error: ${{ matrix.experimental == true }}
+
+    needs:
+      - lint
 
     strategy:
       fail-fast: false
@@ -92,9 +115,6 @@ jobs:
           node-version: '14'
           cache: 'npm'
 
-      - name: Check for Gumbo Millennium typos
-        run: .github/find-typos.sh
-
       - name: Copy environment config
         run: cp .github/actions.env .env
 
@@ -122,9 +142,6 @@ jobs:
 
       - name: Install Font Awesome icons
         run: npm run postinstall
-
-      - name: Run linters
-        run: composer run lint
 
       - name: Test optimizing the config
         run: |
