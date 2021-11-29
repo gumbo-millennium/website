@@ -83,13 +83,15 @@
             <div class="rounded-md shadow">
                 @if ($ticket->isAvailableFor($user))
                 <button name="ticket_id" value="{{ $ticket->id }}" class="btn btn--brand btn--small my-0 w-full"
-                    data-test-action="Buy {{ $ticket->id }}"
+                    data-test-action="buy-{{ $ticket->id }}"
                     aria-describedby="ticket-{{ $ticket->id }}">
                     @lang('Enroll')
                 </button>
                 @else
                 <div class="relative" role="none">
-                    <button type="button" disabled class="btn btn--small my-0 w-full" aria-describedby="ticket-{{ $ticket->id }}">
+                    <button type="button" disabled class="btn btn--small my-0 w-full"
+                        data-test-action="show-{{ $ticket->id }}"
+                        aria-describedby="ticket-{{ $ticket->id }}">
                         @lang('Not Available')
                     </button>
                     <div class="absolute inset-0 bg-transparent"></div>

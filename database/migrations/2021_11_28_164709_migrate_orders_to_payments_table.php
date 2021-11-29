@@ -23,13 +23,16 @@ class MigrateOrdersToPaymentsTable extends Migration
                 continue;
             }
 
-            $order->payments()->forceDelete();
-
-            $payment = $order->payments()->make([
+            $mollieMeta = [
                 'provider' => MolliePaymentService::getName(),
-                'transaction_id' => $order->transaction_id,
+                'transaction_id' => $order->payment_id,
+            ];
+
+            Payment::where($mollieMeta)->forceDelete();
+
+            $payment = $order->payments()->make(array_merge($mollieMeta, [
                 'price' => $order->price,
-            ]);
+            ]));
 
             $payment->user()->associate($order->user);
 
@@ -41,16 +44,7 @@ class MigrateOrdersToPaymentsTable extends Migration
                 'cancelled_at' => $order->cancelled_at,
             ]);
 
-            Payment::withoutEvents(fn () => $payment->save());
+            $payment->save();
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
     }
 }

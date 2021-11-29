@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Shop;
 
+use App\Enums\PaymentStatus;
 use App\Facades\Payments;
 use App\Models\Shop\Order;
 use App\Notifications\Shop\OrderExpired;
@@ -44,16 +45,13 @@ class CancelExpiredOrders extends Command
             $this->line("Order <info>{$order->number}</> eligible for cancellation.");
 
             // Check online
-            if (Payments::isPaid($order) || Payments::isCancelled($order)) {
+            if ($order->status !== PaymentStatus::OPEN) {
                 $this->line("Order <info>{$order->number}</> seems changed online.");
             }
 
             // Cancel it
             $order->cancelled_at = Date::now();
             $order->save();
-
-            // Cancel it online
-            Payments::cancelOrder($order);
 
             // Send notice
             if ($order->user) {

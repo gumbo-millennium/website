@@ -67,7 +67,7 @@ class ActivityTest extends TestCase
             ],
 
             'one paid, one free ticket' => [
-                'Free, paid from € 10,-',
+                'Free, or paid starting at € 10,-',
                 ['price' => 10_00],
                 ['price' => null],
             ],

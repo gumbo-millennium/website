@@ -145,11 +145,11 @@ class MolliePaymentService implements PaymentService
                 'name' => $line->label,
                 'quantity' => $line->quantity,
                 'unitPrice' => [
-                    'value' => sprintf('%.2f', $line->price / $line->quantity / 100),
+                    'value' => sprintf('%.2f', $line->price / 100),
                     'currency' => 'EUR',
                 ],
                 'totalAmount' => [
-                    'value' => sprintf('%.2f', $line->price / 100),
+                    'value' => sprintf('%.2f', $line->getSum() / 100),
                     'currency' => 'EUR',
                 ],
                 'vatRate' => '0.00',

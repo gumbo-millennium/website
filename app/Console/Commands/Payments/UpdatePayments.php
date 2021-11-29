@@ -44,12 +44,13 @@ class UpdatePayments extends Command
 
         $payments = Payment::query()
             ->when($id, fn ($query) => $query->where('id', $id))
-            ->when($all, fn ($query) => $query->pending())
-            ->cursor();
+            ->when($all, fn ($query) => $query->pending());
 
-        foreach ($payments as $payment) {
-            $this->info('Updating payment: ' . $payment->id);
-            UpdatePaymentJob::dispatchNow($payment);
-        }
+        $payments->chunk(100, function ($models) {
+            foreach ($models as $payment) {
+                $this->info('Updating payment: ' . $payment->id);
+                UpdatePaymentJob::dispatchNow($payment);
+            }
+        });
     }
 }

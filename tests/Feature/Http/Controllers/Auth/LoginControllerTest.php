@@ -39,14 +39,16 @@ class LoginControllerTest extends TestCase
 
     public function test_logout_view(): void
     {
-        $this->post(URL::signedRoute('logout.done'))
+        $this->get(URL::signedRoute('logout.done'))
+            ->assertOk()
             ->assertViewIs('auth.logout')
             ->assertSee(__('Homepage'))
             ->assertDontSee(__('Continue'));
 
-        $this->post(URL::signedRoute('logout.done', [
+        $this->get(URL::signedRoute('logout.done', [
             'next' => url('/steve'),
         ]))
+            ->assertOk()
             ->assertViewIs('auth.logout')
             ->assertSee(__('Homepage'))
             ->assertSee(__('Continue'));

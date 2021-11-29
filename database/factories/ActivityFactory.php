@@ -77,7 +77,7 @@ $factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
     'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
 ]);
 
-$factory->state(Activity::class, 'with-form', function (Faker $faker) {
+$factory->afterMakingState(Activity::class, 'with-form', function (Activity $activity, Faker $faker) {
     $fieldCount = $faker->numberBetween(1, 5);
 
     $fields = [];
@@ -109,9 +109,7 @@ $factory->state(Activity::class, 'with-form', function (Faker $faker) {
         ];
     }
 
-    return [
-        'enrollment_questions' => $fields,
-    ];
+    $activity->enrollment_questions = $fields;
 });
 
 $factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [

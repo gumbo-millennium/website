@@ -29,18 +29,14 @@ class EnrollmentsTest extends TestCase
         /** @var Activity $activity */
         $activity = factory(Activity::class)->states([
             'with-seats',
+            'with-form',
             'public',
-        ])->create([
-            'enrollment_questions' => [
-                'key' => $fieldName = $faker->sha1,
-                'layout' => 'text-field',
-                'attributes' => [
-                    'help' => null,
-                    'label' => $faker->sentence,
-                    'required' => true,
-                ],
-            ],
-        ]);
+        ])->create();
+
+        // Check for form
+        if (empty($activity->form)) {
+            $this->markTestSkipped('Cannot create form');
+        }
 
         /** @var Ticket $firstTicket */
         [$firstTicket, $secondTicket] = $activity->tickets()->createMany([

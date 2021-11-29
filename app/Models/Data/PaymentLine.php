@@ -46,6 +46,15 @@ class PaymentLine implements JsonSerializable
         $this->quantity = $quantity;
     }
 
+    public function getSum(): ?int
+    {
+        if ($this->price === null) {
+            return null;
+        }
+
+        return $this->price * max(1, $this->quantity);
+    }
+
     public function jsonSerialize(): array
     {
         return [

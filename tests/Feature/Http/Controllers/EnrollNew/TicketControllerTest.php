@@ -111,7 +111,7 @@ class TicketControllerTest extends TestCase
 
         $this->get($createRoute = route('enroll.create', [$activity]))
             ->assertOk()
-            ->assertSee(__('There are no tickets available'));
+            ->assertSee(__('No tickets available'));
 
         $this->post(route('enroll.store', [$activity]))
             ->assertSessionHasErrors()
@@ -157,7 +157,8 @@ class TicketControllerTest extends TestCase
         // Create the enrollment with the fake ticket
         $this->get($createRoute = route('enroll.create', [$activity]))
             ->assertOk()
-            ->assertSee(__('There are no tickets available'));
+            ->assertSee($ticket->title)
+            ->assertDontSee(__('Enroll'));
 
         // Order the ticket that's sold out (form manipulation baby!)
         $this->post(route('enroll.store', [$activity]), ['ticket_id' => $ticket->id])
@@ -261,7 +262,7 @@ class TicketControllerTest extends TestCase
     public function test_enroll_with_unavailable_tickets(): void
     {
         $activity = factory(Activity::class)->create();
-        [$nowTicket, $soonTicket, $laterTicket] = $activity->tickets()->saveMany([
+        [$nowTicket, $soonTicket, $laterTicket, $memberTicket] = $activity->tickets()->saveMany([
             factory(Ticket::class)->make([
                 'available_from' => Date::now()->subDays(1),
             ]),
@@ -270,6 +271,9 @@ class TicketControllerTest extends TestCase
             ]),
             factory(Ticket::class)->make([
                 'available_from' => Date::now()->addWeek(1),
+            ]),
+            factory(Ticket::class)->make([
+                'members_only' => true,
             ]),
         ]);
 
@@ -280,8 +284,17 @@ class TicketControllerTest extends TestCase
         $this->get($createRoute = route('enroll.create', [$activity]))
             ->assertOk()
             ->assertSee($nowTicket->title)
-            ->assertDontSee($soonTicket->title)
-            ->assertDontSee($laterTicket->title);
+            ->assertSee("data-test-action=\"buy-{$nowTicket->id}\"", false)
+
+            ->assertSee($soonTicket->title)
+            ->assertSee("data-test-action=\"show-{$soonTicket->id}\"", false)
+
+            ->assertSee($laterTicket->title)
+            ->assertSee("data-test-action=\"show-{$laterTicket->id}\"", false)
+
+            ->assertDontSee($memberTicket->title)
+            ->assertDontSee("data-test-action=\"buy-{$memberTicket->id}\"", false)
+            ->assertDontSee("data-test-action=\"show-{$memberTicket->id}\"", false);
 
         // Order the not-yet-available tickets
         $this->post(route('enroll.store', [$activity]), ['ticket_id' => $soonTicket->id])

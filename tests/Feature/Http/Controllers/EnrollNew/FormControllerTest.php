@@ -65,17 +65,24 @@ class FormControllerTest extends TestCase
     public function test_proper_access(): void
     {
         /** @var Activity $activity */
-        $activity = factory(Activity::class)->states(['with-form', 'with-tickets'])->create();
+        $activity = factory(Activity::class)->states('with-form', 'with-tickets')->create();
         $ticket = $activity->tickets->first();
+
+        if (Collection::make($activity->form)->isEmpty()) {
+            $this->markTestSkipped('No form for this activity.');
+        }
 
         $this->actingAs(factory(User::class)->create());
 
         /** @var Enrollment $enrollment */
         $enrollment = Enroll::createEnrollment($activity, $ticket);
+        $this->assertNotNull($enrollment);
+        $this->assertInstanceOf(States\Created::class, $enrollment->state);
 
-        Collection::make($activity->form);
+        Collection::make($activity->form)->dump();
 
         $this->get(route('enroll.form', $activity))
+            ->dump()
             ->assertOk();
 
         $formData = Collection::make($activity->form)

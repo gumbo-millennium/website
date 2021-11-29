@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Support\Facades\Session;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -159,7 +161,15 @@ class OrderController extends Controller
 
         // Create the order
         if (! $payment) {
-            $payment = Payments::create($order);
+            try {
+                $payment = Payments::create($order);
+            } catch (RuntimeException $exception) {
+                flash()->error(__('Failed to create order payment: :message', [
+                    'message' => $exception->getMessage(),
+                ]));
+
+                return ResponseFacade::redirectToRoute('shop.order.show', $order);
+            }
         }
 
         // Redirect to 'please wait' page

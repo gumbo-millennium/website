@@ -60,9 +60,9 @@ final class Payment extends Fluent
         }
     }
 
-    public function addLine(string $label, ?int $price): self
+    public function addLine(string $label, ?int $price, int $quantity = 1): self
     {
-        $this->attributes['lines'][] = new PaymentLine($label, $price);
+        $this->attributes['lines'][] = new PaymentLine($label, $price, $quantity);
 
         return $this;
     }
@@ -97,6 +97,9 @@ final class Payment extends Fluent
 
     public function getSum(): int
     {
-        return Collection::make($this->attributes['lines'])->sum('price');
+        // Use higher-order sum
+        // https://laravel.com/docs/6.x/collections#higher-order-messages
+        return Collection::make($this->attributes['lines'])
+            ->sum->getSum();
     }
 }

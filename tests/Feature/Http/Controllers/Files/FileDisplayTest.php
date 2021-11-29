@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 use Tests\Feature\Http\Controllers\Files\Traits\CreatesFiles;
 use Tests\TestCase;
 
+/**
+ * @group files
+ */
 class FileDisplayTest extends TestCase
 {
     use CreatesFiles;

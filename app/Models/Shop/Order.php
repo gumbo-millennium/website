@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * App\Models\Shop\Order.
@@ -166,7 +167,7 @@ class Order extends Model implements Payable
 
         $payment->addLine(__('Fees'), (int) $this->fee);
 
-        throw_unless($payment->getSum() === $this->price, InvalidArgumentException::class, 'Price mismatch');
+        throw_unless($payment->getSum() === $this->price, RuntimeException::class, 'Price mismatch');
 
         return $payment;
     }
