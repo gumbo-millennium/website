@@ -111,8 +111,8 @@ class Payment extends Model
 
         $query->where(
             fn ($query) => $query
-            ->orWhere('expired_at', '>', Date::now())
-            ->orWhereNull('expired_at'),
+                ->orWhere('expired_at', '>', Date::now())
+                ->orWhereNull('expired_at'),
         );
     }
 
