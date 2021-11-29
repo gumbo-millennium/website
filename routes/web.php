@@ -12,14 +12,13 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
+use App\Http\Policy\LoginPolicy;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Spatie\Csp\AddCspHeaders;
 
-$loginCsp = vsprintf('%s:%s', [
-    Spatie\Csp\AddCspHeaders::class,
-    App\Http\Policy\LoginPolicy::class,
-]);
+$loginCsp = vsprintf('%s:%s', [AddCspHeaders::class, LoginPolicy::class]);
 
 // Bind redirects as very, very first.
 foreach (Config::get('gumbo.redirect-domains') as $domain) {

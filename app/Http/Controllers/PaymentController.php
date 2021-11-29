@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
+use Spatie\Csp\Directive;
 
 class PaymentController extends Controller
 {
@@ -63,6 +64,14 @@ class PaymentController extends Controller
             $next = $service->nextUrl($payment);
 
             if ($next) {
+                // Add redirect header
+                $redirectProto = parse_url($next, PHP_URL_SCHEME);
+                $redirectDomain = parse_url($next, PHP_URL_HOST);
+
+                // Add CSP records
+                $this->addToCsp(["{$redirectProto}://{$redirectDomain}/"], Directive::CONNECT);
+
+                // Perform redirect
                 return Response::redirectTo($next);
             }
 

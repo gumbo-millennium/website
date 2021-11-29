@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Middleware;
 
 use App\Facades\Enroll;
+use App\Http\Middleware\RequireActiveEnrollment;
 use App\Http\Middleware\RequirePaidEnrollment;
 use App\Models\Activity;
 use App\Models\User;
