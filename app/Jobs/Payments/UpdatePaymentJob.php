@@ -69,4 +69,9 @@ class UpdatePaymentJob implements ShouldQueue
 
         $payment->save();
     }
+
+    public function getPayment(): Payment
+    {
+        return $this->payment;
+    }
 }

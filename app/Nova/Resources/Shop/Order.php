@@ -10,7 +10,7 @@ use App\Nova\Actions\Shop\CancelOrder;
 use App\Nova\Actions\Shop\ShipOrder;
 use App\Nova\Actions\Shop\UpdateOrder;
 use App\Nova\Fields\Price;
-use App\Nova\Filters\PayableStatusFilter;
+use App\Nova\Filters\PaymentStatusFilter;
 use App\Nova\Resources\Payment;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
@@ -144,7 +144,7 @@ class Order extends Resource
     public function filters(Request $request)
     {
         return [
-            new PayableStatusFilter(),
+            new PaymentStatusFilter(),
         ];
     }
 

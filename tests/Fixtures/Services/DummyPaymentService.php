@@ -4,105 +4,133 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\Services;
 
-use App\Contracts\Payments\PayableModel;
-use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
+use App\Contracts\Payments\Payable;
+use App\Contracts\Payments\PaymentService;
+use App\Helpers\Arr;
 use App\Helpers\Str;
-use App\Services\PaymentService;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Facades\Date;
-use Mollie\Api\MollieApiClient;
-use Mollie\Api\Resources\Order;
-use Mollie\Api\Resources\Payment;
-use Mollie\Api\Resources\Refund;
-use Mollie\Api\Resources\Shipment;
-use Mollie\Api\Types\OrderStatus;
-use RuntimeException;
+use App\Models\Payment;
+use Illuminate\Database\Eloquent\Model;
+use LogicException;
+use Tests\TestCase as PHPUnit;
 
-class DummyPaymentService extends PaymentService implements PaymentServiceContract
+class DummyPaymentService implements PaymentService
 {
-    private array $orderCache = [];
+    private array $data = [];
 
-    private MollieApiClient $api;
-
-    public function __construct()
+    public static function getName(): string
     {
-        $this->api = (new MollieApiClient())
-            ->setApiKey(sprintf('test_%s', Str::random(35)));
+        return 'dummy';
     }
 
-    public function findOrder(PayableModel $model): ?Order
+    public function create(Payable $payable): Payment
     {
-        if (! $paymentId = $model->{$model->getPaymentIdField()}) {
-            return null;
+        $paymentData = $payable->toPayment();
+
+        $payment = Payment::make([
+            'provider' => self::getName(),
+            'transaction_id' => Str::random(20),
+            'price' => $paymentData->getSum(),
+        ]);
+        $payment->payable()->associate($payable);
+        $payment->save();
+
+        Arr::set($this->data, "{$this->objectKey($payable)}.payment", $payment);
+
+        return $payment;
+    }
+
+    public function nextUrl(Payment $payment): ?string
+    {
+        return Arr::get($this->data, "{$this->objectKey($payment)}.next", null);
+    }
+
+    public function cancel(Payment $payment): void
+    {
+        Arr::set($this->data, "{$this->objectKey($payment)}.cancel", true);
+    }
+
+    public function isPaid(Payment $payment): bool
+    {
+        Arr::set($this->data, "{$this->objectKey($payment)}.checked-paid", true);
+
+        return Arr::get($this->data, "{$this->objectKey($payment)}.paid", false);
+    }
+
+    public function isExpired(Payment $payment): bool
+    {
+        Arr::set($this->data, "{$this->objectKey($payment)}.checked-expired", true);
+
+        return Arr::get($this->data, "{$this->objectKey($payment)}.expired", false);
+    }
+
+    public function isCancelled(Payment $payment): bool
+    {
+        Arr::set($this->data, "{$this->objectKey($payment)}.checked-cancelled", true);
+
+        return Arr::get($this->data, "{$this->objectKey($payment)}.cancelled", false);
+    }
+
+    /**
+     * @param Model|Payable|Payment $subject
+     * @return void
+     */
+    public function setProperty($subject, string $key, bool $value): self
+    {
+        throw_unless(in_array($key, ['paid', 'expired', 'cancelled'], true), new LogicException('Invalid property key'));
+
+        Arr::set($this->data, "{$this->objectKey($subject)}.${key}", $value);
+
+        return $this;
+    }
+
+    public function assertWasSeen($subject): void
+    {
+        PHPUnit::assertArrayHasKey($this->objectKey($subject), $this->data, 'Failed asserting object was seen');
+    }
+
+    public function assertWasNotSeen($subject): void
+    {
+        PHPUnit::assertArrayNotHasKey($this->objectKey($subject), $this->data, 'Failed asserting object was not seen');
+    }
+
+    public function assertWasCreated(Payable $payable): void
+    {
+        $key = $this->objectKey($payable);
+
+        PHPUnit::assertArrayHasKey($key, $this->data, 'Failed asserting the payable was seen');
+        PHPUnit::assertArrayHasKey('created', $this->data[$key], 'Failed asserting a payment was created');
+    }
+
+    public function assertWasCancelled(Payment $payment): void
+    {
+        $key = $this->objectKey($payment);
+
+        PHPUnit::assertArrayHasKey($key, $this->data, 'Failed asserting the payment was seen');
+        PHPUnit::assertArrayHasKey('cancel', $this->data[$key], 'Failed asserting a payment was cancelled');
+    }
+
+    public function assertWasChecked(Payment $payment, string $check): void
+    {
+        throw_unless(in_array($check, ['paid', 'expired', 'cancelled'], true), new LogicException('Invalid check'));
+
+        $key = $this->objectKey($payment);
+
+        PHPUnit::assertArrayHasKey($key, $this->data, 'Failed asserting the payment was seen');
+        PHPUnit::assertArrayHasKey("checked-${check}", $this->data[$key], "Failed asserting the payment was checked for [${check}]");
+    }
+
+    /**
+     * @param Model|Payable $model
+     */
+    private function objectKey($model): string
+    {
+        if ($model instanceof Model) {
+            return get_class($model) . ':' . $model->getKey();
+        }
+        if ($model instanceof Payable) {
+            return get_class($model) . ':' . $model->toPayment()->number;
         }
 
-        return $this->orderCache[$paymentId] ?? null;
-    }
-
-    public function createOrder(PayableModel $model): Order
-    {
-        $orderData = $model->toMollieOrder();
-
-        $paymentId = $orderData->id = Str::random(64);
-        $mollieOrder = new Order($this->api);
-        foreach ($orderData as $property => $value) {
-            $mollieOrder->{$property} = $value instanceof Arrayable ? $value->toArray() : $value;
-        }
-
-        $payment = new Payment($this->api);
-
-        $mollieOrder->id = sprintf('test_order_%s', Str::random(20));
-        $mollieOrder->mode = 'test';
-        $mollieOrder->_embedded = (object) [
-            'payments' => [$payment],
-        ];
-
-        return $this->orderCache[$paymentId] = $mollieOrder;
-    }
-
-    public function cancelOrder(PayableModel $model): void
-    {
-        if (! $payment = $this->findOrder($model)) {
-            return;
-        }
-
-        $payment->isCancelable = false;
-        $payment->canceledAt = Date::today()->toIso8601ZuluString();
-        $payment->status === OrderStatus::STATUS_CANCELED;
-    }
-
-    public function getDashboardUrl(PayableModel $model): ?string
-    {
-        if (! $order = $this->findOrder($model)) {
-            return null;
-        }
-
-        return sprintf('https://example.com/dashboard/%s', $order->id);
-    }
-
-    public function getRedirectUrl(PayableModel $model): string
-    {
-        if (! $order = $this->findOrder($model)) {
-            throw new RuntimeException(
-                'Failed to find redirect',
-            );
-        }
-
-        return sprintf('https://example.com/dashboard/%s', $order->id);
-    }
-
-    public function refundAll(PayableModel $model): ?Refund
-    {
-        return null;
-    }
-
-    public function shipAll(PayableModel $model, ?string $carrier = null, ?string $trackingCode = null): ?Shipment
-    {
-        return null;
-    }
-
-    public function addDummyOrder(Order $order): void
-    {
-        $this->orderCache[$order->id] = $order;
+        return get_class($model);
     }
 }

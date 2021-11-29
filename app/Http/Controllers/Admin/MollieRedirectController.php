@@ -54,35 +54,4 @@ class MollieRedirectController extends Controller
             abort(500);
         }
     }
-
-    public function order(Order $order, Request $request): RedirectResponse
-    {
-        Gate::authorize('view', $order);
-
-        // Fail if not a Mollie payment
-        abort_unless($order->payment_id, 404);
-
-        try {
-            // Find order
-            $mollieOrder = Mollie::api()->orders()->get($order->payment_id);
-
-            // Find dashboard link
-            $dashboardLink = object_get($mollieOrder, '_links.dashboard.href');
-
-            // Fail if no dashboard link
-            abort_unless($dashboardLink, 404);
-
-            // Redirect to dashboard
-            return Response::redirectTo($dashboardLink)->header('Cache-Control', 'no-store');
-        } catch (ApiException $error) {
-            // Throw a 404 if the payment is not found upstream
-            if ($error->getCode() === 404) {
-                abort(404);
-            }
-
-            // Okay, no idea here
-            report($error);
-            abort(500);
-        }
-    }
 }

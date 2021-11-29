@@ -234,7 +234,7 @@ class OrderController extends Controller
         $order->cancelled_at = Date::now();
         $order->save();
 
-        // Cancel at Mollie
+        // Cancel at provider
         foreach ($order->payments as $payment) {
             Payments::find($payment->provider)->cancel($payment);
         }

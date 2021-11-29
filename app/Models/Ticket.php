@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Date;
  * @property null|string $description
  * @property null|int $price
  * @property null|int $quantity
- * @property bool $members_only
+ * @property bool $is_public
  * @property null|\Illuminate\Support\Carbon $available_from
  * @property null|\Illuminate\Support\Carbon $available_until
  * @property null|\Illuminate\Support\Carbon $created_at
@@ -49,7 +49,7 @@ class Ticket extends Model
         'price' => 'int',
         'quantity' => 'int',
 
-        'members_only' => 'bool',
+        'is_public' => 'bool',
 
         'available_from' => 'datetime',
         'available_until' => 'datetime',
@@ -65,7 +65,7 @@ class Ticket extends Model
         'description',
         'price',
         'quantity',
-        'members_only',
+        'is_public',
         'available_from',
         'available_until',
     ];
@@ -83,7 +83,7 @@ class Ticket extends Model
     public function getMembersOnlyAttribute(): bool
     {
         // Tickets can be members only
-        if ($this->attributes['members_only'] ?? false) {
+        if ($this->is_public === false) {
             return true;
         }
 

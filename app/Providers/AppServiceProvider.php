@@ -8,14 +8,12 @@ use App\Contracts\ConscriboService as ConscriboServiceContract;
 use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\MarkdownServiceContract;
 use App\Contracts\Payments\PaymentManager;
-use App\Contracts\Payments\ServiceContract as PaymentServiceContract;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Events\EventService;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
-use App\Services\PaymentService;
 use App\Services\SponsorService;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Schema\Blueprint;
@@ -41,8 +39,6 @@ class AppServiceProvider extends ServiceProvider
     public $singletons = [
         // Sponsor service
         SponsorServiceContract::class => SponsorService::class,
-        // Mollie Payment service
-        PaymentServiceContract::class => PaymentService::class,
     ];
 
     /**

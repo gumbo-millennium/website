@@ -43,12 +43,7 @@ $factory->define(Activity::class, static function (Faker $faker) {
 
         // Location
         'location' => $faker->company,
-        'location_address' => $faker->address,
-        'location_type' => $faker->optional(0.5, Activity::LOCATION_OFFLINE)->randomElement([
-            Activity::LOCATION_OFFLINE,
-            Activity::LOCATION_ONLINE,
-            Activity::LOCATION_MIXED,
-        ]),
+        'location_address' => $faker->randomElement([$faker->address, $faker->url]),
     ];
 });
 
@@ -127,6 +122,6 @@ $factory->afterMakingState(Activity::class, 'with-image', function (Activity $ac
 $factory->afterCreatingState(Activity::class, 'with-tickets', function (Activity $activity) {
     $activity->tickets()->saveMany([
         factory(Ticket::class)->make(),
-        factory(Ticket::class)->make(['members_only' => true]),
+        factory(Ticket::class)->state('private')->make(),
     ]);
 });

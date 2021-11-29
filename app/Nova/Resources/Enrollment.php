@@ -13,11 +13,11 @@ use App\Nova\Actions\ConfirmEnrollment;
 use App\Nova\Actions\TransferEnrollment;
 use App\Nova\Fields\Price;
 use App\Nova\Filters\EnrollmentStateFilter;
+use App\Nova\Filters\PaymentStatusFilter;
 use App\Nova\Metrics\ConfirmedEnrollments;
 use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\PendingEnrollments;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -169,18 +169,6 @@ class Enrollment extends Resource
                 ->showOnDetail()
                 ->help('Prijs in euro, incl. transactiekosten'),
 
-            Fields\Text::make('Mollie link', function () {
-                if (! $this->mollie_id) {
-                    return null;
-                }
-
-                return sprintf(
-                    '<a href="%s" class="no-underline font-bold dim text-primary" target="_blank">%s</a>',
-                    URL::route('admin.mollie.enrollments', $this->id),
-                    __('View payment in Mollie'),
-                );
-            })->onlyOnDetail()->asHtml(),
-
             Fields\Text::make('Status', fn () => $this->state->title)
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
@@ -254,6 +242,7 @@ class Enrollment extends Resource
     {
         return [
             new EnrollmentStateFilter(),
+            new PaymentStatusFilter(),
         ];
     }
 }

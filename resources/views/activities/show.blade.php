@@ -3,23 +3,6 @@
 @php
 // User flags
 $isMember = $user && $user->is_member;
-
-// Get discount data
-$hasRestrictedDiscount = $activity->discounts_available !== null;
-$hasSoldOutDiscount = $activity->discounts_available === 0;
-
-// Build a discount message
-$discountWarning = (object) [
-    'show' => $hasRestrictedDiscount && $isMember,
-    'soldout' => $hasSoldOutDiscount,
-    'price' => Str::price($activity->total_discount_price),
-    'count' => sprintf(
-        '%d %s',
-        $activity->discounts_available,
-        Str::multiple('lid', 'leden', $activity->discounts_available ?? 0)
-    )
-];
-
 $isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
 
 @endphp

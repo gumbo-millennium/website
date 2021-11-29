@@ -10,7 +10,7 @@ use App\Models;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use RuntimeException;
-use Tests\Fixtures\Services\Payments\DummyService;
+use Tests\Fixtures\Services\DummyPaymentService;
 use Tests\TestCase;
 
 class PaymentManagerTest extends TestCase
@@ -22,11 +22,11 @@ class PaymentManagerTest extends TestCase
     {
         $this->afterApplicationCreated(function () {
             Config::set([
-                'gumbo.payments.providers' => [DummyService::class],
-                'gumbo.payments.default' => DummyService::getName(),
+                'gumbo.payments.providers' => [DummyPaymentService::class],
+                'gumbo.payments.default' => DummyPaymentService::getName(),
             ]);
 
-            App::singleton(DummyService::class);
+            App::singleton(DummyPaymentService::class);
         });
     }
 
@@ -42,8 +42,8 @@ class PaymentManagerTest extends TestCase
 
         $this->assertSame($manager, Payments::getFacadeRoot());
 
-        $this->assertInstanceOf(DummyService::class, $manager->default());
-        $this->assertInstanceOf(DummyService::class, $manager->find(DummyService::getName()));
+        $this->assertInstanceOf(DummyPaymentService::class, $manager->default());
+        $this->assertInstanceOf(DummyPaymentService::class, $manager->find(DummyPaymentService::getName()));
     }
 
     /**

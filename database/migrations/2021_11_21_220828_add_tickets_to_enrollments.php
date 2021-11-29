@@ -24,6 +24,7 @@ class AddTicketsToEnrollments extends Migration
                 'available_from' => $activity->enrollment_start,
                 'available_until' => $activity->enrollment_end,
 
+                // members_only → is_public migration is later!
                 'members_only' => false,
                 'price' => $activity->price,
                 'quantity' => $activity->seats,
@@ -37,6 +38,7 @@ class AddTicketsToEnrollments extends Migration
                     'available_from' => $activity->enrollment_start,
                     'available_until' => $activity->enrollment_end,
 
+                    // members_only → is_public migration is later!
                     'members_only' => true,
                     'price' => $activity->price - $activity->member_discount,
                     'quantity' => $activity->discount_count ?? $activity->seats,

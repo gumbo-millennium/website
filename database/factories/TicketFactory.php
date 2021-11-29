@@ -20,5 +20,5 @@ $factory->state(Ticket::class, 'paid', fn (Faker $faker) => [
 ]);
 
 $factory->state(Ticket::class, 'private', fn () => [
-    'members_only' => true,
+    'is_public' => false,
 ]);
