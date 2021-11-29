@@ -11,15 +11,16 @@
     - Lidmaatschappen
 
 # Stripe handles payments
-- name: Stripe Inc.
-  url: https://stripe.com/
+- name: Mollie B.V.
+  url: https://mollie.com/
   privacy-urls:
-    Privacybeleid (Engels): https://stripe.com/en-nl/privacy
+    Privacybeleid: https://www.mollie.com/nl/privacy
   purposes:
-    - uitvoeren van betalingen voor (o.a.) activiteiten
+    - uitvoeren van betalingen voor activiteiten en webshop-aankopen
   data:
-    - naam
-    - e-mailadres
+    - Naam
+    - E-mailadres
+    - Adresgegevens
     - iDEAL transactiedetails (bank, IBAN)
 
 # Google handles e-mail lists
