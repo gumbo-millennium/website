@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Date;
  *
  * @property int $id
  * @property string $payable_type
- * @property int $payable_id
+ * @property string $payable_id
  * @property null|int $user_id
  * @property string $provider
  * @property null|string $transaction_id
@@ -118,10 +118,6 @@ class Payment extends Model
 
     public function getStatusAttribute(): string
     {
-        if ($this->transaction_id === null) {
-            return PaymentStatus::PENDING;
-        }
-
         if ($this->paid_at !== null) {
             return PaymentStatus::PAID;
         }
@@ -132,6 +128,10 @@ class Payment extends Model
 
         if ($this->expired_at !== null && $this->expired_at < Date::now()) {
             return PaymentStatus::EXPIRED;
+        }
+
+        if ($this->transaction_id === null) {
+            return PaymentStatus::PENDING;
         }
 
         return PaymentStatus::OPEN;

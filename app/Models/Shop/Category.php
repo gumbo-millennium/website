@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
 
 /**
- * A shop category.
+ * App\Models\Shop\Category.
  *
  * @property string $id
  * @property null|\Illuminate\Support\Carbon $created_at

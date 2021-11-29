@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layout.main', ['hideFlash' => true])
 
 @section('title', "Inschrijven voor {$activity->name}")
 
@@ -13,7 +13,7 @@ $dataRecipients = collect([
 @section('content')
 <div class="bg-gray-50">
     @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="pt-8 leading-relaxed text-lg flex flex-col gap-y-4">
+    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
         <p>
             Om verder te gaan moet je een paar vragen beantwoorden. Deze vragen staan hieronder.
         </p>

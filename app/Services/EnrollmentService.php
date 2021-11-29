@@ -136,6 +136,11 @@ class EnrollmentService implements EnrollmentServiceContract
         // Make sure transfer token is unset
         $enrollment->transfer_secret = null;
 
+        // Wipe form data if it's sensitive
+        if ($enrollment->is_form_exportable === false) {
+            $enrollment->form = [];
+        }
+
         // Save changes
         $enrollment->save();
 

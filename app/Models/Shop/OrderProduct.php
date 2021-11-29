@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * A product in an order, with a fixed price and tax rate.
+ * App\Models\Shop\OrderProduct.
  *
  * @property string $product_variant_id
  * @property int $order_id

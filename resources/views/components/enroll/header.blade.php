@@ -33,6 +33,14 @@ if ($enrollment) {
     @endif
 
     <div class="relative z-10 enroll-column pt-8 lg:pt-16">
+        @if (flash()->message)
+        <div class="mb-4 mt-0" role="alert">
+            <div class="notice {{ flash()->class }} bg-white mt-0">
+                <p>{{ flash()->message }}</p>
+            </div>
+        </div>
+        @endif
+
         <div class="enroll-card">
             <div class="flex flex-col md:flex-row mb-8 gap-4">
                 <div class="flex flex-col w-full gap-4">
@@ -71,7 +79,11 @@ if ($enrollment) {
                 </div>
             </div>
 
-            {{ $slot }}
+            @if ($slot)
+            <div class="mt-4">
+                {{ $slot }}
+            </div>
+            @endif
         </div>
     </div>
 </div>

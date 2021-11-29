@@ -20,12 +20,13 @@ use Illuminate\Support\HtmlString;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * Our users.
+ * App\Models\User.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property null|string $stripe_id
  * @property null|int $conscribo_id
  * @property null|string $telegram_id
  * @property string $first_name

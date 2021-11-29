@@ -42,6 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \App\Models\Activity $activity
  * @property-read null|array $form
  * @property-read mixed $form_data
+ * @property-read bool $has_been_paid
  * @property-read bool $is_discounted
  * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
@@ -182,6 +183,14 @@ class Enrollment extends UuidModel implements Payable
     public function getIsDiscountedAttribute(): bool
     {
         return $this->price === $this->activity->discount_price;
+    }
+
+    /**
+     * Returns if the enrollment has been paid.
+     */
+    public function getHasBeenPaidAttribute(): bool
+    {
+        return $this->state instanceof States\Paid;
     }
 
     /**

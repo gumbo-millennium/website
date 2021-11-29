@@ -10,8 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * A mail that will be sent at a later date, or has been
- * sent.
+ * App\Models\ScheduledMail.
  *
  * @property int $id
  * @property string $group

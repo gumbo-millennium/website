@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Gumbo Millennium sponsors.
+ * App\Models\Sponsor.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

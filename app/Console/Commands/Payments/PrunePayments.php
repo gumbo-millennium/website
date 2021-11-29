@@ -61,13 +61,16 @@ class PrunePayments extends Command
     private function handleOrders(): int
     {
         $cursor = Order::query()
+            ->withoutGlobalScopes()
             ->where(function (Builder $query) {
-                $query->whereNotNull('paid_at')
+                $query
+                    ->orWhereNotNull('paid_at')
                     ->orWhereNotNull('cancelled_at')
-                    ->orWhere(fn ($query) => $query->where([
-                        ['expires_at', '!=', 'null'],
-                        ['expires_at', '<', Date::now()],
-                    ]));
+                    ->orWhere(
+                        fn ($query) => $query
+                    ->whereNotNull('expires_at')
+                    ->where('expires_at', '<', Date::now()),
+                    );
             })
             ->whereHas('payments', fn (Builder $query) => $query->pending())
             ->cursor();

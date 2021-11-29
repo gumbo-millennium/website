@@ -258,5 +258,14 @@
   "Read the Privacy Policy": "Lees het Privacybeleid",
   "I accept the privacy policy and understand how my data will be processed.": "Ik accepteer het privacybeleid en begrijp hoe mijn gegevens worden verwerkt.",
 
+  "Transfer enrollment": "Inschrijving overdragen",
+  "Confirm Enrollment Transfer": "Inschrijving overnemen",
+  "You haven't requested a transfer code yet": "Je hebt nog geen overdraaglink aangevraagd",
+  "Transfer code disabled": "Je overdraaglink is uitgeschakeld",
+  "A new transfer code has been generated" : "Er is een nieuwe overdraaglink gegenereerd",
+  "A transfer code has been generated, you can now transfer your enrollment": "Er is een overdrachtcode gegenereerd, je kunt nu je inschrijving overdragen",
+  "This is your transfer link, you cannot transfer your enrollment to yourself.": "Dit is jouw eigen overdraaglink. Hoe graag je het ook wil, je kan niet jezelf jouw eigen inschrijving overdragen.",
+  "Hello, I'd like to transfer my enrollment for :activity to you.": "Hallo, ik wil mijn inschrijving voor :activity overdragen aan jou.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

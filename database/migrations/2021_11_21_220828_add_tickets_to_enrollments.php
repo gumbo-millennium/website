@@ -47,7 +47,7 @@ class AddTicketsToEnrollments extends Migration
             foreach ($activity->enrollments()->withoutGlobalScopes()->get() as $enrollment) {
                 $ticket = $regularTicket;
 
-                if ($memberTicket && $enrollment->is_discounted) {
+                if ($memberTicket && $enrollment->total_price < $regularTicket->total_price) {
                     $ticket = $memberTicket;
                 }
 

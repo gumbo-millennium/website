@@ -1,11 +1,11 @@
-@extends('layout.main')
+@extends('layout.main', ['hideFlash' => true])
 
 @section('title', "Inschrijven voor {$activity->name}")
 
 @section('content')
 <div class="bg-gray-50">
     @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="pt-8 leading-relaxed text-lg flex flex-col gap-y-4">
+    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
         <p>
             Je inschrijving voor {{ $activity->name }} is bijna af. Je hoeft alleen nog te betalen.<br />
 

@@ -139,15 +139,15 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
     Route::get('/betalen/controle', [EnrollNew\PaymentController::class, 'verify'])->name('payVerify');
 
     // Transfer form
-    Route::get('/overdragen', [Activities\TransferController::class, 'sender'])->name('transfer');
+    Route::get('/overdragen', [EnrollNew\TransferController::class, 'show'])->name('transfer');
 
     // Transfer actions
-    Route::post('/overdragen', [Activities\TransferController::class, 'senderUpdate']);
-    Route::delete('/overdragen', [Activities\TransferController::class, 'senderRemove']);
+    Route::post('/overdragen', [EnrollNew\TransferController::class, 'store']);
+    Route::delete('/overdragen', [EnrollNew\TransferController::class, 'destroy']);
 
     // Transfer acceptance form
-    Route::get('/overnemen/{token}', [Activities\TransferController::class, 'receiver'])->name('transfer-view');
-    Route::post('/overnemen/{token}', [Activities\TransferController::class, 'receiverTake']);
+    Route::get('/overnemen/{secret}', [EnrollNew\TransferController::class, 'showConsume'])->name('transfer-view');
+    Route::post('/overnemen/{secret}', [EnrollNew\TransferController::class, 'storeConsume']);
 
     // Cancel form
     Route::post('/annuleren', [EnrollNew\CancelController::class, 'cancel'])->name('cancel');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Contracts\Payments\Payable;
+use App\Enums\PaymentStatus;
 use App\Fluent\Payment as PaymentFluent;
 use App\Models\Traits\HasPayments;
 use App\Models\User;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
 
 /**
- * A user's order.
+ * App\Models\Shop\Order.
  *
  * @property int $id
  * @property string $number
@@ -32,12 +33,18 @@ use InvalidArgumentException;
  * @property int $fee
  * @property-read string $payment_status
  * @property-read string $status
+ * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read User $user
  * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
+ * @method static Builder|Order cancelled()
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
+ * @method static Builder|Order paid()
  * @method static Builder|Order query()
- * @method static Builder|Order wherePaymentStatus(string $status)
+ * @method static Builder|Order unpaid()
+ * @method static Builder|Order whereCancelled()
+ * @method static Builder|Order whereExpired()
+ * @method static Builder|Order wherePaid()
  * @mixin \Eloquent
  */
 class Order extends Model implements Payable
@@ -115,11 +122,17 @@ class Order extends Model implements Payable
 
     public function getStatusAttribute(): string
     {
-        if ($this->shipped_at) {
-            return 'sent';
+        if ($this->paid_at) {
+            return PaymentStatus::PAID;
+        }
+        if ($this->cancelled_at) {
+            return PaymentStatus::CANCELLED;
+        }
+        if ($this->expires_at !== null && $this->expires_at < Date::now()) {
+            return PaymentStatus::EXPIRED;
         }
 
-        return $this->paid_at ? 'paid' : 'pending';
+        return PaymentStatus::OPEN;
     }
 
     /**

@@ -11,7 +11,7 @@ use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
 
 /**
- * File collection media.
+ * App\Models\Media.
  *
  * @property int $id
  * @property string $model_type

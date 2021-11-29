@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Date;
 use Spatie\MediaLibrary\Models\Media;
 
 /**
- * An individual file download, logs the bundle downloaded, the specific file downloaded (if any),
- * the user, the timestamp, the IP from which the user downloaded and the user agent used.
+ * App\Models\FileDownload.
  *
  * @property string $id
  * @property null|\Illuminate\Support\Carbon $created_at

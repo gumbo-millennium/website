@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 
 /**
- * A single product.
+ * App\Models\Shop\Product.
  *
  * @property string $id
  * @property null|string $category_id

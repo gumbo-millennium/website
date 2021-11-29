@@ -25,7 +25,7 @@ use Spatie\Permission\Models\Role;
 use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
- * A hosted activity.
+ * App\Models\Activity.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

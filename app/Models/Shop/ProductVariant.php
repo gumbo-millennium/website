@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\HtmlString;
 
 /**
- * A variant of the product, like size or color.
+ * App\Models\Shop\ProductVariant.
  *
  * @property string $id
  * @property string $product_id

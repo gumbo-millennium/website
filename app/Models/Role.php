@@ -9,7 +9,7 @@ use LogicException;
 use Spatie\Permission\Models\Role as SpatieRole;
 
 /**
- * A role, with some modifications.
+ * App\Models\Role.
  *
  * @property int $id
  * @property string $name

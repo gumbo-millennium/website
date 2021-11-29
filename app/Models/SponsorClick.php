@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 /**
- * A collection of clicks on a sponsor for a given day.
+ * App\Models\SponsorClick.
  *
  * @property int $id
  * @property int $sponsor_id

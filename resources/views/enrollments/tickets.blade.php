@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layout.main', ['hideFlash' => true])
 
 @section('title', "Inschrijven voor {$activity->name}")
 
@@ -7,7 +7,7 @@
 @section('content')
 <div class="bg-gray-50">
     @component('components.enroll.header', ['activity' => $activity])
-    <div class="pt-8 leading-relaxed text-lg flex flex-col gap-y-4">
+    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
         <p>
             Kies hieronder het ticket dat je wil bestellen voor {{ $activity->name }}.
         </p>

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A referral by a user, managed by the Intro Committee.
+ * App\Models\MemberReferral.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

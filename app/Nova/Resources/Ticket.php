@@ -130,6 +130,8 @@ class Ticket extends Resource
             Fields\BelongsTo::make(__('Activity'), 'activity', Activity::class)
                 ->exceptOnForms(),
 
+            Fields\Boolean::make(__('Members Only'), 'members_only'),
+
             // Availability
             Fields\Heading::make(__('Availability')),
 

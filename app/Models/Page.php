@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * A user-generated page.
+ * App\Models\Page.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

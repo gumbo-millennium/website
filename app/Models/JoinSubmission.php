@@ -8,7 +8,7 @@ use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Encrypted submission to Gumbo.
+ * App\Models\JoinSubmission.
  *
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at

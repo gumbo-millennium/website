@@ -14,7 +14,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
 
 /**
- * A bundle of uploaded files.
+ * App\Models\FileBundle.
  *
  * @property int $id
  * @property null|int $category_id
