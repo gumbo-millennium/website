@@ -17,7 +17,7 @@
         </div>
 
         <div class="mt-4 flex items-baseline text-6xl font-extrabold">
-            {{ Str::price($ticket->price) ?? __('Free') }}
+            {{ Str::price($ticket->total_price) ?? __('Free') }}
         </div>
 
         @if ($ticket->description)

@@ -514,7 +514,7 @@ class Activity extends SluggableModel implements AttachableInterface
     {
         $ticketCount = $this->tickets->count();
 
-        $ticketPrices = $this->tickets->pluck('price')->sort()->values();
+        $ticketPrices = $this->tickets->pluck('total_price')->sort()->values();
 
         $hasFreeTickets = $ticketPrices->contains(null);
 
