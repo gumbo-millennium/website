@@ -22,6 +22,8 @@ use Tests\TestCase;
  * ✅ Event with public and private tickets
  * ✅ Public event with only private tickets
  * ✅ Event with tickets not yet available
+ * ✅ Ended event
+ * ✅ Enroll service error
  */
 class TicketControllerTest extends TestCase
 {
@@ -347,6 +349,29 @@ class TicketControllerTest extends TestCase
 
         // Check enroll was blocked
         $this->assertSame(0, $user->enrollments()->count());
+    }
+
+    public function test_enroll_after_start_and_end(): void
+    {
+        $activity = factory(Activity::class)->create([
+            'start_date' => Date::now()->subDay(1),
+            'end_date' => Date::now()->subHours(23),
+        ]);
+
+        $ticket = $activity->tickets()->create([
+            'title' => 'Free',
+        ]);
+
+        // Act as a regular user
+        $this->actingAs(factory(User::class)->create());
+
+        // Test if ticket page is visible
+        $this->get(route('enroll.create', $activity))
+            ->assertRedirect(route('activity.show', $activity));
+
+        // Test if ticket enroll action is blocked
+        $this->post(route('enroll.store', $activity), ['ticket_id' => $ticket->id])
+            ->assertRedirect(route('activity.show', $activity));
     }
 
     public function test_enroll_when_enrolled(): void

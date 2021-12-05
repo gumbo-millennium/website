@@ -13,8 +13,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\Rule;
+use RuntimeException;
 
 class TicketController extends Controller
 {
@@ -32,6 +34,11 @@ class TicketController extends Controller
         $enrollment = Enroll::getEnrollment($activity);
         if ($enrollment) {
             return Response::redirectToRoute('enroll.show', [$activity]);
+        }
+
+        // Check if ended
+        if ($redirect = $this->redirectIfEnded($activity)) {
+            return $redirect;
         }
 
         // Get user
@@ -80,6 +87,11 @@ class TicketController extends Controller
             return Response::redirectToRoute('enroll.show', [$activity]);
         }
 
+        // Check if ended
+        if ($redirect = $this->redirectIfEnded($activity)) {
+            return $redirect;
+        }
+
         // Get tickets
         $tickets = Enroll::findTicketsForActivity($activity);
 
@@ -97,18 +109,37 @@ class TicketController extends Controller
 
         try {
             // Enroll using the given ticket
-            $enrollment = Enroll::createEnrollment($activity, $ticket);
+            Enroll::createEnrollment($activity, $ticket);
         } catch (EnrollmentFailedException $exception) {
+            report(new RuntimeException(sprintf(
+                'Failed to enroll user %s in activity %s',
+                optional($request->user())->id,
+                $activity->id,
+            ), 0, $exception));
+
             flash()->error(__(
                 'Something went wrong enrolling you into :activity, please try again.',
                 ['activity' => $activity->name],
             ));
 
             // Return to the previous page, but explicitly specifying it
-            return Response::redirectToRoute('enroll.ticket', [$activity]);
+            return Response::redirectToRoute('enroll.create', [$activity]);
         }
 
         // Redirect to info, let that thing figure it out
         return Response::redirectToRoute('enroll.show', [$activity]);
+    }
+
+    private function redirectIfEnded(Activity $activity): ?RedirectResponse
+    {
+        // Check if ended
+        if ($activity->end_date < Date::now()) {
+            flash()
+                ->warning(__('You cannot enroll for an activity that has ended.'));
+
+            return Response::redirectToRoute('activity.show', [$activity]);
+        }
+
+        return null;
     }
 }

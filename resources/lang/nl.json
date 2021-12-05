@@ -250,6 +250,9 @@
   "Sold Out": "Uitverkocht",
   ":quantity tickets, :available left": ":quantity tickets beschikbaar, :available over",
 
+  "You cannot enroll for an activity that has ended.": "Je kunt je niet inschrijven voor een activiteit die is afgelopen.",
+  "Something went wrong enrolling you into :activity, please try again.": "Er is iets fout gegaan bij het inschrijven bij :activity, probeer het opnieuw.",
+
   "Welcome Back": "Welkom terug",
   "You've already submitted this form, but you can revise information to your liking.": "Je hebt dit formulier al ingediend, maar je kunt de informatie hieronder nog aanpassen.",
   "Please check with the organisation after updating, since they might've taken out some information already.": "Check wel even na het aanpassen met de organisatie, voor het geval ze al wat hebben doorgegeven.",
