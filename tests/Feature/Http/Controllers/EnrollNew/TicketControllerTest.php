@@ -349,7 +349,6 @@ class TicketControllerTest extends TestCase
         $this->assertSame(0, $user->enrollments()->count());
     }
 
-
     public function test_enroll_when_enrolled(): void
     {
         $activity = factory(Activity::class)->create();

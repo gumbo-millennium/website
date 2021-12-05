@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 
 trait CreatesFiles
 {
@@ -25,6 +26,20 @@ trait CreatesFiles
             'medialibrary.image_generators' => [],
             'medialibrary.image_optimizers' => [],
         ], []));
+    }
+
+    /**
+     * @before
+     */
+    public function swapFilesystems(): void
+    {
+        $this->afterApplicationCreated(function () {
+            $disks = array_keys(Config::get('filesystems.disks'));
+
+            foreach ($disks as $diskName) {
+                Storage::fake($diskName);
+            }
+        });
     }
 
     protected function createFileCategory(): FileCategory
