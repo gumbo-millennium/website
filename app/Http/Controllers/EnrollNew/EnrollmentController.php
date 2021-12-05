@@ -38,6 +38,8 @@ class EnrollmentController extends Controller
     public function show(Request $request, Activity $activity)
     {
         if (! $enrollment = Enroll::getEnrollment($activity)) {
+            $request->session()->reflash();
+
             flash()->warning(__(
                 "You're currently not enrolled into :activity",
                 ['activity' => $activity->name],
@@ -47,10 +49,14 @@ class EnrollmentController extends Controller
         }
 
         if ($enrollment->state instanceof States\Created) {
+            $request->session()->reflash();
+
             return Response::redirectToRoute('enroll.form', [$activity]);
         }
 
         if ($enrollment->state instanceof States\Seeded) {
+            $request->session()->reflash();
+
             return Response::redirectToRoute('enroll.pay', [$activity]);
         }
 

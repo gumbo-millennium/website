@@ -10,6 +10,7 @@ use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Models\Traits\HasPayments;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -52,6 +53,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Enrollment active()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
@@ -316,6 +318,19 @@ class Enrollment extends UuidModel implements Payable
         throw_unless($payment->verifySum($this->total_price), new LogicException('Price mismatch'));
 
         return $payment;
+    }
+
+    /**
+     * @param Builder<self> $query
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->whereState('state', [
+            States\Created::class,
+            States\Seeded::class,
+            States\Confirmed::class,
+            States\Paid::class,
+        ]);
     }
 
     /**

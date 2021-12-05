@@ -17,8 +17,18 @@
     </div>
     @endcomponent
 
-    @if (! $hasTickets && $tickets->isNotEmpty())
-    <div class="enroll-column mt-8">
+    @if ($activity->available_seats === 0)
+    <div class="enroll-column">
+        <div class="notice notice--large notice--warning my-0">
+            <h3 class="notice__title">@lang('Sold Out')</h3>
+            <p>
+                @lang("This activity has no more seats available.")
+                @lang("The ticket options below are just for reference.")
+            </p>
+        </div>
+    </div>
+    @elseif (! $hasTickets && $tickets->isNotEmpty())
+    <div class="enroll-column">
         <div class="notice notice--large notice--warning my-0">
             <h3 class="notice__title">@lang('No tickets available')</h3>
             <p>

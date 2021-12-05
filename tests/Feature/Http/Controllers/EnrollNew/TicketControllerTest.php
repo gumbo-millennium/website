@@ -317,6 +317,39 @@ class TicketControllerTest extends TestCase
         $this->assertSame(1, $user->enrollments()->count());
     }
 
+    public function test_enroll_with_no_more_seats(): void
+    {
+        $activity = factory(Activity::class)->state('with-tickets')->create([
+            'seats' => 2,
+        ]);
+        $ticket = $activity->tickets->first();
+
+        // Enroll two users
+        for ($i = 0; $i < 2; $i++) {
+            $this->actingAs(factory(User::class)->create());
+            Enroll::createEnrollment($activity, $ticket);
+        }
+
+        // Act as a regular user
+        $this->actingAs($user = factory(User::class)->create());
+
+        // Check enrollments are closed
+        $this->get($createRoute = route('enroll.create', [$activity]))
+            ->assertOk()
+            ->assertSee($ticket->title)
+            ->assertSee("data-test-action=\"show-{$ticket->id}\"", false)
+
+            ->assertSee(__('Sold Out'));
+
+        $this->post(route('enroll.store', [$activity]), ['ticket_id' => $ticket->id])
+            ->assertSessionHasErrors()
+            ->assertRedirect($createRoute);
+
+        // Check enroll was blocked
+        $this->assertSame(0, $user->enrollments()->count());
+    }
+
+
     public function test_enroll_when_enrolled(): void
     {
         $activity = factory(Activity::class)->create();

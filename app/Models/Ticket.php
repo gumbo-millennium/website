@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\States\Enrollment as States;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,6 +29,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
  * @property-read string $available_range
  * @property-read bool $is_being_sold
+ * @property-read bool $members_only
  * @property-read null|int $quantity_available
  * @property-read int $quantity_sold
  * @property-read null|int $total_price
@@ -101,9 +101,9 @@ class Ticket extends Model
 
     public function getQuantitySoldAttribute(): int
     {
-        return $this->enrollments()->whereNotState('state', [
-            States\Cancelled::class,
-        ])->count();
+        return $this->enrollments()
+            ->active()
+            ->count();
     }
 
     public function getQuantityAvailableAttribute(): ?int
@@ -145,6 +145,7 @@ class Ticket extends Model
     {
         return $this->is_being_sold
             && $this->quantity_available !== 0
+            && $this->activity->available_seats !== 0
             && (! $this->members_only || optional($user)->is_member);
     }
 }

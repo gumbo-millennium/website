@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Models;
 
+use App\Facades\Enroll;
 use App\Models\Activity;
+use App\Models\Enrollment;
+use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
+use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
@@ -91,5 +96,56 @@ class TicketTest extends TestCase
 
         // Members only is computed
         $this->assertTrue($ticket->members_only);
+    }
+
+    public function test_ticket_quantities(): void
+    {
+        $activity = factory(Activity::class)->create();
+
+        /** @var Ticket $ticket */
+        [$ticketWithoutLimit, $ticketWithLimit] = $activity->tickets()->createMany([
+            factory(Ticket::class)->make(['quantity' => null])->toArray(),
+            factory(Ticket::class)->make(['quantity' => 10])->toArray(),
+        ]);
+
+        // Create the proper number of users
+        $usersWithWithoutLimitTicket = factory(User::class)->times(15)->create();
+        $usersWithLimitTicket = factory(User::class)->times(8)->create();
+
+        // Create a bunch of enrollments
+        /** @var Collection<Enrollment> $enrollmentsWithoutLimit */
+        $enrollmentsWithoutLimit = $usersWithWithoutLimitTicket->map(function ($user) use ($activity, $ticketWithoutLimit) {
+            $this->actingAs($user);
+
+            return Enroll::createEnrollment($activity, $ticketWithoutLimit);
+        });
+
+        /** @var Collection<Enrollment> $enrollmentsWithLimit */
+        $enrollmentsWithLimit = $usersWithLimitTicket->map(function ($user) use ($activity, $ticketWithLimit) {
+            $this->actingAs($user);
+
+            return Enroll::createEnrollment($activity, $ticketWithLimit);
+        });
+
+        // Cancel 5 without limit
+        $enrollmentsWithoutLimit->random(5)->each(function (Enrollment $enrollment) {
+            $enrollment->transitionTo(States\Cancelled::class);
+            $enrollment->save();
+        });
+
+        // Cancel 3 with limit
+        $enrollmentsWithLimit->random(3)->each(function (Enrollment $enrollment) {
+            $enrollment->transitionTo(States\Cancelled::class);
+            $enrollment->save();
+        });
+
+        // Check counts on both
+        $this->assertSame(null, $ticketWithoutLimit->quantity);
+        $this->assertSame(null, $ticketWithoutLimit->quantity_available);
+        $this->assertSame(10, $ticketWithoutLimit->quantity_sold);
+
+        $this->assertSame(10, $ticketWithLimit->quantity);
+        $this->assertSame(5, $ticketWithLimit->quantity_available);
+        $this->assertSame(5, $ticketWithLimit->quantity_sold);
     }
 }

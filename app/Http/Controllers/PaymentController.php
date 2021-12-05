@@ -76,14 +76,14 @@ class PaymentController extends Controller
             }
 
             flash()
-                ->warning(__('This payment is currently processing, please hold'));
+                ->warning(__('This payment is currently processing, please hold.'));
 
             return $this->getDestination($payment);
         } catch (PaymentException $e) {
             report($e);
 
             flash()
-                ->warning(__('Could not start payment: :message', ['message' => $e->getMessage()]));
+                ->warning(__('Could not start payment: :message.', ['message' => rtrim($e->getMessage(), '.')]));
 
             return $this->getDestination($payment);
         }

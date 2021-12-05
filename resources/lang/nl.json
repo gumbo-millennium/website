@@ -228,6 +228,7 @@
   "Available Until": "Beschikbaar tot",
   "Max Quantity": "Maximaal aantal",
 
+  "This activity has no more seats available.": "Deze activiteit heeft geen plaatsen meer beschikbaar.",
   "No tickets available": "Geen tickets beschikbaar",
   "Sorry, but there are currently no tickets available for this activity.": "Sorry, maar er zijn momenteel geen tickets beschikbaar voor deze activiteit.",
   "The ticket options below are just for reference.": "De ticketopties hieronder zijn alleen ter referentie.",
@@ -254,6 +255,12 @@
   "Please check with the organisation after updating, since they might've taken out some information already.": "Check wel even na het aanpassen met de organisatie, voor het geval ze al wat hebben doorgegeven.",
   "There was a problem submitting the form.": "Er is een probleem opgetreden bij het versturen van het formulier.",
   "Please re-check all the fields below for errors.": "Controleer de velden hieronder op fouten.",
+
+  "The payment provider isn't available right now.": "De betaalprovider is momenteel niet beschikbaar.",
+  "This payment is currently processing, please hold.": "De betaling wordt momenteel verwerkt, wacht even.",
+  "Could not start payment: :message.": "Betaling kon niet worden gestart: :message.",
+  "The payment has been validated successfully.": "De betaling is succesvol verwerkt.",
+  "The payment is still processing or has failed, please try again.": "De betaling wordt momenteel verwerkt of is mislukt, probeer het opnieuw.",
 
   "Privacy Policy": "Privacybeleid",
   "Read the Privacy Policy": "Lees het Privacybeleid",
