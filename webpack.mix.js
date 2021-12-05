@@ -3,7 +3,6 @@ const mix = require('laravel-mix')
 const path = require('path')
 
 // Webpack plugins
-const ImageminPlugin = require('imagemin-webpack-plugin').default
 const ESLintPlugin = require('eslint-webpack-plugin')
 
 /**
@@ -58,7 +57,7 @@ mix.alias({
 mix.override(webpack => {
   // Allow webpack loaders, except those handling images
   const allowedWebpackLoaders = webpack.module.rules
-    .filter(rule => !(rule.test && rule.test instanceof RegExp && rule.test.test('@images/test.jpg')))
+    .filter(rule => !('test' in rule && rule.test instanceof RegExp && rule.test.test('@images/test.jpg')))
 
   // Push the responsive-loader
   allowedWebpackLoaders.push({
@@ -86,12 +85,6 @@ mix.override(webpack => {
 // Push plugins
 mix.webpackConfig({
   plugins: [
-    // Minify images
-    new ImageminPlugin({
-      test: /\.(png|svg|jpg)$/,
-      disable: !mix.inProduction(),
-    }),
-
     // ESLint validation on build
     new ESLintPlugin({
       files: [
