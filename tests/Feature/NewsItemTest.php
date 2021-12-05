@@ -89,6 +89,20 @@ class NewsItemTest extends TestCase
             ->assertNotFound();
     }
 
+    public function test_news_cover_images(): void
+    {
+        $item = factory(NewsItem::class)->state('with-image')->create();
+
+        // Get news index
+        $this->get(route('news.index'))
+            ->assertOk()
+            ->assertSeeText($item->title);
+
+        // Get news item
+        $this->get(route('news.show', [$item]))
+            ->assertOk();
+    }
+
     private function getTestNewsItem(array $attributes = []): NewsItem
     {
         return factory(NewsItem::class)->create($attributes);
