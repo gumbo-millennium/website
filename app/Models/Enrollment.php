@@ -53,16 +53,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment active()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment newQuery()
+ * @method static Builder|Enrollment active()
+ * @method static Builder|Enrollment newModelQuery()
+ * @method static Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment query()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereCancelled()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereExpired()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereNotState(string $column, $states)
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment wherePaid()
- * @method static \Illuminate\Database\Eloquent\Builder|Enrollment whereState(string $column, $states)
+ * @method static Builder|Enrollment query()
+ * @method static Builder|Enrollment whereCancelled()
+ * @method static Builder|Enrollment whereExpired()
+ * @method static Builder|Enrollment whereNotState(string $column, $states)
+ * @method static Builder|Enrollment wherePaid()
+ * @method static Builder|Enrollment whereState(string $column, $states)
  * @method static \Illuminate\Database\Query\Builder|Enrollment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
