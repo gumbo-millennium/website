@@ -187,9 +187,14 @@ jobs:
     with:
       environment: acceptance
     secrets:
+      # Deployer
       deploy_port: ${{ secrets.DEPLOY_PORT }}
       deploy_user: ${{ secrets.DEPLOY_USER }}
       deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      # Sentry
+      sentry_auth_token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      sentry_org: ${{ secrets.SENTRY_ORG }}
+      sentry_project: ${{ secrets.SENTRY_PROJECT }}
 
   deploy-production:
     name: Deploy to production
@@ -203,9 +208,11 @@ jobs:
     with:
       environment: production
     secrets:
+      # Deployer
       deploy_port: ${{ secrets.DEPLOY_PORT }}
       deploy_user: ${{ secrets.DEPLOY_USER }}
       deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      # Sentry
       sentry_auth_token: ${{ secrets.SENTRY_AUTH_TOKEN }}
       sentry_org: ${{ secrets.SENTRY_ORG }}
       sentry_project: ${{ secrets.SENTRY_PROJECT }}
