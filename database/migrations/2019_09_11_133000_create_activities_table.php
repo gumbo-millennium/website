@@ -50,9 +50,6 @@ class CreateActivitiesTable extends Migration
             $table->unsignedBigInteger('role_id')->nullable()->default(null);
             $table->unsignedBigInteger('user_id')->nullable()->default(null);
 
-            // Add image
-            $table->paperclip('image');
-
             // Add role and user foreign key
             $roleTable = config('permission.table_names.roles');
             $table->foreign('role_id')->references('id')->on($roleTable)->onDelete('set null');

@@ -9,15 +9,13 @@ use App\Models\Activity;
 use App\Models\NewsItem;
 use App\Models\Page;
 use App\Models\Sponsor;
-use Czim\FileHandling\Storage\File\SplFileInfoStorableFile;
-use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
-use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Mime\MimeTypes;
+use ZipArchive;
 
 class RestoreImages extends Command
 {
@@ -53,19 +51,17 @@ class RestoreImages extends Command
         $this->line("Restoring from <info>{$filePath}</>...");
 
         // Get a tempname
-        $tempFile = \tempnam(\sys_get_temp_dir(), 'zipfile');
-        $tempStream = \fopen($tempFile, 'w');
+        $tempFile = tempnam(sys_get_temp_dir(), 'zipfile');
         $originalStream = Storage::readStream($filePath);
 
         // Copy stream
-        \stream_copy_to_stream($originalStream, $tempStream);
+        file_put_contents($tempFile, $originalStream);
 
         // Close streams
-        \fclose($tempStream);
-        \fclose($originalStream);
+        fclose($originalStream);
 
         // Get zip handle
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $zip->open($tempFile);
 
         // Arhive
@@ -90,10 +86,8 @@ class RestoreImages extends Command
 
     /**
      * Maps the archive to an array.
-     *
-     * @param ZipArchive $zip
      */
-    public function mapArchive(\ZipArchive $zip): array
+    public function mapArchive(ZipArchive $zip): array
     {
         // Result
         $result = [];
@@ -104,7 +98,7 @@ class RestoreImages extends Command
             $file = $zip->getNameIndex($index);
 
             // Skip if invalid URL
-            if (! \preg_match('/^\/?([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+)\//', $file)) {
+            if (! preg_match('/^\/?([a-z0-9-]+)\/([a-z0-9-]+)\/([a-z0-9-]+)\//', $file)) {
                 continue;
             }
 
@@ -126,22 +120,22 @@ class RestoreImages extends Command
         }
 
         // Sort model names
-        \ksort($result);
+        ksort($result);
 
         // Sort results per model
-        foreach (\array_keys($result) as $key) {
-            \ksort($result[$key]);
+        foreach (array_keys($result) as $key) {
+            ksort($result[$key]);
         }
 
         // Done
         return $result;
     }
 
-    public function assign(\ZipArchive $zip, array $map, string $className): void
+    public function assign(ZipArchive $zip, array $map, string $className): void
     {
         // Prep some values
-        $pathName = Str::snake(\class_basename($className), '-');
-        $classDisplay = \ucwords(Str::snake(\class_basename($className), ' '));
+        $pathName = Str::snake(class_basename($className), '-');
+        $classDisplay = ucwords(Str::snake(class_basename($className), ' '));
 
         // Skip
         if (! isset($map[$pathName])) {
@@ -156,7 +150,7 @@ class RestoreImages extends Command
 
         // Prep a base
         $baseClass = new $className();
-        \assert($baseClass instanceof Model);
+        assert($baseClass instanceof Model);
 
         // Get affected models
         $classCursor = $className::query()
@@ -173,22 +167,11 @@ class RestoreImages extends Command
 
         // Class cursor
         foreach ($classCursor as $model) {
-            \assert($model instanceof Model);
+            assert($model instanceof Model);
             $newValues = $map[$pathName][$model->getKey()];
 
             // Iterate values
             foreach ($newValues as $propertyName => $fileIndex) {
-                // Skip if not an attachment
-                if (! $model->{$propertyName} instanceof AttachmentInterface) {
-                    $this->line(
-                        "Skipping <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>.",
-                        null,
-                        OutputInterface::VERBOSITY_VERY_VERBOSE,
-                    );
-
-                    continue;
-                }
-
                 $this->line(
                     "Updating <info>{$propertyName}</> on <comment>{$classDisplay} #{$model->getKey()}</>...",
                     null,
@@ -196,24 +179,19 @@ class RestoreImages extends Command
                 );
 
                 // Prep a tempfle
-                $tempFile = \tempnam(\sys_get_temp_dir(), 'image');
+                $tempFile = tempnam(sys_get_temp_dir(), 'image');
 
                 // Write contents
-                \file_put_contents($tempFile, $zip->getFromIndex($fileIndex));
+                file_put_contents($tempFile, $zip->getFromIndex($fileIndex));
 
-                // Determine mime type
-                $mimeTypes = new MimeTypes();
-                $mimeType = $mimeTypes->guessMimeType($tempFile);
-                $extension = $mimeTypes->getExtensions($mimeType)[0] ?? 'bin';
-
-                // Build custom file
-                $customFile = new SplFileInfoStorableFile();
-                $customFile->setData(new SplFileInfo($tempFile));
-                $customFile->setMimeType($mimeType);
-                $customFile->setName(sprintf('%s.%s', \hash_file('sha256', $tempFile), $extension));
+                // Check file
+                $storagePath = Storage::disk('public')->putFile("images/{$pathName}", new File($tempFile));
+                if (! $storagePath) {
+                    continue;
+                }
 
                 // Assign file
-                $model->{$propertyName} = $customFile;
+                $model->{$propertyName} = $storagePath;
 
                 // Save it
                 $model->save([$propertyName]);
@@ -227,7 +205,7 @@ class RestoreImages extends Command
                 $updateCount++;
 
                 // Delete temp file
-                \unlink($tempFile);
+                unlink($tempFile);
             }
         }
 
@@ -259,7 +237,7 @@ class RestoreImages extends Command
         // Only show zip files
         $zipFiles = [];
         foreach ($files as $file) {
-            $file = \basename($file);
+            $file = basename($file);
             if (! preg_match('/^[a-z0-9_-]+\.zip$/', $file)) {
                 continue;
             }

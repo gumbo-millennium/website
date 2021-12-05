@@ -19,7 +19,7 @@ class MigrateMediaLibraryCommandTest extends TestCase
 
     private const LOCAL_DISK = 'local';
 
-    private const CLOUD_DISK = 'paperclip';
+    private const CLOUD_DISK = 'public';
 
     /**
      * @before

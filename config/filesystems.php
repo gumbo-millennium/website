@@ -55,18 +55,6 @@ return [
             'visibility' => 'public',
         ],
 
-        'paperclip' => [
-            'driver' => 'local',
-            'root' => storage_path('app/paperclip'),
-        ],
-
-        'paperclip-public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/paperclip'),
-            'url' => env('APP_URL') . '/storage/paperclip',
-            'visibility' => 'public',
-        ],
-
         'scaleway' => [
             'driver' => 's3',
             'key' => env('SCALEWAY_ACCESS_KEY_ID'),

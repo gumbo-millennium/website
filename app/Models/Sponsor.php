@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,20 +21,15 @@ use Illuminate\Support\Facades\Storage;
  * @property string $slug
  * @property null|string $cover
  * @property string $url URL of sponsor landing page
+ * @property null|string $caption
+ * @property null|string $contents_title
+ * @property null|mixed $contents
  * @property null|\Illuminate\Support\Carbon $starts_at
  * @property null|\Illuminate\Support\Carbon $ends_at
  * @property null|int $has_page
  * @property int $view_count Number of showings
- * @property null|string $backdrop_file_name backdrop name
- * @property null|int $backdrop_file_size backdrop size (in bytes)
- * @property null|string $backdrop_content_type backdrop content type
- * @property null|string $backdrop_updated_at backdrop update timestamp
- * @property null|mixed $backdrop_variants backdrop variants (json)
- * @property null|string $caption
  * @property null|string $logo_gray
  * @property null|string $logo_color
- * @property null|string $contents_title
- * @property null|mixed $contents
  * @property-read \App\Models\SponsorClick[]|\Illuminate\Database\Eloquent\Collection $clicks
  * @property-read mixed $click_count
  * @property-read null|string $content_html
@@ -57,12 +48,9 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Query\Builder|Sponsor withoutTrashed()
  * @mixin \Eloquent
  */
-class Sponsor extends SluggableModel implements AttachableInterface
+class Sponsor extends SluggableModel
 {
     use HasEditorJsContent;
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
     use SoftDeletes;
 
     public const LOGO_DISK = 'public';
@@ -212,16 +200,5 @@ class Sponsor extends SluggableModel implements AttachableInterface
     public function getContentHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->contents);
-    }
-
-    /**
-     * Binds paperclip files.
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('backdrop', [
-            'banner' => [1920, 960, true],
-        ]);
     }
 }

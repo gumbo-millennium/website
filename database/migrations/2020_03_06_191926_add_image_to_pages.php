@@ -15,9 +15,7 @@ class AddImageToPages extends Migration
      */
     public function up()
     {
-        Schema::table('pages', static function (Blueprint $table) {
-            $table->paperclip('image');
-        });
+        // noop
     }
 
     /**
@@ -27,8 +25,12 @@ class AddImageToPages extends Migration
      */
     public function down()
     {
+        if (! Schema::hasColumn('pages', 'image')) {
+            return;
+        }
+
         Schema::table('pages', static function (Blueprint $table) {
-            $table->dropPaperclip('image');
+            $table->dropColumn('image');
         });
     }
 }

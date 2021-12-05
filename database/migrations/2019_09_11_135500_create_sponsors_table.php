@@ -23,8 +23,6 @@ class CreateSponsorsTable extends Migration
             $table->string('name')->comment('Sponsor name');
             $table->string('url')->comment('URL of sponsor landing page');
 
-            $table->paperclip('image');
-
             // Visiblity dates
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();

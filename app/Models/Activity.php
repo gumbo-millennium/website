@@ -9,11 +9,7 @@ use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
 use App\Nova\Flexible\Presets\ActivityForm;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -54,11 +50,6 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property null|string $postponed_reason
  * @property null|array $enrollment_questions
  * @property null|int $role_id
- * @property null|string $image_file_name image name
- * @property null|int $image_file_size image size (in bytes)
- * @property null|string $image_content_type image content type
- * @property null|string $image_updated_at image update timestamp
- * @property null|mixed $image_variants image variants (json)
  * @property array $features
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
  * @property-read int $available_seats
@@ -97,13 +88,10 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @mixin \Eloquent
  */
-class Activity extends SluggableModel implements AttachableInterface
+class Activity extends SluggableModel
 {
     use HasEditorJsContent;
     use HasFlexible;
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
 
@@ -659,16 +647,5 @@ class Activity extends SluggableModel implements AttachableInterface
     public function hasFeature(string $feature): bool
     {
         return (bool) Arr::get($this->features ?? [], $feature, false);
-    }
-
-    /**
-     * Binds paperclip files.
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'cover' => [768, 256, true],
-        ]);
     }
 }

@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
-use App\Models\Traits\HasSimplePaperclippedMedia;
-use App\Traits\HasPaperclip;
-use Czim\Paperclip\Contracts\AttachableInterface;
-use Czim\Paperclip\Model\PaperclipTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -27,11 +23,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|mixed $contents
  * @property null|int $author_id
  * @property bool $hidden
- * @property null|string $image_file_name image name
- * @property null|int $image_file_size image size (in bytes)
- * @property null|string $image_content_type image content type
- * @property null|string $image_updated_at image update timestamp
- * @property null|mixed $image_variants image variants (json)
  * @property-read null|\App\Models\User $author
  * @property-read null|string $html
  * @property-read string $url
@@ -43,12 +34,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @mixin \Eloquent
  */
-class Page extends SluggableModel implements AttachableInterface
+class Page extends SluggableModel
 {
     use HasEditorJsContent;
-    use HasPaperclip;
-    use HasSimplePaperclippedMedia;
-    use PaperclipTrait;
 
     public const TYPE_USER = 'user';
 
@@ -146,18 +134,5 @@ class Page extends SluggableModel implements AttachableInterface
         }
 
         return url("/{$this->slug}");
-    }
-
-    /**
-     * Binds paperclip files.
-     */
-    protected function bindPaperclip(): void
-    {
-        // Sizes
-        $this->createSimplePaperclip('image', [
-            'article' => [1440, 960, false],
-            'cover' => [384, 256, true],
-            'poster' => [192, 256, false],
-        ]);
     }
 }

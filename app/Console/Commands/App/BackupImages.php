@@ -9,7 +9,6 @@ use App\Models\Activity;
 use App\Models\NewsItem;
 use App\Models\Page;
 use App\Models\Sponsor;
-use Czim\Paperclip\Contracts\AttachmentInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -56,16 +55,16 @@ class BackupImages extends Command
         ));
 
         // Get all activities
-        $this->storeImages($zip, Activity::class, ['image']);
+        $this->storeImages($zip, Activity::class, ['poster']);
 
         // Get all sponsors
-        $this->storeImages($zip, Sponsor::class, ['backdrop']);
+        $this->storeImages($zip, Sponsor::class, ['canvas']);
 
         // Get all pages
-        $this->storeImages($zip, Page::class, ['image']);
+        $this->storeImages($zip, Page::class, ['canvas']);
 
         // Get all news items
-        $this->storeImages($zip, NewsItem::class, ['image']);
+        $this->storeImages($zip, NewsItem::class, ['canvas']);
 
         // Save it
         $this->line('Saving...', null, OutputInterface::VERBOSITY_VERBOSE);
@@ -102,11 +101,10 @@ class BackupImages extends Command
 
             // Iterate requested properties
             foreach ($properties as $propertyName) {
-                $property = $item->{$propertyName};
-                \assert($property instanceof AttachmentInterface);
+                $path = $item->{$propertyName};
 
                 // Skip if missing
-                if (! $property->exists()) {
+                if (! Storage::disk('public')->exists($path)) {
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$baseName} #{$itemId}</>.",
                         null,
@@ -117,9 +115,9 @@ class BackupImages extends Command
                 }
 
                 // Prep normal name and extension
-                $attachmentNameParts = explode('.', $property->variantFilename(null));
-                $attachmentExt = Str::lower(\array_pop($attachmentNameParts));
-                $attachmentName = Str::slug(\implode('.', $attachmentNameParts));
+                $attachmentNameParts = explode('.', $path);
+                $attachmentExt = Str::lower(array_pop($attachmentNameParts));
+                $attachmentName = Str::slug(implode('.', $attachmentNameParts));
 
                 // Prep filename
                 $filename = sprintf(
@@ -132,8 +130,7 @@ class BackupImages extends Command
                 );
 
                 // Get storage
-                $contents = Storage::disk($property->getStorage())
-                    ->get($property->variantPath());
+                $contents = Storage::disk('public')->get($path);
 
                 // Write to zip
                 $zip->addFromString($filename, $contents);

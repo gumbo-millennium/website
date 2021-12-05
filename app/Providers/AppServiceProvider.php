@@ -16,7 +16,6 @@ use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
 use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -96,33 +95,6 @@ class AppServiceProvider extends ServiceProvider
             Config::get('gumbo.payments.default'),
             Config::get('gumbo.payments.providers', []),
         ));
-
-        // Add Paperclip macro to the database helper
-        Blueprint::macro('paperclip', function (string $name, ?bool $variants = null) {
-            \assert($this instanceof Blueprint);
-            $this->string("{$name}_file_name")->comment("{$name} name")->nullable();
-            $this->integer("{$name}_file_size")->comment("{$name} size (in bytes)")->nullable();
-            $this->string("{$name}_content_type")->comment("{$name} content type")->nullable();
-            $this->timestamp("{$name}_updated_at")->comment("{$name} update timestamp")->nullable();
-
-            if ($variants === false) {
-                return;
-            }
-
-            $this->json("{$name}_variants")->comment("{$name} variants (json)")->nullable();
-        });
-
-        // Add Paperclip drop macro to database
-        Blueprint::macro('dropPaperclip', function (string $name, ?bool $variants = null) {
-            \assert($this instanceof Blueprint);
-            $this->dropColumn(array_filter([
-                "{$name}_file_name",
-                "{$name}_file_size",
-                "{$name}_content_type",
-                "{$name}_updated_at",
-                $variants !== false ? "{$name}_variants" : null,
-            ]));
-        });
 
         // Provide User for all views
         view()->composer('*', static function (View $view) {

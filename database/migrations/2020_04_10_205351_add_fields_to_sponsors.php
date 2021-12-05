@@ -23,11 +23,12 @@ class AddFieldsToSponsors extends Migration
         // Add slugs
         Schema::table('sponsors', static function (Blueprint $table) {
             // Add caption for the site-wide adverts
-            $table->text('caption')->nullable()->default(null)->after('backdrop_variants');
+            $table->text('caption')->nullable()->default(null)->after('url');
 
             // Add has_page as computed field
-            $table->string('contents_title')->nullable()->default(null);
-            $table->json('contents')->nullable();
+            $table->string('contents_title')->nullable()->default(null)->after('caption');
+            $table->json('contents')->nullable()->after('contents_title');
+
             $hasPage = $table->boolean('has_page')->storedAs(self::PAGE_SQL)->after('ends_at');
 
             // Add soft deletes and slug
