@@ -125,7 +125,7 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 
     // Answer form questions
     Route::get('/gegevens', [EnrollNew\FormController::class, 'edit'])->name('form');
-    Route::patch('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
+    Route::put('/gegevens', [EnrollNew\FormController::class, 'update'])->name('formStore');
 
     // Start payment
     Route::get('/betalen', [EnrollNew\PaymentController::class, 'create'])->name('pay');

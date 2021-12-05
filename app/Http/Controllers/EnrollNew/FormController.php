@@ -55,7 +55,7 @@ class FormController extends Controller
 
         // Build the real form
         $form = $this->getForm($activity, [
-            'method' => 'PATCH',
+            'method' => 'PUT',
             'url' => route('enroll.formStore', [$activity]),
             'data' => $enrollment->form_data,
         ]);

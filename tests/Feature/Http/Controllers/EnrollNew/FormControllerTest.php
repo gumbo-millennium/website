@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -87,5 +88,23 @@ class FormControllerTest extends TestCase
 
         $formData = Collection::make($activity->form)
             ->map->getName();
+    }
+
+    public function test_without_form(): void
+    {
+        /** @var Activity $activity */
+        $activity = factory(Activity::class)->states('with-form', 'with-tickets')->create();
+        $ticket = $activity->tickets->first();
+
+        $this->actingAs(factory(User::class)->create());
+        $enrollment = Enroll::createEnrollment($activity, $ticket);
+
+        $this->assertNotNull($enrollment);
+
+        $this->get(route('enroll.form', $activity))
+            ->assertRedirect(route('enroll.show', $activity));
+
+        $this->put(route('enroll.formStore', $activity))
+            ->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 }
