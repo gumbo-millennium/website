@@ -19,7 +19,7 @@
     $postDate = $postTimestamp->isoFormat('DD MMM \'YY');
     $headline = $item->headline ?? Str::words(strip_tags($item->html), 10);
 
-    $bannerImage = image_asset($item->poster)->preset('banner');
+    $bannerImage = image_asset($item->image)->preset('banner');
     $bannerImage2x = (clone $bannerImage)->dpr(2);
     @endphp
     <article class="card-grid__item">
