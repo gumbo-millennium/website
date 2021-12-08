@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models\MediaLibrary;
 
-use App\Helpers\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\PathGenerator\DefaultPathGenerator;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
@@ -18,6 +17,6 @@ class LocalPathGenerator extends DefaultPathGenerator implements PathGenerator
      */
     protected function getBasePath(Media $media): string
     {
-        return Str::finish(self::BASE_PATH, '/') . hash('sha256', "model.{$media->getKey()}");
+        return 'medialibrary/media/' . hash('sha256', "model.{$media->getKey()}");
     }
 }

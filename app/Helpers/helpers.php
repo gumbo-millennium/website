@@ -40,6 +40,9 @@ if (! function_exists('mix_file')) {
 }
 
 if (! function_exists('image_asset')) {
+    /**
+     * Makes an image fluent from the given file.
+     */
     function image_asset(?string $file): Image
     {
         return Image::make($file);

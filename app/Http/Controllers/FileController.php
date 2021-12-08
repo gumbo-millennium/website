@@ -12,14 +12,14 @@ use App\Models\Media;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Spatie\MediaLibrary\Support\MediaStream;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -44,11 +44,8 @@ class FileController extends Controller
             $response = $next($request);
 
             // Add cache headers if possible
-            if ($response instanceof Response) {
-                $response->setCache([
-                    'max_age' => 0,
-                    'private' => true,
-                ]);
+            if ($response instanceof HttpResponse) {
+                $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
             }
 
             // Return response
@@ -59,7 +56,7 @@ class FileController extends Controller
     /**
      * Homepage.
      */
-    public function index(): Response
+    public function index(): HttpResponse
     {
         // Try to only get non-empty categories
         $categoryQuery = FileCategory::whereAvailable();
@@ -86,17 +83,13 @@ class FileController extends Controller
         SEOTools::setCanonical(route('files.index'));
 
         // Show view
-        return response()
-            ->view('files.index', compact('categories'))
-            ->setPrivate();
+        return Response::view('files.index', compact('categories'));
     }
 
     /**
      * Shows all the files in a given category, ordered by newest.
-     *
-     * @return Response
      */
-    public function category(FileCategory $category)
+    public function category(FileCategory $category): HttpResponse
     {
         // Get most recent files
         $bundles = $category
@@ -109,17 +102,13 @@ class FileController extends Controller
         SEOTools::setCanonical(route('files.category', compact('category')));
 
         // Render view
-        return response()
-            ->view('files.category', compact('category', 'bundles'))
-            ->setPrivate();
+        return Response::view('files.category', compact('category', 'bundles'));
     }
 
     /**
      * Returns a single file's detail page.
-     *
-     * @return Response
      */
-    public function show(FileBundle $bundle)
+    public function show(FileBundle $bundle): HttpResponse
     {
         if (! $bundle->is_available) {
             throw new NotFoundHttpException();
@@ -136,15 +125,13 @@ class FileController extends Controller
         SEOTools::setCanonical(route('files.show', compact('bundle')));
 
         // Render view
-        return response()
-            ->view('files.show', compact('bundle', 'bundleMedia'))
-            ->setPrivate();
+        return Response::view('files.show', compact('bundle', 'bundleMedia'));
     }
 
     /**
      * Streams a zipfile to the user.
      */
-    public function download(Request $request, FileBundle $bundle): SymfonyResponse
+    public function download(Request $request, FileBundle $bundle): StreamedResponse
     {
         // Check permissions
         $this->authorize('download', $bundle);
@@ -164,8 +151,7 @@ class FileController extends Controller
         // Stream a zip to the user
         return MediaStream::create("{$filename}.zip")
             ->addMedia($media)
-            ->toResponse($request)
-            ->setPrivate();
+            ->toResponse($request);
     }
 
     /**
@@ -178,9 +164,7 @@ class FileController extends Controller
     public function downloadSingle(Request $request, SpatieMedia $media): StreamedResponse
     {
         $bundle = $media->model;
-        if (! $bundle instanceof FileBundle) {
-            throw new NotFoundHttpException();
-        }
+        abort_unless($bundle instanceof FileBundle, HttpResponse::HTTP_NOT_FOUND);
 
         // Check permissions
         $this->authorize('download', $bundle);
@@ -191,10 +175,18 @@ class FileController extends Controller
         // Log bundle download
         $this->log($request, $bundle, $media);
 
-        // Send single file
-        return Storage::disk($media->disk)
-            ->download($media->getPath(), $media->file_name)
-            ->setPrivate();
+        // Find file
+        $storageDisk = Storage::disk($media->disk);
+
+        // Skip if not found
+        abort_unless($storageDisk->exists($media->getPath()), HttpResponse::HTTP_NOT_FOUND);
+
+        // Stream file to user
+        return Response::stream(fn () => $storageDisk->readStream($media->getPath()), 200, [
+            'Content-Type' => $media->mime_type,
+            'Content-Disposition' => sprintf('attachment; filename="%s"', Str::ascii($media->name)),
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
+        ]);
     }
 
     /**
@@ -207,8 +199,7 @@ class FileController extends Controller
         // Require a search query
         $searchQuery = $request->get('query');
         if (empty($searchQuery)) {
-            return \response()
-                ->redirectToRoute('files.index');
+            return Response::redirectToRoute('files.index');
         }
 
         // Set title
@@ -232,11 +223,10 @@ class FileController extends Controller
         $results = $files->paginate(30);
 
         // Return result
-        return \response()
-            ->view('files.search', [
-                'files' => $results,
-                'searchQuery' => $searchQuery,
-            ]);
+        return Response::view('files.search', [
+            'files' => $results,
+            'searchQuery' => $searchQuery,
+        ]);
     }
 
     /**

@@ -34,11 +34,7 @@ trait CreatesFiles
     public function swapFilesystems(): void
     {
         $this->afterApplicationCreated(function () {
-            $disks = array_keys(Config::get('filesystems.disks'));
-
-            foreach ($disks as $diskName) {
-                Storage::fake($diskName);
-            }
+            Storage::fake();
         });
     }
 

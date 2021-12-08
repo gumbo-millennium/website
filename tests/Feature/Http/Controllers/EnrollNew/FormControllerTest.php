@@ -80,14 +80,13 @@ class FormControllerTest extends TestCase
         $this->assertNotNull($enrollment);
         $this->assertInstanceOf(States\Created::class, $enrollment->state);
 
-        Collection::make($activity->form)->dump();
+        Collection::make($activity->form);
 
         $this->get(route('enroll.form', $activity))
-            ->dump()
             ->assertOk();
 
-        $formData = Collection::make($activity->form)
-            ->map->getName();
+        // Collection::make($activity->form)
+        //     ->map->getName();
     }
 
     public function test_without_form(): void
