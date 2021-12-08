@@ -38,7 +38,7 @@
             <div class="card__body">
                 <p class="card__body-label">{{ $item->category }}</p>
                 <h2 class="card__body-title">
-                    <a href="{{ route('news.show', ['news' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
+                    <a href="{{ route('news.show', ['item' => $item]) }}" class="stretched-link">{{ $item->title }}</a>
                 </h2>
 
                 <p class="card__body-content">{{ $headline }}</p>

@@ -34,7 +34,7 @@ class NewsController extends Controller
         $newsItems = [];
 
         foreach ($allNewsItems as $index => $item) {
-            $url = route('news.show', ['news' => $item]);
+            $url = route('news.show', ['item' => $item]);
 
             $newItem = [
                 '@type' => 'NewsArticle',
@@ -91,7 +91,7 @@ class NewsController extends Controller
         // meta
         $title = $item->title;
         $description = $item->summary;
-        $url = route('news.show', ['news' => $item]);
+        $url = route('news.show', ['item' => $item]);
 
         // Set SEO
         SEOTools::setTitle($title);
@@ -122,6 +122,8 @@ class NewsController extends Controller
         }
 
         // Show item
-        return view('news.show')->with(compact('item'));
+        return view('news.show', [
+            'item' => $item,
+        ]);
     }
 }

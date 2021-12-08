@@ -28,7 +28,7 @@ class NewsItemTest extends TestCase
 
         // Get news display
         $this
-            ->get(route('news.show', $item))
+            ->get(route('news.show', ['item' => $item]))
             ->assertOk()
             ->assertSeeText($item->title);
     }
@@ -45,7 +45,7 @@ class NewsItemTest extends TestCase
 
         // Get news display
         $this
-            ->get(route('news.show', $item))
+            ->get(route('news.show', ['item' => $item]))
             ->assertNotFound();
     }
 
@@ -80,12 +80,12 @@ class NewsItemTest extends TestCase
             ->assertDontSeeText($unpublished->title);
 
         // Get published item
-        $this->get(route('news.show', $published))
+        $this->get(route('news.show', ['item' => $published]))
             ->assertOk()
             ->assertSeeText($published->title);
 
         // Get unpublished item
-        $this->get(route('news.show', $unpublished))
+        $this->get(route('news.show', ['item' => $unpublished]))
             ->assertNotFound();
     }
 
@@ -99,7 +99,7 @@ class NewsItemTest extends TestCase
             ->assertSeeText($item->title);
 
         // Get news item
-        $this->get(route('news.show', [$item]))
+        $this->get(route('news.show', ['item' => $item]))
             ->assertOk();
     }
 
