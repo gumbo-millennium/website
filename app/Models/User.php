@@ -193,7 +193,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     public function getPublicNameAttribute(): ?string
     {
-        return $this->alias ?? $this->name;
+        return $this->alias ?? $this->first_name;
     }
 
     /**
