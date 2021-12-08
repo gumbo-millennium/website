@@ -154,17 +154,6 @@ Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middlewar
 });
 
 /**
- * News.
- */
-Route::prefix('nieuws')->name('news.')->group(static function () {
-    // Main route
-    Route::get('/', 'NewsController@index')->name('index');
-
-    // Single view
-    Route::get('/{news}', 'NewsController@show')->name('show');
-});
-
-/**
  * Join controller.
  */
 Route::prefix('word-lid')->name('join.')->group(static function () {
