@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use Illuminate\Support\Str as SupportStr;
-use Spatie\MediaLibrary\Helpers\File;
+use Spatie\MediaLibrary\Support\File;
 
 /**
  * String extensions.

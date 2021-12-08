@@ -8,7 +8,7 @@ use App\Helpers\Arr;
 use Eloquent;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\Models\Media as BaseMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
 /**
  * App\Models\Media.
@@ -16,11 +16,13 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
  * @property int $id
  * @property string $model_type
  * @property int $model_id
+ * @property null|string $uuid
  * @property string $collection_name
  * @property string $name
  * @property string $file_name
  * @property null|string $mime_type
  * @property string $disk
+ * @property null|string $conversions_disk
  * @property int $size
  * @property array $manipulations
  * @property array $custom_properties
@@ -34,6 +36,8 @@ use Spatie\MediaLibrary\Models\Media as BaseMedia;
  * @property-read string $human_readable_size
  * @property-read string $type
  * @property-read Eloquent|\Illuminate\Database\Eloquent\Model $model
+ * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|static[] all($columns = ['*'])
+ * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|static[] get($columns = ['*'])
  * @method static \Illuminate\Database\Eloquent\Builder|Media newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Media newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Media ordered()

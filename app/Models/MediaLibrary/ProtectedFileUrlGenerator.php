@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models\MediaLibrary;
 
 use Illuminate\Support\Facades\URL;
-use Spatie\MediaLibrary\UrlGenerator\LocalUrlGenerator;
-use Spatie\MediaLibrary\UrlGenerator\UrlGenerator;
+use Spatie\MediaLibrary\Support\UrlGenerator\DefaultUrlGenerator;
+use Spatie\MediaLibrary\Support\UrlGenerator\UrlGenerator;
 
-class ProtectedLocalFileUrlGenerator extends LocalUrlGenerator implements UrlGenerator
+class ProtectedFileUrlGenerator extends DefaultUrlGenerator implements UrlGenerator
 {
     /**
      * Get the URL for the profile of a media item.

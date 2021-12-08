@@ -4,18 +4,9 @@ declare(strict_types=1);
 
 use App\Models\Media;
 use App\Models\MediaLibrary\LocalPathGenerator;
-use App\Models\MediaLibrary\ProtectedCloudFileUrlGenerator;
-use App\Models\MediaLibrary\ProtectedLocalFileUrlGenerator;
-use Spatie\ImageOptimizer\Optimizers\Gifsicle;
-use Spatie\ImageOptimizer\Optimizers\Jpegoptim;
-use Spatie\ImageOptimizer\Optimizers\Optipng;
-use Spatie\ImageOptimizer\Optimizers\Pngquant;
-use Spatie\ImageOptimizer\Optimizers\Svgo;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Image;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Pdf;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Svg;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Video;
-use Spatie\MediaLibrary\ImageGenerators\FileTypes\Webp;
+use App\Models\MediaLibrary\ProtectedFileUrlGenerator;
+use Spatie\ImageOptimizer\Optimizers;
+use Spatie\MediaLibrary\Conversions\ImageGenerators;
 use Spatie\MediaLibrary\ResponsiveImages\TinyPlaceholderGenerator\Blurred;
 use Spatie\MediaLibrary\ResponsiveImages\WidthCalculator\FileSizeOptimizedWidthCalculator;
 
@@ -89,9 +80,7 @@ return [
      * When urls to files get generated, this class will be called. Leave empty
      * if your files are stored locally above the site root or on s3.
      */
-    'url_generator' => $diskName === 'local'
-        ? ProtectedLocalFileUrlGenerator::class
-        : ProtectedCloudFileUrlGenerator::class,
+    'url_generator' => ProtectedFileUrlGenerator::class,
 
     /*
      * Whether to activate versioning when urls to files get generated.
@@ -108,22 +97,22 @@ return [
      * the optimizers that will be used by default.
      */
     'image_optimizers' => [
-        Jpegoptim::class => [
+        Optimizers\Jpegoptim::class => [
             '--strip-all', // this strips out all text information such as comments and EXIF data
             '--all-progressive', // this will make sure the resulting image is a progressive one
         ],
-        Pngquant::class => [
+        Optimizers\Pngquant::class => [
             '--force', // required parameter for this package
         ],
-        Optipng::class => [
+        Optimizers\Optipng::class => [
             '-i0', // this will result in a non-interlaced, progressive scanned image
             '-o2', // this set the optimization level to two (multiple IDAT compression trials)
             '-quiet', // required parameter for this package
         ],
-        Svgo::class => [
+        Optimizers\Svgo::class => [
             '--disable=cleanupIDs', // disabling because it is known to cause troubles
         ],
-        Gifsicle::class => [
+        Optimizers\Gifsicle::class => [
             '-b', // required parameter for this package
             '-O3', // this produces the slowest but best results
         ],
@@ -131,11 +120,11 @@ return [
 
     // These generators will be used to create an image of media files.
     'image_generators' => [
-        Image::class,
-        Webp::class,
-        Pdf::class,
-        Svg::class,
-        Video::class,
+        ImageGenerators\Image::class,
+        ImageGenerators\Webp::class,
+        ImageGenerators\Pdf::class,
+        ImageGenerators\Svg::class,
+        ImageGenerators\Video::class,
     ],
 
     /*
@@ -163,7 +152,7 @@ return [
      * your custom jobs extend the ones provided by the package.
      */
     'jobs' => [
-        'perform_conversions' => Spatie\MediaLibrary\Jobs\PerformConversions::class,
-        'generate_responsive_images' => Spatie\MediaLibrary\Jobs\GenerateResponsiveImages::class,
+        'perform_conversions' => Spatie\MediaLibrary\Conversions\Jobs\PerformConversionsJob::class,
+        'generate_responsive_images' => Spatie\MediaLibrary\ResponsiveImages\Jobs\GenerateResponsiveImagesJob::class,
     ],
 ];
