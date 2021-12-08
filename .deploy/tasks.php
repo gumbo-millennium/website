@@ -24,6 +24,11 @@ task('gumbo:horizon:pause', function () {
     run('{{bin/php}} {{release_path}}/artisan horizon:pause');
 });
 
+desc('Execute artisan horizon:terminate');
+task('gumbo:horizon:terminate', function () {
+    run('{{bin/php}} {{release_path}}/artisan horizon:terminate || true');
+});
+
 desc('Prints the URL of the environment, for debug purposes.');
 task('gumbo:url', function () {
     $appUrl = run('php {{release_path}}/artisan gumbo:url');
