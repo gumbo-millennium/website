@@ -46,7 +46,8 @@ $factory->define(Sponsor::class, static function (Faker $faker) use ($colorSpons
     // Add backdrop and caption if possible
     if ($faker->boolean(75)) {
         $data['caption'] = $faker->sentence;
-        $data['backdrop'] = $faker->randomElement($backdropImage);
+        $data['cover'] = Storage::disk('public')
+            ->putFile('seeded/sponsors', $faker->randomElement($backdropImage));
     }
 
     // Add contents and associated title
