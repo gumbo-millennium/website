@@ -7,7 +7,6 @@ namespace App\Models;
 use App\Helpers\Arr;
 use App\Models\Shop\Order;
 use App\Notifications\VerifyEmail;
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\HtmlString;
+use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -68,21 +68,12 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasEncryptedAttributes;
     use HasRoles;
     use MustVerifyEmail;
     use Notifiable;
     use SoftDeletes;
 
     public const SHOW_IN_LEADERBOARD_GRANT = 'leaderboard:show';
-
-    /**
-     * @inheritDoc
-     */
-    protected $encrypted = [
-        'address',
-        'phone',
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -139,8 +130,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     protected $casts = [
         'conscribo_id' => 'int',
-        'address' => 'json',
-        'grants' => 'json',
+        'address' => EncryptedAttribute::class . ':json',
+        'grants' => EncryptedAttribute::class . ':json',
     ];
 
     /**

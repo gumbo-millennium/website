@@ -9,13 +9,13 @@ use App\Fluent\Payment as PaymentFluent;
 use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Models\Traits\HasPayments;
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use LogicException;
+use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -69,7 +69,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Enrollment extends UuidModel implements Payable
 {
-    use HasEncryptedAttributes;
     use HasPayments;
     use HasStates;
     use SoftDeletes;
@@ -81,20 +80,13 @@ class Enrollment extends UuidModel implements Payable
     /**
      * @inheritDoc
      */
-    protected $encrypted = [
-        'data',
-    ];
-
-    /**
-     * @inheritDoc
-     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'expire' => 'datetime',
 
-        'data' => 'json',
+        'data' => EncryptedAttribute::class . ':json',
         'paid' => 'bool',
         'price' => 'int',
     ];

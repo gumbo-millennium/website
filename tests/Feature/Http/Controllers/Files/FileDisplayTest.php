@@ -6,9 +6,9 @@ namespace Tests\Feature\Http\Controllers\Files;
 
 use App\Models\User;
 use Closure;
-use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Tests\Feature\Http\Controllers\Files\Traits\CreatesFiles;
 use Tests\TestCase;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 
 /**
  * App\Models\JoinSubmission.
@@ -37,24 +37,25 @@ use Illuminate\Database\Eloquent\Model;
  */
 class JoinSubmission extends Model
 {
-    // Use action log and encryption helper
-    use HasEncryptedAttributes;
-
     /**
-     * @inheritDoc
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
-    protected $encrypted = [
-        'phone',
-        'date_of_birth',
-        'street',
-        'number',
-        'city',
-        'postal_code',
-        'country',
+    protected $casts = [
+        'phone' => EncryptedAttribute::class,
+        'date_of_birth' => EncryptedAttribute::class . ':date',
+        'street' => EncryptedAttribute::class,
+        'number' => EncryptedAttribute::class,
+        'city' => EncryptedAttribute::class,
+        'postal_code' => EncryptedAttribute::class,
+        'country' => EncryptedAttribute::class,
     ];
 
     /**
-     * @inheritDoc
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'first_name',
@@ -75,7 +76,7 @@ class JoinSubmission extends Model
     ];
 
     /**
-     * Default values.
+     * The model's attributes.
      *
      * @var array
      */

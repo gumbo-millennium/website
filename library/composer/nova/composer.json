@@ -1,7 +1,7 @@
 {
     "name": "laravel/nova",
     "description": "A wonderful administration interface for Laravel.",
-    "version": "2.12.0",
+    "version": "3.30.0",
     "keywords": [
         "laravel",
         "admin"
@@ -14,15 +14,18 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
-        "brick/money": "^0.4.2",
-        "cakephp/chronos": "^1.0",
+        "php": "^7.2.5|^8.0",
+        "brick/money": "^0.5.0",
+        "cakephp/chronos": "^1.0|^2.0",
         "doctrine/dbal": "^2.9",
-        "illuminate/support": "^5.7.15 | 5.8.* | ^6.0",
+        "illuminate/support": "^7.0|^8.0",
+        "laravel/ui": "^2.0|^3.0",
         "moontoast/math": "^1.1",
-        "spatie/once": "^1.1 | ^2.0",
-        "symfony/finder": "^4.0 | ^5.0",
-        "symfony/intl": "^4.0 | ^5.0"
+        "spatie/once": "^1.1|^2.0|^3.0",
+        "symfony/console": "^5.0",
+        "symfony/finder": "^5.0",
+        "symfony/intl": "^5.0",
+        "symfony/process": "^5.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
@@ -45,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev"
+            "dev-master": "3.x-dev"
         },
         "laravel": {
             "providers": [

@@ -70,7 +70,7 @@ class LustrumControllerTest extends TestCase
             ->assertOk()
             ->assertSee($lustrumPage->title)
             ->assertSee($lustrumPage->summary)
-            ->assertSee($lustrumPage->html);
+            ->assertSee($lustrumPage->html, false);
     }
 
     public function test_with_merchandise(): void

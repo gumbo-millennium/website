@@ -32,8 +32,8 @@ class DataExportControllerTest extends TestCase
     {
         $this->get(route('account.export.index'))
             ->assertOk()
-            ->assertSee('data-x-group="no-export-card"')
-            ->assertSee('data-x-group="request-form"');
+            ->assertSee('data-x-group="no-export-card"', false)
+            ->assertSee('data-x-group="request-form"', false);
     }
 
     public function test_some_items_index(): void
@@ -44,9 +44,9 @@ class DataExportControllerTest extends TestCase
 
         $this->get(route('account.export.index'))
             ->assertOk()
-            ->assertSee('data-x-group="has-exports"')
-            ->assertDontSee('data-x-group="has-pages"')
-            ->assertSee('data-x-group="request-form"');
+            ->assertSee('data-x-group="has-exports"', false)
+            ->assertDontSee('data-x-group="has-pages"', false)
+            ->assertSee('data-x-group="request-form"', false);
     }
 
     public function test_many_items(): void
@@ -57,9 +57,9 @@ class DataExportControllerTest extends TestCase
 
         $this->get(route('account.export.index'))
             ->assertOk()
-            ->assertSee('data-x-group="has-exports"')
-            ->assertSee('data-x-group="has-pages"')
-            ->assertSee('data-x-group="request-form"');
+            ->assertSee('data-x-group="has-exports"', false)
+            ->assertSee('data-x-group="has-pages"', false)
+            ->assertSee('data-x-group="request-form"', false);
     }
 
     public function test_request_item(): void
