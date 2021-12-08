@@ -2,8 +2,10 @@ production.env.gumbo-millennium.nl:
   stage: production
   roles: app
   deploy_path: ~/domains/gumbo
+  keep_releases: 5
 
 acceptance.env.gumbo-millennium.nl:
   stage: acceptance
   roles: app
   deploy_path: ~/domains/gumbo-acc
+  keep_releases: 2
