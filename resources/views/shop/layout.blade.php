@@ -16,12 +16,9 @@
 {{-- Breadcrumbs --}}
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+]" />
 @show
 
 {{-- Main --}}

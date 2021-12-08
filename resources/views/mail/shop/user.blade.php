@@ -2,11 +2,11 @@
     $actionText = 'Bekijk aanmelding';
 @endphp
 
-@component('mail::message')
+<x-mail::message>
 {{-- Greeting --}}
-@slot('header')
+<x-slot name="header">
     Aanmelding nieuw lid
-@endslot
+</x-slot>
 
 {{-- Intro Lines --}}
 Beste {{ $order->user->first_name }},
@@ -15,13 +15,13 @@ Bedankt voor je bestelling bij Gumbo Millennium.
 
 De bestelling:
 
-@component('mail::table')
+<x-mail::table>
 |Product|Aantal|Eenheidsprijs|Prijs|
 |-------|------|-------------|-----|
 @foreach($order->variants as $variant)
 |{{ $variant->display_name }}|{{ $variant->pivot->quantity }}|{{ Str::price($variant->pivot->price) }}|{{ Str::price($variant->pivot->price * $variant->pivot->quantity) }}|
 @endforeach
-@endcomponent
+</x-mail::table>
 
 Het bestuur zal binnenkort contact met je opnemen om de bestelling af te ronden.
 
@@ -33,4 +33,4 @@ Het bestuur zal binnenkort contact met je opnemen om de bestelling af te ronden.
 Met vriendelijke groet,
 
 De Digitale Commissie
-@endcomponent
+</x-mail::message>

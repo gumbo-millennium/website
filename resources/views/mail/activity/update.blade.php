@@ -1,52 +1,52 @@
-@component('mail::message')
+<x-mail::message
+    :mailImage="mix('images/header-update.png')"
+>
 
-@slot('summary')
-Laatste informatie voor {{ $activity->name }}
-@endslot
+<x-slot name="summary">
+    Laatste informatie voor {{ $activity->name }}
+</x-slot>
 
 {{-- Image --}}
-@slot('mailImage', mix('images/header-update.png'))
-@slot('html')
-<p class="lead">Beste {{ $participant->first_name }},</p>
+<x-slot name="html">
+    <p class="lead">Beste {{ $participant->first_name }},</p>
 
-<p>De organisatie van {{ $activity->name }} wil je graag het volgende bericht sturen.</p>
+    <p>De organisatie van {{ $activity->name }} wil je graag het volgende bericht sturen.</p>
 
-<hr />
+    <hr />
 
-<h2>{{ $userTitle }}</h2>
+    <h2>{{ $userTitle }}</h2>
 
-{{ $userBody }}
+    {{ $userBody }}
 
-<hr />
-@endslot
+    <hr />
+</x-slot>
 
-@slot('greeting')
-Veel plezier bij _{{ $activity->name }}_.
+<x-slot name="greeting">
+    Veel plezier bij _{{ $activity->name }}_.
 
-Met vriendelijke groet,
+    Met vriendelijke groet,
 
-Gumbo Millennium
-@endslot
+    Gumbo Millennium
+</x-slot>
 
 {{-- Subcopy --}}
-@slot('subcopy')
-<p>
-    Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ \route('activity.show', compact('activity')) }}"
-        target="_blank" rel="noopener">{{ $activity->name }}</a> bij Gumbo Millennium.
-</p>
+<x-slot name="subcopy">
+    <p>
+        Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ \route('activity.show', compact('activity')) }}"
+            target="_blank" rel="noopener">{{ $activity->name }}</a> bij Gumbo Millennium.
+    </p>
 
-<p>
-    @if ($cancelType === 'cancel')
-        Indien je niet meer deel wilt nemen aan deze activiteit, dan kan je jezelf <a href="{{ $cancelUrl }}">uitschrijven via deze link.</a>
-    @else
-        Indien je niet meer deel wilt nemen aan deze activiteit, kan je je inschrijving <a href="{{ $cancelUrl }}">overdragen aan iemand anders</a>.
-    @endif
-</p>
+    <p>
+        @if ($cancelType === 'cancel')
+            Indien je niet meer deel wilt nemen aan deze activiteit, dan kan je jezelf <a href="{{ $cancelUrl }}">uitschrijven via deze link.</a>
+        @else
+            Indien je niet meer deel wilt nemen aan deze activiteit, kan je je inschrijving <a href="{{ $cancelUrl }}">overdragen aan iemand anders</a>.
+        @endif
+    </p>
 
-<p>
-    Werkt de link niet? Copy-paste dan deze URL:<br />
-    {{ $cancelUrl }}
-</p>
-
-@endslot
-@endcomponent
+    <p>
+        Werkt de link niet? Copy-paste dan deze URL:<br />
+        {{ $cancelUrl }}
+    </p>
+</x-slot>
+</x-mail::message>

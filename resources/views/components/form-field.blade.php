@@ -23,10 +23,14 @@ if ($errors->has($field->name)) {
     $statusClass .= 'is-valid';
 }
 @endphp
+@props([
+    'field',
+    'label' => 'Label',
+])
 <div class="form-group row">
     @if ($field->type !== 'checkbox')
     <label for="{{ $field->name }}" class="col-sm-2 col-form-label">
-        @slot('label')
+        {{ $label }}
     </label>
     @else
     <div class="col-sm-2"></div>
@@ -43,7 +47,7 @@ if ($errors->has($field->name)) {
                 {{ $field->required ? 'required' : '' }}
                 />
             <label class="custom-control-label" for="{{ $field->name }}">
-                @slot('label')
+                {{ $label}}
             </label>
         </div>
         @elseif($field->type === 'select')

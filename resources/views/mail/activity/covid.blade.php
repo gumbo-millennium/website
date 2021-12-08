@@ -1,11 +1,7 @@
-@component('mail::message')
-
-@slot('summary')
-Laatste informatie voor {{ $activity->name }}
-@endslot
-
-{{-- Image --}}
-@slot('mailImage', mix('images/header-covid.png'))
+<x-mail::message :mailImage="mix('images/header-covid.png')">
+<x-slot name="summary">
+    Laatste informatie voor {{ $activity->name }}
+</x-slot>
 
 Beste {{ $participant->first_name }},
 
@@ -16,102 +12,93 @@ op de huisregels voor activiteiten die plaatsvinden tijdens deze corona-tijden.
 In deze mail staat ook wat te doen bij ziekte, dus lees 'm even goed door (we
 houden het kort).
 
-@slot('html')
-{{-- Keep distance --}}
-@component('mail::icon-tile')
-@slot('icon', mix('images/mail-covid-distance.png'))
-@slot('iconAlt', "Houd afstand")
-@slot('title', 'Bewaar de afstand en blijf zitten')
+<x-slot name="html">
+    {{-- Keep distance --}}
+    <x-mail::icon-tile :icon="mix('images/mail-covid-distance.png')" iconAlt="Houd afstand" title='Bewaar de afstand en blijf zitten'>
+        <p>
+            Net zoals op straat moet je bij de activiteiten 1,5 meter afstand van
+            elkaar houden. In cafés en op terrassen mag je met z'n tweeën aan één
+            tafel zitten, maar laat de stoelen op hun plek staan, zodat de afstand ook
+            gegarandeerd blijft.
+        </p>
 
-<p>
-    Net zoals op straat moet je bij de activiteiten 1,5 meter afstand van
-    elkaar houden. In cafés en op terrassen mag je met z'n tweeën aan één
-    tafel zitten, maar laat de stoelen op hun plek staan, zodat de afstand ook
-    gegarandeerd blijft.
-</p>
+        <p>
+            Eten en drinken bestel je bij de SC-leden of de organisatie van de
+            activiteit.  <strong>Ga dus niet zelf naar de bar lopen</strong>.
+        </p>
+    </x-mail::icon-tile>
 
-<p>
-    Eten en drinken bestel je bij de SC-leden of de organisatie van de
-    activiteit.  <strong>Ga dus niet zelf naar de bar lopen</strong>.
-</p>
-@endcomponent
+    {{-- No singing --}}
+    <x-mail::icon-tile :icon="mix('images/mail-covid-no-sing.png')" iconAlt="Niet zingen" title="Niet zingen en geen Gumbo yell">
+        <p>
+            Het is in kerken en andere gebedshuizen verboden om te zingen voor
+            deelnemers, omdat dit veel aerosolen in de lucht brengt waarmee het virus
+            zich verspreid.  Omdat wij als verenigingsactiviteit momenteel in een
+            relatief grijs gebied zitten, handhaven wij dezelfde regels.
+        </p>
 
-{{-- No singing --}}
-@component('mail::icon-tile')
-@slot('icon', mix('images/mail-covid-no-sing.png'))
-@slot('iconAlt', "Niet zingen")
-@slot('title', 'Niet zingen en geen Gumbo yell')
+        <p>
+            Dit betekent dus dat er niet gezongen mag worden (binnen óf buiten) en dat
+            je de Gumbo yell ook helaas even achterwege moet laten. We snappen dat een
+            speech zonder "Wat een spreker" een hele andere ervaring is, maar het is
+            helaas even niet anders.
+        </p>
+    </x-mail::icon-tile>
 
-<p>
-    Het is in kerken en andere gebedshuizen verboden om te zingen voor
-    deelnemers, omdat dit veel aerosolen in de lucht brengt waarmee het virus
-    zich verspreid.  Omdat wij als verenigingsactiviteit momenteel in een
-    relatief grijs gebied zitten, handhaven wij dezelfde regels.
-</p>
+    {{-- Stay home --}}
+    <x-mail::icon-tile :icon="mix('images/mail-covid-stay-home.png')" iconAlt="Blijf thuis" title="Blijf thuis bij ziekte of ziekteverschijnselen">
+        <p>
+            Heb je last van verkoudheid, keelpijn en hoesten, koorts of andere aan
+            coronavirus-gerelateerde klachten? Blijf dan thuis.
+        </p>
 
-<p>
-    Dit betekent dus dat er niet gezongen mag worden (binnen óf buiten) en dat
-    je de Gumbo yell ook helaas even achterwege moet laten. We snappen dat een
-    speech zonder "Wat een spreker" een hele andere ervaring is, maar het is
-    helaas even niet anders.
-</p>
-@endcomponent
+        @if ($cancelType == 'delete')
+            <p>
+                Je kan je met onderstaande knop uitschijven voor deze activiteit.
+            </p>
 
-{{-- Stay home --}}
-@component('mail::icon-tile')
-@slot('icon', mix('images/mail-covid-stay-home.png'))
-@slot('iconAlt', "Blijf thuis")
-@slot('title', 'Blijf thuis bij ziekte of ziekteverschijnselen')
+            <x-mail::button :url="$cancelUrl">
+                Uitschrijven
+            </x-mail::button>
+        @else
+            <p>
+                Je kan je voor deze activiteit niet (meer) uitschijven, maar wel je
+                inschrijving overdragen aan een ander persoon.
+            </p>
+            @if ($enrollment->price > 0)
+                <p class="font-bold">
+                    Je moet er zelf zorg voor dragen dat je het inschrijfgeld weer terug krijgt
+                    van deze persoon.
+                </p>
+            @endif
 
-<p>
-    Heb je last van verkoudheid, keelpijn en hoesten, koorts of andere aan
-    coronavirus-gerelateerde klachten? Blijf dan thuis.
-</p>
+            <x-mail::button :url="$cancelUrl">
+                Inschrijving overdragen
+            </x-mail::button>
+        @endif
+    </x-mail::icon-tile>
+</x-slot>
 
-@if ($cancelType == 'delete')
-<p>
-    Je kan je met onderstaande knop uitschijven voor deze activiteit.
-</p>
+<x-slot name="greeting">
+    Alvast bedankt voor je medewerking, en veel plezier bij
+    _{{ $activity->name }}_.
 
-@component('mail::button', ['url' => $cancelUrl])
-    Uitschrijven
-@endcomponent
-@else
-<p>
-    Je kan je voor deze activiteit niet (meer) uitschijven, maar wel je
-    inschrijving overdragen aan een ander persoon.
-</p>
-@if ($enrollment->price > 0)
-<p class="font-bold">
-    Je moet er zelf zorg voor dragen dat je het inschrijfgeld weer terug krijgt
-    van deze persoon.
-</p>
-@endif
+    Met vriendelijke groet,
 
-@component('mail::button', ['url' => $cancelUrl])
-    Inschrijving overdragen
-@endcomponent
-@endif
-@endcomponent
-@endslot
-
-@slot('greeting')
-Alvast bedankt voor je medewerking, en veel plezier bij
-_{{ $activity->name }}_.
-
-Met vriendelijke groet,
-
-Gumbo Millennium
-@endslot
+    Gumbo Millennium
+</x-slot>
 
 {{-- Subcopy --}}
-@slot('subcopy')
-<p>
-    Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ \route('activity.show', compact('activity')) }}"
-        target="_blank" rel="noopener">{{ $activity->name }}</a>.
-</p>
-<p>
-    Je kan je voor dit soort updates niet afmelden.
-</p>
-@endslot
-@endcomponent
+<x-slot name="subcopy">
+    <p>
+        Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ \route('activity.show', compact('activity')) }}"
+            target="_blank" rel="noopener">{{ $activity->name }}</a>.
+    </p>
+    <p>
+        Je kan je voor dit soort updates niet afmelden.
+    </p>
+</x-slot>
+
+{{-- Footer --}}
+<!-- No footer -->
+</x-mail::message>

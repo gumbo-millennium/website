@@ -5,13 +5,10 @@
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-        $category->name,
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+    $category->name,
+]" />
 @endsection
 
 {{-- Main --}}
@@ -20,8 +17,7 @@
     @foreach ($products as $product)
     <div class="col col-12 md:col-6 lg:col-4">
         <div class="mb-4 relative">
-            @component('components.shop.product-card', ['product' => $product])
-            @endcomponent
+            <x-shop.product-card :product="$product" />
         </div>
     </div>
     @endforeach

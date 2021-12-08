@@ -4,16 +4,16 @@
 
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Je inschrijving voor {{ $activity->name }} is bijna af. Je hoeft alleen nog te betalen.<br />
+    <x-enroll.header :activity="$activity" :enrollment="$enrollment">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Je inschrijving voor {{ $activity->name }} is bijna af. Je hoeft alleen nog te betalen.<br />
 
-            Dit kan online <strong>exclusief</strong> via iDEAL. Wil je liever betalen via overboeking
-            of via een andere afspraak met het bestuur? Neem dan contact op met het bestuur.
-        </p>
-    </div>
-    @endcomponent
+                Dit kan online <strong>exclusief</strong> via iDEAL. Wil je liever betalen via overboeking
+                of via een andere afspraak met het bestuur? Neem dan contact op met het bestuur.
+            </p>
+        </div>
+    </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
 

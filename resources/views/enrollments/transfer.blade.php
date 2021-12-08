@@ -4,18 +4,18 @@
 
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Je kunt je inschrijving voor {{ $activity->name }} overdragen tot aanvang van de activiteit. Daarna is
-            overdragen niet meer mogelijk.
-        </p>
-        <p>
-            Deel onderstaande link met de persoon die je wilt uitnodigen. Diegene kan dan na inloggen de inschrijving
-            overnemen.
-        </p>
-    </div>
-    @endcomponent
+    <x-enroll.header :activity="$activity" :enrollment="$enrollment">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Je kunt je inschrijving voor {{ $activity->name }} overdragen tot aanvang van de activiteit. Daarna is
+                overdragen niet meer mogelijk.
+            </p>
+            <p>
+                Deel onderstaande link met de persoon die je wilt uitnodigen. Diegene kan dan na inloggen de inschrijving
+                overnemen.
+            </p>
+        </div>
+    </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
         <div class="enroll-card">

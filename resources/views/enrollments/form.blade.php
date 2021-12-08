@@ -12,21 +12,21 @@ $dataRecipients = collect([
 
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Om verder te gaan moet je een paar vragen beantwoorden. Deze vragen staan hieronder.
-        </p>
-        <p class="text-sm">
-            Je antwoorden worden versleuteld opgeslagen en behandeld conform het <a href="/privacy-policy" target="_blank">privacybeleid</a>.
-            De ingevulde gegevens kunnen aan derden worden verstrekt waar nodig (zoals voedselwensen in geval van een etenje),
-            maar dit zal altijd minimale data zijn.
-        </p>
-        <p class="text-sm">
-            De data is exlusief toegankelijk voor {{ $dataRecipients }}.
-        </p>
-    </div>
-    @endcomponent
+    <x-enroll.header :activity="$activity" :enrollment="$enrollment">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Om verder te gaan moet je een paar vragen beantwoorden. Deze vragen staan hieronder.
+            </p>
+            <p class="text-sm">
+                Je antwoorden worden versleuteld opgeslagen en behandeld conform het <a href="/privacy-policy" target="_blank">privacybeleid</a>.
+                De ingevulde gegevens kunnen aan derden worden verstrekt waar nodig (zoals voedselwensen in geval van een etenje),
+                maar dit zal altijd minimale data zijn.
+            </p>
+            <p class="text-sm">
+                De data is exlusief toegankelijk voor {{ $dataRecipients }}.
+            </p>
+        </div>
+    </x-enroll.header>
 
     @if ($errors->isNotEmpty())
     <div class="enroll-column mt-8">

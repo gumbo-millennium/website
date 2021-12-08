@@ -1,14 +1,14 @@
-@component('mail::message')
+<x-mail::layout>
 {{-- Greeting --}}
-@slot('header')
+<x-slot name="header">
 Wist-Je-Datjes
-@endslot
+</x-slot>
 
 {{-- Subcopy --}}
-@slot('subcopy')
+<x-slot name="subcopy">
 Dit is een automatisch bericht vanuit de website, reageren is niet mogelijk.\
 Als redactielid van de Gumbode krijg je deze mailtjes, hiervoor kan je je lekker niet afmelden.
-@endslot
+</x-slot>
 
 {{-- Intro Lines --}}
 Liebe, lieve Klass,
@@ -32,4 +32,4 @@ De quotes zijn ook als bijlage in de mail gezet, voor het gemak.
 Groetjes,
 
 De Digitale Commissie
-@endcomponent
+</x-mail::layout>

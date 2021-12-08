@@ -20,15 +20,16 @@ $settings = array_filter([
 ?>
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Je bent ingeschreven voor {{ $activity->name }}.
-        </p>
-        <p>
-            Hieronder vind je de details van je inschrijving.
-        </p>
-    </div>
+    <x-enroll.header :activity="$activity" :enrollment="$enrollment">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Je bent ingeschreven voor {{ $activity->name }}.
+            </p>
+            <p>
+                Hieronder vind je de details van je inschrijving.
+            </p>
+        </div>
+    </x-enroll.header>
 
     <hr class="mt-8 bg-gray-200" />
 

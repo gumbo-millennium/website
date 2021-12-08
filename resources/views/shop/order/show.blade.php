@@ -16,14 +16,11 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') 
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-        route('shop.order.index') => 'Bestellingen',
-        "Bestelling {$order->number}"
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+    route('shop.order.index') => 'Bestellingen',
+    "Bestelling {$order->number}"
+]" />
 @endsection
 
 {{-- Main --}}

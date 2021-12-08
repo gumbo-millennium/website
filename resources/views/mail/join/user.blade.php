@@ -1,18 +1,15 @@
-@php
+<?php
 $contact = collect([
     $submission->email,
     $submission->phone
 ])->reject(fn ($value) => empty($value))->implode(' of ');
-@endphp
+?>
 
-@component('mail::message')
+<x-mail::message :mail-image="mix('images/header-welcome.png')">
 {{-- Greeting --}}
-@slot('header')
-Welkom bij Gumbo Millennium!
-@endslot
-
-{{-- Image --}}
-@slot('mailImage', mix('images/header-welcome.png'))
+<x-slot name="header">
+    Welkom bij Gumbo Millennium!
+</x-slot>
 
 Beste {{ $submission->first_name }},
 
@@ -31,9 +28,9 @@ Met vriendelijke groet,
 Gumbo Millennium
 
 {{-- Subcopy --}}
-@slot('subcopy')
-Dit is een automatisch opgesteld bericht, reacties op deze mail worden niet bezorgd.
+<x-slot name="subcopy">
+    Dit is een automatisch opgesteld bericht, reacties op deze mail worden niet bezorgd.
 
-Heb je toch een brandende vraag, stuur dan een mailtje naar bestuur@gumbo-millennium.nl.
-@endslot
-@endcomponent
+    Heb je toch een brandende vraag, stuur dan een mailtje naar bestuur@gumbo-millennium.nl.
+</x-slot>
+</x-mail::message>

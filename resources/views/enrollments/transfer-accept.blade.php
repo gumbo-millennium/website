@@ -4,21 +4,21 @@
 
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity, 'enrollment' => $enrollment])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Je kan via onderstaande knop de inschrijving van {{ $enrollment->user->first_name }} overnemen.<br />
-            Dit kan tot {{ $activity->start_date->isoFormat('dddd DD MMMM, HH:mm') }}.
-        </p>
+    <x-enroll.header :activity="$activity" :enrollment="$enrollment">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Je kan via onderstaande knop de inschrijving van {{ $enrollment->user->first_name }} overnemen.<br />
+                Dit kan tot {{ $activity->start_date->isoFormat('dddd DD MMMM, HH:mm') }}.
+            </p>
 
-        @if ($enrollment->price > 0)
-        <p>
-            Dit is een betaalde inschrijving, maar {{ $enrollment->user->first_name }} heeft al betaald.<br />
-            Jullie mogen onderling de betaling regelen.
-        </p>
-        @endif
-    </div>
-    @endcomponent
+            @if ($enrollment->price > 0)
+            <p>
+                Dit is een betaalde inschrijving, maar {{ $enrollment->user->first_name }} heeft al betaald.<br />
+                Jullie mogen onderling de betaling regelen.
+            </p>
+            @endif
+        </div>
+    </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
         <div class="enroll-card">

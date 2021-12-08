@@ -63,9 +63,6 @@ class AppServiceProvider extends ServiceProvider
         // Handle Horizon auth
         Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
 
-        // Components
-        Blade::component('components.breadcrumbs', 'breadcrumbs');
-
         // Special events
         Blade::if('event', function ($event) {
             $service = $this->app->make(EventService::class);

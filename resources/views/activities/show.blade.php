@@ -23,52 +23,48 @@ if ($ticketPrices->isEmpty()) {
 
 @section('content')
 <div class="">
-    @component('components.page.header', ['image' => $activity->poster])
-        @slot('title', $activity->name)
+    <x-page.header :image="$activity->poster" :title="$activity->name">
+        <x-slot name="header">
+            <div class="mt-[-2rem] mb-4 px-8">
+                <p class="text-lg text-gray-700">
+                    {{ $activity->tagline }}
+                </p>
+            </div>
 
-        @slot('header')
-        <div class="mt-[-2rem] mb-4 px-8">
-            <p class="text-lg text-gray-700">
-                {{ $activity->tagline }}
-            </p>
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-gray-200">
+                <x-activities.header-tile icon="solid/calendar">
+                    <x-slot name="title">
+                        {{ $activity->start_date->isoFormat('ddd DD MMMM, HH:mm') }}
+                    </x-slot>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-gray-200">
-            @component('components.activities.header-tile', ['icon' => 'solid/calendar'])
-                @slot('title', $activity->start_date->isoFormat('ddd DD MMMM, HH:mm'))
+                    @if ($activity->end_date->diffInHours($activity->start_date) < 6)
+                    <p>tot {{ $activity->end_date->isoFormat('HH:mm') }}</p>
+                    @else
+                    <p>tot {{ $activity->end_date->isoFormat('ddd DD MMMM, HH:mm') }}</p>
+                    @endif
+                </x-activities.header-tile>
 
-                @if ($activity->end_date->diffInHours($activity->start_date) < 6)
-                <p>tot {{ $activity->end_date->isoFormat('HH:mm') }}</p>
-                @else
-                <p>tot {{ $activity->end_date->isoFormat('ddd DD MMMM, HH:mm') }}</p>
-                @endif
-            @endcomponent
-
-            @component('components.activities.header-tile', ['icon' => 'solid/ticket-alt'])
-                @slot('title', $ticketPrices)
-
-                <p>{{ $activity->tickets->count() }} soorten tickets</p>
-            @endcomponent
-
-            @component('components.activities.header-tile', ['icon' => $activity->is_public ? 'solid/globe-europe' : 'solid/user-friends'])
-                @slot('title', $activity->is_public ? 'Openbare activiteit' : 'Besloten activiteit')
+                <x-activities.header-tile icon="solid/ticket-alt" :title="$ticketPrices">
+                    <p>{{ $activity->tickets->count() }} soorten tickets</p>
+                </x-activities.header-tile>
 
                 @if ($activity->is_public)
-                <p>Iedereen is welkom</p>
+                <x-activities.header-tile icon="solid/globe-europe" title="Openbare activiteit">
+                    <p>Iedereen is welkom</p>
+                </x-activities.header-tile>
                 @else
-                <p>Alleen voor leden</p>
+                <x-activities.header-tile icon="solid/user-friends" title="Besloten activiteit">
+                    <p>Alleen voor leden</p>
+                </x-activities.header-tile>
                 @endif
-            @endcomponent
 
-            <div class="grid grid-cols-1 lg:hidden">
-                @component('components.activities.header-tile', ['icon' => 'solid/map-marked-alt'])
-                    @slot('title', $activity->location)
-
-                    <p>{{ $activity->location_address }}</p>
-                @endcomponent
+                <div class="grid grid-cols-1 lg:hidden">
+                    <x-activities.header-tile icon="solid/map-marked-alt" :title="$activity->location">
+                        <p>{{ $activity->location_address }}</p>
+                    </x-activities.header-tile>
+                </div>
             </div>
-        </div>
-        @endslot
+        </x-slot>
 
         @if ($isCoronacheck)
         <div class="notice notice--large notice--warning mx-8">
@@ -123,5 +119,5 @@ if ($ticketPrices->isEmpty()) {
                 </a>
             @endif
         </div>
-    @endcomponent
+    </x-page.header>
 @endsection

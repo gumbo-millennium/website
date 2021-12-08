@@ -8,13 +8,10 @@ Je winkelwagen is <strong>geen</strong> reservering, dus lekker snel bestellen i
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-        'Winkelwagen',
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+    'Winkelwagen',
+]" />
 @endsection
 
 {{-- Main --}}

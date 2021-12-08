@@ -7,13 +7,10 @@
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-        'Bestellingen',
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+    'Bestellingen',
+]" />
 @endsection
 
 {{-- Main --}}

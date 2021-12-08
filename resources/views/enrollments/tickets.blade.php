@@ -6,16 +6,16 @@
 
 @section('content')
 <div class="bg-gray-50">
-    @component('components.enroll.header', ['activity' => $activity])
-    <div class="leading-relaxed text-lg flex flex-col gap-y-4">
-        <p>
-            Kies hieronder het ticket dat je wil bestellen voor {{ $activity->name }}.
-        </p>
-        <p>
-            Je hebt na je keuze 15 min om je inschrijving af te ronden, anders komt je plek weer vrij.
-        </p>
-    </div>
-    @endcomponent
+    <x-enroll.header :activity="$activity">
+        <div class="leading-relaxed text-lg flex flex-col gap-y-4">
+            <p>
+                Kies hieronder het ticket dat je wil bestellen voor {{ $activity->name }}.
+            </p>
+            <p>
+                Je hebt na je keuze 15 min om je inschrijving af te ronden, anders komt je plek weer vrij.
+            </p>
+        </div>
+    </x-enroll.header>
 
     @if ($activity->available_seats === 0)
     <div class="enroll-column">
@@ -44,8 +44,7 @@
 
         <div class="space-y-4 lg:grid lg:grid-cols-2 lg:gap-5 lg:space-y-0">
             @forelse($tickets as $ticket)
-                @component('components.enroll.ticket', ['ticket' => $ticket])
-                @endcomponent
+                <x-enroll.ticket :ticket="$ticket" />
             @empty
             <div class="flex flex-col overflow-hidden col-span-2">
                 <div class="px-6 py-12 rounded-lg border-4 border-dashed">

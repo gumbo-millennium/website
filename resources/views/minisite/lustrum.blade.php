@@ -90,8 +90,7 @@
             <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($merchandise as $product)
                 <div class="relative">
-                    @component('components.shop.product-card', ['product' => $product])
-                    @endcomponent
+                    <x-shop.product-card :product="$product" />
                 </div>
                 @endforeach
             </div>

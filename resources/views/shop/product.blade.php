@@ -5,14 +5,11 @@
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-@breadcrumbs([
-    'items' => [
-        route('shop.home') => 'Shop',
-        route('shop.category', compact('category')) => $category->name,
-        $product->name,
-    ]
-])
-@endbreadcrumbs
+<x-breadcrumbs :items="[
+    route('shop.home') => 'Shop',
+    route('shop.category', compact('category')) => $category->name,
+    $product->name,
+]" />
 @endsection
 
 {{-- Main --}}
