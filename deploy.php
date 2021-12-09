@@ -31,23 +31,29 @@ add('writable_dirs', []);
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
 
-// CHANGES
-// Install Nova after updating the shared files
-after('deploy:shared', 'gumbo:replace-nova');
-
-// Install front-end after the back-end dependencies
-after('deploy:vendors', 'gumbo:front-end');
-
-// Migrate a little early, and disable Horizon beforehand
-after('artisan:storage:link', 'gumbo:horizon:pause');
-after('artisan:storage:link', 'gumbo:migrate');
-
-// Cache the events after optimizing the application, and then kill Horizon
-after('artisan:optimize', 'artisan:event:cache');
-after('artisan:optimize', 'artisan:horizon:terminate');
-
-// Print URL after symlinking
-after('deploy:symlink', 'gumbo:url');
-
-// Restart Horizon in case of deployment failure
-after('deploy:failed', 'artisan:horizon:terminate');
+// Re-map all tasks
+desc('Deploy your project');
+task('deploy', [
+    'deploy:info',
+    'deploy:prepare',
+    'deploy:lock',
+    'deploy:release',
+    'deploy:update_code',
+    'deploy:shared',
+    'gumbo:replace-nova', // Replace the nova dummy with a live install
+    'deploy:vendors',
+    'gumbo:front-end', // Upload compiled front-end
+    'deploy:writable',
+    'artisan:storage:link',
+    'gumbo:horizon:pause', // Pause the horizon supervisor
+    'gumbo:migrate', // Run the database migrations
+    'artisan:view:cache',
+    'artisan:config:cache',
+    'artisan:optimize',
+    'artisan:event:cache', // Cache the events
+    'gumbo:horizon:terminate', // Terminate all horizon supervisors
+    'deploy:symlink',
+    'gumbo:url', // Print the URL to the environment
+    'deploy:unlock',
+    'cleanup',
+]);
