@@ -38,7 +38,7 @@
             <div class="flex items-center flex-wrap mt-2">
                 @foreach ($product->detail_feature_icons as $icon => $feature)
                 <div class="flex items-center mr-4 mb-4 p-2 bg-gray-100 rounded">
-                    @icon($icon, 'h-4 mr-2')
+                    <x-icon :icon="$icon" class="h-4 mr-2" />
                     <span class="text-sm">{{ $feature }}</span>
                 </div>
                 @endforeach
@@ -88,7 +88,7 @@
                 </select>
 
                 <button class="btn btn--brand btn--wide w-full uppercase my-0">
-                    @icon('solid/shopping-cart', 'h-4 mr-2')
+                    <x-icon icon="solid/shopping-cart" class="h-4 mr-2" />
                     {{-- Start Ye' Plunder --}}
                     Toevoegen <span class="hidden 2xl:inline">aan winkelmand</span>
                 </button>

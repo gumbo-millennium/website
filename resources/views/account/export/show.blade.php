@@ -41,12 +41,12 @@
 <div class="w-full grid grid-cols-1">
     @if ($export->path && !$export->is_expired)
         <a href="{{ route('account.export.download', [$export->id, $export->token]) }}" class="btn btn-small btn-primary text-center">
-            @icon('solid/download', 'h-8 mr-4')
+            <x-icon icon="solid/download" class="h-8 mr-4" />
             Download
         </a>
     @else
         <button disabled class="btn btn-small text-center" aria-label="Download niet beschikbaar">
-            @icon('solid/download', 'h-8 mr-4')
+            <x-icon icon="solid/download" class="h-8 mr-4" />
             Download
         </button>
     @endif

@@ -95,10 +95,11 @@ $bannerImage2x = (clone $bannerImage)->dpr(2);
         @if ($features->isNotEmpty())
         <div class="absolute bottom-4 right-4 rounded-lg bg-white flex items-center space-x-2 p-2">
             @foreach ($features as $feature)
-            @icon("solid/{$feature->icon}", [
-                'class' => 'icon h-4 card__figure-icon',
-                'title' => $feature->title
-            ])
+            <x-icon
+                :class='"solid/{$feature->icon}"'
+                :title="$feature->title"
+                class="icon h-4 card__figure-icon"
+            />
             @endforeach
         </div>
         @endif

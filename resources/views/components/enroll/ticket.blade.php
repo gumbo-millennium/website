@@ -8,7 +8,7 @@
 
             @if ($ticket->members_only)
             <span class="flex items-center" title="@lang('Members Only')">
-                @svg('solid/lock', 'h-4 text-gray-400 mr-2')
+                <x-icon icon="solid/lock" class="h-4 text-gray-400 mr-2" />
                 <span class="sr-only">
                     @lang('Members Only')
                 </span>
@@ -31,9 +31,9 @@
             <li class="flex items-start">
                 <div class="flex-shrink-0">
                     @if ($ticket->members_only)
-                    @svg('solid/user-friends', 'h-6 w-6 text-green-600')
+                    <x-icon icon="solid/user-friends" class="h-6 w-6 text-green-600" />
                     @else
-                    @svg('solid/globe-europe', 'h-6 w-6 text-green-600')
+                    <x-icon icon="solid/globe-europe" class="h-6 w-6 text-green-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">
@@ -48,9 +48,9 @@
             <li class="flex items-start">
                 <div class="flex-shrink-0">
                     @if ($ticket->quantity_available === 0)
-                    @svg('solid/ticket-alt', 'h-6 w-6 text-red-600')
+                    <x-icon icon="solid/ticket-alt" class="h-6 w-6 text-red-600" />
                     @else
-                    @svg('solid/ticket-alt', 'h-6 w-6 text-green-600')
+                    <x-icon icon="solid/ticket-alt" class="h-6 w-6 text-green-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">
@@ -70,9 +70,9 @@
             <li class="flex items-start">
                 <div class="flex-shrink-0">
                     @if ($ticket->is_being_sold)
-                    @svg('solid/clock', 'h-6 w-6 text-green-600')
+                    <x-icon icon="solid/clock" class="h-6 w-6 text-green-600" />
                     @else
-                    @svg('solid/clock', 'h-6 w-6 text-red-600')
+                    <x-icon icon="solid/clock" class="h-6 w-6 text-red-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">

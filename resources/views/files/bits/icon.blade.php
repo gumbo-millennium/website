@@ -24,4 +24,4 @@ $map = [
 $extension = Str::afterLast($file->name, '.');
 $icon = $map[$extension] ?? 'file';
 @endphp
-@icon("regular/{$icon}", 'mr-2 flex-none icon block mt-1')
+<x-icon :icon='"regular/{$icon}"' class="mr-2 flex-none icon block mt-1" />

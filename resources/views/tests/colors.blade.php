@@ -32,7 +32,7 @@ $colors = [
                         <div class="flex items-center mt-5">
                             <div class="color-swatch rounded-lg shadow-inner">
                                 <div class="h-12 w-12 rounded-lg shadow-inner bg-{{ $name }}-{{ $code }} text-{{ $name }}-{{ $code }} flex items-center justify-center">
-                                    @icon('solid/fill', 'icon icon-lg')
+                                    <x-icon icon="solid/fill" class="icon icon-lg" />
                                 </div>
                             </div>
                             <div class="ml-2 text-gray-primary-3 text-xs leading-none pl-1">

@@ -7,19 +7,19 @@
             <!--sse-->
             <li class="userbar__links-link">
                 <a href="tel:+31388450100" class="userbar__links-item userbar__links-item--flex">
-                    @icon('solid/phone', ['aria-label' => 'Telefoon symbool'])
+                    <x-icon icon="solid/phone" />
                     <span>038 845 0100</span>
                 </a>
             </li>
             <li class="userbar__links-link">
                 <a href="https://wa.me/31388450100" target="_blank" rel="nofollow noopener noreferer"
                     class="userbar__links-item userbar__links-item--flex">
-                    @icon('brands/whatsapp', ['aria-label' => 'WhatsApp Gumbo'])
+                    <x-icon icon="brands/whatsapp" />
                 </a>
             </li>
             <li class="userbar__links-link">
                 <a href="mailto:bestuur@gumbo-millennium.nl" class="userbar__links-item userbar__links-item--flex">
-                    @icon('solid/envelope', ['aria-label' => 'E-mail symbool'])
+                    <x-icon icon="solid/envelope" />
                     <span>bestuur@gumbo-millennium.nl</span>
                 </a>
             </li>
@@ -33,8 +33,8 @@
             {{-- Shopping cart --}}
             @unless (Cart::isEmpty())
             <li class="userbar__links-link cursor-default">
-                <a href="{{ route('shop.cart') }}" class="userbar__links-item">
-                    @icon('solid/shopping-cart', ['aria-label' => 'Winkelwagentje'])
+                <a href="{{ route('shop.cart') }}" class="userbar__links-item" aria-label="Bekijk je winkelwagentje">
+                    <x-icon icon="solid/shopping-cart" />
                     <span>
                         {{ Lang::choice('1 product|:count products', Cart::getContent()->sum('quantity')) }}
                     </span>
@@ -45,7 +45,7 @@
             {{-- User name --}}
             <li class="userbar__links-link cursor-default">
                 <a href="{{ route('account.index') }}" class="userbar__links-item">
-                    @icon('solid/user', ['aria-label' => 'Gebruiker symbool'])
+                    <x-icon icon="solid/user" />
                     <span>{{ $user->name }}</span>
                 </a>
             </li>
@@ -98,7 +98,7 @@
         {{-- Toggle --}}
         <label for="navbar-toggle" class="navbar__toggle">
             <span class="sr-only">Toon navigatie</span>
-            @icon('solid/bars', 'navbar__toggle-icon')
+            <x-icon icon="solid/bars" class="navbar__toggle-icon" />
         </label>
 
         {{-- The actual toggle (without JS) --}}

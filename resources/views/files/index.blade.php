@@ -48,7 +48,7 @@
         {{-- Show all link --}}
         <a href="{{ route('files.category', compact('category')) }}" class="file-set__show-all">
             Bekijk alle bundels in {{ $category->title }}
-            @icon('solid/chevron-right', 'ml-2')
+            <x-icon icon="solid/chevron-right" class="ml-2" />
         </a>
         @else
         <div class="file-set__empty-notice">

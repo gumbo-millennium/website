@@ -24,13 +24,13 @@ if (!empty($relative)) {
 {{-- Optional author --}}
 @if ($hasAuthor)
 <div class="mr-4 flex flex-row items-center">
-    @icon('solid/user', 'block mr-2')
+    <x-icon icon="solid/user" class="block mr-2" />
     <span>{{ $item->author->display_name }}</span>
 </div>
 @endif
 
 {{-- Date of publication --}}
 <div class="mr-4 flex flex-row items-center">
-    @icon('solid/clock', 'block mr-2')
+    <x-icon icon="solid/clock" class="block mr-2" />
     <time datetime="{{ $postDateIso }}">{{ $postDate }}</time>
 </div>

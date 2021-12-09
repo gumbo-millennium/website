@@ -21,11 +21,11 @@ $startDateFull = $startLocale->isoFormat('dddd D MMMM Y, [om] HH:mm');
         {{-- Details --}}
         <div class="activity-summary__stat-group">
             <div class="activity-summary__stat">
-                @icon('solid/clock', 'mr-4')
+                <x-icon icon="solid/clock" class="mr-4" />
                 <time datetime="{{ $startIso }}">{{ $startDate }}</time>
             </div>
             <div class="activity-summary__stat">
-                @icon('solid/map-marker-alt', 'mr-4')
+                <x-icon icon="solid/map-marker-alt" class="mr-4" />
                 @empty($activity->location)
                 <span class="text-gray-primary-1">Onbekend</span>
                 @elseif ($activity->location_url)

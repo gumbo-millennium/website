@@ -27,7 +27,7 @@ $backdrop = image_asset($sponsor->cover)->preset('banner');
             {{-- Link --}}
             <a href="{{ route('sponsors.show', compact('sponsor')) }}" class="partner-card__link stretched-link">
                 <span>{{ $sponsor->name }}</span>
-                @icon('solid/chevron-right', 'h-4 ml-2')
+                <x-icon icon="solid/chevron-right" class="h-4 ml-2" />
             </a>
         </div>
     </div>

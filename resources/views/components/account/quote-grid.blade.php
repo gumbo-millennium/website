@@ -44,8 +44,9 @@ $lastDate = null;
                 class="appearance-none text-danger p-2"
                 name="quote-id"
                 value="{{ $quote->id }}"
+                aria-label="Verwijder je wist-je-datje"
             >
-                @icon('solid/trash-alt', ['class' => 'icon', 'aria-label' => 'Verwijder wist-je-datje'])
+                <x-icon icon="solid/trash-alt" class="icon" />
             </button>
         </div>
         @endif

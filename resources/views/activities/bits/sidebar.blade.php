@@ -118,13 +118,13 @@ $showCovidWarning = Str::contains(
 <div class="text-gray-primary-1 text-sm font-bold uppercase mb-4 flex flex-row items-center">
     @if (!$activity->is_published)
     <p class="mr-4">
-        @icon('solid/eye-slash', 'mr-1')
+        <x-icon icon="solid/eye-slash" class="mr-1" />
         verborgen
     </p>
     @endif
     @if (!$activity->is_public)
     <p class="mr-4">
-        @icon('solid/lock', 'mr-1')
+        <x-icon icon="solid/lock" class="mr-1" />
         alleen voor leden
     </p>
     @endif
@@ -216,11 +216,11 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
     @foreach ($features as $feature)
     <div class="flex items-center">
         <div class="w-8">
-            @icon("solid/{$feature->icon}", [
-            'class' => 'icon h-4 card__figure-icon',
-            'title' => $feature->title,
-            'role' => 'none',
-            ])
+            <x-icon
+                :class='"solid/{$feature->icon}"'
+                :title="$feature->title"
+                class="icon h-4 card__figure-icon"
+            />
         </div>
         <div>
             {{ $feature->title }}
@@ -239,7 +239,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
     <dt class="font-bold">{{ $label }}</dt>
     <dd class="text-sm">
         @if ($icon)
-            @icon("solid/{$icon}", 'mr-2')
+            <x-icon :icon='"solid/{$icon}"' class="mr-2" />
         @endif
         {{ $value }}
     </dd>
@@ -254,13 +254,13 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 @if ($nextLink === 'activity')
 <a href="{{ route('activity.show', compact('activity')) }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('solid/chevron-left', 'mr-2')
+    <x-icon icon="solid/chevron-left" class="mr-2" />
     Terug naar details
 </a>
 @elseif ($activity === 'list')
 <a href="{{ route('activity.index') }}"
     class="inline-block p-4 mb-4 no-underline p-4 text-sm">
-    @icon('solid/chevron-left', 'mr-2')
+    <x-icon icon="solid/chevron-left" class="mr-2" />
     Terug naar overzicht
 </a>
 @endif

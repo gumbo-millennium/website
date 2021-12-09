@@ -9,7 +9,6 @@
         "artesaos/seotools": "^0.20",
         "barryvdh/laravel-debugbar": "^3.6",
         "benjaminhirsch/nova-slug-field": "^1.2",
-        "blade-ui-kit/blade-icons": "^0.5",
         "cviebrock/eloquent-sluggable": "^7.0",
         "darryldecode/cart": "^4.2",
         "david-griffiths/nova-dark-theme": "^1.0",

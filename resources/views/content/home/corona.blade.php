@@ -1,7 +1,7 @@
 <div class="bg-brand-primary-2 font-normal text-light">
     <div class="container py-1 flex flex-row items-center">
       {{-- Icon --}}
-      @svg('solid/shield-virus', 'h-4 mr-4 my-1')
+      <x-icon icon="solid/shield-virus" class="h-4 mr-4 my-1" />
 
       {{-- Title --}}
       <h3 class="mr-4 flex-grow my-1">

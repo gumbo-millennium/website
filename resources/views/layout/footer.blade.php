@@ -10,7 +10,7 @@
         </div>
 
         <div class="hidden md:flex items-center justify-end text-gray-300">
-            @icon('solid/leaf', 'h-4 mr-2')
+            <x-icon icon="solid/leaf" class="h-4 mr-2" />
 
             <a class="no-underline text-gray-300 hover:text-gray-700 hover:underline focus:text-gray-700 focus:underline" rel="nofollow noopener" target="_blank" href="https://www.scaleway.com/en/environmental-leadership/">
                 Onze website is CO<sub>2</sub> neutraal gehost.

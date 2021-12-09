@@ -38,7 +38,7 @@ $properties = [
 
     {{-- Back link --}}
     <a href="{{ route('files.category', ['category' => $bundle->category]) }}" class="inline-block mb-4 no-underline p-4 text-sm">
-        @icon('solid/chevron-left', 'mr-2')
+        <x-icon icon="solid/chevron-left" class="mr-2" />
         Terug naar {{ $bundle->category->title }}
     </a>
 @endsection

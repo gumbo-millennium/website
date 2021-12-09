@@ -10,7 +10,7 @@
     {{-- Telegram user --}}
     <div class="flex flex-col items-center w-1/3 flex-grow">
         <div class="h-20 w-20 rounded-full bg-blue-primary-1 text-white mb-4 flex items-center justify-center">
-            @icon('brands/telegram-plane', 'h-8')
+            <x-icon icon="brands/telegram-plane" class="h-8" />
         </div>
 
         <strong class="text-lg">{{ $telegramName }}</strong>
@@ -19,13 +19,13 @@
 
     {{-- Arrow --}}
     <div class="flex flex-col items-center w-20 flex-none">
-        @icon('solid/arrow-right', 'text-grey-primary-3 h-8 mt-6')
+        <x-icon icon="solid/arrow-right" class="text-grey-primary-3 h-8 mt-6" />
     </div>
 
     {{-- Gumbo user --}}
     <div class="flex flex-col items-center w-1/3 flex-grow">
         <div class="h-20 w-20 rounded-full bg-brand-primary-1 text-white mb-4 flex items-center justify-center">
-            @icon('solid/user', 'h-8')
+            <x-icon icon="solid/user" class="h-8" />
         </div>
 
         <strong class="text-lg">{{ $user->first_name }}</strong>

@@ -11,7 +11,7 @@
 {{-- Back link --}}
 <div class="container">
     <a href="{{ route('files.index') }}" class="inline-block p-4 mb-4 no-underline p-4">
-        @icon('solid/chevron-left', 'mr-2')
+        <x-icon icon="solid/chevron-left" class="mr-2" />
         naar overzicht
     </a>
 </div>

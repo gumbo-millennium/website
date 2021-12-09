@@ -25,7 +25,7 @@ if ($variants->count() === 2) {
         <div class="absolute bottom-4 right-4 flex flex-row-reverse items-center mt-2">
             @foreach ($product->feature_icons as $icon => $feature)
             <div class="flex items-center ml-4 p-2 bg-white text-black rounded" title="{{ $feature }}">
-                @icon($icon, 'h-4')
+                <x-icon :icon="$icon" class="h-4" />
             </div>
             @endforeach
         </div>
