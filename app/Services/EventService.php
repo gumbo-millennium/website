@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Events;
+namespace App\Services;
 
 use Illuminate\Support\Facades\Date;
 
