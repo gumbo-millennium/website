@@ -63,9 +63,6 @@ class NewJoinSubmissions extends Value
         return 'new-join-submissions';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', JoinSubmission::class) && parent::authorizedToSee($request);

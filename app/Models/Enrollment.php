@@ -78,7 +78,9 @@ class Enrollment extends UuidModel implements Payable
     public const USER_TYPE_GUEST = 'guest';
 
     /**
-     * @inheritDoc
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         'created_at' => 'datetime',

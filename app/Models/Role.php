@@ -41,7 +41,9 @@ class Role extends SpatieRole
     ];
 
     /**
-     * {@inheritDoc}
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         'default' => 'bool',

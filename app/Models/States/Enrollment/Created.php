@@ -21,9 +21,6 @@ class Created extends State
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Nieuw';

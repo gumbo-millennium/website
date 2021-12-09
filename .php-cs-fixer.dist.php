@@ -157,6 +157,7 @@ return (new Config())
                 'license',
                 'package',
                 'version',
+                'inheritdoc',
             ],
         ],
         'no_blank_lines_after_phpdoc' => true,

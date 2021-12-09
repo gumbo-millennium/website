@@ -88,9 +88,6 @@ class Product extends Model
         'features' => '[]',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function sluggable(): array
     {
         return [

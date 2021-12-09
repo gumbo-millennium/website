@@ -32,7 +32,7 @@ class WebcamUpdate extends Model
     public const STORAGE_LOCATION = 'webcam_updates/images';
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */

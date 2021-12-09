@@ -57,7 +57,7 @@ class Category extends Model
     ];
 
     /**
-     * {@inheritdoc}
+     * Returns a sluggable definition for this model.
      */
     public function sluggable(): array
     {

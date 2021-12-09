@@ -21,9 +21,6 @@ class Seeded extends State
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Wachtend op betaling';

@@ -9,35 +9,23 @@ use LogicException;
 
 class ShallowGoogleMailList extends GoogleMailList
 {
-    /**
-     * @inheritdoc
-     */
     public function listEmails(): array
     {
         throw new LogicException('Cannot list members on a shallow group');
     }
 
-    /**
-     * @inheritdoc
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function addEmail(string $email, int $role = self::ROLE_NORMAL): void
     {
         throw new LogicException('Cannot add members on a shallow group');
     }
 
-    /**
-     * @inheritdoc
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function updateEmail(string $email, int $role = self::ROLE_NORMAL): void
     {
         throw new LogicException('Cannot update members on a shallow group');
     }
 
-    /**
-     * @inheritdoc
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function removeEmail(string $email): void
     {

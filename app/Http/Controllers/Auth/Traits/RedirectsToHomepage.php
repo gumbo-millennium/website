@@ -14,9 +14,6 @@ trait RedirectsToHomepage
      */
     protected string $redirectTo = '/';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function redirectTo(): string
     {
         return route('home', null, false);

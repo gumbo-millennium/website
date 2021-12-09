@@ -127,9 +127,6 @@ class Sponsor extends Resource
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function cards(Request $request)
     {

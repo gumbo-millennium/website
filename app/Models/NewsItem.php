@@ -38,7 +38,9 @@ class NewsItem extends SluggableModel
     use HasEditorJsContent;
 
     /**
-     * @inheritDoc
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'slug',
@@ -47,22 +49,16 @@ class NewsItem extends SluggableModel
     ];
 
     /**
-     * @inheritDoc
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         'content' => 'json',
         'user_id' => 'int',
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'published_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
     /**

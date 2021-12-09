@@ -21,9 +21,6 @@ class Cancelled extends State
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Geannuleerd';

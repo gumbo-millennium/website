@@ -65,12 +65,12 @@ class FileDownload extends Pivot
     ];
 
     /**
-     * A file download has a download date.
+     * The attributes that should be cast.
      *
      * @var array
      */
-    public $dates = [
-        'created_at',
+    protected $casts = [
+        'created_at' => 'datetime', ,
     ];
 
     /**

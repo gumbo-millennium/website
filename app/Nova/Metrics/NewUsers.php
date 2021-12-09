@@ -63,9 +63,6 @@ class NewUsers extends Value
         return 'new-users';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', User::class) && parent::authorizedToSee($request);

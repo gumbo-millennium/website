@@ -103,16 +103,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
     ];
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'deleted_at',
-        'email_verified_at',
-    ];
-
-    /**
      * The model's default values for attributes.
      *
      * @var array
@@ -124,7 +114,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
@@ -132,6 +122,9 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'conscribo_id' => 'int',
         'address' => EncryptedAttribute::class . ':json',
         'grants' => EncryptedAttribute::class . ':json',
+
+        'deleted_at' => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
 
     /**

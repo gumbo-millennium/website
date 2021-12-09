@@ -31,12 +31,12 @@ class BotQuote extends Model
     private const KEEP_DAYS = 45;
 
     /**
-     * The attributes that should be mutated to dates.
+     * The attributes that should be cast.
      *
      * @var array
      */
-    protected $dates = [
-        'submitted_at',
+    protected $casts = [
+        'submitted_at' => 'datetime',
     ];
 
     /**

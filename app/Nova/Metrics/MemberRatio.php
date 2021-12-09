@@ -56,9 +56,6 @@ class MemberRatio extends Partition
         return 'member-ratio';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', User::class) && parent::authorizedToSee($request);

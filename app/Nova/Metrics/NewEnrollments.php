@@ -71,9 +71,6 @@ class NewEnrollments extends Value
         return 'new-enrollments';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', Enrollment::class) && parent::authorizedToSee($request);

@@ -113,33 +113,9 @@ class Activity extends SluggableModel
     ];
 
     /**
-     * @inheritDoc
-     */
-    protected $dates = [
-        // Management dates
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'published_at',
-        'cancelled_at',
-
-        // Start date
-        'start_date',
-        'end_date',
-
-        // Enrollment date
-        'enrollment_start',
-        'enrollment_end',
-
-        // Reschedule date
-        'rescheduled_from',
-
-        // Postpone date
-        'postponed_at',
-    ];
-
-    /**
-     * @inheritDoc
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         // Description
@@ -157,6 +133,27 @@ class Activity extends SluggableModel
 
         // Features
         'features' => 'json',
+
+        // Management dates
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'published_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+
+        // Start date
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+
+        // Enrollment date
+        'enrollment_start' => 'datetime',
+        'enrollment_end' => 'datetime',
+
+        // Reschedule date
+        'rescheduled_from' => 'datetime',
+
+        // Postpone date
+        'postponed_at' => 'datetime',
     ];
 
     /**

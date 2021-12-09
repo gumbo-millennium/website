@@ -63,9 +63,6 @@ class DownloadsPerDay extends Trend
         return 'downloads-per-day';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', FileBundle::class) && parent::authorizedToSee($request);

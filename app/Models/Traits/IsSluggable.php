@@ -20,9 +20,6 @@ trait IsSluggable
      */
     protected $slugKeyName = 'slug';
 
-    /**
-     * Returns a sluggable definition for this model.
-     */
     abstract public function sluggable(): array;
 
     /**

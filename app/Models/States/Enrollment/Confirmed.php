@@ -21,9 +21,6 @@ class Confirmed extends State
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Bevestigd';

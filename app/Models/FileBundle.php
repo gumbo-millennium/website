@@ -56,31 +56,31 @@ class FileBundle extends SluggableModel implements HasMedia
     ];
 
     /**
-     * {@inheritDoc}
+     * The accessors to append to the model's array form.
+     *
+     * @var array
      */
     protected $appends = [
         'url',
     ];
 
     /**
-     * {@inheritDoc}
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'title',
     ];
 
     /**
-     * {@inheritDoc}
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         'total_size' => 'int',
-    ];
-
-    /**
-     * {@inheritDoc}
-     */
-    protected $dates = [
-        'published_at',
+        'published_at' => 'datetime',
     ];
 
     /**

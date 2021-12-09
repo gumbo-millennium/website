@@ -21,9 +21,6 @@ class Refunded extends Cancelled
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Terugbetaald';

@@ -67,22 +67,14 @@ class Sponsor extends SluggableModel
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
         'view_count' => 'int',
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'starts_at',
-        'ends_at',
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
     ];
 
     /**

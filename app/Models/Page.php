@@ -61,7 +61,9 @@ class Page extends SluggableModel
     public const SLUG_404 = 'error-404';
 
     /**
-     * @inheritDoc
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'slug',
@@ -71,7 +73,9 @@ class Page extends SluggableModel
     ];
 
     /**
-     * @inheritDoc
+     * The attributes that should be cast.
+     *
+     * @var array
      */
     protected $casts = [
         'user_id' => 'int',

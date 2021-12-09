@@ -39,7 +39,7 @@ class FileExport extends Model implements Responsable
     private const TARGET_DIR = 'private/exports';
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */

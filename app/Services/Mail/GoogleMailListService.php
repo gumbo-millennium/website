@@ -63,9 +63,6 @@ class GoogleMailListService implements MailListHandler
         return $listEmails;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getList(string $email): ?MailList
     {
         // Get email and domain name
@@ -123,9 +120,6 @@ class GoogleMailListService implements MailListHandler
         return GoogleMailList::fromGoogleModel($group, $members);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function createList(string $email, string $name): MailList
     {
         // Get API

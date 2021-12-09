@@ -76,9 +76,6 @@ class PendingEnrollments extends Value
         return 'pending-enrollments';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', Enrollment::class) && parent::authorizedToSee($request);

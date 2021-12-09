@@ -21,9 +21,6 @@ class Paid extends Confirmed
      */
     public static $name = self::NAME;
 
-    /**
-     * @inheritDoc
-     */
     public function getTitleAttribute(): string
     {
         return 'Betaald';

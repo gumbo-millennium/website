@@ -110,9 +110,6 @@ class ProductVariant extends Model
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sluggable(): array
     {
         return [

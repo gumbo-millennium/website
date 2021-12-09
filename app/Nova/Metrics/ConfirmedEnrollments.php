@@ -75,9 +75,6 @@ class ConfirmedEnrollments extends Trend
         return 'confirmed-enrollments';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', Enrollment::class) && parent::authorizedToSee($request);

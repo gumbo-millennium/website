@@ -79,9 +79,6 @@ class SponsorClicksPerDay extends Trend
         return 'sponsor-clicks-per-day';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authorizedToSee(Request $request)
     {
         return $request->user()->can('viewAny', Sponsor::class) && parent::authorizedToSee($request);

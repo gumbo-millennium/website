@@ -35,23 +35,15 @@ class ScheduledMail extends Model
     public $timestamps = false;
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
         'group' => 'string',
         'name' => 'string',
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'scheduled_for',
-        'sent_at',
+        'scheduled_for' => 'datetime',
+        'sent_at' => 'datetime',
     ];
 
     /**

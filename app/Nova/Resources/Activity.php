@@ -371,9 +371,6 @@ class Activity extends Resource
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function cards(Request $request)
     {
         return [
