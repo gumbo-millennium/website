@@ -59,9 +59,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         // Register ebess/advanced-nova-media-library
         $this->app->register(\Ebess\AdvancedNovaMediaLibrary\AdvancedNovaMediaLibraryServiceProvider::class);
 
-        // Register gregoriohc/laravel-nova-theme-responsive
-        $this->app->register(\Gregoriohc\LaravelNovaThemeResponsive\ThemeServiceProvider::class);
-
         // Register kabbouchi/nova-impersonate
         $this->app->register(\KABBOUCHI\NovaImpersonate\ToolServiceProvider::class);
 
