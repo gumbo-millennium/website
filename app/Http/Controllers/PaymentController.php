@@ -96,8 +96,11 @@ class PaymentController extends Controller
         // Wait 500ms between checks
         $sleepDuration = 500_000;
 
+        // Backup
+        $startTime = microtime(true);
+
         // Allow for 10 seconds at most
-        $maxIterations = 10 / ($sleepDuration / 1_000_000);
+        $maxIterations = 5 / ($sleepDuration / 1_000_000);
 
         for ($iteration = 0; $iteration < $maxIterations; $iteration++) {
             $payment->refresh();
@@ -109,6 +112,11 @@ class PaymentController extends Controller
                 );
 
                 return $this->getDestination($payment);
+            }
+
+            // Check if safetynet is broken
+            if (microtime(true) - $startTime > 5) {
+                break;
             }
 
             // Sleep
