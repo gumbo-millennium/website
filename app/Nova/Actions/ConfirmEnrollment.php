@@ -11,9 +11,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
+/**
+ * @method static static make(Enrollment $enrollment, User $user)
+ */
 class ConfirmEnrollment extends Action
 {
     use InteractsWithQueue;
@@ -46,8 +50,16 @@ class ConfirmEnrollment extends Action
      *
      * @return ConfirmEnrollment
      */
-    public static function make(Enrollment $enrollment, User $user): self
+    public static function make(...$arguments): self
     {
+        // Validate arguments
+        throw_unless(count($arguments) === 2, new InvalidArgumentException('ConfirmEnrollment::make requires two arguments.'));
+
+        // Validate types
+        [$enrollment, $user] = $arguments;
+        throw_unless($enrollment instanceof Enrollment, new InvalidArgumentException('First argument must be an Enrollment.'));
+        throw_unless($user instanceof User, new InvalidArgumentException('Second argument must be a User.'));
+
         // Prep proper text
         $noticeText = [__('Are you sure you wish to confirm this enrollment?')];
         if ($enrollment->price > 0) {
