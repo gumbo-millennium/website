@@ -2,11 +2,11 @@
 $actionText = 'Bekijk aanmelding';
 @endphp
 
-<x-mail::message>
+@component('mail::message')
 {{-- Greeting --}}
-<x-slot name="header">
+@slot('header')
 Aanmelding nieuw lid
-</x-slot>
+@endslot
 
 {{-- Intro Lines --}}
 Geacht bestuur,
@@ -19,9 +19,9 @@ Verdere gegevens zijn, ter waarboring van de privacy van het lid,
 te vinden in het administratiepaneel.
 
 {{-- Action Button --}}
-<x-mail::button :url="$actionUrl">
+@component('mail::button', ['url' => $actionUrl])
 {{ $actionText }}
-</x-mail::button>
+@endcomponent
 
 {{-- Outro Lines --}}
 <p class="text-gray-primary-1">
@@ -29,7 +29,7 @@ te vinden in het administratiepaneel.
 </p>
 
 {{-- Subcopy --}}
-<x-slot name='subcopy'>
+@slot('subcopy')
 @lang(
     "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
     'into your web browser: [:actionURL](:actionURL)',
@@ -38,9 +38,8 @@ te vinden in het administratiepaneel.
         'actionURL' => $actionUrl,
     ]
 )
-</x-slot>
-
+@endslot
 Met vriendelijke groet,
 
 De Digitale Commissie
-</x-mail::message>
+@endcomponent

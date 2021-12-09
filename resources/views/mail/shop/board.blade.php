@@ -1,11 +1,12 @@
-<?php
+@php
 $actionText = 'Bekijk aanmelding';
-?>
-<x-mail::message>
+@endphp
+
+@component('mail::message')
 {{-- Greeting --}}
-<x-slot name="header">
+@slot('header')
 Aanmelding nieuw lid
-</x-slot>
+@endslot
 
 {{-- Intro Lines --}}
 Geacht bestuur,
@@ -18,13 +19,13 @@ Je kan de details zien op de website, onder nummer **{{ $order->number }}**.
 
 De bestelling:
 
-<x-mail::table>
+@component('mail::table')
 |Product|Aantal|Eenheidsprijs|Prijs|
 |-------|------|-------------|-----|
 @foreach($order->variants as $variant)
 |{{ $variant->display_name }}|{{ $variant->pivot->quantity }}|{{ Str::price($variant->pivot->price) }}|{{ Str::price($variant->pivot->price * $variant->pivot->quantity) }}|
 @endforeach
-</x-mail::table>
+@endcomponent
 
 {{-- Outro Lines --}}
 <p class="text-gray-primary-1">
@@ -34,4 +35,4 @@ De bestelling:
 Met vriendelijke groet,
 
 De Digitale Commissie
-</x-mail::message>
+@endcomponent
