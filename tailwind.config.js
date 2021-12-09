@@ -10,10 +10,20 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   mode: 'jit',
 
-  purge: [
-    'resources/views/**/*.blade.php',
-    'app/**/*.php',
-  ],
+  purge: {
+    content: [
+      'resources/views/**/*.blade.php',
+      'app/**/*.php',
+    ],
+    options: {
+      safelist: {
+        deep: ['prose'],
+      },
+      fontFace: true,
+      keyframes: true,
+      variables: true,
+    },
+  },
 
   theme: {
     container: {
