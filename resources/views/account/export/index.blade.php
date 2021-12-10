@@ -35,7 +35,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <x-icon icon="solid/file-archive" class="mx-auto h-10 $iconColor" />
+                                    <x-icon icon="solid/file-archive" :class='"mx-auto h-10 $iconColor"' />
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">

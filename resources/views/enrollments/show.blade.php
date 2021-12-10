@@ -31,7 +31,7 @@
                 <button class="btn" form="unenroll-form" type="submit">
                     Uitschrijven
                 </button>
-                <form formaction="{{ route('enroll.cancel', [$activity]) }}" method="POST" id="unenroll-form">
+                <form action="{{ route('enroll.cancel', [$activity]) }}" method="POST" id="unenroll-form">
                     @csrf
                 </form>
                 @endif
