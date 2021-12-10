@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\ActivityFormCast;
 use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
-use App\Nova\Flexible\Presets\ActivityForm;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -18,7 +18,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Spatie\Permission\Models\Role;
-use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 
 /**
  * App\Models\Activity.
@@ -48,7 +47,7 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
  * @property null|string $rescheduled_reason
  * @property null|\Illuminate\Support\Carbon $postponed_at
  * @property null|string $postponed_reason
- * @property null|array $enrollment_questions
+ * @property |null $enrollment_questions
  * @property null|int $role_id
  * @property array $features
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
@@ -91,7 +90,6 @@ use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
 class Activity extends SluggableModel
 {
     use HasEditorJsContent;
-    use HasFlexible;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
 
@@ -120,7 +118,7 @@ class Activity extends SluggableModel
     protected $casts = [
         // Description
         'description' => 'json',
-        'enrollment_questions' => 'json',
+        'enrollment_questions' => ActivityFormCast::class,
 
         // Number of seats
         'seats' => 'int',
@@ -317,20 +315,7 @@ class Activity extends SluggableModel
      */
     public function getFlexibleContentAttribute()
     {
-        // Return empty collection if Nova is disabled
-        if (! Config::get('services.features.enable-nova')) {
-            return new Collection();
-        }
-
-        // Map layouts with keys
-        $keyedLayouts = collect(ActivityForm::LAYOUTS)
-            ->mapWithKeys(static fn ($item) => [
-                (new $item())->name() => $item,
-            ])
-            ->toArray();
-
-        // Return flexible content
-        return $this->flexible('enrollment_questions', $keyedLayouts);
+        return $this->enrollment_questions;
     }
 
     /**
@@ -597,7 +582,7 @@ class Activity extends SluggableModel
     {
         $fields = [];
 
-        foreach ($this->flexible_content ?? [] as $field) {
+        foreach ($this->enrollment_questions as $field) {
             if (! $field instanceof FormLayoutContract) {
                 continue;
             }
