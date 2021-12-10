@@ -32,14 +32,16 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
  * @property-read bool $is_available
  * @property-read null|string $url
- * @property-read \App\Models\Media[]|\Illuminate\Database\Eloquent\Collection $media
+ * @property-read \App\Models\Media[]|\Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection $media
  * @property-read null|\App\Models\User $owner
+ * @method static \Database\Factories\FileBundleFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|FileBundle newModelQuery()
  * @method static Builder|FileBundle newQuery()
  * @method static Builder|FileBundle query()
  * @method static Builder|FileBundle whereAvailable()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @mixin \Eloquent
  */
 class FileBundle extends SluggableModel implements HasMedia

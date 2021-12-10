@@ -55,6 +55,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
  * @method static Builder|Enrollment active()
+ * @method static \Database\Factories\EnrollmentFactory factory(...$parameters)
  * @method static Builder|Enrollment newModelQuery()
  * @method static Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()

@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $referred_by
  * @property null|int $user_id
  * @property-read null|\App\Models\User $user
+ * @method static \Database\Factories\MemberReferralFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MemberReferral query()

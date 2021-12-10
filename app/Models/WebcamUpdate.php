@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @property-read bool $is_expired
  * @property-read string $name
  * @property-read \App\Models\Webcam $webcam
+ * @method static \Database\Factories\WebcamUpdateFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|WebcamUpdate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebcamUpdate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebcamUpdate query()

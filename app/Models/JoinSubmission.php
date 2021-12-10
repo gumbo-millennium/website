@@ -18,19 +18,20 @@ use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
  * @property null|string $insert
  * @property string $last_name
  * @property string $email
- * @property null|string $phone Encrypted phone number
- * @property null|string $date_of_birth Encrypted date of birth, as dd-mm-yyyy
+ * @property null|array $phone Encrypted phone number
+ * @property null|array $date_of_birth Encrypted date of birth, as dd-mm-yyyy
  * @property null|string $gender User supplied gender
- * @property null|string $street Encrypted street name
- * @property null|string $number Encrypted number
- * @property null|string $city Encrypted city
- * @property null|string $postal_code Encrypted zipcode
- * @property null|string $country Encrypted country
+ * @property null|array $street Encrypted street name
+ * @property null|array $number Encrypted number
+ * @property null|array $city Encrypted city
+ * @property null|array $postal_code Encrypted zipcode
+ * @property null|array $country Encrypted country
  * @property int $windesheim_student
  * @property int $newsletter
  * @property null|int $granted
  * @property null|string $referrer
  * @property-read string $name
+ * @method static \Database\Factories\JoinSubmissionFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission query()

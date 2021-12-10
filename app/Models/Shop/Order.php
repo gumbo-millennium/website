@@ -38,6 +38,7 @@ use RuntimeException;
  * @property-read User $user
  * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
  * @method static Builder|Order cancelled()
+ * @method static \Database\Factories\Shop\OrderFactory factory(...$parameters)
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
  * @method static Builder|Order paid()

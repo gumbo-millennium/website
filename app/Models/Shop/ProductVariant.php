@@ -44,6 +44,7 @@ use Illuminate\Support\HtmlString;
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Order[]|\Illuminate\Database\Eloquent\Collection $orders
  * @property-read \App\Models\Shop\Product $product
+ * @method static \Database\Factories\Shop\ProductVariantFactory factory(...$parameters)
  * @method static Builder|ProductVariant findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|ProductVariant newModelQuery()
  * @method static Builder|ProductVariant newQuery()

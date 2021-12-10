@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\URL;
  * @property-read Image $valid_image
  * @property-read string $valid_image_url
  * @property-read \App\Models\Shop\Product[]|\Illuminate\Database\Eloquent\Collection $products
+ * @method static \Database\Factories\Shop\CategoryFactory factory(...$parameters)
  * @method static Builder|Category findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\URL;
  * @method static Builder|Category query()
  * @method static Builder|Category whereSlug(string $slug)
  * @method static \Illuminate\Database\Query\Builder|Category withTrashed()
+ * @method static Builder|Category withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @method static \Illuminate\Database\Query\Builder|Category withoutTrashed()
  * @mixin \Eloquent
  */

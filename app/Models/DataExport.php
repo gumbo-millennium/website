@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read string $file_name
  * @property-read bool $is_expired
  * @property-read \App\Models\User $user
+ * @method static \Database\Factories\DataExportFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newQuery()
  * @method static \Illuminate\Database\Query\Builder|DataExport onlyTrashed()

@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property string $slug
  * @property-read \App\Models\FileBundle[]|\Illuminate\Database\Eloquent\Collection $bundles
  * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
+ * @method static \Database\Factories\FileCategoryFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|FileCategory newModelQuery()
  * @method static Builder|FileCategory newQuery()
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @method static Builder|FileCategory whereAvailable()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @method static Builder|FileCategory withAvailable()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @mixin \Eloquent
  */
 class FileCategory extends SluggableModel

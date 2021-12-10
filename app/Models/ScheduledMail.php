@@ -19,6 +19,7 @@ use Illuminate\Support\Collection;
  * @property \Illuminate\Support\Carbon $scheduled_for
  * @property null|\Illuminate\Support\Carbon $sent_at
  * @property bool $is_sent
+ * @method static \Database\Factories\ScheduledMailFactory factory(...$parameters)
  * @method static Builder|ScheduledMail newModelQuery()
  * @method static Builder|ScheduledMail newQuery()
  * @method static Builder|ScheduledMail query()

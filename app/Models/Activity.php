@@ -78,6 +78,7 @@ use Spatie\Permission\Models\Role;
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
  * @property-read null|Role $role
  * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
+ * @method static \Database\Factories\ActivityFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Activity newModelQuery()
  * @method static Builder|Activity newQuery()
@@ -86,6 +87,7 @@ use Spatie\Permission\Models\Role;
  * @method static Builder|Activity whereHasFeature(string $feature)
  * @method static Builder|Activity wherePublished()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @mixin \Eloquent
  */
 class Activity extends SluggableModel

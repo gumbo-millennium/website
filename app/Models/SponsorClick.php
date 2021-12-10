@@ -18,6 +18,7 @@ use InvalidArgumentException;
  * @property int $count
  * @property \Illuminate\Support\Carbon $date
  * @property-read \App\Models\Sponsor $sponsor
+ * @method static \Database\Factories\SponsorClickFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SponsorClick query()

@@ -26,12 +26,14 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|int $author_id
  * @property-read null|\App\Models\User $author
  * @property-read null|string $html
+ * @method static \Database\Factories\NewsItemFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|NewsItem newModelQuery()
  * @method static Builder|NewsItem newQuery()
  * @method static Builder|NewsItem query()
  * @method static Builder|NewsItem whereAvailable()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @mixin \Eloquent
  */
 class NewsItem extends SluggableModel

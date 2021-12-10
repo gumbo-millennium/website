@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read null|int $quantity_available
  * @property-read int $quantity_sold
  * @property-read null|int $total_price
+ * @method static \Database\Factories\TicketFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()

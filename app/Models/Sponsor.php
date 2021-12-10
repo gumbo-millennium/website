@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Storage;
  * @property-read bool $is_classic
  * @property-read null|string $logo_color_url
  * @property-read null|string $logo_gray_url
+ * @method static \Database\Factories\SponsorFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Sponsor newModelQuery()
  * @method static Builder|Sponsor newQuery()
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static Builder|Sponsor whereAvailable()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @method static \Illuminate\Database\Query\Builder|Sponsor withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @method static \Illuminate\Database\Query\Builder|Sponsor withoutTrashed()
  * @mixin \Eloquent
  */

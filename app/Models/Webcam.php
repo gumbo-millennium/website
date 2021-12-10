@@ -22,11 +22,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read null|string $path
  * @property-read null|\App\Models\WebcamUpdate $lastUpdate
  * @property-read \App\Models\WebcamUpdate[]|\Illuminate\Database\Eloquent\Collection $updates
+ * @method static \Database\Factories\WebcamFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static \Illuminate\Database\Eloquent\Builder|Webcam newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Webcam newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Webcam query()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @mixin \Eloquent
  */
 class Webcam extends SluggableModel

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $display_name
  * @property string $quote
  * @property-read null|\App\Models\User $user
+ * @method static \Database\Factories\BotQuoteFactory factory(...$parameters)
  * @method static Builder|BotQuote newModelQuery()
  * @method static Builder|BotQuote newQuery()
  * @method static Builder|BotQuote notSubmitted()
