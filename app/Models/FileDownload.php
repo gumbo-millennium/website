@@ -73,7 +73,7 @@ class FileDownload extends Pivot
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime', ,
+        'created_at' => 'datetime',
     ];
 
     /**
