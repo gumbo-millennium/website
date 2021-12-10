@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Scopes\DefaultOrderScope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class FileCategory extends SluggableModel
 {
+    use HasFactory;
+
     /**
      * Categories don't have timestamps.
      *

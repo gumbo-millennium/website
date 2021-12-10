@@ -11,6 +11,7 @@ use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
@@ -90,6 +91,7 @@ use Spatie\Permission\Models\Role;
 class Activity extends SluggableModel
 {
     use HasEditorJsContent;
+    use HasFactory;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
 

@@ -2,14 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Models\Shop\Order;
-use App\Models\User;
-use Faker\Generator as Faker;
+namespace Database\Factories\Shop;
 
-$factory->define(Order::class, static function (Faker $faker) {
-    return [
-        'paid_at' => $faker->optional()->dateTimeBetween('-1 year', '5 seconds ago'),
-        'user_id' => User::inRandomOrder()->first()->id,
-        'price' => $faker->numberBetween(150, 15000),
-    ];
-});
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class OrderFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'paid_at' => $this->faker->optional()->dateTimeBetween('-1 year', '5 seconds ago'),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'price' => $this->faker->numberBetween(150, 15000),
+        ];
+    }
+}

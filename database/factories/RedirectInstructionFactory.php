@@ -2,12 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Models\RedirectInstruction;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(RedirectInstruction::class, function (Faker $faker) {
-    return [
-        'slug' => parse_url($faker->url, PHP_URL_PATH),
-        'path' => parse_url($faker->url, PHP_URL_PATH),
-    ];
-});
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class RedirectInstructionFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'slug' => parse_url($this->faker->url, PHP_URL_PATH),
+            'path' => parse_url($this->faker->url, PHP_URL_PATH),
+        ];
+    }
+}

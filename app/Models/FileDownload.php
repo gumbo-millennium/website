@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helpers\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
@@ -30,6 +31,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class FileDownload extends Pivot
 {
+    use HasFactory;
+
     /**
      * Categories don't have timestamps.
      *

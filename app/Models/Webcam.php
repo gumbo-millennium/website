@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helpers\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -30,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Webcam extends SluggableModel
 {
+    use HasFactory;
+
     /**
      * The relations to eager load on every query.
      *

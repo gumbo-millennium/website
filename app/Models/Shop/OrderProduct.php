@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Shop;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class OrderProduct extends Pivot
 {
+    use HasFactory;
+
     protected $table = 'shop_order_product_variant';
 
     protected $casts = [

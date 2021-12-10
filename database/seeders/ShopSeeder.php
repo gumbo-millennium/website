@@ -29,8 +29,7 @@ class ShopSeeder extends Seeder
 
         // Categories
         $categoryCount = $faker->numberBetween(2, 5);
-        $categories = factory(Category::class, $categoryCount)
-            ->make();
+        $categories = Category::factory($categoryCount)->make();
         $categories->each->save();
         $categories->push(null);
 
@@ -40,7 +39,7 @@ class ShopSeeder extends Seeder
         // Make products in each category
         foreach ($categories as $category) {
             $productCount = $faker->numberBetween(2, 12);
-            $products = factory(Product::class, $productCount)->make([
+            $products = Product::factory($productCount)->make([
                 'category_id' => optional($category)->id,
             ]);
             $products->each->save();
@@ -53,7 +52,7 @@ class ShopSeeder extends Seeder
 
             // Make variants for each product
             foreach ($products as $product) {
-                $variants = factory(ProductVariant::class, $variantCount)->make([
+                $variants = ProductVariant::factory($variantCount)->make([
                     'product_id' => $product->id,
                 ]);
                 $variants->each->save();
@@ -67,7 +66,7 @@ class ShopSeeder extends Seeder
         // Make orders
         $orderCount = $faker->numberBetween(5, 50);
         for ($i = 0; $i < $orderCount; $i++) {
-            $order = factory(Order::class)->make();
+            $order = Order::factory()->make();
 
             $products = $variants->random($faker->numberBetween(0, 7));
 

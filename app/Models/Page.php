@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
@@ -37,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 class Page extends SluggableModel
 {
     use HasEditorJsContent;
+    use HasFactory;
 
     public const TYPE_USER = 'user';
 

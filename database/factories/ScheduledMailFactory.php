@@ -2,18 +2,30 @@
 
 declare(strict_types=1);
 
-use App\Models\ScheduledMail;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$generatorNodes = [
-    'Activity',
-    'Enrollment',
-    'File',
-];
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(ScheduledMail::class, static fn (Faker $faker) => [
-    'group' => sprintf('%s:%s', $faker->randomElement($generatorNodes), $faker->numberBetween()),
-    'name' => $faker->word,
-    'scheduled_for' => $faker->dateTimeBetween('-60 days', '+60 days'),
-    'sent_at' => $faker->optional(0.7)->dateTimeBetween('-60 days', '+60 days'),
-]);
+class ScheduledMailFactory extends Factory
+{
+    private const GENERATOR_NODES = [
+        'Activity',
+        'Enrollment',
+        'File',
+    ];
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'group' => sprintf('%s:%s', $this->faker->randomElement(self::GENERATOR_NODES), $this->faker->numberBetween()),
+            'name' => $this->faker->word,
+            'scheduled_for' => $this->faker->dateTimeBetween('-60 days', '+60 days'),
+            'sent_at' => $this->faker->optional(0.7)->dateTimeBetween('-60 days', '+60 days'),
+        ];
+    }
+}

@@ -8,6 +8,7 @@ use App\Fluent\Image;
 use App\Helpers\Arr;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -59,6 +60,7 @@ use Illuminate\Support\HtmlString;
  */
 class Product extends Model
 {
+    use HasFactory;
     use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;

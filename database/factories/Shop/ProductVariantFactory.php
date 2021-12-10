@@ -2,28 +2,48 @@
 
 declare(strict_types=1);
 
-use App\Models\Shop\ProductVariant;
-use Faker\Generator as Faker;
+namespace Database\Factories\Shop;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
-$factory->define(ProductVariant::class, static function (Faker $faker) {
-    $image = $faker->optional(0.25)->passthrough(true);
+class ProductVariantFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $image = $this->faker->optional(0.25)->passthrough(true);
 
-    if ($image) {
-        $image = Storage::disk('public')->putFile('shop/images', new File(resource_path('test-assets/images/roadtrip.jpg')));
+        if ($image) {
+            $image = Storage::disk('public')->putFile(
+                'shop/images',
+                new File(resource_path('test-assets/images/roadtrip.jpg')),
+            );
+        }
+
+        return [
+            'id' => $this->faker->uuid,
+            'name' => $this->faker->words(3, true),
+            'description' => $this->faker->optional()->sentences(
+                $this->faker->numberBetween(1, 6),
+                true,
+            ),
+            'image_path' => $image,
+            'sku' => $this->faker->ean13,
+            'price' => $this->faker->numberBetween(250, 3000),
+            'order' => $this->faker->numerify(1, 10),
+        ];
     }
 
-    return [
-        'id' => $faker->uuid,
-        'name' => $faker->words(3, true),
-        'description' => $faker->optional()->sentences($faker->numberBetween(1, 6), true),
-        'image_path' => $image,
-        'sku' => $faker->ean13,
-        'price' => $faker->numberBetween(250, 3000),
-        'order' => $faker->numerify(1, 10),
-    ];
-});
-
-$factory->state(ProductVariant::class, 'order-limit', fn (Faker $faker) => [
-    'order_limit' => $faker->numberBetween(1, 10),
-]);
+    public function orderLimit()
+    {
+        return $this->state([
+            'order_limit' => $this->faker->numberBetween(1, 10),
+        ]);
+    }
+}

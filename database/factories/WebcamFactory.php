@@ -2,15 +2,30 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
+use App\Helpers\Str;
 use App\Models\Webcam;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Webcam::class, function (Faker $faker) {
-    return [
-        'name' => $faker->sentence,
-    ];
-});
+class WebcamFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->sentence,
+        ];
+    }
 
-$factory->afterMaking(Webcam::class, function (Webcam $webcam, Faker $faker) {
-    $webcam->command ??= Str::slug($webcam->name ?? $faker->words(2, true));
-});
+    public function configure()
+    {
+        return $this->afterMaking(function (Webcam $webcam) {
+            $webcam->command ??= Str::slug($webcam->name ?? $this->faker->words(2, true));
+        });
+    }
+}

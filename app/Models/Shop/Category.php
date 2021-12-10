@@ -8,6 +8,7 @@ use App\Fluent\Image;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +41,7 @@ use Illuminate\Support\Facades\URL;
  */
 class Category extends Model
 {
+    use HasFactory;
     use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;

@@ -10,6 +10,7 @@ use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Models\Traits\HasPayments;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,6 +70,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Enrollment extends UuidModel implements Payable
 {
+    use HasFactory;
     use HasPayments;
     use HasStates;
     use SoftDeletes;

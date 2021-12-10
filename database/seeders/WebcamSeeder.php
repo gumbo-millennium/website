@@ -17,17 +17,17 @@ class WebcamSeeder extends Seeder
     public function run(Faker $faker): void
     {
         // Make cams
-        $cams = factory(Webcam::class, 3)->create();
+        $cams = Webcam::factory(3)->create();
 
         // Make updates for each cam
         foreach ($cams as $cam) {
-            factory(WebcamUpdate::class, $faker->numberBetween(5, 100))->create([
+            WebcamUpdate::factory($faker->numberBetween(5, 100))->create([
                 'webcam_id' => $cam->id,
             ]);
 
             $images = $faker->numberBetween(5, 20);
             for ($i = 0; $i < $images; $i++) {
-                factory(WebcamUpdate::class)->state('with-image')->create([
+                WebcamUpdate::factory()->withImage()->create([
                     'webcam_id' => $cam->id,
                     'created_at' => $date = $faker->dateTimeBetween('-1 day', 'now'),
                     'updated_at' => $date,

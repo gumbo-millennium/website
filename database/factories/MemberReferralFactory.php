@@ -2,12 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Models\MemberReferral;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(MemberReferral::class, static function (Faker $faker) {
-    return [
-        'subject' => $faker->firstName,
-        'referred_by' => $faker->name,
-    ];
-});
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class MemberReferralFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'subject' => $this->faker->firstName,
+            'referred_by' => $this->faker->name,
+        ];
+    }
+}

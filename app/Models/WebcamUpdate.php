@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Date;
@@ -29,6 +30,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class WebcamUpdate extends Model
 {
+    use HasFactory;
+
     public const STORAGE_LOCATION = 'webcam_updates/images';
 
     /**

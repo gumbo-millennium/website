@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\File;
@@ -36,6 +37,8 @@ use Illuminate\Support\Str;
  */
 class FileExport extends Model implements Responsable
 {
+    use HasFactory;
+
     private const TARGET_DIR = 'private/exports';
 
     /**

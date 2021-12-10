@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 
@@ -37,6 +38,8 @@ use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
  */
 class JoinSubmission extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that should be cast.
      *

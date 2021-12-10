@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
+use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -29,7 +30,7 @@ class ActivitySeeder extends Seeder
      */
     private function seedTestingEvents(): void
     {
-        $faker = App::make(\Faker\Generator::class);
+        $faker = App::make(Faker::class);
 
         $sets = [
             'private-free' => [[true, null]],
@@ -58,7 +59,7 @@ class ActivitySeeder extends Seeder
                 continue;
             }
 
-            $activity = factory(Activity::class)->states(['with-image'])->create([
+            $activity = Activity::factory()->withImage()->create([
                 'name' => "[test] {$name}",
                 'slug' => $slug,
                 'tagline' => optional($faker)->sentence,
@@ -85,7 +86,7 @@ class ActivitySeeder extends Seeder
 
         // Seed an activity with a form
         if (! Activity::query()->whereSlug('with-form')->exists()) {
-            $activity = factory(Activity::class)->states(['with-image', 'with-form'])->create([
+            $activity = Activity::factory()->withImage()->withForm()->create([
                 'name' => '[test] With Form',
                 'slug' => 'with-form',
                 'tagline' => optional($faker)->sentence,
@@ -94,14 +95,14 @@ class ActivitySeeder extends Seeder
             ]);
 
             $activity->tickets()->saveMany([
-                factory(Ticket::class)->make([
+                Ticket::factory()->make([
                     'price' => 25_00,
                 ]),
-                factory(Ticket::class)->states(['private'])->make([
+                Ticket::factory()->private()->make([
                     'quantity' => 5,
                     'price' => 10_00,
                 ]),
-                factory(Ticket::class)->states(['private'])->make([
+                Ticket::factory()->private()->make([
                     'price' => 15_00,
                 ]),
             ]);

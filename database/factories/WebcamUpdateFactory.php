@@ -2,29 +2,40 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
 use App\Models\WebcamUpdate;
-use Faker\Generator as Faker;
-use Illuminate\Http\File;
+use Database\Factories\Traits\HasFileFinder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 
-$factory->define(WebcamUpdate::class, function (Faker $faker) {
-    return [
-        'ip' => $faker->randomElement([$faker->ipv4, $faker->ipv6]),
-        'user_agent' => $faker->userAgent,
+class WebcamUpdateFactory extends Factory
+{
+    use HasFileFinder;
 
-        'created_at' => $date = $faker->dateTimeBetween('-3 hours', '-30 min'),
-        'updated_at' => $date,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'ip' => $this->faker->randomElement([$this->faker->ipv4, $this->faker->ipv6]),
+            'user_agent' => $this->faker->userAgent,
 
-$factory->afterMakingState(WebcamUpdate::class, 'with-image', function (WebcamUpdate $webcamUpdate, Faker $faker) {
-    $image = new File(resource_path($faker->randomElement([
-        'test-assets/images/squares/square-red.png',
-        'test-assets/images/squares/square-green.png',
-        'test-assets/images/squares/square-blue.png',
-        'test-assets/images/squares/square-orange.png',
-        'test-assets/images/squares/square-yellow.png',
-    ])));
+            'created_at' => $date = $this->faker->dateTimeBetween('-3 hours', '-30 min'),
+            'updated_at' => $date,
+        ];
+    }
 
-    $webcamUpdate->path = Storage::putFile(WebcamUpdate::STORAGE_LOCATION, $image);
-});
+    public function withImage()
+    {
+        return $this->afterMaking(function (WebcamUpdate $webcamUpdate) {
+            $webcamUpdate->path = Storage::putFile(
+                WebcamUpdate::STORAGE_LOCATION,
+                $this->findFiles('test-assets/images/squares', 'png')->random(),
+            );
+        });
+    }
+}

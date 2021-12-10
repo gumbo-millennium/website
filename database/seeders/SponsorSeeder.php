@@ -21,8 +21,8 @@ class SponsorSeeder extends Seeder
         Sponsor::unsetEventDispatcher();
 
         // Make sponsor
-        factory(Sponsor::class, 15)->create([
-            'slug' => static fn () => (string) Str::uuid(),
+        Sponsor::factory(15)->create([
+            'slug' => fn () => (string) Str::uuid(),
         ]);
     }
 }

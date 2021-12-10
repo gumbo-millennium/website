@@ -16,22 +16,24 @@ class BotQuoteSeeder extends Seeder
      */
     public function run(Generator $faker): void
     {
-        factory(BotQuote::class, 70)->state('sent')->create([
+        BotQuote::factory()->times(70)->sent()->create([
             'user_id' => null,
         ]);
-        factory(BotQuote::class, 15)->create([
+        BotQuote::factory()->times(15)->create([
             'user_id' => null,
         ]);
 
         foreach (User::query()->where('email', 'like', '%@example.gumbo-millennium.nl')->get() as $user) {
-            factory(BotQuote::class)
+            BotQuote::factory()
                 ->times($faker->numberBetween(1, 30))
-                ->state('sent')
-                ->create(['user_id' => null]);
+                ->sent()
+                ->for($user)
+                ->create();
 
-            factory(BotQuote::class)
+            BotQuote::factory()
                 ->times($faker->numberBetween(1, 5))
-                ->create(['user_id' => null]);
+                ->for($user)
+                ->create();
         }
     }
 }

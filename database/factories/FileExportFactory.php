@@ -2,40 +2,56 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
 use App\Models\FileExport;
 use App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
+use RuntimeException;
 
-$factory->define(FileExport::class, static function (Faker $faker) {
-    return [
-        'urlkey' => $faker->uuid,
-        'expires_at' => $faker->dateTimeBetween('+1 week', '+1 month'),
-    ];
-});
-
-$factory->afterMaking(FileExport::class, static function (FileExport $export) {
-    $fakeFile = tempnam(sys_get_temp_dir(), 'test');
-
-    if (! file_put_contents($fakeFile, 'test')) {
-        throw new RuntimeException('Failed to create test file');
+class FileExportFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'urlkey' => $this->faker->uuid,
+            'expires_at' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
+        ];
     }
 
-    if (! $export->filename) {
-        $export->attachFile(new File($fakeFile));
+    public function configure()
+    {
+        $this->afterMaking(function (FileExport $export) {
+            $fakeFile = tempnam(sys_get_temp_dir(), 'test');
+
+            if (! file_put_contents($fakeFile, 'test')) {
+                throw new RuntimeException('Failed to create test file');
+            }
+
+            if (! $export->filename) {
+                $export->attachFile(new File($fakeFile));
+            }
+
+            if (! $export->owner_id) {
+                $export->owner()->associate(
+                    User::query()->inRandomOrder()->first(),
+                );
+            }
+
+            return $export;
+        });
     }
 
-    if (! $export->owner_id) {
-        $export->owner()->associate(
-            User::query()->inRandomOrder()->first(),
-        );
+    public function expired()
+    {
+        return $this->state([
+            'expires_at' => $this->faker->dateTimeBetween('-1 year', '-1 second'),
+        ]);
     }
-
-    return $export;
-});
-
-$factory->state(FileExport::class, 'expired', static function (Faker $faker) {
-    return [
-        'expires_at' => $faker->dateTimeBetween('-1 year', '-1 second'),
-    ];
-});
+}

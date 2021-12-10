@@ -2,10 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Models\SponsorClick;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(SponsorClick::class, static fn (Faker $faker) => [
-    'count' => $faker->numberBetween(1, 500),
-    'date' => $faker->unique()->date(),
-]);
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class SponsorClickFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return  [
+            'count' => $this->faker->numberBetween(1, 500),
+            'date' => $this->faker->unique()->date(),
+        ];
+    }
+}

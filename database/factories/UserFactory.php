@@ -2,24 +2,29 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
 use App\Helpers\Str;
-use App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
-$randomGenders = [
-    'Man',
-    'Vrouw',
-    'Onbekend',
-    'Apache Gevechtshelikopter',
-    'Aggressieve wasbeer',
-];
-
-$factory->define(User::class, static fn (Faker $faker) => [
-    'telegram_id' => $faker->optional(0.8)->numerify(str_repeat('#', 31)),
-    'first_name' => $faker->firstName,
-    'last_name' => $faker->lastName,
-    'email' => $faker->unique()->safeEmail,
-    'gender' => $faker->randomElement($randomGenders),
-    'password' => password_hash('password', PASSWORD_DEFAULT), // password
-    'remember_token' => Str::random(10),
-]);
+class UserFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'telegram_id' => $this->faker->optional(0.8)->numerify(str_repeat('#', 31)),
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'email' => $this->faker->unique()->safeEmail,
+            'gender' => $this->faker->randomElement(['Man', 'Vrouw', null]),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ];
+    }
+}

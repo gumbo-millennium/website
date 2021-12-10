@@ -2,23 +2,36 @@
 
 declare(strict_types=1);
 
-use App\Models\BotQuote;
+namespace Database\Factories;
+
 use App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(BotQuote::class, static function (Faker $faker) {
-    $createdAt = $faker->dateTimeBetween('-5 months', '+4 weeks');
+class BotQuoteFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $createdAt = $this->faker->dateTimeBetween('-5 months', '+4 weeks');
 
-    return [
-        'created_at' => $createdAt,
-        'updated_at' => $createdAt,
-        'submitted_at' => null,
-        'user_id' => $faker->optional(0.4)->passthrough(User::inRandomOrder()->first(['id'])->id),
-        'display_name' => $faker->name,
-        'quote' => $faker->sentence,
-    ];
-});
+        return [
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
+            'submitted_at' => null,
+            'user_id' => $this->faker->optional(0.4)->passthrough(User::inRandomOrder()->first(['id'])->id),
+            'display_name' => $this->faker->name,
+            'quote' => $this->faker->sentence,
+        ];
+    }
 
-$factory->state(BotQuote::class, 'sent', static fn (Faker $faker) => [
-    'submitted_at' => $faker->dateTimeBetween('-5 months', 'now'),
-]);
+    public function sent()
+    {
+        return $this->state([
+            'submitted_at' => $this->faker->dateTimeBetween('-5 months', 'now'),
+        ]);
+    }
+}

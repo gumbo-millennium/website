@@ -2,126 +2,168 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
-use Faker\Generator as Faker;
-use Illuminate\Support\Carbon;
+use Database\Factories\Traits\HasFileFinder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 
-$scandir = require __DIR__ . '/../helpers/files.php';
-$imageOptions = $scandir('test-assets/images', 'jpg');
+class ActivityFactory extends Factory
+{
+    use HasFileFinder;
 
-$factory->define(Activity::class, static function (Faker $faker) {
-    $eventStart = $faker->dateTimeBetween(today()->addDay(1), today()->addYear(1));
-    $eventStartCarbon = Carbon::instance($eventStart)->toImmutable();
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $eventStart = $this->faker->dateTimeBetween(today()->addDay(1), today()->addYear(1));
+        $eventStartCarbon = Date::instance($eventStart)->toImmutable();
 
-    $eventEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(2), $eventStartCarbon->addHours(8));
-    $eventEndCarbon = Carbon::instance($eventEnd)->toImmutable();
+        $eventEnd = $this->faker->dateTimeBetween($eventStartCarbon->addHours(2), $eventStartCarbon->addHours(8));
+        $eventEndCarbon = Date::instance($eventEnd)->toImmutable();
 
-    $enrollStart = $faker->dateTimeBetween($eventStartCarbon->subWeeks(4), $eventStartCarbon);
-    $enrollStartCarbon = Carbon::instance($enrollStart)->toImmutable();
+        $enrollStart = $this->faker->dateTimeBetween($eventStartCarbon->subWeeks(4), $eventStartCarbon);
+        $enrollStartCarbon = Date::instance($enrollStart)->toImmutable();
 
-    $enrollEnd = $faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
-    $enrollEndCarbon = Carbon::instance($enrollEnd)->toImmutable();
+        $enrollEnd = $this->faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
+        $enrollEndCarbon = Date::instance($enrollEnd)->toImmutable();
 
-    return [
-        // Sometimes add a publish date
-        'published_at' => $faker->optional()->dateTimeBetween('-1 year', '-5 minutes'),
+        return [
+            // Sometimes add a publish date
+            'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', '-5 minutes'),
 
-        // Labels
-        'name' => $faker->words(4, true),
-        'tagline' => $faker->sentence($faker->numberBetween(3, 8)),
+            // Labels
+            'name' => $this->faker->words(4, true),
+            'tagline' => $this->faker->sentence($this->faker->numberBetween(3, 8)),
 
-        // Dates
-        'start_date' => $eventStartCarbon,
-        'end_date' => $eventEndCarbon,
-        'enrollment_start' => $enrollStartCarbon,
-        'enrollment_end' => $enrollEndCarbon,
+            // Dates
+            'start_date' => $eventStartCarbon,
+            'end_date' => $eventEndCarbon,
+            'enrollment_start' => $enrollStartCarbon,
+            'enrollment_end' => $enrollEndCarbon,
 
-        // Mark public by default
-        'is_public' => true,
+            // Mark public by default
+            'is_public' => true,
 
-        // Location
-        'location' => $faker->company,
-        'location_address' => $faker->randomElement([$faker->address, $faker->url]),
-    ];
-});
-
-$factory->state(Activity::class, 'cancelled', fn (Faker $faker) => [
-    'cancelled_at' => $faker->dateTimeBetween('-1 month', 'now'),
-]);
-
-$factory->state(Activity::class, 'with-seats', fn (Faker $faker) => [
-    'seats' => $faker->numberBetween(4, 80),
-]);
-
-$factory->state(Activity::class, 'public', fn () => [
-    'is_public' => true,
-]);
-
-$factory->state(Activity::class, 'private', fn () => [
-    'is_public' => false,
-]);
-
-$factory->state(Activity::class, 'postponed', fn (Faker $faker) => [
-    'postponed_at' => $faker->dateTimeBetween('-2 weeks', '+2 weeks'),
-    'postponed_reason' => $faker->optional(0.80)->sentence,
-]);
-
-$factory->state(Activity::class, 'unpublished', static fn (Faker $faker) => [
-    'published_at' => $faker->dateTimeBetween('+1 minute', '+4 weeks'),
-]);
-
-$factory->afterMakingState(Activity::class, 'with-form', function (Activity $activity, Faker $faker) {
-    $fieldCount = $faker->numberBetween(1, 5);
-
-    $fields = [];
-    for ($i = 0; $i < $fieldCount; $i++) {
-        $layout = $faker->randomElement([
-            'text-field',
-            'email',
-            'phone',
-            'content',
-        ]);
-
-        $attributes = [
-            'help' => $faker->optional()->sentence(),
-            'label' => $faker->sentence(),
-            'required' => $faker->boolean(),
-        ];
-
-        if ($layout === 'content') {
-            $attributes = [
-                'title' => $faker->sentence(),
-                'content' => $faker->paragraphs(3, true),
-            ];
-        }
-
-        $fields[] = [
-            'key' => Str::random(16),
-            'layout' => $layout,
-            'attributes' => $attributes,
+            // Location
+            'location' => $this->faker->company,
+            'location_address' => $this->faker->randomElement([$this->faker->address, $this->faker->url]),
         ];
     }
 
-    $activity->enrollment_questions = $fields;
-});
+    public function cancelled()
+    {
+        return $this->state([
+            'cancelled_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
+        ]);
+    }
 
-$factory->afterMakingState(Activity::class, 'rescheduled', fn (Activity $activity, Faker $faker) => [
-    'rescheduled_from' => $faker->dateTimeBetween(
-        (clone $activity->start_date)->subMonth(),
-        $activity->start_date,
-    ),
-    'rescheduled_reason' => $faker->optional(0.80)->sentence,
-]);
+    public function withSeats()
+    {
+        return $this->state([
+            'seats' => $this->faker->numberBetween(4, 80),
+        ]);
+    }
 
-$factory->afterMakingState(Activity::class, 'with-image', function (Activity $activity) use ($imageOptions) {
-    $activity->poster = Storage::disk('public')->putFile('seeded/activities/', $imageOptions->random());
-});
+    public function public()
+    {
+        return $this->state([
+            'is_public' => true,
+        ]);
+    }
 
-$factory->afterCreatingState(Activity::class, 'with-tickets', function (Activity $activity) {
-    $activity->tickets()->saveMany([
-        factory(Ticket::class)->make(),
-        factory(Ticket::class)->state('private')->make(),
-    ]);
-});
+    public function private()
+    {
+        return $this->state([
+            'is_public' => false,
+        ]);
+    }
+
+    public function postponed()
+    {
+        return $this->state([
+            'postponed_at' => $this->faker->dateTimeBetween('-2 weeks', '+2 weeks'),
+            'postponed_reason' => $this->faker->optional(0.80)->sentence,
+        ]);
+    }
+
+    public function unpublished()
+    {
+        return $this->state([
+            'published_at' => $this->faker->dateTimeBetween('+1 minute', '+4 weeks'),
+        ]);
+    }
+
+    public function withForm()
+    {
+        $this->afterMaking(function (Activity $activity) {
+            $fieldCount = $this->faker->numberBetween(1, 5);
+
+            $fields = [];
+            for ($i = 0; $i < $fieldCount; $i++) {
+                $layout = $this->faker->randomElement([
+                    'text-field',
+                    'email',
+                    'phone',
+                    'content',
+                ]);
+
+                $attributes = [
+                    'help' => $this->faker->optional()->sentence(),
+                    'label' => $this->faker->sentence(),
+                    'required' => $this->faker->boolean(),
+                ];
+
+                if ($layout === 'content') {
+                    $attributes = [
+                        'title' => $this->faker->sentence(),
+                        'content' => $this->faker->paragraphs(3, true),
+                    ];
+                }
+
+                $fields[] = [
+                    'key' => Str::random(16),
+                    'layout' => $layout,
+                    'attributes' => $attributes,
+                ];
+            }
+
+            $activity->enrollment_questions = $fields;
+        });
+    }
+
+    public function rescheduled()
+    {
+        return $this->afterMakingState(function (Activity $activity) {
+            $activity->rescheduled_from = $this->faker->dateTimeBetween(
+                (clone $activity->start_date)->subMonth(),
+                $activity->start_date,
+            );
+            $activity->rescheduled_reason = $this->faker->optional(0.80)->sentence;
+        });
+    }
+
+    public function withImage()
+    {
+        return $this->afterMakingState(function (Activity $activity) {
+            $activity->poster = Storage::disk('public')->putFile('seeded/activities/', $this->findImages('test-assets/images')->random());
+        });
+    }
+
+    public function withTickets()
+    {
+        return $this->afterCreatingState(function (Activity $activity) {
+            $activity->tickets()->saveMany([
+                Ticket::factory()->make(),
+                Ticket::factory()->private()->make(),
+            ]);
+        });
+    }
+}

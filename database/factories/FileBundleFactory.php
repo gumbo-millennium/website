@@ -2,19 +2,33 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
 use App\Models\FileBundle;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
 
-// Create instance
-$factory->define(FileBundle::class, fn (Faker $faker) => [
-    'title' => "[test bundle] {$faker->sentence}",
-    'published_at' => $faker->optional(0.4)->dateTimeBetween(now()->subYear(), now()->addWeek()),
-]);
+class FileBundleFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'title' => "[test bundle] {$this->faker->sentence}",
+            'published_at' => $this->faker->optional(0.4)->dateTimeBetween(now()->subYear(), now()->addWeek()),
+        ];
+    }
 
-// Attach chicken
-$factory->afterMakingState(FileBundle::class, 'with-file', function (FileBundle $bundle) {
-    $bundle->addMedia(new File(resource_path('test-assets/pdf/chicken.pdf')))
-        ->preservingOriginal()
-        ->toMediaCollection();
-});
+    public function withFile()
+    {
+        $this->afterMaking(function (FileBundle $bundle) {
+            $bundle->addMedia(new File(resource_path('test-assets/pdf/chicken.pdf')))
+                ->preservingOriginal()
+                ->toMediaCollection();
+        });
+    }
+}

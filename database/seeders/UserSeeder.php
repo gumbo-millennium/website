@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         $this->makeUser('event-owner', 'Event Owner', ['member']);
 
         // Add more users
-        factory(User::class, 25)->create();
+        User::factory(25)->create();
     }
 
     /**

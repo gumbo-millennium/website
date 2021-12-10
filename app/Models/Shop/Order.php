@@ -10,6 +10,7 @@ use App\Fluent\Payment as PaymentFluent;
 use App\Models\Traits\HasPayments;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -49,6 +50,7 @@ use RuntimeException;
  */
 class Order extends Model implements Payable
 {
+    use HasFactory;
     use HasPayments;
 
     protected $table = 'shop_orders';

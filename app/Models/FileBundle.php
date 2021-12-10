@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -43,6 +44,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class FileBundle extends SluggableModel implements HasMedia
 {
+    use HasFactory;
     use InteractsWithMedia;
     use Searchable;
 

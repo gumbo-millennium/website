@@ -2,66 +2,71 @@
 
 declare(strict_types=1);
 
+namespace Database\Factories;
+
 use App\Models\Sponsor;
 use App\Models\SponsorClick;
-use Faker\Generator as Faker;
+use Database\Factories\Traits\HasEditorjs;
+use Database\Factories\Traits\HasFileFinder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 
-// Get sponsor directory
-$scandir = require __DIR__ . '/../helpers/files.php';
-$colorSponsors = $scandir('test-assets/images/logos/src/logos/color', 'svg');
-$grayscaleSponsors = $scandir('test-assets/images/logos/src/logos/grayscale', 'svg');
-$backdropImage = $scandir('test-assets/images', 'jpg');
-$editorjs = require __DIR__ . '/../helpers/editorjs.php';
+class SponsorFactory extends Factory
+{
+    use HasEditorjs;
+    use HasFileFinder;
 
-// Generate sponsor
-// phpcs:ignore Generic.Files.LineLength.TooLong
-$factory->define(Sponsor::class, static function (Faker $faker) use ($colorSponsors, $grayscaleSponsors, $backdropImage, $editorjs) {
-    // Add start and end date
-    $startDate = $faker->dateTimeBetween('-6 months', '+6 months');
-    $endDate = (clone $startDate)->add($faker->dateTimeThisMonth()->diff(now()));
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        // Get sponsor imagery
+        $colorSponsors = $this->findFiles('test-assets/images/logos/src/logos/color', 'svg');
+        $grayscaleSponsors = $this->findFiles('test-assets/images/logos/src/logos/grayscale', 'svg');
 
-    // Remove end date in 50% of the time
-    if ($faker->boolean) {
-        $endDate = null;
+        // Copy logo's to filesystem
+        $colorLogo = Storage::disk(Sponsor::LOGO_DISK)
+            ->putFile(Sponsor::LOGO_PATH, $colorSponsors->random());
+        $grayscaleLogo = Storage::disk(Sponsor::LOGO_DISK)
+            ->putFile(Sponsor::LOGO_PATH, $grayscaleSponsors->random());
+
+        // Build base data
+        $data = [
+            'name' => $this->faker->company,
+            'url' => $this->faker->url,
+            'starts_at' => $this->faker->dateTimeBetween('-1 year', '-1 day'),
+            'logo_gray' => $grayscaleLogo,
+            'logo_color' => $colorLogo,
+        ];
+
+        // Add contents and associated title
+        if ($this->faker->boolean(50)) {
+            $data['contents_title'] = $this->faker->sentence;
+            $data['contents'] = json_encode($this->getEditorBlock());
+        }
+
+        // Done :)
+        return $data;
     }
 
-    // Copy logo's to filesystem
-    $colorLogo = Storage::disk(Sponsor::LOGO_DISK)
-        ->putFile(Sponsor::LOGO_PATH, $faker->randomElement($colorSponsors));
-    $grayscaleLogo = Storage::disk(Sponsor::LOGO_DISK)
-        ->putFile(Sponsor::LOGO_PATH, $faker->randomElement($grayscaleSponsors));
+    public function hasBackdrop()
+    {
+        $backdropImage = $this->findImages('test-assets/images');
 
-    // Build base data
-    $data = [
-        'deleted_at' => $faker->optional(0.2)->passthrough(now()),
-        'name' => $faker->company,
-        'url' => $faker->url,
-        'starts_at' => $startDate,
-        'ends_at' => $endDate,
-        'logo_gray' => $grayscaleLogo,
-        'logo_color' => $colorLogo,
-    ];
-
-    // Add backdrop and caption if possible
-    if ($faker->boolean(75)) {
-        $data['caption'] = $faker->sentence;
-        $data['cover'] = Storage::disk('public')
-            ->putFile('seeded/sponsors', $faker->randomElement($backdropImage));
+        // Add backdrop and caption
+        return $this->state([
+            'caption' => $this->faker->sentence,
+        ])->afterMaking(function (Sponsor $sponsor) use ($backdropImage) {
+            $sponsor->cover = Storage::disk('public')
+                ->putFile('seeded/sponsors', $backdropImage->random());
+        });
     }
 
-    // Add contents and associated title
-    if ($faker->boolean(50)) {
-        $data['contents_title'] = $faker->sentence;
-        $data['contents'] = \json_encode($editorjs($faker));
+    public function configure()
+    {
+        return $this->has(SponsorClick::factory()->times(10));
     }
-
-    // Done :)
-    return $data;
-});
-
-$factory->afterCreating(Sponsor::class, static function (Sponsor $sponsor) {
-    factory(SponsorClick::class, 10)->create([
-        'sponsor_id' => $sponsor->id,
-    ]);
-});
+}

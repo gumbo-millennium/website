@@ -9,6 +9,7 @@ use App\Helpers\Str;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -56,6 +57,7 @@ use Illuminate\Support\HtmlString;
  */
 class ProductVariant extends Model
 {
+    use HasFactory;
     use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;

@@ -2,9 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Models\FileCategory;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(FileCategory::class, static fn (Faker $faker) => [
-    'title' => "[test category] {$faker->sentence}",
-]);
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class FileCategoryFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'title' => "[test category] {$this->faker->sentence}",
+        ];
+    }
+}
