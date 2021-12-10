@@ -69,7 +69,6 @@
     },
     "autoload": {
         "classmap": [
-            "database/seeds",
             "database/factories"
         ],
         "files": [
@@ -78,7 +77,7 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Migrations\\": "database/migrations/",
-            "Database\\Seeds\\": "database/seeds/"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {

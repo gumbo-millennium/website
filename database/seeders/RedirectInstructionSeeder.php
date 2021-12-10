@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
+use App\Helpers\Arr;
+use App\Helpers\Str;
 use App\Models\RedirectInstruction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\URL;

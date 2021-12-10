@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use Illuminate\Console\OutputStyle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;

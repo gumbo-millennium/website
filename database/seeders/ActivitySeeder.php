@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 
 class ActivitySeeder extends Seeder
 {

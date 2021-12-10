@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Models\Shop\Category;
 use App\Models\Shop\Order;
 use App\Models\Shop\OrderProduct;

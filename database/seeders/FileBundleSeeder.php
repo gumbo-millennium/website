@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Models\FileBundle;
 use App\Models\FileCategory;
 use Illuminate\Database\Seeder;

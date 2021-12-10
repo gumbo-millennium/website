@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Models\Webcam;
 use App\Models\WebcamUpdate;
 use Faker\Generator as Faker;

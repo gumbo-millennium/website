@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Helpers\Str;
 use App\Models\Sponsor;
 use Illuminate\Database\Seeder;
