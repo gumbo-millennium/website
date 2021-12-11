@@ -95,21 +95,6 @@
         "post-create-project-cmd": [
             "@php artisan key:generate"
         ],
-        "install-nova-zip": [
-            "git ls-files library/composer/nova | xargs git update-index --assume-unchanged",
-            "echo 'library/composer/nova' >> .git/info/exclude",
-            "rm -rf library/composer/nova/",
-            "unzip nova.zip",
-            "mv laravel-nova-* library/composer/nova",
-            "touch library/composer/nova/src/aliases.php",
-            "composer install"
-        ],
-        "remove-nova": [
-            "git checkout library/composer/nova",
-            "git clean -dfx library/composer/nova",
-            "git ls-files library/composer/nova | xargs git update-index --no-assume-unchanged",
-            "composer install"
-        ],
         "post-install-cmd": [
             "@php artisan vendor:publish --tag=nova-assets || true",
             "@php artisan horizon:publish",
@@ -164,7 +149,6 @@
         }
     },
     "scripts-descriptions": {
-        "install-nova-zip": "Installs Laravel Nova from a nova.zip file in the project root"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -178,8 +162,8 @@
             "url": "https://github.com/gumbo-millennium/izettle-api.git"
         },
         {
-            "type": "path",
-            "url": "./library/composer/nova"
+            "type": "composer",
+            "url": "https://nova.laravel.com"
         }
     ]
 }

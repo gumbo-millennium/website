@@ -6,18 +6,7 @@ use function Deployer\desc;
 use function Deployer\run;
 use function Deployer\task;
 use function Deployer\upload;
-use function Deployer\within;
 use function Deployer\writeln;
-
-desc('Replaces the dummy Laravel Nova package with the real deal');
-task('gumbo:replace-nova', function () {
-    within('{{release_path}}/library/composer', function () {
-        run('rm -rf nova');
-        run('unzip -o {{nova_zip}}');
-        run('mv laravel-nova-* nova');
-        run('touch nova/src/aliases.php');
-    });
-});
 
 desc('Execute artisan horizon:pause');
 task('gumbo:horizon:pause', function () {

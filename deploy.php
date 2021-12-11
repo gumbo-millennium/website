@@ -18,9 +18,6 @@ set('repository', 'https://github.com/gumbo-millennium/website.git');
 // Disable recursive git pull, since it's only for test data
 set('git_recursive', false);
 
-// Set the Nova path
-set('nova_zip', '~/nova.zip');
-
 // Shared files/dirs between deploys, merged with the Laravel recipe
 add('shared_files', []);
 add('shared_dirs', []);
@@ -40,7 +37,6 @@ task('deploy', [
     'deploy:release',
     'deploy:update_code',
     'deploy:shared',
-    'gumbo:replace-nova', // Replace the nova dummy with a live install
     'deploy:vendors',
     'gumbo:front-end', // Upload compiled front-end
     'deploy:writable',

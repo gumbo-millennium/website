@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28ad76770e3651e55d1e91c73bd50661",
+    "content-hash": "8aca6389bb75397c91166c6c5b517928",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -3314,10 +3314,16 @@
         {
             "name": "laravel/nova",
             "version": "3.30.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:laravel/nova.git",
+                "reference": "0a8ec5b37dc3ca29f4b79c7318c9278e5a5d2c1a"
+            },
             "dist": {
-                "type": "path",
-                "url": "./library/composer/nova",
-                "reference": "16e1b68b0cd5131db3e6c3c967b254ff5750eee0"
+                "type": "zip",
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-0a8ec5b37dc3ca29f4b79c7318c9278e5a5d2c1a-zip-7e4351.zip",
+                "reference": "0a8ec5b37dc3ca29f4b79c7318c9278e5a5d2c1a",
+                "shasum": "e7ac64939c9b64726f89219af065d170a4d340bb"
             },
             "require": {
                 "brick/money": "^0.5.0",
@@ -3395,9 +3401,10 @@
                 "admin",
                 "laravel"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/laravel/nova/tree/v3.30.0"
+            },
+            "time": "2021-10-19T20:42:33+00:00"
         },
         {
             "name": "laravel/scout",
