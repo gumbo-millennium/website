@@ -97,23 +97,10 @@ jobs:
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: pcov
 
-      - name: Configure Imagick PDF policy
-        run:
-          sudo sed
-            --in-place
-            's/<policy domain="coder" rights="none" pattern="PDF" \/>/<policy domain="coder" rights="read" pattern="PDF" \/>/'
-            /etc/ImageMagick*/policy.xml
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           submodules: true
-
-      - name: Setup NodeJS and cache
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          cache: 'npm'
 
       - name: Copy environment config
         run: cp .github/actions.env .env
@@ -126,8 +113,8 @@ jobs:
         with:
           composer-options: "--ignore-platform-req=php"
 
-      - name: Install Node dependencies
-        run: npm clean-install
+      - name: Install an application key
+        run: php artisan key:generate
 
       - name: Wait for MySQL to get ready
         timeout-minutes: 5
@@ -139,12 +126,6 @@ jobs:
 
       - name: Prepare database
         run: php artisan migrate --seed
-
-      - name: Install an application key
-        run: php artisan key:generate
-
-      - name: Install Font Awesome icons
-        run: npm run postinstall
 
       - name: Test optimizing the config
         run: |
