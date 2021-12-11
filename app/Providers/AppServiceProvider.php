@@ -16,6 +16,7 @@ use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -109,19 +110,16 @@ class AppServiceProvider extends ServiceProvider
             'success' => 'notice notice--brand',
         ]);
 
-        // Bind feature config
-        $this->mapFeatures();
-
-        // Registrer Laravel Nova
-        $this->registerNova();
+        // Load feature config
+        $this->registerFeatureConfig();
     }
 
     /**
      * Maps features from Yaml files to config.
      */
-    private function mapFeatures(): void
+    private function registerFeatureConfig(): void
     {
-        if ($this->app->configurationIsCached()) {
+        if (App::configurationIsCached()) {
             return;
         }
 
@@ -142,26 +140,5 @@ class AppServiceProvider extends ServiceProvider
                 Config::set("{$configKey}.{$feature}", $options);
             }
         }
-    }
-
-    /**
-     * Safely registers Nova if it's enabled and available.
-     */
-    private function registerNova(): void
-    {
-        // Check if Nova is enabled to begin with
-        if (! Config::get('services.features.enable-nova')) {
-            return;
-        }
-
-        // Check if Nova is available, disable if not
-        if (! class_exists(\Laravel\Nova\NovaServiceProvider::class)) {
-            Config::set('services.features.enable-nova', false);
-
-            return;
-        }
-
-        // Load Nova service provider
-        $this->app->register(NovaServiceProvider::class);
     }
 }

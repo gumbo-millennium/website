@@ -15,7 +15,6 @@ use App\Models\Page;
 use App\Models\Payment;
 use App\Models\Sponsor;
 use App\Models\User;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Handles authorisation for users entering admin areas.
@@ -27,11 +26,6 @@ class AdminGate
      */
     public function nova(User $user): bool
     {
-        // Disallow if nova isn't available
-        if (! Config::get('services.features.enable-nova')) {
-            return false;
-        }
-
         return $user->can('create', Activity::class)
             || $user->can('manage', Activity::class)
             || $user->can('manage', File::class)

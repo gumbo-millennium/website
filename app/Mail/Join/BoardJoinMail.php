@@ -6,7 +6,6 @@ namespace App\Mail\Join;
 
 use App\Models\JoinSubmission;
 use App\Nova\Resources\JoinSubmission as NovaJoinSubmission;
-use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Nova;
 
 /**
@@ -26,18 +25,13 @@ class BoardJoinMail extends BaseJoinMail
      */
     public function build()
     {
-        // Add link to admin panel
-        $actionUrl = secure_url('/admin');
-
-        // Add precise link to admin panel if Nova is enabled
-        if (Config::get('services.features.enable-nova')) {
-            $actionUrl = implode('/', [
-                secure_url(Nova::path()),
-                'resources',
-                NovaJoinSubmission::uriKey(),
-                $this->submission->id,
-            ]);
-        }
+        // Add precise link to admin panel
+        $actionUrl = implode('/', [
+            secure_url(Nova::path()),
+            'resources',
+            NovaJoinSubmission::uriKey(),
+            $this->submission->id,
+        ]);
 
         // Render view
         return $this->markdown('mail.join.board')->with(['actionUrl' => $actionUrl]);

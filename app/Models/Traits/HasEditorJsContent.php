@@ -6,7 +6,6 @@ namespace App\Models\Traits;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use JsonException;
 use Throwable;
@@ -40,11 +39,6 @@ trait HasEditorJsContent
         // Skip if empty
         if (empty($contents)) {
             return null;
-        }
-
-        // Return JSON as-is when Nova is not available
-        if (! Config::get('services.features.enable-nova')) {
-            return $this->renderConvertToHtmlError();
         }
 
         // Clean up contents
