@@ -106,7 +106,7 @@ jobs:
         run: cp .github/actions.env .env
 
       - name: Configure Laravel Nova auth
-        run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USER }}" "${{ secrets.NOVA_PASSWORD }}"
+        run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v1

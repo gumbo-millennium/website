@@ -70,7 +70,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Laravel Nova auth
-        run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USER }}" "${{ secrets.NOVA_PASSWORD }}"
+        run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
 
       - name: Run Contribute command
         run: composer run contribute
