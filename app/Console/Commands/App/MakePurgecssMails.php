@@ -127,20 +127,22 @@ class MakePurgecssMails extends Command
     public function seedModels(): array
     {
         // Get activity
-        $activity = \factory(Activity::class, 1)->create()->first();
+        $activity = Activity::factory()->create();
 
         // Get user
-        $user = \factory(User::class, 1)->create()->first();
+        $user = User::factory()->create();
 
         // Enroll user into activity
-        $enrollment = \factory(Enrollment::class, 1)->create([
-            'activity_id' => $activity->id,
-            'user_id' => $user->id,
-        ])->first();
+        $enrollment = Enrollment::factory()->for($activity)->for($user)->create();
 
         // Get a join submission
-        $joinSubmission = \factory(JoinSubmission::class, 1)->create()->first();
+        $joinSubmission = JoinSubmission::factory()->create();
 
-        return compact('activity', 'user', 'enrollment', 'joinSubmission');
+        return [
+            'activity' => $activity,
+            'user' => $user,
+            'enrollment' => $enrollment,
+            'joinSubmission' => $joinSubmission,
+        ];
     }
 }
