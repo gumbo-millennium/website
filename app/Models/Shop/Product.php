@@ -8,6 +8,7 @@ use App\Fluent\Image;
 use App\Helpers\Arr;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
+use Database\Factories\Shop\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -91,6 +92,16 @@ class Product extends Model
         'meta' => '[]',
         'features' => '[]',
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return new ProductFactory();
+    }
 
     public function sluggable(): array
     {

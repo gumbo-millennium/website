@@ -52,7 +52,7 @@ class SponsorFactory extends Factory
         return $data;
     }
 
-    public function hasBackdrop()
+    public function hasBackdrop(): self
     {
         $backdropImage = $this->findImages('test-assets/images');
 

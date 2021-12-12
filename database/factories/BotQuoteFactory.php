@@ -28,7 +28,7 @@ class BotQuoteFactory extends Factory
         ];
     }
 
-    public function sent()
+    public function sent(): self
     {
         return $this->state([
             'submitted_at' => $this->faker->dateTimeBetween('-5 months', 'now'),

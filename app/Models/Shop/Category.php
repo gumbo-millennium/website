@@ -7,6 +7,7 @@ namespace App\Models\Shop;
 use App\Fluent\Image;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
+use Database\Factories\Shop\CategoryFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +60,16 @@ class Category extends Model
         'meta' => '[]',
         'visible' => 0,
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return new CategoryFactory();
+    }
 
     /**
      * Returns a sluggable definition for this model.

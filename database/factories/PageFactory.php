@@ -27,14 +27,14 @@ class PageFactory extends Factory
         ];
     }
 
-    public function withSummary()
+    public function withSummary(): self
     {
         return $this->state([
             'summary' => $this->faker->sentence,
         ]);
     }
 
-    public function withContents()
+    public function withContents(): self
     {
         return $this->state([
             'blocks' => json_encode($this->getEditorBlocks()),

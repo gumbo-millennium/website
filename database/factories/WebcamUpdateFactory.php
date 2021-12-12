@@ -29,7 +29,7 @@ class WebcamUpdateFactory extends Factory
         ];
     }
 
-    public function withImage()
+    public function withImage(): self
     {
         return $this->afterMaking(function (WebcamUpdate $webcamUpdate) {
             $webcamUpdate->path = Storage::putFile(

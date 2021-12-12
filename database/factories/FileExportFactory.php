@@ -27,7 +27,7 @@ class FileExportFactory extends Factory
 
     public function configure()
     {
-        $this->afterMaking(function (FileExport $export) {
+        return $this->afterMaking(function (FileExport $export) {
             $fakeFile = tempnam(sys_get_temp_dir(), 'test');
 
             if (! file_put_contents($fakeFile, 'test')) {
@@ -48,7 +48,7 @@ class FileExportFactory extends Factory
         });
     }
 
-    public function expired()
+    public function expired(): self
     {
         return $this->state([
             'expires_at' => $this->faker->dateTimeBetween('-1 year', '-1 second'),

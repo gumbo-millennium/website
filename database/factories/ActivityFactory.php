@@ -58,35 +58,35 @@ class ActivityFactory extends Factory
         ];
     }
 
-    public function cancelled()
+    public function cancelled(): self
     {
         return $this->state([
             'cancelled_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
         ]);
     }
 
-    public function withSeats()
+    public function withSeats(): self
     {
         return $this->state([
             'seats' => $this->faker->numberBetween(4, 80),
         ]);
     }
 
-    public function public()
+    public function public(): self
     {
         return $this->state([
             'is_public' => true,
         ]);
     }
 
-    public function private()
+    public function private(): self
     {
         return $this->state([
             'is_public' => false,
         ]);
     }
 
-    public function postponed()
+    public function postponed(): self
     {
         return $this->state([
             'postponed_at' => $this->faker->dateTimeBetween('-2 weeks', '+2 weeks'),
@@ -94,16 +94,16 @@ class ActivityFactory extends Factory
         ]);
     }
 
-    public function unpublished()
+    public function unpublished(): self
     {
         return $this->state([
             'published_at' => $this->faker->dateTimeBetween('+1 minute', '+4 weeks'),
         ]);
     }
 
-    public function withForm()
+    public function withForm(): self
     {
-        $this->afterMaking(function (Activity $activity) {
+        return $this->afterMaking(function (Activity $activity) {
             $fieldCount = $this->faker->numberBetween(1, 5);
 
             $fields = [];
@@ -139,9 +139,9 @@ class ActivityFactory extends Factory
         });
     }
 
-    public function rescheduled()
+    public function rescheduled(): self
     {
-        return $this->afterMakingState(function (Activity $activity) {
+        return $this->afterMaking(function (Activity $activity) {
             $activity->rescheduled_from = $this->faker->dateTimeBetween(
                 (clone $activity->start_date)->subMonth(),
                 $activity->start_date,
@@ -150,16 +150,16 @@ class ActivityFactory extends Factory
         });
     }
 
-    public function withImage()
+    public function withImage(): self
     {
-        return $this->afterMakingState(function (Activity $activity) {
+        return $this->afterMaking(function (Activity $activity) {
             $activity->poster = Storage::disk('public')->putFile('seeded/activities/', $this->findImages('test-assets/images')->random());
         });
     }
 
-    public function withTickets()
+    public function withTickets(): self
     {
-        return $this->afterCreatingState(function (Activity $activity) {
+        return $this->afterCreating(function (Activity $activity) {
             $activity->tickets()->saveMany([
                 Ticket::factory()->make(),
                 Ticket::factory()->private()->make(),
