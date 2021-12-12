@@ -19,7 +19,7 @@ class CheckActivityFeatureMailsTest extends TestCase
     {
         Notification::fake();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'start_date' => Date::parse('2021-06-01 21:00:00'),
         ]);
 
@@ -37,7 +37,7 @@ class CheckActivityFeatureMailsTest extends TestCase
             'icon' => 'steve',
         ]);
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'start_date' => Date::parse('2021-06-01 21:00:00'),
             'features' => [
                 'test-123' => true,
@@ -55,7 +55,7 @@ class CheckActivityFeatureMailsTest extends TestCase
 
         Config::set('gumbo.activity-features.test-not-found', null);
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'start_date' => Date::parse('2021-06-01 21:00:00'),
             'features' => [
                 'test-not-found' => true,
@@ -85,7 +85,7 @@ class CheckActivityFeatureMailsTest extends TestCase
 
         Notification::fake();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'start_date' => Date::parse('2021-06-01 21:00:00'),
             'features' => [
                 'test-simple' => true,

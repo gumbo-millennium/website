@@ -12,47 +12,15 @@ use App\Models\User;
 trait ProvidesUsers
 {
     /**
-     * All users created during this request.
-     *
-     * @var array<User>
-     */
-    private $createdUsers = [];
-
-    /**
-     * Delete users after the class is done testing.
-     *
-     * @after
-     */
-    public function tearDownUsers(): void
-    {
-        // Edge case when queries are being monitored
-        $this->ensureApplicationExists();
-
-        // Delete users afterwards
-        foreach ($this->createdUsers as $user) {
-            $user->delete();
-        }
-    }
-
-    /**
      * Creates a user with the given roles.
      */
     public function getTemporaryUser(?array $roles = null): User
     {
-        $users = factory(User::class, 1)->create();
-        $user = $users->first();
-        \assert($user instanceof User);
-
-        // Assign roles, if any
-        if (! empty($roles)) {
-            $user->assignRole($roles);
-        }
-
-        // Add to deletion queue
-        $this->createdUsers[] = $user;
-
-        // Return user
-        return $user;
+        /** @var User $user */
+        return tap(
+            User::factory()->create(),
+            fn (User $user) => ! empty($roles) && $user->assignRole(...$roles),
+        );
     }
 
     /**
@@ -92,9 +60,9 @@ trait ProvidesUsers
      */
     public function getSuperAdminUser(): User
     {
-        $user = $this->getTemporaryUser();
-        $user->givePermissionTo('super-admin');
-
-        return $user;
+        return tap(
+            $this->getTemporaryUser(),
+            fn (User $user) => $user->givePermissionTo('super-admin'),
+        );
     }
 }

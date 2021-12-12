@@ -25,7 +25,7 @@ class RequirePaidEnrollmentTest extends TestCase
                 RequirePaidEnrollment::class,
             ]);
 
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $ticket = $activity->tickets()->create([
             'title' => 'Free test',
         ]);
@@ -33,7 +33,7 @@ class RequirePaidEnrollmentTest extends TestCase
         $this->get("/test/middleware/{$activity->getRouteKey()}")
             ->assertRedirect();
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $this->get("/test/middleware/{$activity->getRouteKey()}")

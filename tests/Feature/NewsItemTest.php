@@ -91,7 +91,7 @@ class NewsItemTest extends TestCase
 
     public function test_news_cover_images(): void
     {
-        $item = factory(NewsItem::class)->state('with-image')->create();
+        $item = NewsItem::factory()->withImage()->create();
 
         // Get news index
         $this->get(route('news.index'))
@@ -105,6 +105,6 @@ class NewsItemTest extends TestCase
 
     private function getTestNewsItem(array $attributes = []): NewsItem
     {
-        return factory(NewsItem::class)->create($attributes);
+        return NewsItem::factory()->create($attributes);
     }
 }

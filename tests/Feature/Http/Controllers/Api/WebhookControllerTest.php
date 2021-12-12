@@ -37,7 +37,7 @@ class WebhookControllerTest extends TestCase
 
     public function test_get_valid_id(): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::make([
             'provider' => MolliePaymentService::getName(),

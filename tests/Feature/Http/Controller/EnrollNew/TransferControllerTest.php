@@ -19,11 +19,11 @@ class TransferControllerTest extends TestCase
      */
     public function test_regular_call()
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $this->actingAs($user1);
 
         $enrollment = Enroll::createEnrollment($activity, $ticket);

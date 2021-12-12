@@ -26,7 +26,7 @@ class PageControllerTest extends TestCase
 
     public function test_full_homepage(): void
     {
-        [$public1, $private, $public2] = factory(Activity::class)->createMany([[
+        [$public1, $private, $public2] = Activity::factory()->createMany([[
             'is_public' => true,
             'start_date' => $start = Date::now()->addWeeks(1),
             'end_date' => (clone $start)->addHours(3),

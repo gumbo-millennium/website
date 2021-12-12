@@ -27,10 +27,10 @@ class FileDisplayTest extends TestCase
     public function test_guest_routes_get_redirected_to_login(): void
     {
         /** @var FileCategory $category */
-        $category = factory(FileCategory::class)->create();
+        $category = FileCategory::factory()->create();
 
         /** @var FileBundle $bundle */
-        $bundle = factory(FileBundle::class)->state('with-file')->create([
+        $bundle = FileBundle::factory()->withFile()->create([
             'category_id' => $category->id,
         ]);
 
@@ -56,10 +56,10 @@ class FileDisplayTest extends TestCase
     public function test_non_member_user_routes(): void
     {
         /** @var FileCategory $category */
-        $category = factory(FileCategory::class)->create();
+        $category = FileCategory::factory()->create();
 
         /** @var FileBundle $bundle */
-        $bundle = factory(FileBundle::class)->state('with-file')->create([
+        $bundle = FileBundle::factory()->withFile()->create([
             'category_id' => $category->id,
         ]);
 
@@ -87,7 +87,7 @@ class FileDisplayTest extends TestCase
     public function test_index_view(): void
     {
         /** @var FileCategory $category */
-        [$category, $emptyCategory, $deletedCategory] = factory(FileCategory::class)->createMany([
+        [$category, $emptyCategory, $deletedCategory] = FileCategory::factory()->createMany([
             ['title' => 'Normal Category'],
             ['title' => 'Empty Category'],
             ['title' => 'Removed Category'],
@@ -97,19 +97,19 @@ class FileDisplayTest extends TestCase
         $deletedCategory->delete();
 
         /** @var FileBundle $normalBundle */
-        $normalBundle = factory(FileBundle::class)->state('with-file')->create([
+        $normalBundle = FileBundle::factory()->withFile()->create([
             'category_id' => $category->id,
             'published_at' => Date::now()->subWeek(),
         ]);
 
         /** @var FileBundle $futureBundle */
-        $futureBundle = factory(FileBundle::class)->state('with-file')->create([
+        $futureBundle = FileBundle::factory()->withFile()->create([
             'category_id' => $category->id,
             'published_at' => Date::now()->addWeek(),
         ]);
 
         /** @var FileBundle $deletedBundle */
-        $deletedBundle = factory(FileBundle::class)->state('with-file')->create([
+        $deletedBundle = FileBundle::factory()->withFile()->create([
             'category_id' => $deletedCategory->id,
             'published_at' => Date::now()->subWeek(),
         ]);

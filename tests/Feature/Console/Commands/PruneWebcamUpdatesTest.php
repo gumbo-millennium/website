@@ -52,8 +52,8 @@ class PruneWebcamUpdatesTest extends TestCase
         [$cam] = $this->createTestWebcam(0);
 
         $cam->updates()->saveMany([
-            $old = factory(WebcamUpdate::class)->make(['created_at' => Date::now()->subMonths(4)]),
-            $new = factory(WebcamUpdate::class)->make(['created_at' => Date::now()]),
+            $old = WebcamUpdate::factory()->make(['created_at' => Date::now()->subMonths(4)]),
+            $new = WebcamUpdate::factory()->make(['created_at' => Date::now()]),
         ]);
 
         $this->assertTrue($old->exists);
@@ -74,7 +74,7 @@ class PruneWebcamUpdatesTest extends TestCase
         /** @var Webcam $cam */
         [$cam] = $this->createTestWebcam(0);
 
-        $factory = factory(WebcamUpdate::class)->state('with-image');
+        $factory = WebcamUpdate::factory()->withImage();
 
         $fourMonthOld = $factory->make(['created_at' => Date::now()->subMonths(4)]);
         $twoMonthOld = $factory->make(['created_at' => Date::now()->subMonths(2)]);
@@ -122,14 +122,14 @@ class PruneWebcamUpdatesTest extends TestCase
      */
     private function createTestWebcam(int $count): array
     {
-        $cam = factory(Webcam::class)->create();
+        $cam = Webcam::factory()->create();
 
         if ($count === 0) {
             return [$cam, collect()];
         }
 
         /** @var \Illuminate\Database\Eloquent\Collection $models */
-        $models = factory(WebcamUpdate::class)->times($count)->make();
+        $models = WebcamUpdate::factory()->times($count)->make();
 
         $cam->updates()->saveMany($models);
 

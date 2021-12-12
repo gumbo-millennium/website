@@ -23,7 +23,7 @@ class TicketTest extends TestCase
      */
     public function test_computed_properties()
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         /** @var Ticket $ticket */
         $ticket = $activity->tickets()->create([
@@ -43,7 +43,7 @@ class TicketTest extends TestCase
 
     public function test_availability(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         /** @var Ticket $ticket */
         [$beforeTicket, $currentTicket, $afterTicket] = $activity->tickets()->createMany([
@@ -81,7 +81,7 @@ class TicketTest extends TestCase
 
     public function test_publicness_is_inherited_from_activity(): void
     {
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'is_public' => false,
         ]);
 
@@ -100,17 +100,17 @@ class TicketTest extends TestCase
 
     public function test_ticket_quantities(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         /** @var Ticket $ticket */
         [$ticketWithoutLimit, $ticketWithLimit] = $activity->tickets()->createMany([
-            factory(Ticket::class)->make(['quantity' => null])->toArray(),
-            factory(Ticket::class)->make(['quantity' => 10])->toArray(),
+            Ticket::factory()->make(['quantity' => null])->toArray(),
+            Ticket::factory()->make(['quantity' => 10])->toArray(),
         ]);
 
         // Create the proper number of users
-        $usersWithWithoutLimitTicket = factory(User::class)->times(15)->create();
-        $usersWithLimitTicket = factory(User::class)->times(8)->create();
+        $usersWithWithoutLimitTicket = User::factory()->times(15)->create();
+        $usersWithLimitTicket = User::factory()->times(8)->create();
 
         // Create a bunch of enrollments
         /** @var Collection<Enrollment> $enrollmentsWithoutLimit */

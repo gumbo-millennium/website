@@ -23,7 +23,7 @@ class ActivityTest extends TestCase
         Config::set('gumbo.transfer-fee', 0);
 
         /** @var Activity $activity */
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         foreach ($tickets as &$ticket) {
             $ticket['title'] ??= $this->faker->sentence();

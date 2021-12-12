@@ -24,14 +24,14 @@ class EnrollmentServiceTest extends TestCase
      */
     public function test_get_enrollment_function(bool $shouldMatch, bool $makeUser, ?array $enrollmentData = null): void
     {
-        $user = $makeUser ? factory(User::class)->create() : null;
+        $user = $makeUser ? User::factory()->create() : null;
         $user and $this->actingAs($user);
 
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
         if ($enrollmentData !== null) {
-            $enrollment = factory(Enrollment::class)->make();
+            $enrollment = Enrollment::factory()->make();
             $enrollment->ticket()->associate($ticket);
             $enrollment->user()->associate($user);
 
@@ -62,7 +62,7 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_ticket_availability(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         $seededTickets = $activity->tickets()->createMany([
             // Before tickets
@@ -134,14 +134,14 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_ticket_quantity(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         $ticket = $activity->tickets()->create([
             'title' => 'Quantity ticket',
             'quantity' => 2,
         ]);
 
-        [$user1, $user2, $user3] = factory(User::class, 3)->create();
+        [$user1, $user2, $user3] = User::factory(3)->create();
 
         $this->actingAs($user1);
         $this->assertTrue(Enroll::canEnroll($activity));
@@ -174,7 +174,7 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_public_with_infinite_seats(): void
     {
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'is_public' => true,
         ]);
 
@@ -211,7 +211,7 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_public_with_no_public_tickets(): void
     {
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'is_public' => true,
         ]);
 
@@ -233,7 +233,7 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_private_enrollment(): void
     {
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'is_public' => false,
         ]);
 
@@ -257,11 +257,11 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_activity_with_limited_seats(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create([
+        $activity = Activity::factory()->withTickets()->create([
             'seats' => 1,
         ]);
 
-        $this->actingAs($user1 = factory(User::class)->create());
+        $this->actingAs($user1 = User::factory()->create());
         $this->assertTrue(Enroll::canEnroll($activity));
 
         $this->assertInstanceOf(Enrollment::class, Enroll::createEnrollment($activity, $activity->tickets()->first()));
@@ -281,10 +281,10 @@ class EnrollmentServiceTest extends TestCase
      */
     public function test_re_enrollment(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         $this->assertTrue(Enroll::canEnroll($activity));
         $this->assertInstanceOf(Enrollment::class, Enroll::createEnrollment($activity, $ticket));
@@ -302,10 +302,10 @@ class EnrollmentServiceTest extends TestCase
      */
     public function test_transfer_to_self(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         // make enrollment
@@ -325,7 +325,7 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_transfer_cancelled_and_trashed(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
         $this->actingAs(factory(User::class)->create());
@@ -371,11 +371,11 @@ class EnrollmentServiceTest extends TestCase
      */
     public function test_regular_transfer(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $this->actingAs($user1);
 
         // make enrollment
@@ -413,10 +413,10 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_transfer_unstable_enrollment(): void
     {
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         $enrollment = $user1->enrollments()->make([
             'state' => States\Seeded::class,
@@ -445,10 +445,10 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_transfer_stable_enrollment(): void
     {
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         $enrollment = $user1->enrollments()->make([
             'state' => States\Confirmed::class,
@@ -471,12 +471,12 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_can_enroll_failure_cases(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create([
+        $activity = Activity::factory()->withTickets()->create([
             'seats' => 1,
         ]);
 
-        $user = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
 
         // Test ticket unavailability
         $ticket = $activity->tickets()->first();
@@ -492,10 +492,10 @@ class EnrollmentServiceTest extends TestCase
 
     public function test_permissions_on_started_and_ended_activities(): void
     {
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $activity = factory(Activity::class)->state('with-tickets')->create([
+        $activity = Activity::factory()->withTickets()->create([
             'start_date' => Date::now()->addDay(),
             'end_date' => Date::now()->addDay()->addHour(),
         ]);

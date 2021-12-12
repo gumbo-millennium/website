@@ -34,7 +34,7 @@ class TestSendActivityMessageJob extends TestCase
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'price' => null,
         ]);
 
@@ -75,7 +75,7 @@ class TestSendActivityMessageJob extends TestCase
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'price' => null,
         ]);
 
@@ -108,7 +108,7 @@ class TestSendActivityMessageJob extends TestCase
         $confirmedUser = $this->getGuestUser();
         $pendingUser = $this->getGuestUser();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'price' => null,
         ]);
 
@@ -142,7 +142,7 @@ class TestSendActivityMessageJob extends TestCase
         $pendingUser = $this->getGuestUser();
         $cancelledUser = $this->getGuestUser();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'price' => null,
         ]);
 

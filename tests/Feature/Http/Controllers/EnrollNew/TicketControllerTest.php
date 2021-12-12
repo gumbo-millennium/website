@@ -29,10 +29,10 @@ class TicketControllerTest extends TestCase
 {
     public function test_guest_access(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
 
-        $privateActivity = factory(Activity::class)->state('private')->create();
+        $privateActivity = Activity::factory()->private()->create();
         $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
 
         // View routes
@@ -52,10 +52,10 @@ class TicketControllerTest extends TestCase
 
     public function test_user_access(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
 
-        $privateActivity = factory(Activity::class)->state('private')->create();
+        $privateActivity = Activity::factory()->private()->create();
         $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
 
         // Get user
@@ -79,10 +79,10 @@ class TicketControllerTest extends TestCase
 
     public function test_member_access(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
 
-        $privateActivity = factory(Activity::class)->state('private')->create();
+        $privateActivity = Activity::factory()->private()->create();
         $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
 
         // Check member
@@ -107,7 +107,7 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_without_tickets(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
 
         $this->actingAs(factory(User::class)->create());
 
@@ -122,12 +122,12 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_one_ticket(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $activity->tickets()->save(
-            $ticket = factory(Ticket::class)->create(),
+            $ticket = Ticket::factory()->create(),
         );
 
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         $this->get(route('enroll.create', [$activity]))
             ->assertOk()
@@ -142,19 +142,19 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_sold_out_tickets(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $activity->tickets()->save(
-            $ticket = factory(Ticket::class)->create([
+            $ticket = Ticket::factory()->create([
                 'quantity' => 1,
             ]),
         );
 
         // Create a user and give it the only spot remaining
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
         Enroll::createEnrollment($activity, $ticket);
 
         // Act as someone else
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Create the enrollment with the fake ticket
         $this->get($createRoute = route('enroll.create', [$activity]))
@@ -173,16 +173,16 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_mixed_tickets(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         [$publicTicket, $privateTicket] = $activity->tickets()->saveMany([
-            factory(Ticket::class)->make(),
-            factory(Ticket::class)->make([
+            Ticket::factory()->make(),
+            Ticket::factory()->make([
                 'is_public' => false,
             ]),
         ]);
 
         // Act as a regular user
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Create the enrollment with the fake ticket
         $this->get($createRoute = route('enroll.create', [$activity]))
@@ -222,15 +222,15 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_only_private_tickets(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $privateTicket = $activity->tickets()->save(
-            factory(Ticket::class)->make([
+            Ticket::factory()->make([
                 'is_public' => false,
             ]),
         );
 
         // Act as a regular user
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Create the enrollment with the fake ticket
         $this->get($createRoute = route('enroll.create', [$activity]))
@@ -263,24 +263,24 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_unavailable_tickets(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         [$nowTicket, $soonTicket, $laterTicket, $memberTicket] = $activity->tickets()->saveMany([
-            factory(Ticket::class)->make([
+            Ticket::factory()->make([
                 'available_from' => Date::now()->subDays(1),
             ]),
-            factory(Ticket::class)->make([
+            Ticket::factory()->make([
                 'available_from' => Date::now()->addDays(1),
             ]),
-            factory(Ticket::class)->make([
+            Ticket::factory()->make([
                 'available_from' => Date::now()->addWeek(1),
             ]),
-            factory(Ticket::class)->make([
+            Ticket::factory()->make([
                 'is_public' => false,
             ]),
         ]);
 
         // Act as a regular user
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Create the enrollment with the fake ticket
         $this->get($createRoute = route('enroll.create', [$activity]))
@@ -321,7 +321,7 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_with_no_more_seats(): void
     {
-        $activity = factory(Activity::class)->state('with-tickets')->create([
+        $activity = Activity::factory()->withTickets()->create([
             'seats' => 2,
         ]);
         $ticket = $activity->tickets->first();
@@ -333,7 +333,7 @@ class TicketControllerTest extends TestCase
         }
 
         // Act as a regular user
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Check enrollments are closed
         $this->get($createRoute = route('enroll.create', [$activity]))
@@ -353,7 +353,7 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_after_start_and_end(): void
     {
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'start_date' => Date::now()->subDay(1),
             'end_date' => Date::now()->subHours(23),
         ]);
@@ -376,14 +376,14 @@ class TicketControllerTest extends TestCase
 
     public function test_enroll_when_enrolled(): void
     {
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         [$ticketOne, $ticketTwo] = $activity->tickets()->saveMany([
-            factory(Ticket::class)->make(),
-            factory(Ticket::class)->make(),
+            Ticket::factory()->make(),
+            Ticket::factory()->make(),
         ]);
 
         // Act as a regular user
-        $this->actingAs($user = factory(User::class)->create());
+        $this->actingAs($user = User::factory()->create());
 
         // Enroll with ticket 1
         Enroll::createEnrollment($activity, $ticketOne);

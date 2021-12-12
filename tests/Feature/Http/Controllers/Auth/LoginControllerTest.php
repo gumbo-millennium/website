@@ -15,7 +15,7 @@ class LoginControllerTest extends TestCase
     {
         Date::setTestNow('2021-11-25T23:30:00');
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // No next
         $this->actingAs($user);

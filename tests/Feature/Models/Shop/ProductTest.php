@@ -34,7 +34,7 @@ class ProductTest extends TestCase
     {
         Config::set('gumbo.shop.order-limit', 4);
 
-        $model = factory(Product::class)->create();
+        $model = Product::factory()->create();
 
         $this->assertSame(4, $model->refresh()->applied_order_limit);
 

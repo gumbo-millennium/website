@@ -20,7 +20,7 @@ class UpdatePaymentJobTest extends TestCase
      */
     public function test_stable_job_types(): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::make([
             'provider' => DummyPaymentService::getName(),
@@ -42,7 +42,7 @@ class UpdatePaymentJobTest extends TestCase
 
     public function test_paid_payment(): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $payment = Payment::make([
             'provider' => DummyPaymentService::getName(),

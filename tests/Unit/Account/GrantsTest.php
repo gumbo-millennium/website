@@ -7,6 +7,7 @@ namespace Tests\Unit\Account;
 use App\Http\Controllers\Account\GrantsController;
 use App\Models\Grant;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Yaml\Yaml;
 use Tests\TestCase;
 
@@ -64,9 +65,10 @@ class GrantsTest extends TestCase
 
         $this->actingAs($user);
 
-        $grantsRequest = $this->get(route('account.grants'));
+        $this->assertTrue($user->is(Auth::user()), 'User is not the same as Auth::user()');
 
-        $grantsRequest->assertOk();
+        $grantsRequest = $this->get(route('account.grants'))
+            ->assertOk();
 
         foreach (GrantsController::getGrants() as $grant) {
             $grantsRequest->assertSee($grant->key);

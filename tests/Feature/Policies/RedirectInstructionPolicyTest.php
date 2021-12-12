@@ -13,7 +13,7 @@ class RedirectInstructionPolicyTest extends TestCase
 {
     public function test_guest(): void
     {
-        $redirect = factory(RedirectInstruction::class)->create();
+        $redirect = RedirectInstruction::factory()->create();
         assert($redirect instanceof RedirectInstruction);
 
         $this->assertFalse(Gate::allows('viewAny', $redirect));
@@ -31,10 +31,10 @@ class RedirectInstructionPolicyTest extends TestCase
      */
     public function test_user($roleOrRoles, bool $canView, bool $canEdit): void
     {
-        $redirect = factory(RedirectInstruction::class)->create();
+        $redirect = RedirectInstruction::factory()->create();
         assert($redirect instanceof RedirectInstruction);
 
-        $user = factory(User::class)->create()->assignRole($roleOrRoles);
+        $user = User::factory()->create()->assignRole($roleOrRoles);
         assert($user instanceof User);
         $this->actingAs($user);
 
