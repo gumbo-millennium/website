@@ -37,6 +37,17 @@
 		"mysql:3306"
 	],
 
+	"portsAttributes": {
+		"8080": {
+			"label": "Application",
+			"onAutoForward": "openBrowserOnce"
+		},
+		"3306": {
+			"label": "Database",
+			"onAutoForward": "silent"
+		}
+	},
+
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": [
 		"test -f /workspace/.env || cp /workspace/.devcontainer/devcontainer.env /workspace/.env",
