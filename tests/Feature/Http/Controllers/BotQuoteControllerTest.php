@@ -39,13 +39,13 @@ class BotQuoteControllerTest extends FeatureTestCase
         $user = $this->getGuestUser();
         $this->actingAs($user);
 
-        factory(BotQuote::class)
+        BotQuote::factory()
             ->times(8)
             ->create(['user_id' => $user->id]);
 
-        factory(BotQuote::class)
+        BotQuote::factory()
             ->times(6)
-            ->state('sent')
+            ->sent()
             ->create(['user_id' => $user->id]);
 
         $response = $this->get(route('account.quotes'));
@@ -67,7 +67,7 @@ class BotQuoteControllerTest extends FeatureTestCase
             'created_at' => $this->faker->dateTimeBetween("{$date}T04:00:00", "{$date}T22:00:00"),
         ];
 
-        factory(BotQuote::class)
+        BotQuote::factory()
             ->createMany([
                 $createDated('2021-01-12'),
                 $createDated('2021-01-12'),
@@ -107,7 +107,7 @@ class BotQuoteControllerTest extends FeatureTestCase
         $this->actingAs($user);
 
         // Test unsent quotes to self
-        $unsentSelf = factory(BotQuote::class)
+        $unsentSelf = BotQuote::factory()
             ->create(['user_id' => $user->id]);
 
         $response = $this
@@ -128,8 +128,8 @@ class BotQuoteControllerTest extends FeatureTestCase
         $this->actingAs($user);
 
         // Test sent quotes to self
-        $sentSelf = factory(BotQuote::class)
-            ->state('sent')
+        $sentSelf = BotQuote::factory()
+            ->sent()
             ->create(['user_id' => $user->id]);
 
         $response = $this
@@ -151,7 +151,7 @@ class BotQuoteControllerTest extends FeatureTestCase
         $this->actingAs($user);
 
         // Test an unsent quote from User 2
-        $unsentQuote = factory(BotQuote::class)
+        $unsentQuote = BotQuote::factory()
             ->create(['user_id' => $user2->id]);
 
         $response = $this
@@ -163,8 +163,8 @@ class BotQuoteControllerTest extends FeatureTestCase
         $this->assertNotNull(BotQuote::find($unsentQuote->id));
 
         // Test a sent quote from User 2
-        $sentQuote = factory(BotQuote::class)
-            ->state('sent')
+        $sentQuote = BotQuote::factory()
+            ->sent()
             ->create(['user_id' => $user2->id]);
 
         $response = $this
@@ -187,7 +187,7 @@ class BotQuoteControllerTest extends FeatureTestCase
         $this->actingAs($user);
 
         // Test sent from anon
-        $sentAnon = factory(BotQuote::class)->state('sent')->create(['user_id' => $user2->id]);
+        $sentAnon = BotQuote::factory()->sent()->create(['user_id' => $user2->id]);
         $response = $this->delete(route('account.quotes.delete'), ['quote-id' => $sentAnon->id]);
         $response->assertNotFound();
 

@@ -21,7 +21,7 @@ class TicketPolicyTest extends TestCase
         $user = $userType ? $this->{$userType}() : null;
 
         $scopes = ['viewAny', 'view', 'create', 'update', 'delete'];
-        $activity = factory(Activity::class)->state('with-tickets')->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
         if ($user) {
@@ -52,7 +52,7 @@ class TicketPolicyTest extends TestCase
         $boardUser = $this->getBoardUser();
         $adminUser = $this->getSuperAdminUser();
 
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'role_id' => Role::findByName('ac')->id,
         ]);
 

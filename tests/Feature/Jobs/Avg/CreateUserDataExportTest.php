@@ -24,8 +24,8 @@ class CreateUserDataExportTest extends TestCase
     public function createModelsAtStart(): void
     {
         $this->afterApplicationCreated(function () {
-            $this->user = factory(User::class)->create();
-            $this->export = factory(DataExport::class)->create([
+            $this->user = User::factory()->create();
+            $this->export = DataExport::factory()->create([
                 'user_id' => $this->user->id,
             ]);
         });
@@ -76,7 +76,7 @@ class CreateUserDataExportTest extends TestCase
     {
         Date::setTestNow('2021-01-01T00:00:00');
 
-        $this->export = factory(DataExport::class)->state('with-data')->create([
+        $this->export = DataExport::factory()->withData()->create([
             'user_id' => $this->user->id,
             'completed_at' => Date::now()->subWeek(),
         ]);

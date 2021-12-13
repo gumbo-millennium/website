@@ -21,11 +21,11 @@ class FileExportControllerTest extends TestCase
     {
         Storage::fake();
 
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $validFile = factory(FileExport::class)->create(['owner_id' => $user1->id]);
-        $expiredFile = factory(FileExport::class)->state('expired')->create(['owner_id' => $user1->id]);
+        $validFile = FileExport::factory()->create(['owner_id' => $user1->id]);
+        $expiredFile = FileExport::factory()->expired()->create(['owner_id' => $user1->id]);
 
         $response = $this->get(route('export.download', [$validFile]));
         $response->assertHeaderMissing('Content-Disposition');
@@ -60,10 +60,10 @@ class FileExportControllerTest extends TestCase
     {
         Storage::fake();
 
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $movedFile = factory(FileExport::class)->create(['owner_id' => $user1->id]);
+        $movedFile = FileExport::factory()->create(['owner_id' => $user1->id]);
 
         Storage::put('/test.txt', 'hi');
 
@@ -91,10 +91,10 @@ class FileExportControllerTest extends TestCase
     {
         Storage::fake();
 
-        $user1 = factory(User::class)->create();
-        $user2 = factory(User::class)->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
-        $removedFile = factory(FileExport::class)->create(['owner_id' => $user1->id]);
+        $removedFile = FileExport::factory()->create(['owner_id' => $user1->id]);
 
         Storage::delete($removedFile->path);
 

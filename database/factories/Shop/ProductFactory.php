@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories\Shop;
 
+use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var null|string
+     */
+    protected $model = Product::class;
+
     /**
      * Define the model's default state.
      *
@@ -29,14 +37,14 @@ class ProductFactory extends Factory
         ];
     }
 
-    public function orderLimit()
+    public function orderLimit(): self
     {
         return $this->state([
             'order_limit' => $this->faker->numberBetween(1, 10),
         ]);
     }
 
-    public function withVariants()
+    public function withVariants(): self
     {
         return $this->hasAttached(
             ProductVariant::factory()->times($this->faker->numberBetween(1, 5)),

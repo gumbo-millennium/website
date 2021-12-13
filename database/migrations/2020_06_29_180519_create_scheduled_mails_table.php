@@ -29,9 +29,11 @@ class CreateScheduledMailsTable extends Migration
             $table->timestamp('sent_at')->nullable()->default(null);
 
             // Virtuals
-            $virtual = $table->boolean('is_sent')->virtualAs('ISNULL(`sent_at`)');
+            $virtual = $table->boolean('is_sent');
             if (DB::getDriverName() === 'sqlite') {
                 $virtual->default(0);
+            } else {
+                $virtual->virtualAs('ISNULL(`sent_at`)');
             }
         });
     }

@@ -22,15 +22,15 @@ class ProductControllerTest extends TestCase
 
     public function test_index(): void
     {
-        $invisible = factory(Category::class, 5)->create([
+        $invisible = Category::factory(5)->create([
             'visible' => 0,
         ]);
 
-        $visible = factory(Category::class, 5)->create([
+        $visible = Category::factory(5)->create([
             'visible' => 1,
         ]);
 
-        $productFactory = factory(Product::class, 5)->state('with-variants');
+        $productFactory = Product::factory(5)->withVariants();
 
         foreach ($visible as $category) {
             $productFactory->create([
@@ -62,10 +62,10 @@ class ProductControllerTest extends TestCase
 
     public function test_category(): void
     {
-        $category = factory(Category::class)->create([
+        $category = Category::factory()->create([
             'visible' => 1,
         ]);
-        $category2 = factory(Category::class)->create([
+        $category2 = Category::factory()->create([
             'visible' => 1,
         ]);
 
@@ -73,7 +73,7 @@ class ProductControllerTest extends TestCase
             'visible' => 1,
             'category_id' => $category->id,
         ];
-        $visibleProducts = factory(Product::class)->state('with-variants')->createMany([
+        $visibleProducts = Product::factory()->withVariants()->createMany([
             array_merge($base, ['name' => 'Visible Product 1']),
             array_merge($base, ['name' => 'Visible Product 2']),
             array_merge($base, ['name' => 'Visible Product 3']),
@@ -84,7 +84,7 @@ class ProductControllerTest extends TestCase
             'visible' => 0,
             'category_id' => $category->id,
         ];
-        $invisibleProducts = factory(Product::class)->state('with-variants')->createMany([
+        $invisibleProducts = Product::factory()->withVariants()->createMany([
             array_merge($base, ['name' => 'Hidden Product 1']),
             array_merge($base, ['name' => 'Hidden Product 2']),
             array_merge($base, ['name' => 'Hidden Product 3']),
@@ -95,7 +95,7 @@ class ProductControllerTest extends TestCase
             'visible' => 1,
             'category_id' => $category2->id,
         ];
-        $mismatchedProducts = factory(Product::class)->state('with-variants')->createMany([
+        $mismatchedProducts = Product::factory()->withVariants()->createMany([
             array_merge($base, ['name' => 'Other Product 1']),
             array_merge($base, ['name' => 'Other Product 2']),
             array_merge($base, ['name' => 'Other Product 3']),
@@ -118,10 +118,10 @@ class ProductControllerTest extends TestCase
 
     public function test_variant_requirement(): void
     {
-        $category = factory(Category::class)->create([
+        $category = Category::factory()->create([
             'visible' => 1,
         ]);
-        $product = factory(Product::class)->create([
+        $product = Product::factory()->create([
             'visible' => 1,
             'category_id' => $category->id,
         ]);
@@ -139,17 +139,17 @@ class ProductControllerTest extends TestCase
 
     public function test_display(): void
     {
-        $category = factory(Category::class)->create([
+        $category = Category::factory()->create([
             'visible' => 1,
         ]);
 
-        $product = factory(Product::class)->state('with-variants')->create([
+        $product = Product::factory()->withVariants()->create([
             'category_id' => $category->id,
             'visible' => 1,
             'description' => implode("\n", $this->faker->sentences(4)),
         ]);
 
-        $variants = factory(ProductVariant::class, 5)->create([
+        $variants = ProductVariant::factory(5)->create([
             'product_id' => $product->id,
             'description' => null,
         ]);

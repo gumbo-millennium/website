@@ -81,7 +81,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {
@@ -149,6 +152,8 @@
         }
     },
     "scripts-descriptions": {
+        "cs": "Format code using php-cs-fixer",
+        "contribute": "Perform all required steps to setup the project"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

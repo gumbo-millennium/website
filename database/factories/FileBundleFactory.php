@@ -23,9 +23,9 @@ class FileBundleFactory extends Factory
         ];
     }
 
-    public function withFile()
+    public function withFile(): self
     {
-        $this->afterMaking(function (FileBundle $bundle) {
+        return $this->afterMaking(function (FileBundle $bundle) {
             $bundle->addMedia(new File(resource_path('test-assets/pdf/chicken.pdf')))
                 ->preservingOriginal()
                 ->toMediaCollection();

@@ -55,7 +55,7 @@ class FormFieldTest extends TestCase
         $this->markTestSkipped('Test is broken');
 
         // Make entry
-        $activity = factory(Activity::class)->create([
+        $activity = Activity::factory()->create([
             'enrollment_questions' => json_encode([
                 [
                     'key' => '54fd249d9b4fc488',

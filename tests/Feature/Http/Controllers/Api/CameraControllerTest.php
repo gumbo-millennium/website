@@ -18,8 +18,8 @@ class CameraControllerTest extends TestCase
 {
     public function test_information_exposure(): void
     {
-        $webcam = factory(Webcam::class)->create();
-        $user = factory(User::class)->create();
+        $webcam = Webcam::factory()->create();
+        $user = User::factory()->create();
 
         $this->get(route('api.webcam.view', [
             'webcam' => $webcam,
@@ -54,8 +54,8 @@ class CameraControllerTest extends TestCase
 
     public function test_no_user_auth(): void
     {
-        $webcam = factory(Webcam::class)->create();
-        $user = factory(User::class)->create();
+        $webcam = Webcam::factory()->create();
+        $user = User::factory()->create();
         $user->delete();
 
         $this->get(URL::signedRoute('api.webcam.view', [
@@ -71,8 +71,8 @@ class CameraControllerTest extends TestCase
 
     public function test_user_auth(): void
     {
-        $webcam = factory(Webcam::class)->create();
-        $user = factory(User::class)->create();
+        $webcam = Webcam::factory()->create();
+        $user = User::factory()->create();
 
         $this->get(URL::signedRoute('api.webcam.view', [
             'webcam' => $webcam,
@@ -87,12 +87,12 @@ class CameraControllerTest extends TestCase
 
     public function test_member_auth(): void
     {
-        $webcam = factory(Webcam::class)->create();
+        $webcam = Webcam::factory()->create();
 
-        $webcamImage = factory(WebcamUpdate::class)->state('with-image')->make();
+        $webcamImage = WebcamUpdate::factory()->withImage()->make();
         $webcam->updates()->save($webcamImage);
 
-        $user = factory(User::class)->create()->givePermissionTo('plazacam-view');
+        $user = User::factory()->create()->givePermissionTo('plazacam-view');
 
         $this->get(URL::signedRoute('api.webcam.view', [
             'webcam' => $webcam,
@@ -109,12 +109,12 @@ class CameraControllerTest extends TestCase
     {
         Storage::fake();
 
-        $webcam = factory(Webcam::class)->create();
+        $webcam = Webcam::factory()->create();
 
-        $webcamImage = factory(WebcamUpdate::class)->state('with-image')->make();
+        $webcamImage = WebcamUpdate::factory()->withImage()->make();
         $webcam->updates()->save($webcamImage);
 
-        $user = factory(User::class)->create()->givePermissionTo([
+        $user = User::factory()->create()->givePermissionTo([
             'plazacam-view',
             'plazacam-update',
         ]);
@@ -138,14 +138,14 @@ class CameraControllerTest extends TestCase
     {
         Storage::fake();
 
-        $webcam = factory(Webcam::class)->create();
+        $webcam = Webcam::factory()->create();
 
-        $webcamImage = factory(WebcamUpdate::class)->state('with-image')->make();
+        $webcamImage = WebcamUpdate::factory()->withImage()->make();
         $webcam->updates()->save($webcamImage);
 
         $this->assertSame(1, $webcam->updates()->count());
 
-        $user = factory(User::class)->create()->givePermissionTo('plazacam-update');
+        $user = User::factory()->create()->givePermissionTo('plazacam-update');
 
         $putUrl = URL::signedRoute('api.webcam.store', [
             'webcam' => $webcam,

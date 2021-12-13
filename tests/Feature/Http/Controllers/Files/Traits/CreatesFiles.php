@@ -40,7 +40,7 @@ trait CreatesFiles
 
     protected function createFileCategory(): FileCategory
     {
-        $category = factory(FileCategory::class)->make([
+        $category = FileCategory::factory()->make([
             'title' => sprintf(
                 '[test] %s (%s)',
                 $this->faker->sentence,
@@ -60,7 +60,7 @@ trait CreatesFiles
         $fileCategory ??= $this->createFileCategory();
 
         /** @var FileBundle $bundle */
-        $bundle = factory(FileBundle::class)->make([
+        $bundle = FileBundle::factory()->make([
             'published_at' => Date::now()->addWeek($published ? -4 : 4),
             'title' => sprintf(
                 '[test] %s (%s)',

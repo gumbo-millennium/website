@@ -21,7 +21,7 @@ class TicketFactory extends Factory
         ];
     }
 
-    public function timed()
+    public function timed(): self
     {
         return $this->state([
             'available_from' => $this->faker->dateTimeBetween('-1 month', '-1 day'),
@@ -29,14 +29,14 @@ class TicketFactory extends Factory
         ]);
     }
 
-    public function paid()
+    public function paid(): self
     {
         return $this->state([
             'price' => (int) round($this->faker->randomFloat(2, 2.50, 100) * 100),
         ]);
     }
 
-    public function private()
+    public function private(): self
     {
         return $this->state([
             'is_public' => false,

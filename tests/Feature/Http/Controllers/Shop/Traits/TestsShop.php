@@ -16,17 +16,17 @@ trait TestsShop
         ?Product $product = null
     ): ProductVariant {
         if (! $product) {
-            $category = factory(Category::class)->create([
+            $category = Category::factory()->create([
                 'visible' => true,
             ]);
 
-            $product = factory(Product::class)->create([
+            $product = Product::factory()->create([
                 'category_id' => $category->id,
                 'visible' => true,
             ]);
         }
 
-        return factory(ProductVariant::class)->create(array_merge($attributes, [
+        return ProductVariant::factory()->create(array_merge($attributes, [
             'product_id' => $product->id,
         ]));
     }

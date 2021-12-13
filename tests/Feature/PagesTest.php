@@ -43,7 +43,7 @@ class PagesTest extends TestCase
      */
     public function test_seeded_page(): void
     {
-        $page = factory(Page::class)->create();
+        $page = Page::factory()->create();
 
         $this->get(url("/{$page->slug}"))
             ->assertOk()

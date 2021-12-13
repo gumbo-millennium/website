@@ -30,7 +30,7 @@ class FormControllerTest extends TestCase
 {
     public function test_guest_access(): void
     {
-        $activity = factory(Activity::class)->states(['with-form'])->create();
+        $activity = Activity::factory()->withForm()->create();
 
         $this->get(route('enroll.form', $activity))
             ->assertRedirect(route('login'));
@@ -41,10 +41,12 @@ class FormControllerTest extends TestCase
 
     public function test_not_enrolled_access(): void
     {
-        $activity = factory(Activity::class)->states(['with-form', 'with-tickets'])->create();
+        $activity = Activity::factory()->withForm()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $this->actingAs(factory(User::class)->create());
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
         $this->get(route('enroll.form', $activity))
             ->assertRedirect(route('enroll.create', $activity));
@@ -66,14 +68,16 @@ class FormControllerTest extends TestCase
     public function test_proper_access(): void
     {
         /** @var Activity $activity */
-        $activity = factory(Activity::class)->states('with-form', 'with-tickets')->create();
+        $activity = Activity::factory()->withForm()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
         if (Collection::make($activity->form)->isEmpty()) {
             $this->markTestSkipped('No form for this activity.');
         }
 
-        $this->actingAs(factory(User::class)->create());
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
         /** @var Enrollment $enrollment */
         $enrollment = Enroll::createEnrollment($activity, $ticket);
@@ -92,10 +96,13 @@ class FormControllerTest extends TestCase
     public function test_without_form(): void
     {
         /** @var Activity $activity */
-        $activity = factory(Activity::class)->states('with-form', 'with-tickets')->create();
+        $activity = Activity::factory()->withForm()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $this->actingAs(factory(User::class)->create());
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
         $enrollment = Enroll::createEnrollment($activity, $ticket);
 
         $this->assertNotNull($enrollment);

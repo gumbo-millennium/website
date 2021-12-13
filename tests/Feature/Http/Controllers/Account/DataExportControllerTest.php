@@ -22,7 +22,7 @@ class DataExportControllerTest extends TestCase
     public function ensureActingAsSomeone(): void
     {
         $this->afterApplicationCreated(function () {
-            $this->user = factory(User::class)->create();
+            $this->user = User::factory()->create();
 
             $this->actingAs($this->user);
         });
@@ -38,9 +38,9 @@ class DataExportControllerTest extends TestCase
 
     public function test_some_items_index(): void
     {
-        factory(DataExport::class, 3)->state('expired')->create(['user_id' => $this->user->id]);
-        factory(DataExport::class, 2)->state('with-data')->create(['user_id' => $this->user->id]);
-        factory(DataExport::class, 1)->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(3)->expired()->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(2)->withData()->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(1)->create(['user_id' => $this->user->id]);
 
         $this->get(route('account.export.index'))
             ->assertOk()
@@ -51,9 +51,9 @@ class DataExportControllerTest extends TestCase
 
     public function test_many_items(): void
     {
-        factory(DataExport::class, 20)->state('expired')->create(['user_id' => $this->user->id]);
-        factory(DataExport::class, 2)->state('with-data')->create(['user_id' => $this->user->id]);
-        factory(DataExport::class, 1)->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(20)->expired()->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(2)->withData()->create(['user_id' => $this->user->id]);
+        DataExport::factory()->times(1)->create(['user_id' => $this->user->id]);
 
         $this->get(route('account.export.index'))
             ->assertOk()
@@ -91,7 +91,7 @@ class DataExportControllerTest extends TestCase
 
     public function test_display_fresh_item(): void
     {
-        $item = factory(DataExport::class)->create(['user_id' => $this->user->id]);
+        $item = DataExport::factory()->create(['user_id' => $this->user->id]);
 
         $showRoute = route('account.export.show', [$item->id, $item->token]);
         $downloadRoute = route('account.export.download', [$item->id, $item->token]);
@@ -109,7 +109,7 @@ class DataExportControllerTest extends TestCase
 
     public function test_display_ready_item(): void
     {
-        $item = factory(DataExport::class)->state('with-data')->create(['user_id' => $this->user->id]);
+        $item = DataExport::factory()->withData()->create(['user_id' => $this->user->id]);
 
         $showRoute = route('account.export.show', [$item->id, $item->token]);
         $downloadRoute = route('account.export.download', [$item->id, $item->token]);
@@ -128,7 +128,7 @@ class DataExportControllerTest extends TestCase
 
     public function test_display_expired_item(): void
     {
-        $item = factory(DataExport::class)->state('expired')->create(['user_id' => $this->user->id]);
+        $item = DataExport::factory()->expired()->create(['user_id' => $this->user->id]);
 
         $showRoute = route('account.export.show', [$item->id, $item->token]);
         $downloadRoute = route('account.export.download', [$item->id, $item->token]);
@@ -146,7 +146,7 @@ class DataExportControllerTest extends TestCase
 
     private function checkNotAccessibleByOther(string $url): void
     {
-        $this->otherUser ??= factory(User::class)->create();
+        $this->otherUser ??= User::factory()->create();
 
         $this->actingAs($this->otherUser);
 

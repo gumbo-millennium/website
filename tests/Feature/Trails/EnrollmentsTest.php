@@ -27,11 +27,11 @@ class EnrollmentsTest extends TestCase
         $faker = App::make(Faker::class);
 
         /** @var Activity $activity */
-        $activity = factory(Activity::class)->states([
-            'with-seats',
-            'with-form',
-            'public',
-        ])->create();
+        $activity = Activity::factory()
+            ->withSeats()
+            ->withForm()
+            ->public()
+            ->create();
 
         // Check for form
         if (empty($activity->form)) {
@@ -61,7 +61,7 @@ class EnrollmentsTest extends TestCase
             ->assertRedirect(route('login'));
 
         // Login
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         // Try to enroll again

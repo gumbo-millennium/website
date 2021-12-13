@@ -47,7 +47,7 @@ class LustrumControllerTest extends TestCase
         $lustrumRole = Role::findOrCreate('lucie');
         assert($lustrumRole instanceof Role);
 
-        $activities = factory(Activity::class)->create([
+        $activities = Activity::factory()->create([
             'role_id' => $lustrumRole->getKey(),
         ]);
 
@@ -62,8 +62,9 @@ class LustrumControllerTest extends TestCase
         optional(Page::findBySlug('lustrum'))->delete();
 
         // Make a new one
-        $lustrumPage = factory(Page::class)
-            ->states(['with_contents', 'with_summary'])
+        $lustrumPage = Page::factory()
+            ->withContents()
+            ->withSummary()
             ->create(['slug' => 'lustrum']);
 
         $this->get($this->host)
@@ -75,12 +76,12 @@ class LustrumControllerTest extends TestCase
 
     public function test_with_merchandise(): void
     {
-        $shopCategory = factory(Category::class)->create([
+        $shopCategory = Category::factory()->create([
             'visible' => true,
             'slug' => 'lustrum',
         ]);
 
-        $shopProducts = factory(Product::class, 4)->state('with-variants')->create([
+        $shopProducts = Product::factory(4)->withVariants()->create([
             'category_id' => $shopCategory->id,
             'visible' => true,
         ]);

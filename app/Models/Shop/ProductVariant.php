@@ -8,6 +8,7 @@ use App\Fluent\Image;
 use App\Helpers\Str;
 use App\Models\Traits\IsSluggable;
 use App\Models\Traits\IsUuidModel;
+use Database\Factories\Shop\ProductVariantFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -111,6 +112,16 @@ class ProductVariant extends Model
                 $variant->order = $arrPos !== false ? ($arrPos + 1) : 255;
             }
         });
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return new ProductVariantFactory();
     }
 
     public function sluggable(): array

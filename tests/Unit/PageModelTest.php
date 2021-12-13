@@ -14,7 +14,7 @@ class PageModelTest extends TestCase
      */
     public function test_page_contents_are_strings(): void
     {
-        $page = factory(Page::class)->create();
+        $page = Page::factory()->create();
 
         $this->assertIsString($page->contents);
         $this->assertArrayNotHasKey('contents', $page->getCasts());

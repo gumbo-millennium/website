@@ -22,7 +22,7 @@ class RequireActiveEnrollmentTest extends TestCase
         Route::get('/test/middleware/{activity}', fn (Activity $activity) => 'OK')
             ->middleware([RequireActiveEnrollment::class]);
 
-        $activity = factory(Activity::class)->create();
+        $activity = Activity::factory()->create();
         $ticket = $activity->tickets()->create([
             'title' => 'Middleware test',
         ]);
@@ -30,7 +30,7 @@ class RequireActiveEnrollmentTest extends TestCase
         $this->get("/test/middleware/{$activity->getRouteKey()}")
             ->assertRedirect();
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->actingAs($user);
 
         $this->get("/test/middleware/{$activity->getRouteKey()}")

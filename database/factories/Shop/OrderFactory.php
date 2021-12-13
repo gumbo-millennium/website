@@ -4,11 +4,19 @@ declare(strict_types=1);
 
 namespace Database\Factories\Shop;
 
+use App\Models\Shop\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var null|string
+     */
+    protected $model = Order::class;
+
     /**
      * Define the model's default state.
      *

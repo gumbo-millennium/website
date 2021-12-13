@@ -12,7 +12,7 @@ max_line_length = 80
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{js,jsx,css,scss,xml,yaml,yml}]
+[*.{js,jsx,css,scss,yaml,yml}]
 indent_style = space
 indent_size = 2
 

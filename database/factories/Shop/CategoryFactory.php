@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Database\Factories\Shop;
 
+use App\Models\Shop\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CategoryFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var null|string
+     */
+    protected $model = Category::class;
+
     /**
      * Define the model's default state.
      *

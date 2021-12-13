@@ -9,6 +9,7 @@ use App\Enums\PaymentStatus;
 use App\Fluent\Payment as PaymentFluent;
 use App\Models\Traits\HasPayments;
 use App\Models\User;
+use Database\Factories\Shop\OrderFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -108,6 +109,16 @@ class Order extends Model implements Payable
             $targetDate->month,
             $orderCount + 1,
         );
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return new OrderFactory();
     }
 
     public function user(): BelongsTo

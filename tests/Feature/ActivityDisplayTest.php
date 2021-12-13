@@ -15,14 +15,16 @@ class ActivityDisplayTest extends TestCase
      */
     public function test_various_routes(): void
     {
-        $publicEvent = factory(Activity::class)->create([
+        /** @var Activity $publicEvent */
+        $publicEvent = Activity::factory()->create([
             'is_public' => true,
             'published_at' => Date::today()->subYear(),
             'start_date' => Date::today()->addWeeks(1),
             'end_date' => Date::today()->addWeeks(1)->addHours(5),
         ]);
 
-        $privateEvent = factory(Activity::class)->create([
+        /** @var Activity $privateEvent */
+        $privateEvent = Activity::factory()->create([
             'is_public' => false,
             'published_at' => Date::today()->subYear(),
             'start_date' => Date::today()->addWeeks(2),

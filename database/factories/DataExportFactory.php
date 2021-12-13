@@ -23,9 +23,9 @@ class DataExportFactory extends Factory
         ];
     }
 
-    public function withData()
+    public function withData(): self
     {
-        $this->afterMaking(function (DataExport $dataExport) {
+        return $this->afterMaking(function (DataExport $dataExport) {
             $path = "user-export/data/{$this->faker->uuid}.json";
 
             Storage::put($path, json_encode([
@@ -38,7 +38,7 @@ class DataExportFactory extends Factory
         });
     }
 
-    public function expired()
+    public function expired(): self
     {
         return $this->afterCreating(function (DataExport $dataExport) {
             $dataExport->expires_at = $this->faker->dateTimeBetween('-1 year', '-1 day');
