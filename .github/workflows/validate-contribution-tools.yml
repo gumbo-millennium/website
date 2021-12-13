@@ -28,7 +28,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Validate config
-        run: docker-compose -f .devcontainer/docker-compose config -q
+        run: docker-compose -f .devcontainer/docker-compose.yml config -q
 
       - name: Log in to GitHub Packages
         if: ${{ github.event_name == 'push' }}
