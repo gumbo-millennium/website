@@ -14,14 +14,11 @@ on:
       - main
       - develop
 
-
 jobs:
   docker-build:
-    name: Build Docker images
+    name: Build Codespace image
 
     runs-on: ubuntu-latest
-
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
     steps:
       - name: Checkout repository
@@ -30,52 +27,24 @@ jobs:
       - name: Create empty env
         run: cp .env.example .env
 
+      - name: Validate config
+        run: docker-compose -f .devcontainer/docker-compose config -q
+
       - name: Log in to GitHub Packages
+        if: ${{ github.event_name == 'push' }}
         run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin <<< "${DOCKER_PASSWORD}"
         env:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull images
-        run: docker-compose pull
+        if: ${{ github.event_name == 'push' }}
+        run: docker-compose -f .devcontainer/docker-compose.yml pull
         continue-on-error: true
 
       - name: Build images
-        run: docker-compose build
+        if: ${{ github.event_name == 'push' }}
+        run: docker-compose -f .devcontainer/docker-compose.yml build
 
       - name: Upload images
-        run: docker-compose push
-
-  validate-composer:
-    name: Validate contribute command
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@master
-        with:
-          php-version: 7.4
-          extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
-          coverage: none
-          tools: composer
-
-      - name: Log in to GitHub Packages
-        run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin <<< "${DOCKER_PASSWORD}"
-        env:
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Configure Laravel Nova auth
-        run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
-
-      - name: Run Contribute command
-        run: composer run contribute
-
-      - name: Validate result
-        run: |
-          test -f .env
-          curl -s -o /dev/null -D- -m 5 http://localhost:13370
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: docker-compose -f .devcontainer/docker-compose.yml push
