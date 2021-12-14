@@ -27,6 +27,15 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/cache/apt /var/lib/apt
 
+# Install MySQL client
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5 \
+    && source /etc/os-release \
+    && echo "deb http://repo.mysql.com/apt/${ID}/ ${VERSION_CODENAME} mysql-8.0" > /etc/apt/sources.list.d/mysql-repo.list \
+    && apt-get update \
+    && apt-get install -y mysql-client \
+    && apt-get clean \
+    && rm -rf /var/cache/apt /var/lib/apt
+
 # Install xdebug
 RUN yes | pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
@@ -72,7 +81,7 @@ RUN echo 'export PATH="$PATH:$( composer config --global --absolute bin-dir )"' 
 
 # Create a non-root user to use - see https://aka.ms/vscode-remote/containers/non-root-user.
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/zsh --uid $USER_UID --gid $USER_GID -G www-data,supervisor -m $USERNAME \
+    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -G www-data,supervisor -m $USERNAME \
     && apt-get update \
     && apt-get install -y sudo \
     && apt-get clean \
