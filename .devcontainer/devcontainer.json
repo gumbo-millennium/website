@@ -1,70 +1,64 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.208.0/containers/php-mariadb
-// Update the VARIANT arg in docker-compose.yml to pick a PHP version
+// For format details, see https://aka.ms/devcontainer.json.
 {
-	"name": "PHP and MySQL for Laravel",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspace",
+    "name": "PHP and MySQL for Laravel",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"sqltools.connections": [{
-			"name": "Container database",
-			"driver": "MySQL",
-			"server": "localhost",
-			"previewLimit": 50,
-			"port": 3306,
-			"database": "vscode",
-			"username": "vscode",
-			"password": "vscode"
-		}]
-	},
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+        "sqltools.connections": [{
+            "name": "Container database",
+            "driver": "MySQL",
+            "server": "localhost",
+            "previewLimit": 50,
+            "port": 3306,
+            "database": "vscode",
+            "username": "vscode",
+            "password": "vscode"
+        }]
+    },
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"felixfbecker.php-debug",
-		"felixfbecker.php-intellisense",
-		"mrmlnc.vscode-apache",
-		"mtxr.sqltools",
-		"mtxr.sqltools-driver-mysql",
-		"GitHub.copilot",
-	],
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "felixfbecker.php-debug",
+        "felixfbecker.php-intellisense",
+        "mrmlnc.vscode-apache",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql",
+        "GitHub.copilot",
+    ],
 
-	// For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
-	"forwardPorts": [
-		8080,
-		"mysql:3306"
-	],
+    // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
+    "forwardPorts": [
+        8080,
+        3306
+    ],
 
-	"portsAttributes": {
-		"8080": {
-			"label": "Application",
-			"onAutoForward": "openBrowserOnce"
-		},
-		"3306": {
-			"label": "Database",
-			"onAutoForward": "silent"
-		}
-	},
+    "portsAttributes": {
+        "8080": {
+            "label": "Application",
+            "onAutoForward": "openBrowserOnce"
+        },
+        "3306": {
+            "label": "Database",
+            "onAutoForward": "silent"
+        }
+    },
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": [
-		"test -f /workspace/.env || cp /workspace/.devcontainer/devcontainer.env /workspace/.env",
-		"composer config --global http-basic.nova.laravel.com \"${NOVA_USER}\" \"${NOVA_PASSWORD}\"",
-		"composer -d /workspace install",
-		"php /workspace/artisan key:generate",
-	],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": [
+        // noop
+    ],
 
-	"postStartCommand": [
-		"/workspace/.devcontainer/bin/setup-container.sh",
-	],
+    // Use 'postStartCommand' to run commands after the container is started.
+    "postStartCommand": [
+        "/workspace/.devcontainer/bin/setup-container.sh",
+    ],
 
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
-	"features": {
-
-		"git": "os-provided",
-		"github-cli": "latest"
-	}
+    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode",
+    "features": {
+        "github-cli": "latest"
+    }
 }

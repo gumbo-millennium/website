@@ -107,5 +107,9 @@ ENV DB_DATABASE=vscode
 ENV DB_USERNAME=vscode
 ENV DB_PASSWORD=vscode
 
+# Install setup-container script somewhere clever
+COPY ./bin/setup-container.sh /usr/local/bin/setup-container.sh
+RUN chmod 0555 /usr/local/bin/setup-container.sh
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=

@@ -23,7 +23,7 @@ fi
 
 if [ ! -z "$NOVA_USERNAME" -a ! -z "$NOVA_PASSWORD" ]; then
     echo "Assigning Nova credentials"
-    composer config --global http-basic.nova.laravel.com "${NOVA_USER}" "${NOVA_PASSWORD}"
+    composer config --global http-basic.nova.laravel.com "${NOVA_USERNAME}" "${NOVA_PASSWORD}"
 fi
 
 echo "Installing dependencies"
