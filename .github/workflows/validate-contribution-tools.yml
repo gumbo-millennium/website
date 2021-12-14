@@ -42,7 +42,16 @@ jobs:
           docker pull composer/composer:latest
         continue-on-error: true
 
-      - name: Build image
+      - name: Build Docker image
+        run: |
+          docker build \
+            --pull \
+            --compress \
+            --cache-from ghcr.io/gumbo-millennium/website/codespaces:latest \
+            --tag ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }} \
+            .devcontainer/
+
+      - name: Build Devcontainer image
         run: |
           devcontainer build \
             --image-name ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }}
