@@ -1,4 +1,4 @@
-name: "Validate contributing workspace"
+name: "Pre-build Codespaces workspace"
 
 on:
   push:
@@ -16,7 +16,7 @@ on:
 
 jobs:
   codespaces:
-    name: Validate Codespaces configuration
+    name: Validate and build Codespaces workspace
 
     runs-on: ubuntu-latest
 
