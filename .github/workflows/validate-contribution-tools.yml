@@ -48,6 +48,7 @@ jobs:
             --pull \
             --compress \
             --cache-from ghcr.io/gumbo-millennium/website/codespaces:latest \
+            --tag ghcr.io/gumbo-millennium/website/codespaces:latest \
             --tag ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }} \
             .devcontainer/
 
