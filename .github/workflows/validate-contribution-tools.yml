@@ -15,8 +15,8 @@ on:
       - develop
 
 jobs:
-  docker-build:
-    name: Build Codespace image
+  codespaces:
+    name: Validate Codespaces configuration
 
     runs-on: ubuntu-latest
 
@@ -24,25 +24,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create empty env
-        run: cp .env.example .env
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
 
-      - name: Validate config
-        run: docker-compose -f .devcontainer/docker-compose.yml config -q
+      - name: Check configuration
+        run: docker-compose -f  .devcontainer/docker-compose.yml config -q
+
+      - name: Install devcontainer CLI
+        run: npm install -g @vscode/dev-container-cli
+
+      - name: Pull images (for caching)
+        run: |
+          docker pull ghcr.io/gumbo-millennium/website/codespaces:latest
+          docker pull composer/composer:latest
+        continue-on-error: true
+
+      - name: Build image
+        run: |
+          devcontainer build \
+            --image-name ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }}
 
       - name: Log in to GitHub Packages
         if: ${{ github.event_name == 'push' }}
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
 
-      - name: Pull images
+      - name: Push images (sha)
         if: ${{ github.event_name == 'push' }}
-        run: docker-compose -f .devcontainer/docker-compose.yml pull
-        continue-on-error: true
+        run: docker push ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }}
 
-      - name: Build images
-        if: ${{ github.event_name == 'push' }}
-        run: docker-compose -f .devcontainer/docker-compose.yml build
-
-      - name: Upload images
+      - name: Push images (stable)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: docker-compose -f .devcontainer/docker-compose.yml push
+        run: |
+          docker tag ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }} ghcr.io/gumbo-millennium/website/codespaces:latest
+          docker push ghcr.io/gumbo-millennium/website/codespaces:latest
+
+      - name: Push images (next)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        run: |
+          docker tag ghcr.io/gumbo-millennium/website/codespaces:${{ github.sha }} ghcr.io/gumbo-millennium/website/codespaces:next
+          docker push ghcr.io/gumbo-millennium/website/codespaces:next

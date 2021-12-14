@@ -3,7 +3,6 @@ version: "3.6"
 services:
   app:
     image: ghcr.io/gumbo-millennium/website/codespaces
-    build: .
     volumes:
       - ..:/workspace:cached
     ports:
