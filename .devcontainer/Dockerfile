@@ -37,35 +37,6 @@ RUN yes | pecl install xdebug \
 RUN yes '' | pecl install redis \
     && echo "extension=$(find /usr/local/lib/php/extensions/ -name redis.so)" > /usr/local/etc/php/conf.d/redis.ini
 
-# Install and configure supervisord
-RUN apt-get update \
-    && apt-get install -y supervisor \
-    && apt-get clean \
-    && rm -rf /var/cache/apt /var/lib/apt
-RUN groupadd --system supervisor
-COPY ./supervisor/*.conf /etc/supervisor/conf.d/
-
-# Create a non-root user to use - see https://aka.ms/vscode-remote/containers/non-root-user.
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/zsh --uid $USER_UID --gid $USER_GID -G www-data,supervisor -m $USERNAME \
-    && apt-get update \
-    && apt-get install -y sudo \
-    && apt-get clean \
-    && rm -rf /var/cache/apt /var/lib/apt \
-    && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
-
-# Install Composer from the Composer docker image, and auto-bind user composer dir on login
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN echo 'export PATH="$PATH:$( composer config --global --absolute bin-dir )"' > /etc/profile.d/composer.sh \
-    && chmod 0555 /etc/profile.d/composer.sh
-
-# Install Node LTS
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean \
-    && rm -rf /var/cache/apt /var/lib/apt
-
 # Install libzip-dev
 RUN apt-get update \
     && apt-get install -y libzip-dev libpng-dev libjpeg-dev \
@@ -79,6 +50,35 @@ RUN docker-php-ext-configure zip \
     && docker-php-ext-configure gd \
     && docker-php-ext-install gd pcntl exif \
     && docker-php-source delete
+
+# Install Node LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/cache/apt /var/lib/apt
+
+# Install and configure supervisord
+RUN apt-get update \
+    && apt-get install -y supervisor \
+    && apt-get clean \
+    && rm -rf /var/cache/apt /var/lib/apt
+RUN groupadd --system supervisor
+COPY ./supervisor/*.conf /etc/supervisor/conf.d/
+
+# Install Composer from the Composer docker image, and auto-bind user composer dir on login
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN echo 'export PATH="$PATH:$( composer config --global --absolute bin-dir )"' > /etc/profile.d/composer.sh \
+    && chmod 0555 /etc/profile.d/composer.sh
+
+# Create a non-root user to use - see https://aka.ms/vscode-remote/containers/non-root-user.
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd -s /bin/zsh --uid $USER_UID --gid $USER_GID -G www-data,supervisor -m $USERNAME \
+    && apt-get update \
+    && apt-get install -y sudo \
+    && apt-get clean \
+    && rm -rf /var/cache/apt /var/lib/apt \
+    && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Copy PHP-FPM config and self-test
 COPY ./fpm/docker-pool.conf $PHP_INI_DIR/../php-fpm.d/zz-docker.conf
