@@ -12,13 +12,12 @@ cd "$APP_DIR"
 # Create env if missing
 if [ ! -f ".env" ]; then
     echo "Creating .env file"
-    cp .env.example .env
-    sed --in-place \
-        --regexp-extended \
-        --expression='s/^DB_DATABASE=(.+?)$/DB_DATABASE=vscode' \
-        --expression='s/^DB_USERNAME=(.+?)$/DB_USERNAME=vscode' \
-        --expression='s/^DB_PASSWORD=(.+?)$/DB_PASSWORD=vscode' \
-        .env
+    sed --regexp-extended \
+        --expression='s/^DB_USERNAME=(.+?)$/DB_USERNAME=vscode/' \
+        --expression='s/^DB_PASSWORD=(.+?)$/DB_PASSWORD=vscode/' \
+        --expression='s/^APP_KEY=$/APP_KEY=base64:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=/' \
+        .env.example \
+        > .env
 fi
 
 if [ ! -z "$NOVA_USERNAME" -a ! -z "$NOVA_PASSWORD" ]; then
@@ -29,7 +28,7 @@ fi
 echo "Installing dependencies"
 composer install
 
-if grep -q -E '^APP_KEY=$' .env; then
+if grep -q -E '^APP_KEY=(base64:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=)?$' .env; then
     echo "Setting application key"
     php artisan key:generate
 fi
