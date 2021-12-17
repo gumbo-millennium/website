@@ -35,7 +35,7 @@ RUN gpg \
     && gpg --export 8C718D3B5072E1F5 > /etc/apt/trusted.gpg.d/mysql-repo.gpg \
     && chmod 644 /etc/apt/trusted.gpg.d/mysql-repo.gpg \
     && echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/mysql-repo.gpg] http://repo.mysql.com/apt/$(lsb_release -is)/ $(lsb_release -cs) mysql-8.0" \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/mysql-repo.gpg] http://repo.mysql.com/apt/debian/ $(lsb_release -cs) mysql-8.0" \
         | tee /etc/apt/sources.list.d/mysql-repo.list \
         > /dev/null \
     && apt-get update \
