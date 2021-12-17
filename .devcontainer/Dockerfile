@@ -28,9 +28,16 @@ RUN apt-get update \
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install MySQL client
-RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5 \
-    && source /etc/os-release \
-    && echo "deb http://repo.mysql.com/apt/${ID}/ ${VERSION_CODENAME} mysql-8.0" > /etc/apt/sources.list.d/mysql-repo.list \
+RUN gpg \
+        --recv-keys \
+        --keyserver pgp.mit.edu \
+        --recv-keys 8C718D3B5072E1F5 \
+    && gpg --export 8C718D3B5072E1F5 > /etc/apt/trusted.gpg.d/mysql-repo.gpg \
+    && chmod 644 /etc/apt/trusted.gpg.d/mysql-repo.gpg \
+    && echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/mysql-repo.gpg] http://repo.mysql.com/apt/$(lsb_release -is)/ $(lsb_release -cs) mysql-8.0" \
+        | tee /etc/apt/sources.list.d/mysql-repo.list \
+        > /dev/null \
     && apt-get update \
     && apt-get install -y mysql-client \
     && apt-get clean \
