@@ -66,18 +66,26 @@ if ($ticketPrices->isEmpty()) {
             </div>
         </x-slot>
 
-        @if ($isCoronacheck)
-        <div class="notice notice--large notice--warning mx-8">
-            <h3 class="notice__title">Testen voor Toegang</h3>
-            <p>Om aan deze activiteit deel te nemen, moet je aan de deur een geldige CoronaCheck QR-code kunnen tonen.</p>
-        </div>
-        @endif
 
-        {{-- Unlisted --}}
-        @if (!$activity->is_published)
-        <div class="notice notice--brand mx-8">
-            Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
-        </div>
+        {{-- Activity has ended --}}
+        @if ($activity->end_date < Date::now())
+        <x-notice class="mx-8">
+            Deze activiteit is al afgelopen.
+        </x-notice>
+        @else
+            {{-- Coronacheck --}}
+            @if ($isCoronacheck)
+            <x-notice type="warning" title="Testen voor Toegang" class="mx-8">
+                Om aan deze activiteit deel te nemen, moet je aan de deur een geldige CoronaCheck QR-code kunnen tonen.
+            </x-notice>
+            @endif
+
+            {{-- Unlisted --}}
+            @if (!$activity->is_published)
+            <x-notice type="brand" class="mx-8">
+                Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
+            </x-notice>
+            @endif
         @endif
 
         <div class="p-8">
@@ -96,7 +104,7 @@ if ($ticketPrices->isEmpty()) {
 
         <div class="px-8 flex flex-col gap-4 items-stretch text-center md:flex-row">
             @if ($enrollment = Enroll::getEnrollment($activity))
-                <a href="{{ route('enroll.show', [$activity]) }}" class="btn btn--brand max-w-1/2 md:flex-grow">
+                <a href="{{ route('enroll.show', [$activity]) }}" class="btn btn--brand max-w-1/2 md:flex-grow" data-action="view-enrollment">
                     @if ($enrollment->is_stable)
                         Bekijk inschrijving
                     @else
@@ -105,16 +113,16 @@ if ($ticketPrices->isEmpty()) {
                 </a>
 
                 @if ($enrollment->is_stable && Enroll::canTransfer($enrollment))
-                    <a href="{{ route('enroll.transfer', [$activity]) }}" class="btn md:flex-grow">
+                    <a href="{{ route('enroll.transfer', [$activity]) }}" class="btn md:flex-grow" data-action="transfer-enrollment">
                         Overdragen
                     </a>
                 @endif
-            @elseif ($activity->tickets->count() == 0)
+            @elseif ($activity->tickets->count() < 1 || $activity->end_date < Date::now())
                 <button class="disabled btn">
                     Inschrijven niet mogelijk
                 </button>
             @else
-                <a href="{{ route('enroll.create', [$activity]) }}" class="btn btn--brand">
+                <a href="{{ route('enroll.create', [$activity]) }}" class="btn btn--brand" data-action="enroll">
                     Inschrijven
                 </a>
             @endif
