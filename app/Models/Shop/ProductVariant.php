@@ -6,7 +6,7 @@ namespace App\Models\Shop;
 
 use App\Fluent\Image;
 use App\Helpers\Str;
-use App\Models\Traits\IsSluggable;
+use App\Models\SluggableModel;
 use App\Models\Traits\IsUuidModel;
 use Database\Factories\Shop\ProductVariantFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,10 +57,9 @@ use Illuminate\Support\HtmlString;
  * @method static \Illuminate\Database\Query\Builder|ProductVariant withoutTrashed()
  * @mixin \Eloquent
  */
-class ProductVariant extends Model
+class ProductVariant extends SluggableModel
 {
     use HasFactory;
-    use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;
 
@@ -137,11 +136,11 @@ class ProductVariant extends Model
 
     public function scopeWithUniqueSlugConstraints(
         Builder $query,
-        self $model,
+        Model $model,
         $attribute,
         $config,
         $slug
-    ) {
+    ): Builder {
         return $query->where('product_id', $model->product_id);
     }
 

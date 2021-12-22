@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Models\Shop;
 
 use App\Fluent\Image;
-use App\Models\Traits\IsSluggable;
+use App\Models\SluggableModel;
 use App\Models\Traits\IsUuidModel;
 use Database\Factories\Shop\CategoryFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
@@ -42,10 +41,9 @@ use Illuminate\Support\Facades\URL;
  * @method static \Illuminate\Database\Query\Builder|Category withoutTrashed()
  * @mixin \Eloquent
  */
-class Category extends Model
+class Category extends SluggableModel
 {
     use HasFactory;
-    use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;
 

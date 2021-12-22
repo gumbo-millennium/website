@@ -6,11 +6,10 @@ namespace App\Models\Shop;
 
 use App\Fluent\Image;
 use App\Helpers\Arr;
-use App\Models\Traits\IsSluggable;
+use App\Models\SluggableModel;
 use App\Models\Traits\IsUuidModel;
 use Database\Factories\Shop\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,10 +60,9 @@ use Illuminate\Support\HtmlString;
  * @method static \Illuminate\Database\Query\Builder|Product withoutTrashed()
  * @mixin \Eloquent
  */
-class Product extends Model
+class Product extends SluggableModel
 {
     use HasFactory;
-    use IsSluggable;
     use IsUuidModel;
     use SoftDeletes;
 
