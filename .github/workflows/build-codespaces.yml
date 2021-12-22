@@ -6,6 +6,9 @@ on:
       - main
       - develop
 
+    paths:
+      - .devcontainer/
+
   pull_request:
     types:
       - synchronize
@@ -13,6 +16,9 @@ on:
     branches:
       - main
       - develop
+
+    paths:
+      - .devcontainer/
 
 jobs:
   codespaces:
