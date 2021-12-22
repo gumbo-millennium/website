@@ -69,14 +69,6 @@ class JoinRequest extends FormRequest
     }
 
     /**
-     * Returns the data without sensitive fields.
-     */
-    public function safe(): array
-    {
-        return $this->except(['password', 'password_confirm']);
-    }
-
-    /**
      * Returns the submission for this data.
      */
     public function submission(): JoinSubmission
