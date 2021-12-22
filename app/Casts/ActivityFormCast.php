@@ -7,7 +7,6 @@ namespace App\Casts;
 use App\Nova\Flexible\Presets\ActivityForm;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
-use Whitecube\NovaFlexibleContent\Value\FlexibleCast;
 
 class ActivityFormCast extends FlexibleCast implements CastsAttributes
 {
