@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\HtmlString;
 
 /**
  * App\Models\BotQuote.
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|int $user_id
  * @property string $display_name
  * @property string $quote
+ * @property-read HtmlString $formatted_quote
  * @property-read null|\App\Models\User $user
  * @method static \Database\Factories\BotQuoteFactory factory(...$parameters)
  * @method static Builder|BotQuote newModelQuery()
@@ -79,5 +81,10 @@ class BotQuote extends Model
             $query->whereNotNull('submitted_at')
                 ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS));
         });
+    }
+
+    public function getFormattedQuoteAttribute(): HtmlString
+    {
+        return new HtmlString(nl2br(e($this->quote)));
     }
 }

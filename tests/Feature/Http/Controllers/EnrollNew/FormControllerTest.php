@@ -96,7 +96,7 @@ class FormControllerTest extends TestCase
     public function test_without_form(): void
     {
         /** @var Activity $activity */
-        $activity = Activity::factory()->withForm()->withTickets()->create();
+        $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
         /** @var User $user */

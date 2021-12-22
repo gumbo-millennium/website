@@ -39,22 +39,28 @@ class BotQuoteControllerTest extends FeatureTestCase
         $user = $this->getGuestUser();
         $this->actingAs($user);
 
-        BotQuote::factory()
+        $newQuotes = BotQuote::factory()
             ->times(8)
-            ->create(['user_id' => $user->id]);
+            ->for($user)
+            ->create();
 
-        BotQuote::factory()
+        $sentQuotes = BotQuote::factory()
             ->times(6)
             ->sent()
-            ->create(['user_id' => $user->id]);
+            ->for($user)
+            ->create();
 
-        $response = $this->get(route('account.quotes'));
+        $response = $this->get(route('account.quotes'))
+            ->assertOk();
 
         // Count the number of delete buttons
-        $this->assertEquals(8, substr_count(
-            $response->getContent(),
-            'Verwijder wist-je-datje',
-        ));
+        foreach ($newQuotes as $quote) {
+            $response->assertSee("data-delete-quote-id=\"{$quote->id}\"", false);
+        }
+
+        foreach ($sentQuotes as $quote) {
+            $response->assertDontSee("data-delete-quote-id=\"{$quote->id}\"", false);
+        }
     }
 
     public function test_date_labels(): void

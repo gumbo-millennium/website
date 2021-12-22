@@ -30,4 +30,11 @@ class CategoryFactory extends Factory
             'visible' => $this->faker->boolean(30),
         ];
     }
+
+    public function visible(bool $visible = true): self
+    {
+        return $this->state([
+            'visible' => $visible,
+        ]);
+    }
 }

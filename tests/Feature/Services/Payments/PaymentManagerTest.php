@@ -58,10 +58,10 @@ class PaymentManagerTest extends TestCase
     public function test_calls_are_forwarded_properly(): void
     {
         /** @var Models\User $user */
-        $user = factory(Models\User::class)->create();
+        $user = Models\User::factory()->create();
 
         /** @var Models\Activity $activity */
-        $activity = factory(Models\Activity::class)->create();
+        $activity = Models\Activity::factory()->create();
 
         /** @var Models\Ticket $ticket */
         $ticket = $activity->tickets()->create([

@@ -36,7 +36,9 @@ class JoinSubmissionFactory extends Factory
 
             // User details
             'date_of_birth' => $this->faker->dateTimeBetween('30 years ago', '16 years ago')->format('d-m-Y'),
-            'gender' => $this->faker->optional(0.2, $this->faker->randomElement('Man', 'Vrouw'))->randomElement([
+            'gender' => $this->faker->randomElement([
+                ...array_fill(0, 10, 'Man'),
+                ...array_fill(0, 10, 'Vrouw'),
                 'Non-Binary',
                 'Zeg ik liever niet',
             ]),

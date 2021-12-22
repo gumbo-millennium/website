@@ -66,7 +66,6 @@ if ($ticketPrices->isEmpty()) {
             </div>
         </x-slot>
 
-
         {{-- Activity has ended --}}
         @if ($activity->end_date < Date::now())
         <x-notice class="mx-8">

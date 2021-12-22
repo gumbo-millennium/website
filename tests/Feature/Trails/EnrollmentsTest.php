@@ -6,17 +6,15 @@ namespace Tests\Feature\Trails;
 
 use App\Helpers\Arr;
 use App\Helpers\Str;
-use App\Nova\Flexible\Layouts;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Models\FormLayout;
 use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Nova\Flexible\Layouts;
 use Generator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
-use LogicException;
 use Tests\TestCase;
 
 /**
@@ -148,12 +146,12 @@ class EnrollmentsTest extends TestCase
         foreach ($fields as $field) {
             yield [
                 'key' => Str::random(16),
-                'layout' => (new $field)->name(),
-                "attributes" => [
-                    "help" => $this->faker->sentence(),
-                    "label" => $this->faker->sentence(),
-                    "required" => true
-                ]
+                'layout' => (new $field())->name(),
+                'attributes' => [
+                    'help' => $this->faker->sentence(),
+                    'label' => $this->faker->sentence(),
+                    'required' => true,
+                ],
             ];
         }
     }

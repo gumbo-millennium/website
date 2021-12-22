@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Feature\Models;
 
 use App\Models\Page;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class PageModelTest extends TestCase
 {

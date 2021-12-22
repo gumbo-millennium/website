@@ -9,12 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Resource;
 use Tests\TestCase;
-use Tests\Traits\RequiresNova;
 
 class ResourceBaselineTest extends TestCase
 {
-    use RequiresNova;
-
     /**
      * Tests listing, viewing create, viewing.
      *
@@ -28,7 +25,7 @@ class ResourceBaselineTest extends TestCase
         $this->assertTrue(is_a($modelClass, Model::class, true), 'Resource model is not a model');
 
         /** @var Model $model */
-        $model = factory($modelClass)->create();
+        $model = $modelClass::factory()->create();
         $this->assertInstanceOf($modelClass, $model, 'Model class is not the same as the class passed to the test');
 
         $resource = new $resourceClass($model);

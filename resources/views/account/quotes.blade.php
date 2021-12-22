@@ -26,14 +26,11 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 <h3 class="font-title text-2xl">Te-verzenden wist-je-datjes</h3>
 <p class="mb-4">Deze wist-je-datjes moeten nog verstuurd worden. Hier kàn je nog een potje zelfcensuur op loslaten</p>
 
-
 <x-account.quote-grid :delete="true" :quotes="$unsent">
-    <x-slot name="empty">
-        <div class="py-16 px-4 text-center">
-            <h3 class="text-title text-center">Geen wist-je-datjes</h3>
-            <p class="text-gray-primary-2">Je hebt nog geen wist-je-datjes ingestuurd, of ze zijn allemaal al doorgestuurd.</p>
-        </div>
-    </x-slot>
+    <div class="py-16 px-4 text-center">
+        <h3 class="text-title text-center">Geen wist-je-datjes</h3>
+        <p class="text-gray-primary-2">Je hebt nog geen wist-je-datjes ingestuurd, of ze zijn allemaal al doorgestuurd.</p>
+    </div>
 </x-account.quote-grid>
 
 <hr class="my-8 border-gray-secondary-3" />
@@ -43,12 +40,10 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 <p class="mb-4">Deze wist-je-datjes zijn doorgestuurd naar de Gumbode. Oude wist-je-datjes kunnen verwijderd worden.</p>
 
 <x-account.quote-grid :delete="false" :quotes="$sent">
-    <x-slot name="empty">
-        <div class="py-16 px-4 text-center">
-            <h3 class="text-title text-center">Geen wist-je-datjes</h3>
-            <p class="text-gray-primary-2">Er zijn geen wist-je-datjes van jou doorgestuurd naar de Gumbode, of ze zijn verwijderd.</p>
-        </div>
-    </x-slot>
+    <div class="py-16 px-4 text-center">
+        <h3 class="text-title text-center">Geen wist-je-datjes</h3>
+        <p class="text-gray-primary-2">Er zijn geen wist-je-datjes van jou doorgestuurd naar de Gumbode, of ze zijn verwijderd.</p>
+    </div>
 </x-account.quote-grid>
 
 @endsection

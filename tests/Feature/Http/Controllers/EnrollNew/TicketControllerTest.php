@@ -30,10 +30,10 @@ class TicketControllerTest extends TestCase
     public function test_guest_access(): void
     {
         $activity = Activity::factory()->create();
-        $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
+        $ticket = $activity->tickets()->save(Ticket::factory()->create());
 
         $privateActivity = Activity::factory()->private()->create();
-        $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
+        $privateTicket = $privateActivity->tickets()->save(Ticket::factory()->create());
 
         // View routes
         $this->get(route('enroll.create', [$activity]))
@@ -53,13 +53,13 @@ class TicketControllerTest extends TestCase
     public function test_user_access(): void
     {
         $activity = Activity::factory()->create();
-        $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
+        $ticket = $activity->tickets()->save(Ticket::factory()->create());
 
         $privateActivity = Activity::factory()->private()->create();
-        $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
+        $privateTicket = $privateActivity->tickets()->save(Ticket::factory()->create());
 
         // Get user
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         // View routes
         $this->get(route('enroll.create', [$activity]))
@@ -80,10 +80,10 @@ class TicketControllerTest extends TestCase
     public function test_member_access(): void
     {
         $activity = Activity::factory()->create();
-        $ticket = $activity->tickets()->save(factory(Ticket::class)->create());
+        $ticket = $activity->tickets()->save(Ticket::factory()->create());
 
         $privateActivity = Activity::factory()->private()->create();
-        $privateTicket = $privateActivity->tickets()->save(factory(Ticket::class)->create());
+        $privateTicket = $privateActivity->tickets()->save(Ticket::factory()->create());
 
         // Check member
         $this->actingAs($this->getMemberUser());
@@ -109,7 +109,7 @@ class TicketControllerTest extends TestCase
     {
         $activity = Activity::factory()->create();
 
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         $this->get($createRoute = route('enroll.create', [$activity]))
             ->assertOk()
@@ -328,7 +328,7 @@ class TicketControllerTest extends TestCase
 
         // Enroll two users
         for ($i = 0; $i < 2; $i++) {
-            $this->actingAs(factory(User::class)->create());
+            $this->actingAs(User::factory()->create());
             Enroll::createEnrollment($activity, $ticket);
         }
 
@@ -363,7 +363,7 @@ class TicketControllerTest extends TestCase
         ]);
 
         // Act as a regular user
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         // Test if ticket page is visible
         $this->get(route('enroll.create', $activity))

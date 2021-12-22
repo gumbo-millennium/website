@@ -1,12 +1,14 @@
-@php
-$hasDelete = (bool) ($delete ?? false);
-$lastDate = null;
-@endphp
+@props([
+    'quotes',
+    'delete' => false,
+])
+@php($lastDate = null)
 @forelse ($quotes as $quote)
-    @php
+    <?php
     $dateIso = $quote->created_at->toIso8601String();
     $currentDate = $quote->created_at->isoFormat('dddd D MMM, Y')
-    @endphp
+    ?>
+
     @if ($currentDate !== $lastDate)
     <p class="my-4 text-gray-secondary-3 text-center text-sm">
         {{ $currentDate }}
@@ -21,7 +23,7 @@ $lastDate = null;
         <blockquote class="mb-4 text-right">
             {{-- Message --}}
             <p class="rounded-lg bg-blue-secondary-2 p-2">
-                {!! nl2br(e($quote->quote)) !!}
+                {{ $quote->formatted_quote }}
             </p>
 
             {{-- Footer --}}
@@ -36,7 +38,7 @@ $lastDate = null;
             </footer>
         </blockquote>
 
-        @if ($hasDelete)
+        @if ($delete)
         <div class="mb-6 flex-none mr-2">
             <button
                 type="submit"
@@ -45,6 +47,7 @@ $lastDate = null;
                 name="quote-id"
                 value="{{ $quote->id }}"
                 aria-label="Verwijder je wist-je-datje"
+                data-delete-quote-id="{{ $quote->id }}"
             >
                 <x-icon icon="solid/trash-alt" class="icon" />
             </button>
@@ -52,9 +55,7 @@ $lastDate = null;
         @endif
     </div>
 
-    @php
-    $lastDate = $currentDate;
-    @endphp
+    @php($lastDate = $currentDate)
 @empty
-    {{ $empty }}
+    {{ $slot }}
 @endforelse

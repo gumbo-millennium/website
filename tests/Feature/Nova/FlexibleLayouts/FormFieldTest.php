@@ -10,11 +10,9 @@ use App\Nova\Flexible\Layouts\FormField;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\RequiresNova;
 
 class FormFieldTest extends TestCase
 {
-    use RequiresNova;
     use WithFaker;
 
     public function test_conversion(): void
@@ -52,11 +50,9 @@ class FormFieldTest extends TestCase
      */
     public function test_form_field_conversion(): void
     {
-        $this->markTestSkipped('Test is broken');
-
         // Make entry
         $activity = Activity::factory()->create([
-            'enrollment_questions' => json_encode([
+            'enrollment_questions' => [
                 [
                     'key' => '54fd249d9b4fc488',
                     'layout' => 'text-field',
@@ -75,7 +71,7 @@ class FormFieldTest extends TestCase
                         'required' => false,
                     ],
                 ],
-            ]),
+            ],
         ]);
 
         // Re-load activity from scratch

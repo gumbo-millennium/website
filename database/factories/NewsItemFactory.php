@@ -34,13 +34,14 @@ class NewsItemFactory extends Factory
         ];
     }
 
-    public function configure()
+    public function withImage(): self
     {
-        return $this->afterMaking(function (NewsItem $item) {
-            $item->cover = Storage::disk('public')->putFile(
-                'tests/images',
-                $this->faker->randomElement($this->findImages('test-assets/images')),
-            );
-        });
+        return $this->afterMaking(
+            fn (NewsItem $item) => $item->cover = Storage::disk('public')
+                ->putFile(
+                    'tests/images',
+                    $this->faker->randomElement($this->findImages('test-assets/images')),
+                ),
+        );
     }
 }

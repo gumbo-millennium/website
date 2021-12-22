@@ -46,14 +46,14 @@ use Illuminate\Support\HtmlString;
  * @property-read \App\Models\Shop\Order[]|\Illuminate\Database\Eloquent\Collection $orders
  * @property-read \App\Models\Shop\Product $product
  * @method static \Database\Factories\Shop\ProductVariantFactory factory(...$parameters)
- * @method static Builder|ProductVariant findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|ProductVariant newModelQuery()
  * @method static Builder|ProductVariant newQuery()
  * @method static \Illuminate\Database\Query\Builder|ProductVariant onlyTrashed()
  * @method static Builder|ProductVariant query()
- * @method static Builder|ProductVariant whereSlug(string $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @method static \Illuminate\Database\Query\Builder|ProductVariant withTrashed()
- * @method static Builder|ProductVariant withUniqueSlugConstraints(\self $model, $attribute, $config, $slug)
+ * @method static Builder|ProductVariant withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
  * @method static \Illuminate\Database\Query\Builder|ProductVariant withoutTrashed()
  * @mixin \Eloquent
  */

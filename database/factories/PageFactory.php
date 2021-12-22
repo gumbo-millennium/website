@@ -37,7 +37,7 @@ class PageFactory extends Factory
     public function withContents(): self
     {
         return $this->state([
-            'blocks' => json_encode($this->getEditorBlocks()),
+            'contents' => json_encode($this->getEditorBlocks()),
         ]);
     }
 }

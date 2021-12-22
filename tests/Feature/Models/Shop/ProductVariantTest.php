@@ -36,7 +36,7 @@ class ProductVariantTest extends TestCase
         Config::set('gumbo.shop.order-limit', 4);
 
         $product = Product::factory()->create();
-        $variant = $product->variants()->save(factory(ProductVariant::class)->make());
+        $variant = $product->variants()->save(ProductVariant::factory()->make());
 
         $this->assertSame(4, $variant->refresh()->applied_order_limit);
 

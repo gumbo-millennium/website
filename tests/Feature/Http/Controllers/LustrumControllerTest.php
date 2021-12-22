@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
@@ -76,15 +77,14 @@ class LustrumControllerTest extends TestCase
 
     public function test_with_merchandise(): void
     {
-        $shopCategory = Category::factory()->create([
-            'visible' => true,
-            'slug' => 'lustrum',
-        ]);
+        /** @var Category $shopCategory */
+        $shopCategory = Category::factory()
+            ->has(Product::factory(4)->hasVariants()->visible())
+            ->visible()
+            ->create(['slug' => 'lustrum']);
 
-        $shopProducts = Product::factory(4)->withVariants()->create([
-            'category_id' => $shopCategory->id,
-            'visible' => true,
-        ]);
+        /** @var Collection<Product> $shopProducts */
+        $shopProducts = $shopCategory->products;
 
         $result = $this->get($this->host)
             ->assertOk();

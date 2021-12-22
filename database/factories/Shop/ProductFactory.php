@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Factories\Shop;
 
 use App\Models\Shop\Product;
-use App\Models\Shop\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
@@ -46,9 +45,13 @@ class ProductFactory extends Factory
 
     public function withVariants(): self
     {
-        return $this->hasAttached(
-            ProductVariant::factory()->times($this->faker->numberBetween(1, 5)),
-            'variants',
-        );
+        return $this->hasVariants($this->faker->numberBetween(1, 5));
+    }
+
+    public function visible(bool $visible = true): self
+    {
+        return $this->state([
+            'visible' => $visible,
+        ]);
     }
 }

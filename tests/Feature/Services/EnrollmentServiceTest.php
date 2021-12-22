@@ -269,7 +269,7 @@ class EnrollmentServiceTest extends TestCase
         $this->assertCount(1, $user1->enrollments()->get());
 
         // Check user2 cannot enroll
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
         $this->assertFalse(Enroll::canEnroll($activity));
 
         $this->expectException(EnrollmentFailedException::class);
@@ -328,7 +328,7 @@ class EnrollmentServiceTest extends TestCase
         $activity = Activity::factory()->withTickets()->create();
         $ticket = $activity->tickets->first();
 
-        $this->actingAs(factory(User::class)->create());
+        $this->actingAs(User::factory()->create());
 
         // Check the user can enroll
         $this->assertTrue(Enroll::canEnroll($activity), 'Failed asserting the user can enroll into the activity');
