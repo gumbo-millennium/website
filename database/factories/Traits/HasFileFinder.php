@@ -34,7 +34,7 @@ trait HasFileFinder
         throw_if($actualPath === null, InvalidArgumentException::class, "Directory not found: ${path}");
 
         $result = Collection::make();
-        foreach ($fs->files($path) as $path) {
+        foreach ($fs->files($actualPath) as $path) {
             if (! Str::lower($path->getExtension()) === $extension) {
                 continue;
             }

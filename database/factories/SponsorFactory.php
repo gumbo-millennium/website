@@ -67,6 +67,6 @@ class SponsorFactory extends Factory
 
     public function configure()
     {
-        return $this->has(SponsorClick::factory()->times(10));
+        return $this->has(SponsorClick::factory()->times(10), 'clicks');
     }
 }

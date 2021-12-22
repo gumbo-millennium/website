@@ -103,7 +103,7 @@ class ActivityFactory extends Factory
 
     public function withForm(): self
     {
-        return $this->afterMaking(function (Activity $activity) {
+        return $this->state(function () {
             $fieldCount = $this->faker->numberBetween(1, 5);
 
             $fields = [];
@@ -135,7 +135,9 @@ class ActivityFactory extends Factory
                 ];
             }
 
-            $activity->enrollment_questions = $fields;
+            return [
+                'enrollment_questions' => $fields,
+            ];
         });
     }
 
