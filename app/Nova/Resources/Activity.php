@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
+use App\Helpers\Str;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions;
 use App\Nova\Fields\Seats;
@@ -204,13 +205,20 @@ class Activity extends Resource
             TextWithSlug::make('Titel', 'name')
                 ->sortable()
                 ->slug('slug')
-                ->rules('required', 'between:4,255'),
+                ->rules([
+                    'required',
+                    'between:4,255',
+                ]),
 
             Slug::make('Pad', 'slug')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
                 ->readonly(fn () => $this->exists)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
+                    $slug = $request->input($requestAttribute);
+                    $model->{$attribute} = Str::slug($slug, '-', 'nl');
+                }),
 
             Fields\Text::make('Slagzin', 'tagline')
                 ->hideFromIndex()
