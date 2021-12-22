@@ -18,7 +18,7 @@ jobs:
       - name: Setup NodeJS and cache
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 'lts/*'
           cache: 'npm'
 
       - name: Copy environment config
@@ -37,8 +37,20 @@ jobs:
           path: public/
 
   lint:
-    name: Lint
+    name: Lint on PHP ${{ matrix.php }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental == true }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php:
+          - '7.4'
+          - '8.0'
+          - '8.1'
+        include:
+          - php: '8.1'
+            experimental: true
 
     steps:
       - name: Checkout code
@@ -47,7 +59,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
         with:
-          php-version: '7.4'
+          php-version: ${{ matrix.php }}}
           tools: php-parallel-lint/php-parallel-lint
 
       - name: Lint PHP code
@@ -71,12 +83,12 @@ jobs:
         php:
           - '7.4'
           - '8.0'
-          # - '8.1'
+          - '8.1'
         include:
           - php: '7.4'
             main: true
-          # - php: '8.1'
-          #   experimental: true
+          - php: '8.1'
+            experimental: true
 
     services:
       database:
