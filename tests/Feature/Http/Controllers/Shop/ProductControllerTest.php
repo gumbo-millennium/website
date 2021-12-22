@@ -42,10 +42,10 @@ class ProductControllerTest extends TestCase
             ->assertOk();
 
         foreach ($visible as $category) {
-            $response->assertSeeText($category->name);
+            $response->assertSee($category->name);
         }
         foreach ($invisible as $category) {
-            $response->assertDontSeeText($category->name);
+            $response->assertDontSee($category->name);
         }
     }
 
@@ -57,7 +57,7 @@ class ProductControllerTest extends TestCase
 
         $this->onlyForMembers(route('shop.home'))
             ->assertOk()
-            ->assertSeeText($product->name);
+            ->assertSee($product->name);
     }
 
     public function test_category(): void
@@ -106,13 +106,13 @@ class ProductControllerTest extends TestCase
             ->assertOk();
 
         foreach ($visibleProducts as $category) {
-            $response->assertSeeText($category->name);
+            $response->assertSee($category->name);
         }
         foreach ($invisibleProducts as $category) {
-            $response->assertDontSeeText($category->name);
+            $response->assertDontSee($category->name);
         }
         foreach ($mismatchedProducts as $category) {
-            $response->assertDontSeeText($category->name);
+            $response->assertDontSee($category->name);
         }
     }
 
@@ -177,7 +177,7 @@ class ProductControllerTest extends TestCase
         $response->assertSee($variant->description_html ?? $product->description_html);
 
         foreach ($variants as $variant) {
-            $response->assertSeeText($variant->name);
+            $response->assertSee($variant->name);
         }
     }
 }

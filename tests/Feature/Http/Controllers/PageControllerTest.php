@@ -49,26 +49,26 @@ class PageControllerTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSeeText($advertisedProduct->name)
-            ->assertSeeText($public1->name)
-            ->assertDontSeeText($private->name)
-            ->assertSeeText($public2->name);
+            ->assertSee($advertisedProduct->name)
+            ->assertSee($public1->name)
+            ->assertDontSee($private->name)
+            ->assertSee($public2->name);
 
         $this->actingAs($this->getGuestUser())
             ->get('/')
             ->assertOk()
-            ->assertSeeText($advertisedProduct->name)
-            ->assertSeeText($public1->name)
-            ->assertDontSeeText($private->name)
-            ->assertSeeText($public2->name);
+            ->assertSee($advertisedProduct->name)
+            ->assertSee($public1->name)
+            ->assertDontSee($private->name)
+            ->assertSee($public2->name);
 
         $this->actingAs($this->getMemberUser())
             ->get('/')
             ->assertOk()
-            ->assertSeeText($advertisedProduct->name)
-            ->assertSeeText($public1->name)
-            ->assertSeeText($private->name)
-            ->assertDontSeeText($public2->name);
+            ->assertSee($advertisedProduct->name)
+            ->assertSee($public1->name)
+            ->assertSee($private->name)
+            ->assertDontSee($public2->name);
     }
 
     public function test_git_page(): void

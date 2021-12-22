@@ -94,6 +94,7 @@ class Enrollment extends UuidModel implements Payable
         'data' => EncryptedAttribute::class . ':json',
         'paid' => 'bool',
         'price' => 'int',
+        'total_price' => 'int',
     ];
 
     /**

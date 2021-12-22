@@ -42,7 +42,7 @@ class OrderControllerTest extends TestCase
         $response = $this->get(route('shop.order.create'));
         $response
             ->assertOk()
-            ->assertSeeText($variant->display_name)
+            ->assertSee($variant->display_name)
             ->assertSee(Str::price($payFee));
     }
 

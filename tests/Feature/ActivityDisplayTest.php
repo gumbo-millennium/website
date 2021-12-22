@@ -19,7 +19,7 @@ class ActivityDisplayTest extends TestCase
     public function test_various_routes(): void
     {
         /** @var Activity $publicEvent */
-        $publicEvent = Activity::factory()->create([
+        $publicEvent = Activity::factory()->withTickets()->create([
             'is_public' => true,
             'published_at' => Date::today()->subYear(),
             'start_date' => Date::today()->addWeeks(1),
@@ -27,7 +27,7 @@ class ActivityDisplayTest extends TestCase
         ]);
 
         /** @var Activity $privateEvent */
-        $privateEvent = Activity::factory()->create([
+        $privateEvent = Activity::factory()->withTickets()->create([
             'is_public' => false,
             'published_at' => Date::today()->subYear(),
             'start_date' => Date::today()->addWeeks(2),
@@ -43,8 +43,8 @@ class ActivityDisplayTest extends TestCase
             ->assertRedirect(route('login'));
 
         $this->get(route('activity.index'))
-            ->assertSeeText($publicEvent->name)
-            ->assertDontSeeText($privateEvent->name);
+            ->assertSee($publicEvent->name)
+            ->assertDontSee($privateEvent->name);
 
         $this->actingAs($this->getGuestUser());
 
@@ -57,8 +57,8 @@ class ActivityDisplayTest extends TestCase
             ->assertForbidden();
 
         $this->get(route('activity.index'))
-            ->assertSeeText($publicEvent->name)
-            ->assertDontSeeText($privateEvent->name);
+            ->assertSee($publicEvent->name)
+            ->assertDontSee($privateEvent->name);
 
         $this->actingAs($this->getMemberUser());
 
@@ -73,8 +73,8 @@ class ActivityDisplayTest extends TestCase
             ->assertSee('data-action="enroll"', false);
 
         $this->get(route('activity.index'))
-            ->assertSeeText($publicEvent->name)
-            ->assertSeeText($privateEvent->name);
+            ->assertSee($publicEvent->name)
+            ->assertSee($privateEvent->name);
     }
 
     public function test_activity_enrollment_button(): void
@@ -82,6 +82,7 @@ class ActivityDisplayTest extends TestCase
         $this->actingAs($user = User::factory()->create());
 
         $activity = Activity::factory()->withTickets()->create();
+
         $pastActivity = Activity::factory()->withTickets()->create([
             'start_date' => Date::now()->subWeek(),
             'end_date' => Date::now()->subWeek()->addHour(),

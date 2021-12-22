@@ -72,7 +72,7 @@ class GrantsTest extends TestCase
 
         foreach (GrantsController::getGrants() as $grant) {
             $grantsRequest->assertSee($grant->key);
-            $grantsRequest->assertSeeText($grant->name);
+            $grantsRequest->assertSee($grant->name);
         }
     }
 

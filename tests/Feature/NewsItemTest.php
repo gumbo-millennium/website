@@ -24,13 +24,13 @@ class NewsItemTest extends TestCase
         // Get news index
         $this->get(route('news.index'))
             ->assertOk()
-            ->assertSeeText($item->title);
+            ->assertSee($item->title);
 
         // Get news display
         $this
             ->get(route('news.show', ['item' => $item]))
             ->assertOk()
-            ->assertSeeText($item->title);
+            ->assertSee($item->title);
     }
 
     public function test_item_deletion(): void
@@ -41,7 +41,7 @@ class NewsItemTest extends TestCase
         // Get news index
         $this->get(route('news.index'))
             ->assertOk()
-            ->assertDontSeeText($item->title);
+            ->assertDontSee($item->title);
 
         // Get news display
         $this
@@ -61,7 +61,7 @@ class NewsItemTest extends TestCase
         $response->assertOk();
 
         // Check if we cannot see our article
-        $response->assertDontSeeText($item->title);
+        $response->assertDontSee($item->title);
     }
 
     public function test_publication_dates(): void
@@ -76,13 +76,13 @@ class NewsItemTest extends TestCase
         // Get news index
         $this->get(route('news.index'))
             ->assertOk()
-            ->assertSeeText($published->title)
-            ->assertDontSeeText($unpublished->title);
+            ->assertSee($published->title)
+            ->assertDontSee($unpublished->title);
 
         // Get published item
         $this->get(route('news.show', ['item' => $published]))
             ->assertOk()
-            ->assertSeeText($published->title);
+            ->assertSee($published->title);
 
         // Get unpublished item
         $this->get(route('news.show', ['item' => $unpublished]))
@@ -96,7 +96,7 @@ class NewsItemTest extends TestCase
         // Get news index
         $this->get(route('news.index'))
             ->assertOk()
-            ->assertSeeText($item->title);
+            ->assertSee($item->title);
 
         // Get news item
         $this->get(route('news.show', ['item' => $item]))

@@ -39,7 +39,7 @@ class LustrumControllerTest extends TestCase
     {
         $this->get($this->host)
             ->assertOk()
-            ->assertSeeText('Er is er een jarig');
+            ->assertSee('Er is er een jarig');
     }
 
     public function test_with_proper_activities(): void
@@ -53,7 +53,7 @@ class LustrumControllerTest extends TestCase
 
         $this->get($this->host)
             ->assertOk()
-            ->assertSeeText($activities->name);
+            ->assertSee($activities->name);
     }
 
     public function test_with_custom_page(): void
@@ -90,7 +90,7 @@ class LustrumControllerTest extends TestCase
             ->assertOk();
 
         foreach ($shopProducts as $product) {
-            $result->assertSeeText($product->name);
+            $result->assertSee($product->name);
             $result->assertSee(route('shop.product', $product));
         }
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Models\User;
 use App\Services\Payments\MolliePaymentService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Config;
@@ -11,6 +12,9 @@ use Illuminate\Testing\TestResponse;
 use Tests\Fixtures\Services\DummyPaymentService;
 use Tests\Traits\RefreshDatabase;
 
+/**
+ * @method void actingAs(User $user)
+ */
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;

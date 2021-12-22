@@ -6,14 +6,17 @@ namespace Tests\Feature\Trails;
 
 use App\Helpers\Arr;
 use App\Helpers\Str;
+use App\Nova\Flexible\Layouts;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\FormLayout;
 use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
-use Faker\Generator as Faker;
-use Illuminate\Support\Facades\App;
+use Generator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
+use LogicException;
 use Tests\TestCase;
 
 /**
@@ -21,17 +24,17 @@ use Tests\TestCase;
  */
 class EnrollmentsTest extends TestCase
 {
+    use WithFaker;
+
     public function test_enrollments_trail()
     {
-        /** @var Faker $faker */
-        $faker = App::make(Faker::class);
-
         /** @var Activity $activity */
         $activity = Activity::factory()
             ->withSeats()
-            ->withForm()
             ->public()
-            ->create();
+            ->create([
+                'enrollment_questions' => [...$this->getForm()],
+            ]);
 
         // Check for form
         if (empty($activity->form)) {
@@ -54,7 +57,11 @@ class EnrollmentsTest extends TestCase
         $this->get(route('activity.show', [$activity]))
             ->assertOk()
             ->assertSee($activity->title)
-            ->assertSee(__('From :price', ['price' => Str::price($firstTicket->total_price)]));
+            ->assertSee(
+                $activity->tickets
+                    ->map(fn (Ticket $ticket) => Str::price($ticket->total_price))
+                    ->implode(' of '),
+            );
 
         // Prep to enroll, which should require a login
         $this->get(route('enroll.create', [$activity]))
@@ -76,7 +83,7 @@ class EnrollmentsTest extends TestCase
             'ticket_id' => $firstTicket->id,
         ])
             ->assertSessionHasNoErrors()
-            ->assertRedirect($formUrl = route('enroll.form', [$activity]));
+            ->assertRedirect($showUrl = route('enroll.show', $activity));
 
         // Ensure the enrollment was created
         /** @var Enrollment $enrollment */
@@ -87,7 +94,11 @@ class EnrollmentsTest extends TestCase
         $this->assertTrue($firstTicket->is($enrollment->ticket));
 
         $this->assertInstanceOf(States\Created::class, $enrollment->state);
-        $this->assertSame($firstTicket->total_price, $enrollment->price);
+        $this->assertSame($firstTicket->total_price, $enrollment->total_price);
+
+        // Check that the "show" page now redirects to the form
+        $this->get($showUrl)
+            ->assertRedirect($formUrl = route('enroll.form', $activity));
 
         // Check that the form view loads properly
         $this->get($formUrl)
@@ -95,26 +106,55 @@ class EnrollmentsTest extends TestCase
             ->assertSee(Arr::get($activity->enrollment_questions, '0.attributes.label'));
 
         // Prep a form
-        $formField = $this->activity->form;
-        $submitFields = [];
-
-        /** @var FormLayout $field */
-        foreach ($formField as $field) {
-            $submitFields[$field->getName()] = $faker->sentence;
-        }
+        $submitFields = Collection::make($activity->form)
+            ->map->getName()
+            ->combine([
+                'Text Field',
+                'email@example.com',
+                '+31 6 12345678',
+                'Textarea Field v9001',
+            ])
+            ->put('accept-terms', 'yes')
+            ->toArray();
 
         // Submit a form field
-        $this->post(route('enroll.form.store', [$activity]), $submitFields)
+        $this->put(route('enroll.formStore', [$activity]), $submitFields)
             ->assertSessionHasNoErrors()
-            ->assertRedirect($paymentUrl = route('enroll.pay', [$activity]));
+            ->assertRedirect($showUrl);
 
         // Check form was assigned
         $enrollment->refresh();
         $this->assertInstanceOf(States\Seeded::class, $enrollment->state);
         $this->assertNotNull($enrollment->form);
 
+        // Ensure show redirects to the payment page
+        $this->get($showUrl)
+            ->assertRedirect($paymentUrl = route('enroll.pay', $activity));
+
         // Check pay page loads properly
         $this->get($paymentUrl)
             ->assertOk();
+    }
+
+    private function getForm(): Generator
+    {
+        $fields = [
+            Layouts\FormField::class,
+            Layouts\FormEmail::class,
+            Layouts\FormPhone::class,
+            Layouts\FormTextArea::class,
+        ];
+
+        foreach ($fields as $field) {
+            yield [
+                'key' => Str::random(16),
+                'layout' => (new $field)->name(),
+                "attributes" => [
+                    "help" => $this->faker->sentence(),
+                    "label" => $this->faker->sentence(),
+                    "required" => true
+                ]
+            ];
+        }
     }
 }
