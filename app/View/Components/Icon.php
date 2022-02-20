@@ -63,6 +63,10 @@ class Icon extends Component
      */
     public function render()
     {
+        if ($this->icon == null) {
+            return "<!-- NULL value for icon -->";
+        }
+
         $contents = $this->getCleanIconContents($this->icon);
 
         // If not found and in production, fail quietly.
