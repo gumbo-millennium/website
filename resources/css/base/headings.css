@@ -2,24 +2,24 @@
   Make the background gray-ish
 */
 
-.heading-1, .heading-2, .heading-3 {
+.heading-1, .heading-2, .heading-3, .prose h1, .prose h2, .prose h3 {
   @apply font-bold;
   @apply text-dark;
 }
 
-.heading-1 {
+.heading-1, .prose h1 {
   @apply text-3xl mt-8 mb-4;
 }
 
-.heading-2 {
+.heading-2, .prose h2 {
   @apply text-2xl mt-6 mb-4;
 }
 
-.heading-3 {
+.heading-3, .prose h3 {
   @apply text-xl mt-4 mb-2;
 }
 
-.heading-4 {
+.heading-4, .prose h4 {
   @apply my-2;
   @apply text-brand-primary-2;
   @apply font-bold uppercase;

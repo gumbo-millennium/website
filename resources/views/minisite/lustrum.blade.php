@@ -47,7 +47,7 @@
         <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
 
         {{-- Page body --}}
-        <div class="plain-content">
+        <div class="prose">
             {!! $page->html !!}
         </div>
     </div>

@@ -89,7 +89,7 @@ if ($ticketPrices->isEmpty()) {
 
         <div class="p-8">
             @if (!empty($activity->description_html))
-            <div class="leading-relaxed plain-content prose">
+            <div class="leading-relaxed prose">
                 {!! $activity->description_html !!}
             </div>
             @else

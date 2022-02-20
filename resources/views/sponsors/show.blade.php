@@ -29,7 +29,7 @@
             </header>
 
             {{-- Get content --}}
-            <div class="sponsor-single__content plain-content">
+            <div class="sponsor-single__content prose">
                 {!! $sponsor->content_html !!}
             </div>
 

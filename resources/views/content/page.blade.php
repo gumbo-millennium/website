@@ -21,7 +21,7 @@ SEOMeta::setCanonical($page->url);
 
     {{-- Contents --}}
     <div class="container">
-        <div class="plain-content">
+        <div class="prose">
             {!! $page->html !!}
         </div>
     </div>

@@ -21,7 +21,7 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
 
     {{-- Contents --}}
     <div class="container">
-        <div class="plain-content">
+        <div class="prose">
             {!! $page->html !!}
         </div>
     </div>

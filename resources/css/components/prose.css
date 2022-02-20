@@ -2,27 +2,27 @@
   Heading content
 */
 
-.plain-content p, .plain-content ul, .plain-content ol {
+.prose p, .prose ul, .prose ol {
   @apply mb-4;
 }
 
-.plain-content p {
+.prose p {
   @apply leading-relaxed;
 }
 
-.plain-content ul {
+.prose ul {
   @apply list-disc pl-4;
 }
 
-.plain-content ol {
+.prose ol {
   @apply list-decimal pl-4;
 }
 
-.plain-content li {
+.prose li {
   @apply mb-2;
 }
 
-.plain-content .editor-js-delimiter::before {
+.prose .editor-js-delimiter::before {
   @apply block text-2xl my-4 p-4 pb-2 text-center text-gray-secondary-3 leading-none;
   content: '***';
 }

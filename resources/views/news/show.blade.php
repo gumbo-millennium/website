@@ -72,7 +72,7 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
     </div>
     @endif
 
-    <div class="plain-content plain-content--narrow">
+    <div class="prose prose--narrow">
         {!! $item->html !!}
     </div>
 </div>
