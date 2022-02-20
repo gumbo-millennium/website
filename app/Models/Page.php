@@ -84,6 +84,7 @@ class Page extends SluggableModel
     protected $casts = [
         'user_id' => 'int',
         'hidden' => 'bool',
+        'contents' => 'json',
     ];
 
     /**
