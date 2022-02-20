@@ -39,8 +39,8 @@ if (mix.inProduction()) {
  * Image assets
  */
 const imageAssets = [
-  'resources/assets/images-mail/**/*.{svg,jpg,png}',
-  'resources/assets/images/**/*.{svg,jpg,webp,png}',
+  'resources/assets/images-mail/',
+  'resources/assets/images/',
 ]
 mix
   .copy(imageAssets, 'public/images/')
