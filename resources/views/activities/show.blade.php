@@ -19,11 +19,24 @@ if ($ticketPrices->isEmpty()) {
 } else {
     $ticketPrices = sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last());
 }
+$visibilityIcon = $activity->is_public ? 'solid/globe-europe' : 'solid/user-friends';
+$visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten activiteit";
 ?>
 
 @section('content')
 <div class="">
     <x-page.header :image="$activity->poster" :title="$activity->name">
+        <x-slot name="headerIcon">
+            <div class="hidden lg:block">
+                <div class="group flex-none ml-4 relative">
+                    <div aria-hidden="true" class="hidden group-hover:flex absolute top-0 h-8 right-8 bg-white px-2 items-center justify-end text-gray-600 w-64">
+                        <strong class="font-bold">{{ $visibilityTitle }}</strong>
+                    </div>
+                    <x-icon :icon="$visibilityIcon" class="text-gray-400 h-8" aria-label="{{ $visibilityTitle }}" />
+                </div>
+            </div>
+        </x-slot>
+
         <x-slot name="header">
             <div class="mt-[-2rem] mb-4 px-8">
                 <p class="text-lg text-gray-700">
@@ -48,21 +61,13 @@ if ($ticketPrices->isEmpty()) {
                     <p>{{ $activity->tickets->count() }} soorten tickets</p>
                 </x-activities.header-tile>
 
-                @if ($activity->is_public)
-                <x-activities.header-tile icon="solid/globe-europe" title="Openbare activiteit">
-                    <p>Iedereen is welkom</p>
-                </x-activities.header-tile>
-                @else
-                <x-activities.header-tile icon="solid/user-friends" title="Besloten activiteit">
-                    <p>Alleen voor leden</p>
-                </x-activities.header-tile>
-                @endif
-
                 <div class="grid grid-cols-1 lg:hidden">
-                    <x-activities.header-tile icon="solid/map-marked-alt" :title="$activity->location">
-                        <p>{{ $activity->location_address }}</p>
-                    </x-activities.header-tile>
+                    <x-activities.header-tile :icon="$visibilityIcon" :title="$visibilityTitle" />
                 </div>
+
+                <x-activities.header-tile icon="solid/map-marked-alt" :title="$activity->location">
+                    <p>{{ $activity->location_address }}</p>
+                </x-activities.header-tile>
             </div>
         </x-slot>
 
