@@ -37,11 +37,17 @@ $coverImageSmall = image_asset($image)->square(768)->height(300);
                 <div class="flex flex-col w-full gap-4 px-8">
                     <h1 class="font-title text-3xl">{{ $title }}</h1>
                 </div>
+
+                @isset($headerIcon)
+                <div class="flex-none px-8">
+                    {{ $headerIcon }}
+                </div>
+                @endisset
             </div>
 
-            @if (isset($header))
+            @isset($header)
             {{ $header }}
-            @endif
+            @endisset
 
             @if ($slot)
             <div class="mt-4">
