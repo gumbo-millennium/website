@@ -7,6 +7,8 @@
     'notice',
     'notice--large' => (bool) $title,
     "notice-{$type}" => (bool) $type,
+    // Type is one of (for Tailwind purge):
+    // notice-warning, notice-info, notice-success, notice-error, notice-brand
 ]))
 @if ($title)
 <div {{ $attrs }}>
