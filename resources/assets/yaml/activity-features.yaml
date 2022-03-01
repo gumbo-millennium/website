@@ -16,11 +16,8 @@ coronacheck:
       Je hebt je aangemeld voor {name}. Voor deze activiteit moet je in het bezit
       zijn van een geldig coronatoegangsbewijs.
 
-      Ben je volledig gevaccineerd of heb je al een afspraak gemaakt om je te laten testen,
-      zorg er dan voor dat je aan de deur je coronatoegangsbewijs kan laten zien.
-
-      Heb je nog geen afspraak gemaakt? Wacht dan niet te lang en maak een afspraak om
-      je te laten testen.
+      Je bent zelf verantwoordelijk voor het op tijd regelen van je toegangsbewijs,
+      maar dit is een gratis reminder voor je 😉
     button:
       text: Maak een testafspraak
       url: https://www.testenvoortoegang.org/
