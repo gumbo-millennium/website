@@ -43,8 +43,8 @@ use Illuminate\Support\Facades\Date;
  */
 class Ticket extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast.

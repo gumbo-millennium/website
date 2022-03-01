@@ -29,8 +29,6 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line.
-     *
-     * @param mixed ...$args
      */
     public function error(...$args): void
     {
@@ -44,8 +42,6 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line.
-     *
-     * @param mixed ...$args
      */
     public function log(...$args): void
     {
@@ -54,8 +50,6 @@ abstract class VerboseSeeder extends Seeder
 
     /**
      * Prints a debug line.
-     *
-     * @param mixed ...$args
      */
     public function debug(...$args): void
     {
