@@ -111,7 +111,7 @@ class ActivityFeatureNotification extends Notification implements ShouldQueue
      */
     private function getSubject($notifiable): string
     {
-        $title = Config::get('gumbo.activity-features.coronacheck.mail.subject', 'Informatie over {name}');
+        $title = Config::get("gumbo.activity-features.{$this->feature}.mail.subject", 'Informatie over {name}');
 
         return $this->replacePlaceholders($notifiable, $title);
     }
@@ -124,7 +124,7 @@ class ActivityFeatureNotification extends Notification implements ShouldQueue
      */
     private function getBody($notifiable): ?string
     {
-        $body = Config::get('gumbo.activity-features.coronacheck.mail.body');
+        $body = Config::get("gumbo.activity-features.{$this->feature}.mail.body");
 
         return $body ? $this->replacePlaceholders($notifiable, $body) : null;
     }
@@ -139,11 +139,11 @@ class ActivityFeatureNotification extends Notification implements ShouldQueue
     {
         return [
             'text' => $this->replacePlaceholders($notifiable, Config::get(
-                'gumbo.activity-features.coronacheck.mail.button.text',
+                "gumbo.activity-features.{$this->feature}.mail.button.text",
                 'Bekijk {name}',
             )),
             'url' => Config::get(
-                'gumbo.activity-features.coronacheck.mail.button.url',
+                "gumbo.activity-features.{$this->feature}.mail.button.url",
                 $this->getLink(),
             ),
         ];

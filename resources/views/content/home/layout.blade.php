@@ -13,9 +13,6 @@ SEOMeta::setCanonical(url('/'));
 @push('header.navbar-class', ' navbar--no-shadow ')
 
 @section('content')
-{{-- Covid --}}
-@includeWhen(!Auth::user() || Auth::user()->hasVerifiedEmail(), 'content.home.corona')
-
 {{-- Header --}}
 @include('content.home.header')
 
