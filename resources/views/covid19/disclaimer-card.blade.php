@@ -1,11 +1,12 @@
 <article class="col w-full flex items-stretch flex-none md:w-1/2 mb-8">
   <div class="card">
     <div class="card__figure card__figure--alleen-samen hidden md:block" role="none">
-      <div class="card__figure-wrapper">
-        <img src="{{ mix('images/alleen-samen.png') }}"
-          srcset="{{ mix('images/alleen-samen.webp') }}, {{ mix('images/alleen-samen@2x.webp') }} 2x, {{ mix('images/alleen-samen@4x.webp') }} 4x"
-          alt="Alleen Samen krijgen we corona onder controle" class="h-16 mx-auto">
-      </div>
+      <picture class="card__figure-wrapper">
+          <source type="image/webp" srcset="/images/alleen-samen.webp, /images/alleen-samen@2x.webp 2x, /images/alleen-samen@4x.webp 4x" />
+          <source type="image/png" src="/images/alleen-samen.png" />
+          <img src="/images/alleen-samen.png"
+            alt="Alleen Samen krijgen we corona onder controle" class="h-16 mx-auto">
+      </picture>
     </div>
 
     <div class="card__body">
