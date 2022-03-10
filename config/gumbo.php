@@ -169,4 +169,10 @@ return [
         'cache-disk' => env('GLIDE_DISK', 'local'),
         'cache-path' => env('GLIDE_PATH', '.glide/image-cache'),
     ],
+
+    // Image settings
+    'images' => [
+        'disk' => env('GUMBO_IMAGE_DISK', 'public'),
+        'path' => env('GUMBO_IMAGE_PATH', 'images'),
+    ],
 ];

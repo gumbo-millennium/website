@@ -9,6 +9,7 @@ use App\Models\NewsItem as NewsItemModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
 
 /**
@@ -89,6 +90,8 @@ class NewsItem extends Resource
 
             // Image
             Fields\Image::make('Afbeelding', 'cover')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->path(Config::get('gumbo.images.path'))
                 ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                 ->deletable()

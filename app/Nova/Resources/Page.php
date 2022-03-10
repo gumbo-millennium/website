@@ -10,6 +10,7 @@ use App\Models\Page as PageModel;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
 
@@ -104,6 +105,8 @@ class Page extends Resource
                 ->help('Wordt getoond op kaarten en in Google / Facebook'),
 
             Fields\Image::make('Afbeelding', 'cover')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->path(Config::get('gumbo.images.path'))
                 ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                 ->deletable()

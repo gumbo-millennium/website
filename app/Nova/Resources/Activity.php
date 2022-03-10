@@ -237,7 +237,8 @@ class Activity extends Resource
                 ->stacked(),
 
             Fields\Image::make('Afbeelding', 'poster')
-                ->disk('public')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->path(Config::get('gumbo.images.path'))
                 ->thumbnail(fn () => (string) image_asset($this->poster)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->poster)->preset('nova-preview'))
                 ->deletable()

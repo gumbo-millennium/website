@@ -11,6 +11,7 @@ use App\Nova\Metrics\SponsorClicksPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
@@ -98,6 +99,8 @@ class Sponsor extends Resource
                     ->help('Tekst in de advertentie, maximaal 40 woorden.'),
 
                 Fields\Image::make('Achtergrond', 'cover')
+                    ->disk(Config::get('gumbo.images.disk'))
+                    ->path(Config::get('gumbo.images.path'))
                     ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
                     ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                     ->deletable()
