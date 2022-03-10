@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 
 trait DownloadsImages
@@ -36,7 +37,10 @@ trait DownloadsImages
                 return null;
             }
 
-            return Storage::disk('public')->putFile('shop/images', new File($sinkFile));
+            return Storage::disk(Config::get('gumbo.images.disk'))->putFile(
+                path_join(Config::get('gumbo.images.path'), 'shop/images/'),
+                new File($sinkFile)
+            );
         } catch (GuzzleException $exception) {
             return null;
         } finally {

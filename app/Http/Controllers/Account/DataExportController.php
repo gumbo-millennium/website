@@ -86,7 +86,7 @@ class DataExportController extends Controller
 
         abort_if($export->is_expired, 410, __('This export is no longer available.'));
 
-        return Storage::disk('local')->download($export->path, $export->file_name, [
+        return Storage::download($export->path, $export->file_name, [
             'Cache-Control' => 'no-cache, no-store, no-transform',
             'Max-Age' => 0,
             'Pragma' => 'no-cache',

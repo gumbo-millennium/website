@@ -14,10 +14,11 @@ use GuzzleHttp\RequestOptions;
 use Illuminate\Console\Command;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateShop extends Command
+class UpdateShopCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -210,7 +211,8 @@ class UpdateShop extends Command
                 return null;
             }
 
-            return Storage::disk('public')->putFile('shop/images', new File($sinkFile));
+            return Storage::disk(Config::get('gumbo.images.disk'))
+                ->putFile(path_join(Config::get('gumbo.images.path'), 'shop/images'), new File($sinkFile));
         } catch (GuzzleException $exception) {
             return null;
         } finally {
