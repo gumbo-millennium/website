@@ -164,25 +164,29 @@ class FileController extends Controller
     public function downloadSingle(Request $request, SpatieMedia $media): StreamedResponse
     {
         $bundle = $media->model;
-        abort_unless($bundle instanceof FileBundle, HttpResponse::HTTP_NOT_FOUND);
+        abort_unless($bundle instanceof FileBundle, HttpResponse::HTTP_NOT_FOUND, 'Invalid media attachment');
 
         // Check permissions
         $this->authorize('download', $bundle);
 
         // Softfail if not published
-        abort_unless($bundle->is_available, 404);
+        abort_unless($bundle->is_available, HttpResponse::HTTP_NOT_FOUND, 'Bundle not available');
 
         // Log bundle download
         $this->log($request, $bundle, $media);
 
-        // Find file
+        // Find disk
         $storageDisk = Storage::disk($media->disk);
 
+        // Find file in disk
+        $storageBasePath = $storageDisk->path('');
+        $mediaPath = Str::after($media->getPath(), $storageBasePath);
+
         // Skip if not found
-        abort_unless($storageDisk->exists($media->getPath()), HttpResponse::HTTP_NOT_FOUND);
+        abort_unless($storageDisk->exists($mediaPath), HttpResponse::HTTP_NOT_FOUND, 'Disk error');
 
         // Stream file to user
-        return Response::stream(fn () => $storageDisk->readStream($media->getPath()), 200, [
+        return Response::stream(fn () => $storageDisk->readStream($mediaPath), 200, [
             'Content-Type' => $media->mime_type,
             'Content-Disposition' => sprintf('attachment; filename="%s"', Str::ascii($media->name)),
             'Cache-Control' => 'no-store, no-cache, must-revalidate',
