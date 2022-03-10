@@ -65,7 +65,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('bot:update')->hourly();
 
         // Manually check payments every 30 minutes
-        $schedule->command('payments:update', ['--all' => true])->everyThirtyMinutes();
+        $schedule->command('payments:update', ['--all'])->everyThirtyMinutes();
 
         // Shop expiration and reminders
         $schedule->command('shop:send-reminders')->hourlyAt(20);
