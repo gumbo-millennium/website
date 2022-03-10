@@ -156,8 +156,8 @@ return [
         ],
         'nova-preview' => [
             'dpr' => 2,
-            'width' => 320,
-            'height' => 500,
+            'width' => 600,
+            'height' => 200,
             'fit' => Image::FIT_CROP,
         ],
     ],
