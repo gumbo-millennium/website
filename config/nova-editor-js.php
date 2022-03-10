@@ -29,8 +29,8 @@ return [
         'image' => [
             'activated' => true,
             'shortcut' => 'CMD+SHIFT+I',
-            'path' => 'content/images',
-            'disk' => 'public',
+            'path' => path_join(env('GUMBO_IMAGE_PATH', 'images/'), 'content'),
+            'disk' => env('GUMBO_IMAGE_DISK', 'local'),
             'alterations' => [
                 'resize' => [
                     'width' => 1280, // integer
