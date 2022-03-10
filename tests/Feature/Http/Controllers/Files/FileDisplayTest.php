@@ -170,7 +170,7 @@ class FileDisplayTest extends TestCase
         if ($response->isOk()) {
             $response->assertHeader('Content-Disposition', sprintf(
                 'attachment; filename="%s"',
-                Str::ascii($normalMedia->file_name),
+                Str::ascii($normalMedia->file_name . '.' . $normalMedia->extension, 'nl'),
             ));
         }
 
