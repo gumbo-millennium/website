@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Date;
@@ -39,6 +40,7 @@ use Illuminate\Support\Str;
 class FileExport extends Model implements Responsable
 {
     use HasFactory;
+    use Prunable;
 
     private const TARGET_DIR = 'private/exports';
 
@@ -103,7 +105,7 @@ class FileExport extends Model implements Responsable
     {
         return $builder->where(
             static fn (Builder $query) => $query
-                ->whereDoesntHave('owner_id')
+                ->whereDoesntHave('owner')
                 ->orWhere('expires_at', '<', Date::today()->subWeek()),
         );
     }
@@ -155,5 +157,15 @@ class FileExport extends Model implements Responsable
     public function getRouteKeyName()
     {
         return 'urlkey';
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()->wherePurgeable();
     }
 }

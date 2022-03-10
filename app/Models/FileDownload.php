@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
@@ -32,6 +33,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class FileDownload extends Pivot
 {
     use HasFactory;
+    use Prunable;
 
     /**
      * Categories don't have timestamps.
@@ -126,5 +128,16 @@ class FileDownload extends Pivot
     public function media(): Relation
     {
         return $this->belongsTo(Media::class);
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->where('created_at', '<', Date::today()->subMonths(9));
     }
 }

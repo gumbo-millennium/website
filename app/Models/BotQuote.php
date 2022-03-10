@@ -7,7 +7,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -33,6 +35,7 @@ use Illuminate\Support\HtmlString;
 class BotQuote extends Model
 {
     use HasFactory;
+    use Prunable;
 
     private const KEEP_DAYS = 45;
 
@@ -86,5 +89,18 @@ class BotQuote extends Model
     public function getFormattedQuoteAttribute(): HtmlString
     {
         return new HtmlString(nl2br(e($this->quote)));
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->whereNotNull('created_at')
+            ->whereNotNull('submitted_at')
+            ->where('submitted_at', '<', Date::today()->subMonths(6));
     }
 }

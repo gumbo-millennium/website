@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\Storage;
 class WebcamUpdate extends Model
 {
     use HasFactory;
+    use Prunable;
 
     public const STORAGE_LOCATION = 'webcam_updates/images';
 
@@ -91,5 +93,16 @@ class WebcamUpdate extends Model
     public function getIsExpiredAttribute(): bool
     {
         return $this->created_at < Date::now()->subHours(3);
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->where('created_at', '<', Date::today()->subWeek());
     }
 }

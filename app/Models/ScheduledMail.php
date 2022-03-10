@@ -8,7 +8,9 @@ use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 
 /**
  * App\Models\ScheduledMail.
@@ -30,6 +32,7 @@ use Illuminate\Support\Collection;
 class ScheduledMail extends Model
 {
     use HasFactory;
+    use Prunable;
 
     /**
      * Indicates if the model should be timestamped.
@@ -103,5 +106,16 @@ class ScheduledMail extends Model
     public function getIsSentAttribute(): bool
     {
         return $this->sent_at !== null;
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->where('sent_at', '<', Date::today()->subMonths(6));
     }
 }

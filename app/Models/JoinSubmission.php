@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Support\Facades\Date;
 use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 
 /**
@@ -40,6 +42,7 @@ use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 class JoinSubmission extends Model
 {
     use HasFactory;
+    use Prunable;
 
     /**
      * The attributes that should be cast.
@@ -126,5 +129,16 @@ class JoinSubmission extends Model
             $this->insert,
             $this->last_name,
         ])->reject('empty')->implode(' ');
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->where('created_at', '<', Date::today()->subMonths(6));
     }
 }

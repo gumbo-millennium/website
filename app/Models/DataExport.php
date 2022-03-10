@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Date;
 class DataExport extends Model
 {
     use HasFactory;
+    use Prunable;
     use SoftDeletes;
 
     /**
@@ -97,5 +99,16 @@ class DataExport extends Model
         ]);
 
         return "${localName}.${extension}";
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return $this->query()
+            ->where('expires_at', '<', Date::today()->subMonths(3));
     }
 }
