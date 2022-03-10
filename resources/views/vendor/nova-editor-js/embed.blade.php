@@ -1,4 +1,5 @@
 <div class="editor-js-block">
+  <div class="container">
     <table class="editor-js-embed">
         <iframe
                 width="{{ $width }}px"
@@ -11,4 +12,5 @@
             {{ $caption }}
         </div>
     </table>
+  </div>
 </div>

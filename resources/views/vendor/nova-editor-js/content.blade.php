@@ -1,3 +1,3 @@
-<div class="editor-js-content prose">
-    {!! $content !!}
+<div class="editor-js-content">
+  {!! $content !!}
 </div>

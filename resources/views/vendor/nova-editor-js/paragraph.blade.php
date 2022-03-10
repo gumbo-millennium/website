@@ -1,5 +1,7 @@
 <div class="editor-js-block">
-    <p>
+  <div class="container container--md">
+    <p class="prose">
         {{ $text }}
     </p>
+  </div>
 </div>

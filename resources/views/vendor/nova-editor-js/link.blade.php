@@ -1,4 +1,5 @@
 <div class="editor-js-block">
+  <div class="container container--md">
     <div class="editor-js-link">
         <a href="{{ $link }}" class="editor-js-link-content">
             @if (!empty($meta['image']['url']))
@@ -14,4 +15,5 @@
             </p>
         </a>
     </div>
+  </div>
 </div>
