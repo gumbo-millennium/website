@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
+use RuntimeException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Spatie\MediaLibrary\Support\MediaStream;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -161,7 +163,7 @@ class FileController extends Controller
      * @throws InvalidUrlGenerator
      * @throws InvalidConversion
      */
-    public function downloadSingle(Request $request, SpatieMedia $media): StreamedResponse
+    public function downloadSingle(Request $request, SpatieMedia $media): SymfonyResponse
     {
         $bundle = $media->model;
         abort_unless($bundle instanceof FileBundle, HttpResponse::HTTP_NOT_FOUND, 'Invalid media attachment');
@@ -185,7 +187,21 @@ class FileController extends Controller
         // Skip if not found
         abort_unless($storageDisk->exists($mediaPath), HttpResponse::HTTP_NOT_FOUND, 'Disk error');
 
-        // Stream file to user
+        // Check if the file is external (cloud-hosted)
+        try {
+            $temporaryUrl = $storageDisk->temporaryUrl($mediaPath, Date::now()->addMinutes(5));
+            if ($temporaryUrl) {
+                // Redirect but ensure browser won't replay
+                return Response::redirectTo($temporaryUrl, HttpResponse::HTTP_FOUND, [
+                    'Cache-Control' => 'no-store',
+                ]);
+            }
+
+            // No URL, stream it
+        } catch (RuntimeException $exception) {
+            // No worries, stream it
+        }
+
         return Response::stream(fn () => $storageDisk->readStream($mediaPath), 200, [
             'Content-Type' => $media->mime_type,
             'Content-Disposition' => sprintf('attachment; filename="%s"', Str::ascii($media->name)),
