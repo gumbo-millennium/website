@@ -204,7 +204,7 @@ class FileController extends Controller
 
         return Response::stream(fn () => $storageDisk->readStream($mediaPath), 200, [
             'Content-Type' => $media->mime_type,
-            'Content-Disposition' => sprintf('attachment; filename="%s"', Str::ascii($media->name)),
+            'Content-Disposition' => sprintf('attachment; filename="%s"', Str::ascii($media->file_name)),
             'Cache-Control' => 'no-store, no-cache, must-revalidate',
         ]);
     }
