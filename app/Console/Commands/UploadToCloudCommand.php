@@ -6,7 +6,9 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UploadToCloudCommand extends Command
@@ -38,9 +40,18 @@ class UploadToCloudCommand extends Command
             $paths = ['medialibrary', 'paperclip'];
         }
 
-        foreach ($paths as $path) {
-            $this->handleDirectory($path);
+        try {
+            foreach ($paths as $path) {
+                $this->handleDirectory($path);
+            }
+        } catch (RuntimeException $exception) {
+            $this->line('');
+            $this->error("Upload failed: {$exception->getMessage()}");
+
+            return Command::FAILURE;
         }
+
+        return Command::SUCCESS;
     }
 
     private function handleDirectory(string $directory): void
@@ -62,11 +73,15 @@ class UploadToCloudCommand extends Command
 
     private function handleFile(string $file): void
     {
-        usleep(700_000);
+        $fromDiskName = Config::get('filesystems.default');
+        $toDiskName = Config::get('filesystems.cloud');
 
-        return;
-        $fromDisk = Storage::disk('local');
-        $toDisk = Storage::disk('cloud');
+        if ($fromDiskName == $toDiskName) {
+            throw new RuntimeException('Source and destination disk are identical!');
+        }
+
+        $fromDisk = Storage::disk($fromDiskName);
+        $toDisk = Storage::disk($toDiskName);
 
         if ($toDisk->exists($file) && $toDisk->size($file) >= $fromDisk->size($file)) {
             $this->line("<fg=blue>SKIP</> {$file}", null, OutputInterface::VERBOSITY_VERBOSE);
