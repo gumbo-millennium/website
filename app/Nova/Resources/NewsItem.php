@@ -91,7 +91,7 @@ class NewsItem extends Resource
             // Image
             Fields\Image::make('Afbeelding', 'cover')
                 ->disk(Config::get('gumbo.images.disk'))
-                ->path(Config::get('gumbo.images.path'))
+                ->path(path_join(Config::get('gumbo.images.path'), 'news'))
                 ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                 ->deletable()

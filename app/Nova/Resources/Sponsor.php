@@ -100,7 +100,7 @@ class Sponsor extends Resource
 
                 Fields\Image::make('Achtergrond', 'cover')
                     ->disk(Config::get('gumbo.images.disk'))
-                    ->path(Config::get('gumbo.images.path'))
+                    ->path(path_join(Config::get('gumbo.images.path'), 'sponsors'))
                     ->thumbnail(fn () => (string) image_asset($this->cover)->preset('nova-thumbnail'))
                     ->preview(fn () => (string) image_asset($this->cover)->preset('nova-preview'))
                     ->deletable()

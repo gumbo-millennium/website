@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Fluent\Image;
 use App\Helpers\Str;
+use Illuminate\Support\Collection;
 
 if (! function_exists('mix_file')) {
     function mix_file(string $file): ?string
@@ -46,5 +47,22 @@ if (! function_exists('image_asset')) {
     function image_asset(?string $file): Image
     {
         return Image::make($file);
+    }
+}
+
+if (! function_exists('path_join')) {
+    /**
+     * Joins a given set of paths, skipping `null` values.
+     */
+    function path_join(?string ...$paths): string
+    {
+        $startsWithSlash = ! empty($paths[0]) && Str::startsWith($paths[0], '/');
+
+        $joinedPaths = Collection::make($paths)
+            ->filter()
+            ->map(fn ($segment) => trim($segment, '/'))
+            ->implode('/');
+
+        return $startsWithSlash ? "/{$joinedPaths}" : $joinedPaths;
     }
 }

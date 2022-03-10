@@ -238,7 +238,7 @@ class Activity extends Resource
 
             Fields\Image::make('Afbeelding', 'poster')
                 ->disk(Config::get('gumbo.images.disk'))
-                ->path(Config::get('gumbo.images.path'))
+                ->path(path_join(Config::get('gumbo.images.path'), 'activities'))
                 ->thumbnail(fn () => (string) image_asset($this->poster)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->poster)->preset('nova-preview'))
                 ->deletable()
