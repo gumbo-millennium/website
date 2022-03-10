@@ -161,4 +161,12 @@ return [
             'fit' => Image::FIT_CROP,
         ],
     ],
+
+    // Glide settings
+    'glide' => [
+        'source-disk' => env('GLIDE_SOURCE_DISK', 'public'),
+        'source-path' => env('GLIDE_SOURCE_PATH', null),
+        'cache-disk' => env('GLIDE_DISK', 'local'),
+        'cache-path' => env('GLIDE_PATH', '.glide/image-cache'),
+    ],
 ];
