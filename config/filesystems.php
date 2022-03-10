@@ -60,6 +60,7 @@ return [
             'key' => env('SCALEWAY_ACCESS_KEY_ID'),
             'secret' => env('SCALEWAY_SECRET_ACCESS_KEY'),
             'region' => env('SCALEWAY_DEFAULT_REGION'),
+            'endpoint' => env('SCALEWAY_ENDPOINT'),
             'bucket' => env('SCALEWAY_BUCKET'),
             'url' => env('SCALEWAY_URL'),
         ],
