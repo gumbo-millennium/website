@@ -33,6 +33,7 @@ use Spatie\Permission\Models\Role;
  * @property string $slug
  * @property null|string $tagline
  * @property null|array $description
+ * @property null|array $ticket_text
  * @property null|string $poster
  * @property null|string $location
  * @property null|string $location_address
@@ -72,6 +73,7 @@ use Spatie\Permission\Models\Role;
  * @property-read null|string $location_url
  * @property-read null|string $organiser
  * @property-read string $price_range
+ * @property-read null|string $ticket_html
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
@@ -122,6 +124,7 @@ class Activity extends SluggableModel
     protected $casts = [
         // Description
         'description' => 'json',
+        'ticket_text' => 'json',
         'enrollment_questions' => ActivityFormCast::class,
 
         // Number of seats
@@ -310,6 +313,14 @@ class Activity extends SluggableModel
     public function getDescriptionHtmlAttribute(): ?string
     {
         return $this->convertToHtml($this->description);
+    }
+
+    /**
+     * Converts ticket contents to HTML.
+     */
+    public function getTicketHtmlAttribute(): ?string
+    {
+        return $this->convertToHtml($this->ticket_text);
     }
 
     /**

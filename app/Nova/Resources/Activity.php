@@ -321,6 +321,13 @@ class Activity extends Resource
                 ->nullable()
                 ->firstDayOfWeek(1),
 
+
+            NovaEditorJs::make('Ticket omschrijving', 'ticket_text')
+                ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
+                ->nullable()
+                ->hideFromIndex()
+                ->stacked(),
+
             Fields\Text::make('Status inschrijvingen', function () {
                 // Edge case for no-enrollment events
                 if ($this->enrollment_start === null && $this->enrollment_end === null) {
