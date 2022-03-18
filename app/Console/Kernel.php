@@ -57,6 +57,9 @@ class Kernel extends ConsoleKernel
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
 
+        // Update ticket PDFs from enrollments hourly
+        $schedule->command('gumbo:update-ticket-pdfs')->hourly();
+
         // Weekly make a backup of the images
         $schedule->command('app:backup-images')->weeklyOn(0, '06:30');
 
