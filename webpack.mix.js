@@ -29,6 +29,14 @@ mix
 mix.sourceMaps(false, 'source-map')
 
 /**
+ * Copy assets to public
+ */
+mix
+  .copyDirectory('resources/assets/images', 'public/images')
+  .copyDirectory('resources/assets/images-mail', 'public/images-mail')
+  .copyDirectory('resources/assets/icons', 'public/icons')
+
+/**
  * Add a version and extract vendor if in production
  */
 if (mix.inProduction()) {
