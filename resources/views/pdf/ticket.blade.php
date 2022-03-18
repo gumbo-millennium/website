@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=210mm, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Ticket</title>
+  <title>Ticket voor {{ $activity->name }}</title>
 
-  @if (PHP_SAPI == 'cli')
+  @if ($showWeb ?? false)
+  <link rel="stylesheet" href="{{ mix('app.css') }}">
+  @else
   <style>
     {{ mix_file('mail.css') }}
   </style>
-  @else
-  <link rel="stylesheet" href="{{ mix('app.css') }}">
   @endif
 </head>
 <body class="p-8 bg-gray-200 min-h-screen">

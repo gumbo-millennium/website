@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Str;
 use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
+use RuntimeException;
 
 class TicketController extends Controller
 {
@@ -39,7 +43,15 @@ class TicketController extends Controller
             )
             ->get();
 
-        return Response::json($enrollments);
+        return Response::json($enrollments->map(fn (Enrollment $enrollment) => [
+            'id' => $enrollment->id,
+            'description' => (string) $enrollment,
+            'activity' => $enrollment->activity->name,
+            'ticket' => $enrollment->ticket->title,
+            'stable' => $enrollment->is_stable,
+            'view' => URL::route('tickets.show', $enrollment),
+            'download' => $this->getTemporaryDownloadUrl($enrollment),
+        ]));
 
         return Response::view('tickets.index', [
             'enrollments' => $enrollments,
@@ -55,10 +67,24 @@ class TicketController extends Controller
             ->findOrFail($ticket);
 
         return Response::view('pdf.ticket', [
+            'showWeb' => true,
             'enrollment' => $enrollment,
             'ticket' => $enrollment->ticket,
             'activity' => $enrollment->activity,
             'subject' => $enrollment->user,
         ]);
+    }
+
+    private function getTemporaryDownloadUrl(Enrollment $enrollment): ?string
+    {
+        try {
+            return Storage::cloud()->temporaryUrl($enrollment->pdf_path, Date::now()->addHour());
+        } catch (RuntimeException $exception) {
+            if (Str::contains($exception->getMessage(), ['does not support', 'not found'])) {
+                return null;
+            }
+
+            throw $exception;
+        }
     }
 }

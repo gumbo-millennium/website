@@ -414,4 +414,18 @@ class Enrollment extends UuidModel implements Payable
                 States\Refunded::class,
             );
     }
+
+    public function __toString()
+    {
+        $out = "Ticket for {$this->activity->name}, owned by {$this->user->name}";
+        if ($this->state instanceof States\Cancelled) {
+            $out .= ' (cancelled)';
+        } elseif ($this->has_been_paid) {
+            $out .= ", paid on {$this->payments->firstWhere('paid_at', '!=', null)?->paid_at?->format('d-m-Y')}";
+        } elseif (! $this->is_stable) {
+            $out .= ' (pending)';
+        }
+
+        return $out;
+    }
 }
