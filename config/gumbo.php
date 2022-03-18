@@ -11,6 +11,13 @@ return [
     // Cost of a single payment transaction
     'transfer-fee' => 40,
 
+    'tickets' => [
+        'expiration' => [
+            'anonymous' => 'PT15M',
+            'authenticated' => 'PT1H',
+        ],
+    ],
+
     // Google config
     'google' => [
         // Allowed domains

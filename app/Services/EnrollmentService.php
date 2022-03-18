@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use LogicException;
 
@@ -89,12 +90,18 @@ class EnrollmentService implements EnrollmentServiceContract
 
         throw_unless($this->canEnroll($activity), new EnrollmentFailedException('You cannot enroll for this activity'));
 
+        /** @var Enrollment $enrollment */
         $enrollment = $activity->enrollments()->make();
         $enrollment->ticket()->associate($ticket);
         $enrollment->user()->associate($user);
 
+        // Assign price
         $enrollment->price = $ticket->price;
         $enrollment->total_price = $ticket->total_price;
+
+        // Assign expiration
+        $expirationPeriod = Config::get('gumbo.tickets.expiration.authenticated');
+        $enrollment->expire = Date::now()->add($expirationPeriod);
         $enrollment->save();
 
         return $enrollment;
