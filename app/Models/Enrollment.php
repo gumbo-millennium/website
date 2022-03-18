@@ -56,6 +56,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \App\Models\User $user
  * @method static Builder|Enrollment active()
  * @method static \Database\Factories\EnrollmentFactory factory(...$parameters)
+ * @method static Builder|Enrollment forUser(\App\Models\User|int $user)
  * @method static Builder|Enrollment newModelQuery()
  * @method static Builder|Enrollment newQuery()
  * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
@@ -329,6 +330,18 @@ class Enrollment extends UuidModel implements Payable
             States\Confirmed::class,
             States\Paid::class,
         ]);
+    }
+
+    /**
+     * Filter by the given user.
+     */
+    public function scopeForUser(Builder $query, User|int $user): void
+    {
+        if ($user instanceof User) {
+            $user = $user->id;
+        }
+
+        $query->whereHas('user', fn (Builder $query) => $query->where('id', $user));
     }
 
     /**
