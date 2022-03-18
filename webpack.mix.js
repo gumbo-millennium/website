@@ -32,7 +32,9 @@ mix.sourceMaps(false, 'source-map')
  * Add a version and extract vendor if in production
  */
 if (mix.inProduction()) {
-  mix.version()
+  mix.version([
+    'images/**/*.{jpg,png,gif,webp}',
+  ])
 }
 
 /**
