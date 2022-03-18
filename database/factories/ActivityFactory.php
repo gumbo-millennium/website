@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
+use Database\Factories\Traits\HasEditorjs;
 use Database\Factories\Traits\HasFileFinder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ActivityFactory extends Factory
 {
+    use HasEditorjs;
     use HasFileFinder;
 
     /**
@@ -55,6 +57,10 @@ class ActivityFactory extends Factory
             // Location
             'location' => $this->faker->company,
             'location_address' => $this->faker->randomElement([$this->faker->address, $this->faker->url]),
+
+            // Description
+            'description' => $this->faker->optional()->passthrough($this->getEditorBlocks()),
+            'ticket_text' => $this->faker->optional(0.25)->passthrough($this->getEditorBlocks()),
         ];
     }
 
