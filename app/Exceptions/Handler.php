@@ -84,7 +84,7 @@ class Handler extends ExceptionHandler
 
         // Then check for CLI-exceptions, like invalid commands I type on a prod environment
         if (PHP_SAPI == 'cli') {
-            return null !== Arr::first($this->dontReportCli, fn ($type) => $e instanceof $type);
+            return Arr::first($this->dontReportCli, fn ($type) => $e instanceof $type) != null;
         }
 
         // Probably want to report this now
