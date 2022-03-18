@@ -50,4 +50,9 @@ interface EnrollmentServiceContract
      * invoicing jobs.
      */
     public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment;
+
+    /**
+     * Generates a new unique ticket code for the enrollment.
+     */
+    public function updateTicketCode(Enrollment $enrollment): void;
 }

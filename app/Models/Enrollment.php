@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Payments\Payable;
+use App\Facades\Enroll;
 use App\Fluent\Payment as PaymentFluent;
 use App\Models\States\Enrollment as States;
 use App\Models\States\Enrollment\State as EnrollmentState;
@@ -40,8 +41,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $user_type
  * @property null|\Illuminate\Support\Carbon $expire
  * @property null|string $transfer_secret
+ * @property null|string $ticket_code
  * @property null|array $data
  * @property-read \App\Models\Activity $activity
+ * @property-read null|string $enrollment_code
  * @property-read null|array $form
  * @property-read mixed $form_data
  * @property-read bool $has_been_paid
@@ -112,6 +115,21 @@ class Enrollment extends UuidModel implements Payable
         'price',
         'total_price',
     ];
+
+    /**
+     * Ensure a ticket code is set when saving an enrollment.
+     * @return void
+     */
+    public static function booted()
+    {
+        parent::booted();
+
+        static::saving(function (self $enrollment) {
+            if ($enrollment->ticket_code == null) {
+                Enroll::updateTicketCode($enrollment);
+            }
+        });
+    }
 
     /**
      * Finds the active enrollment for this activity.
@@ -342,6 +360,15 @@ class Enrollment extends UuidModel implements Payable
         }
 
         $query->whereHas('user', fn (Builder $query) => $query->where('id', $user));
+    }
+
+    public function getEnrollmentCodeAttribute(): ?string
+    {
+        if (! $this->activity?->id || ! $this->ticket_code) {
+            return null;
+        }
+
+        return sprintf('GMT-%03d%s', $this->activity->id, $this->ticket_code ?? 'TEST');
     }
 
     /**

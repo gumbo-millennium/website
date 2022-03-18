@@ -6,12 +6,14 @@ namespace App\Services;
 
 use App\Contracts\EnrollmentServiceContract;
 use App\Exceptions\EnrollmentFailedException;
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -157,5 +159,24 @@ class EnrollmentService implements EnrollmentServiceContract
 
         // Return it
         return $enrollment;
+    }
+
+    /**
+     * Generates a new unique ticket code for the enrollment.
+     */
+    public function updateTicketCode(Enrollment $enrollment): void
+    {
+        // Try to generate a new code 10 times
+        for ($i = 0; $i < 10; $i++) {
+            try {
+                $enrollment->ticket_code = Str::upper(Str::random(8));
+            } catch (QueryException $exception) {
+                if (Str::contains(Str::lower($exception->getMessage()), 'unqiue')) {
+                    continue;
+                }
+
+                throw $exception;
+            }
+        }
     }
 }
