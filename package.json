@@ -36,7 +36,7 @@
     "pixrem": "^5.0.0",
     "postcss": "^8.3.8",
     "postcss-calc": "^7.0.5",
-    "postcss-css-variables": "^0.17.0",
+    "postcss-css-variables": "^0.18.0",
     "postcss-import": "^14.0.2",
     "postcss-rem": "^1.1.5",
     "responsive-loader": "^2.3.0",
