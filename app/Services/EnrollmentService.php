@@ -13,6 +13,10 @@ use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
+use Endroid\QrCode\Builder\Builder as QRBuilder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -102,7 +106,7 @@ class EnrollmentService implements EnrollmentServiceContract
         $enrollment->total_price = $ticket->total_price;
 
         // Assign expiration
-        $expirationPeriod = Config::get('gumbo.tickets.expiration.authenticated');
+        $expirationPeriod = $user == null ? Config::get('gumbo.tickets.expiration.anonymous') : Config::get('gumbo.tickets.expiration.authenticated');
         $enrollment->expire = Date::now()->add($expirationPeriod);
         $enrollment->save();
 
@@ -178,5 +182,18 @@ class EnrollmentService implements EnrollmentServiceContract
                 throw $exception;
             }
         }
+    }
+
+    public function getTicketQrCode(Enrollment $enrollment, int $size = 400): string
+    {
+        return QRBuilder::create()
+            ->writer(new PngWriter())
+            ->encoding(new Encoding('ISO-8859-1')) // Not UTF-8 for highest compatibility
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size($size)
+            ->margin(0)
+            ->data(Str::ascii($enrollment->enrollment_code))
+            ->build()
+            ->getDataUri();
     }
 }

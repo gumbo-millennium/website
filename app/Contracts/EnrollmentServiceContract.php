@@ -55,4 +55,13 @@ interface EnrollmentServiceContract
      * Generates a new unique ticket code for the enrollment.
      */
     public function updateTicketCode(Enrollment $enrollment): void;
+
+    /**
+     * Generates a QR code for the given enrollment, to be printed on the ticket.
+     *
+     * @param Enrollment $enrollment The enrollment to generate the QR code for
+     * @param int $size Size of the QR code in pixels
+     * @return string The QR code as a base64 encoded string
+     */
+    public function getTicketQrCode(Enrollment $enrollment, int $size = 400): string;
 }

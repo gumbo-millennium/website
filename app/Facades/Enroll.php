@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static Enrollment transferEnrollment(Enrollment $enrollment, User $reciever)
  * @method static Enrollment createEnrollment(Activity $activity, Ticket $ticket)
  * @method static void updateTicketCode(Enrollment $enrollment)
+ * @method static string getTicketQrCode(Enrollment $enrollment, int $size = 400)
  * @see \App\Contracts\EnrollmentServiceContract
  * @see \App\Services\EnrollmentService
  */

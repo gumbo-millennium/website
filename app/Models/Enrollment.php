@@ -52,6 +52,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
  * @property-read string $payment_status
+ * @property-read string $pdf_path
  * @property-read bool $requires_payment
  * @property-read null|\App\Models\States\Enrollment\State $wanted_state
  * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
@@ -369,6 +370,15 @@ class Enrollment extends UuidModel implements Payable
         }
 
         return sprintf('GMT-%03d%s', $this->activity->id, $this->ticket_code ?? 'TEST');
+    }
+
+    public function getPdfPathAttribute(): string
+    {
+        if ($this->id == null) {
+            throw new LogicException('Cannot generate ticket PDF for enrollment that have not been saved yet');
+        }
+
+        return "tickets/{$this->id}.pdf";
     }
 
     /**
