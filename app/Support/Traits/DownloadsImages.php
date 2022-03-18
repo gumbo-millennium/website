@@ -39,7 +39,7 @@ trait DownloadsImages
 
             return Storage::disk(Config::get('gumbo.images.disk'))->putFile(
                 path_join(Config::get('gumbo.images.path'), 'shop/images/'),
-                new File($sinkFile)
+                new File($sinkFile),
             );
         } catch (GuzzleException $exception) {
             return null;

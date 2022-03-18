@@ -321,7 +321,6 @@ class Activity extends Resource
                 ->nullable()
                 ->firstDayOfWeek(1),
 
-
             NovaEditorJs::make('Ticket omschrijving', 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
                 ->nullable()
