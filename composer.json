@@ -4,7 +4,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.4 | ^8.0",
+        "php": "^8.1",
         "advoor/nova-editor-js": "^2.0",
         "artesaos/seotools": "^0.20",
         "barryvdh/laravel-debugbar": "^3.6",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e1568bb073c10489b9d4a31d5d5caff",
+    "content-hash": "cf4891d348e3b0f24545097c33349090",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -15960,7 +15960,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4 | ^8.0"
+        "php": "^8.1"
     },
     "platform-dev": [],
     "platform-overrides": {
