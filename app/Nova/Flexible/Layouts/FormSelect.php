@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Flexible\Layouts;
 
 use App\Models\FormLayout;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\KeyValue;
@@ -50,15 +51,12 @@ class FormSelect extends FormField
      */
     public function toFormField(): FormLayout
     {
-        $options = $this->getAttribute('options');
+        $options = Collection::make($this->getAttribute('options'))->toArray();
         $multiple = (bool) $this->getAttribute('multiple');
         $required = (bool) $this->getAttribute('required');
 
         if (! $required && ! $multiple) {
-            $options = array_merge(
-                ['' => '-'],
-                $options,
-            );
+            $options = array_merge(['' => '-'], $options);
         }
 
         return FormLayout::merge(parent::toFormField(), null, $multiple ? 'choice' : 'select', [

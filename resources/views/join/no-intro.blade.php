@@ -1,13 +1,14 @@
 @extends('layout.variants.login')
 
 @php
-    $isClosed = $intro !== null;
+  $tooLate = $intro && Date::now()->greaterThan($intro->enrollment_end);
+  $tooEarly = $intro && Date::now()->lessThan($intro->enrollment_start);
 @endphp
 
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__title">Oh no, <strong>slecht nieuws</strong></h1>
-@if ($isClosed)
+@if ($tooLate || $tooEarly)
 <p class="login__subtitle">De inschrijvingen voor de intro zijn gesloten.</p>
 @else
 <p class="login__subtitle">Er is momenteel nog geen intro gepland.</p>
@@ -21,8 +22,8 @@
     <p class="leading-relaxed mb-2">
         Wat leuk dat je je wil aanmelden voor de intro van Gumbo Millennium.
     </p>
-    @if ($isClosed)
-    <p class="leading-relaxed mb-2">
+    @if ($tooLate)
+    <p class="leading-relaxed mb-2" data-test="too-late">
         De inschrijving start over {{ $intro->start_date->diffInHours() }} uur. Omdat je inschrijving verwerken tijd
         kost en dit vaak wat ruimer van tevoren plaatsvind, is het niet mogelijk om je via de website last-minute in
         te schrijven.
@@ -31,11 +32,16 @@
         <h3 class="notice__title">Toch last-minute inschrijven?</h3>
         <p class="text-lg">Als je je last-minute wil inschrijven, raden we je aan om te bellen naar <strong>038 845 0100</strong>.</p>
     </div>
+    @elseif ($tooEarly)
+    <p class="leading-relaxed mb-2" data-test="too-early">
+        Je kan je momenteel nog niet inschrijven voor de intro van Gumbo Millennium.<br />
+        De introductieweek start op <strong>{{ $intro->enrollment_start->isoFormat('dddd DD MMMM') }}</strong>, we zien
+        je graag dan terug!
+    </p>
     @else
-    <p class="leading-relaxed mb-2">
-        Helaas kan je momenteel niet online inschrijven, omdat er momenteel nog
-        geen introductieweek is gepland. Deze zal naar alle waarschijnlijkheid
-        in de volgende herfstvakantie zijn.
+    <p class="leading-relaxed mb-2" data-test="no-intro">
+      Je kan je momenteel nog niet inschrijven voor de intro van Gumbo Millennium.<br />
+      Zodra de datum bekend is, zal deze pagina weer beschikbaar zijn.
     </p>
     @endif
 
