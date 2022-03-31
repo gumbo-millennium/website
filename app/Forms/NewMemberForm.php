@@ -7,6 +7,7 @@ namespace App\Forms;
 use App\Forms\Traits\UseTemplateStrings;
 use App\Helpers\Str;
 use App\Models\Activity;
+use App\Models\Ticket;
 use App\Rules\PhoneNumber;
 use Kris\LaravelFormBuilder\Form;
 
@@ -212,9 +213,15 @@ class NewMemberForm extends Form
         // Flags
         $forced = $this->getFormOption('intro-checked', false);
         $activity = $this->getFormOption('intro-activity');
+        $ticket = $this->getFormOption('intro-ticket');
 
         // Skip if no intro
         if (! $activity instanceof Activity || ! $activity->enrollment_open) {
+            return;
+        }
+
+        // Skip if no ticket
+        if (! $ticket instanceof Ticket || ! $ticket->is_being_sold) {
             return;
         }
 
@@ -233,7 +240,7 @@ class NewMemberForm extends Form
                 'help_block' => [
                     'text' => <<<TEXT
                     Maak kennis met Gumbo tijdens de introductieweek. Na je inschrijving sturen we je gelijk
-                    door naar het aanmeldproces. De intro kost {$price} (incl. gratis jaar lidmaatschap).
+                    door naar het aanmeldproces. De intro kost {$price} (incl. jaar lidmaatschap).
                     TEXT,
                 ],
                 'checked' => $forced ? 'checked' : false,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\EnrollmentServiceContract;
+use App\Facades\Enroll;
 use App\Forms\NewMemberForm;
 use App\Helpers\Str;
 use App\Mail\Join\BoardJoinMail;
@@ -13,19 +14,25 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\JoinSubmission;
 use App\Models\Page;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
@@ -43,6 +50,8 @@ class JoinController extends Controller
         'name' => 'Bestuur Gumbo Millennium',
         'email' => 'bestuur@gumbo-millennium.nl',
     ]];
+
+    private const INTRO_CACHE_KEY = 'join.intro-activity';
 
     /**
      * A useful form builder.
@@ -67,6 +76,9 @@ class JoinController extends Controller
     {
         // Check for an intro
         $introActivity = $this->getIntroActivity();
+        $introTicket = $this->getIntroTicketForActivity($introActivity);
+
+        // Check if the URL is an intro route
         $isIntro = Str::endsWith($router->currentRouteName(), 'intro');
 
         // Create form
@@ -75,6 +87,7 @@ class JoinController extends Controller
             'url' => route('join.submit'),
             'intro-checked' => $isIntro,
             'intro-activity' => $introActivity,
+            'intro-ticket' => $introTicket,
         ]);
 
         // Get content data
@@ -82,9 +95,9 @@ class JoinController extends Controller
         $pageTemplate = 'join.form';
 
         // Return a message if there's no intro right now
-        if ($isIntro && ($introActivity === null || ! $introActivity->enrollment_open)) {
+        if ($isIntro && ($introActivity === null || ! $introActivity->enrollment_open || ! $introTicket)) {
             return response()
-                ->view('join.no-intro', ['intro' => $introActivity])
+                ->view('join.no-intro', ['intro' => $introActivity, 'ticket' => $introTicket])
                 ->setPublic();
         }
 
@@ -114,10 +127,12 @@ class JoinController extends Controller
     {
         // Get intro activity
         $introActivity = $this->getIntroActivity();
+        $introTicket = $this->getIntroTicketForActivity($introActivity);
 
         // Get form
         $form = $this->formBuilder->create(NewMemberForm::class, [
             'intro-activity' => $introActivity,
+            'intro-ticket' => $introTicket,
         ]);
 
         // Or automatically redirect on error. This will throw an HttpResponseException with redirect
@@ -174,8 +189,7 @@ class JoinController extends Controller
         // Check if the user wants to join the introduction
         if (! $introActivity || empty($userValues['join-intro'])) {
             // Send redirect reply
-            return \redirect()
-                ->route('join.complete')
+            return Response::redirectToRoute('join.complete')
                 ->with('submission', $submission);
         }
 
@@ -188,51 +202,45 @@ class JoinController extends Controller
             // No user means an existing user was found, request login.
             if (! $user) {
                 // Set next URL
-                \redirect()->setIntendedUrl(
-                    \route('activity.show', ['activity' => $introActivity]),
+                Redirect::setIntendedUrl(
+                    URL::route('activity.show', ['activity' => $introActivity]),
                 );
 
                 // Flash message
-                \flash(<<<'EOL'
+                flash(<<<'EOL'
                     Je hebt al een account op de site, dus om je in
                     te schrijven voor de intro moet je even inloggen.
                     EOL);
 
                 // Redirect to login
-                return \redirect()->route('login');
+                return Redirect::route('login');
             }
 
             Auth::login($user);
         }
 
         // Join intro
-        $enrollment = $this->joinIntroActivity(
-            $enrollService,
-            $introActivity,
-            $user,
-        );
+        $enrollment = $this->joinIntroActivity($introActivity, $introTicket, $user);
 
         // No enrollment means enrolling was blocked
         if (! $enrollment) {
             // Flash failure
-            \flash(
+            flash(
                 'Je aanmelding is ontvangen, maar je kon helaas niet ingeschreven worden op de introductieweek.',
                 'warning',
             );
 
             // Redirect to welcome
 
-            return \redirect()
-                ->route('join.complete')
+            return Response::redirectToRoute('join.complete')
                 ->with('submission', $submission);
         }
 
         // Flash OK
-        \flash('Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.', 'success');
+        flash('Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.', 'success');
 
         // Redirect to proper location
-        return \response()
-            ->redirectToRoute('enroll.show', ['activity' => $introActivity])
+        return Response::redirectToRoute('enroll.show', ['activity' => $introActivity])
             ->setPrivate();
     }
 
@@ -264,19 +272,55 @@ class JoinController extends Controller
      */
     private function getIntroActivity(): ?Activity
     {
+        // Check cache first
+        if (Cache::has(self::INTRO_CACHE_KEY)) {
+            $introKey = Cache::get(self::INTRO_CACHE_KEY);
+
+            // Value may be null, in case no intro activity matches
+            return $introKey === null ? null : Activity::query()
+                ->with('tickets')
+                ->find($introKey);
+        }
+
         // Query
-        return Activity::query()
+        $matchedActivity = Activity::query()
             // Find the activity starting with intro
             ->where('slug', 'LIKE', 'intro-%')
-
-            // Make sure the activity is AT LEAST 2 days long
-            ->whereRaw('`end_date` > DATE_ADD(`start_date`, INTERVAL 2 DAY)')
 
             // Get the one that starts soonest
             ->orderByDesc('start_date')
 
-            // Return first
-            ->first();
+            // Fetch from DB
+            ->get()
+
+            // Find the first activity that takes more than 2 days
+            ->first(fn (Activity $activity) => $activity->start_date->diffInDays($activity->end_date) >= 2);
+
+        // Cache result
+        Cache::put(self::INTRO_CACHE_KEY, $matchedActivity ? $matchedActivity->id : null, Date::now()->addHours(2));
+
+        // Done
+        return $matchedActivity;
+    }
+
+    /**
+     * Returns the ticket that's applicable for the introduction period.
+     */
+    private function getIntroTicketForActivity(?Activity $activity): ?Ticket
+    {
+        // No activity, no ticket
+        if (! $activity) {
+            return null;
+        }
+
+        // Check if the activity has valid tickets
+        return $activity
+            ->tickets
+            ->first(fn (Ticket $ticket) => (
+                $ticket->is_being_sold
+                && ! $ticket->members_only
+            && $ticket->quantity_available > 0
+            ));
     }
 
     /**
@@ -316,46 +360,23 @@ class JoinController extends Controller
      * @return null|RedirectResponse
      */
     private function joinIntroActivity(
-        EnrollmentServiceContract $enrollService,
         Activity $activity,
+        Ticket $ticket,
         User $user
     ): ?Enrollment {
-        // Check if we need to lock
-        $lock = $enrollService->useLocks() ? $enrollService->getLock($activity) : null;
+        // Check if the user can actually enroll
+        if (! Enroll::canEnroll($activity)) {
+            Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
+                'user' => $user,
+                'activity' => $activity,
+            ]);
 
-        // Get enrollment
-        $enrollment = null;
-
-        try {
-            // Get a lock
-            optional($lock)->block(15);
-
-            // Check if the user can actually enroll
-            if (! $enrollService->canEnroll($activity, $user)) {
-                Log::info('User {user} tried to enroll into {actiity}, but it\'s not allowed', [
-                    'user' => $user,
-                    'activity' => $activity,
-                ]);
-
-                // Return existing enrollment or null
-                return Enrollment::findActive($user, $activity);
-            }
-
-            // Create the enrollment
-            $enrollment = $enrollService->createEnrollment($activity, $user);
-        } catch (LockTimeoutException $exception) {
-            // Report timeout
-            \report($exception);
-
-            // Return
-            return null;
-        } finally {
-            // Free lock
-            \optional($lock)->release();
+            // Return existing enrollment or null
+            return Enrollment::findActive($user, $activity);
         }
 
-        // Advance the enrollment
-        $enrollService->advanceEnrollment($activity, $enrollment);
+        // Create the enrollment
+        $enrollment = Enroll::createEnrollment($activity, $ticket);
 
         // Return enrollment
         return $enrollment->exists ? $enrollment : null;
