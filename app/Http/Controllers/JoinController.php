@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Contracts\EnrollmentServiceContract;
 use App\Facades\Enroll;
 use App\Forms\NewMemberForm;
 use App\Helpers\Str;
@@ -16,16 +15,13 @@ use App\Models\JoinSubmission;
 use App\Models\Page;
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Session\Store as SessionStore;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
@@ -34,6 +30,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Kris\LaravelFormBuilder\FormBuilder;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
  * Handles sign ups to the student community. Presents a whole form and
@@ -51,12 +48,20 @@ class JoinController extends Controller
         'email' => 'bestuur@gumbo-millennium.nl',
     ]];
 
-    private const INTRO_CACHE_KEY = 'join.intro-activity';
-
     /**
      * A useful form builder.
      */
     private FormBuilder $formBuilder;
+
+    /**
+     * The next upcoming introduction activity.
+     */
+    private ?Activity $activity;
+
+    /**
+     * The cheapest available ticket for the activity, if any.
+     */
+    private ?Ticket $activityTicket;
 
     /**
      * Creates a new controller with form builder.
@@ -65,18 +70,24 @@ class JoinController extends Controller
     {
         // Form builder
         $this->formBuilder = $builder;
+
+        // Attach middleware to load the intro ticket and activity when
+        // this route is requested
+        $this->middleware(function (Request $request, Closure $next) {
+            $this->determineActivityAndTicket();
+
+            return $next($request);
+        });
     }
 
     /**
      * Shows the registration form.
-     *
-     * @return Response
      */
-    public function index(SessionStore $session, Router $router)
+    public function index(SessionStore $session, Router $router): SymfonyResponse
     {
         // Check for an intro
-        $introActivity = $this->getIntroActivity();
-        $introTicket = $this->getIntroTicketForActivity($introActivity);
+        $introActivity = $this->activity;
+        $introTicket = $this->activityTicket;
 
         // Check if the URL is an intro route
         $isIntro = Str::endsWith($router->currentRouteName(), 'intro');
@@ -95,10 +106,15 @@ class JoinController extends Controller
         $pageTemplate = 'join.form';
 
         // Return a message if there's no intro right now
-        if ($isIntro && ($introActivity === null || ! $introActivity->enrollment_open || ! $introTicket)) {
-            return response()
-                ->view('join.no-intro', ['intro' => $introActivity, 'ticket' => $introTicket])
-                ->setPublic();
+        if ($isIntro && (
+            $introActivity === null || $introTicket === null
+            || $introActivity->available_seats === 0
+            || $introActivity->enrollment_open === false
+        )) {
+            return Response::view('join.no-intro', [
+                'activity' => $introActivity,
+                'ticket' => $introTicket,
+            ]);
         }
 
         // Flag to auto-enroll to the introduction week
@@ -111,23 +127,24 @@ class JoinController extends Controller
         }
 
         // Show form
-        return response()
-            ->view($pageTemplate, compact('form', 'page', 'isIntro') + [
-                'intro' => $introActivity,
-            ]);
+        return Response::view($pageTemplate, [
+            'form' => $form,
+            'page' => $page,
+            'isIntro' => $isIntro,
+            'activity' => $introActivity,
+            'ticket' => $introTicket,
+        ]);
     }
 
     /**
-     * Handle registration.
-     *
-     * @param SignUpRequest $request
-     * @return Response
+     * Handle the submission of the form, either for the intro-version or for the
+     * regular version.
      */
-    public function submit(EnrollmentServiceContract $enrollService, Request $request)
+    public function submit(Request $request): SymfonyResponse
     {
         // Get intro activity
-        $introActivity = $this->getIntroActivity();
-        $introTicket = $this->getIntroTicketForActivity($introActivity);
+        $introActivity = $this->activity;
+        $introTicket = $this->activityTicket;
 
         // Get form
         $form = $this->formBuilder->create(NewMemberForm::class, [
@@ -170,8 +187,7 @@ class JoinController extends Controller
 
         // Validate the submission was created
         if (! $submission->exists()) {
-            return redirect()
-                ->back()
+            return Redirect::back()
                 ->withInput()
                 ->withErrors('Er is iets fout gegaan bij het aanmelden.');
         }
@@ -189,7 +205,7 @@ class JoinController extends Controller
         // Check if the user wants to join the introduction
         if (! $introActivity || empty($userValues['join-intro'])) {
             // Send redirect reply
-            return Response::redirectToRoute('join.complete')
+            return Redirect::route('join.complete')
                 ->with('submission', $submission);
         }
 
@@ -203,7 +219,7 @@ class JoinController extends Controller
             if (! $user) {
                 // Set next URL
                 Redirect::setIntendedUrl(
-                    URL::route('activity.show', ['activity' => $introActivity]),
+                    URL::route('enroll.show', ['activity' => $introActivity]),
                 );
 
                 // Flash message
@@ -232,7 +248,7 @@ class JoinController extends Controller
 
             // Redirect to welcome
 
-            return Response::redirectToRoute('join.complete')
+            return Redirect::route('join.complete')
                 ->with('submission', $submission);
         }
 
@@ -240,87 +256,53 @@ class JoinController extends Controller
         flash('Bedankt voor je aanmelding, deze is doorgestuurd naar het bestuur.', 'success');
 
         // Redirect to proper location
-        return Response::redirectToRoute('enroll.show', ['activity' => $introActivity])
-            ->setPrivate();
+        return Redirect::route('enroll.show', ['activity' => $introActivity]);
     }
 
     /**
-     * Request completed.
-     *
-     * @return View
+     * Show the 'thank you for joining' page.
      */
-    public function complete()
+    public function complete(): SymfonyResponse
     {
         // Redirect to form if they're reloading the page
         // and the submission was removed
         if (! Session::has(self::SESSION_NAME)) {
-            return redirect()->route('join.form');
+            return Redirect::route('join.form');
         }
 
         // Get submission from session
         $submission = Session::get(self::SESSION_NAME);
 
-        // Get introduction activity
-        $introActivity = $this->getIntroActivity();
-
         // Return join-complete view
-        return view('join.complete', compact('submission', 'introActivity'));
+        return Response::view('join.complete', [
+            'submission' => $submission,
+            'activity' => $this->activity,
+        ]);
     }
 
     /**
-     * Returns the introduction week, matching by slug.
+     * Determine the activity and the ticket to use when determining if there's
+     * an introduction period to be enrolled into.
      */
-    private function getIntroActivity(): ?Activity
+    private function determineActivityAndTicket(): void
     {
-        // Check cache first
-        if (Cache::has(self::INTRO_CACHE_KEY)) {
-            $introKey = Cache::get(self::INTRO_CACHE_KEY);
+        // Get the activity
+        $this->activity = Activity::query()
+            // Should start with intro-
+            ->where('slug', 'like', 'intro-%')
+            // Should be available to anons
+            ->whereAvailable(new User())
+            // Should be in the future
+            ->whereInTheFuture()
+            // Load tickets too
+            ->with(['tickets'])
+            ->first();
 
-            // Value may be null, in case no intro activity matches
-            return $introKey === null ? null : Activity::query()
-                ->with('tickets')
-                ->find($introKey);
-        }
-
-        // Query
-        $matchedActivity = Activity::query()
-            // Find the activity starting with intro
-            ->where('slug', 'LIKE', 'intro-%')
-
-            // Get the one that starts soonest
-            ->orderByDesc('start_date')
-
-            // Fetch from DB
-            ->get()
-
-            // Find the first activity that takes more than 2 days
-            ->first(fn (Activity $activity) => $activity->start_date->diffInDays($activity->end_date) >= 2);
-
-        // Cache result
-        Cache::put(self::INTRO_CACHE_KEY, $matchedActivity ? $matchedActivity->id : null, Date::now()->addHours(2));
-
-        // Done
-        return $matchedActivity;
-    }
-
-    /**
-     * Returns the ticket that's applicable for the introduction period.
-     */
-    private function getIntroTicketForActivity(?Activity $activity): ?Ticket
-    {
-        // No activity, no ticket
-        if (! $activity) {
-            return null;
-        }
-
-        // Check if the activity has valid tickets
-        return $activity
-            ->tickets
-            ->first(fn (Ticket $ticket) => (
-                $ticket->is_being_sold
-                && ! $ticket->members_only
-            && $ticket->quantity_available > 0
-            ));
+        // Get the ticket
+        $this->activityTicket = $this->activity?->tickets
+            ->filter(fn (Ticket $ticket) => $ticket->is_being_sold && $ticket->is_public && $ticket->quantity_available !== 0)
+            ->sortBy('total_price')
+            ->first();
     }
 
     /**
@@ -335,16 +317,13 @@ class JoinController extends Controller
             'first_name' => $data['first-name'],
             'insert' => $data['insert'],
             'last_name' => $data['last-name'],
-            'password' => Hash::make((string) Str::uuid()),
+            'password' => '!',
         ]);
 
         // Return null if the user already exists
         if (! $user->wasRecentlyCreated) {
             return null;
         }
-
-        // Dispatch new account event
-        event(new Registered($user));
 
         // Send a password reset
         Password::broker()->sendResetLink([

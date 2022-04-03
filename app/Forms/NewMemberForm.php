@@ -231,7 +231,7 @@ class NewMemberForm extends Form
         $endDate = $activity->end_date->isoFormat('D MMMM');
 
         // Price
-        $price = Str::price($activity->total_price);
+        $price = Str::price($ticket->total_price);
 
         // Add intro checkbox
         $this

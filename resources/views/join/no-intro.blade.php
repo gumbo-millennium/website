@@ -1,14 +1,22 @@
 @extends('layout.variants.login')
 
 @php
-  $tooLate = $intro && Date::now()->greaterThan($intro->enrollment_end);
-  $tooEarly = $intro && Date::now()->lessThan($intro->enrollment_start);
+  $started = $activity && Date::now()->greaterThan($activity->started_at);
+  $soldOut = $activity && $activity->available_seats === 0;
+  $tooEarly = $activity && Date::now()->lessThan($ticket?->enrollment_start ?? $activity->enrollment_start);
+  $tooLate = $activity && Date::now()->greaterThan($ticket?->enrollment_end ?? $activity->enrollment_end);
+
+  $startDiffInDays = $activity?->start_date->diffInDays();
+  $startDiffInHours = $activity?->start_date->diffInHours();
+  $startDiffLabel = $startDiffInDays > 1 ? "{$startDiffInDays} dagen" : "{$startDiffInHours} uur";
 @endphp
 
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__title">Oh no, <strong>slecht nieuws</strong></h1>
-@if ($tooLate || $tooEarly)
+@if ($soldOut)
+<p class="login__subtitle">De introductieweek zit rammetjevol.</p>
+@elseif ($tooLate || $tooEarly || $started)
 <p class="login__subtitle">De inschrijvingen voor de intro zijn gesloten.</p>
 @else
 <p class="login__subtitle">Er is momenteel nog geen intro gepland.</p>
@@ -22,9 +30,17 @@
     <p class="leading-relaxed mb-2">
         Wat leuk dat je je wil aanmelden voor de intro van Gumbo Millennium.
     </p>
-    @if ($tooLate)
+    @if ($started)
     <p class="leading-relaxed mb-2" data-test="too-late">
-        De inschrijving start over {{ $intro->start_date->diffInHours() }} uur. Omdat je inschrijving verwerken tijd
+      De introductieweek van Gumbo Millennium is gestart. Je kan je dus niet meer hiervoor inschrijven.
+    </p>
+    @elseif ($soldOut)
+    <p class="leading-relaxed mb-2" data-test="too-late">
+      De introductieweek van Gumbo Millennium is helaas uitverkocht. Je kan je dus niet meer hiervoor inschrijven.
+    </p>
+    @elseif ($tooLate)
+    <p class="leading-relaxed mb-2" data-test="too-late">
+        De inschrijving start over {{ $startDiffLabel }}. Omdat je inschrijving verwerken tijd
         kost en dit vaak wat ruimer van tevoren plaatsvind, is het niet mogelijk om je via de website last-minute in
         te schrijven.
     </p>
@@ -35,8 +51,14 @@
     @elseif ($tooEarly)
     <p class="leading-relaxed mb-2" data-test="too-early">
         Je kan je momenteel nog niet inschrijven voor de intro van Gumbo Millennium.<br />
-        De introductieweek start op <strong>{{ $intro->enrollment_start->isoFormat('dddd DD MMMM') }}</strong>, we zien
-        je graag dan terug!
+        De inschrijvingen voor de introductieweek openen op <strong>{{ $activity->enrollment_start->isoFormat('dddd D MMMM') }}</strong>,
+        we zien je graag dan terug!
+    </p>
+    @elseif($activity)
+    <p class="leading-relaxed mb-2" data-test="too-late">
+      Je kan je momenteel nog niet inschrijven voor de intro van Gumbo Millennium.<br />
+      Helaas is er nog geen datum bekend waarop de inschrijvingen starten.
+      Houd deze pagina in de gaten voor meer info, of stuur ons een berichtje!
     </p>
     @else
     <p class="leading-relaxed mb-2" data-test="no-intro">

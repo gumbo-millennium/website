@@ -10,12 +10,14 @@ use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
 use App\Models\Traits\HasEditorJsContent;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Spatie\Permission\Models\Role;
@@ -87,6 +89,7 @@ use Spatie\Permission\Models\Role;
  * @method static Builder|Activity query()
  * @method static Builder|Activity whereAvailable(?\App\Models\User $user = null)
  * @method static Builder|Activity whereHasFeature(string $feature)
+ * @method static Builder|Activity whereInTheFuture(?\DateTimeInterface $date = null)
  * @method static Builder|Activity wherePublished()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
@@ -169,16 +172,7 @@ class Activity extends SluggableModel
     public static function getNextActivities(?User $user): Builder
     {
         return self::query()
-            ->where(static function (Builder $query) {
-                $query
-                    // Get non-ended activities...
-                    ->where('end_date', '>', Date::now())
-                    // ... or where the event is postponed, but only postponed
-                    ->orWhere(static fn (Builder $query) => $query
-                    ->whereNotNull('postponed_at')
-                    ->whereNull('cancelled_at')
-                    ->whereNull('rescheduled_from'), );
-            })
+            ->whereInTheFuture()
             ->orderBy('start_date')
             ->whereAvailable($user);
     }
@@ -530,8 +524,8 @@ class Activity extends SluggableModel
      */
     public function scopeWhereAvailable(Builder $query, ?User $user = null): Builder
     {
-        $user ??= request()->user();
-        \assert($user === null || $user instanceof User);
+        $user ??= Auth::user();
+        assert($user === null || $user instanceof User);
 
         // Add public-only when not a member
         if (! $user || ! $user->is_member) {
@@ -644,5 +638,22 @@ class Activity extends SluggableModel
     public function hasFeature(string $feature): bool
     {
         return (bool) Arr::get($this->features ?? [], $feature, false);
+    }
+
+    /**
+     * Scope the query to only target future activities after the given date.
+     */
+    public function scopeWhereInTheFuture(Builder $query, ?DateTimeInterface $date = null): void
+    {
+        $query
+            // Check if the end date is after the given date
+            ->where('end_date', '>', $date ?? Date::now())
+            // ... or where the event is postponed, but only postponed
+            ->orWhere(fn (Builder $query) => (
+                $query
+                    ->whereNotNull('postponed_at')
+                    ->whereNull('cancelled_at')
+                    ->whereNull('rescheduled_from')
+            ));
     }
 }

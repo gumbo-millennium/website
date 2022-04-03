@@ -112,7 +112,7 @@ class Ticket extends Resource
     public function fields(Request $request)
     {
         return [
-            Fields\ID::make()->hideFromIndex(),
+            Fields\ID::make(),
 
             Fields\Text::make(__('Title'), 'title')
                 ->rules([
