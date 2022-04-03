@@ -5,7 +5,7 @@ Laatste informatie voor {{ $activity->name }}
 @endslot
 
 {{-- Image --}}
-@slot('mailImage', mix('images/header-update.png'))
+@slot('mailImage', mix('images-mail/header-update.png'))
 @slot('html')
 <p class="lead">Beste {{ $participant->first_name }},</p>
 

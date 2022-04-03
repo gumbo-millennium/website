@@ -42,6 +42,7 @@ mix
 if (mix.inProduction()) {
   mix.version([
     'images/**/*.{jpg,png,gif,webp}',
+    'images-mail/**/*.{jpg,png,gif,webp}',
   ])
 }
 
