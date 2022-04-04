@@ -6,13 +6,13 @@
     </p>
 
     <p class="p-4 border border-brand-400 rounded my-2">
-      <a href="{{ $calendarUrl }}" class="text-brand-600">
+      <a href="{{ $calendarUrl }}" class="text-brand-600 whitespace-nowrap truncate">
         {{ $calendarUrl }}
       </a>
     </p>
 
     <p class="text-gray-700 text-sm">
-      Gebruik je Google Calendar? <a href="{{ $googleUrl }}" rel="noopener noreferrer" target="_blank">voeg 'm dan snel toe</a>!
+      <strong class="font-bold">Let op</strong> Houd deze URL geheim, anders kunnen andere gebruikers jouw inschrijvingen in hun agenda zien.
     </p>
   </x-notice>
 </div>
