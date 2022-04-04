@@ -54,4 +54,6 @@ $firstActivity = $past ? null : $activities->first();
 @endif
 </div>
 
+<x-activities.ical-link />
+
 @endsection

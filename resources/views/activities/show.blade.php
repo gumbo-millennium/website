@@ -132,4 +132,6 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
             @endif
         </div>
     </x-page.header>
+
+    <x-activities.ical-link />
 @endsection
