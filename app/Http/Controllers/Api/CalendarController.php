@@ -29,6 +29,8 @@ use Eluceo\iCal\Domain\ValueObject\Timestamp;
 use Eluceo\iCal\Domain\ValueObject\Uri;
 use Eluceo\iCal\Presentation\Component\Property;
 use Eluceo\iCal\Presentation\Component\Property\Value\DurationValue;
+use Eluceo\iCal\Presentation\Component\Property\Value\TextValue;
+use Eluceo\iCal\Presentation\Component\Property\Value\UriValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
@@ -37,6 +39,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 
 class CalendarController extends Controller
 {
@@ -144,18 +147,49 @@ class CalendarController extends Controller
         $calendar = new Calendar($events->values()->all());
         $calendarComponent = (new CalendarFactory())->createCalendar($calendar);
 
+        // Create the calendar text name
+        $calendarNameString = Str::of("Activiteiten-agenda van {$user->public_name}")->ascii('nl');
+
         // Add update interval to ensure Google fetches this data a bit often
-        $updateInterval = new DurationValue(new DateInterval('PT12H'));
+        $calendarName = new TextValue((string) $calendarNameString);
+        $calendarDescription = new TextValue(<<<TEXT
+        Persoonlijke agenda van {$user->first_name} met je inschrijvingen en een overzicht
+        van activiteiten waar je zonder inschrijven naartoe kan.
+
+        Veel plezier bij de activiteiten van Gumbo!
+        TEXT);
+        $calendarTimezone = new TextValue(Config::get('app.timezone'));
+        $calendarUrl = new UriValue(
+            new Uri(URL::signedRoute('api.calendar.show', $user)),
+        );
+        $calendarUpdateInterval = new DurationValue(new DateInterval('PT12H'));
+
         $calendarComponent
-            ->withProperty(new Property('X-PUBLISHED-TTL', $updateInterval))
-            ->withProperty(new Property('REFRESH-INTERVAL', $updateInterval));
+            // Set name
+            ->withProperty(new Property('NAME', $calendarName))
+            ->withProperty(new Property('X-WR-CALNAME', $calendarName))
+
+            // Set description
+            ->withProperty(new Property('DESCRIPTION', $calendarDescription))
+            ->withProperty(new Property('X-WR-CALDESC', $calendarDescription))
+
+            // Set timezone
+            ->withProperty(new Property('TIMEZONE-ID', $calendarTimezone))
+            ->withProperty(new Property('X-WR-TIMEZONE', $calendarTimezone))
+
+            // Set URL
+            ->withProperty(new Property('URL', $calendarUrl))
+
+            // Set TTL
+            ->withProperty(new Property('X-PUBLISHED-TTL', $calendarUpdateInterval))
+            ->withProperty(new Property('REFRESH-INTERVAL', $calendarUpdateInterval));
 
         // Send response
         return Response::make($calendarComponent)->withHeaders([
             'Content-Type' => 'text/calendar; charset=utf-8',
             'Content-Disposition' => sprintf(
                 'attachment; filename="%s.ics"',
-                Str::of("Activiteiten-agenda van {$user->public_name}")->ascii('nl')->replace('"', "'"),
+                $calendarNameString->replace('"', "'"),
             ),
         ]);
     }
