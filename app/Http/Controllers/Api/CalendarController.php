@@ -8,6 +8,7 @@ use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\States\Enrollment as EnrollmentStates;
 use App\Models\User;
+use Carbon\CarbonInterval;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
@@ -21,6 +22,8 @@ use Eluceo\iCal\Domain\ValueObject\Organizer;
 use Eluceo\iCal\Domain\ValueObject\TimeSpan;
 use Eluceo\iCal\Domain\ValueObject\Timestamp;
 use Eluceo\iCal\Domain\ValueObject\Uri;
+use Eluceo\iCal\Presentation\Component\Property;
+use Eluceo\iCal\Presentation\Component\Property\Value\DurationValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;
@@ -76,6 +79,7 @@ class CalendarController extends Controller
 
             {$descriptionAsText}
             DESC);
+
             // Create Location model
             $location = new Location(
                 $activity->location_address ?? $activity->location,
@@ -130,10 +134,19 @@ class CalendarController extends Controller
         $calendar = new Calendar($events);
         $calendarComponent = (new CalendarFactory())->createCalendar($calendar);
 
+        // Add update interval to ensure Google fetches this data a bit often
+        $updateInterval = new DurationValue(CarbonInterval::createFromDateString('PT12H'));
+        $calendarComponent
+            ->withProperty(new Property('X-PUBLISHED-TTL', $updateInterval))
+            ->withProperty(new Property('REFRESH-INTERVAL', $updateInterval));
+
         // Send response
         return Response::make($calendarComponent)->withHeaders([
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => sprintf('attachment; filename="%s.ics"', Str::of($user->name)->ascii('nl')->replace('"', "'")),
+            'Content-Disposition' => sprintf(
+                'attachment; filename="%s.ics"',
+                Str::of("Activiteiten-agenda van {$user->public_name}")->ascii('nl')->replace('"', "'"),
+            ),
         ]);
     }
 }
