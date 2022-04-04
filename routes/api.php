@@ -36,3 +36,6 @@ Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('b
 
 // Register Mollie webhook URL
 Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name('webhooks.mollie');
+
+// Register ical route
+Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->name('calendar.show');
