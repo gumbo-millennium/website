@@ -8,7 +8,7 @@ use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\States\Enrollment as EnrollmentStates;
 use App\Models\User;
-use Carbon\CarbonInterval;
+use DateInterval;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
@@ -135,7 +135,7 @@ class CalendarController extends Controller
         $calendarComponent = (new CalendarFactory())->createCalendar($calendar);
 
         // Add update interval to ensure Google fetches this data a bit often
-        $updateInterval = new DurationValue(CarbonInterval::createFromDateString('PT12H'));
+        $updateInterval = new DurationValue(new DateInterval('PT12H'));
         $calendarComponent
             ->withProperty(new Property('X-PUBLISHED-TTL', $updateInterval))
             ->withProperty(new Property('REFRESH-INTERVAL', $updateInterval));
