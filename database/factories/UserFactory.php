@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Helpers\Str;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,9 +23,14 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
-            'gender' => $this->faker->randomElement(['Man', 'Vrouw', null]),
+            'gender' => $this->faker->randomElement(['Man', 'Vrouw', $this->faker->word, null]),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function withRole(string $role): self
+    {
+        return $this->afterCreating(fn (User $user) => $user->assignRole($role));
     }
 }

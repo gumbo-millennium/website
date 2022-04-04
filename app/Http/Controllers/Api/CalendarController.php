@@ -6,9 +6,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
+use App\Models\Enrollment;
 use App\Models\States\Enrollment as EnrollmentStates;
 use App\Models\User;
 use DateInterval;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
@@ -25,13 +30,81 @@ use Eluceo\iCal\Domain\ValueObject\Uri;
 use Eluceo\iCal\Presentation\Component\Property;
 use Eluceo\iCal\Presentation\Component\Property\Value\DurationValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 
 class CalendarController extends Controller
 {
+    /**
+     * Creates a clean body text for use in plain text formats (like the calendar entry), by
+     * stripping HTML tags and reformatting titles.
+     */
+    public static function createCleanBodyText(Activity $activity): string
+    {
+        return Cache::remember("activity.{$activity->id}.clean_body_text", Date::now()->addHour(), function () use ($activity) {
+            // Prep document
+            $doc = new DOMDocument();
+
+            // Load HTML
+            $doc->loadHTML(
+                "<article>{$activity->description_html}</article>",
+                LIBXML_HTML_NOIMPLIED | LIBXML_NOERROR | LIBXML_NOWARNING,
+            );
+
+            // Prep xpath
+            $xpath = new DOMXPath($doc);
+
+            // Prep body text
+            $bodyLines = [];
+
+            // Iterate over all items, only preserving headers and paragraphs
+            foreach ($xpath->query('//div[contains(@class, "container")]/*') as $childNode) {
+                if (! $childNode instanceof DOMElement) {
+                    continue;
+                }
+
+                // Get clean contents
+                $asciiValue = Str::of($childNode->nodeValue)->ascii('nl')->trim();
+
+                // Format h1/h2 as main title
+                if ($childNode->nodeName === 'h1' || $childNode->nodeName === 'h2') {
+                    $bodyLines[] = $asciiValue->upper();
+                    $bodyLines[] = str_repeat('=', $asciiValue->length());
+                    $bodyLines[] = '';
+
+                    continue;
+                }
+
+                // Format h3 as subtitle
+                if ($childNode->nodeName === 'h3') {
+                    $bodyLines[] = $asciiValue->title();
+                    $bodyLines[] = str_repeat('-', $asciiValue->length());
+                    $bodyLines[] = '';
+
+                    continue;
+                }
+
+                // Format other headers and paragraphs as plain text
+                if (preg_match('/^(p|h\d)$/i', $childNode->nodeName)) {
+                    $bodyLines[] = $asciiValue;
+                    $bodyLines[] = '';
+
+                    continue;
+                }
+
+                // All other HTML types are skipped
+            }
+
+            // Join bodylines and re-trim
+            return trim(implode("\n", $bodyLines));
+        });
+    }
+
     /**
      * Ensure all requests to this controller are signed.
      */
@@ -45,93 +118,30 @@ class CalendarController extends Controller
      */
     public function show(User $user): HttpResponse
     {
-        // Find all enrollments for this user that are confirmed or pending payment
-        /** @var \App\Models\Enrollment[] $enrollments */
-        $enrollments = $user->enrollments()
-            ->whereState('state', [
-                EnrollmentStates\Created::class,
-                EnrollmentStates\Seeded::class,
-                EnrollmentStates\Confirmed::class,
-                EnrollmentStates\Paid::class,
-            ])
-            ->with(['activity', 'ticket'])
-            ->get();
+        // Collect events
+        $openAdmissionEvents = $this->getOpenEventsForUser($user);
+        $enrolledEvents = $this->getEnrolledEventsForUser($user);
 
-        // List of iCal calendar items
-        $events = [];
+        // Add events to an array and sort by start date
+        $events = Collection::make([$openAdmissionEvents, $enrolledEvents])
+            ->collapse()
+            ->sort(function (Event $eventA, Event $eventB) {
+                $occurrenceA = $eventA->getOccurrence();
+                $occurrenceB = $eventB->getOccurrence();
 
-        // Get the last update time of this file, causing updates to this file
-        // to be reflected in user's calendars (if we add/remove fields)
-        $fileModifiedTimestamp = Date::createFromTimestamp(filemtime(__FILE__));
-
-        // Iterate over each enrollment
-        foreach ($enrollments as $enrollment) {
-            // Get models
-            $activity = $enrollment->activity;
-            $ticket = $enrollment->ticket;
-
-            // Get body text
-            $descriptionAsText = strip_tags($activity->description_html ?? '');
-            $eventPrice = Str::price($enrollment->total_price) ?? __('Free');
-            $eventDescription = trim(<<<DESC
-            Ticket: {$ticket->title}
-            Prijs: {$eventPrice}
-
-            {$descriptionAsText}
-            DESC);
-
-            // Create Location model
-            $location = new Location(
-                $activity->location_address ?? $activity->location,
-                $activity->location,
-            );
-
-            // Create Attendee model
-            $attendee = (new Attendee(
-                new EmailAddress($user->email),
-            ))
-                ->setRole(RoleType::REQ_PARTICIPANT())
-                ->setDisplayName($user->display_name ?? $user->first_name ?? $user->email)
-                ->setParticipationStatus(
-                    $enrollment->is_stable
-                        ? ParticipationStatus::ACCEPTED()
-                        : ParticipationStatus::NEEDS_ACTION(),
-                )
-                ->setResponseNeededFromAttendee(false)
-                ->setCalendarUserType(CalendarUserType::INDIVIDUAL());
-
-            $events[] = (new Event())
-                ->setSummary($activity->name)
-                ->setDescription($eventDescription)
-                ->setLocation($location)
-                ->addAttendee($attendee)
-                ->setUrl(
-                    new Uri(route('activity.show', $activity)),
-                )
-                ->setLastModified(
-                    new Timestamp(
-                        $enrollment->updated_at
-                            ->max($activity->updated_at)
-                            ->max($ticket->updated_at)
-                            ->max($fileModifiedTimestamp),
-                    ),
-                )
-                ->setOrganizer(
-                    (new Organizer(
-                        new EmailAddress(Config::get('mail.from.address')),
-                        $activity->organiser ?? Config::get('app.name'),
-                    )),
-                )
-                ->setOccurrence(
-                    TimeSpan::create(
-                        new DateTime($activity->start_date, false),
-                        new DateTime($activity->end_date, false),
-                    ),
-                );
-        }
+                if ($occurrenceA instanceof TimeSpan && $occurrenceB instanceof TimeSpan) {
+                    return $occurrenceA->getBegin()->getDateTime()->getTimestamp() <=> $occurrenceB->getBegin()->getDateTime()->getTimestamp();
+                }
+                if ($occurrenceA instanceof Timespan) {
+                    return -1;
+                }
+                if ($occurrenceB instanceof Timespan) {
+                    return 1;
+                }
+            });
 
         // Create the calendar
-        $calendar = new Calendar($events);
+        $calendar = new Calendar($events->values()->all());
         $calendarComponent = (new CalendarFactory())->createCalendar($calendar);
 
         // Add update interval to ensure Google fetches this data a bit often
@@ -148,5 +158,143 @@ class CalendarController extends Controller
                 Str::of("Activiteiten-agenda van {$user->public_name}")->ascii('nl')->replace('"', "'"),
             ),
         ]);
+    }
+
+    /**
+     * @return Event[]
+     */
+    private function getOpenEventsForUser(User $user): array
+    {
+        // Find all enrollments for this user that are confirmed or pending payment
+        /** @var Activity[] $activities */
+        $activities = Activity::query()
+            ->where('start_date', '>', Date::today()->subMonth())
+            ->whereAvailable($user)
+            ->doesntHave('tickets')
+            ->get();
+
+        // List of iCal calendar items
+        $events = [];
+
+        // Iterate over each enrollment
+        foreach ($activities as $activity) {
+            $events[] = $this->createCalendarEventFromActivity($activity);
+        }
+
+        return $events;
+    }
+
+    /**
+     * @return Event[]
+     */
+    private function getEnrolledEventsForUser(User $user): array
+    {
+        // Find all enrollments for this user that are confirmed or pending payment
+        /** @var Enrollment[] $enrollments */
+        $enrollments = $user->enrollments()
+            ->whereHas('activity', fn (Builder $query) => $query->where('start_date', '>', Date::today()->subYear()))
+            ->whereState('state', [
+                EnrollmentStates\Created::class,
+                EnrollmentStates\Seeded::class,
+                EnrollmentStates\Confirmed::class,
+                EnrollmentStates\Paid::class,
+            ])
+            ->with(['activity', 'ticket'])
+            ->get();
+
+        // List of iCal calendar items
+        $events = [];
+
+        // Iterate over each enrollment
+        foreach ($enrollments as $enrollment) {
+            $events[] = $this->createCalendarEventFromEnrollment($enrollment);
+        }
+
+        return $events;
+    }
+
+    private function createCalendarEventFromActivity(Activity $activity): Event
+    {
+        // Create Location model
+        $location = new Location(
+            $activity->location_address ?? $activity->location,
+            $activity->location,
+        );
+
+        return (new Event())
+            ->setSummary($activity->name)
+            ->setDescription($this->createCleanBodyText($activity))
+            ->setLocation($location)
+            ->setUrl(
+                new Uri(route('activity.show', $activity)),
+            )
+            ->setLastModified(
+                new Timestamp($activity->updated_at),
+            )
+            ->setOrganizer(
+                (new Organizer(
+                    new EmailAddress(Config::get('mail.from.address')),
+                    $activity->organiser ?? Config::get('app.name'),
+                )),
+            )
+            ->setOccurrence(
+                TimeSpan::create(
+                    new DateTime($activity->start_date, false),
+                    new DateTime($activity->end_date, false),
+                ),
+            );
+    }
+
+    /**
+     * Create an event for the given activity enrollment.
+     */
+    private function createCalendarEventFromEnrollment(Enrollment $enrollment): Event
+    {
+        // Get models
+        $activity = $enrollment->activity;
+        $ticket = $enrollment->ticket;
+        $user = $enrollment->user;
+
+        // Get enrollment values
+        $eventPrice = Str::price($enrollment->total_price) ?? __('Free');
+
+        // Create Attendee model
+        $attendee = (new Attendee(
+            new EmailAddress($user->email),
+        ))
+            ->setRole(RoleType::REQ_PARTICIPANT())
+            ->setDisplayName($user->display_name ?? $user->first_name ?? $user->email)
+            ->setParticipationStatus(
+                $enrollment->is_stable
+                        ? ParticipationStatus::ACCEPTED()
+                        : ParticipationStatus::NEEDS_ACTION(),
+            )
+            ->setResponseNeededFromAttendee(false)
+            ->setCalendarUserType(CalendarUserType::INDIVIDUAL());
+
+        // Get event
+        $event = $this->createCalendarEventFromActivity($activity);
+
+        // Update description
+        $updatedDescription = <<<DESC
+        Ticket: {$ticket->title}
+        Prijs: {$eventPrice}
+
+        ---
+
+        {$event->getDescription()}
+        DESC;
+
+        return $event
+            ->setDescription($updatedDescription)
+            ->addAttendee($attendee)
+            ->setLastModified(
+                new Timestamp(
+                    $enrollment->updated_at
+                        ->max($activity->updated_at)
+                        ->max($ticket->updated_at)
+                        ->max(Date::createFromTimestamp(filemtime(__FILE__))),
+                ),
+            );
     }
 }

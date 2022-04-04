@@ -12,7 +12,7 @@
     </p>
 
     <p class="text-gray-700 text-sm">
-      <strong class="font-bold">Let op</strong> Houd deze URL geheim, anders kunnen andere gebruikers jouw inschrijvingen in hun agenda zien.
+      <strong class="font-bold">Let op!</strong> Houd deze URL geheim, anders kunnen andere gebruikers jouw inschrijvingen in hun agenda zien.
     </p>
   </x-notice>
 </div>
