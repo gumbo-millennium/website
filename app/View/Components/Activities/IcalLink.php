@@ -6,6 +6,7 @@ namespace App\View\Components\Activities;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\Component;
@@ -24,8 +25,11 @@ class IcalLink extends Component
             return '';
         }
 
-        $calendarUrl = URL::signedRoute('api.calendar.show', $user);
-        $googleUrl = sprintf('https://calendar.google.com/calendar/render?cid=%s', urlencode($calendarUrl));
+        $calendarUrl = URL::signedRoute('api.calendar.show', [
+            'user' => $user,
+            'version' => Config::get('gumbo.version'),
+        ]);
+        $googleUrl = sprintf('https://calendar.google.com/calendar/render?%s', http_build_query(['cid' => $calendarUrl]));
 
         return View::make('components.activities.ical-link', [
             'calendarUrl' => $calendarUrl,

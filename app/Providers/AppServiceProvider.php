@@ -23,6 +23,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 class AppServiceProvider extends ServiceProvider
@@ -112,6 +113,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Load feature config
         $this->registerFeatureConfig();
+
+        // Load version information
+        $this->registerVersionConfig();
     }
 
     /**
@@ -140,5 +144,26 @@ class AppServiceProvider extends ServiceProvider
                 Config::set("{$configKey}.{$feature}", $options);
             }
         }
+    }
+
+    /**
+     * Loads version information from Git.
+     */
+    private function registerVersionConfig(): void
+    {
+        if (App::configurationIsCached()) {
+            return;
+        }
+
+        $versionProcess = Process::fromShellCommandline('git log -1 --format=\'%h\'');
+        $versionProcess->run();
+
+        if (! $versionProcess->isSuccessful()) {
+            Config::set('gumbo.version', 'unknown-' . date('Ymd-His'));
+
+            return;
+        }
+
+        Config::set('gumbo.version', trim($versionProcess->getOutput()));
     }
 }

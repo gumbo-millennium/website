@@ -435,7 +435,7 @@ class CalendarControllerTest extends TestCase
                         ],
                     ],
                 ],
-                'result' => <<<TEXT
+                'result' => <<<'TEXT'
                 * Lorem ipsum
                 * Dolor sit
                 * Amet bacon
