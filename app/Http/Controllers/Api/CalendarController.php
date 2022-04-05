@@ -17,6 +17,7 @@ use DOMXPath;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\Entity\TimeZone;
 use Eluceo\iCal\Domain\Enum\CalendarUserType;
 use Eluceo\iCal\Domain\Enum\ParticipationStatus;
 use Eluceo\iCal\Domain\Enum\RoleType;
@@ -125,32 +126,14 @@ class CalendarController extends Controller
         $openAdmissionEvents = $this->getOpenEventsForUser($user);
         $enrolledEvents = $this->getEnrolledEventsForUser($user);
 
-        // Add events to an array and sort by start date
-        $events = Collection::make([$openAdmissionEvents, $enrolledEvents])
-            ->collapse()
-            ->sort(function (Event $eventA, Event $eventB) {
-                $occurrenceA = $eventA->getOccurrence();
-                $occurrenceB = $eventB->getOccurrence();
-
-                if ($occurrenceA instanceof TimeSpan && $occurrenceB instanceof TimeSpan) {
-                    return $occurrenceA->getBegin()->getDateTime()->getTimestamp() <=> $occurrenceB->getBegin()->getDateTime()->getTimestamp();
-                }
-                if ($occurrenceA instanceof Timespan) {
-                    return -1;
-                }
-                if ($occurrenceB instanceof Timespan) {
-                    return 1;
-                }
-            });
-
         // Create the calendar
-        $calendar = new Calendar($events->values()->all());
-        $calendarComponent = (new CalendarFactory())->createCalendar($calendar);
+        $calendar = (new Calendar(array_merge($openAdmissionEvents, $enrolledEvents)))
+            ->addTimeZone(new TimeZone(Config::get('app.timezone')));
 
         // Create the calendar text name
         $calendarNameString = Str::of("Activiteiten-agenda van {$user->public_name}")->ascii('nl');
 
-        // Add update interval to ensure Google fetches this data a bit often
+        // Create the metadata for the calendar
         $calendarName = new TextValue((string) $calendarNameString);
         $calendarDescription = new TextValue(<<<TEXT
         Persoonlijke agenda van {$user->first_name} met je inschrijvingen en een overzicht
@@ -164,7 +147,8 @@ class CalendarController extends Controller
         );
         $calendarUpdateInterval = new DurationValue(new DateInterval('PT12H'));
 
-        $calendarComponent = $calendarComponent
+        // Create the component and add properties
+        $calendarComponent = (new CalendarFactory())->createCalendar($calendar)
             // Set name
             ->withProperty(new Property('NAME', $calendarName))
             ->withProperty(new Property('X-WR-CALNAME', $calendarName))
@@ -172,10 +156,6 @@ class CalendarController extends Controller
             // Set description
             ->withProperty(new Property('DESCRIPTION', $calendarDescription))
             ->withProperty(new Property('X-WR-CALDESC', $calendarDescription))
-
-            // Set timezone
-            ->withProperty(new Property('TIMEZONE-ID', $calendarTimezone))
-            ->withProperty(new Property('X-WR-TIMEZONE', $calendarTimezone))
 
             // Set URL
             ->withProperty(new Property('URL', $calendarUrl))
@@ -273,8 +253,8 @@ class CalendarController extends Controller
             )
             ->setOccurrence(
                 TimeSpan::create(
-                    new DateTime($activity->start_date, false),
-                    new DateTime($activity->end_date, false),
+                    new DateTime($activity->start_date, true),
+                    new DateTime($activity->end_date, true),
                 ),
             );
     }
