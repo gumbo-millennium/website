@@ -408,6 +408,43 @@ class CalendarControllerTest extends TestCase
                 Lorem ipsum dolor sit amet
                 HTML,
             ],
+            'list types' => [
+                'input' => [
+                    [
+                        'id' => '1',
+                        'type' => 'list',
+                        'data' => [
+                            'style' => 'ordered',
+                            'items' => [
+                                'Lorem ipsum',
+                                'Dolor sit',
+                                'Amet bacon',
+                            ],
+                        ],
+                    ],
+                    [
+                        'id' => '2',
+                        'type' => 'list',
+                        'data' => [
+                            'style' => 'unordered',
+                            'items' => [
+                                'Alpha',
+                                'Bravo',
+                                'Charlie',
+                            ],
+                        ],
+                    ],
+                ],
+                'result' => <<<TEXT
+                * Lorem ipsum
+                * Dolor sit
+                * Amet bacon
+
+                * Alpha
+                * Bravo
+                * Charlie
+                TEXT,
+            ],
             'non-compatible types' => [
                 'input' => [
                     [
@@ -421,18 +458,6 @@ class CalendarControllerTest extends TestCase
                     ],
                     [
                         'id' => '2',
-                        'type' => 'list',
-                        'data' => [
-                            'style' => 'unordered',
-                            'items' => [
-                                'Lorem ipsum',
-                                'Dolor sit',
-                                'Amet bacon',
-                            ],
-                        ],
-                    ],
-                    [
-                        'id' => '3',
                         'type' => 'delimiter',
                         'data' => [],
                     ],

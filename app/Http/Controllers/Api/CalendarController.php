@@ -73,7 +73,7 @@ class CalendarController extends Controller
                 }
 
                 // Get clean contents
-                $asciiValue = Str::of($childNode->nodeValue)->ascii('nl')->trim();
+                $asciiValue = Str::of($childNode->nodeValue)->trim();
 
                 // Format h1/h2 as main title
                 if ($childNode->nodeName === 'h1' || $childNode->nodeName === 'h2') {
@@ -96,6 +96,21 @@ class CalendarController extends Controller
                 // Format other headers and paragraphs as plain text
                 if (preg_match('/^(p|h\d)$/i', $childNode->nodeName)) {
                     $bodyLines[] = $asciiValue;
+                    $bodyLines[] = '';
+
+                    continue;
+                }
+
+                // Format lists as plain text
+                if ($childNode->nodeName === 'ul' || $childNode->nodeName === 'ol') {
+                    foreach ($childNode->childNodes as $listItem) {
+                        if (! $listItem instanceof DOMElement) {
+                            continue;
+                        }
+
+                        $bodyLines[] = '* ' . Str::of($listItem->nodeValue)->trim();
+                    }
+
                     $bodyLines[] = '';
 
                     continue;
