@@ -159,7 +159,7 @@ class AppServiceProvider extends ServiceProvider
         $versionProcess->run();
 
         if (! $versionProcess->isSuccessful()) {
-            Config::set('gumbo.version', 'unknown-' . date('Ymd-His'));
+            Config::set('gumbo.version', date('YmdHi'));
 
             return;
         }
