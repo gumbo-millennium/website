@@ -431,6 +431,11 @@ class CalendarControllerTest extends TestCase
                             ],
                         ],
                     ],
+                    [
+                        'id' => '3',
+                        'type' => 'delimiter',
+                        'data' => [],
+                    ],
                 ],
                 'result' => '',
             ],
