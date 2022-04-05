@@ -164,7 +164,7 @@ class CalendarController extends Controller
         );
         $calendarUpdateInterval = new DurationValue(new DateInterval('PT12H'));
 
-        $calendarComponent
+        $calendarComponent = $calendarComponent
             // Set name
             ->withProperty(new Property('NAME', $calendarName))
             ->withProperty(new Property('X-WR-CALNAME', $calendarName))
