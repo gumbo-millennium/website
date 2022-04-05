@@ -177,7 +177,10 @@ class CalendarController extends Controller
 
             // Set TTL
             ->withProperty(new Property('X-PUBLISHED-TTL', $calendarUpdateInterval))
-            ->withProperty(new Property('REFRESH-INTERVAL', $calendarUpdateInterval));
+            ->withProperty(new Property('REFRESH-INTERVAL', $calendarUpdateInterval))
+
+            // Set color to Gumbo groen
+            ->withProperty(new Property('COLOR', new TextValue('DarkGreen'))); // #006400
 
         // Send response
         return Response::make($calendarComponent)->withHeaders([
