@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
+use App\Exports\BotQuoteExport;
 use DateTimeInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Maatwebsite\Excel\Excel as ExcelApp;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SendBotQuotes extends Mailable
 {
@@ -19,9 +20,9 @@ class SendBotQuotes extends Mailable
     use SerializesModels;
 
     private const ATTACHMENT_MIMES = [
-        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'csv' => 'text/csv',
+        ExcelApp::ODS => 'application/vnd.oasis.opendocument.spreadsheet',
+        ExcelApp::XLSX => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ExcelApp::CSV => 'text/csv',
     ];
 
     protected Collection $quotes;
@@ -74,52 +75,14 @@ class SendBotQuotes extends Mailable
      */
     public function buildQuoteFiles(Collection $quotes, string $title): array
     {
-        // Add header row
-        $data = [
-            ['Datum', 'Weergavenaam', 'Bekende naam', 'Quote'],
-        ];
-
-        // Create dataset
-        $quotes = $quotes->sortBy('created_at');
-        foreach ($quotes as $row) {
-            $data[] = [
-                $row->created_at,
-                $row->display_name,
-                optional($row->user)->name,
-                $row->quote,
-            ];
-        }
-
-        // Create worksheet
-        $spreadsheet = new Spreadsheet();
-
-        // Set properties
-        $properties = $spreadsheet->getProperties();
-        $properties->setTitle($title);
-        $properties->setModified($quotes->max('created_at')->getTimestamp());
-        $properties->setCompany('Gumbo Millennium');
-
-        // Get sheet and assign data
-        $activeSheet = $spreadsheet->getActiveSheet();
-        $activeSheet->fromArray($data, null, 'A1', true);
-        $activeSheet->setTitle('Wist-je-datjes');
-        $activeSheet->freezePane('A2');
-        $activeSheet->setAutoFilterByColumnAndRow(1, 1, count($data[0]), count($data));
-
-        // Assign colum sizes
-        $activeSheet->getColumnDimension('A')->setWidth(30);
-        $activeSheet->getColumnDimension('B')->setWidth(30);
-        $activeSheet->getColumnDimension('C')->setWidth(30);
-        $activeSheet->getColumnDimension('D')->setAutoSize(true);
-
-        // Prep writers
-        $files = [];
+        // Create export
+        $export = new BotQuoteExport($this->quotes);
 
         // Write files
         foreach (self::ATTACHMENT_MIMES as $format => $mime) {
-            $path = \tempnam(\sys_get_temp_dir(), "quotes-{$format}-");
-            $writer = IOFactory::createWriter($spreadsheet, \ucfirst($format));
-            $writer->save($path);
+            $path = tempnam(sys_get_temp_dir(), "quotes-{$format}-");
+
+            file_put_contents($path, Excel::raw($export, $format));
 
             $filename = "{$title}.{$format}";
             $files[] = [
