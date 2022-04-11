@@ -103,7 +103,7 @@
             "@php artisan key:generate"
         ],
         "post-install-cmd": [
-            "@php artisan vendor:publish --tag=nova-assets || true",
+            "@php artisan nova:publish",
             "@php artisan horizon:publish",
             "@php artisan telescope:publish"
         ],
