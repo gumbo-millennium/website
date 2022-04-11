@@ -278,5 +278,12 @@
   "This is your transfer link, you cannot transfer your enrollment to yourself.": "Dit is jouw eigen overdraaglink. Hoe graag je het ook wil, je kan niet jezelf jouw eigen inschrijving overdragen.",
   "Hello, I'd like to transfer my enrollment for :activity to you.": "Hallo, ik wil mijn inschrijving voor :activity overdragen aan jou.",
 
+  "Export participants": "Deelnemers exporteren",
+  "Create an export of the participants of this activity.": "Maak een export van de deelnemers van deze activiteit.",
+  "Check-in list": "Presentielijst",
+  "Full list (with medical data)": "Alle gegevens (met medische gegevens)",
+  "Failed to export participants: :reason": "Deelnemers exporteren mislukt: :reason",
+  "Creating or writing of sheet failed.": "Aanmaken of schrijven van gegevensblad mislukt.",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

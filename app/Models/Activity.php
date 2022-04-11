@@ -62,7 +62,7 @@ use Spatie\Permission\Models\Role;
  * @property-read bool $enrollment_open
  * @property-read Collection $expanded_features
  * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
- * @property-read null|\App\Models\array<FormLayout> $form
+ * @property-read null|FormLayout[] $form
  * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
  * @property-read string $human_readable_dates

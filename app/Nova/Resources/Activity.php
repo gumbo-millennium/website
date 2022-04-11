@@ -371,6 +371,7 @@ class Activity extends Resource
             new Actions\PostponeActivity(),
             new Actions\RescheduleActivity(),
             new Actions\SendActivityMail(),
+            new Actions\ExportActivityParticipants(),
         ];
     }
 
