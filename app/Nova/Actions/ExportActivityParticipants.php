@@ -83,7 +83,7 @@ class ExportActivityParticipants extends Action
         $activity = $models->first();
 
         // Check if a file already exists and don't override it if it does
-        $filePath = "activities/{$activity->slug}/deelnemers.${type}.csv";
+        $filePath = "activities/{$activity->slug}/deelnemers.${type}.ods";
         $fileDisk = Storage::cloud();
         if ($fileDisk->missing($filePath) || Date::now()->diffInMinutes(Date::createFromTimestamp($fileDisk->lastModified($filePath))) > 15) {
             // Get CSV from the proper type
@@ -93,7 +93,7 @@ class ExportActivityParticipants extends Action
             };
 
             // Build CSV and store on cloud
-            $writeOkay = ExcelFacade::store($exportModel, $filePath, Config::get('filesystems.cloud'), Excel::CSV, [
+            $writeOkay = ExcelFacade::store($exportModel, $filePath, Config::get('filesystems.cloud'), Excel::ODS, [
                 'visibility' => 'private',
             ]);
 
