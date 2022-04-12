@@ -5,26 +5,25 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Helpers\Str;
+use App\Models\Activity;
 use App\Models\Enrollment;
 use Illuminate\Support\Collection;
 
-class ActivityParticipantsMedicalExport extends ActivityParticipantsExport
+class ActivityParticipantsFullExport extends ActivityParticipantsExport
 {
-    private array $formFields = [];
-
     /**
-     * Construct Excel body rows.
+     * @param Collection|Enrollment[] $participants
      */
-    protected function processCollectionRows(Collection $collection): Collection
+    protected function assignTitlesAndRows(Collection $participants, Activity $activity): void
     {
-        $this->formFields = $formFields = $collection
+        $formFields = $participants
             ->map(fn (Enrollment $enrollment) => array_keys($enrollment->form ?? []))
             ->collapse()
             ->unique()
             ->values()
             ->all();
 
-        return $collection
+        $data = $participants
             ->map(function (Enrollment $enrollment) use ($formFields) {
                 $rowData = [
                     implode(', ', array_filter([$enrollment->user->last_name, $enrollment->user->insert])),
@@ -42,21 +41,16 @@ class ActivityParticipantsMedicalExport extends ActivityParticipantsExport
 
                 return $rowData;
             });
-    }
 
-    /**
-     * Construct Excel titles.
-     */
-    protected function processCollectionTitles(Collection $collection): Collection
-    {
-        return Collection::make([
+        $this->setRows($data);
+        $this->setTitles([
             __('Name'),
             __('First name'),
             __('Email'),
             __('Status'),
             __('Ticket'),
             __('Price'),
-            ...$this->formFields,
+            ...$formFields,
         ]);
     }
 }

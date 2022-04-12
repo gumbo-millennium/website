@@ -13,18 +13,48 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithProperties;
 
-class ActivityParticipantsExport implements FromCollection, WithHeadings, WithProperties
+abstract class ActivityParticipantsExport implements FromCollection, WithHeadings, WithProperties
 {
     private Activity $activity;
 
-    private ?Collection $collection = null;
-
     private ?Collection $titles = null;
+
+    private ?Collection $rows = null;
+
+    /**
+     * Load participants in proper order.
+     */
+    private static function determineParticipants(Activity $activity): Collection
+    {
+        // Get enrollments
+        $enrollments = $activity->enrollments()->whereState('state', [
+            States\Paid::class,
+            States\Confirmed::class,
+            States\Seeded::class,
+            States\Created::class,
+        ])->with(['user', 'ticket'])->get();
+
+        // Place confirmed first, pending enrollments second
+        $isStable = fn (Enrollment $enrollment) => $enrollment->is_stable;
+
+        return Collection::make()
+            ->concat($enrollments->filter($isStable)->sortBy('user.last_name'))
+            ->concat($enrollments->reject($isStable)->sortBy('user.last_name'));
+    }
 
     public function __construct(Activity $activity)
     {
         $this->activity = $activity;
+
+        $participants = self::determineParticipants($activity);
+
+        $this->assignTitlesAndRows($participants, $activity);
     }
+
+    /**
+     * @param Collection|Enrollment[] $participants
+     */
+    abstract protected function assignTitlesAndRows(Collection $participants, Activity $activity): void;
 
     public function properties(): array
     {
@@ -36,8 +66,6 @@ class ActivityParticipantsExport implements FromCollection, WithHeadings, WithPr
 
     final public function headings(): array
     {
-        $this->prepareCollectionAndTitles();
-
         return $this->titles->values()->all();
     }
 
@@ -46,43 +74,31 @@ class ActivityParticipantsExport implements FromCollection, WithHeadings, WithPr
      */
     final public function collection()
     {
-        $this->prepareCollectionAndTitles();
+        return $this->rows;
+    }
 
-        return $this->collection;
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    protected function setTitles(iterable $titles): self
+    {
+        $this->titles = Collection::make($titles);
+
+        return $this;
+    }
+
+    protected function setRows(iterable $rows): self
+    {
+        $this->rows = Collection::make($rows);
+
+        return $this;
     }
 
     protected function getActivity(): Activity
     {
         return $this->activity;
-    }
-
-    /**
-     * Load data from DB and construct data and title rows.
-     */
-    final protected function prepareCollectionAndTitles(): void
-    {
-        // Only run once
-        if ($this->collection != null) {
-            return;
-        }
-
-        // Get enrollments
-        $enrollments = $this->activity->enrollments()->whereState('state', [
-            States\Paid::class,
-            States\Confirmed::class,
-            States\Seeded::class,
-            States\Created::class,
-        ])->with(['user', 'ticket'])->get();
-
-        // Place confirmed after pending enrollments
-        $isStable = fn (Enrollment $enrollment) => $enrollment->is_stable;
-        $participants = Collection::make()
-            ->concat($enrollments->filter($isStable)->sortBy('user.last_name'))
-            ->concat($enrollments->reject($isStable)->sortBy('user.last_name'));
-
-        // Construct real data
-        $this->collection = $this->processCollectionRows($participants);
-        $this->titles = $this->processCollectionTitles($participants);
     }
 
     /**

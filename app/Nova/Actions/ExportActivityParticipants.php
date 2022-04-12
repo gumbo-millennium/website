@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions;
 
+use App\Enums\ActivityExportType;
 use App\Exports\ActivityParticipantsExport;
-use App\Exports\ActivityParticipantsMedicalExport;
+use App\Exports\ActivityParticipantsFullExport;
+use App\Exports\ActivityParticipantsPresenceList;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;
+use App\Services\ActivityExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
-use Maatwebsite\Excel\Excel;
-use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
 use RuntimeException;
 
 class ExportActivityParticipants extends Action
@@ -78,34 +78,29 @@ class ExportActivityParticipants extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        // Fetch data
-        $type = $fields->get('type', self::TYPE_CHECK_IN);
+        // Determine type
+        $exportType = $fields->get('type', self::TYPE_CHECK_IN);
+        $wantedType = match ($exportType) {
+            self::TYPE_CHECK_IN => ActivityExportType::CheckIn,
+            self::TYPE_ARCHIVE => ActivityExportType::Full,
+            default => ActivityExportType::CheckIn,
+        };
+
+        // Get activity
         $activity = $models->first();
 
-        // Check if a file already exists and don't override it if it does
-        $filePath = "activities/{$activity->slug}/deelnemers.${type}.ods";
-        $fileDisk = Storage::cloud();
-        if ($fileDisk->missing($filePath) || Date::now()->diffInMinutes(Date::createFromTimestamp($fileDisk->lastModified($filePath))) > 15) {
-            // Get CSV from the proper type
-            $exportModel = match ($type) {
-                self::TYPE_ARCHIVE => $this->getArchiveCsv($activity),
-                self::TYPE_CHECK_IN => $this->getCheckInCsv($activity),
-            };
+        /** @var ActivityExportService $exportService */
+        $exportService = App::make(ActivityExportService::class);
 
-            // Build CSV and store on cloud
-            $writeOkay = ExcelFacade::store($exportModel, $filePath, Config::get('filesystems.cloud'), Excel::ODS, [
-                'visibility' => 'private',
-            ]);
-
-            if (! $writeOkay) {
-                return $this->danger(__('Failed to export participants: :reason', [
-                    'reason' => __('Creating or writing of sheet failed.'),
-                ]));
-            }
+        // Write export
+        try {
+            $exportPath = $exportService->createParticipantsExport($activity, $wantedType);
+        } catch (RuntimeException $exception) {
+            return Action::danger(__('Creating or writing of sheet failed.'));
         }
 
         try {
-            $downloadUrl = $fileDisk->temporaryUrl($filePath, Date::now()->addMinutes(5));
+            $downloadUrl = Storage::cloud()->temporaryUrl($exportPath, Date::now()->addMinutes(5));
         } catch (RuntimeException $exception) {
             if (
                 App::isProduction()
@@ -116,10 +111,10 @@ class ExportActivityParticipants extends Action
                 ]));
             }
 
-            $downloadUrl = $fileDisk->url($filePath);
+            $downloadUrl = Storage::cloud()->url($exportPath);
         }
 
-        $fileType = array_map('__', self::TYPE_LABEL_MAPPING)[$type] ?? $type;
+        $fileType = __(self::TYPE_LABEL_MAPPING[$exportType]) ?? $exportType;
 
         return $this->download($downloadUrl, "Deelnemers {$activity->name} ({$fileType}).ods");
     }
@@ -141,7 +136,7 @@ class ExportActivityParticipants extends Action
 
     private function getArchiveCsv(Activity $activity): ActivityParticipantsExport
     {
-        return new ActivityParticipantsMedicalExport($activity);
+        return new ActivityParticipantsFullExport($activity);
     }
 
     /**
@@ -150,6 +145,6 @@ class ExportActivityParticipants extends Action
      */
     private function getCheckInCsv(Activity $activity): ActivityParticipantsExport
     {
-        return new ActivityParticipantsExport($activity);
+        return new ActivityParticipantsPresenceList($activity);
     }
 }
