@@ -5,7 +5,7 @@
     "type": "project",
     "require": {
         "php": "^8.1",
-        "advoor/nova-editor-js": "^2.0",
+        "advoor/nova-editor-js": "dev-nova-4x",
         "artesaos/seotools": "^0.20",
         "barryvdh/laravel-debugbar": "^3.6",
         "barryvdh/laravel-dompdf": "^1.0",
@@ -28,7 +28,7 @@
         "kris/laravel-form-builder": "^1.40",
         "laravel/framework": "^8.75",
         "laravel/horizon": "^5.7",
-        "laravel/nova": "^3.30",
+        "laravel/nova": "^4.0",
         "laravel/sanctum": "^2.15",
         "laravel/scout": "^9.3",
         "laravel/telescope": "^4.6",
@@ -57,7 +57,7 @@
         "symfony/yaml": "^5.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^11.5",
         "vyuldashev/nova-permission": "^3.0",
-        "whitecube/nova-flexible-content": "^0.2"
+        "whitecube/nova-flexible-content": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",
@@ -159,6 +159,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/gumbo-millennium/izettle-api.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/roelofr/nova-editor-js.git"
         },
         {
             "type": "composer",
