@@ -15,6 +15,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class CancelActivity extends Action
 {
@@ -119,7 +120,7 @@ class CancelActivity extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Textarea::make('Reden', 'reason')

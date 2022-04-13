@@ -15,6 +15,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class RescheduleActivity extends Action
 {
@@ -115,7 +116,7 @@ class RescheduleActivity extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Text::make('Reden', 'reason')

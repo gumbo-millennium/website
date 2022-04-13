@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * Handles join submission completions, which have either a positive or negative
@@ -68,7 +69,7 @@ class HandleJoinSubmission extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Select::make('Resultaat', 'result')

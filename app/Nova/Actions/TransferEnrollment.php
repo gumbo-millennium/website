@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Sloveniangooner\SearchableSelect\SearchableSelect;
 
 class TransferEnrollment extends Action
@@ -75,7 +76,7 @@ class TransferEnrollment extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Text::make('Reden', 'reden'),

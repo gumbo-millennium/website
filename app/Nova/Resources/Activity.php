@@ -156,7 +156,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function fields(Request $request)
+    public function fields(NovaRequest $request)
     {
         $featuresMap = collect(Config::get('gumbo.activity-features', []))
             ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
@@ -194,7 +194,7 @@ class Activity extends Resource
         ];
     }
 
-    public function mainFields(Request $request): MergeValue
+    public function mainFields(NovaRequest $request): MergeValue
     {
         $user = $request->user();
         $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
@@ -360,7 +360,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function actions(Request $request)
+    public function actions(NovaRequest $request)
     {
         return [
             new Actions\CancelActivity(),
@@ -376,7 +376,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function filters(Request $request)
+    public function filters(NovaRequest $request)
     {
         return [
             new Filters\RelevantActivitiesFilter(),

@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ShipOrder extends Action
 {
@@ -112,7 +113,7 @@ class ShipOrder extends Action
     /**
      * Get the fields available on the action.
      */
-    public function fields(): array
+    public function fields(NovaRequest $request)
     {
         return [
             Heading::make(__('Shipping information'))
