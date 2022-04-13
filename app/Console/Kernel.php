@@ -30,16 +30,16 @@ class Kernel extends ConsoleKernel
         // Wipe old data
         $schedule->command('model:prune')->weeklyOn(6, '22:00');
 
-        // Wipe old exports
-        $schedule->job(CleanExpiredExportsJob::class)->weekly();
+        // Wipe old data exports
+        $schedule->job(CleanExpiredExportsJob::class)->daily();
 
-        // Update enrollments' user_type every hour
-        $schedule->job(UpdateEnrollmentUserTypes::class)->dailyAt('04:00');
+        // Update enrollments' user_type every day
+        $schedule->job(UpdateEnrollmentUserTypes::class)->daily();
 
         // Update users from API every night
         $schedule->command('gumbo:update-user')->dailyAt('03:00');
 
-        // Update users from API every night
+        // Update groups from API every night
         $schedule->command('gumbo:update-groups --missing')->dailyAt('03:30');
 
         // Update Sponsor logos nightly (in case some were missed)
@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('gumbo:send-activity-feature-mails')->cron('15 2,7,12,16,21 * * *');
 
         // Updated maillists every other night
-        $schedule->job(ConstructGoogleActionList::class)->days(1, 3, 5)->dailyAt('06:00');
+        $schedule->job(ConstructGoogleActionList::class)->dailyAt('06:00');
 
         // Clean enrollments hourly
         $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
