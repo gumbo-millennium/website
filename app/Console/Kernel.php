@@ -27,6 +27,9 @@ class Kernel extends ConsoleKernel
         // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();
 
+        // Wipe old enrollment exports
+        $schedule->command('enrollment:prune-exports')->daily();
+
         // Wipe old data
         $schedule->command('model:prune')->weeklyOn(6, '22:00');
 
