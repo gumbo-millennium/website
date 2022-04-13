@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Nova\Metrics\NewEnrollments;
-use App\Nova\Metrics\NewUsers;
 use App\Nova\Resources\Permission;
 use App\Nova\Resources\Role;
 use Illuminate\Support\Facades\Gate;
@@ -50,20 +48,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function register()
     {
-        // Register advoor/nova-editor-js
-        $this->app->register(\Advoor\NovaEditorJs\FieldServiceProvider::class);
-
-        // Register benjaminhirsch/nova-slug-field
-        $this->app->register(\Benjaminhirsch\NovaSlugField\FieldServiceProvider::class);
-
-        // Register ebess/advanced-nova-media-library
-        $this->app->register(\Ebess\AdvancedNovaMediaLibrary\AdvancedNovaMediaLibraryServiceProvider::class);
-
-        // Register vyuldashev/nova-permission
-        $this->app->register(\Vyuldashev\NovaPermission\ToolServiceProvider::class);
-
-        // Register whitecube/nova-flexible-content
-        $this->app->register(\Whitecube\NovaFlexibleContent\FieldServiceProvider::class);
+        //
     }
 
     /**
@@ -99,25 +84,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 
     /**
-     * Get the cards that should be displayed on the default Nova dashboard.
-     *
-     * @return array
-     */
-    protected function cards()
-    {
-        return [
-            new NewUsers(),
-            new NewEnrollments(),
-        ];
-    }
-
-    /**
-     * Get the extra dashboards that should be displayed on the Nova dashboard.
+     * Get the dashboards that should be listed in the Nova sidebar.
      *
      * @return array
      */
     protected function dashboards()
     {
-        return [];
+        return [
+            new \App\Nova\Dashboards\Main(),
+        ];
     }
 }

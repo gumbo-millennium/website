@@ -124,12 +124,10 @@ class RescheduleActivity extends Action
             DateTime::make('Nieuwe aanvang', 'start_date')
                 ->sortable()
                 ->rules('required', 'date', 'after:now')
-                ->firstDayOfWeek(1)
                 ->help('Moet <em>na</em> de huidige startdatum zijn.'),
             DateTime::make('Nieuw einde', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
-                ->hideFromIndex()
-                ->firstDayOfWeek(1),
+                ->hideFromIndex(),
         ];
     }
 }

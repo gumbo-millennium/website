@@ -7,6 +7,7 @@ use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\Authorize;
 use Laravel\Nova\Http\Middleware\BootTools;
 use Laravel\Nova\Http\Middleware\DispatchServingNovaEvent;
+use Laravel\Nova\Http\Middleware\HandleInertiaRequests;
 use Vyuldashev\NovaPermission\ForgetCachedPermissions;
 
 return [
@@ -35,19 +36,6 @@ return [
     */
 
     'domain' => env('NOVA_DOMAIN_NAME', null),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Nova App URL
-    |--------------------------------------------------------------------------
-    |
-    | This URL is where users will be directed when clicking the application
-    | name in the Nova navigation bar. You are free to change this URL to
-    | any location you wish depending on the needs of your application.
-    |
-    */
-
-    'url' => env('APP_URL', '/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -101,11 +89,16 @@ return [
 
     'middleware' => [
         'web',
-        Authenticate::class,
+        HandleInertiaRequests::class,
         DispatchServingNovaEvent::class,
         BootTools::class,
-        Authorize::class,
         ForgetCachedPermissions::class,
+    ],
+
+    'api_middleware' => [
+        'nova',
+        Authenticate::class,
+        Authorize::class,
     ],
 
     /*
@@ -123,18 +116,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Nova Action Resource Class
+    | Nova Storage Disk
     |--------------------------------------------------------------------------
     |
-    | This configuration option allows you to specify a custom resource class
-    | to use instead of the type that ships with Nova. You may use this to
-    | define any extra form fields or other custom behavior as required.
+    | This configuration option allows you to define the default disk that
+    | will be used to store files using the Image, File, and other file
+    | related field types. You're welcome to use any configured disk.
     |
-    */
+     */
 
-    'actions' => [
-        'resource' => ActionResource::class,
-    ],
+    'storage_disk' => env('NOVA_STORAGE_DISK', 'public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -148,4 +139,41 @@ return [
     */
 
     'currency' => 'EUR',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Branding
+    |--------------------------------------------------------------------------
+    |
+    | These configuration values allow you to customize the branding of the
+    | Nova interface, including the primary color and the logo that will
+    | be displayed within the Nova interface. This logo value must be
+    | the absolute path to an SVG logo within the local filesystem.
+    |
+    */
+
+    'brand' => [
+        'logo' => resource_path('assets/images/logo-nova.svg'),
+
+        //     'colors' => [
+        //         "400" => "24, 182, 155, 0.5",
+        //         "500" => "24, 182, 155",
+        //         "600" => "24, 182, 155, 0.75",
+        //     ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Nova Action Resource Class
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to specify a custom resource class
+    | to use instead of the type that ships with Nova. You may use this to
+    | define any extra form fields or other custom behavior as required.
+    |
+    */
+
+    'actions' => [
+        'resource' => ActionResource::class,
+    ],
 ];

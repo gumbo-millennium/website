@@ -288,13 +288,11 @@ class Activity extends Resource
             Fields\DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
-                ->firstDayOfWeek(1)
                 ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             Fields\DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
-                ->hideFromIndex()
-                ->firstDayOfWeek(1),
+                ->hideFromIndex(),
         ];
     }
 
@@ -312,14 +310,12 @@ class Activity extends Resource
             Fields\DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
             Fields\DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
             NovaEditorJs::make('Ticket omschrijving', 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
