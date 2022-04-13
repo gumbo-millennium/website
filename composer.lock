@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19080eed277986d95823255f8c6de73f",
+    "content-hash": "0d58409123a57062e0a1d9ecbcc06d12",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -3387,52 +3387,6 @@
             "time": "2021-10-08T21:21:46+00:00"
         },
         {
-            "name": "kabbouchi/nova-impersonate",
-            "version": "v1.14.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/KABBOUCHI/nova-impersonate.git",
-                "reference": "7b01eea404b3e9c8b757166be768382b64190008"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/KABBOUCHI/nova-impersonate/zipball/7b01eea404b3e9c8b757166be768382b64190008",
-                "reference": "7b01eea404b3e9c8b757166be768382b64190008",
-                "shasum": ""
-            },
-            "require": {
-                "lab404/laravel-impersonate": "^1.7.3",
-                "laravel/nova": "^1.0|^2.0|^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "KABBOUCHI\\NovaImpersonate\\ToolServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "KABBOUCHI\\NovaImpersonate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field allows you to authenticate as your users.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/KABBOUCHI/nova-impersonate/issues",
-                "source": "https://github.com/KABBOUCHI/nova-impersonate/tree/v1.14.0"
-            },
-            "time": "2022-04-08T18:37:04+00:00"
-        },
-        {
             "name": "kris/laravel-form-builder",
             "version": "1.51.1",
             "source": {
@@ -3499,74 +3453,6 @@
                 "source": "https://github.com/kristijanhusak/laravel-form-builder/tree/1.51.1"
             },
             "time": "2022-04-08T20:13:53+00:00"
-        },
-        {
-            "name": "lab404/laravel-impersonate",
-            "version": "1.7.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/404labfr/laravel-impersonate.git",
-                "reference": "7c1f9c5cefd40247993f52f4b7724fd8b580084f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/404labfr/laravel-impersonate/zipball/7c1f9c5cefd40247993f52f4b7724fd8b580084f",
-                "reference": "7c1f9c5cefd40247993f52f4b7724fd8b580084f",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^6.0 | ^7.0 | ^8.0 | ^9.0",
-                "php": "^7.2 | ^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3.3",
-                "orchestra/database": "^4.0 | ^5.0 | ^6.0 | ^7.0",
-                "orchestra/testbench": "^4.0 | ^5.0 | ^6.0 | ^7.0",
-                "phpunit/phpunit": "^7.5 | ^8.0 | ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Lab404\\Impersonate\\ImpersonateServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Lab404\\Impersonate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marceau Casals",
-                    "email": "marceau@casals.fr"
-                }
-            ],
-            "description": "Laravel Impersonate is a plugin that allows to you to authenticate as your users.",
-            "keywords": [
-                "auth",
-                "impersonate",
-                "impersonation",
-                "laravel",
-                "laravel-package",
-                "laravel-plugin",
-                "package",
-                "plugin",
-                "user"
-            ],
-            "support": {
-                "issues": "https://github.com/404labfr/laravel-impersonate/issues",
-                "source": "https://github.com/404labfr/laravel-impersonate/tree/1.7.3"
-            },
-            "time": "2022-01-15T13:39:35+00:00"
         },
         {
             "name": "laravel/framework",

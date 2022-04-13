@@ -25,7 +25,6 @@
         "guzzlehttp/guzzle": "^6.3",
         "html2text/html2text": "^4.2",
         "irazasyed/telegram-bot-sdk": "^3.3",
-        "kabbouchi/nova-impersonate": "^1.10",
         "kris/laravel-form-builder": "^1.40",
         "laravel/framework": "^8.75",
         "laravel/horizon": "^5.7",
