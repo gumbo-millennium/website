@@ -48,8 +48,8 @@ class ExportEnrollments extends Command
         $activity = Activity::query()
             ->where(
                 fn (Builder $query) => $query
-            ->where('id', $activityHandle)
-            ->orWhere('slug', $activityHandle),
+                    ->where('id', $activityHandle)
+                    ->orWhere('slug', $activityHandle),
             )->first();
 
         if (! $activity) {
