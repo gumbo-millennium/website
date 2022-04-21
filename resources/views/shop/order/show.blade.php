@@ -1,6 +1,11 @@
 @extends('shop.layout')
 
 @php($user = Auth::user())
+@php($breadcrumbs = [
+  route('shop.home') => 'Shop',
+  route('shop.order.index') => 'Bestellingen',
+  "Bestelling {$order->number}"
+])
 
 {{-- Header --}}
 @section('shop-title', "Bestelling {$order->number}")
@@ -16,11 +21,7 @@ Moet betaald worden voor {{ $order->expires_at->isoFormat('dddd D MMMM, HH:mm') 
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-<x-breadcrumbs :items="[
-    route('shop.home') => 'Shop',
-    route('shop.order.index') => 'Bestellingen',
-    "Bestelling {$order->number}"
-]" />
+<x-breadcrumbs :items="$breadcrumbs" />
 @endsection
 
 {{-- Main --}}

@@ -1,17 +1,19 @@
 @extends('shop.layout')
 
+@php($breadcrumbs = [
+  route('shop.home') => 'Shop',
+  route('shop.order.index') => 'Bestellingen',
+  route('shop.order.show', $order) => "Bestelling {$order->number}",
+  'Annuleren',
+])
+
 {{-- Header --}}
 @section('shop-title', "Bestelling {$order->number} annuleren")
 @section('shop-subtitle', 'Toch maar niet?')
 
 @section('shop-crumbs')
 {{-- Breadcrumbs --}}
-<x-breadcrumbs :items="[
-    route('shop.home') => 'Shop',
-    route('shop.order.index') => 'Bestellingen',
-    route('shop.order.show', $order) => "Bestelling {$order->number}",
-    'Annuleren'
-]" />
+<x-breadcrumbs :items="$breadcrumbs" />
 @endsection
 
 {{-- Main --}}
