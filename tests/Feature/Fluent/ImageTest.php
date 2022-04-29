@@ -7,6 +7,7 @@ namespace Tests\Feature\Fluent;
 use App\Fluent\Image;
 use DomainException;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use OutOfRangeException;
@@ -169,6 +170,23 @@ class ImageTest extends TestCase
                 ->{$method}()
                 ->getUrl(),
         );
+    }
+
+    public function test_setting_the_expiration_flag_works(): void
+    {
+        Date::setTestNow(Date::now());
+
+        $expirationTimestamp = Date::now()->addHour()->getTimestamp();
+        $expirationUrlPart = http_build_query(['expires' => $expirationTimestamp]);
+
+        $defaultImage = Image::make('test');
+        $this->assertStringNotContainsString($expirationUrlPart, $defaultImage->getUrl());
+
+        $expiringImage = Image::make('test')->shouldExpire();
+        $this->assertStringContainsString($expirationUrlPart, $expiringImage->getUrl());
+
+        $explicitlyNotExpiringImage = Image::make('test')->shouldExpire(false);
+        $this->assertStringNotContainsString($expirationUrlPart, $explicitlyNotExpiringImage->getUrl());
     }
 
     public function seedFits(): array
