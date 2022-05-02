@@ -67,6 +67,6 @@ class BotQuoteExport implements FromCollection, ShouldAutoSize, WithColumnWidths
                 $row->user?->name,
                 $row->quote,
             ])
-            ->all();
+            ->values();
     }
 }
