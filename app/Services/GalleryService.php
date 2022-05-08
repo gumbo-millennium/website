@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Models\Gallery\Photo;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 
 final class GalleryService
 {

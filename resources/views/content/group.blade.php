@@ -32,9 +32,6 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
 {{-- Content --}}
 <div class="container">
     <div class="flex flex-row flex-wrap row">
-    {{-- Add disclaimer --}}
-    @includeWhen($group === 'coronavirus', 'covid19.disclaimer-card')
-
     {{-- Add all pages --}}
     @foreach ($pages as $item)
     @php

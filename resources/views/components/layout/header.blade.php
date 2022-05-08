@@ -72,11 +72,6 @@
             @endif
             <li class="navbar__nav-item">
                 <a class="navbar__nav-link" href="{{ route('news.index') }}">Nieuws</a>
-                <ul class="navbar__dropdown">
-                    <li class="navbar__dropdown-item">
-                        <a href="{{ route('group.index', ['group' => 'coronavirus']) }}" class="navbar__dropdown-link">Coronavirus</a>
-                    </li>
-                </ul>
             </li>
             @endif
         </ul>

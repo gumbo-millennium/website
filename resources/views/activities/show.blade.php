@@ -3,7 +3,6 @@
 @section('title', "{$activity->name} - Activity - Gumbo Millennium")
 
 <?php
-$isCoronacheck = Arr::get($activity->features, 'coronacheck', false);
 $ticketPrices = $activity->tickets
     ->pluck('total_price')
     ->sort()
@@ -77,13 +76,6 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
             Deze activiteit is al afgelopen.
         </x-notice>
         @else
-            {{-- Coronacheck --}}
-            @if ($isCoronacheck)
-            <x-notice type="warning" title="Testen voor Toegang" class="mx-8">
-                Om aan deze activiteit deel te nemen, moet je aan de deur een geldige CoronaCheck QR-code kunnen tonen.
-            </x-notice>
-            @endif
-
             {{-- Unlisted --}}
             @if (!$activity->is_published)
             <x-notice type="brand" class="mx-8">

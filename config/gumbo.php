@@ -59,7 +59,6 @@ return [
         'commissies' => 'Commissies',
         'disputen' => 'Disputen',
         'projectgroepen' => 'Projectgroepen',
-        'coronavirus' => 'Gumbo en de Coronacrisis',
     ],
 
     // Guzzle config
