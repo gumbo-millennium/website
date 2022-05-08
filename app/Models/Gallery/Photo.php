@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Gallery;
 
+use App\Enums\PhotoVisibility;
 use App\Models\User;
 use App\Services\GalleryService;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\App;
  * @property int $id
  * @property int $album_id
  * @property null|int $user_id
- * @property int $visible
+ * @property PhotoVisibility $visibility
  * @property string $name
  * @property string $path
  * @property null|string $description
@@ -30,15 +31,21 @@ use Illuminate\Support\Facades\App;
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property-read \App\Models\Gallery\Album $album
+ * @property-read bool $is_visible
  * @property-read null|self $next_photo
  * @property-read null|self $previous_photo
+ * @property-read \App\Models\Gallery\PhotoReaction[]|\Illuminate\Database\Eloquent\Collection $reactions
+ * @property-read \App\Models\Gallery\PhotoReport[]|\Illuminate\Database\Eloquent\Collection $reports
  * @property-read null|User $user
+ * @method static Builder|Photo editable()
  * @method static \Database\Factories\Gallery\PhotoFactory factory(...$parameters)
  * @method static Builder|Photo newModelQuery()
  * @method static Builder|Photo newQuery()
  * @method static \Illuminate\Database\Query\Builder|Photo onlyTrashed()
  * @method static Builder|Photo query()
+ * @method static Builder|Photo visible()
  * @method static \Illuminate\Database\Query\Builder|Photo withTrashed()
+ * @method static Builder|Photo withUserInteraction(\App\Models\User $user)
  * @method static \Illuminate\Database\Query\Builder|Photo withoutTrashed()
  * @mixin \Eloquent
  */
@@ -48,12 +55,34 @@ class Photo extends Model
     use SoftDeletes;
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'visibility' => PhotoVisibility::Visible,
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
+        'visibility' => PhotoVisibility::class,
         'taken_at' => 'datetime',
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'visibility',
+        'name',
+        'path',
+        'description',
     ];
 
     public function album(): BelongsTo
@@ -66,6 +95,16 @@ class Photo extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function reactions(): HasMany
+    {
+        return $this->hasMany(PhotoReaction::class);
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(PhotoReport::class);
+    }
+
     public function getPreviousPhotoAttribute(): ?self
     {
         return App::make(GalleryService::class)->photoBefore($this);
@@ -74,5 +113,32 @@ class Photo extends Model
     public function getNextPhotoAttribute(): ?self
     {
         return App::make(GalleryService::class)->photoAfter($this);
+    }
+
+    public function scopeVisible(Builder $query): void
+    {
+        $query->where('visibility', PhotoVisibility::Visible);
+    }
+
+    public function scopeEditable(Builder $query): void
+    {
+        $query->whereIn('visibility', [
+            PhotoVisibility::Visible,
+            PhotoVisibility::Hidden,
+        ]);
+    }
+
+    public function scopeWithUserInteraction(Builder $query, User $user): void
+    {
+        $onlyThisUser = fn (Builder $query) => $query->where('user_id', $user->id);
+
+        $query
+            ->with('reactions', $onlyThisUser)
+            ->with('reports', $onlyThisUser);
+    }
+
+    public function getIsVisibleAttribute(): bool
+    {
+        return $this->visibility == PhotoVisibility::Visible;
     }
 }

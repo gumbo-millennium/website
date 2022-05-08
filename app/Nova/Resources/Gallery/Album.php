@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Gallery;
 
+use App\Enums\AlbumVisibility;
 use App\Models\Gallery\Album as AlbumModel;
 use App\Nova\Resources\Activity;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
 
@@ -82,13 +84,17 @@ class Album extends Resource
                 Fields\Text::make(__('Association'), function () {
                     if ($this->user) {
                         return __('Owned by :user (user)', [
-                            'user' => $this->user->name,
+                            'user' => $this->user?->name ?? __('Unknown'),
                         ]);
                     }
 
-                    return __('Attached to :activity (activity)', [
-                        'activity' => $this->activity->name,
-                    ]);
+                    if ($this->activity) {
+                        return __('Attached to :activity (activity)', [
+                            'activity' => $this->activity?->name ?? __('Unknown'),
+                        ]);
+                    }
+
+                    return __('Orphaned album');
                 })->onlyOnIndex(),
 
                 Fields\BelongsTo::make(__('User'), 'user', User::class)
@@ -111,8 +117,13 @@ class Album extends Resource
             ]),
 
             new Panel(__('Availability'), [
-                Fields\Boolean::make(__('Public'), 'public')
-                    ->hideFromIndex(),
+                Fields\Select::make(__('Visibility'), 'visibility')
+                    ->displayUsing(fn (?AlbumVisibility $value) => __(($value ?? AlbumVisibility::Private)->name))
+                    ->default(AlbumVisibility::Private->value)
+                    ->options(
+                        Collection::make(AlbumVisibility::cases())
+                            ->mapWithKeys(fn (AlbumVisibility $vis) => [$vis->value => __($vis->name)]),
+                    ),
 
                 Fields\DateTime::make(__('Editable from'), 'editable_from')
                     ->hideFromIndex()
@@ -136,7 +147,6 @@ class Album extends Resource
             Fields\HasMany::make(__('Photos'), 'photos', Photo::class),
 
             Fields\HasMany::make(__('Reports'), 'reports', PhotoReport::class),
-
         ];
     }
 

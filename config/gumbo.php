@@ -162,10 +162,14 @@ return [
             'fit' => Image::FIT_CROP,
         ],
         'nova-preview' => [
-            'dpr' => 2,
-            'width' => 700,
+            'width' => 320,
+            'height' => 320 / 3 * 4,
+            'fit' => Image::FIT_CONTAIN,
+        ],
+        'tile' => [
+            'width' => 607,
             'height' => 400,
-            'fit' => Image::FIT_CROP,
+            'fit' => Image::FIT_MAX,
         ],
     ],
 
@@ -181,5 +185,14 @@ return [
     'images' => [
         'disk' => env('GUMBO_IMAGE_DISK', 'public'),
         'path' => env('GUMBO_IMAGE_PATH', 'images'),
+    ],
+
+    // Gallery settings
+    'gallery' => [
+        'max_photo_size' => env('GUMBO_GALLERY_MAX_PHOTO_SIZE', 8 * 1024 * 1024),
+        'filepond' => [
+            'disk' => env('GUMBO_IMAGE_DISK', 'public'),
+            'path' => 'filepond/images/gallery',
+        ],
     ],
 ];

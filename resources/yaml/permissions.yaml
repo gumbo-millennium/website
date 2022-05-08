@@ -43,6 +43,11 @@ shop-admin: Webwinkel beheren
 redirects-view: View redirections
 redirects-manage: Manage redirections
 
+# Gallery
+gallery-use: Nieuwe gallerijen aanmaken
+gallery-manage: Gallerijen beheren
+gallery-lock: (Deny) Blokkeer gallerij-acties
+
 # System admin permissions
 devops: Toegang tot status dashboards
 impersonate: Inloggen als andere gebruikers

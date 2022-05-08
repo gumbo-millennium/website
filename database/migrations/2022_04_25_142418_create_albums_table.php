@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\AlbumVisibility;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,6 +26,8 @@ class CreateAlbumsTable extends Migration
             $table->string('slug')->unique();
 
             $table->string('description')->nullable();
+
+            $table->string('visibility', 20)->default(AlbumVisibility::Private->value);
 
             $table->timestamps();
             $table->softDeletes();

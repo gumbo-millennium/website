@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\PhotoVisibility;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,7 @@ class CreatePhotosTable extends Migration
             $table->foreignId('album_id')->constrained()->restrictOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
-            $table->boolean('visible')->default(false);
+            $table->unsignedTinyInteger('visibility')->default(PhotoVisibility::Visible->value);
 
             $table->string('name');
             $table->string('path');

@@ -274,6 +274,41 @@ Route::prefix('/betalingen/{payment}')->middleware(['auth'])->group(static funct
     Route::get('/verify', [Controllers\PaymentController::class, 'verify'])->name('payment.verify');
 });
 
+/**
+ * Gallery.
+ */
+Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function () {
+    // Index
+    Route::get('/', [Controllers\Gallery\AlbumController::class, 'index'])->name('index');
+
+    // Album creation
+    Route::get('/create', [Controllers\Gallery\AlbumController::class, 'create'])->name('album.create');
+    Route::post('/create', [Controllers\Gallery\AlbumController::class, 'store']);
+
+    // Photo viewing
+    Route::get('/photo/{photo}', [Controllers\Gallery\PhotoController::class, 'show'])->name('photo');
+
+    // Photo editing
+    Route::get('/photo/{photo}/edit', [Controllers\Gallery\PhotoController::class, 'edit'])->name('photo.edit');
+    Route::patch('/photo/{photo}/edit', [Controllers\Gallery\PhotoController::class, 'update']);
+    Route::delete('/photo/{photo}/delete', [Controllers\Gallery\PhotoController::class, 'destroy'])->name('photo.delete');
+
+    Route::get('/photo/{photo}/report', [Controllers\Gallery\PhotoController::class, 'report'])->name('photo.report');
+    Route::post('/photo/{photo}/report', [Controllers\Gallery\PhotoController::class, 'storeReport']);
+
+    // Album viewing (uses wildcard on second segment, must be last)
+    Route::get('/{album}', [Controllers\Gallery\AlbumController::class, 'show'])->name('album');
+
+    // Album uploading
+    Route::get('/{album}/upload', [Controllers\Gallery\AlbumController::class, 'upload'])->name('album.upload');
+    Route::post('/{album}/upload', [Controllers\Gallery\AlbumController::class, 'storeUpload']);
+
+    // Album editing
+    Route::get('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'edit'])->name('album.edit');
+    Route::patch('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'update']);
+    Route::delete('/{album}/delete', [Controllers\Gallery\AlbumController::class, 'destroy'])->name('album.delete');
+});
+
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');

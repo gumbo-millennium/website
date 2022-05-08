@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Gallery;
 
+use App\Enums\PhotoVisibility;
+use App\Fluent\Image;
 use App\Models\Gallery\Photo as PhotoModel;
+use App\Nova\Filters\Gallery\PhotoVisibilityFilter;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Photo extends Resource
 {
@@ -44,6 +50,18 @@ class Photo extends Resource
     public static $group = 'Photo Galleries';
 
     /**
+     * Build an "index" query for the given resource.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return parent::indexQuery($request, $query)
+            ->where('visibility', '!=', PhotoVisibility::Pending);
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @return array
@@ -55,7 +73,8 @@ class Photo extends Resource
 
             Fields\Text::make(__('Name'), 'name')
                 ->sortable()
-                ->exceptOnForms(),
+                ->hideWhenUpdating()
+                ->help(__('Name of the photo, usually the filename')),
 
             Fields\Text::make(__('Description'), 'description')
                 ->hideFromIndex()
@@ -67,10 +86,20 @@ class Photo extends Resource
                 ]),
 
             Fields\Image::make(__('Foto'), 'path')
-                ->disk('cloud')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->path(Config::get('gumbo.images.path'))
+                ->thumbnail(fn () => (string) Image::make($this->path)->preset('nova-thumbnail'))
+                ->preview(fn () => (string) Image::make($this->path)->preset('nova-preview'))
                 ->disableDownload()
                 ->showOnUpdating(false)
                 ->storeOriginalName('name'),
+
+            Fields\Select::make(__('Visibility'), 'visibility')
+                ->displayUsing(fn (?PhotoVisibility $value) => __(($value ?? PhotoVisibility::Pending)->name))
+                ->options(
+                    Collection::make(PhotoVisibility::cases())
+                        ->mapWithKeys(fn (PhotoVisibility $vis) => [$vis->value => __($vis->name)]),
+                ),
 
             Fields\BelongsTo::make(__('Album'), 'album', Album::class)
                 ->rules([
@@ -88,7 +117,7 @@ class Photo extends Resource
             Fields\DateTime::make(__('Updated At'), 'updated_at')
                 ->onlyOnDetail(),
 
-            Fields\Date::make(__('Taken At'), 'taken_at')
+            Fields\DateTime::make(__('Taken At'), 'taken_at')
                 ->hideFromIndex()
                 ->nullable()
                 ->rules([
@@ -116,7 +145,9 @@ class Photo extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new PhotoVisibilityFilter(),
+        ];
     }
 
     /**
