@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,8 +30,11 @@ class UserFactory extends Factory
         ];
     }
 
-    public function withRole(string $role): self
+    /**
+     * @param string|string[] $role
+     */
+    public function withRole(string|array $role): self
     {
-        return $this->afterCreating(fn (User $user) => $user->assignRole($role));
+        return $this->afterCreating(fn (User $user) => $user->assignRole(Arr::wrap($role)));
     }
 }

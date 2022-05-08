@@ -89,7 +89,7 @@ class AlbumPolicy
             return $this->deny(__(self::REASON_BANNED));
         }
 
-        if ($user->hasPermissionTo('gallery-view')) {
+        if ($user->hasPermissionTo('gallery-use')) {
             return $this->allow();
         }
 

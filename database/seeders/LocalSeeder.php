@@ -35,5 +35,8 @@ class LocalSeeder extends Seeder
 
         // Add some sponsors
         $this->call(SponsorSeeder::class);
+
+        // Add some gallery albums
+        $this->call(GallerySeeder::class);
     }
 }

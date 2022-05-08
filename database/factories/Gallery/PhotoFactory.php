@@ -34,6 +34,13 @@ class PhotoFactory extends Factory
         ];
     }
 
+    public function visibility(PhotoVisibility $visibility): self
+    {
+        return $this->state([
+            'visibility' => $visibility,
+        ]);
+    }
+
     public function configure()
     {
         return $this->afterMaking(function (Photo $photo) {

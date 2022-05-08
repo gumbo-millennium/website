@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -87,7 +88,7 @@ class AlbumController extends Controller
 
     public function show(Request $request, Album $album): HttpResponse
     {
-        // $this->authorize('view', $album);
+        $this->authorize('view', $album);
 
         $album = Album::query()
             ->forUser($request->user())
@@ -190,14 +191,17 @@ class AlbumController extends Controller
             $updatedPhotoCount++;
         }
 
-        flash()->success("Successfully uploaded ${updatedPhotoCount} of {$photos->count()} photos");
+        flash()->success(__('Successfully uploaded :success of :total photos', [
+            ':success' => $updatedPhotoCount,
+            ':total' => $photos->count(),
+        ]));
 
         return Response::redirectToRoute('gallery.album', $album);
     }
 
     public function edit(Request $request, Album $album): HttpResponse
     {
-        // $this->authorize('edit', $album);
+        $this->authorize('update', $album);
 
         $photos = $this->getEditablePhotos($request, $album);
 
@@ -209,7 +213,9 @@ class AlbumController extends Controller
 
     public function update(Request $request, Album $album): RedirectResponse
     {
-        $this->authorize('edit', $album);
+        $this->authorize('update', $album);
+
+        DB::beginTransaction();
 
         $photos = $this->getEditablePhotos($request, $album);
 
@@ -245,13 +251,12 @@ class AlbumController extends Controller
             $photo->save();
         }
 
-        $sentences = [
-            $updateCount ? __('Updated :count photos', ['count' => $updateCount]) : null,
-            $visibilityCount ? __('Changed visibility of :count photos', ['count' => $visibilityCount]) : null,
-            $deleteCount ? __('Deleted :count photos', ['count' => $deleteCount]) : null,
-        ];
-
-        $message = (string) Str::of(implode(' ' . __('and') . ' ', $sentences))->lower()->ucfirst();
+        $message = Collection::make()
+            ->push($updateCount ? __('Updated :count photos', ['count' => $updateCount]) : null)
+            ->push($visibilityCount ? __('Changed visibility of :count photos', ['count' => $visibilityCount]) : null)
+            ->push($deleteCount ? __('Deleted :count photos', ['count' => $deleteCount]) : null)
+            ->filter()
+            ->join(', ', ' ' . __('and') . ' ');
 
         if ($message) {
             flash()->success($message);
@@ -259,14 +264,24 @@ class AlbumController extends Controller
             flash()->info(__('No changes have been made, album left unchanged'));
         }
 
+        DB::commit();
+
         return Response::redirectToRoute('gallery.album', $album);
     }
 
     private function getEditablePhotos(Request $request, Album $album): Collection
     {
+        $user = $request->user();
+
         return $album
             ->allPhotos()
-            ->whereHas('user', fn ($query) => $query->where('id', $request->user()->id))
+            ->unless(
+                $user->hasPermissionTo('gallery-manage'),
+                fn ($query) => $query->whereHas(
+                    'user',
+                    fn ($query) => $query->where('id', $user->id),
+                ),
+            )
             ->editable()
             ->with(['user'])
             ->get();

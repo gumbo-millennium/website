@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\AlbumVisibility;
 use App\Models\Gallery\Album;
 use App\Models\Gallery\Photo;
 use App\Models\Gallery\PhotoReaction;
@@ -11,6 +12,7 @@ use App\Models\Gallery\PhotoReport;
 use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
 
 class GallerySeeder extends Seeder
 {
@@ -23,7 +25,17 @@ class GallerySeeder extends Seeder
      */
     public function run(Generator $faker)
     {
-        $albums = Album::factory($faker->numberBetween(2, 10))->create();
+        $albums = Collection::make()
+            ->concat(
+                Album::factory($faker->numberBetween(2, 10))
+                    ->visibility(AlbumVisibility::Public)
+                    ->create(),
+            )
+            ->concat(
+                Album::factory($faker->numberBetween(1, 5))
+                    ->visibility(AlbumVisibility::Private)
+                    ->create(),
+            );
 
         foreach ($albums as $album) {
             // Empty albums (20% of albums)
@@ -32,7 +44,9 @@ class GallerySeeder extends Seeder
             }
 
             // Create a number of photos
-            $photos = Photo::factory($faker->numberBetween(2, 10))->for($album)->create();
+            $photos = Photo::factory($faker->numberBetween(2, 10))
+                ->for($album)
+                ->create();
 
             foreach ($photos as $photo) {
                 // Photo with likes (45% of photos)

@@ -17,7 +17,7 @@ class PhotoController extends Controller
 {
     public function show(Request $request, Photo $photo): HttpResponse
     {
-        // $this->authorize('view', $photo);
+        $this->authorize('view', $photo);
 
         $photo = Photo::query()
             ->withUserInteraction($request->user())
@@ -41,6 +41,8 @@ class PhotoController extends Controller
 
     public function storeReport(PhotoReportRequest $request, Photo $photo): RedirectResponse
     {
+        $this->authorize('report', $photo);
+
         $valid = $request->validated();
         $reason = $valid['reason'];
 
@@ -62,7 +64,7 @@ class PhotoController extends Controller
 
     public function destroy(Request $request, Photo $photo): RedirectResponse
     {
-        // $this->authorize('delete', $photo);
+        $this->authorize('delete', $photo);
 
         $photo->delete();
 
