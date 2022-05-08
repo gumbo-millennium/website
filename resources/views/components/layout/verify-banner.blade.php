@@ -12,13 +12,15 @@
         </h3>
 
         {{-- Link --}}
-        <button type="submit"
-            title="Opnieuw sturen"
-            class="appearance-none no-underline bg-brand-primary-3 px-4 py-1 rounded text-light hover:text-light hover:bg-brand-secondary-3 border border-light flex flex-row items-center">
-            <x-icon icon="solid/redo" class="icon h-4 md:mr-2 my-1" role=presentation" aria-label="Opnieuw sturen" />
-            <span class="hidden md:block">
-                Opnieuw sturen
-            </span>
-        </a>
+        <button
+          type="submit"
+          title="Opnieuw sturen"
+          class="appearance-none no-underline bg-brand-primary-3 px-4 py-1 rounded text-light hover:text-light hover:bg-brand-secondary-3 border border-light flex flex-row items-center"
+        >
+          <x-icon icon="solid/redo" class="icon h-4 md:mr-2 my-1" role="presentation" aria-label="Opnieuw sturen" />
+          <span class="hidden md:block">
+              Opnieuw sturen
+          </span>
+      </button>
     </form>
 </div>
