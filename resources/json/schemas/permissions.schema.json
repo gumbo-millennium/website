@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Permission schema",
+  "type": "object",
+  "patternProperties": {
+    "^([a-z]+-)*[a-z]+$": {
+      "description": "Description of this permission",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

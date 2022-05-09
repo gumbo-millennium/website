@@ -129,6 +129,12 @@
         ],
         "test": [
             "vendor/bin/phpunit"
+        ],
+        "yamllint": [
+            "jsonschema-lint --schema resources/json/schemas/menu.schema.json resources/yaml/menu.yaml",
+            "jsonschema-lint --schema resources/json/schemas/permissions.schema.json resources/yaml/permissions.yaml",
+            "jsonschema-lint --schema resources/json/schemas/redirects.schema.json resources/yaml/redirects.yaml",
+            "jsonschema-lint --schema resources/json/schemas/roles.schema.json resources/yaml/roles.yaml"
         ]
     },
     "config": {

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Redirect mapping schema",
+  "type": "object",
+  "required": [
+    "redirects"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "redirects": {
+      "type": "array",
+      "items": {
+        "description": "A single redirect mapping",
+        "type": "object",
+        "required": [
+          "slug",
+          "path"
+        ],
+        "properties": {
+          "title": {
+            "slug": "string",
+            "description": "The local path of the redirect",
+            "pattern": "^[a-z][a-z0-9-]+$"
+          },
+          "path": {
+            "type": "string",
+            "format": "uri",
+            "description": "The path or absolute URL to redirect to"
+          }
+        }
+      }
+    }
+  }
+}

@@ -75,8 +75,7 @@ jobs:
         run: .github/find-typos.sh
 
       - name: Lint Yaml files
-        run: |
-          jsonschema-lint --schema resources/json/schemas/menu.schema.json resources/yaml/menu.yaml
+        run: composer run yamllint
 
   laravel-backend:
     name: "Back-end build and test"
