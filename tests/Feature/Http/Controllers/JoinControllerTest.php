@@ -112,6 +112,8 @@ class JoinControllerTest extends TestCase
             'slug' => 'intro-test',
             'start_date' => Date::now()->addWeek(),
             'end_date' => Date::now()->addWeek()->addDays(3),
+            'enrollment_start' => Date::now()->subYear(),
+            'enrollment_end' => Date::now()->addWeek(),
         ]);
 
         $introActivity->tickets()->create([
@@ -121,7 +123,7 @@ class JoinControllerTest extends TestCase
         ]);
 
         $inputFields = array_merge(self::VALID_FIELDS, [
-            'join-intro' => 1,
+            'join-intro' => '1',
         ]);
 
         $this->post(route('join.submit'), $inputFields)
