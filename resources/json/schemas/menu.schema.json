@@ -16,12 +16,12 @@
       "properties": {
         "desktop": {
           "type": "array",
-          "$comment": "Desktop menu items",
+          "description": "Desktop menu items",
           "minItems": 1,
           "items": {
             "oneOf": [
               {
-                "$comment": "A simple menu link",
+                "description": "A simple menu link",
                 "type": "object",
                 "required": [
                   "title",
@@ -29,17 +29,18 @@
                 ],
                 "properties": {
                   "title": {
-                    "$comment": "Menu link title",
+                    "description": "Menu link title",
                     "type": "string"
                   },
                   "href": {
-                    "$comment": "Menu link destination",
-                    "type": "string"
+                    "description": "Menu link destination",
+                    "type": "string",
+                    "format": "uri"
                   }
                 }
               },
               {
-                "$comment": "A menu dropdown",
+                "description": "A menu dropdown",
                 "type": "object",
                 "required": [
                   "title",
@@ -47,15 +48,15 @@
                 ],
                 "properties": {
                   "title": {
-                    "$comment": "Title of the dropdown",
+                    "description": "Title of the dropdown",
                     "type": "string"
                   },
                   "items": {
-                    "$comment": "Dropdown items",
+                    "description": "Dropdown items",
                     "type": "array",
                     "minItems": 1,
                     "items": {
-                      "$comment": "A single dropdown item",
+                      "description": "A single dropdown item",
                       "type": "object",
                       "required": [
                         "title",
@@ -63,23 +64,89 @@
                       ],
                       "properties": {
                         "title": {
-                          "$comment": "Title of the dropdown item",
+                          "description": "Title of the dropdown item",
                           "type": "string"
                         },
                         "href": {
-                          "$comment": "Destination of the dropdown item",
-                          "type": "string"
+                          "description": "Destination of the dropdown item",
+                          "type": "string",
+                          "format": "uri"
                         },
                         "subtitle": {
-                          "$comment": "Optional subtitle of the dropdown item",
+                          "description": "Optional subtitle of the dropdown item",
                           "type": "string"
                         },
                         "icon": {
-                          "$comment": "Optional icon of the dropdown item",
+                          "description": "Optional icon of the dropdown item",
                           "type": "string",
                           "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
                         }
                       }
+                    }
+                  },
+                  "footer": {
+                    "description": "Optional footer of the dropdown",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "oneOf": [
+                        {
+                          "description": "A regular footer item",
+                          "type": "object",
+                          "required": [
+                            "title",
+                            "href"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "title": {
+                              "description": "Title of the footer item",
+                              "type": "string"
+                            },
+                            "href": {
+                              "description": "Destination of the footer item",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "icon": {
+                              "description": "Optional icon of the footer item",
+                              "type": "string",
+                              "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
+                            }
+                          }
+                        },
+                        {
+                          "description": "A small footer item",
+                          "type": "object",
+                          "required": [
+                            "title",
+                            "href",
+                            "icon",
+                            "small"
+                          ],
+                          "properties": {
+                            "title": {
+                              "description": "Title of the footer item",
+                              "type": "string"
+                            },
+                            "href": {
+                              "description": "Destination of the footer item",
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "icon": {
+                              "description": "Optional icon of the footer item",
+                              "type": "string",
+                              "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
+                            },
+                            "small": {
+                              "description": "Mark this item as a small menu item, without the title",
+                              "type": "boolean",
+                              "const": true
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -88,7 +155,7 @@
           }
         },
         "mobile": {
-          "$comment": "Mobile menu items",
+          "description": "Mobile menu items",
           "type": "object",
           "required": [
             "main",
@@ -96,11 +163,11 @@
           ],
           "properties": {
             "main": {
-              "$comment": "Primary menu items, shown with icon",
+              "description": "Primary menu items, shown with icon",
               "type": "array",
               "minItems": 1,
               "items": {
-                "$comment": "A single menu item",
+                "description": "A single menu item",
                 "type": "object",
                 "required": [
                   "title",
@@ -109,15 +176,16 @@
                 ],
                 "properties": {
                   "title": {
-                    "$comment": "Menu item title",
+                    "description": "Menu item title",
                     "type": "string"
                   },
                   "href": {
-                    "$comment": "Menu item destination",
-                    "type": "string"
+                    "description": "Menu item destination",
+                    "type": "string",
+                    "format": "uri"
                   },
                   "icon": {
-                    "$comment": "Menu item icon",
+                    "description": "Menu item icon",
                     "type": "string",
                     "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
                   }
@@ -125,7 +193,7 @@
               }
             },
             "footer": {
-              "$comment": "Secondary menu items, shown with just text in a 2-column grid",
+              "description": "Secondary menu items, shown with just text in a 2-column grid",
               "type": "array",
               "minItems": 0,
               "items": {
@@ -136,12 +204,13 @@
                 ],
                 "properties": {
                   "title": {
-                    "$comment": "Menu item title",
+                    "description": "Menu item title",
                     "type": "string"
                   },
                   "href": {
-                    "$comment": "Menu item destination",
-                    "type": "string"
+                    "description": "Menu item destination",
+                    "type": "string",
+                    "format": "uri"
                   }
                 }
               }

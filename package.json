@@ -16,6 +16,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "alpinejs": "^3.10.2",
+    "filepond": "^4.30.3",
     "laravel-mix": "^6.0.31"
   },
   "devDependencies": {
