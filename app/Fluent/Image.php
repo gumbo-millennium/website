@@ -6,6 +6,7 @@ namespace App\Fluent;
 
 use DomainException;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Fluent;
 use JsonSerializable;
@@ -91,6 +92,12 @@ final class Image extends Fluent implements JsonSerializable, Stringable
         self::FORMAT_GIF,
         self::FORMAT_WEBP,
     ];
+
+    /**
+     * Flag to indicate the URLs should expire, making them auto-expire after 1 hour.
+     * @param bool
+     */
+    private bool $shouldExpire = false;
 
     /**
      * Creates a new image for the given path.
@@ -236,6 +243,17 @@ final class Image extends Fluent implements JsonSerializable, Stringable
     }
 
     /**
+     * Flag to indicate the URLs should expire, making them auto-expire after 1 hour.
+     * @return Image
+     */
+    public function shouldExpire(bool $shouldExpire = true): self
+    {
+        $this->shouldExpire = $shouldExpire;
+
+        return $this;
+    }
+
+    /**
      * Returns the signed URL to this image.
      */
     public function getUrl(): string
@@ -248,7 +266,11 @@ final class Image extends Fluent implements JsonSerializable, Stringable
             return $this->path;
         }
 
-        return URL::signedRoute('image.render', $this->toArray());
+        return URL::signedRoute(
+            'image.render',
+            $this->toArray(),
+            $this->shouldExpire ? Date::now()->addHour() : null,
+        );
     }
 
     public function jsonSerialize()

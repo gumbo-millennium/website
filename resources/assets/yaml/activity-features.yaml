@@ -4,23 +4,24 @@
 # Owner-selectable mails with icons and optionally mail parts.
 #
 
-coronacheck:
-  title: Testen voor Toegang
-  icon: qrcode
-  mail:
-    send: PT48H
-    subject: Heb jij al een coronatoegangsbewijs voor {name}?
-    body: |
-      Hoi {user},
+# # Covid code has been removed, this is left in as kitchen sink
+# coronacheck:
+#   title: Testen voor Toegang
+#   icon: qrcode
+#   mail:
+#     send: PT48H
+#     subject: Heb jij al een coronatoegangsbewijs voor {name}?
+#     body: |
+#       Hoi {user},
 
-      Je hebt je aangemeld voor {name}. Voor deze activiteit moet je in het bezit
-      zijn van een geldig coronatoegangsbewijs.
+#       Je hebt je aangemeld voor {name}. Voor deze activiteit moet je in het bezit
+#       zijn van een geldig coronatoegangsbewijs.
 
-      Je bent zelf verantwoordelijk voor het op tijd regelen van je toegangsbewijs,
-      maar dit is een gratis reminder voor je 😉
-    button:
-      text: Maak een testafspraak
-      url: https://www.testenvoortoegang.org/
+#       Je bent zelf verantwoordelijk voor het op tijd regelen van je toegangsbewijs,
+#       maar dit is een gratis reminder voor je 😉
+#     button:
+#       text: Maak een testafspraak
+#       url: https://www.testenvoortoegang.org/
 
 has-own-bar:
   title: Met eigen bar

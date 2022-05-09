@@ -47,6 +47,12 @@ class AuthServiceProvider extends ServiceProvider
         ShopModels\Category::class => ShopPolicies\CategoryPolicy::class,
         ShopModels\Product::class => ShopPolicies\ProductPolicy::class,
         ShopModels\ProductVariant::class => ShopPolicies\ProductVariantPolicy::class,
+
+        // Gallery
+        Models\Gallery\Album::class => Policies\Gallery\AlbumPolicy::class,
+        Models\Gallery\Photo::class => Policies\Gallery\PhotoPolicy::class,
+        Models\Gallery\PhotoReaction::class => Policies\Gallery\PhotoReactionPolicy::class,
+        Models\Gallery\PhotoReport::class => Policies\Gallery\PhotoReportPolicy::class,
     ];
 
     /**

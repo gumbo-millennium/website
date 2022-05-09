@@ -12,6 +12,7 @@ use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\EventService;
+use App\Services\GalleryService;
 use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
@@ -40,6 +41,8 @@ class AppServiceProvider extends ServiceProvider
     public $singletons = [
         // Sponsor service
         SponsorServiceContract::class => SponsorService::class,
+        // Gallery
+        GalleryService::class,
     ];
 
     /**

@@ -1,0 +1,13 @@
+@import 'filepond/dist/filepond.min.css';
+
+@screen md {
+  .filepond--item {
+    width: calc(50% - 0.5em);
+  }
+}
+
+@screen lg {
+  .filepond--item {
+    width: calc(33.333333% - 0.5em);
+  }
+}

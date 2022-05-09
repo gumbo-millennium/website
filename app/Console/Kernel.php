@@ -82,6 +82,10 @@ class Kernel extends ConsoleKernel
 
         // Clear expired webcam images
         $schedule->command('gumbo:prune-webcams')->hourly();
+
+        // Remove expired filepond items every four hours, and remove orphanned Photos every day
+        $schedule->command('gumbo:prune-gallery-filepond')->hourly();
+        $schedule->command('gumbo:prune-gallery-filepond', ['--prune', '--clean'])->dailyAt('03:14');
     }
 
     /**

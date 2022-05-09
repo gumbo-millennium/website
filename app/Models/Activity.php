@@ -645,15 +645,21 @@ class Activity extends SluggableModel
      */
     public function scopeWhereInTheFuture(Builder $query, ?DateTimeInterface $date = null): void
     {
-        $query
+        // Skipp all cancelled
+        $query->whereNull('cancelled_at');
+
+        // Add rest of the scope in a subquery
+        $query->where(function (Builder $query) use ($date) {
             // Check if the end date is after the given date
-            ->where('end_date', '>', $date ?? Date::now())
+            $query->where('end_date', '>', $date ?? Date::now());
+
             // ... or where the event is postponed, but only postponed
-            ->orWhere(fn (Builder $query) => (
+            $query->orWhere(fn (Builder $query) => (
                 $query
                     ->whereNotNull('postponed_at')
-                    ->whereNull('cancelled_at')
                     ->whereNull('rescheduled_from')
+                    ->whereNull('cancelled_at')
             ));
+        });
     }
 }

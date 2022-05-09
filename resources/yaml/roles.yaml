@@ -33,6 +33,9 @@ member:
     # Allow viewing rediects
     - redirects-view
 
+    # Allow gallery access
+    - gallery-use
+
 # Activiteiten Committee
 ac:
   title: Activiteiten Commissie
@@ -108,6 +111,9 @@ board:
 
     # Allow managing custom redirects
     - redirects-manage
+
+    # Allow managing gallery (full access and reports)
+    - gallery-manage
 
 # Digital committee
 dc:

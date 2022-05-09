@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands\App;
 
 use App\Helpers\Str;
-use App\Mail\ActivityCovidMail;
 use App\Mail\Join\UserJoinMail;
 use App\Mail\Shop\NewOrderBoardMail;
 use App\Models\Activity;
@@ -22,7 +21,6 @@ use Illuminate\Mail\Mailable;
 class MakePurgecssMails extends Command
 {
     private const EMAIL_CLASSES = [
-        ActivityCovidMail::class,
         UserJoinMail::class,
         NewOrderBoardMail::class,
         UserJoinMail::class,

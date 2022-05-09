@@ -48,7 +48,7 @@
   "Status": "Status",
   "Sent": "Betaald, verzonden",
   "Paid": "Betaald",
-  "Pending": "Niet betaald",
+  "Pending": "In afwachting",
   "Price": "Prijs",
   "Total price": "Totaalprijs",
   "Features": "Eigenschappen",
@@ -284,6 +284,40 @@
   "Full list (with medical data)": "Alle gegevens (met medische gegevens)",
   "Failed to export participants: :reason": "Deelnemers exporteren mislukt: :reason",
   "Creating or writing of sheet failed.": "Aanmaken of schrijven van gegevensblad mislukt.",
+
+  "Photo Galleries": "Fotoalbums",
+  "Album": "Album",
+  "Albums": "Albums",
+  "Photo": "Foto",
+  "Photos": "Foto's",
+  "Photo Reaction": "Fotoreactie",
+  "Photo Reactions": "Fotoreacties",
+  "Photo Report": "Melding",
+  "Photo Reports": "Meldingen",
+
+  "Name of the photo, usually the filename": "Naam van de foto, meestal de bestandsnaam",
+  "Visibility": "Zichtbaarheid",
+  "Hidden": "Verborgen",
+  "Taken At": "Gemaakt op",
+  "Private": "Privé",
+
+  "Show hidden photos": "Toon verborgen foto's",
+  "Show pending photos": "Toon concept foto's",
+
+  "You don't have permission to use the gallery": "Je hebt geen toegang tot de fotogalerij",
+  "Your account has been banned from making changes to the gallery": "Je account is uitgesloten van bewerkingen aan de galerij",
+  "You don't have permission to make these changes": "Je hebt niet de rechten om deze wijzigingen te maken",
+  "You're not allowed to view this photo": "Je hebt niet de rechten om deze foto te bekijken",
+  "You can't report your own photos or photos in albums you own": "Je kunt je eigen foto's of foto's in eigen albums niet rapporteren",
+  "You've already reported this photo": "Je hebt deze foto al gerapporteerd",
+  "Your album is created, now go and add some photos!": "Je album is aangemaakt, voeg er nu wat foto's aan toe!",
+  "Successfully uploaded :success of :total photos": ":success van :total foto's succesvol geupload",
+
+  "Updated :count photos": ":count foto's bijgewerkt",
+  "Changed visibility of :count photos": "zichtbaarheid van :count foto's aangepast",
+  "Deleted :count photos": ":count foto's verwijderd",
+  "No changes have been made, album left unchanged": "Er zijn geen wijzigingen gemaakt, album is niet aangepast",
+  "and": "en",
 
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

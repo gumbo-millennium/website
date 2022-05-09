@@ -31,10 +31,16 @@
         <a href="#content" class="a11y-skip">Ga direct naar inhoud</a>
     </div>
 
+    <x-layout.user-bar />
+
     @section('main.header')
-    @include('layout.header')
-    @includeWhen(optional(Auth::user())->hasVerifiedEmail() === false, 'layout.verify-banner')
-    @includeUnless(!empty($hideFlash), 'layout.flash-message')
+    <x-layout.header />
+    @if (Auth::user()?->hasVerifiedEmail() != true)
+        <x-layout.verify-banner />
+    @endif
+    @if (($hideFlash ?? false) !== true)
+        <x-layout.flash-message />
+    @endif
     @show
 
     {{-- Main content --}}
@@ -55,8 +61,11 @@
 
     {{-- Footer --}}
     @section('main.footer')
-    @include('layout.footer')
-    @includeWhen($user !== null, 'layout.logout')
+    <x-layout.footer />
+    <form class="hidden" action="{{ route('logout') }}" method="post" id="logout-form" name="logout-form" role="none" aria-hidden="true">
+      @csrf
+      <input type="hidden" name="next" value="{{ Request::url() }}">
+    </form>
     @show
 </body>
 

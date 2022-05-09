@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Role configuration schema",
+  "type": "object",
+  "patternProperties": {
+    "^[a-z]+$": {
+      "$comment": "A role",
+      "type": "object",
+      "required": [
+        "title",
+        "permissions"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the role"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "A permission to give to this role"
+          }
+        },
+        "extends": {
+          "type": "string",
+          "description": "The role that this role extends"
+        },
+        "default": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

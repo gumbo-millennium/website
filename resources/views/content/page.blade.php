@@ -25,8 +25,5 @@ SEOMeta::setCanonical($page->url);
             {!! $page->html !!}
         </div>
     </div>
-
-    {{-- Add disclaimer --}}
-    @includeWhen($page->group === 'coronavirus', 'covid19.disclaimer')
 </article>
 @endsection

@@ -98,12 +98,6 @@ $mainTitle ??= false;
 $showJoin ??= false;
 $showMeta ??= false;
 $showTagline ??= true;
-
-$showCovidWarning = Str::contains(
-    Str::lower($activity->cancelled_reason ?? $activity->postponed_reason ?? $activity->rescheduled_reason ?? ''),
-    ['covid', 'corona', 'covid19', 'coronavirus']
-);
-
 @endphp
 
 {{-- Activity title --}}
@@ -138,7 +132,6 @@ $showCovidWarning = Str::contains(
     <p class="m-0 w-full">
         {{ $activity->cancelled_reason ?: 'Deze activiteit is geannuleerd.' }}
     </p>
-    @includeWhen($showCovidWarning, 'covid19.block')
 </div>
 @else
 {{-- Description --}}
@@ -168,7 +161,6 @@ $toDate = $activity->start_date->isoFormat('D MMM Y, HH:mm (z)');
             naar <time class="inline-block font-bold" datetime="{{ $toDateIso }}">{{ $toDate }}</time>.
         @endif
     </p>
-    @includeWhen($showCovidWarning, 'covid19.block')
 </div>
 @elseif ($activity->is_postponed && !$activity->is_cancelled)
 @php
@@ -185,7 +177,6 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
             Een nieuwe datum is <strong class="inline-block">nog niet bekend</strong>.
         @endif
     </p>
-    @includeWhen($showCovidWarning, 'covid19.block')
 </div>
 @endif
 @if ($showTagline)
@@ -253,13 +244,13 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 {{-- Back link --}}
 @if ($nextLink === 'activity')
 <a href="{{ route('activity.show', compact('activity')) }}"
-    class="inline-block p-4 mb-4 no-underline p-4 text-sm">
+    class="inline-block mb-4 no-underline p-4 text-sm">
     <x-icon icon="solid/chevron-left" class="mr-2" />
     Terug naar details
 </a>
 @elseif ($activity === 'list')
 <a href="{{ route('activity.index') }}"
-    class="inline-block p-4 mb-4 no-underline p-4 text-sm">
+    class="inline-block mb-4 no-underline p-4 text-sm">
     <x-icon icon="solid/chevron-left" class="mr-2" />
     Terug naar overzicht
 </a>
