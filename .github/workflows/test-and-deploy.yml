@@ -61,11 +61,22 @@ jobs:
           php-version: ${{ matrix.php }}}
           tools: php-parallel-lint/php-parallel-lint
 
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install Yaml linter
+        run: pip3 install pyyaml jsonschema-lint
+
       - name: Lint PHP code
         run: parallel-lint  --exclude vendor --exclude node_modules .
 
       - name: Check for Gumbo Millennium typos
         run: .github/find-typos.sh
+
+      - name: Lint Yaml files
+        run: |
+          jsonschema-lint --schema resources/json/schemas/menu.schema.json resources/yaml/menu.yaml
 
   laravel-backend:
     name: "Back-end build and test"

@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu schema",
+  "type": "object",
+  "required": [
+    "menu"
+  ],
+  "properties": {
+    "menu": {
+      "type": "object",
+      "required": [
+        "desktop",
+        "mobile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "desktop": {
+          "type": "array",
+          "$comment": "Desktop menu items",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$comment": "A simple menu link",
+                "type": "object",
+                "required": [
+                  "title",
+                  "href"
+                ],
+                "properties": {
+                  "title": {
+                    "$comment": "Menu link title",
+                    "type": "string"
+                  },
+                  "href": {
+                    "$comment": "Menu link destination",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "$comment": "A menu dropdown",
+                "type": "object",
+                "required": [
+                  "title",
+                  "items"
+                ],
+                "properties": {
+                  "title": {
+                    "$comment": "Title of the dropdown",
+                    "type": "string"
+                  },
+                  "items": {
+                    "$comment": "Dropdown items",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "$comment": "A single dropdown item",
+                      "type": "object",
+                      "required": [
+                        "title",
+                        "href"
+                      ],
+                      "properties": {
+                        "title": {
+                          "$comment": "Title of the dropdown item",
+                          "type": "string"
+                        },
+                        "href": {
+                          "$comment": "Destination of the dropdown item",
+                          "type": "string"
+                        },
+                        "subtitle": {
+                          "$comment": "Optional subtitle of the dropdown item",
+                          "type": "string"
+                        },
+                        "icon": {
+                          "$comment": "Optional icon of the dropdown item",
+                          "type": "string",
+                          "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "mobile": {
+          "$comment": "Mobile menu items",
+          "type": "object",
+          "required": [
+            "main",
+            "footer"
+          ],
+          "properties": {
+            "main": {
+              "$comment": "Primary menu items, shown with icon",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$comment": "A single menu item",
+                "type": "object",
+                "required": [
+                  "title",
+                  "href",
+                  "icon"
+                ],
+                "properties": {
+                  "title": {
+                    "$comment": "Menu item title",
+                    "type": "string"
+                  },
+                  "href": {
+                    "$comment": "Menu item destination",
+                    "type": "string"
+                  },
+                  "icon": {
+                    "$comment": "Menu item icon",
+                    "type": "string",
+                    "pattern": "(solid|regular|brands)/([a-z][a-z0-9-]+)+"
+                  }
+                }
+              }
+            },
+            "footer": {
+              "$comment": "Secondary menu items, shown with just text in a 2-column grid",
+              "type": "array",
+              "minItems": 0,
+              "items": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "href"
+                ],
+                "properties": {
+                  "title": {
+                    "$comment": "Menu item title",
+                    "type": "string"
+                  },
+                  "href": {
+                    "$comment": "Menu item destination",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

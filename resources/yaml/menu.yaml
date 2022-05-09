@@ -1,0 +1,78 @@
+menu:
+  desktop:
+    - title: Activiteiten
+      href: /activiteiten
+
+    - title: Over Gumbo
+      items:
+        - title: Geschiedenis
+          href: /over
+        - title: Bestuur
+          href: /bestuur
+        - title: Commissies
+          href: /commissies
+        - title: Projectgroepen
+          href: /projectgroepen
+        - title: Disputen
+          href: /Disputen
+        - title: Sponsoren
+          href: /Sponsoren
+
+    - title: Voor leden
+      items:
+        - title: Foto's
+          subtitle: Bekijk de leukste foto's terug
+          href: /gallery
+          icon: solid/images
+        - title: Shop
+          subtitle: Ga Gumbo-Groener door het leven
+          href: /shop
+          icon: solid/shopping-cart
+        - title: Bestanden
+          subtitle: Goed voorbereiden is het halve werk
+          href: /bestanden
+          icon: solid/file-alt
+
+    - title: Nieuws
+      href: /nieuws
+
+  mobile:
+    main:
+      - title: Activiteiten
+        href: /activiteiten
+        icon: solid/calendar-alt
+
+      - title: Foto's
+        href: /gallery
+        icon: solid/images
+
+      - title: Shop
+        href: /shop
+        icon: solid/shopping-cart
+
+      - title: Bestanden
+        href: /bestanden
+        icon: solid/file-alt
+
+      - title: Nieuws
+        href: /nieuws
+        icon: solid/newspaper
+
+    footer:
+      - title: Over Gumbo
+        href: /over
+
+      - title: Bestuur
+        href: /bestuur
+
+      - title: Commissies
+        href: /commissies
+
+      - title: Projectgroepen
+        href: /projectgroepen
+
+      - title: Disputen
+        href: /Disputen
+
+      - title: Sponsoren
+        href: /Sponsoren
