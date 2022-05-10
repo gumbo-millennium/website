@@ -15,6 +15,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
     "alpinejs": "^3.10.2",
     "filepond": "^4.30.3",
     "filepond-plugin-file-validate-size": "^2.2.6",

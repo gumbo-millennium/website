@@ -1,29 +1,22 @@
-@extends('layout.main')
-
-@php
+<?php
 // Set the metadata
 SEOMeta::setTitle($page->title);
 SEOMeta::setCanonical($page->url);
-@endphp
 
-@section('content')
-{{-- All in an article --}}
-<article>
-    {{-- Header --}}
-    <div class="container">
-        <div class="page-hero">
-            <h1 class="page-hero__title">{{ $page->title }}</h1>
-            @if (!empty($page->tagline))
-            <p class="page-hero__lead">{{ $page->tagline }}</p>
-            @endif
-        </div>
-    </div>
+$crumbs = ['/' => 'Home'];
+if ($page->group) {
+  $crumbs["/$group"] = $group;
+}
+?>
+<x-page :title="$page->title">
+  <article>
+    <header>
+      <x-sections.header :title="$page->title" :subtitle="$page->tagline" :crumbs="$crumbs" />
+    </header>
 
-    {{-- Contents --}}
-    <div class="container">
-        <div class="prose">
-            {!! $page->html !!}
-        </div>
-    </div>
-</article>
-@endsection
+    {{-- Body --}}
+    <x-container space="small" class="leading-loose prose">
+      {!! $page->html !!}
+    </x-container>
+  </article>
+</x-page>

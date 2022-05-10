@@ -244,6 +244,9 @@ class NewMemberForm extends Form
                     TEXT,
                 ],
                 'checked' => $forced ? 'checked' : false,
+                'attr' => [
+                    'data-intro-state' => 'open',
+                ],
             ]);
     }
 }

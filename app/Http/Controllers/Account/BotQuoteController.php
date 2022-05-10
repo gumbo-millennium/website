@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use App\Models\BotQuote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 /**
  * Lists the user's quote, and allows them to delete the ones not sent yet.
@@ -37,13 +38,10 @@ class BotQuoteController extends Controller
         $sentQuotes = (clone $quotesQuery)->latest()->whereNotNull('submitted_at')->paginate(20, ['*'], 'sent-page');
 
         // Render view
-        return response()
-            ->view('account.quotes', [
-                'unsent' => $unsentQuotes,
-                'sent' => $sentQuotes,
-            ])
-            ->setPrivate()
-            ->setExpires(now()->subYear());
+        return Response::view('account.quotes', [
+            'unsent' => $unsentQuotes,
+            'sent' => $sentQuotes,
+        ]);
     }
 
     /**
@@ -67,9 +65,7 @@ class BotQuoteController extends Controller
         if ($quote->submitted_at !== null) {
             flash('Dit wist-je-datje is al verzonden.', 'warning');
 
-            return response()
-                ->redirectToRoute('account.quotes')
-                ->setPrivate();
+            return Response::redirectToRoute('account.quotes');
         }
 
         // Delete message
@@ -78,8 +74,6 @@ class BotQuoteController extends Controller
         // Redirect back
         flash('Wist-je-datje verwijderd.', 'success');
 
-        return response()
-            ->redirectToRoute('account.quotes')
-            ->setPrivate();
+        return Response::redirectToRoute('account.quotes');
     }
 }

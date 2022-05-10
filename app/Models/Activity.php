@@ -518,22 +518,19 @@ class Activity extends SluggableModel
 
     /**
      * Only return activities available to this user.
-     *
-     * @param User $user
-     * @return Illuminate\Database\Eloquent\Builder
      */
-    public function scopeWhereAvailable(Builder $query, ?User $user = null): Builder
+    public function scopeWhereAvailable(Builder $query, ?User $user = null): void
     {
-        $user ??= Auth::user();
-        assert($user === null || $user instanceof User);
+        // Load user from auth if unset, and check if the possibly-null user is a member
+        $isMember = ($user ?? Auth::user())?->is_member === true;
 
-        // Add public-only when not a member
-        if (! $user || ! $user->is_member) {
-            $query = $query->whereIsPublic(true);
+        // Only show public if not a member
+        if (! $isMember) {
+            $query->where('is_public', true);
         }
 
         // Only return published
-        return $query->wherePublished();
+        $query->wherePublished();
     }
 
     /**
@@ -661,5 +658,21 @@ class Activity extends SluggableModel
                     ->whereNull('cancelled_at')
             ));
         });
+    }
+
+    public function scopeWithoutUncertainty(Builder $query): void
+    {
+        $query->whereNull([
+            'postponed_at',
+            'cancelled_at',
+        ]);
+    }
+
+    public function scopeWithEnrollmentsFor(Builder $query, ?User $user): void
+    {
+        $query->when(
+            $user,
+            fn ($query) => $query->with('enrollments', fn ($query) => $query->where('user_id', $user->id)),
+        );
     }
 }

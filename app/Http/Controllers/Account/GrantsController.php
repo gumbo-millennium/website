@@ -64,7 +64,7 @@ class GrantsController extends Controller
         return Response::view('account.grants', [
             'user' => $user,
             'form' => $this->getForm($formBuilder, $user),
-        ])->setPrivate();
+        ]);
     }
 
     /**

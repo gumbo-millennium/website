@@ -9,6 +9,7 @@ use App\Models\Sponsor;
 use App\Models\SponsorClick;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class SponsorController extends Controller
 {
@@ -31,17 +32,10 @@ class SponsorController extends Controller
         SEOMeta::setCanonical(route('sponsors.index'));
 
         // Build response
-        return \response()
-            ->view('sponsors.index', [
-                'branded' => $brandedSponsors,
-                'simple' => $simpleSponsors,
-            ])
-            ->setCache([
-                'public' => true,
-                'max_age' => 60 * 15,
-                's_maxage' => 60 * 5,
-                'last_modified' => Carbon::parse((clone $baseQuery)->max('updated_at')),
-            ]);
+        return Response::view('sponsors.index', [
+            'branded' => $brandedSponsors,
+            'simple' => $simpleSponsors,
+        ])->setLastModified(Carbon::parse((clone $baseQuery)->max('updated_at')));
     }
 
     /**
@@ -78,9 +72,9 @@ class SponsorController extends Controller
         SEOMeta::setCanonical(route('sponsors.show', compact('sponsor')));
 
         // Return view
-        return \response()
-            ->view('sponsors.show', compact('sponsor'))
-            ->setPublic();
+        return Response::view('sponsors.show', [
+            'sponsor' => $sponsor,
+        ]);
     }
 
     /**
@@ -115,15 +109,8 @@ class SponsorController extends Controller
         SponsorClick::addClick($sponsor);
 
         // Redirect user
-        return \redirect()
-            ->away($sponsor->url)
+        return Response::redirectTo($sponsor->url)
             ->header('Referrer-Policy', 'no-referrer, strict-origin')
-            ->setPublic()
-            ->setCache([
-                'public' => true,
-                'last_modified' => $sponsor->updated_at,
-                'max_age' => 60 * 30,
-                's_maxage' => 60 * 20,
-            ]);
+            ->setLastModified($sponsor->updated_at);
     }
 }

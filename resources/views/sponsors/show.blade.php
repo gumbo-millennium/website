@@ -1,48 +1,22 @@
-@extends('layout.main')
+<x-page :title="$sponsor_contents_title ?? $sponsor->name . ' - Sponsoren'">
+  <x-sections.header
+    :title="$sponsor->contents_title ?? $sponsor->name"
+    :stats='["Gesponsord door {$sponsor->name}" => "solid/ad"]'
+    :crumbs="['/' => 'Home', '/sponsoren' => 'Sponsoren']">
 
-@section('content')
-<div class="sponsor-single">
-    <div class="container container--md">
-        <a href="{{ route('sponsors.index') }}" class="sponsor-single__back" rel="parent">
-            <x-icon icon="solid/chevron-left" class="h-4 mr-2" />
-            <span>Terug naar sponsoren</span>
-        </a>
+    <x-slot name="buttons">
+      <x-button
+        :href="route('sponsors.link', $sponsor)"
+        target="_blank"
+        size="small"
+        color="primary"
+        rel="noopener">
+        Lees meer
+      </x-button>
+    </x-slot>
+  </x-sections.header>
 
-        <article class="sponsor-single__container">
-
-            {{-- Header --}}
-            <header class="sponsor-single__header">
-
-                {{-- Title bit --}}
-                <div class="sponsor-single__header-text">
-                    <h1 class="sponsor-single__header-title">{{ $sponsor->contents_title ?? $sponsor->name }}</h1>
-                    <p class="sponsor-single__header-subtitle">
-                        <x-icon icon="solid/ad" class="h-4 mr-2" />
-                        <span>Gesponsord door {{ $sponsor->name }}</span>
-                    </p>
-                </div>
-
-                {{-- Button bit --}}
-                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="btn btn--brand sponsor-single__header-button">
-                    Lees meer
-                </a>
-            </header>
-
-            {{-- Get content --}}
-            <div class="sponsor-single__content prose">
-                {!! $sponsor->content_html !!}
-            </div>
-
-            {{-- Call-to-action at the bottom --}}
-            <div class="sponsor-single__footer">
-                <span class="sponsor-single__footer-text">
-                    Interesse in {{ $sponsor->name }}?
-                </span>
-                <a href="{{ route('sponsors.link', compact('sponsor')) }}" target="_blank" rel="noopener" class="btn btn--brand sponsor-single__footer-button">
-                    Lees meer
-                </a>
-            </div>
-        </article>
-    </div>
-</div>
-@endsection
+  <x-container space="small" class="leading-loose prose">
+    {!! $sponsor->content_html !!}
+  </x-container>
+</x-page>

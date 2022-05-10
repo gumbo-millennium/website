@@ -1,6 +1,4 @@
-@extends('layout.main')
-
-@php
+<?php
 $title = 'Aankomende activiteiten';
 $subtitle = 'Binnenkort op de agenda bij Gumbo Millennium';
 if ($past) {
@@ -10,50 +8,60 @@ if ($past) {
 
 // Get first activity
 $firstActivity = $past ? null : $activities->first();
-@endphp
+?>
+<x-page title="{{ $title }}">
+  <x-sections.header
+    :title="$title"
+    :subtitle="$subtitle"
+    :crumbs="['/' => 'Home']"
+  >
+    <x-slot name="buttons">
+      @if ($past)
+        <x-button size="small" color="secondary"  href="{{ route('activity.index') }}">
+          Aankomende activiteiten
+        </x-button>
+      @else
+        <x-button size="small" color="secondary" href="{{ route('activity.index', ['past' => true]) }}">
+          Afgelopen activiteiten
+        </x-button>
+      @endif
+    </x-slot>
+  </x-sections.header>
 
-@section('title', "{$title} - Gumbo Millennium")
+  <x-container space="small">
+    @if (empty($activities))
+        <div class="text-center p-16">
+            <h2 class="text-2xl font-normal text-center">Geen activiteiten</h2>
+            <p class="text-center text-lg">De agenda is verdacht leeg. Kom later nog eens kijken.</p>
+        </div>
+    @else
+      @if (!$past)
+      <div class="text-lg mt-6">
+        <p class="text-lg font-medium">
+          Bij Gumbo Millennium zit je goed voor activiteiten. Van een themarijke soosavond tot een befaamd weekend weg met de gehele
+          vereniging, bij ons zit je elke week goed voor gezelligheid.
+        </p>
 
-@if ($firstActivity && $firstActivity->poster)
-@push('css')
-<style nonce="@nonce">
-.header--activity {
-    background-image: url("{{ image_asset($firstActivity->poster)->preset('banner') }}");
-}
-</style>
-@endpush
-@endif
+        <p class="mt-5">
+          Neem snel een kijkje in onze agenda hieronder.
+        </p>
+      </div>
+      @endif
 
-@section('content')
-{{-- Header --}}
-<div class="container">
-    <div class="page-hero">
-        <h1 class="page-hero__title">{{ $title }}</h1>
-        <p class="page-hero__lead">{{ $subtitle }}</p>
-    </div>
-</div>
-
-<div class="container">
-@if (empty($activities))
-    <div class="text-center p-16">
-        <h2 class="text-2xl font-normal text-center">Geen activiteiten</h2>
-        <p class="text-center text-lg">De agenda is verdacht leeg. Kom later nog eens kijken.</p>
-    </div>
-@else
-    {{-- Activity cards --}}
-    <div class="card-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-4">
+      <x-card-grid>
+        {{-- Add all events --}}
         @foreach ($activities as $activity)
-        {{-- <div class="card-grid__item"> --}}
-            @include('activities.bits.single')
-        {{-- </div> --}}
+        <x-cards.activity :activity="$activity" />
         @endforeach
-    </div>
+      </x-card-grid>
 
-    {{-- Links --}}
-    {{ $activities->links() }}
-@endif
-</div>
+      <div class="mt-5 w-full grid">
+        {{ $activities->links() }}
+      </div>
+    @endif
+  </x-container>
 
-<x-activities.ical-link />
+  <x-activities.ical-link />
 
-@endsection
+</x-page>
+

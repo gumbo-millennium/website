@@ -30,6 +30,7 @@ class ProductController extends Controller
                 'variants',
             ])
             ->whereHas('category', fn (Builder $query) => $query->whereVisible(true))
+            ->has('variants')
             ->orderByDesc('created_at')
             ->first();
     }

@@ -39,7 +39,7 @@ foreach (Config::get('gumbo.lustrum-domains') as $domain) {
 }
 
 // Home
-Route::get('/', 'PageController@homepage')->name('home');
+Route::get('/', [Controllers\HomepageController::class, 'show'])->name('home');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -186,7 +186,6 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 
     // Logout page
     Route::get('/logged-out', [Auth\LoginController::class, 'showLoggedout'])
-        ->middleware('signed')
         ->name('logout.done');
 });
 

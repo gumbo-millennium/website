@@ -14,9 +14,23 @@ menu:
         - title: Projectgroepen
           href: /projectgroepen
         - title: Disputen
-          href: /Disputen
+          href: /disputen
         - title: Sponsoren
-          href: /Sponsoren
+          href: /sponsoren
+      footer:
+        - title: 038 845 0100
+          href: tel:+31388450100
+          icon: solid/phone
+
+        - title: WhatsApp
+          href: https://wa.me/31388450100
+          icon: brands/whatsapp
+          small: true
+
+        - title: E-mail
+          href: mailto:bestuur@gumbo-millennium.nl
+          icon: regular/envelope
+          small: true
 
     - title: Voor leden
       items:

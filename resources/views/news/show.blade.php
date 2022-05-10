@@ -1,15 +1,20 @@
 @extends('layout.main')
 
 @php
-$authorName = optional($item->author)->public_name ?? 'Onbekend';
-$isSponsor = !empty($item->sponsor);
-if ($isSponsor) {
-    $authorName = $item->sponsor;
-}
-
-$postTimestamp = $item->published_at ?? $item->created_at;
-$postIso = $postTimestamp->toIso8601String();
-$postDate = $postTimestamp->isoFormat('D MMMM, Y');
+$stats = [
+  [
+    'label' => $item->published_at->isoFormat('D MMMM, Y'),
+    'icon' => 'regular/calendar',
+  ],
+  [
+    'label' => $item->author?->public_name ?? 'Onbekend',
+    'icon' => 'regular/user',
+  ],
+  $item->sponsor ? [
+    'label' => "Gesponsord door {$item->sponsor}",
+    'icon' => 'regular/handshake',
+  ] : null,
+];
 
 // Share links
 $itemUrl = route('news.show', ['item' => $item]);
@@ -25,58 +30,48 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
 @endphp
 
 @section('content')
-<article class="my-16">
-{{-- Header --}}
-<header class="container container--md">
-    {{-- Title --}}
-    <h1 class="text-3xl font-title font-normal mb-6">{{ $item->title }}</h1>
+<article>
+  <header>
+    <x-sections.header
+      :title="$item->title"
+      :crumbs="['/' => 'Home', '/nieuws' => 'Nieuws']"
+      :stats="$stats">
 
-    {{-- Author --}}
-    <div class="py-4 mb-5 border-gray-secondary-2 border-t border-b">
-        <div class="flex flex-row row items-center">
-            <div class="col mb-8 md:mb-0 md:w-7/12">
-                <p class="mb-0 font-bold">
-                    {{ $authorName }}
-                    @if ($isSponsor)
-                    <x-icon icon="solid/ad" class="ml-2" />
-                    @endif
-                </p>
-                <time timestamp="{{ $postIso }}" class="mb-0 text-gray-primary-1">{{ $postDate }}</time>
-            </div>
-            <div class="col md:w-5/12 flex flex-wrap flex-row items-center md:justify-end">
-                <p class="text-sm uppercase font-medium text-gray-primary-1 w-full md:w-auto md:mr-2 mb-0 leading-none">Delen:</p>
-                <a href="{{ $facebookLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Facebook">
-                    <x-icon icon="brands/facebook-f" class="h-4" />
-                </a>
-                <a href="{{ $twitterLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Twitter">
-                    <x-icon icon="brands/twitter" class="h-4" />
-                </a>
-                <a href="{{ $telegramLink }}" class="p-2 mr-2 text-gray-primary-1" aria-label="Delen op Telegram">
-                    <x-icon icon="brands/telegram" class="h-4" />
-                </a>
-                <a href="{{ $whatsappLink }}" class="p-2 text-gray-primary-1" aria-label="Delen op Whatsapp">
-                    <x-icon icon="brands/whatsapp" class="h-4" />
-                </a>
-            </div>
-        </div>
-    </div>
-</header>
+      {{-- Register share actions --}}
+      <x-slot name="buttons">
+        <x-button color="primary" href="{{ route('news.index') }}" data-action="share" size="small" class="flex items-center md:hidden">
+          <x-icon icon="solid/share-alt" class="h-5 mr-2" role="none" />
+          Delen
+        </x-button>
 
-{{-- Content --}}
-<div class="container container--md leading-loose">
+        <x-button color="outline" href="{{ $twitterLink }}" target="_blank" size="small" class="hidden items-center md:flex">
+          <x-icon icon="brands/twitter" class="h-5 mr-2" role="none" />
+          Tweet
+        </x-button>
+
+        <x-button color="outline" href="{{ $facebookLink }}" target="_blank" size="small" class="hidden items-center md:flex">
+          <x-icon icon="brands/facebook-f" class="h-5 mr-2" role="none" />
+          Facebook
+        </x-button>
+      </x-slot>
+    </x-sections.header>
+  </header>
+
+  {{-- Body --}}
+  <x-container space="small" class="leading-loose">
+    {{-- Headline first --}}
     @if ($item->headline)
-    <div class="mb-4">
+    <div class="mb-6">
         <p class="font-bold text-lg">
             {{ $item->headline }}
         </p>
     </div>
     @endif
 
+    {{-- Rest of the HTML --}}
     <div class="prose prose--narrow">
         {!! $item->html !!}
     </div>
-</div>
-
-{{-- End --}}
+  </x-container>
 </article>
 @endsection

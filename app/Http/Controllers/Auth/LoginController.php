@@ -65,8 +65,10 @@ class LoginController extends Controller
      */
     public function showLoggedout(Request $request): HttpResponse
     {
+        $next = $request->hasValidSignature() ? $request->input('next') : null;
+
         return Response::view('auth.logout', [
-            'next' => $request->input('next'),
+            'next' => $next,
         ]);
     }
 

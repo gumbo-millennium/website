@@ -56,6 +56,9 @@ abstract class BasePolicy extends BasicPolicy
         // Allow manifest
         $this->addDirective(Directive::MANIFEST, Keyword::SELF);
 
+        // Allow unsafe-eval, required for AlpineJS
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
+
         // Prevent mixed content from loading on production (testing has no HTTPS)
         if (App::isProduction()) {
             $this->addDirective(Directive::BLOCK_ALL_MIXED_CONTENT, Value::NO_VALUE);

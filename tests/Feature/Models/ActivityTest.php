@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Models;
 
+use App\Facades\Enroll;
 use App\Models\Activity;
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -118,5 +120,40 @@ class ActivityTest extends TestCase
             Activity::query()->whereInTheFuture()->pluck('id')->toArray(),
             'Failed asserting null value is treated as today',
         );
+    }
+
+    public function test_load_with_enrollments(): void
+    {
+        $this->markTestIncomplete("Doesn't seem to be reliable just yet");
+
+        [$user1, $user2] = User::factory()->count(2)->create();
+        $activity = Activity::factory()->withTickets()->create();
+        $ticket = $activity->tickets->first();
+
+        $this->actingAs($user1);
+        $enrollment1 = Enroll::createEnrollment($activity, $ticket);
+
+        $this->actingAs($user2);
+        $enrollment2 = Enroll::createEnrollment($activity, $ticket);
+
+        $this->assertTrue($enrollment1?->exists(), 'Failed to create enrollment for user 1');
+        $this->assertTrue($enrollment2?->exists(), 'Failed to create enrollment for user 2');
+
+        /** @var Activity $loadedActivity */
+        $loadedActivity = Activity::query()
+            ->withEnrollmentsFor($user1)
+            ->find($activity->id);
+
+        // Check if properly found
+        $this->assertNotNull($loadedActivity);
+        $this->assertTrue($loadedActivity->relationLoaded('enrollments'));
+
+        // Check if enrollment count is right
+        $this->assertCount(1, $loadedActivity->enrollments);
+
+        // Check if enrollment list is right
+        $this->assertEquals([
+            $enrollment1->id,
+        ], $loadedActivity->enrollments->pluck('id')->all());
     }
 }

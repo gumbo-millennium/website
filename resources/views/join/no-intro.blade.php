@@ -23,7 +23,7 @@
 @endif
 
 {{-- Add intro --}}
-<div class="mb-4">
+<div class="mb-4" data-intro-state="closed">
     <p class="leading-relaxed mb-2">
         Hallo daar!
     </p>

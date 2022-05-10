@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
 
     private const SHOP_FEATURES_FILE = 'assets/yaml/shop-features.yaml';
 
+    private const MENU_FILE = 'yaml/menu.yaml';
+
     /**
      * Singleton bindings.
      *
@@ -108,34 +110,30 @@ class AppServiceProvider extends ServiceProvider
 
         // Boot flash settings
         Flash::levels([
-            'info' => 'notice notice--info',
-            'error' => 'notice notice--warning',
-            'warning' => 'notice notice--warning',
-            'success' => 'notice notice--brand',
+            'info' => 'info',
+            'success' => 'success',
+            'warning' => 'warning',
+            'error' => 'danger',
+            'danger' => 'danger',
         ]);
 
-        // Load feature config
-        $this->registerFeatureConfig();
-
-        // Load version information
-        $this->registerVersionConfig();
+        if (! App::configurationIsCached()) {
+            $this->registerFileBasedConfig();
+            $this->registerVersionConfig();
+        }
     }
 
     /**
-     * Maps features from Yaml files to config.
+     * Maps configuration values from Yaml files to config.
      */
-    private function registerFeatureConfig(): void
+    private function registerFileBasedConfig(): void
     {
-        if (App::configurationIsCached()) {
-            return;
-        }
-
-        $fileMap = [
+        $featureFiles = [
             self::ACTIVITY_FEATURES_FILE => 'gumbo.activity-features',
             self::SHOP_FEATURES_FILE => 'gumbo.shop.features',
         ];
 
-        foreach ($fileMap as $file => $configKey) {
+        foreach ($featureFiles as $file => $configKey) {
             foreach (Yaml::parseFile(resource_path($file)) as $feature => $options) {
                 $options = array_merge([
                     'title' => null,
@@ -147,6 +145,15 @@ class AppServiceProvider extends ServiceProvider
                 Config::set("{$configKey}.{$feature}", $options);
             }
         }
+
+        $plainFiles = [
+            self::MENU_FILE => 'gumbo.layout',
+        ];
+
+        foreach ($plainFiles as $file => $configKey) {
+            $options = Yaml::parseFile(resource_path($file));
+            Config::set($configKey, array_merge(Config::get($configKey, []), $options));
+        }
     }
 
     /**
@@ -154,10 +161,6 @@ class AppServiceProvider extends ServiceProvider
      */
     private function registerVersionConfig(): void
     {
-        if (App::configurationIsCached()) {
-            return;
-        }
-
         $versionProcess = Process::fromShellCommandline('git log -1 --format=\'%h\'');
         $versionProcess->run();
 

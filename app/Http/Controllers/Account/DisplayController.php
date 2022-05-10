@@ -39,9 +39,7 @@ class DisplayController extends Controller
             $telegramName = BotUserLink::getName('telegram', $user->telegram_id);
         }
 
-        return response()
-            ->view('account.index', compact('user', 'telegramName'))
-            ->setPrivate();
+        return Response::view('account.index', compact('user', 'telegramName'));
     }
 
     /**
@@ -90,8 +88,6 @@ class DisplayController extends Controller
         // Render view
         return Response::view('account.urls', [
             'urls' => $urls->groupBy('group'),
-        ])
-            ->setPrivate()
-            ->setMaxAge(60);
+        ]);
     }
 }
