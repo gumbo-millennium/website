@@ -29,6 +29,7 @@
         <span class="text-sm">Bewerk album</span>
       </a>
       @elsecanany(['like', 'report'], $photo)
+      <!--
       <div class="inline-block text-center py-1 px-2 rounded border">
         <x-icon icon="solid/fist-raised" class="h-4 mr-2" />
         <span class="text-sm">Respect</span>
@@ -38,6 +39,7 @@
         <x-icon icon="solid/skull-crossbones" class="h-4 mr-2" />
         <span class="text-sm">Niet ok</span>
       </a>
+      -->
       @endcanany
     </div>
     @endif
