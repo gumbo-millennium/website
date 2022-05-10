@@ -1,36 +1,32 @@
-@extends('layout.main')
-
-@section('content')
-<x-title>
-    <h1>Gumbo's Grote Galerij™</h1>
-
-    <x-slot name="subtitle">
-      Lekker met je smoel in het album
+<x-page>
+  <x-sections.header
+    title="Gumbo's Grote Galerij™"
+    subtitle="Van zonnige actiefoto's tot duistere dronkenlapjes, je vind ze hier!"
+    :crumbs="['/' => 'Home']"
+    >
+    @can('create', App\Models\Gallery\Album::class)
+    <x-slot name="buttons">
+      <x-button href="{{ route('gallery.album.create') }}" size="small">
+        <x-icon icon="solid/plus" class="h-4 mr-2" />
+        Nieuw album
+      </x-button>
     </x-slot>
-</x-title>
+    @endcan
+  </x-sections.header>
 
-<div class="container">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-    @forelse ($albums as $album)
-      <x-gallery.album-tile :album="$album" />
-    @empty
-      <div class="border-2 border-gray-200 rounded-lg p-8 text-center col-span-4">
-        <p class="text-gray-400 text-4xl">
-          Er zijn nog geen albums
-        </p>
-      </div>
-    @endforelse
-  </div>
-</div>
-
-{{-- @can('create', App\Models\Gallery\Album::class) --}}
-<div class="container mt-4">
-  <div class="flex flex-row gap-4">
-    <a href="{{ route('gallery.album.create') }}" class="btn btn--small btn-brand flex items-center">
-      <x-icon icon="solid/plus" class="h-4 mr-2" />
-      Nieuw album
-    </a>
-  </div>
-</div>
-{{-- @endcan --}}
-@endsection
+  <x-container>
+    @if ($albums->isNotEmpty())
+    <x-card-grid>
+      @foreach ($albums as $album)
+        <x-cards.album :album="$album" />
+      @endforeach
+    </x-card-grid>
+    @else
+    <div class="border-2 border-gray-200 rounded-lg p-8 text-center col-span-4">
+      <p class="text-gray-400 text-4xl">
+        Er zijn nog geen albums
+      </p>
+    </div>
+    @endif
+  </x-container>
+</x-page>

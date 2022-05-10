@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Contracts\SponsorService;
-use App\Http\Controllers\Shop\ProductController;
-use App\Models\Activity;
-use App\Models\Enrollment;
 use App\Models\Page;
-use App\Models\Sponsor;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
 
 class PageController extends Controller
 {
@@ -23,67 +19,6 @@ class PageController extends Controller
     public function __construct(Repository $cache)
     {
         $this->cache = $cache;
-    }
-
-    /**
-     * Renders the homepage.
-     *
-     * @return Response
-     */
-    public function homepage(SponsorService $sponsorService, Request $request)
-    {
-        // Get sponsors
-        $homeSponsors = Sponsor::query()
-            ->whereAvailable()
-            ->inRandomOrder()
-            ->take(4)
-            ->get();
-
-        // Mark 4 sponsors as shown
-        $homeSponsors->each->increment('view_count');
-
-        // Hide sponsors on the page if some are present
-        ($homeSponsors->count() === 4) and $sponsorService->hideSponsor();
-
-        // Has existing users
-        $user = $request->user();
-        $member = $user && $user->is_member ? 'member' : 'guest';
-
-        // Get next set of events
-        // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
-        $nextEvents = $this->cache->remember("home.events.{$member}", now()->addMinutes(10), static function () {
-            return Activity::query()
-                ->whereAvailable()
-                ->where('start_date', '>', now())
-                ->whereNull('cancelled_at')
-                ->orderBy('start_date')
-                ->take(2)
-                ->get();
-        });
-
-        // Get enrollments
-        $enrollments = [];
-        if ($request->user() && $nextEvents) {
-            $enrollments = Enrollment::query()
-                ->whereUserId($request->user()->id)
-                ->where('activity_id', 'in', $nextEvents->pluck('id'))
-                ->orderBy('created_at', 'asc')
-                ->get()
-                ->keyBy('activity_id');
-        }
-
-        $advertisedProduct = ProductController::getAdvertisedProduct();
-
-        // Return view
-        return response()
-            ->view('content.home.layout', [
-                'homeSponsors' => $homeSponsors,
-                'nextEvents' => $nextEvents,
-                'enrollments' => $enrollments,
-                'advertisedProduct' => $advertisedProduct,
-            ])
-            ->setPublic()
-            ->setMaxAge(60 * 15); // Cache for 15 min max
     }
 
     /**
@@ -118,12 +53,11 @@ class PageController extends Controller
             'slug' => $group,
         ])->first();
 
-        return response()
-            ->view('content.group', compact('pages', 'page', 'group'))
-            ->setLastModified($lastModified)
-            ->setMaxAge(now()->addHours(6)->diffInSeconds())
-            ->setSharedMaxAge(now()->addHour()->diffInSeconds())
-            ->setPublic();
+        return Response::view('content.group', [
+            'pages' => $pages,
+            'page' => $page,
+            'group' => $group,
+        ])->setLastModified($lastModified);
     }
 
     /**
@@ -160,11 +94,8 @@ class PageController extends Controller
         ]);
 
         // Show view
-        return response()
-            ->view('content.page', compact('page'))
-            ->setLastModified($page->updated_at)
-            ->setMaxAge(now()->addHours(6)->diffInSeconds())
-            ->setSharedMaxAge(now()->addHour()->diffInSeconds())
-            ->setPublic();
+        return Response::view('content.page', [
+            'page' => $page,
+        ])->setLastModified($page->updated_at);
     }
 }

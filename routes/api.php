@@ -39,11 +39,3 @@ Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name(
 
 // Register ical route
 Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->name('calendar.show');
-
-// Filepond
-Route::prefix('/gallery')->name('gallery.')->group(function () {
-    Route::prefix('/filepond/{album}')->name('filepond.')->group(static function () {
-        Route::post('/process', [Api\GalleryFilePondController::class, 'handleProcess'])->name('process');
-        Route::delete('/revert', [Api\GalleryFilePondController::class, 'handleRevert'])->name('revert');
-    });
-});

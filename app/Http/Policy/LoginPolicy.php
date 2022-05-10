@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Policy;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
 
@@ -24,6 +26,23 @@ class LoginPolicy extends BasePolicy
         parent::configure();
 
         // Disable all scripts
-        $this->directives[Directive::SCRIPT] = [Keyword::SELF];
+        $this->directives[Directive::SCRIPT] = [];
+
+        // Add some exceptions
+        $this->addDirective(Directive::SCRIPT, Keyword::SELF);
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
+        $this->addDirective(Directive::SCRIPT, rtrim(URL::to('/'), '/'));
+
+        if (App::isProduction() || ! App::hasDebugModeEnabled()) {
+            $this->addNonceForDirective(Directive::SCRIPT);
+
+            return;
+        }
+
+        // Allow unsafe inline
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);
+
+        // Allow data images
+        $this->addDirective(Directive::IMG, 'data:');
     }
 }

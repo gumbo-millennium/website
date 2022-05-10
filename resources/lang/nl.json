@@ -319,5 +319,8 @@
   "No changes have been made, album left unchanged": "Er zijn geen wijzigingen gemaakt, album is niet aangepast",
   "and": "en",
 
+  "Last updated": "Laatst bijgewerkt",
+  ":count photo|:count photos": ":count foto|:count foto's",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

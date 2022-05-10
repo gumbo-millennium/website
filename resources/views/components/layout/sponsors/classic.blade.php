@@ -1,5 +1,5 @@
 @php
-$logo = $sponsorService->toSvg($sponsor, [
+$logo = Sponsors::toSvg($sponsor, [
     'class' => 'sponsor__simple-logo fill-current',
     'title' => $sponsor->name,
     'aria-label' => "Logo van {$sponsor->name}"

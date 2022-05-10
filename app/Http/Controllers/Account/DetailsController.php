@@ -53,8 +53,7 @@ class DetailsController extends Controller
             'user' => $user,
             'form' => $form,
             'isLinked' => $isLinked,
-        ])
-            ->setPrivate();
+        ]);
     }
 
     /**

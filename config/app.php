@@ -222,6 +222,7 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
+        'Sponsors' => App\Facades\Sponsors::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'Str' => App\Helpers\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,

@@ -18,11 +18,11 @@
     @stack('main.styles')
 
     {{-- Javascript (deferred) --}}
-    @section('main.scripts')
     <script src="{{ mix('manifest.js') }}" defer></script>
     <script src="{{ mix('vendor.js') }}" defer></script>
     <script src="{{ mix('app.js') }}" defer></script>
-    @show
+
+    @yield('main.scripts')
 </head>
 
 <body>
@@ -31,17 +31,16 @@
         <a href="#content" class="a11y-skip">Ga direct naar inhoud</a>
     </div>
 
-    <x-layout.user-bar />
-
     @section('main.header')
     <x-layout.header />
-    @if (Auth::user()?->hasVerifiedEmail() != true)
-        <x-layout.verify-banner />
-    @endif
     @if (($hideFlash ?? false) !== true)
         <x-layout.flash-message />
     @endif
     @show
+
+    @if (Auth::user()?->hasVerifiedEmail() != true)
+    <x-layout.verify-banner />
+    @endif
 
     {{-- Main content --}}
     <main class="main" id="content">
@@ -49,15 +48,7 @@
     </main>
 
     {{-- Sponsor --}}
-    @if ($sponsorService->hasSponsor())
-        @php
-        $sponsor = $sponsorService->getSponsor();
-        @endphp
-        <aside>
-            @includeWhen($sponsor->is_classic, 'layout.sponsors.classic', compact('sponsor', 'sponsorService'))
-            @includeWhen(!$sponsor->is_classic, 'layout.sponsors.modern', compact('sponsor', 'sponsorService'))
-        </aside>
-    @endif
+    <x-layout.sponsor />
 
     {{-- Footer --}}
     @section('main.footer')

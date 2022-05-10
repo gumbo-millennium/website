@@ -14,7 +14,7 @@ $startFormat = $activity->start_date->month !== $activity->end_date->month ? $en
 @include('join.partials.form-errors')
 
 {{-- Add intro --}}
-<div class="mb-4">
+<div class="mb-4" data-intro-state="open">
     <p class="leading-relaxed mb-2">
         Zie jij het wel zitten om van {{ $activity->start_date->isoFormat($startFormat) }} t/m {{ $activity->end_date->isoFormat($endFormat) }} mee te doen met de introdutieweek
         van Gumbo Millennium? Vul dan hieronder je persoonsgegevens in.

@@ -1,26 +1,32 @@
-<div class="bg-brand-primary-2 font-normal text-light">
-    <form class="container py-1 flex flex-row items-center" method="POST" action="{{ route('verification.resend') }}">
-        @csrf
-
-        {{-- Icon --}}
-        <x-icon icon="solid/exclamation-triangle" class="h-4 mr-4 my-1" />
-
-        {{-- Title --}}
-        <h3 class="mr-4 flex-grow my-1">
-            <span class="hidden md:block">Je moet je e-mailadres nog bevestigen!</span>
-            <span class="block md:hidden">Bevestig je e-mailadres</span>
-        </h3>
-
-        {{-- Link --}}
-        <button
-          type="submit"
-          title="Opnieuw sturen"
-          class="appearance-none no-underline bg-brand-primary-3 px-4 py-1 rounded text-light hover:text-light hover:bg-brand-secondary-3 border border-light flex flex-row items-center"
-        >
-          <x-icon icon="solid/redo" class="icon h-4 md:mr-2 my-1" role="presentation" aria-label="Opnieuw sturen" />
-          <span class="hidden md:block">
-              Opnieuw sturen
+  <div class="sticky top-0 inset-x-0 pb-2 sm:pt-5 z-10 h-10 -mb-10">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="p-2 rounded-lg bg-brand-600 shadow-lg sm:p-3">
+        <div class="flex flex-row items-center gap-3">
+          {{-- Icon --}}
+          <span class="hidden sm:flex p-2 rounded-lg bg-brand-800">
+            <div class="w-6 text-center">
+              <x-icon icon="solid/bell" class="h-6 text-white" />
+            </div>
           </span>
-      </button>
-    </form>
-</div>
+
+          {{-- Label --}}
+          <p class="font-medium text-white truncate flex-grow w-0 ml-3 sm:ml-0">
+            <span class="inline md:hidden">
+              Verifieer je e-mailadres!
+            </span>
+            <span class="hidden md:inline">
+              Hey {{ Auth::user()->first_name }}, bevestig je nog even je e-mailadres?
+            </span>
+          </p>
+
+          <form method="post" action="{{ url('auth/email/resend') }}" class="flex-shrink-0">
+            @csrf
+            <x-button type="submit" color="white" size="small">
+              <x-icon icon="solid/redo" class="h-4 sm:hidden" role="none" />
+              <span class="sr-only sm:not-sr-only">Opnieuw sturen</span>
+            </x-button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

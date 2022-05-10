@@ -52,7 +52,7 @@ class TelegramController extends Controller
         return Response::view('account.telegram-connect', [
             'telegramName' => $username,
             'telegramId' => $telegramId,
-        ])->setPrivate()->setMaxAge(30);
+        ]);
     }
 
     /**

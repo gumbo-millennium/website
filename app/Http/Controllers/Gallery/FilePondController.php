@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Gallery;
 
 use App\Enums\PhotoVisibility;
 use App\Helpers\Str;
@@ -19,15 +19,20 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class GalleryFilePondController extends Controller
+class FilePondController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Handle a Filepond 'process', which is an upload. Will be saved as pending and stored in a special
      * director that's regularly pruned.
      */
     public function handleProcess(Request $request, Album $album): HttpResponse
     {
-        // $this->authorize('upload', $album);
+        $this->authorize('upload', $album);
 
         // Check request
         $request->validate([

@@ -39,7 +39,7 @@ foreach (Config::get('gumbo.lustrum-domains') as $domain) {
 }
 
 // Home
-Route::get('/', 'PageController@homepage')->name('home');
+Route::get('/', [Controllers\HomepageController::class, 'show'])->name('home');
 
 // Sitemap
 Route::get('/sitemap.xml', 'SitemapController@index')->name('sitemap');
@@ -55,7 +55,7 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 /**
  * Plazacam routes.
  */
-Route::get('plazacam/{image}', 'PlazaCamController@image')
+Route::get('plazacam/{image}', [Controllers\Api\WebcamController::class, 'show'])
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
@@ -186,7 +186,6 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 
     // Logout page
     Route::get('/logged-out', [Auth\LoginController::class, 'showLoggedout'])
-        ->middleware('signed')
         ->name('logout.done');
 });
 
@@ -307,6 +306,12 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
     Route::get('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'edit'])->name('album.edit');
     Route::patch('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'update']);
     Route::delete('/{album}/delete', [Controllers\Gallery\AlbumController::class, 'destroy'])->name('album.delete');
+
+    // Filepond
+    Route::prefix('/filepond/{album}')->name('filepond.')->group(static function () {
+        Route::post('/process', [Controllers\Gallery\FilePondController::class, 'handleProcess'])->name('process');
+        Route::delete('/revert', [Controllers\Gallery\FilePondController::class, 'handleRevert'])->name('revert');
+    });
 });
 
 // Common mistakes handler

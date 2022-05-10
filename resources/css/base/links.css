@@ -2,10 +2,10 @@
   Link formatting
 */
 
-a {
+.prose a {
   @apply text-dark underline;
 }
 
-a:hover, a:active {
+.prose a:hover, .prose a:active {
   @apply text-gray-primary-3 no-underline;
 }
