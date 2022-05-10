@@ -3,7 +3,7 @@
     {{-- Icon --}}
     <div class="flex-shrink-0" role="none">
       <div class="w-5">
-        <x-icon :icon='"solid/{$iconName}"' class="h-5 {{ $iconColor }}" />
+        <x-icon :icon='$iconName' class="h-5 {{ $iconColor }}" />
       </div>
     </div>
 

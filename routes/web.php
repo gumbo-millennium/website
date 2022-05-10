@@ -306,6 +306,12 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
     Route::get('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'edit'])->name('album.edit');
     Route::patch('/{album}/edit', [Controllers\Gallery\AlbumController::class, 'update']);
     Route::delete('/{album}/delete', [Controllers\Gallery\AlbumController::class, 'destroy'])->name('album.delete');
+
+    // Filepond
+    Route::prefix('/filepond/{album}')->name('filepond.')->group(static function () {
+        Route::post('/process', [Controllers\Gallery\FilePondController::class, 'handleProcess'])->name('process');
+        Route::delete('/revert', [Controllers\Gallery\FilePondController::class, 'handleRevert'])->name('revert');
+    });
 });
 
 // Common mistakes handler

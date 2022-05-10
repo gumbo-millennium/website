@@ -44,8 +44,8 @@
 
       <div data-content="filepond" data-scope="gallery"
         data-max-filesize="{{ config('gumbo.gallery.max_photo_size') }}"
-        data-process-url="{{ route('api.gallery.filepond.process', $album) }}"
-        data-revert-url="{{ route('api.gallery.filepond.revert', $album) }}"
+        data-process-url="{{ route('gallery.filepond.process', $album) }}"
+        data-revert-url="{{ route('gallery.filepond.revert', $album) }}"
         data-csrf="{{ csrf_token() }}">
         <script type="application/json" data-content="pending-uploads">@json($pendingPhotos, JSON_PRETTY_PRINT)</script>
         <input name="file" multiple required accept="image/jpeg" type="file" class="hidden" />

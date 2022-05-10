@@ -200,8 +200,8 @@ class AlbumController extends Controller
         }
 
         flash()->success(__('Successfully uploaded :success of :total photos', [
-            ':success' => $updatedPhotoCount,
-            ':total' => $photos->count(),
+            'success' => $updatedPhotoCount,
+            'total' => $photos->count(),
         ]));
 
         return Response::redirectToRoute('gallery.album', $album);
