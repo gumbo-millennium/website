@@ -26,15 +26,13 @@ class PhotoVisibilityFilter extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        dd('Fck');
         $visibilities = Collection::make([
             PhotoVisibility::Visible,
             $value['hidden'] ? PhotoVisibility::Hidden : null,
         ])->filter()->values();
 
         return $query
-            ->where(fn ($query) => $query->whereIn('visibility', $visibilities))
-            ->dd();
+            ->where(fn ($query) => $query->whereIn('visibility', $visibilities));
     }
 
     /**
