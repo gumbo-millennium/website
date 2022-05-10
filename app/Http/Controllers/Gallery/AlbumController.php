@@ -16,6 +16,7 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -83,7 +84,7 @@ class AlbumController extends Controller
 
         flash()->success(__('Your album is created, now go and add some photos!'));
 
-        return redirect()->route('gallery.album.upload', $album);
+        return Response::redirectToRoute('gallery.album.upload', $album);
     }
 
     public function show(Request $request, Album $album): HttpResponse
@@ -166,6 +167,8 @@ class AlbumController extends Controller
 
         foreach ($photos as $photo) {
             if (! Str::startsWith($photo->path, $fromPath)) {
+                Log::warning("Skipping {$photo->path} because it doesn't start with {$fromPath}, likely not uploaded");
+
                 continue;
             }
 
@@ -176,10 +179,13 @@ class AlbumController extends Controller
                 : $toDisk->put($newPhotoPath, $fromDisk->read($photo->path));
 
             if (! $moveOk) {
+                Log::warning("Failed to move file from {$fromDiskName}:{$photo->path} to {$toDiskName}:{$newPhotoPath}");
+
                 continue;
             }
 
             if ($moveOk && ! $sameDisk) {
+                Log::info("Moved photo to {$toDiskName}, deleting {$fromDiskName}:{$photo->path}");
                 $fromDisk->delete($photo->path);
             }
 
@@ -187,6 +193,8 @@ class AlbumController extends Controller
 
             $photo->visibility = PhotoVisibility::Visible;
             $photo->save();
+
+            Log::debug("Updated photo {$photo->id} to {$photo->path}");
 
             $updatedPhotoCount++;
         }
