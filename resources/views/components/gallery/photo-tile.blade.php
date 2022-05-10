@@ -24,7 +24,11 @@
 
     @if(! $readOnly)
     <div class="flex items-center flex-row gap-2">
-      @canany(['like', 'report'], $photo)
+      @canany(['edit'], $photo)
+      <a href="{{ route('gallery.album.edit', $photo->album) }}" class="inline-block py-1 px-2 rounded border">
+        <span class="text-sm">Bewerk album</span>
+      </a>
+      @elsecanany(['like', 'report'], $photo)
       <div class="inline-block text-center py-1 px-2 rounded border">
         <x-icon icon="solid/fist-raised" class="h-4 mr-2" />
         <span class="text-sm">Respect</span>
@@ -33,10 +37,6 @@
       <a href="{{ route('gallery.photo.report', $photo) }}" class="inline-block text-center py-1 px-2 rounded border">
         <x-icon icon="solid/skull-crossbones" class="h-4 mr-2" />
         <span class="text-sm">Niet ok</span>
-      </a>
-      @elsecanany(['edit'], $photo)
-      <a href="{{ route('gallery.album.edit', $photo->album) }}" class="inline-block py-1 px-2 rounded border">
-        <span class="text-sm">Bewerk album</span>
       </a>
       @endcanany
     </div>
