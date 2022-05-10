@@ -55,7 +55,7 @@ Route::get('/nieuws/{item}', 'NewsController@show')->name('news.show');
 /**
  * Plazacam routes.
  */
-Route::get('plazacam/{image}', 'PlazaCamController@image')
+Route::get('plazacam/{image}', [Controllers\Api\WebcamController::class, 'show'])
     ->middleware(['auth', 'member'])
     ->name('plazacam');
 
