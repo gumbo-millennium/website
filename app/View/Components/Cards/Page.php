@@ -34,7 +34,7 @@ class Page extends Component
         $page = $this->page;
 
         return View::make('components.card', [
-            'href' => route('group.show', $page->only('group', 'slug')),
+            'href' => $page->url,
             'image' => $page->cover,
             'lead' => $page->category,
             'title' => $page->name,
