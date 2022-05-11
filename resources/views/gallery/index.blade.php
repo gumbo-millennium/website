@@ -1,7 +1,7 @@
 <x-page>
   <x-sections.header
     title="Gumbo's Grote Galerij™"
-    subtitle="Van zonnige actiefoto's tot duistere dronkenlapjes, je vind ze hier!"
+    subtitle="Van zonnige actiefoto's tot duistere dronkenlapjes, je vindt ze hier!"
     :crumbs="['/' => 'Home']"
     >
     @can('create', App\Models\Gallery\Album::class)
