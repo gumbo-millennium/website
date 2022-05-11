@@ -86,6 +86,9 @@ class Kernel extends ConsoleKernel
         // Remove expired filepond items every four hours, and remove orphanned Photos every day
         $schedule->command('gumbo:prune-gallery-filepond')->hourly();
         $schedule->command('gumbo:prune-gallery-filepond', ['--prune', '--clean'])->dailyAt('03:14');
+
+        // Auto-remove old Glide images
+        $schedule->command('gumbo:prune-glide-cache')->daily();
     }
 
     /**
