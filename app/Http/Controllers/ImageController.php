@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException as FilesystemFileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use League\Glide\Filesystem\FileNotFoundException as GlideFileNotFoundException;
 use League\Glide\Responses\LaravelResponseFactory;
 use League\Glide\ServerFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -40,7 +40,7 @@ class ImageController extends Controller
 
         try {
             return $server->getImageResponse($path, $request->all());
-        } catch (FileNotFoundException | FilesystemFileNotFoundException) {
+        } catch (FileNotFoundException | GlideFileNotFoundException) {
             return Response::noContent(HttpResponse::HTTP_NOT_FOUND);
         }
     }
