@@ -43,4 +43,5 @@ class ImageController extends Controller
         } catch (FileNotFoundException | FilesystemFileNotFoundException) {
             return Response::noContent(HttpResponse::HTTP_NOT_FOUND);
         }
+    }
 }
