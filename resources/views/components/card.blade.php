@@ -11,7 +11,7 @@
 <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
   <div class="flex-shrink-0">
     @if ($image)
-    <picture class="h-48 w-full">
+    <picture class="h-48 w-full bg-gray-200">
       <source src="{{ image_asset($image)->preset('tile')->webp() }}" type="image/webp" />
       <img src="{{ image_asset($image)->preset('tile') }}" alt="{{ $title }}" class="h-48 w-full object-cover" />
     </picture>
