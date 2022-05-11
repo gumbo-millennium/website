@@ -94,7 +94,7 @@ class Category extends SluggableModel
         return $this->hasMany(Product::class);
     }
 
-    public function getValidImageAttribute(): Image
+    public function getValidImageAttribute(): ?string
     {
         $productWithImage = $this->products()
             // Only find visible
@@ -111,14 +111,11 @@ class Category extends SluggableModel
             );
 
         // Also just find the first image
-        $firstProduct = $this->products->where('visible', true);
-
-        $fallback = Image::make(URL::to('/images/geen-foto.jpg'));
+        $firstProduct = $this->products()->where('visible', true);
 
         // We make the first()-call here, so prevent excessive queries
-        return optional($productWithImage->first())->valid_image
-            ?? optional($firstProduct->first())->valid_image
-            ?? $fallback;
+        return $productWithImage->first()?->valid_image
+            ?? $firstProduct->first()?->valid_image;
     }
 
     public function getValidImageUrlAttribute(): string

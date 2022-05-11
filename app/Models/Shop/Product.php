@@ -9,6 +9,7 @@ use App\Helpers\Arr;
 use App\Models\SluggableModel;
 use App\Models\Traits\IsUuidModel;
 use Database\Factories\Shop\ProductFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -131,13 +132,22 @@ class Product extends SluggableModel
 
     public function getValidImageAttribute(): Image
     {
-        return $this->image_path ? $this->image : Image::make(url((string) mix('images/geen-foto.jpg')));
+        return $this->image_path ? $this->image : Image::make(null);
     }
 
     public function getDefaultVariantAttribute(): ?ProductVariant
     {
         return $this->variants
             ->first();
+    }
+
+    public function getUrlAttribute(): string
+    {
+        if ($variant = $this->default_variant) {
+            return route('shop.product-variant', [$this, $variant]);
+        }
+
+        return route('shop.product', $this);
     }
 
     public function getDescriptionHtmlAttribute(): ?HtmlString
@@ -189,6 +199,13 @@ class Product extends SluggableModel
         }
 
         return $this->image->getUrl();
+    }
+
+    public function scopeVisible(Builder $query): void
+    {
+        $query
+            ->where('visible', true)
+            ->whereHas('variants');
     }
 
     private function getEnrichedFeatures(): Collection

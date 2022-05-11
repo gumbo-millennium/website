@@ -154,7 +154,7 @@ class FileBundle extends SluggableModel implements HasMedia
             return null;
         }
 
-        return route('files.show', ['bundle' => $this]);
+        return route('files.show', $this);
     }
 
     /**
@@ -172,7 +172,6 @@ class FileBundle extends SluggableModel implements HasMedia
         $this
             ->addMediaCollection('default')
             ->useDisk('local')
-            // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
             ->registerMediaConversions(function (Media $media) use ($variants, $size) {
                 foreach ($variants as $name => $mul) {
                     $this->addMediaConversion($name)

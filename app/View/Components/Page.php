@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\View\Components;
 
+use Artesaos\SEOTools\Facades\SEOMeta;
 use Closure;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\Component;
@@ -37,9 +38,10 @@ class Page extends Component
             if (last($title) !== 'Gumbo Millennium') {
                 $title[] = 'Gumbo Millennium';
             }
-            $title = implode(' • ', $title);
+            $title = implode(' - ', $title);
         }
 
+        SEOMeta::setTitle($title, false);
         $this->title = $title;
         ;
 

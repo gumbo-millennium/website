@@ -52,18 +52,6 @@ $accountLinks = array_filter([
         @if ($user = Auth::user())
         {{-- Dropdown with account actions --}}
         <x-layout.header.menu-dropdown :items="$accountLinks">
-          {{-- <x-slot name="header">
-            <div class="flex items-center max-w-sm">
-              <div class="rounded-full h-10 w-10 bg-brand-500 flex justify-center items-center flex-shrink-0">
-                <x-icon icon="solid/user" class="h-6 text-white" />
-              </div>
-              <div class="ml-3">
-                <div class="text-base font-medium text-gray-800">{{ $user->name }}</div>
-                <div class="text-sm font-medium text-gray-500">{{ $user->email }}</div>
-              </div>
-            </div>
-          </x-slot> --}}
-
           {{ $user->first_name }}
 
           <x-slot name="footer">
@@ -89,6 +77,16 @@ $accountLinks = array_filter([
         <a href="{{ route('join.form')}}"
           class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand-600 hover:bg-brand-700">
           Word lid
+        </a>
+        @endif
+        @if (Cart::getContent()->count() > 0)
+        <a href="{{ route('shop.cart') }}"
+          class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand-600 hover:bg-brand-700">
+          <div class="mr-3 w-6">
+            <x-icon icon="solid/shopping-cart" class="h-6" />
+          </div>
+
+          {{ Str::price(Cart::getTotal()) }}
         </a>
         @endif
       </div>

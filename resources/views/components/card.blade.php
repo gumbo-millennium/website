@@ -16,7 +16,7 @@
       <img src="{{ image_asset($image)->preset('tile') }}" alt="{{ $title }}" class="h-48 w-full object-cover" />
     </picture>
     @else
-    <x-empty-image class="h-48" />
+    <x-empty-state.image class="h-48" />
     @endif
   </div>
   <div class="flex-1 bg-white p-6 flex flex-col justify-between">

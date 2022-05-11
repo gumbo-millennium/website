@@ -32,16 +32,16 @@ $stats = array_filter([
   </x-sections.header>
 
 <x-container>
+  @if ($album->photos->isNotEmpty())
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    @forelse ($album->photos as $photo)
-      <x-gallery.photo-tile :photo="$photo" />
-    @empty
-      <div class="border-2 border-gray-200 rounded-lg p-8 text-center col-span-4">
-        <p class="text-gray-400 text-4xl">
-          Er zijn nog geen foto's in dit album
-        </p>
-      </div>
-    @endforelse
+    @foreach ($album->photos as $photo)
+    <x-gallery.photo-tile :photo="$photo" />
+    @endforeach
   </div>
+  @else
+  <x-empty-state.message title="Leeg album" icon="solid/images">
+    Er zijn nog geen foto's in dit album
+  </x-empty-state.message>
+  @endif
 </x-container>
 </x-page>

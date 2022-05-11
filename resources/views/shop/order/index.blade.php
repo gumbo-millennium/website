@@ -1,20 +1,16 @@
-@extends('shop.layout')
+<?php
+$user = Auth::user();
+?>
+<x-page :title="['Bestellingen', 'Webshop']">
+  <x-sections.header
+    :crumbs="[
+      '/' => 'Home',
+      route('shop.home') => 'Webshop',
+    ]"
+    title="Bestellingen"
+  />
 
-@php($user = Auth::user())
-
-{{-- Header --}}
-@section('shop-title', "Jouw bestellingen")
-
-@section('shop-crumbs')
-{{-- Breadcrumbs --}}
-<x-breadcrumbs :items="[
-    route('shop.home') => 'Shop',
-    'Bestellingen',
-]" />
-@endsection
-
-{{-- Main --}}
-@section('shop-content')
+  <x-container space="small">
 <p class="mb-8 text-lg">
     Hieronder staan jouw bestellingen, wil je een nieuwe bestelling plaatsen? <a href="{{ route('shop.home') }}">Bekijk dan de shop!</a>
 </p>
@@ -59,4 +55,5 @@
     </div>
     @endif
 </div>
-@endsection
+  </x-container>
+</x-page>

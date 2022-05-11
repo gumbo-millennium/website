@@ -7,7 +7,7 @@
       <source srcset="{{ (clone $url)->webp()->dpr(2) }} 2x, {{ (clone $url)->webp() }}" type="image/webp" />
       <img src="{{ $url }}" class="h-64 w-full object-cover rounded-t" />
     @else
-    <x-empty-image class="h-64 w-full rounded-t" />
+    <x-empty-state.image class="h-64 w-full rounded-t" />
     @endif
   </picture>
 

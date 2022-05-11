@@ -1,25 +1,24 @@
-@extends('shop.layout')
+<x-page :title="[$category->name, 'Webshop']">
+  <x-sections.header
+    :crumbs="[
+      '/' => 'Home',
+      route('shop.home') => 'Webshop',
+    ]"
+    :title="$category->name"
+    :subtitle="$category->description"
+    />
 
-{{-- Header --}}
-@section('shop-title', $category->name)
-
-@section('shop-crumbs')
-{{-- Breadcrumbs --}}
-<x-breadcrumbs :items="[
-    route('shop.home') => 'Shop',
-    $category->name,
-]" />
-@endsection
-
-{{-- Main --}}
-@section('shop-content')
-<div class="row">
-    @foreach ($products as $product)
-    <div class="col col-12 md:col-6 lg:col-4">
-        <div class="mb-4 relative">
-            <x-shop.product-card :product="$product" />
-        </div>
-    </div>
-    @endforeach
-</div>
-@endsection
+  <x-container space="small">
+    @if ($products->isNotEmpty())
+    <x-card-grid>
+      @foreach ($products as $product)
+      <x-cards.shop-product :product="$product" />
+      @endforeach
+    </x-card-grid>
+    @else
+    <x-empty-state.message title="Geen producten beschikbaar">
+      Er zijn helaas momenteel geen producten beschikbaar in deze categorie.
+    </x-empty-state.message>
+    @endif
+  </x-container>
+</x-page>

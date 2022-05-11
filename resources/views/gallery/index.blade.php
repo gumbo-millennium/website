@@ -22,11 +22,9 @@
       @endforeach
     </x-card-grid>
     @else
-    <div class="border-2 border-gray-200 rounded-lg p-8 text-center col-span-4">
-      <p class="text-gray-400 text-4xl">
-        Er zijn nog geen albums
-      </p>
-    </div>
+    <x-empty-state.message title="Geen albums">
+      Er zijn nog geen albums
+    </x-empty-state.message>
     @endif
   </x-container>
 </x-page>

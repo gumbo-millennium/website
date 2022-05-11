@@ -10,7 +10,7 @@
         <img src="{{ $url }}" class="max-h-[400px] h-full w-full object-cover rounded" />
       </picture>
       @else
-      <x-empty-image class="h-64 w-full rounded-t" />
+      <x-empty-state.image class="h-64 w-full rounded-t" />
       @endif
     </div>
     <div class="absolute inset-0 flex items-center justify-center">

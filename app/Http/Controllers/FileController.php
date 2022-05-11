@@ -23,7 +23,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Spatie\MediaLibrary\Support\MediaStream;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
@@ -112,9 +111,8 @@ class FileController extends Controller
      */
     public function show(FileBundle $bundle): HttpResponse
     {
-        if (! $bundle->is_available) {
-            throw new NotFoundHttpException();
-        }
+        // Fail if invalid sorting
+        abort_unless($bundle->is_available, HttpResponse::HTTP_NOT_FOUND);
 
         // Load extras
         $bundle->loadMissing('media', 'category');
