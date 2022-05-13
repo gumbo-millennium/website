@@ -21,11 +21,11 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "felixfbecker.php-debug",
         "bmewburn.vscode-intelephense-client",
-        "william-voyek.vscode-nginx",
-        "sleistner.vscode-fileutils",
+        "felixfbecker.php-debug",
         "GitHub.copilot",
+        "sleistner.vscode-fileutils",
+        "william-voyek.vscode-nginx",
     ],
 
     // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
