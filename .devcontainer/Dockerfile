@@ -36,7 +36,7 @@ RUN dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb \
     && apt-get update \
     && apt-get install -y mysql-client \
     && apt-get clean \
-    && rm -rf /tmp/mysql-apt-config_0.8.22-1_all.deb
+    && rm -rf /tmp/mysql-apt-config_0.8.22-1_all.deb \
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install xdebug
