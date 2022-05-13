@@ -40,7 +40,17 @@ class PruneGlideCacheCommand extends Command
     {
         // Get all existing files
         $disk = Storage::disk(Config::get('gumbo.glide.cache-disk'));
-        $existingFiles = $disk->allFiles(Config::get('gumbo.glide.cache-path'));
+        $path = Config::get('gumbo.glide.cache-path');
+
+        if (empty($path) || $path == '/') {
+            $this->error('Glide cache path is not configured or is too broad.');
+            $this->line('This might delete files that we want to keep, preventing!');
+
+            return Command::FAILURE;
+        }
+
+        // Find all files
+        $existingFiles = $disk->allFiles($path);
 
         // Get expiration date
         $pruneBefore = Date::now()->sub(self::CACHE_DURATION)->getTimestamp();
