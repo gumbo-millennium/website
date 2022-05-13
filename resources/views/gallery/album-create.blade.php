@@ -23,10 +23,10 @@
         <div class="leading-loose mb-4">
           <p>
             We verwachten dat je zelfcensuur toepast waar nodig. De foto's zijn alleen te zien voor leden,
-            maar dat betekend niet dat je dronkemansfoto's van LHW om 06:30 verstanding zijn om te publiceren.
+            maar dat betekent niet dat je dronkemansfoto's van LHW om 06:30 verstanding zijn om te publiceren.
           </p>
           <p>
-            Bij misbruik worden de foto's verwijderd en kan je geblokeerd worden van het uploaden.
+            Bij misbruik worden de foto's verwijderd en kan je geblokkeerd worden van het uploaden.
           </p>
         </div>
         <div  class="flex flex-row form__field form__field--checkbox">
