@@ -34,8 +34,8 @@ RUN apt-get update \
 RUN gpg \
         --recv-keys \
         --keyserver pgp.mit.edu \
-        --recv-keys 8C718D3B5072E1F5 \
-    && gpg --export 8C718D3B5072E1F5 > /etc/apt/trusted.gpg.d/mysql-repo.gpg \
+        --recv-keys 467B942D3A79BD29 \
+    && gpg --export 467B942D3A79BD29 > /etc/apt/trusted.gpg.d/mysql-repo.gpg \
     && chmod 644 /etc/apt/trusted.gpg.d/mysql-repo.gpg \
     && echo \
         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/mysql-repo.gpg] http://repo.mysql.com/apt/debian/ $(lsb_release -cs) mysql-8.0" \
