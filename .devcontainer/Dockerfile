@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-FROM php:7-fpm
+FROM php:8.1-fpm
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,6 +18,9 @@ ARG USER_GID=$USER_UID
 
 # Use production PHP
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Increase max post body size
+COPY ./fpm/increase-upload-size.ini "$PHP_INI_DIR/conf.d/99-increase-upload-size.ini"
 
 # Configure apt and install packages
 RUN apt-get update \

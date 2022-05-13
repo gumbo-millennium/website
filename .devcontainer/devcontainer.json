@@ -23,9 +23,8 @@
     "extensions": [
         "felixfbecker.php-debug",
         "felixfbecker.php-intellisense",
-        "mrmlnc.vscode-apache",
-        "mtxr.sqltools",
-        "mtxr.sqltools-driver-mysql",
+        "william-voyek.vscode-nginx",
+        "sleistner.vscode-fileutils",
         "GitHub.copilot",
     ],
 
