@@ -31,19 +31,12 @@ RUN apt-get update \
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install MySQL client
-RUN gpg \
-        --recv-keys \
-        --keyserver pgp.mit.edu \
-        --recv-keys 467B942D3A79BD29 \
-    && gpg --export 467B942D3A79BD29 > /etc/apt/trusted.gpg.d/mysql-repo.gpg \
-    && chmod 644 /etc/apt/trusted.gpg.d/mysql-repo.gpg \
-    && echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/mysql-repo.gpg] http://repo.mysql.com/apt/debian/ $(lsb_release -cs) mysql-8.0" \
-        | tee /etc/apt/sources.list.d/mysql-repo.list \
-        > /dev/null \
+COPY ./bin/mysql-apt-config_0.8.22-1_all.deb /tmp/mysql-apt-config_0.8.22-1_all.deb
+RUN dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb \
     && apt-get update \
     && apt-get install -y mysql-client \
     && apt-get clean \
+    && rm -rf /tmp/mysql-apt-config_0.8.22-1_all.deb
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install xdebug
