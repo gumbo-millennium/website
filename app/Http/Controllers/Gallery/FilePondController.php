@@ -49,7 +49,7 @@ class FilePondController extends Controller
         if ($data = exif_read_data($request->file('file')->path()) !== false) {
             if ($exifDate = $data['DateTimeOriginal'] ?? null) {
                 try {
-                    $takenDate = Date::parse($exifDate);
+                    $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
                 } catch (InvalidDateException) {
                     // Ignore
                 }

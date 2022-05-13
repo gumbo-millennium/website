@@ -11,6 +11,7 @@ use App\Models\Gallery\Photo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PhotoFactory extends Factory
@@ -51,7 +52,18 @@ class PhotoFactory extends Factory
             $photoDisk = Config::get('gumbo.images.disk');
             $photoPath = Config::get('gumbo.images.path');
 
-            $photo->path ??= Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($this->faker->image()));
+            if ($photo->path !== null) {
+                return;
+            }
+
+            $storedImage = Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($this->faker->image()));
+            if ($storedImage === false) {
+                Log::warning("Failed to write image to disk");
+
+                return;
+            }
+
+            $photo->path ??= $storedImage;
             $photo->taken_at = $this->faker->dateTimeBetween('-1 year', 'now');
         });
     }
