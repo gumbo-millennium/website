@@ -32,7 +32,7 @@ RUN apt-get update \
 
 # Install MySQL client
 COPY ./bin/mysql-apt-config_0.8.22-1_all.deb /tmp/mysql-apt-config_0.8.22-1_all.deb
-RUN dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb \
+RUN dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb || apt install -f \
     && apt-get update \
     && apt-get install -y mysql-client \
     && apt-get clean \
