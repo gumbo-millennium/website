@@ -42,8 +42,11 @@ class PruneGalleryFilepondCommand extends Command
     {
         // Find all pending uploads
         $pendingPhotos = Photo::query()
-            ->where('visibility', PhotoVisibility::Pending)
-            ->where('path', 'LIKE', Config::get('gumbo.gallery.filepond.path') . '%')
+            ->where(function ($query) {
+                $query
+                    ->where('visibility', PhotoVisibility::Pending)
+                    ->where('path', 'LIKE', Config::get('gumbo.gallery.filepond.path') . '%');
+            })
             ->get()
             ->keyBy('path');
 
@@ -51,7 +54,7 @@ class PruneGalleryFilepondCommand extends Command
 
         // Get all existing files
         $disk = Storage::disk(Config::get('gumbo.gallery.filepond.disk'));
-        $existingFiles = $disk->allFiles();
+        $existingFiles = $disk->allFiles(Config::get('gumbo.gallery.filepond.path'));
 
         // Get photos to remove
         $expiredAfter = Date::now()->subHours(4)->getTimestamp();
@@ -100,6 +103,12 @@ class PruneGalleryFilepondCommand extends Command
         }
 
         if ($this->option('clean')) {
+            if (empty(Config::get('gumbo.gallery.filepond.path'))) {
+                $this->error('Filepond path is not configured.');
+
+                return Command::FAILURE;
+            }
+
             $orphanFiles = Collection::make($filesLeft)
                 ->reject(fn (string $path) => $pendingPhotos->has($path));
 
