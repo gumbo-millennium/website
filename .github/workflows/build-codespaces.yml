@@ -7,7 +7,7 @@ on:
       - develop
 
     paths:
-      - .devcontainer/
+      - .devcontainer/**/*
 
   pull_request:
     types:
@@ -18,7 +18,7 @@ on:
       - develop
 
     paths:
-      - .devcontainer/
+      - .devcontainer/**/*
 
 jobs:
   codespaces:
