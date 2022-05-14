@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Gallery;
 
+use App\Enums\AlbumVisibility;
 use App\Enums\PhotoVisibility;
 use App\Fluent\Image;
 use App\Models\Gallery\Photo as PhotoModel;
@@ -57,8 +58,24 @@ class Photo extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
+        $user = $request->user();
+
         return parent::indexQuery($request, $query)
-            ->where('visibility', '!=', PhotoVisibility::Pending);
+            ->where('visibility', '!=', PhotoVisibility::Pending)
+            ->whereHas('album', function ($query) use ($user) {
+                $query
+                    ->where('visibility', AlbumVisibility::Public)
+                    ->orWhereHas('user', fn ($query) => $query->where('id', $user->id));
+            })
+            ->where(function ($query) use ($user) {
+                $query
+                    ->where('visibility', PhotoVisibility::Visible)
+                    ->orWhere(function ($query) use ($user) {
+                        $query
+                            ->whereHas('user', fn ($query) => $query->whereId($user->id))
+                            ->where('visibility', PhotoVisibility::Hidden);
+                    });
+            });
     }
 
     /**
