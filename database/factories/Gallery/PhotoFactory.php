@@ -63,7 +63,7 @@ class PhotoFactory extends Factory
 
             $storedImage = Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($image));
             if ($storedImage === false) {
-                Log::error("Failed to write image to disk");
+                Log::error('Failed to write image to disk');
 
                 return;
             }
