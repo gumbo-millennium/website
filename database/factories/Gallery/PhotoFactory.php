@@ -56,9 +56,14 @@ class PhotoFactory extends Factory
                 return;
             }
 
-            $storedImage = Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($this->faker->image()));
+            if (! $image = $this->faker->image()) {
+                Log::notice('Failed to generate image for photo, using placeholder');
+                $image = resource_path('assets/images/geen-foto.jpg');
+            }
+
+            $storedImage = Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($image));
             if ($storedImage === false) {
-                Log::warning("Failed to write image to disk");
+                Log::error("Failed to write image to disk");
 
                 return;
             }
