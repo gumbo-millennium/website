@@ -29,7 +29,7 @@
       <a href="{{ $href }}" class="block mt-2">
         <p class="text-xl font-semibold text-gray-900">{{ $title }}</p>
         <p class="mt-3 text-base text-gray-500">
-          {{ $slot ?? $description }}
+          {{ $description ?? $slot }}
         </p>
       </a>
     </div>

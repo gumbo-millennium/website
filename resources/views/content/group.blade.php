@@ -13,7 +13,7 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
   <x-container space="small">
     <x-card-grid>
     @foreach ($pages as $item)
-      <x-cards.page :item="$item" />
+      <x-cards.page :page="$item" />
     @endforeach
     </x-card-grid>
   </x-container>

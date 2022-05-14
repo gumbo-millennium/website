@@ -36,9 +36,9 @@ class Page extends Component
         return View::make('components.card', [
             'href' => $page->url,
             'image' => $page->cover,
-            'lead' => $page->category,
-            'title' => $page->name,
-            'description' => $page->description ?? Str::words(strip_tags($page->html ?? ''), 10),
+            'lead' => Str::of($page->group)->title(),
+            'title' => $page->title,
+            'description' => $page->summary ?? Str::words(strip_tags($page->html ?? ''), 10),
         ]);
     }
 }
