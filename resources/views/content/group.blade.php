@@ -3,7 +3,7 @@
 SEOMeta::setTitle($page->title);
 SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
 ?>
-<x-page title="Het laatste nieuws">
+<x-page :title="$page->title">
   <x-sections.header :title="$page->title" :subtitle="$page->tagline" :crumbs="['/' => 'Home']" />
 
   <x-container space="small" class="leading-loose prose">
