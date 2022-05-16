@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Fluent\Image;
+use App\Helpers\Str;
 
 return [
     // Application status, based on URL
@@ -193,5 +194,32 @@ return [
             'disk' => env('GUMBO_IMAGE_DISK', 'public'),
             'path' => 'filepond/images/gallery',
         ],
+    ],
+
+    'backups' => [
+        /**
+         * Flag to indicate if backups will run.
+         */
+        'enabled' => env('BACKUP_ENABLED', false),
+
+        /**
+         * Number of days to keep incremental backups.
+         */
+        'incremental_preservation_days' => 16,
+
+        /**
+         * Number of days to keep full backups.
+         */
+        'full_preservation_days' => 30 * 6,
+
+        /**
+         * Location to store backups, should not overlap with other backup folders.
+         */
+        'storage_path' => Str::finish(env('BACKUP_LOCATION', 'backups/untagged'), '/'),
+
+        /**
+         * Location disk to use for backups.
+         */
+        'storage_disk' => env('BACKUP_DISK', 'glacier'),
     ],
 ];
