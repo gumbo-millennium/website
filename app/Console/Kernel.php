@@ -21,6 +21,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // Backups
+        $schedule->command('backup:create')->daily()->at('01:00');
+        $schedule->command('backup:create', ['--full' => true])->weekly()->at('01:30');
+
         // Expunge outdated non-critical data daily
         $schedule->command('avg:flush')->daily();
 
