@@ -64,5 +64,15 @@ return [
             'bucket' => env('SCALEWAY_BUCKET'),
             'url' => env('SCALEWAY_URL'),
         ],
+
+        'glacier' => [
+            'driver' => 's3',
+            'key' => env('GLACIER_ACCESS_KEY_ID'),
+            'secret' => env('GLACIER_SECRET_ACCESS_KEY'),
+            'region' => env('GLACIER_DEFAULT_REGION'),
+            'endpoint' => env('GLACIER_ENDPOINT'),
+            'bucket' => env('GLACIER_BUCKET'),
+            'url' => env('GLACIER_URL'),
+        ],
     ],
 ];
