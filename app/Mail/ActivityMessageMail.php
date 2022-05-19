@@ -45,12 +45,7 @@ class ActivityMessageMail extends Mailable
         $user = $enrollment->user;
 
         // Get link
-        $cancelUrl = \route('enroll.remove', compact('activity'));
-        $cancelType = 'cancel';
-        if ($enrollment->price > 0 && $activity->enrollment_open) {
-            $cancelUrl = \route('enroll.transfer', compact('activity'));
-            $cancelType = 'transfer';
-        }
+        $enrollmentUrl = route('enroll.show', $activity);
 
         // Set subject
         $this->subject("Update voor {$activity->name}: {$message->title}");
@@ -59,8 +54,7 @@ class ActivityMessageMail extends Mailable
         return $this->markdown('mail.activity.update', [
             'activity' => $activity,
             'enrollment' => $enrollment,
-            'cancelUrl' => $cancelUrl,
-            'cancelType' => $cancelType,
+            'enrollmentUrl' => $enrollmentUrl,
             'participant' => $user,
             'userTitle' => $message->title,
             'userBody' => Markdown::parseSafe($message->body),

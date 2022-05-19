@@ -31,21 +31,17 @@ Gumbo Millennium
 {{-- Subcopy --}}
 @slot('subcopy')
 <p>
-    Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ \route('activity.show', compact('activity')) }}"
+    Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ route('activity.show', $activity) }}"
         target="_blank" rel="noopener">{{ $activity->name }}</a> bij Gumbo Millennium.
 </p>
 
 <p>
-    @if ($cancelType === 'cancel')
-        Indien je niet meer deel wilt nemen aan deze activiteit, dan kan je jezelf <a href="{{ $cancelUrl }}">uitschrijven via deze link.</a>
-    @else
-        Indien je niet meer deel wilt nemen aan deze activiteit, kan je je inschrijving <a href="{{ $cancelUrl }}">overdragen aan iemand anders</a>.
-    @endif
+    Wil je iets wijzigen aan je inschrijving, of je inschrijving annuleren of overdagen? <a href="{{ $enrollmentUrl }}">klik dan op deze link.</a>
 </p>
 
 <p>
     Werkt de link niet? Copy-paste dan deze URL:<br />
-    {{ $cancelUrl }}
+    {{ $enrollmentUrl }}
 </p>
 
 @endslot
