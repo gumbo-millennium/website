@@ -35,11 +35,14 @@ class Activity extends Component
 
         $longActivity = $activity->start_date->diffInHours($activity->end_date) > 6;
 
-        $activityLabel = 'Besloten activiteit';
-        if ($activity->is_public) {
-            $activityLabel = $activity->price_range !== __('Free')
-                ? 'Betaalde activiteit'
-                : 'Openbare activiteit';
+        $isFreeOrTicketless = $activity->tickets->count() === 0 || $activity->price_range === __('Free');
+
+        if ($activity->is_public && $isFreeOrTicketless) {
+            $activityLabel = __('Public activity');
+        } elseif ($isFreeOrTicketless) {
+            $activityLabel = __('Private activity');
+        } else {
+            $activityLabel = __('Paid activity');
         }
 
         /*
