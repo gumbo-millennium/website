@@ -100,7 +100,7 @@ class SitemapController extends Controller
         // Item page
         foreach ($query->cursor() as $model) {
             $sitemap->add(
-                route("${base}.show", [$field => $model]),
+                route("${base}.show", $model),
                 $model->updated_at,
                 '0.8',
                 'weekly',
