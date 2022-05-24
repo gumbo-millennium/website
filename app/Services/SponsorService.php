@@ -101,7 +101,7 @@ class SponsorService implements SponsorServiceContract
         } catch (FileNotFoundException $exception) {
             // Handle not founds
             report(new RuntimeException(
-                "Could not find imag for {$sponsor->name} ({$sponsor->id})",
+                "Could not find image for {$sponsor->name} (Sponsor #{$sponsor->id})",
                 404,
                 $exception,
             ));
