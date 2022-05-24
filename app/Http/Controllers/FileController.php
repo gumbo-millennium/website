@@ -157,9 +157,9 @@ class FileController extends Controller
                 ->addMedia($media)
                 ->toResponse($request);
         } catch (FileNotFoundException $exception) {
-            report (new GoneHttpException(
+            report(new GoneHttpException(
                 'Bestandensysteem bestand niet gevonden!',
-                $exception
+                $exception,
             ));
 
             throw new NotFoundHttpException('Een of meer bestanden konden niet worden gevonden.');
