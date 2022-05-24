@@ -1,7 +1,7 @@
 @extends('layout.main')
 
 @php
-$stats = [
+$stats = array_filter([
   [
     'label' => $item->published_at->isoFormat('D MMMM, Y'),
     'icon' => 'regular/calendar',
@@ -14,7 +14,7 @@ $stats = [
     'label' => "Gesponsord door {$item->sponsor}",
     'icon' => 'regular/handshake',
   ] : null,
-];
+]);
 
 // Share links
 $itemUrl = route('news.show', ['item' => $item]);
