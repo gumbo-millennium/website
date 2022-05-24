@@ -11,6 +11,7 @@ use App\Models\FileDownload;
 use App\Models\Media;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Closure;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Cache;
@@ -23,6 +24,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Spatie\MediaLibrary\Support\MediaStream;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
@@ -149,9 +152,18 @@ class FileController extends Controller
         $media = $bundle->getMedia();
 
         // Stream a zip to the user
-        return MediaStream::create("{$filename}.zip")
-            ->addMedia($media)
-            ->toResponse($request);
+        try {
+            return MediaStream::create("{$filename}.zip")
+                ->addMedia($media)
+                ->toResponse($request);
+        } catch (FileNotFoundException $exception) {
+            report (new GoneHttpException(
+                'Bestandensysteem bestand niet gevonden!',
+                $exception
+            ));
+
+            throw new NotFoundHttpException('Een of meer bestanden konden niet worden gevonden.');
+        }
     }
 
     /**
