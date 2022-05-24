@@ -5,7 +5,7 @@ SEOMeta::setCanonical($page->url);
 
 $crumbs = ['/' => 'Home'];
 if ($page->group) {
-  $crumbs["/$group"] = $group;
+  $crumbs["/$page->group"] = Str::title($page->group);
 }
 ?>
 <x-page :title="$page->title">

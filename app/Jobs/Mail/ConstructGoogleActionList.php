@@ -13,6 +13,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 class ConstructGoogleActionList implements ShouldQueue
@@ -29,7 +32,7 @@ class ConstructGoogleActionList implements ShouldQueue
     public static function test()
     {
         $inst = new self();
-        \app()->call([$inst, 'handle']);
+        App::call([$inst, 'handle']);
     }
 
     /**
@@ -44,19 +47,28 @@ class ConstructGoogleActionList implements ShouldQueue
             ->getResource('role', [], ['code', 'voorzitter', 'naam', 'leden', 'e_mailadres'])
             ->reject(static fn ($row) => empty($row['e_mailadres']));
 
-        Log::info('Recieved roles from Conscribo', compact('roles'));
+        Log::info('Recieved roles from Conscribo', [
+            'roles' => $roles->pluck('naam', 'code'),
+        ]);
+
+        // Log all members, but only on debug
+        Log::debug('Received role-members: {roles}', [
+            'roles' => $roles->mapWithKeys(fn ($row) => [
+                $row['naam'] => $row['leden'],
+            ]),
+        ]);
 
         // Map "leden" to an array
         // 1) Get the 'leden' properties and split it on comma's followed by a digit (values are "1: user, 2: user")
         // 3) Sort by member ID by casting to a number
-        $roles = $roles->map(static function (&$role) {
+        $roles = $roles->map(function ($role) {
             $memberList = preg_split('/\,\s*(?=\d+\:)/', $role['leden'] ?? '');
 
-            $role['leden'] = collect($memberList)
+            $role['leden'] = Collection::make($memberList)
                 ->each('trim')
                 ->filter()
-                ->sort(static fn ($a, $b) => (int) $a <=> (int) $b)
-                ->toArray();
+                ->sort(fn ($a, $b) => (int) $a <=> (int) $b)
+                ->all();
 
             return $role;
         });
@@ -69,41 +81,40 @@ class ConstructGoogleActionList implements ShouldQueue
             ->pluck('leden')
             ->collapse()
             ->flip()
-            ->keys()
-            ->toArray();
+            ->keys();
 
         // Log count
         Log::debug('Will look for {member-count} members', [
-            'member-count' => count($userIds),
+            'member-count' => $userIds->count(),
         ]);
 
         // Get users from Conscribo
         $userResource = $conscribo->getResource(
             'user',
-            [['selector', '~', $userIds]],
+            [['selector', '~', $userIds->all()]],
             ['selector', 'email'],
         );
 
         // Log count
         Log::debug('Received {member-count} members from Conscribo', [
-            'member-count' => count($userResource),
+            'member-count' => $userResource->count(),
         ]);
 
         // Map emails by selector, remove empties and lowercase email
         $emails = $userResource
             ->pluck('email', 'selector')
             ->filter()
-            ->map(static fn ($val) => Str::lower(trim($val)));
+            ->map(static fn ($val) => Str::of($val)->trim()->lower());
 
         // Log count
         Log::info('After filter, got left with {email-count} email addresses from Conscribo', [
-            'email-count' => count($emails),
-            'query-count' => count($userResource),
-            'search-count' => count($userIds),
+            'email-count' => $emails->count(),
+            'query-count' => $userResource->count(),
+            'search-count' => $userIds->count(),
         ]);
 
         // Map new models
-        $jobList = collect();
+        $jobList = Collection::make();
         foreach ($roles as $role) {
             // Build member list
             $emailsBySelector = $emails
@@ -147,12 +158,12 @@ class ConstructGoogleActionList implements ShouldQueue
         }
 
         // Get safe domains
-        $validDomains = \config('services.google.domains', []);
+        $validDomains = Config::get('services.google.domains', []);
 
         // Start a job for each email
         foreach ($jobList as $job) {
             $domain = Str::afterLast($job['email'], '@');
-            if (! \in_array($domain, $validDomains, true)) {
+            if (! in_array($domain, $validDomains, true)) {
                 Log::warning('Tried to start job for {email}, which isn\'t in the safe domain list', [
                     'email' => $job['email'],
                     'safe-domains' => $validDomains,

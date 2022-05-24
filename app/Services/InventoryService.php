@@ -45,8 +45,13 @@ class InventoryService
         // Get client
         $response = $this->getClient()->get($endpoint, $args);
 
+        // Throw exception if response is not 200
+        if ($response === null) {
+            throw new RuntimeException("Inventory API call to {$endpoint} failed.");
+        }
+
         // Get body
-        $contents = (string) $response->getBody();
+        $contents = (string) $response?->getBody();
 
         try {
             return json_decode($contents, true, 64, JSON_THROW_ON_ERROR);
