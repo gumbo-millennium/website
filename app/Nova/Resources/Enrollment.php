@@ -53,6 +53,9 @@ class Enrollment extends Resource
      * @var array
      */
     public static $search = [
+        'id',
+        'previous_id',
+        'ticket_code',
     ];
 
     /**
@@ -63,9 +66,8 @@ class Enrollment extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        // Get user shorthand
+        /** @var UserModel $user */
         $user = $request->user();
-        \assert($user instanceof UserModel);
 
         // Return all enrollments if the user can manage them
         if ($user->can('admin', EnrollmentModel::class)) {
@@ -90,9 +92,8 @@ class Enrollment extends Resource
      */
     public static function relatableQuery(NovaRequest $request, $query)
     {
-        // Get user shorthand
+        /** @var UserModel $user */
         $user = $request->user();
-        \assert($user instanceof UserModel);
 
         // Return all enrollments if the user can manage them
         if ($user->can('admin', EnrollmentModel::class)) {
@@ -115,12 +116,12 @@ class Enrollment extends Resource
     public function fields(Request $request)
     {
         return [
-            Fields\ID::make()->hideFromIndex(),
+            Fields\ID::make(),
 
             // Add multi selects
             Fields\BelongsTo::make('Activiteit', 'activity', Activity::class)
                 ->rules('required', static function ($activity) use ($request): void {
-                    $request->can('manage', $activity);
+                    $request->user()->can('manage', $activity);
                 })
                 ->hideWhenUpdating(),
 

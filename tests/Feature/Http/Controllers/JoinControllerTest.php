@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Helpers\Arr;
 use App\Models\Activity;
+use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
@@ -142,7 +143,7 @@ class JoinControllerTest extends TestCase
         $user = User::where('email', self::VALID_FIELDS['email'])->first();
         $this->assertNotNull($user, 'Failed finding created user');
 
-        $this->assertDatabaseHas('enrollments', [
+        $this->assertDatabaseHas(Enrollment::make()->getTable(), [
             'user_id' => $user->id,
             'activity_id' => $introActivity->id,
         ]);

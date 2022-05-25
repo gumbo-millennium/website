@@ -12,6 +12,7 @@ use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Models\Traits\HasPayments;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * App\Models\Enrollment.
  *
- * @property string $id
+ * @property int $id
  * @property int $user_id
  * @property int $activity_id
  * @property null|int $ticket_id
@@ -73,7 +74,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
  */
-class Enrollment extends UuidModel implements Payable
+class Enrollment extends Model implements Payable
 {
     use HasFactory;
     use HasPayments;
@@ -83,6 +84,13 @@ class Enrollment extends UuidModel implements Payable
     public const USER_TYPE_MEMBER = 'member';
 
     public const USER_TYPE_GUEST = 'guest';
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'activity_enrollments';
 
     /**
      * The attributes that should be cast.

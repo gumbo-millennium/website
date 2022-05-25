@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Facades\Enroll;
-use App\Models\Enrollment;
 use Illuminate\Database\Migrations\Migration;
 
 class AssignUniqueTicketCodesToEnrollments extends Migration
@@ -15,11 +13,6 @@ class AssignUniqueTicketCodesToEnrollments extends Migration
      */
     public function up()
     {
-        Enrollment::withoutGlobalScopes()->chunk(100, function ($tickets) {
-            foreach ($tickets as $ticket) {
-                Enroll::updateTicketCode($ticket);
-                $ticket->save();
-            }
-        });
+        // 2022-05-30 - This migration has moved to 2022_05_30_193434_create_ticket_codes_on_enrollments
     }
 }
