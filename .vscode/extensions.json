@@ -6,7 +6,6 @@
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "junstyle.php-cs-fixer",
-    "linyang95.phpmd",
     "mikestead.dotenv",
     "neilbrayfield.php-docblocker",
     "onecentlin.laravel-blade",
@@ -17,6 +16,7 @@
     "eg2.tslint",
     "felixfbecker.php-intellisense",
     "ikappas.phpcs",
+    "linyang95.phpmd",
     "ms-mssql.mssql",
   ]
 }
