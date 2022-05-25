@@ -7,7 +7,7 @@ $stats = array_filter([
     'icon' => 'regular/calendar',
   ],
   [
-    'label' => $item->author?->public_name ?? 'Onbekend',
+    'label' => $item->author?->public_name ?: 'Onbekend',
     'icon' => 'regular/user',
   ],
   $item->sponsor ? [
