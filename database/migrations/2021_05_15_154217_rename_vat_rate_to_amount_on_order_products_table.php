@@ -28,7 +28,7 @@ class RenameVatRateToAmountOnOrderProductsTable extends Migration
     public function down()
     {
         Schema::table('shop_order_product_variant', static function (Blueprint $table) {
-            $table->renameColumn('vat_rate', 'amount');
+            $table->renameColumn('quantity', 'vat_rate');
         });
     }
 }

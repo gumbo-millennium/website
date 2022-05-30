@@ -28,7 +28,6 @@ class AddImagesAndCategoryToNewsItems extends Migration
     public function down()
     {
         Schema::table('news_items', static function (Blueprint $table) {
-            $table->dropColumn('image');
             $table->dropColumn('category');
         });
     }
