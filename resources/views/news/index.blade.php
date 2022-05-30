@@ -1,4 +1,4 @@
-<x-page title="Het laatste nieuws">
+<x-page title="Het laatste nieuws" hide-flash="true">
   <x-sections.header title="Het laatste nieuws" :crumbs="['/' => 'Home']">
     <x-slot name="subtitle">
       De laatste updates vanuit Gumbo, of gewoon kneiterveel reclame!

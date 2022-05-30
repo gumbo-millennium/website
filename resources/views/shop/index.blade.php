@@ -1,4 +1,4 @@
-<x-page title="Webshop">
+<x-page title="Webshop" hide-flash="true">
   <x-sections.header
     :crumbs="['/' => 'Home',]"
     title="Gumbo Millennium webshop"

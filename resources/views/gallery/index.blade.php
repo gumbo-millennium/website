@@ -1,4 +1,4 @@
-<x-page>
+<x-page hide-flash="true">
   <x-sections.header
     title="Gumbo's Grote Galerij™"
     subtitle="Van zonnige actiefoto's tot duistere dronkenlapjes, je vindt ze hier!"

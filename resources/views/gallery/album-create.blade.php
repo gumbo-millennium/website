@@ -1,4 +1,4 @@
-<x-page :title="['Nieuw album', 'Galerij']">
+<x-page :title="['Nieuw album', 'Galerij']" hide-flash="true">
   <x-sections.header
     title="Album aanmaken"
     subtitle="Je eigen plekje voor jouw beste kiekjes!"

@@ -1,4 +1,11 @@
-<x-page :title="$sponsor_contents_title ?? $sponsor->name . ' - Sponsoren'">
+<?php
+$pageTitle = array_filter([
+  $sponsor->contents_title,
+  $sponsor->name,
+  'Sponsoren'
+])
+?>
+<x-page :title="$pageTitle" hide-flash="true">
   <x-sections.header
     :title="$sponsor->contents_title ?? $sponsor->name"
     :stats='["Gesponsord door {$sponsor->name}" => "solid/ad"]'

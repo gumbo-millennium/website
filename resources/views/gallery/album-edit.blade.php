@@ -1,4 +1,4 @@
-<x-page :title="['Bewerken', $album->name, 'Galerij']">
+<x-page :title="['Bewerken', $album->name, 'Galerij']" hide-flash="true">
   <x-sections.header
     title="Album bewerken"
     subtitle="Voeg omschrijvingen toe en verberg of verwijder foto's"

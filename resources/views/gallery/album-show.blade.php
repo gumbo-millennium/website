@@ -15,7 +15,7 @@ $stats = array_filter([
   ['icon' => 'solid/pencil-alt', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],
 ], fn ($row) => !empty($row['label']));
 ?>
-<x-page :title="[$album->name, 'Galerij']">
+<x-page :title="[$album->name, 'Galerij']" hide-flash="true">
   <x-sections.header
     :title="$album->name"
     :crumbs="['/' => 'Home', '/gallery' => 'Galerij']"

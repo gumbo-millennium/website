@@ -1,4 +1,8 @@
 <x-container background="gray">
+  @if ($flash = flash()->getMessage())
+  <x-alert class="mb-4 mt-n4" :level="$flash->level">{{ $flash->message }}</x-alert>
+  @endif
+
   @if ($back)
   <nav class="sm:hidden" aria-label="Back">
     <a href="{{ $back }}" class="flex items-center font-medium text-gray-500 hover:text-gray-700">

@@ -9,7 +9,7 @@ if ($past) {
 // Get first activity
 $firstActivity = $past ? null : $activities->first();
 ?>
-<x-page title="{{ $title }}">
+<x-page title="{{ $title }}" hide-flash="true">
   <x-sections.header
     :title="$title"
     :subtitle="$subtitle"
