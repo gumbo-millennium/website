@@ -62,7 +62,7 @@ class Payment extends Resource
             Fields\Text::make(__('Subject'), fn () => $this->payable->name ?? $this->payable->title)
                 ->exceptOnForms(),
 
-            Fields\Text::make(__('User'), fn () => optional($this->user)->name)
+            Fields\Text::make(__('User'), fn () => $this->user?->name)
                 ->exceptOnForms(),
 
             Fields\MorphTo::make(__('Subject'), 'payable')
