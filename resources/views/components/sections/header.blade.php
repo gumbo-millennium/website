@@ -55,7 +55,7 @@
 
     {{-- Page buttons --}}
     @if ($buttons)
-    <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4 gap-x-4">
+    <div class="mt-4 flex-shrink-0 flex flex-wrap md:flex-nowrap md:mt-0 md:ml-4 gap-4">
       {{ $buttons }}
     </div>
     @endif

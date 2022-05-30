@@ -1,7 +1,14 @@
 <?php
+use App\Enums\AlbumVisibility;
+
 $activityName = $album->activity?->name;
+$isPrivate = $album->visibility == AlbumVisibility::Private;
 
 $stats = array_filter([
+  $isPrivate
+    ? ['icon' => 'solid/eye-slash', 'label' => 'Privé album']
+    : ['icon' => 'solid/users', 'label' => 'Zichtbaar voor leden'],
+
   ['icon' => 'solid/calendar-alt', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
   ['icon' => 'solid/user', 'label' => $album->user?->public_name],
   ['icon' => 'solid/images', 'label' => trans_choice(":count photo|:count photos", $album->photos->count())],
@@ -15,19 +22,41 @@ $stats = array_filter([
     :stats="$stats"
     >
     <x-slot name="buttons">
-      @can('update', $album)
-      <x-button color="" size="small" href="{{ route('gallery.album.edit', $album) }}" class="flex items-center">
-        <x-icon icon="solid/pencil-alt" class="h-4" />
-        <span class="ml-2 lg:sr-only">Bewerken</span>
-      </x-button>
-      @endcan
+      <div class="grid gap-4 w-full sm:contents">
+        @can('update', $album)
+        <form id="edit-album-visibility" action="{{ route('gallery.album.edit', $album) }}" method="POST" class="hidden">
+          @csrf
+          @method('PATCH')
+        </form>
+        <x-button color="" size="small" href="{{ route('gallery.album.edit', $album) }}" class="flex items-center">
+          <x-icon icon="solid/pencil-alt" class="h-4" />
+          <span class="ml-2 md:sr-only">Bewerken</span>
+        </x-button>
 
-      @can('upload', $album)
-      <x-button color="primary" size="small" href="{{ route('gallery.album.upload', $album) }}" class="flex items-center">
-        <x-icon icon="solid/upload" class="h-4 mr-2" />
-        Uploaden
-      </x-button>
-      @endcan
+        @if ($isPrivate)
+        <x-button type="submit" name="visibility" value="public" color="primary" size="small" form="edit-album-visibility"
+          class="flex items-center">
+          <x-icon icon="solid/eye" class="h-4" />
+          <span class="ml-2 md:sr-only">Publiceren</span>
+        </x-button>
+        @else
+        <x-button type="submit" name="visibility" value="private" color="" size="small" form="edit-album-visibility"
+          class="flex items-center">
+          <x-icon icon="solid/eye-slash" class="h-4" />
+          <span class="ml-2 lg:sr-only">Verbergen</span>
+        </x-button>
+        @endif
+        @endcan
+
+        @can('upload', $album)
+        <div class="col-start-1 col-end-3">
+          <x-button color="primary" size="small" href="{{ route('gallery.album.upload', $album) }}" class="flex items-center">
+            <x-icon icon="solid/upload" class="h-4 mr-2" />
+            Uploaden
+          </x-button>
+        </div>
+        @endcan
+      </div>
     </x-slot>
   </x-sections.header>
 

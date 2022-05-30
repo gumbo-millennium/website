@@ -223,6 +223,16 @@ class AlbumController extends Controller
     {
         $this->authorize('update', $album);
 
+        // In case this is just a visibility change.
+        if ($request->has('visibility')) {
+            $album->visibility = $request->input('visibility', 'private') === 'public' ? AlbumVisibility::Public : AlbumVisibility::Private;
+            $album->save();
+
+            flash()->success(__('Album visibility updated.'));
+
+            return Response::redirectToRoute('gallery.album', $album);
+        }
+
         DB::beginTransaction();
 
         $photos = $this->getEditablePhotos($request, $album);
@@ -232,6 +242,12 @@ class AlbumController extends Controller
         $visibilityCount = 0;
 
         foreach ($photos as $photo) {
+            // Skip if a photo is missing, in case it was recently uploaded or in case this is just
+            // a visibility change.
+            if (! $request->has("photo.{$photo->id}")) {
+                continue;
+            }
+
             $newDescription = $request->input("photo.{$photo->id}.description");
             $newVisibility = $request->input("photo.{$photo->id}.visible") == 'visible'
                 ? PhotoVisibility::Visible
