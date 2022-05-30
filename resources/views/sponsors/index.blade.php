@@ -1,4 +1,4 @@
-<x-page title="Onze Sponsoren">
+<x-page title="Onze Sponsoren" hide-flash="true">
   <x-sections.header
     title="Sponsoren van Gumbo Millennium"
     subtitle="Dankzij deze bedrijven kunnen wij de gaafste activiteiten neerzetten. Bedankt!"

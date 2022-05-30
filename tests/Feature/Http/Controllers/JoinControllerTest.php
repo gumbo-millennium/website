@@ -135,7 +135,7 @@ class JoinControllerTest extends TestCase
             ->assertSessionDoesntHaveErrors()
             ->assertRedirect(route('enroll.show', [$introActivity]));
 
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseHas(User::make()->getTable(), [
             'email' => self::VALID_FIELDS['email'],
         ]);
 

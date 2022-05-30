@@ -1,4 +1,8 @@
 <x-container background="gray">
+  @if ($flash = flash()->getMessage())
+  <x-alert class="mb-4 mt-n4" :level="$flash->level">{{ $flash->message }}</x-alert>
+  @endif
+
   @if ($back)
   <nav class="sm:hidden" aria-label="Back">
     <a href="{{ $back }}" class="flex items-center font-medium text-gray-500 hover:text-gray-700">
@@ -55,7 +59,7 @@
 
     {{-- Page buttons --}}
     @if ($buttons)
-    <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4 gap-x-4">
+    <div class="mt-4 flex-shrink-0 flex flex-wrap md:flex-nowrap md:mt-0 md:ml-4 gap-4">
       {{ $buttons }}
     </div>
     @endif

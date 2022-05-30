@@ -24,7 +24,7 @@ class PageControllerTest extends TestCase
             ->name('*.json')
             ->files();
 
-        $pageTable = (new Page())->getTable();
+        $pageTable = Page::make()->getTable();
 
         foreach ($finder as $file) {
             $this->assertFileExists($file->getPathname());

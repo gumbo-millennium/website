@@ -1,4 +1,4 @@
-<x-page :title="[$category->name, 'Webshop']">
+<x-page :title="[$category->name, 'Webshop']" hide-flash="true">
   <x-sections.header
     :crumbs="[
       '/' => 'Home',

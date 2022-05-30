@@ -1,4 +1,4 @@
-<x-page :title="['Foto\'s uploaden', $album->name, 'Galerij']">
+<x-page :title="['Foto\'s uploaden', $album->name, 'Galerij']" hide-flash="true">
   <x-sections.header
     title="Foto's uploaden"
     :subtitle='"Voeg je beste kiekjes toe aan {$album->name}"'

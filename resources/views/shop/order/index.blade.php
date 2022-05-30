@@ -1,7 +1,7 @@
 <?php
 $user = Auth::user();
 ?>
-<x-page :title="['Bestellingen', 'Webshop']">
+<x-page :title="['Bestellingen', 'Webshop']" hide-flash="true">
   <x-sections.header
     :crumbs="[
       '/' => 'Home',

@@ -8,7 +8,7 @@ if ($page->group) {
   $crumbs["/$page->group"] = Str::title($page->group);
 }
 ?>
-<x-page :title="$page->title">
+<x-page :title="$page->title" hide-flash="true">
   <article>
     <header>
       <x-sections.header :title="$page->title" :subtitle="$page->tagline" :crumbs="$crumbs" />
