@@ -42,8 +42,9 @@ class PruneWebcamUpdatesTest extends TestCase
 
         $this->assertCount(15, $cam->refresh()->updates);
 
-        $this->assertDatabaseHas('webcam_updates', ['id' => $sortedModels->first()->id]);
-        $this->assertDatabaseMissing('webcam_updates', ['id' => $sortedModels->last()->id]);
+        $webcamTable = WebcamUpdate::make()->getTable();
+        $this->assertDatabaseHas($webcamTable, ['id' => $sortedModels->first()->id]);
+        $this->assertDatabaseMissing($webcamTable, ['id' => $sortedModels->last()->id]);
     }
 
     public function test_pruning_in_order(): void

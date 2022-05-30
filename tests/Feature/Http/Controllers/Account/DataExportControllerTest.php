@@ -69,7 +69,7 @@ class DataExportControllerTest extends TestCase
         $response = $this->post(route('account.export.store'))
             ->assertRedirect();
 
-        $this->assertDatabaseHas((new DataExport())->getTable(), [
+        $this->assertDatabaseHas(DataExport::make()->getTable(), [
             'user_id' => $this->user->id,
             'created_at' => Date::now(),
             'expires_at' => Date::now()->addDays(Config::get('gumbo.export-expire-days')),
