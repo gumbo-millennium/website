@@ -33,6 +33,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         // Ensure timezone is Europe/Amsterdam
         Nova::userTimezone(static fn () => 'Europe/Amsterdam');
 
+        // Disable the notification center for now
+        Nova::withoutNotificationCenter();
+
         // Create menu
         $this->createMenu();
     }
