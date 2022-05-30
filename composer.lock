@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "722071af9403b9030f94e86503d2d055",
+    "content-hash": "1df5d57d42266882a878ee34c5348fd5",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -491,59 +491,6 @@
                 }
             ],
             "time": "2022-01-29T08:02:59+00:00"
-        },
-        {
-            "name": "benjaminhirsch/nova-slug-field",
-            "version": "1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tomhatzer/nova-slug-field.git",
-                "reference": "ed3dfb1947e2da3e8bcc1a4d168ddc9d9d7ee6a9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tomhatzer/nova-slug-field/zipball/ed3dfb1947e2da3e8bcc1a4d168ddc9d9d7ee6a9",
-                "reference": "ed3dfb1947e2da3e8bcc1a4d168ddc9d9d7ee6a9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Benjaminhirsch\\NovaSlugField\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Benjaminhirsch\\NovaSlugField\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Benjamin Hirsch",
-                    "email": "mail@benjaminhirsch.net",
-                    "homepage": "https://www.benjaminhirsch.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A Laravel Nova field to generate a slugs.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/benjaminhirsch/nova-slug-field/issues",
-                "source": "https://github.com/tomhatzer/nova-slug-field/tree/1.3.0"
-            },
-            "time": "2022-04-04T16:53:49+00:00"
         },
         {
             "name": "box/spout",
@@ -1183,61 +1130,6 @@
                 "source": "https://github.com/DASPRiD/Enum/tree/1.0.3"
             },
             "time": "2020-10-02T16:03:48+00:00"
-        },
-        {
-            "name": "david-griffiths/nova-dark-theme",
-            "version": "v1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/David-Griffiths/Nova-Dark-Theme.git",
-                "reference": "dfd190f4d3454e5ec066b886ad687c135b680f3b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/David-Griffiths/Nova-Dark-Theme/zipball/dfd190f4d3454e5ec066b886ad687c135b680f3b",
-                "reference": "dfd190f4d3454e5ec066b886ad687c135b680f3b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "DavidGriffiths\\NovaDarkTheme\\ThemeServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DavidGriffiths\\NovaDarkTheme\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Griffiths",
-                    "homepage": "https://github.com/David-Griffiths",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A dark theme for Laravel Nova",
-            "homepage": "https://github.com/David-Griffiths/Nova-Dark-Theme",
-            "keywords": [
-                "dark",
-                "laravel",
-                "nova",
-                "theme"
-            ],
-            "support": {
-                "issues": "https://github.com/David-Griffiths/Nova-Dark-Theme/issues",
-                "source": "https://github.com/David-Griffiths/Nova-Dark-Theme"
-            },
-            "time": "2019-02-16T22:07:27+00:00"
         },
         {
             "name": "doctrine/cache",

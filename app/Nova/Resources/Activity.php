@@ -12,8 +12,6 @@ use App\Nova\Fields\Seats;
 use App\Nova\Filters;
 use App\Nova\Flexible\Presets\ActivityForm;
 use App\Nova\Metrics;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Config;
@@ -202,15 +200,15 @@ class Activity extends Resource
         return $this->merge([
             Fields\ID::make()->sortable(),
 
-            TextWithSlug::make('Titel', 'name')
+            Fields\Text::make('Titel', 'name')
                 ->sortable()
-                ->slug('slug')
                 ->rules([
                     'required',
                     'between:4,255',
                 ]),
 
-            Slug::make('Pad', 'slug')
+            Fields\Slug::make('Pad', 'slug')
+                ->from('name')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
                 ->readonly(fn () => $this->exists)

@@ -83,10 +83,14 @@ class JoinSubmission extends Resource
                     ->rules(['required', 'string', 'min:2']),
 
                 // Date of Brith
-                Fields\Text::make('Geboortedatum', 'date_of_birth')
+                Fields\Date::make('Geboortedatum', 'date_of_birth')
                     ->hideFromIndex()
-                    ->help('Geboortedatum, in ISO 8601 (yyyy-mm-dd)')
-                    ->rules(['required', 'date_format:Y-m-d', "before:{$sixteenYears}"]),
+                    ->help('Geboortedatum')
+                    ->rules([
+                        'required',
+                        'date_format:Y-m-d',
+                        "before:{$sixteenYears}",
+                    ]),
                 Fields\Text::make('Geslacht', 'gender')
                     ->hideFromIndex()
                     ->help('Geslacht, in vrije vorm')

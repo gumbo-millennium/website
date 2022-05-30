@@ -7,7 +7,6 @@ namespace App\Nova\Resources;
 use App\Models\FileCategory as FileCategoryModel;
 use App\Nova\Metrics\DownloadsPerDay;
 use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
@@ -52,12 +51,13 @@ class FileCategory extends Resource
             Fields\ID::make()->sortable(),
 
             // Title and slug
-            TextWithSlug::make('Titel', 'title')
-                ->slug('slug')
+            Fields\Text::make('Titel', 'title')
                 ->rules('required', 'min:4')
                 ->help('File title, does not need to be a filename'),
-            Slug::make('Pad', 'slug')
+
+            Fields\Slug::make('Pad', 'slug')
                 ->nullable(false)
+                ->from('title')
                 ->readonly(fn () => $this->exists)
                 ->creationRules('unique:file_categories,slug')
                 ->updateRules('unique:file_categories,slug,{{resourceId}}'),
