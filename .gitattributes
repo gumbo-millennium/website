@@ -3,7 +3,7 @@
 CHANGELOG.md export-ignore
 
 # Ignore lock file diffs
-package-lock.json binary export-ignore
+package-lock.json export-ignore
 
 # Fixes for Windows being weird
 # See https://stackoverflow.com/a/2361309
