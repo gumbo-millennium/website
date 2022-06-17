@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJs;
+use Advoor\NovaEditorJs\NovaEditorJsField;
 use App\Helpers\Str;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions;
@@ -229,7 +229,7 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            NovaEditorJs::make('Omschrijving', 'description')
+            NovaEditorJsField::make('Omschrijving', 'description')
                 ->nullable()
                 ->hideFromIndex()
                 ->stacked(),
@@ -315,7 +315,7 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            NovaEditorJs::make('Ticket omschrijving', 'ticket_text')
+            NovaEditorJsField::make('Ticket omschrijving', 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
                 ->nullable()
                 ->hideFromIndex()
