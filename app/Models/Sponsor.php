@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,15 +63,6 @@ class Sponsor extends SluggableModel
     public const LOGO_PATH = 'sponsors/logos';
 
     /**
-     * The model's attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'contents' => 'null',
-    ];
-
-    /**
      * The attributes that should be cast.
      *
      * @var array
@@ -79,6 +71,7 @@ class Sponsor extends SluggableModel
         'view_count' => 'int',
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
+        'contents' => NovaEditorJsCast::class,
     ];
 
     /**

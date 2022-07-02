@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use App\Casts\ActivityFormCast;
 use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
@@ -126,8 +127,8 @@ class Activity extends SluggableModel
      */
     protected $casts = [
         // Description
-        'description' => 'json',
-        'ticket_text' => 'json',
+        'description' => NovaEditorJsCast::class,
+        'ticket_text' => NovaEditorJsCast::class,
         'enrollment_questions' => ActivityFormCast::class,
 
         // Number of seats

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,7 +85,7 @@ class Page extends SluggableModel
     protected $casts = [
         'user_id' => 'int',
         'hidden' => 'bool',
-        'contents' => 'json',
+        'contents' => NovaEditorJsCast::class,
     ];
 
     /**
