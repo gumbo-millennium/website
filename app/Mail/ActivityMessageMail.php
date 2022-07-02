@@ -48,7 +48,7 @@ class ActivityMessageMail extends Mailable
         $enrollmentUrl = route('enroll.show', $activity);
 
         // Set subject
-        $this->subject("Update voor {$activity->name}: {$message->title}");
+        $this->subject($message->subject ?: "Update voor {$activity->name}");
 
         // Render
         return $this->markdown('mail.activity.update', [

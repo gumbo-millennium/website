@@ -1,48 +1,35 @@
 @component('mail::message')
 
 @slot('summary')
-Laatste informatie voor {{ $activity->name }}
+Update vanuit de organisatie van {{ $activity->name }}
 @endslot
 
 {{-- Image --}}
 @slot('mailImage', mix('images-mail/header-update.png'))
 @slot('html')
-<p class="lead">Beste {{ $participant->first_name }},</p>
-
-<p>De organisatie van {{ $activity->name }} wil je graag het volgende bericht sturen.</p>
-
-<hr />
-
 <h2>{{ $userTitle }}</h2>
 
 {{ $userBody }}
 
-<hr />
+<div class="m-4 mt-8 py-4 px-8 bg-gray-100 text-gray-700 text-center">
+    <p>
+        Dit is een bericht verstuurd door de organisatie van {{ $activity->name }}.<br />
+        Wil je je inschrijving beheren? <a href="{{ $enrollmentUrl }}">klik dan hier</a>.
+    </p>
+    <p class="text-xs text-gray-600 mt-2">
+        Indien dit bericht ongepast is, kan je het doorsturen naar bestuur@gumbo-millennium.nl,
+        zij kunnen de afzender hierop aanspreken.
+    </p>
+</div>
 @endslot
 
-@slot('greeting')
-Veel plezier bij _{{ $activity->name }}_.
-
-Met vriendelijke groet,
-
-Gumbo Millennium
-@endslot
+@slot('greeting', '')
 
 {{-- Subcopy --}}
 @slot('subcopy')
 <p>
-    Je ontvangt deze mail omdat je bent ingeschreven op <a href="{{ route('activity.show', $activity) }}"
-        target="_blank" rel="noopener">{{ $activity->name }}</a> bij Gumbo Millennium.
-</p>
-
-<p>
-    Wil je iets wijzigen aan je inschrijving, of je inschrijving annuleren of overdagen? <a href="{{ $enrollmentUrl }}">klik dan op deze link.</a>
-</p>
-
-<p>
-    Werkt de link niet? Copy-paste dan deze URL:<br />
+    Werkt de link om je inschrijving te beheren niet? Copy-paste dan deze URL:<br />
     {{ $enrollmentUrl }}
 </p>
-
 @endslot
 @endcomponent
