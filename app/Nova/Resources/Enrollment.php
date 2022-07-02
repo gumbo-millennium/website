@@ -124,7 +124,7 @@ class Enrollment extends Resource
                 })
                 ->hideWhenUpdating(),
 
-            Fields\Text::make('Gebruiker', fn () => optional($this->user)->name)
+            Fields\Text::make('Gebruiker', fn () => $this->user?->name)
                 ->onlyOnIndex()
                 ->showOnDetail(),
 

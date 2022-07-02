@@ -137,10 +137,10 @@ class Activity extends Resource
     public function subtitle()
     {
         // Format some dates
-        $startDate = optional($this->start_date)->format('d-m-Y');
-        $endDate = optional($this->end_date)->format('d-m-Y');
-        $startTime = optional($this->start_date)->format('H:i');
-        $endTime = optional($this->end_date)->format('H:i');
+        $startDate = $this->start_date?->format('d-m-Y');
+        $endDate = $this->end_date?->format('d-m-Y');
+        $startTime = $this->start_date?->format('H:i');
+        $endTime = $this->end_date?->format('H:i');
 
         // If the start date isn't the end date, show both
         if ($startDate !== $endDate) {

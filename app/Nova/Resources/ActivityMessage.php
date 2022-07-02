@@ -54,7 +54,7 @@ class ActivityMessage extends Resource
             // Add activity
             Fields\BelongsTo::make(__('Activity'), 'activity', Activity::class),
 
-            Fields\Text::make(__('Sender'), fn () => optional($this->sender)->name),
+            Fields\Text::make(__('Sender'), fn () => $this->sender?->name),
 
             // Add data
             Fields\Text::make(__('Target audience'), 'target_audience')

@@ -1,23 +1,4 @@
-<?php
-$accountLinks = array_filter([
-  [
-    'title' => 'Mijn account',
-    'href' => route('account.index'),
-    'icon' => 'solid/user',
-  ],
-  [
-    'title' => 'Mijn wist-je-datjes',
-    'href' => route('account.quotes'),
-    'icon' => 'solid/comment-dots'
-  ],
-  Gate::allows('enter-admin') ? [
-    'title' => 'Administratie',
-    'href' => Nova::path(),
-    'icon' => 'solid/cogs'
-  ] : null,
-])
-?>
-<div class="relative bg-white shadow" x-data="{ menuOpen: false }">
+<div class="relative bg-white shadow {{ $transparent ? 'lg:shadow-none lg:bg-none' : ''}}" x-data="{ menuOpen: false }">
   <div class="mx-auto px-4 sm:px-6 lg:container">
     <div class="flex justify-between items-center py-6 lg:justify-start lg:space-x-10">
       <div class="flex justify-start lg:w-0 lg:flex-1">
@@ -26,6 +7,7 @@ $accountLinks = array_filter([
           <img class="h-10 w-auto sm:h-10" src="{{ mix('images/logo-text-green.svg') }}" alt="Logo">
         </a>
       </div>
+      @unless ($simple)
       <div class="-mr-2 -my-2 lg:hidden">
         <button type="button"
           @click.prevent="menuOpen = ! menuOpen"
@@ -36,7 +18,7 @@ $accountLinks = array_filter([
         </button>
       </div>
       <nav class="hidden lg:flex space-x-10">
-        @foreach (config('gumbo.layout.menu.desktop') as $menuItem)
+        @foreach ($desktopMenuItems as $menuItem)
           @if ($menuItem['href'] ?? null)
           <x-layout.header.menu-item :href="url($menuItem['href'])">
             {{ $menuItem['title'] }}
@@ -49,7 +31,7 @@ $accountLinks = array_filter([
         @endforeach
       </nav>
       <div class="hidden lg:flex items-center justify-end flex-1 w-0">
-        @if ($user = Auth::user())
+        @if ($user)
         {{-- Dropdown with account actions --}}
         <x-layout.header.menu-dropdown :items="$accountLinks">
           {{ $user->first_name }}
@@ -90,9 +72,11 @@ $accountLinks = array_filter([
         </a>
         @endif
       </div>
+      @endunless
     </div>
   </div>
 
+  @unless ($simple)
   <div
     class="absolute top-0 inset-x-0 z-20 w-full p-2 transition transform origin-top-right md:left-[unset] md:max-w-xl lg:hidden"
     x-show="menuOpen"
@@ -123,7 +107,7 @@ $accountLinks = array_filter([
         </div>
         <div class="mt-6">
           <nav class="grid gap-y-8">
-            @foreach (config('gumbo.layout.menu.mobile.main') as $menuItem)
+            @foreach ($mobileMenuItems as $menuItem)
             <a href="{{ url($menuItem['href']) }}" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
               <div class="w-6 flex-shrink-0 text-center">
                 <x-icon :icon="$menuItem['icon']" class="h-6 text-brand-600" />
@@ -136,13 +120,13 @@ $accountLinks = array_filter([
       </div>
       <div class="py-6 px-5 space-y-6">
         <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-          @foreach (config('gumbo.layout.menu.mobile.footer') as $menuItem)
+          @foreach ($mobileMenuFooter as $menuItem)
           <a href="{{ url($menuItem['href']) }}" class="text-base font-medium text-gray-900 hover:text-gray-700">
             {{ $menuItem['title'] }}
           </a>
           @endforeach
         </div>
-        @if ($user = Auth::user())
+        @if ($user)
         <div class="pt-4 border-t border-gray-200">
           <div class="flex items-center">
             <div class="rounded-full h-10 w-10 bg-brand-500 flex justify-center items-center flex-shrink-0">
@@ -188,4 +172,5 @@ $accountLinks = array_filter([
       </div>
     </div>
   </div>
+  @endunless
 </div>

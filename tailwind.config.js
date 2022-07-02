@@ -75,11 +75,6 @@ module.exports = {
   ],
 
   corePlugins: {
-    // Disable gradient (which introduces a lot of variables)
-    backgroundOrigin: false,
-    backgroundImage: false,
-    gradientColorStops: false,
-
     // Effects
     backgroundBlendMode: false,
 

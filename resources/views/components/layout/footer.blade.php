@@ -1,6 +1,11 @@
+@props([
+  'simple' => false,
+])
 <footer class="footer container">
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-        <div class="hidden xl:block">&nbsp;</div>
+    <div class="grid grid-cols-1 {{ $simple ? '' : 'md:grid-cols-2 xl:grid-cols-3' }}">
+      @unless ($simple)
+      <div class="hidden xl:block">&nbsp;</div>
+      @endunless
 
         <div class="text-center md:text-left xl:text-center">
             <p class="md:flex flex-col items-start xl:block">
@@ -9,6 +14,7 @@
             </p>
         </div>
 
+        @unless ($simple)
         <div class="hidden md:flex items-center justify-end text-gray-300">
             <x-icon icon="solid/leaf" class="h-4 mr-2" />
 
@@ -16,5 +22,6 @@
                 Onze website is CO<sub>2</sub> neutraal gehost.
             </a>
         </div>
+        @endunless
     </div>
 </footer>
