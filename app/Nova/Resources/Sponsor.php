@@ -8,7 +8,6 @@ use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Sponsor as SponsorModel;
 use App\Nova\Fields\Logo;
 use App\Nova\Metrics\SponsorClicksPerDay;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;

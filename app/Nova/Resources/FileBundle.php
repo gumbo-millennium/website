@@ -6,7 +6,6 @@ namespace App\Nova\Resources;
 
 use App\Helpers\Str;
 use App\Models\FileBundle as FileBundleModel;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

@@ -7,7 +7,6 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Helpers\Str;
 use App\Models\Page as PageModel;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;

@@ -6,7 +6,6 @@ namespace App\Nova\Resources;
 
 use App\Models\FileCategory as FileCategoryModel;
 use App\Nova\Metrics\DownloadsPerDay;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Panel;
