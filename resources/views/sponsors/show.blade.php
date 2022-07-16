@@ -24,6 +24,6 @@ $pageTitle = array_filter([
   </x-sections.header>
 
   <x-container space="small" class="leading-loose prose">
-    {!! $sponsor->content_html !!}
+    {{ $sponsor->content_html }}
   </x-container>
 </x-page>

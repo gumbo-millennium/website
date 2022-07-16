@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\HtmlString;
 
 /**
  * App\Models\NewsItem.
@@ -38,7 +38,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class NewsItem extends SluggableModel
 {
-    use HasEditorJsContent;
     use HasFactory;
 
     /**
@@ -91,9 +90,9 @@ class NewsItem extends SluggableModel
     /**
      * Converts contents to HTML.
      */
-    public function getHtmlAttribute(): ?string
+    public function getHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->contents);
+        return $this->contents->toHtml();
     }
 
     /**

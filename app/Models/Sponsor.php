@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJsCast;
-use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 /**
  * App\Models\Sponsor.
@@ -54,7 +54,6 @@ use Illuminate\Support\Facades\Storage;
  */
 class Sponsor extends SluggableModel
 {
-    use HasEditorJsContent;
     use HasFactory;
     use SoftDeletes;
 
@@ -186,8 +185,8 @@ class Sponsor extends SluggableModel
     /**
      * Converts contents to HTML.
      */
-    public function getContentHtmlAttribute(): ?string
+    public function getContentHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->contents);
+        return $this->contents->toHtml();
     }
 }

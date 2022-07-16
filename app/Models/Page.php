@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJsCast;
-use App\Models\Traits\HasEditorJsContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\HtmlString;
 
 /**
  * App\Models\Page.
@@ -40,7 +40,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class Page extends SluggableModel
 {
-    use HasEditorJsContent;
     use HasFactory;
 
     public const TYPE_USER = 'user';
@@ -127,9 +126,9 @@ class Page extends SluggableModel
     /**
      * Converts contents to HTML.
      */
-    public function getHtmlAttribute(): ?string
+    public function getHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->contents);
+        return $this->contents->toHtml();
     }
 
     /**

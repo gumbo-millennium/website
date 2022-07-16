@@ -16,7 +16,7 @@ if ($page->group) {
 
     {{-- Body --}}
     <x-container space="small" class="leading-loose prose">
-      {!! $page->html !!}
+      {{ $page->html }}
     </x-container>
   </article>
 </x-page>
