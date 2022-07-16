@@ -12,7 +12,7 @@
         "cviebrock/eloquent-sluggable": "^8.0",
         "darryldecode/cart": "^4.2",
         "doctrine/dbal": "^2.6",
-        "ebess/advanced-nova-media-library": "^3.6",
+        "ebess/advanced-nova-media-library": "^4.0",
         "eduardokum/laravel-mail-auto-embed": "dev-master",
         "eluceo/ical": "^2.5",
         "endroid/qr-code": "^4.4",
