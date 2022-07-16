@@ -7,7 +7,9 @@ namespace App\Services;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use DateTimeInterface;
 use GuzzleHttp\Client as HttpClient;
+
 use function GuzzleHttp\Psr7\stream_for;
+
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;

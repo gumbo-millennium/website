@@ -7,6 +7,7 @@ namespace App\Jobs\ImageJobs;
 use App\Helpers\Str;
 use DOMDocument;
 use SSNepenthe\ColorUtils\Exceptions\InvalidArgumentException as ColorException;
+
 use function SSNepenthe\ColorUtils\is_bright;
 
 class RemoveImageColors extends SvgJob
