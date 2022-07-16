@@ -35,8 +35,8 @@ use Spatie\Permission\Models\Role;
  * @property string $name
  * @property string $slug
  * @property null|string $tagline
- * @property null|array $description
- * @property null|array $ticket_text
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $description
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $ticket_text
  * @property null|string $poster
  * @property null|string $location
  * @property null|string $location_address
@@ -57,7 +57,7 @@ use Spatie\Permission\Models\Role;
  * @property array $features
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
  * @property-read int $available_seats
- * @property-read null|string $description_html
+ * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read null|int $discount_price
  * @property-read null|int $discounts_available
  * @property-read bool $enrollment_open
@@ -76,7 +76,7 @@ use Spatie\Permission\Models\Role;
  * @property-read null|string $location_url
  * @property-read null|string $organiser
  * @property-read string $price_range
- * @property-read null|string $ticket_html
+ * @property-read null|\Illuminate\Support\HtmlString $ticket_html
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
@@ -93,7 +93,9 @@ use Spatie\Permission\Models\Role;
  * @method static Builder|Activity whereInTheFuture(?\DateTimeInterface $date = null)
  * @method static Builder|Activity wherePublished()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static Builder|Activity withEnrollmentsFor(?\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+ * @method static Builder|Activity withoutUncertainty()
  * @mixin \Eloquent
  */
 class Activity extends SluggableModel
@@ -582,7 +584,7 @@ class Activity extends SluggableModel
     /**
      * Returns the form fields interpreted as a form field.
      *
-     * @return null|array<FormLayout>
+     * @return null|FormLayout[]
      */
     public function getFormAttribute(): ?array
     {

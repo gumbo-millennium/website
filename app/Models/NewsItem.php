@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -22,10 +23,10 @@ use Illuminate\Support\HtmlString;
  * @property string $category
  * @property null|string $sponsor
  * @property null|string $headline
- * @property null|mixed $contents
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
  * @property null|int $author_id
  * @property-read null|\App\Models\User $author
- * @property-read null|string $html
+ * @property-read null|\Illuminate\Support\HtmlString $html
  * @method static \Database\Factories\NewsItemFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|NewsItem newModelQuery()
@@ -57,7 +58,7 @@ class NewsItem extends SluggableModel
      * @var array
      */
     protected $casts = [
-        'content' => 'json',
+        'contents' => NovaEditorJsCast::class,
         'user_id' => 'int',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

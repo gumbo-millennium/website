@@ -3,16 +3,15 @@
 ])
 <footer class="footer container">
     <div class="grid grid-cols-1 {{ $simple ? '' : 'md:grid-cols-2 xl:grid-cols-3' }}">
-      @unless ($simple)
-      <div class="hidden xl:block">&nbsp;</div>
-      @endunless
-
-        <div class="text-center md:text-left xl:text-center">
-            <p class="md:flex flex-col items-start xl:block">
-                <span>© Gumbo Millennium {{ today()->year }}.</span>
-                <span>Alle rechten voorbehouden.</span>
-            </p>
-        </div>
+      <div class="text-center md:text-left xl:text-center">
+          <p class="md:flex flex-col items-start xl:block">
+              <span>© Gumbo Millennium {{ today()->year }}.</span>
+              <span>Alle rechten voorbehouden.</span>
+          </p>
+          <p>
+            <a href="/privacy" rel="privacy">Privacybeleid</a>
+          </p>
+      </div>
 
         @unless ($simple)
         <div class="hidden md:flex items-center justify-end text-gray-300">

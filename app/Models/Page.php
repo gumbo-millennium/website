@@ -22,11 +22,11 @@ use Illuminate\Support\HtmlString;
  * @property null|string $group
  * @property string $type
  * @property null|string $summary
- * @property null|mixed $contents
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
  * @property null|int $author_id
  * @property bool $hidden
  * @property-read null|\App\Models\User $author
- * @property-read null|string $html
+ * @property-read null|\Illuminate\Support\HtmlString $html
  * @property-read string $url
  * @method static \Database\Factories\PageFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)

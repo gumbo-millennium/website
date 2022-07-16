@@ -76,7 +76,7 @@ class SitemapController extends Controller
 
         // Add other pages
         foreach (Page::cursor() as $page) {
-            if (in_array($page->slug, self::SKIPPED_PAGES, true) || empty($page->html)) {
+            if (in_array($page->slug, self::SKIPPED_PAGES, true) || ! $page->html?->isNotEmpty()) {
                 continue;
             }
 

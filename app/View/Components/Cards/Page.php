@@ -38,7 +38,7 @@ class Page extends Component
             'image' => $page->cover,
             'lead' => Str::of($page->group)->title(),
             'title' => $page->title,
-            'description' => $page->summary ?? Str::words(strip_tags($page->html ?? ''), 10),
+            'description' => $page->summary ?? Str::words(strip_tags($page->html?->toHtml() ?? ''), 10),
         ]);
     }
 }
