@@ -93,7 +93,7 @@ class NewsItem extends SluggableModel
      */
     public function getHtmlAttribute(): ?HtmlString
     {
-        return $this->contents->toHtml();
+        return $this->contents?->toHtml();
     }
 
     /**
