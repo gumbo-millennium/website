@@ -6,6 +6,7 @@ namespace App\Nova\Dashboards;
 
 use App\Nova\Metrics\NewEnrollments;
 use App\Nova\Metrics\NewUsers;
+use Illuminate\Support\Facades\App;
 use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Dashboards\Main as Dashboard;
 
@@ -18,10 +19,15 @@ class Main extends Dashboard
      */
     public function cards()
     {
-        return [
+        $cards = [
             new NewUsers(),
             new NewEnrollments(),
-            new Help(),
         ];
+
+        if (App::isLocal()) {
+            $cards[] = new Help();
+        }
+
+        return $cards;
     }
 }
