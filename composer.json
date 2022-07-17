@@ -8,7 +8,7 @@
         "advoor/nova-editor-js": "^3.0",
         "artesaos/seotools": "^0.20",
         "barryvdh/laravel-debugbar": "^3.6",
-        "barryvdh/laravel-dompdf": "^1.0",
+        "barryvdh/laravel-dompdf": "^2.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "darryldecode/cart": "^4.2",
         "doctrine/dbal": "^2.6",
