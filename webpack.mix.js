@@ -89,6 +89,13 @@ mix.override(webpack => {
   // Override the ruleset
   webpack.module.rules = allowedWebpackLoaders
 
+  // Mute autoprefixer warnign we have no control over
+  webpack.stats ??= {}
+  webpack.stats.warningsFilter = [
+    ...(webpack.stats.warningsFilter ?? []),
+    'Replace color-adjust to print-color-adjust.',
+  ]
+
   // Done
   return webpack
 })
