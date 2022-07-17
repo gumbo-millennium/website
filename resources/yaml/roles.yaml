@@ -24,8 +24,9 @@ member:
     # Allow file browsing
     - file-view
 
-    # Allow viewing plazacam
-    - plazacam-view
+    # Allow device viewing
+    - camera-view
+    - device-view
 
     # Allow enrolling on private events
     - activity-private
@@ -55,7 +56,7 @@ pc:
   title: Plaza Commissie
   extends: member
   permissions:
-    - plazacam-update
+    - device-write
 
 # Public Relations Project Group
 pr:
@@ -70,6 +71,7 @@ ic:
   title: Introductie commissie
   permissions:
     - activity-create
+    - device-write
 
 wc:
   title: Werving Commissie
@@ -84,8 +86,9 @@ board:
     # Allow file management
     - file-admin
 
-    # Allow manually updating plazacam
-    - plazacam-update
+    # Allow changes to cameras
+    - camera-admin
+    - device-admin
 
     # Allow editing content
     - content-admin

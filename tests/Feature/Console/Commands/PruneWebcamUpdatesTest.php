@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Console\Commands;
 
-use App\Models\Webcam;
-use App\Models\WebcamUpdate;
+use App\Models\Webcam\Device;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -22,120 +23,45 @@ class PruneWebcamUpdatesTest extends TestCase
         });
     }
 
-    public function test_pruning(): void
+    public function test_default_pruning(): void
     {
-        [$cam] = $this->createTestWebcam(30);
+        $imageDisk = Config::get('gumbo.images.disk');
+        Storage::fake($imageDisk);
+
+        $oldDevices = $this->createDevices(10, [
+            'updated_at' => Date::now()->subWeek(),
+        ]);
+
+        $currentDevices = $this->createDevices(10, [
+            'updated_at' => Date::now(),
+        ]);
 
         $this->artisan('gumbo:prune-webcams');
 
-        $this->assertCount(20, $cam->refresh()->updates);
+        $oldDevices->each(fn ($device) => Storage::assertMissing($device->path));
+        $currentDevices->each(fn ($device) => Storage::assertExists($device->path));
     }
 
-    public function test_pruning_custom_count(): void
+    public function test_high_number_pruning(): void
     {
-        /** @var Webcam $cam */
-        [$cam, $models] = $this->createTestWebcam(30);
+        $imageDisk = Config::get('gumbo.images.disk');
+        Storage::fake($imageDisk);
 
-        $this->artisan('gumbo:prune-webcams', ['--keep' => 15]);
-
-        $sortedModels = $models->sortByDesc('created_at');
-
-        $this->assertCount(15, $cam->refresh()->updates);
-
-        $webcamTable = WebcamUpdate::make()->getTable();
-        $this->assertDatabaseHas($webcamTable, ['id' => $sortedModels->first()->id]);
-        $this->assertDatabaseMissing($webcamTable, ['id' => $sortedModels->last()->id]);
-    }
-
-    public function test_pruning_in_order(): void
-    {
-        /** @var Webcam $cam */
-        [$cam] = $this->createTestWebcam(0);
-
-        $cam->updates()->saveMany([
-            $old = WebcamUpdate::factory()->make(['created_at' => Date::now()->subMonths(4)]),
-            $new = WebcamUpdate::factory()->make(['created_at' => Date::now()]),
+        $devices = $this->createDevices(30, [
+            'updated_at' => Date::now()->subWeek(),
         ]);
 
-        $this->assertTrue($old->exists);
-        $this->assertTrue($new->exists);
+        $this->artisan('gumbo:prune-webcams');
 
-        $this->assertCount(2, $cam->refresh()->updates);
+        $devices->each(fn ($device) => Storage::assertExists($device->path));
 
-        $this->artisan('gumbo:prune-webcams', ['--keep' => 1]);
+        $this->artisan('gumbo:prune-webcams', ['--force' => true]);
 
-        $this->assertNull(WebcamUpdate::find($old->id));
-        $this->assertNotNull(WebcamUpdate::find($new->id));
-
-        $this->assertCount(1, $cam->refresh()->updates);
+        $devices->each(fn ($device) => Storage::assertMissing($device->path));
     }
 
-    public function test_pruning_oprhans(): void
+    private function createDevices(int $count, array $props = []): Collection
     {
-        /** @var Webcam $cam */
-        [$cam] = $this->createTestWebcam(0);
-
-        $factory = WebcamUpdate::factory()->withImage();
-
-        $fourMonthOld = $factory->make(['created_at' => Date::now()->subMonths(4)]);
-        $twoMonthOld = $factory->make(['created_at' => Date::now()->subMonths(2)]);
-        $oneMonthOld = $factory->make(['created_at' => Date::now()->subMonth()]);
-        $oneHourOld = $factory->make(['created_at' => Date::now()->subHour()]);
-
-        $cam->updates()->saveMany([$fourMonthOld, $twoMonthOld, $oneMonthOld, $oneHourOld]);
-
-        $this->assertCount(4, $cam->refresh()->updates);
-
-        // Delete two resources without deleting their images
-        WebcamUpdate::withoutEvents(fn () => $fourMonthOld->delete());
-
-        // Ensure the four month old update is deleted
-        $this->assertNull(WebcamUpdate::find($fourMonthOld->id));
-
-        // Ensure the filesystem has the images
-        Storage::assertExists($fourMonthOld->image_path);
-        Storage::assertExists($twoMonthOld->image_path);
-        Storage::assertExists($oneMonthOld->image_path);
-        Storage::assertExists($oneHourOld->image_path);
-
-        // Prune the other two cams too
-        $this->artisan('gumbo:prune-webcams', ['--keep' => 2]);
-
-        // Ensure the proper models were removed
-        $this->assertNull(WebcamUpdate::find($twoMonthOld->id));
-        $this->assertNotNull(WebcamUpdate::find($oneMonthOld->id));
-        $this->assertNotNull(WebcamUpdate::find($oneHourOld->id));
-
-        // Ensure the floating images were removed
-        Storage::assertMissing($fourMonthOld->image_path);
-        Storage::assertMissing($twoMonthOld->image_path);
-
-        // Ensure the last two images is still there
-        Storage::assertExists($oneMonthOld->image_path);
-        Storage::assertExists($oneHourOld->image_path);
-
-        // Last sanity check
-        $this->assertCount(2, $cam->refresh()->updates);
-    }
-
-    /**
-     * @return array[Webcam,Collection|WebcamUpdate]
-     */
-    private function createTestWebcam(int $count): array
-    {
-        $cam = Webcam::factory()->create();
-
-        if ($count === 0) {
-            return [$cam, collect()];
-        }
-
-        /** @var \Illuminate\Database\Eloquent\Collection $models */
-        $models = WebcamUpdate::factory()->times($count)->make();
-
-        $cam->updates()->saveMany($models);
-
-        $this->assertCount($count, $cam->refresh()->updates);
-
-        return [$cam, $models->toBase()];
+        return Device::withImages()->times($count)->create($props);
     }
 }

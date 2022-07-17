@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Webcam;
+use App\Models\Webcam\Camera;
 use Illuminate\Database\Seeder;
 
-class RequiredWebcamSeeder extends Seeder
+class RequiredCameraSeeder extends Seeder
 {
-    private const REQUIRED_WEBCAMS = [
+    private const REQUIRED_CAMERAS = [
         'plaza' => 'Plazacam',
         'coffee' => 'Koffiecam',
     ];
@@ -19,9 +19,9 @@ class RequiredWebcamSeeder extends Seeder
      */
     public function run(): void
     {
-        Webcam::unguarded(function () {
-            foreach (self::REQUIRED_WEBCAMS as $slug => $name) {
-                Webcam::firstOrCreate([
+        Camera::unguarded(function () {
+            foreach (self::REQUIRED_CAMERAS as $slug => $name) {
+                Camera::firstOrCreate([
                     'slug' => $slug,
                 ], [
                     'name' => $name,

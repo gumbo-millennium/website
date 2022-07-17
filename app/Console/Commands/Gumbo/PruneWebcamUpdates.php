@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Gumbo;
 
-use App\Models\Webcam;
-use App\Models\WebcamUpdate;
+use App\Models\Webcam\Device;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -17,76 +19,53 @@ class PruneWebcamUpdates extends Command
      *
      * @var string
      */
-    protected $signature = <<<'CMD'
-    gumbo:prune-webcams
-        {--keep=20 : Number of updates to keep}
-    CMD;
+    protected $signature = <<<'DOC'
+        gumbo:prune-webcams
+            {--force : Force removal, required if the number of files is above 15}
+    DOC;
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Remove all webcam updates before the given number, also pruning the disk.';
+    protected $description = 'Remove all device photo\'s that are older than 4 days (to keep weekends intact).';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $keepCount = $this->option('keep') ?? 20;
-
-        $this->line("Removing all webcam updates after the count of <info>{$keepCount}</>.", null, OutputInterface::VERBOSITY_VERBOSE);
-
-        $totalRemoveCount = 0;
-        foreach (Webcam::all() as $webcam) {
-            $removeCount = 0;
-            $webcamCount = $webcam->updates()->count();
-            if ($webcamCount <= $keepCount) {
-                $this->line("Webcam <info>{$webcam->name}</> has <comment>{$webcamCount}</> updates, not pruning.", null, OutputInterface::VERBOSITY_VERBOSE);
-
-                continue;
-            }
-
-            $updatesToRemove = $webcam
-                ->updates()
-                ->latest()
-                ->take($webcamCount - $keepCount)
-                ->skip($keepCount)
-                ->cursor();
-
-            /** @var \App\Models\WebcamUpdate $update */
-            foreach ($updatesToRemove as $update) {
-                $update->delete();
-
-                $this->line("Removed update <comment>{$update->name}</>.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
-
-                $removeCount++;
-            }
-
-            $this->line("Removed <info>{$removeCount}</> update(s) for <comment>{$webcam->name}</>.", null, OutputInterface::VERBOSITY_VERBOSE);
-
-            $totalRemoveCount += $removeCount;
+        if ($this->option('force')) {
+            $this->comment('--force option given, I hope you know what you\'re doing...');
         }
 
-        $this->line("Removed <info>{$totalRemoveCount}</> webcam update(s).");
+        $date = Date::now()->subDays(4);
+        $photoDisk = Config::get('gumbo.images.disk');
 
-        // Find all remainig updates
-        $files = Storage::allFiles(WebcamUpdate::STORAGE_LOCATION);
+        $this->line("Removing all device photos timestamped before <info>{$date->format('Y-m-d H:i:s (z)')}</>.", null, OutputInterface::VERBOSITY_VERBOSE);
 
-        $fileLocations = WebcamUpdate::query()->pluck('path');
+        $existingFiles = Collection::make(Storage::disk($photoDisk)->allFiles(Device::STORAGE_FOLDER));
 
-        $orphans = 0;
-        foreach ($files as $file) {
-            if (! $fileLocations->contains($file)) {
-                Storage::delete($file);
+        $recentPaths = Device::where([
+            ['updated_at', '>=', $date],
+            ['path', '!=', null],
+        ])->pluck('path');
 
-                $this->line("Removed orphaned file <comment>{$file}</>.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $filesToDelete = $existingFiles->reject(fn ($path) => $recentPaths->contains($path));
 
-                $orphans++;
-            }
+        $this->line("Found <info>{$filesToDelete->count()}</> files to delete (<comment>{$recentPaths->count()}</comment> will be kept).", null, OutputInterface::VERBOSITY_VERBOSE);
+
+        if ($this->option('force') === false && count($filesToDelete) > 15) {
+            $this->error('Too many files to delete. Use --force to force removal.');
+
+            return Command::FAILURE;
         }
 
-        $this->line("Removed <info>{$orphans}</> orphaned file(s).", null);
+        Storage::disk($photoDisk)->delete($filesToDelete);
+
+        $this->line("Removed <info>{$filesToDelete->count()}</> photos.");
+
+        return Command::SUCCESS;
     }
 }

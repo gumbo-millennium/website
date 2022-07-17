@@ -3,8 +3,11 @@ file-view: Bestandsysteem bekijken
 file-admin: Bestandsysteem beheren
 
 # Plaza cam permissions
-plazacam-view: Viewing of the plazacam (and coffee cam)
-plazacam-update: Editing the plazacam (and coffee cam)
+camera-view: Cameras bekijken
+camera-admin: Cameras beheren
+device-view: Apparaten bekijken
+device-write: Apparaten gebruiken
+device-admin: Appraten beheren
 
 # Manage content
 content-admin: Pagina's en nieuws beheren

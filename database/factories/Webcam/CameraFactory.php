@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Database\Factories;
+namespace Database\Factories\Webcam;
 
 use App\Helpers\Str;
-use App\Models\Webcam;
+use App\Models\Webcam\Camera;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class WebcamFactory extends Factory
+class CameraFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -24,8 +24,8 @@ class WebcamFactory extends Factory
 
     public function configure()
     {
-        return $this->afterMaking(function (Webcam $webcam) {
-            $webcam->command ??= Str::slug($webcam->name ?? $this->faker->words(2, true));
+        return $this->afterMaking(function (Camera $camera) {
+            $camera->command ??= Str::slug($camera->name ?? $this->faker->words(2, true));
         });
     }
 }

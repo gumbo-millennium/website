@@ -211,13 +211,13 @@
   "This export is ready to download.": "De export is klaar om te downloaden.",
   "This export is no longer available.": "De export is niet langer beschikbaar.",
 
-  "Webcams": "Camera's",
-  "Webcam": "Camera",
-  "Webcam Updates": "Updates",
-  "Webcam Update": "Update",
+  "Camera": "Camera",
+  "Cameras": "Camera's",
+  "Device": "Apparaat",
+  "Devices": "Apparaten",
   "Most recent image": "Meest recente afbeelding",
-  "Image": "Afbeelding",
   "The bot command that will show the cam, must end with \"cam\".": "Het bot commando dat de camera zal tonen, moet eindigen met \"cam\".",
+  ":name on :device": ":name op :device",
 
   "Ticket": "Ticket",
   "Tickets": "Tickets",
