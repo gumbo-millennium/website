@@ -192,10 +192,12 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
-    Route::get('/', 'Account\DisplayController@index')->name('index');
+    Route::get('/', 'Account\IndexController@index')->name('index');
 
     // Urls
-    Route::get('/api-urls', 'Account\DisplayController@showUrls')->name('urls');
+    Route::get('/personal-access-tokens', 'Account\PersonalAccessTokenController@index')->name('tokens.index');
+    Route::post('/personal-access-tokens', 'Account\PersonalAccessTokenController@store')->name('tokens.store');
+    Route::delete('/personal-access-tokens/{token}', 'Account\PersonalAccessTokenController@delete')->name('tokens.delete');
 
     // Edit profile
     Route::get('/bewerk-profiel', 'Account\DetailsController@editDetails')->name('edit');

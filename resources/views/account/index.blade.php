@@ -47,16 +47,16 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
-{{-- API toegang --}}
+{{-- API keys --}}
 <div class="card card--padded">
-    <h3 class="heading-3 mt-0">API toegang</h3>
+    <h3 class="heading-3 mt-0">Mijn API toegang</h3>
     <div class="flex flex-row items-center">
-        <p class="leading-none m-0 mr-4 flex-grow">Hacken op de Gumbo site</p>
-        <a href="{{ route('account.urls') }}" class="btn my-0">Naar overzicht</a>
+        <p class="leading-none m-0 mr-4 flex-grow">Toegang tot Gumbo APIs</p>
+        <a href="{{ route('account.tokens.index') }}" class="btn my-0">Naar overzicht</a>
     </div>
 </div>
 
-{{-- API toegang --}}
+{{-- Telegram account --}}
 <div class="card card--padded">
     <h3 class="heading-3 mt-0">Telegram account</h3>
     @if ($telegramName)
