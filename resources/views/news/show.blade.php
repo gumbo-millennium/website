@@ -68,7 +68,7 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
 
       {{-- Rest of the HTML --}}
       <div class="prose prose--narrow">
-          {!! $item->html !!}
+          {{ $item->html }}
       </div>
     </x-container>
   </article>

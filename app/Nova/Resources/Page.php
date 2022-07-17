@@ -7,8 +7,6 @@ namespace App\Nova\Resources;
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Helpers\Str;
 use App\Models\Page as PageModel;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
@@ -56,8 +54,10 @@ class Page extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            TextWithSlug::make('Titel', 'title')->slug('slug'),
-            Slug::make('Deelpad', 'slug')
+            Fields\Text::make('Titel', 'title'),
+
+            Fields\Slug::make('Deelpad', 'slug')
+                ->from('title')
                 ->nullable(false)
                 ->hideFromIndex()
                 ->readonly(fn () => array_key_exists($this->slug, PageModel::REQUIRED_PAGES))

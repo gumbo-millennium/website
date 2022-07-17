@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Markdown as MarkdownField;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class SendActivityMail extends Action
 {
@@ -76,7 +77,7 @@ class SendActivityMail extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Select::make(__('Target audience'), 'audience')

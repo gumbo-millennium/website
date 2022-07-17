@@ -7,7 +7,6 @@ namespace App\Nova\Resources\Shop;
 use App\Models\Shop\ProductVariant as Model;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Resource;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 
@@ -58,7 +57,8 @@ class ProductVariant extends Resource
             Fields\Text::make(__('Name'), 'name')
                 ->readonly(),
 
-            Slug::make(__('Slug'), 'slug')
+            Fields\Slug::make(__('Slug'), 'slug')
+                ->from('name')
                 ->disableAutoUpdateWhenUpdating()
                 ->onlyOnDetail()
                 ->nullable(),

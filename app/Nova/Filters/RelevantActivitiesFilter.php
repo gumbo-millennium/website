@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Filters;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class RelevantActivitiesFilter extends BooleanFilter
 {
@@ -22,7 +22,7 @@ class RelevantActivitiesFilter extends BooleanFilter
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function apply(Request $request, $query, $value)
+    public function apply(NovaRequest $request, $query, $value)
     {
         // Future or past
         $query = $query->where('end_date', $value['show_past'] ? '<' : '>=', now());
@@ -40,7 +40,7 @@ class RelevantActivitiesFilter extends BooleanFilter
      *
      * @return array
      */
-    public function options(Request $request)
+    public function options(NovaRequest $request)
     {
         return [
             'Afgelopen' => 'show_past',

@@ -6,8 +6,6 @@ namespace App\Nova\Resources;
 
 use App\Helpers\Str;
 use App\Models\FileBundle as FileBundleModel;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -63,11 +61,12 @@ class FileBundle extends Resource
             Fields\ID::make()->sortable(),
 
             // Title and slug
-            TextWithSlug::make('Titel', 'title')
-                ->slug('slug')
+            Fields\Text::make('Titel', 'title')
                 ->rules('required', 'min:4')
                 ->help('Titel van de bundel'),
-            Slug::make('Pad', 'slug')
+
+            Fields\Slug::make('Pad', 'slug')
+                ->from('title')
                 ->nullable(false)
                 ->readonly(fn () => $this->exists)
                 ->creationRules('unique:file_bundles,slug')

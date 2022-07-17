@@ -87,7 +87,7 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
         <div class="p-8">
             @if (!empty($activity->description_html))
             <div class="leading-relaxed prose">
-                {!! $activity->description_html !!}
+                {{ $activity->description_html }}
             </div>
             @else
             <p class="leading-relaxed text-center text-gray-primary-1">

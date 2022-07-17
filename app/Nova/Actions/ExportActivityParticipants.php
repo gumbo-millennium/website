@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use RuntimeException;
 
 class ExportActivityParticipants extends Action
@@ -63,7 +64,7 @@ class ExportActivityParticipants extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Select::make('Type export', 'type')

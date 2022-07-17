@@ -7,7 +7,7 @@ SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
   <x-sections.header :title="$page->title" :subtitle="$page->tagline" :crumbs="['/' => 'Home']" />
 
   <x-container space="small" class="leading-loose prose">
-    {!! $page->html !!}
+    {{ $page->html }}
   </x-container>
 
   <x-container space="small">

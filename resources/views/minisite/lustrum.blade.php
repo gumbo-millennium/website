@@ -48,7 +48,7 @@
 
         {{-- Page body --}}
         <div class="prose">
-            {!! $page->html !!}
+            {{ $page->html }}
         </div>
     </div>
 </div>

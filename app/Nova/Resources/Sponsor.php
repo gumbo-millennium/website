@@ -8,8 +8,6 @@ use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Sponsor as SponsorModel;
 use App\Nova\Fields\Logo;
 use App\Nova\Metrics\SponsorClicksPerDay;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
@@ -59,8 +57,10 @@ class Sponsor extends Resource
             Fields\ID::make()->sortable(),
 
             // Name and slug
-            TextWithSlug::make('Naam', 'name')->slug('slug'),
-            Slug::make('Pad', 'slug')
+            Fields\Text::make('Naam', 'name'),
+
+            Fields\Slug::make('Pad', 'slug')
+                ->from('name')
                 ->nullable(false)
                 ->hideFromIndex()
                 ->readonly(fn () => $this->exists())

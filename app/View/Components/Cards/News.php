@@ -52,7 +52,7 @@ class News extends Component
             'image' => $item->cover,
             'title' => $item->title,
             'lead' => $item->category,
-            'slot' => $item->headline ?? Str::words(strip_tags($item->html ?? ''), 10),
+            'slot' => $item->headline ?? Str::words(strip_tags($item->html?->toHtml() ?? ''), 10),
 
             // Footer
             'footer-text' => "Gepubliceerd op {$item->published_at->isoFormat('ddd DD MMM YYYY')}",

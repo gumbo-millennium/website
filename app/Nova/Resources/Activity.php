@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJs;
+use Advoor\NovaEditorJs\NovaEditorJsField;
 use App\Helpers\Str;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions;
@@ -12,8 +12,6 @@ use App\Nova\Fields\Seats;
 use App\Nova\Filters;
 use App\Nova\Flexible\Presets\ActivityForm;
 use App\Nova\Metrics;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Config;
@@ -156,7 +154,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function fields(Request $request)
+    public function fields(NovaRequest $request)
     {
         $featuresMap = collect(Config::get('gumbo.activity-features', []))
             ->mapWithKeys(fn ($row, $key) => [$key => $row['title']])
@@ -194,7 +192,7 @@ class Activity extends Resource
         ];
     }
 
-    public function mainFields(Request $request): MergeValue
+    public function mainFields(NovaRequest $request): MergeValue
     {
         $user = $request->user();
         $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
@@ -202,15 +200,15 @@ class Activity extends Resource
         return $this->merge([
             Fields\ID::make()->sortable(),
 
-            TextWithSlug::make('Titel', 'name')
+            Fields\Text::make('Titel', 'name')
                 ->sortable()
-                ->slug('slug')
                 ->rules([
                     'required',
                     'between:4,255',
                 ]),
 
-            Slug::make('Pad', 'slug')
+            Fields\Slug::make('Pad', 'slug')
+                ->from('name')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
                 ->readonly(fn () => $this->exists)
@@ -231,7 +229,7 @@ class Activity extends Resource
                 ->hideFromIndex()
                 ->nullable(),
 
-            NovaEditorJs::make('Omschrijving', 'description')
+            NovaEditorJsField::make('Omschrijving', 'description')
                 ->nullable()
                 ->hideFromIndex()
                 ->stacked(),
@@ -288,13 +286,11 @@ class Activity extends Resource
             Fields\DateTime::make('Aanvang activiteit', 'start_date')
                 ->sortable()
                 ->rules('required', 'date')
-                ->firstDayOfWeek(1)
                 ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             Fields\DateTime::make('Einde activiteit', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
-                ->hideFromIndex()
-                ->firstDayOfWeek(1),
+                ->hideFromIndex(),
         ];
     }
 
@@ -312,16 +308,14 @@ class Activity extends Resource
             Fields\DateTime::make('Opening inschrijvingen', 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
             Fields\DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
-            NovaEditorJs::make('Ticket omschrijving', 'ticket_text')
+            NovaEditorJsField::make('Ticket omschrijving', 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
                 ->nullable()
                 ->hideFromIndex()
@@ -364,7 +358,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function actions(Request $request)
+    public function actions(NovaRequest $request)
     {
         return [
             new Actions\CancelActivity(),
@@ -380,7 +374,7 @@ class Activity extends Resource
      *
      * @return array
      */
-    public function filters(Request $request)
+    public function filters(NovaRequest $request)
     {
         return [
             new Filters\RelevantActivitiesFilter(),

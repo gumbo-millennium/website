@@ -6,7 +6,6 @@ namespace App\Nova\Resources\Shop;
 
 use App\Models\Shop\Category as Model;
 use App\Nova\Resources\Resource;
-use Benjaminhirsch\NovaSlugField\Slug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 
@@ -55,7 +54,8 @@ class Category extends Resource
             Fields\ID::make(),
 
             Fields\Text::make(__('Name'), 'name'),
-            Slug::make(__('Slug'), 'slug')
+            Fields\Slug::make(__('Slug'), 'slug')
+                ->from('name')
                 ->disableAutoUpdateWhenUpdating()
                 ->showUrlPreview(url('/shop/'))
                 ->hideFromIndex()

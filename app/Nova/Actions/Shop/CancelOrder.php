@@ -60,7 +60,7 @@ class CancelOrder extends Action
      *
      * @var bool
      */
-    public $showOnTableRow = true;
+    public $showInline = true;
 
     /**
      * Get the displayable name of the action.

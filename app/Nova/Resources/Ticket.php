@@ -138,14 +138,12 @@ class Ticket extends Resource
             Fields\DateTime::make(__('Available From'), 'available_from')
                 ->rules('nullable', 'date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
             Fields\DateTime::make(__('Available Until'), 'available_until')
                 ->rules('nullable', 'date')
                 ->hideFromIndex()
-                ->nullable()
-                ->firstDayOfWeek(1),
+                ->nullable(),
 
             // Pricing
             Fields\Heading::make(__('Pricing and quantity')),

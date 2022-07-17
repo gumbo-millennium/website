@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use App\Casts\ActivityFormCast;
 use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
-use App\Models\Traits\HasEditorJsContent;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +20,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\HtmlString;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -34,8 +35,8 @@ use Spatie\Permission\Models\Role;
  * @property string $name
  * @property string $slug
  * @property null|string $tagline
- * @property null|array $description
- * @property null|array $ticket_text
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $description
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $ticket_text
  * @property null|string $poster
  * @property null|string $location
  * @property null|string $location_address
@@ -56,7 +57,7 @@ use Spatie\Permission\Models\Role;
  * @property array $features
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
  * @property-read int $available_seats
- * @property-read null|string $description_html
+ * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read null|int $discount_price
  * @property-read null|int $discounts_available
  * @property-read bool $enrollment_open
@@ -75,7 +76,7 @@ use Spatie\Permission\Models\Role;
  * @property-read null|string $location_url
  * @property-read null|string $organiser
  * @property-read string $price_range
- * @property-read null|string $ticket_html
+ * @property-read null|\Illuminate\Support\HtmlString $ticket_html
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
  * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
@@ -92,12 +93,13 @@ use Spatie\Permission\Models\Role;
  * @method static Builder|Activity whereInTheFuture(?\DateTimeInterface $date = null)
  * @method static Builder|Activity wherePublished()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
+ * @method static Builder|Activity withEnrollmentsFor(?\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+ * @method static Builder|Activity withoutUncertainty()
  * @mixin \Eloquent
  */
 class Activity extends SluggableModel
 {
-    use HasEditorJsContent;
     use HasFactory;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
@@ -126,8 +128,8 @@ class Activity extends SluggableModel
      */
     protected $casts = [
         // Description
-        'description' => 'json',
-        'ticket_text' => 'json',
+        'description' => NovaEditorJsCast::class,
+        'ticket_text' => NovaEditorJsCast::class,
         'enrollment_questions' => ActivityFormCast::class,
 
         // Number of seats
@@ -304,17 +306,17 @@ class Activity extends SluggableModel
     /**
      * Converts contents to HTML.
      */
-    public function getDescriptionHtmlAttribute(): ?string
+    public function getDescriptionHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->description);
+        return $this->description?->toHtml();
     }
 
     /**
      * Converts ticket contents to HTML.
      */
-    public function getTicketHtmlAttribute(): ?string
+    public function getTicketHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->ticket_text);
+        return $this->ticket_text?->toHtml();
     }
 
     /**
@@ -582,7 +584,7 @@ class Activity extends SluggableModel
     /**
      * Returns the form fields interpreted as a form field.
      *
-     * @return null|array<FormLayout>
+     * @return null|FormLayout[]
      */
     public function getFormAttribute(): ?array
     {

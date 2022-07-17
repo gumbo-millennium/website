@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\Traits\HasEditorJsContent;
+use Advoor\NovaEditorJs\NovaEditorJsCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\HtmlString;
 
 /**
  * App\Models\Page.
@@ -21,11 +22,11 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|string $group
  * @property string $type
  * @property null|string $summary
- * @property null|mixed $contents
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
  * @property null|int $author_id
  * @property bool $hidden
  * @property-read null|\App\Models\User $author
- * @property-read null|string $html
+ * @property-read null|\Illuminate\Support\HtmlString $html
  * @property-read string $url
  * @method static \Database\Factories\PageFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
@@ -39,7 +40,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class Page extends SluggableModel
 {
-    use HasEditorJsContent;
     use HasFactory;
 
     public const TYPE_USER = 'user';
@@ -84,7 +84,7 @@ class Page extends SluggableModel
     protected $casts = [
         'user_id' => 'int',
         'hidden' => 'bool',
-        'contents' => 'json',
+        'contents' => NovaEditorJsCast::class,
     ];
 
     /**
@@ -126,9 +126,9 @@ class Page extends SluggableModel
     /**
      * Converts contents to HTML.
      */
-    public function getHtmlAttribute(): ?string
+    public function getHtmlAttribute(): ?HtmlString
     {
-        return $this->convertToHtml($this->contents);
+        return $this->contents?->toHtml();
     }
 
     /**

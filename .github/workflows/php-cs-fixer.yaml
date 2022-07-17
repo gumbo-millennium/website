@@ -25,7 +25,11 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: '8.1'
-          tools: php-cs-fixer
+
+      - name: Install php-cs-fixer
+        run: |
+          export PHP_CS_FIXER_VERSION=$( composer show --locked friendsofphp/php-cs-fixer -f json | jq -r '.versions[0]' )
+          composer global require friendsofphp/php-cs-fixer:$PHP_CS_FIXER_VERSION
 
       - name: Run PHP CS Fixer
         run: php-cs-fixer fix

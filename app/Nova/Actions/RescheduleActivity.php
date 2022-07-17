@@ -15,6 +15,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class RescheduleActivity extends Action
 {
@@ -115,7 +116,7 @@ class RescheduleActivity extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return [
             Text::make('Reden', 'reason')
@@ -124,12 +125,10 @@ class RescheduleActivity extends Action
             DateTime::make('Nieuwe aanvang', 'start_date')
                 ->sortable()
                 ->rules('required', 'date', 'after:now')
-                ->firstDayOfWeek(1)
                 ->help('Moet <em>na</em> de huidige startdatum zijn.'),
             DateTime::make('Nieuw einde', 'end_date')
                 ->rules('required', 'date', 'after:start_date')
-                ->hideFromIndex()
-                ->firstDayOfWeek(1),
+                ->hideFromIndex(),
         ];
     }
 }

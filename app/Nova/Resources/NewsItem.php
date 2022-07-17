@@ -6,8 +6,6 @@ namespace App\Nova\Resources;
 
 use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\NewsItem as NewsItemModel;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
@@ -56,8 +54,11 @@ class NewsItem extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            TextWithSlug::make('Titel', 'title')->slug('slug'),
-            Slug::make('Pad', 'slug')->nullable(false),
+            Fields\Text::make('Titel', 'title'),
+
+            Fields\Slug::make('Pad', 'slug')
+                ->from('title')
+                ->nullable(false),
 
             // Category
             Fields\Select::make('Categorie', 'category')
