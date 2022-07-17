@@ -155,7 +155,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             }
 
             if ($user?->can('devops')) {
-                yield MenuItem::make(__('DevOps'), [
+                yield MenuSection::make(__('DevOps'), [
                     MenuItem::externalLink('Telescope', URL::to(Config::get('telescope.path'))),
                     MenuItem::externalLink('Horizon', URL::to(Config::get('horizon.path'))),
                 ])->icon('server');
