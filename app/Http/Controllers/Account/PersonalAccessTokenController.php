@@ -13,6 +13,9 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class PersonalAccessTokenController extends Controller
 {
+    /**
+     * Displays existing access tokens.
+     */
     public function index(Request $request): HttpResponse
     {
         $user = $request->user();
@@ -23,6 +26,9 @@ class PersonalAccessTokenController extends Controller
         ]);
     }
 
+    /**
+     * Issues new access tokens.
+     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -37,13 +43,14 @@ class PersonalAccessTokenController extends Controller
 
         flash()->success('API token created successfully.');
 
-        dd($token);
-
         return Response::redirectToRoute('account.tokens.index')
             ->with('created_token', $token);
     }
 
-    public function revoke(Request $request, PersonalAccessToken $token): RedirectResponse
+    /**
+     * Revokes access tokens.
+     */
+    public function delete(Request $request, PersonalAccessToken $token): RedirectResponse
     {
         $user = $request->user();
 

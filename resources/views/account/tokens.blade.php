@@ -25,9 +25,9 @@
               <p class="text-medium text-gray-900 truncate">
                 {{ $token->name }}
               </p>
-              @if ($token->id === $newToken?->id)
+              @if ($token->id === $newToken?->accessToken->id)
               <div class="px-2 py-1 bg-gray-900 text-white">
-                <code class="text-monospace">{{ $newToken->plainTextToken }}
+                <code data-content="plain-text-token" data-token-id="{{ $newToken->accessToken->id }}" class="text-monospace">{{ $newToken->plainTextToken }}</code>
               </div>
               @else
               <p class="text-gray-500 truncate">
@@ -42,6 +42,7 @@
               <button class="appearance-none p-4 flex items-center group">
                 <x-icon icon="solid/times" class="h-4 text-gray-500 group-hover:text-red-500" />
               </button>
+            </form>
           </div>
         </li>
       @endforeach
