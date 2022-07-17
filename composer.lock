@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "b6f5dfa52f8f57526afc8b3484ad828d776ae677"
+                "reference": "2be40c75855cb230dafbdf772229a133a203d842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/b6f5dfa52f8f57526afc8b3484ad828d776ae677",
-                "reference": "b6f5dfa52f8f57526afc8b3484ad828d776ae677",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/2be40c75855cb230dafbdf772229a133a203d842",
+                "reference": "2be40c75855cb230dafbdf772229a133a203d842",
                 "shasum": ""
             },
             "require": {
@@ -59,9 +59,9 @@
             ],
             "support": {
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
-                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.2"
+                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.3"
             },
-            "time": "2022-07-07T08:21:48+00:00"
+            "time": "2022-07-17T00:27:17+00:00"
         },
         {
             "name": "artesaos/seotools",
@@ -2240,16 +2240,16 @@
         },
         {
             "name": "fideloper/proxy",
-            "version": "4.4.1",
+            "version": "4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fideloper/TrustedProxy.git",
-                "reference": "c073b2bd04d1c90e04dc1b787662b558dd65ade0"
+                "reference": "a751f2bc86dd8e6cfef12dc0cbdada82f5a18750"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fideloper/TrustedProxy/zipball/c073b2bd04d1c90e04dc1b787662b558dd65ade0",
-                "reference": "c073b2bd04d1c90e04dc1b787662b558dd65ade0",
+                "url": "https://api.github.com/repos/fideloper/TrustedProxy/zipball/a751f2bc86dd8e6cfef12dc0cbdada82f5a18750",
+                "reference": "a751f2bc86dd8e6cfef12dc0cbdada82f5a18750",
                 "shasum": ""
             },
             "require": {
@@ -2259,7 +2259,7 @@
             "require-dev": {
                 "illuminate/http": "^5.0|^6.0|^7.0|^8.0|^9.0",
                 "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^6.0"
+                "phpunit/phpunit": "^8.5.8|^9.3.3"
             },
             "type": "library",
             "extra": {
@@ -2292,9 +2292,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fideloper/TrustedProxy/issues",
-                "source": "https://github.com/fideloper/TrustedProxy/tree/4.4.1"
+                "source": "https://github.com/fideloper/TrustedProxy/tree/4.4.2"
             },
-            "time": "2020-10-22T13:48:01+00:00"
+            "time": "2022-02-09T13:33:34+00:00"
         },
         {
             "name": "firebase/php-jwt",
