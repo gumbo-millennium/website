@@ -54,7 +54,11 @@ class Page extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\Text::make('Titel', 'title'),
+            Fields\Text::make('Titel', 'title')
+                ->rules([
+                    'required',
+                    'max:200',
+                ]),
 
             Fields\Slug::make('Deelpad', 'slug')
                 ->from('title')
