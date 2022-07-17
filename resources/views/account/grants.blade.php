@@ -3,7 +3,7 @@
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Jouw <strong>toestemmingen</strong></h1>
-<p class="text-lg text-gray-primary-2 mb-4">Jouw privacy gaat voor, tenzij je dat liever niet hebt.</p>
+<p class="text-lg text-gray-600 mb-4">Jouw privacy gaat voor, tenzij je dat liever niet hebt.</p>
 
 <a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
 

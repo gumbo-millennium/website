@@ -26,7 +26,7 @@ De bestelling:
 Het bestuur zal binnenkort contact met je opnemen om de bestelling af te ronden.
 
 {{-- Outro Lines --}}
-<p class="text-gray-primary-1">
+<p class="text-gray-500">
     Dit is een automatisch bericht vanuit de website, reageren is niet mogelijk.
 </p>
 

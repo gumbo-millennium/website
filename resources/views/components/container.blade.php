@@ -14,7 +14,7 @@ $containerPadding = match($space) {
 };
 $background = match($background) {
   'brand' => 'bg-brand-50',
-  'brand-dark' => 'bg-brand-600 text-white',
+  'brand-gray-900' => 'bg-brand-600 text-white',
   'gray' => 'bg-gray-50',
   'dark' => 'bg-gray-900 text-white',
   'white' => 'bg-white',

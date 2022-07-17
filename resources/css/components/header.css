@@ -1,7 +1,7 @@
 /* Header element */
 
 .header {
-  @apply bg-brand-primary-2 relative;
+  @apply bg-brand-600 relative;
   @apply overflow-hidden;
 }
 
@@ -20,7 +20,7 @@
 }
 
 .header__title, .header__subtitle {
-  @apply text-light text-center;
+  @apply text-white text-center;
 }
 
 .header__title {

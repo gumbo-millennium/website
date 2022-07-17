@@ -12,26 +12,26 @@
 
 .prose button:hover, .prose button:active,
 .btn:hover, .btn:active {
-  @apply bg-gray-secondary-2 text-gray-primary-3;
+  @apply bg-gray-200 text-gray-700;
 }
 
 .btn--link {
-  @apply border-0 bg-transparent text-brand-primary-2;
+  @apply border-0 bg-transparent text-brand-600;
 }
 
 .btn--link:hover, .btn--link:active {
-  @apply border-0 bg-transparent text-brand-primary-1;
+  @apply border-0 bg-transparent text-brand-500;
 }
 
 .prose button[type="submit"],
 .btn--brand {
-  @apply bg-brand-primary-1 border-brand-primary-2 text-light;
+  @apply bg-brand-500 border-brand-600 text-white;
   @apply border-none;
 }
 
 .prose button[type="submit"]:hover, .prose button[type="submit"]:active,
 .btn--brand:hover, .btn--brand:active {
-  @apply bg-brand-primary-2 border-brand-primary-3 text-white shadow-lg;
+  @apply bg-brand-600 border-brand-700 text-white shadow-lg;
 }
 
 .prose button[disabled],

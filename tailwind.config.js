@@ -3,26 +3,20 @@
  */
 
 //  Load our settings
-const gumboSettings = require('./resources/js-build/branding')
+const { brand } = require('./resources/js-build/branding')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 // Build configs
 module.exports = {
   mode: 'jit',
 
-  purge: {
-    content: [
-      'resources/views/**/*.blade.php',
-      'app/**/*.php',
-    ],
-    options: {
-      safelist: {
-        deep: ['prose'],
-      },
-      fontFace: true,
-      keyframes: true,
-      variables: true,
-    },
+  content: [
+    'resources/views/**/*.blade.php',
+    'app/**/*.php',
+  ],
+
+  safelist: {
+    deep: ['prose'],
   },
 
   theme: {
@@ -48,7 +42,9 @@ module.exports = {
       fontSize: {
         huge: '8rem',
       },
-      colors: gumboSettings.colors,
+      colors: {
+        brand: brand,
+      },
       backgroundPosition: {
         center: 'center',
       },

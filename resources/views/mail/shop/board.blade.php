@@ -28,7 +28,7 @@ De bestelling:
 @endcomponent
 
 {{-- Outro Lines --}}
-<p class="text-gray-primary-1">
+<p class="text-gray-500">
     Dit is een automatisch bericht vanuit de website, reageren is niet mogelijk.
 </p>
 

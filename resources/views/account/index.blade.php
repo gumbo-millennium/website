@@ -7,7 +7,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Hallo <strong>{{ $user->first_name }}</strong>,</h1>
-<p class="text-lg text-gray-primary-2 mb-4">Beheer je gegevens, of steek alles in de fik en verwijder je account.</p>
+<p class="text-lg text-gray-600 mb-4">Beheer je gegevens, of steek alles in de fik en verwijder je account.</p>
 
 {{-- Edit account --}}
 <div class="card card--padded">

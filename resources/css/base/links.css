@@ -3,9 +3,9 @@
 */
 
 .prose a {
-  @apply text-dark underline;
+  @apply text-gray-900 underline;
 }
 
 .prose a:hover, .prose a:active {
-  @apply text-gray-primary-3 no-underline;
+  @apply text-gray-700 no-underline;
 }

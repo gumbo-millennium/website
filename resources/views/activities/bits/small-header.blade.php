@@ -27,7 +27,7 @@ $startDateFull = $startLocale->isoFormat('dddd D MMMM Y, [om] HH:mm');
             <div class="activity-summary__stat">
                 <x-icon icon="solid/map-marker-alt" class="mr-4" />
                 @empty($activity->location)
-                <span class="text-gray-primary-1">Onbekend</span>
+                <span class="text-gray-500">Onbekend</span>
                 @elseif ($activity->location_url)
                 <a href="{{ $activity->location_url }}" target="_blank" rel="noopener">{{ $activity->location }}</a>
                 @else

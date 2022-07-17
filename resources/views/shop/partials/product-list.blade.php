@@ -52,7 +52,7 @@
                     </div>
                 @else
                     <button name="quantity" value="{{ min($item->quantity + 1, $item->associatedModel->applied_order_limit) }}"
-                        class="flex items-center justify-center appearance-none rounded-full h-6 w-6 shadow bg-brand-primary-1 text-white">
+                        class="flex items-center justify-center appearance-none rounded-full h-6 w-6 shadow bg-brand-500 text-white">
                         <x-icon icon="solid/plus" class="h-2" />
                     </button>
                 @endif
@@ -71,6 +71,6 @@
 
     <div class="p-2 rounded-lg bg-gray-50 grid grid-cols-2">
         <p class="font-bold">Totaal</p>
-        <p class="text-right font-title text-lg text-brand-primary-3">{{ Str::price(Cart::getTotal()) }}</p>
+        <p class="text-right font-title text-lg text-brand-700">{{ Str::price(Cart::getTotal()) }}</p>
     </div>
 </div>

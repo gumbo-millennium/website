@@ -23,16 +23,16 @@ $properties = [
     <h1 class="text-3xl font-title mb-4">{{ $bundle->title }}</h1>
 
     {{-- Description --}}
-    <p class="text-gray-primary-1 mb-4">{{ $description }}</p>
+    <p class="text-gray-500 mb-4">{{ $description }}</p>
 
     {{-- Download all --}}
     <a class="@stack('files.download-class')" href="{{ route('files.download', compact('bundle')) }}">Alles downloaden</a>
 
     {{-- Data --}}
-    <dl class="my-8 py-8 border-gray-secondary-3 border-t border-b grid gap-2 grid-cols-2">
+    <dl class="my-8 py-8 border-gray-300 border-t border-b grid gap-2 grid-cols-2">
         @foreach ($properties as $label => $value)
         <dt class="font-bold">{{ $label }}</dt>
-        <dd class="text-sm font-gray-primary-1">{{ $value }}</dd>
+        <dd class="text-sm font-gray-500">{{ $value }}</dd>
         @endforeach
     </dl>
 

@@ -3,7 +3,7 @@
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">API Tokens</h1>
-<p class="text-lg text-gray-primary-2 mb-4">Toegang tot de Gumbo APIs met je eigen sleutels.</p>
+<p class="text-lg text-gray-600 mb-4">Toegang tot de Gumbo APIs met je eigen sleutels.</p>
 
 <a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
 
@@ -17,7 +17,7 @@
 
 @if ($tokens->count() > 0)
   <div class="flow-root mt-6 mb-10">
-    <ul role="list" class="-my-5 divide-y divide-gray-secondary-2">
+    <ul role="list" class="-my-5 divide-y divide-gray-200">
       @foreach ($tokens as $token)
         <li class="py-4">
           <div class="flex items-center space-x-4">
@@ -30,7 +30,7 @@
                 <code class="text-monospace">{{ $newToken->plainTextToken }}
               </div>
               @else
-              <p class="text-gray-primary-1 truncate">
+              <p class="text-gray-500 truncate">
                 Aangemaakt op {{ $token->created_at->isoFormat('D MMM YYYY, HH:mm') }}
               </p>
               @endif
@@ -40,17 +40,17 @@
               @csrf
               @method('DELETE')
               <button class="appearance-none p-4 flex items-center group">
-                <x-icon icon="solid/times" class="h-4 text-gray-primary-1 group-hover:text-red-primary-1" />
+                <x-icon icon="solid/times" class="h-4 text-gray-500 group-hover:text-red-500" />
               </button>
           </div>
         </li>
       @endforeach
-    </ul>
+      </ul>
   </div>
 @else
-<div class="relative block w-full border-2 border-gray-secondary-3 border-dashed rounded-lg p-12 text-center">
+<div class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-12 text-center">
   <h3 class="mt-2 text-sm font-medium text-gray-900">Geen API tokens</h3>
-  <p class="mt-1 text-sm text-gray-primary-1">Je hebt nog geen tokens aangemaakt.</p>
+  <p class="mt-1 text-sm text-gray-500">Je hebt nog geen tokens aangemaakt.</p>
 </div>
 @endif
 

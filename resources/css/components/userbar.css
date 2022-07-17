@@ -1,7 +1,7 @@
 /* Userbar */
 
 .userbar {
-  @apply bg-brand-primary-2 text-light py-2;
+  @apply bg-brand-600 text-white py-2;
 }
 
 .userbar__container {
@@ -49,7 +49,7 @@
 }
 
 .userbar__links-item:hover, .userbar__links-item:active {
-  @apply text-gray-secondary-2 underline;
+  @apply text-gray-200 underline;
 }
 
 .userbar__links-item:first-child .userbar__links-link {

@@ -1,6 +1,5 @@
 /* Input dark mode */
 
 .form-input, .form-select {
-  @apply border;
-  border-color: theme('colors.source.gray.300');
+  @apply border border-gray-300;
 }

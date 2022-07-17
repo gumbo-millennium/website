@@ -53,7 +53,7 @@ if ($durationIsLong && $durationIsMultiDay) {
 }
 
 // Prep location
-$location = new HtmlString('<span class="text-gray-primary-1">Onbekend</span>');
+$location = new HtmlString('<span class="text-gray-500">Onbekend</span>');
 $locationIcon = null;
 if (!empty($activity->location) && filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
     $location = new HtmlString(sprintf(
@@ -109,7 +109,7 @@ $showTagline ??= true;
 
 {{-- Members only message, if required --}}
 @if (!$activity->is_public || !$activity->is_published)
-<div class="text-gray-primary-1 text-sm font-bold uppercase mb-4 flex flex-row items-center">
+<div class="text-gray-500 text-sm font-bold uppercase mb-4 flex flex-row items-center">
     @if (!$activity->is_published)
     <p class="mr-4">
         <x-icon icon="solid/eye-slash" class="mr-1" />
@@ -180,7 +180,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 </div>
 @endif
 @if ($showTagline)
-    <p class="text-gray-primary-1 mb-4">{{ $tagline }}</p>
+    <p class="text-gray-500 mb-4">{{ $tagline }}</p>
 @endif
 @endif
 
@@ -198,7 +198,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 
 @if ($showMeta)
 {{-- Make some room --}}
-<hr class="border-gray-secondary-3 my-8" />
+<hr class="border-gray-300 my-8" />
 
 {{-- Icons --}}
 @php($features = $activity->expanded_features)
@@ -222,7 +222,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 @endif
 
 {{-- Make some room --}}
-<hr class="border-gray-secondary-3 my-8" />
+<hr class="border-gray-300 my-8" />
 
 {{-- Data --}}
 <dl class="grid grid-cols-2 gap-2">
@@ -238,7 +238,7 @@ $onDate = $activity->postponed_at->isoFormat('D MMM Y, HH:mm (z)');
 </dl>
 
 {{-- Make some more room --}}
-<hr class="border-gray-secondary-3 my-8" />
+<hr class="border-gray-300 my-8" />
 @endif
 
 {{-- Back link --}}

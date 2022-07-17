@@ -90,7 +90,7 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
                 {{ $activity->description_html }}
             </div>
             @else
-            <p class="leading-relaxed text-center text-gray-primary-1">
+            <p class="leading-relaxed text-center text-gray-500">
                 Deze activiteit heeft geen uitgebreide omschrijving.
             </p>
             @endif

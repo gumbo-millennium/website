@@ -1,5 +1,5 @@
 .mail-footer {
-  @apply bg-gray-secondary-1;
+  @apply bg-gray-100;
 }
 
 .mail-footer__cell {

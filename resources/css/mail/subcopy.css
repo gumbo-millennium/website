@@ -3,5 +3,5 @@
 }
 
 .mail-subcopy__inner-cell {
-  @apply text-gray-secondary-3 p-8 pt-0 text-center text-sm;
+  @apply text-gray-300 p-8 pt-0 text-center text-sm;
 }

@@ -11,11 +11,11 @@
 }
 
 .home-hero__title-fat {
-  @apply text-5xl font-bold text-brand-primary-2;
+  @apply text-5xl font-bold text-brand-600;
 }
 
 .home-hero__lead {
-  @apply text-lg text-gray-primary-3 mb-8;
+  @apply text-lg text-gray-700 mb-8;
 }
 
 .home-hero__logo {
@@ -27,7 +27,7 @@
 }
 
 .home-sponsors {
-  @apply bg-gray-secondary-2;
+  @apply bg-gray-200;
 }
 
 .home-sponsors__container {
@@ -43,7 +43,7 @@
 }
 
 .home-sponsor__sponsor-link {
-  @apply rounded px-4 py-8 text-gray-primary-1 block;
+  @apply rounded px-4 py-8 text-gray-500 block;
 }
 
 .home-sponsors__sponsor-image {

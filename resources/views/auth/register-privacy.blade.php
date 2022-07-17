@@ -16,7 +16,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
         Daarom hebben wij een privacybeleid opgesteld met als oog om de
         informatie over onze leden zo goed mogelijk te beschermen.
     </p>
-    <div class="my-4 p-4 border border-brand-primary-1 rounded">
+    <div class="my-4 p-4 border border-brand-500 rounded">
         <p>
             <a target="_blank" href="/privacy-policy">Lees ons privacybeleid</a>
             (opent in een nieuw tabblad).
@@ -24,7 +24,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
     </div>
 </div>
 
-<p class="mb-8 text-gray-primary-2">
+<p class="mb-8 text-gray-600">
     Hierbij een kort overzicht van de gegevens die direct worden gedeeld zodra je akkoord gaat.
 </p>
 

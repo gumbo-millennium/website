@@ -11,7 +11,7 @@ $canEnroll = Enroll::canEnroll($activity);
                 Inschrijving beheren
             </a>
             @if ($activity->start_date > now())
-                <a href="{{ route('enroll.transfer', [$activity]) }}" class="mt-2 text-gray-secondary-3">Overdragen</a>
+                <a href="{{ route('enroll.transfer', [$activity]) }}" class="mt-2 text-gray-300">Overdragen</a>
             @endif
         @elseif (!$canEnroll)
             <a disabled href="#" class="btn btn--brand">

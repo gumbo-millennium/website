@@ -3,13 +3,13 @@
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Verbinden met <strong>Telegram</strong></h1>
-<p class="text-lg text-gray-primary-2 mb-4">Om besloten activiteiten en de plazacam via de bot op te vragen, moet je je Telegram account aan je Gumbo account linken.</p>
+<p class="text-lg text-gray-600 mb-4">Om besloten activiteiten en de plazacam via de bot op te vragen, moet je je Telegram account aan je Gumbo account linken.</p>
 
 {{-- Display --}}
 <div class="flex flex-row my-16 md:mx-16">
     {{-- Telegram user --}}
     <div class="flex flex-col items-center w-1/3 flex-grow">
-        <div class="h-20 w-20 rounded-full bg-blue-primary-1 text-white mb-4 flex items-center justify-center">
+        <div class="h-20 w-20 rounded-full bg-blue-500 text-white mb-4 flex items-center justify-center">
             <x-icon icon="brands/telegram-plane" class="h-8" />
         </div>
 
@@ -24,7 +24,7 @@
 
     {{-- Gumbo user --}}
     <div class="flex flex-col items-center w-1/3 flex-grow">
-        <div class="h-20 w-20 rounded-full bg-brand-primary-1 text-white mb-4 flex items-center justify-center">
+        <div class="h-20 w-20 rounded-full bg-brand-500 text-white mb-4 flex items-center justify-center">
             <x-icon icon="solid/user" class="h-8" />
         </div>
 

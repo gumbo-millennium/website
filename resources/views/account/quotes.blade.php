@@ -7,7 +7,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Jouw <strong>wist-je-datjes</strong></h1>
-<p class="text-lg text-gray-primary-2 mb-4">Telt het als klikken als anderen er plezier aan beleven?</p>
+<p class="text-lg text-gray-600 mb-4">Telt het als klikken als anderen er plezier aan beleven?</p>
 
 <a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
 
@@ -29,11 +29,11 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 <x-account.quote-grid :delete="true" :quotes="$unsent">
     <div class="py-16 px-4 text-center">
         <h3 class="text-title text-center">Geen wist-je-datjes</h3>
-        <p class="text-gray-primary-2">Je hebt nog geen wist-je-datjes ingestuurd, of ze zijn allemaal al doorgestuurd.</p>
+        <p class="text-gray-600">Je hebt nog geen wist-je-datjes ingestuurd, of ze zijn allemaal al doorgestuurd.</p>
     </div>
 </x-account.quote-grid>
 
-<hr class="my-8 border-gray-secondary-3" />
+<hr class="my-8 border-gray-300" />
 
 {{-- Sent quotes --}}
 <h3 class="font-title text-2xl">Verzonden wist-je-datjes</h3>
@@ -42,7 +42,7 @@ $testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@examp
 <x-account.quote-grid :delete="false" :quotes="$sent">
     <div class="py-16 px-4 text-center">
         <h3 class="text-title text-center">Geen wist-je-datjes</h3>
-        <p class="text-gray-primary-2">Er zijn geen wist-je-datjes van jou doorgestuurd naar de Gumbode, of ze zijn verwijderd.</p>
+        <p class="text-gray-600">Er zijn geen wist-je-datjes van jou doorgestuurd naar de Gumbode, of ze zijn verwijderd.</p>
     </div>
 </x-account.quote-grid>
 

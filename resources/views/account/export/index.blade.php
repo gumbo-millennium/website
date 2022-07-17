@@ -3,7 +3,7 @@
 @section('basic-content-small')
 {{-- Header --}}
 <h1 class="login__header font-base text-4xl">Jouw <strong>inzageverzoeken</strong></h1>
-<p class="text-lg text-gray-primary-2 mb-4">Bekijk welke data de site over je weet.</p>
+<p class="text-lg text-gray-600 mb-4">Bekijk welke data de site over je weet.</p>
 
 <a href="{{ route('account.index') }}" class="w-full block mb-4">« Terug naar overzicht</a>
 

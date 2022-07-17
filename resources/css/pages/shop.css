@@ -51,7 +51,7 @@
 .shop-detail__details {
   @apply relative;
   @apply py-4 px-4;
-  @apply bg-gray-secondary-2 rounded-t-2xl;
+  @apply bg-gray-200 rounded-t-2xl;
 
   margin-top: calc(0 - theme('spacing.4'));
 }
@@ -65,11 +65,11 @@
 
 .shop-detail__variant {
   @apply block mx-2 p-4;
-  @apply bg-gray-secondary-1 border border-gray-primary-1 rounded;
+  @apply bg-gray-100 border border-gray-500 rounded;
 }
 
 .shop-detail__variant--active {
-  @apply bg-brand-secondary-1 border-brand-primary-1 text-dark;
+  @apply bg-brand-100 border-brand-500 text-gray-900;
 }
 
 @screen md {

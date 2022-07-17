@@ -23,6 +23,6 @@
 }
 
 .prose .editor-js-delimiter::before {
-  @apply block text-2xl my-4 p-4 pb-2 text-center text-gray-secondary-3 leading-none;
+  @apply block text-2xl my-4 p-4 pb-2 text-center text-gray-300 leading-none;
   content: '***';
 }

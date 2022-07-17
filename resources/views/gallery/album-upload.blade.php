@@ -51,7 +51,7 @@
         <input name="file" multiple required accept="image/jpeg" type="file" class="hidden" />
       </div>
 
-      <p class="text-sm text-gray-primary-1">
+      <p class="text-sm text-gray-500">
         Uploads die niet zijn opgeslagen blijven sowieso 3 uur staan, daarna kunnen ze worden verwijderd.
       </p>
     </x-gallery.step>
