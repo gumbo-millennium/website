@@ -7,8 +7,6 @@ namespace App\Providers;
 use App\Models;
 use App\Nova\Dashboards;
 use App\Nova\Resources;
-use App\Nova\Resources\Permission;
-use App\Nova\Resources\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
@@ -17,7 +15,6 @@ use Laravel\Nova\Menu\MenuItem;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Vyuldashev\NovaPermission\NovaPermissionTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -48,10 +45,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function tools()
     {
         return [
-            // Permission handler
-            NovaPermissionTool::make()
-                ->roleResource(Role::class)
-                ->permissionResource(Permission::class),
         ];
     }
 

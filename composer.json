@@ -54,7 +54,6 @@
         "symfony/process": "^5.4",
         "symfony/yaml": "^5.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^11.5",
-        "vyuldashev/nova-permission": "^3.0",
         "whitecube/nova-flexible-content": "^1.0"
     },
     "require-dev": {

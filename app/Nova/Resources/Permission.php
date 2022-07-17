@@ -10,7 +10,6 @@ use Laravel\Nova\Fields;
 use Laravel\Nova\Nova;
 use Spatie\Permission\Models\Permission as PermissionModel;
 use Spatie\Permission\PermissionRegistrar;
-use Vyuldashev\NovaPermission\AttachToRole;
 
 /**
  * Permissions, for the Permission Framework.
@@ -111,8 +110,6 @@ class Permission extends Resource
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
     public function actions(Request $request)
     {
-        return [
-            new AttachToRole(),
-        ];
+        return [];
     }
 }
