@@ -17,7 +17,7 @@ use Kris\LaravelFormBuilder\FormBuilder;
 /**
  * Allows a user to change it's account info.
  */
-class DetailsController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Force auth.
@@ -27,29 +27,35 @@ class DetailsController extends Controller
         $this->middleware('auth');
     }
 
+    public function index(Request $request): HttpResponse
+    {
+        return Response::view('account.index', [
+            'user' => $request->user(),
+        ]);
+    }
+
     /**
      * Edit form.
      */
-    public function editDetails(FormBuilder $formBuilder, Request $request): HttpResponse
+    public function edit(FormBuilder $formBuilder, Request $request): HttpResponse
     {
-        // Get current user
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
 
         // Get some params
         $isLinked = $user->conscribo_id !== null;
 
+        /** @var AccountEditForm $form */
         $form = $formBuilder->create(AccountEditForm::class, [
             'method' => 'PATCH',
-            'url' => route('account.update'),
+            'url' => route('account.profile.update'),
             'model' => $user,
             'user-id' => $user->id,
             'is-linked' => $isLinked,
         ]);
-        // Create form
-        \assert($form instanceof AccountEditForm);
 
-        return Response::view('account.edit', [
+        // Render
+        return Response::view('account.profile', [
             'user' => $user,
             'form' => $form,
             'isLinked' => $isLinked,
@@ -59,7 +65,7 @@ class DetailsController extends Controller
     /**
      * Applying the changes.
      */
-    public function updateDetails(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
+    public function update(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
         // Get current user
         $user = $request->user();
@@ -118,7 +124,7 @@ class DetailsController extends Controller
         }
 
         // Flash OK
-        flash($message, 'success');
+        flash()->success($message);
 
         return Response::redirectToRoute('account.index');
     }

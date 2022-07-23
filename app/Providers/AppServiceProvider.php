@@ -147,6 +147,7 @@ class AppServiceProvider extends ServiceProvider
         $plainFiles = [
             'yaml/menu.yaml' => 'gumbo.layout',
             'yaml/buttons.yaml' => 'gumbo.buttons',
+            'yaml/account-menu.yaml' => 'gumbo.account.menu',
         ];
 
         foreach ($plainFiles as $file => $configKey) {

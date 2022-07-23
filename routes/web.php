@@ -192,7 +192,7 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
-    Route::get('/', 'Account\IndexController@index')->name('index');
+    Route::get('/', 'Account\ProfileController@index')->name('index');
 
     // Urls
     Route::get('/personal-access-tokens', 'Account\PersonalAccessTokenController@index')->name('tokens.index');
@@ -200,8 +200,8 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::delete('/personal-access-tokens/{token}', 'Account\PersonalAccessTokenController@delete')->name('tokens.delete');
 
     // Edit profile
-    Route::get('/bewerk-profiel', 'Account\DetailsController@editDetails')->name('edit');
-    Route::patch('/bewerk-profiel', 'Account\DetailsController@updateDetails')->name('update');
+    Route::get('/profiel', 'Account\ProfileController@edit')->name('profile.edit');
+    Route::patch('/profiel', 'Account\ProfileController@update')->name('profile.update');
 
     // Quotes
     Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');

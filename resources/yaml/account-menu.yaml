@@ -1,0 +1,27 @@
+- route: account.index
+  title: Account
+  icon: solid/house
+
+- route: account.profile.edit
+  title: Profile
+  icon: solid/user
+
+- route: account.quotes
+  title: Bot Quotes
+  icon: solid/comment-dots
+
+- route: account.grants
+  title: Grants
+  icon: solid/list-check
+
+- route: account.tg.link
+  title: Telegram Account
+  icon: brands/telegram
+
+- route: account.export.index
+  title: Export
+  icon: solid/file-export
+
+- route: account.tokens.index
+  title: API tokens
+  icon: solid/key
