@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
 
     private const SHOP_FEATURES_FILE = 'assets/yaml/shop-features.yaml';
 
+    private const BUTTON_STYLES_FILE = 'assets/yaml/button-styles.yaml';
+
     private const MENU_FILE = 'yaml/menu.yaml';
 
     /**
@@ -131,6 +133,7 @@ class AppServiceProvider extends ServiceProvider
         $featureFiles = [
             self::ACTIVITY_FEATURES_FILE => 'gumbo.activity-features',
             self::SHOP_FEATURES_FILE => 'gumbo.shop.features',
+            self::BUTTON_STYLES_FILE => 'gumbo.buttons',
         ];
 
         foreach ($featureFiles as $file => $configKey) {

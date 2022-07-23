@@ -16,7 +16,7 @@ $pageTitle = array_filter([
         :href="route('sponsors.link', $sponsor)"
         target="_blank"
         size="small"
-        color="primary"
+        style="primary"
         rel="noopener">
         Lees meer
       </x-button>

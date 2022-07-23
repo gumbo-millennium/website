@@ -9,7 +9,7 @@
   @endforeach
 
   <x-slot name="callToAction">
-    <x-button color="primary" href="{{ route('news.index') }}">
+    <x-button style="primary" href="{{ route('news.index') }}">
       Bekijk alle updates
     </x-button>
   </x-slot>

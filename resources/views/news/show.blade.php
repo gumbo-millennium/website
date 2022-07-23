@@ -37,7 +37,7 @@ $whatsappLink = "whatsapp://send?{$facebookQuery}";
 
         {{-- Register share actions --}}
         <x-slot name="buttons">
-          <x-button color="primary" href="{{ route('news.index') }}" data-action="share" size="small" class="flex items-center md:hidden">
+          <x-button style="primary" href="{{ route('news.index') }}" data-action="share" size="small" class="flex items-center md:hidden">
             <x-icon icon="solid/share-alt" class="h-5 mr-2" role="none" />
             Delen
           </x-button>

@@ -9,7 +9,7 @@
   @endforeach
 
   <x-slot name="callToAction">
-    <x-button color="primary" href="{{ route('activity.index') }}">
+    <x-button style="primary" href="{{ route('activity.index') }}">
       Bekijk alle activiteiten
     </x-button>
   </x-slot>

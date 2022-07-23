@@ -17,11 +17,11 @@ $firstActivity = $past ? null : $activities->first();
   >
     <x-slot name="buttons">
       @if ($past)
-        <x-button size="small" color="secondary"  href="{{ route('activity.index') }}">
+        <x-button size="small" style="light"  href="{{ route('activity.index') }}">
           Aankomende activiteiten
         </x-button>
       @else
-        <x-button size="small" color="secondary" href="{{ route('activity.index', ['past' => true]) }}">
+        <x-button size="small" style="light" href="{{ route('activity.index', ['past' => true]) }}">
           Afgelopen activiteiten
         </x-button>
       @endif
