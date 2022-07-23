@@ -14,7 +14,7 @@
   title: Grants
   icon: solid/list-check
 
-- route: account.tg.link
+- route: account.tg.show
   title: Telegram Account
   icon: brands/telegram
 

@@ -212,6 +212,7 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::post('/toestemmingen', 'Account\GrantsController@updateGrants');
 
     // Telegram
+    Route::get('/telegram', 'Account\TelegramController@show')->name('tg.show');
     Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'Account\TelegramController@store');
     Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');

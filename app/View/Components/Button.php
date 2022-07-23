@@ -40,10 +40,10 @@ final class Button extends Component
         $sizeClass = Config::get("gumbo.buttons.sizes.{$this->size}");
         $styleClass = Config::get("gumbo.buttons.styles.{$this->style}");
 
-        throw_unless($styleClass, InvalidArgumentException::class, "Button style {$this->style} not found");
         throw_unless($sizeClass, InvalidArgumentException::class, "Button size {$this->size} not found");
+        throw_unless($styleClass, InvalidArgumentException::class, "Button style {$this->style} not found");
 
-        $cssClass = [$styleClass, $sizeClass];
+        $cssClass = [$sizeClass, $styleClass];
 
         if (in_array($this->type, ['button', 'submit', 'reset'], true)) {
             return fn (array $data) => sprintf(

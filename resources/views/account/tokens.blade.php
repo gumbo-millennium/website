@@ -1,6 +1,6 @@
-<x-account-page>
+<x-account-page :hideTitle="true">
   <div class="pb-2 mb-4 border-b border-gray-200 flex flex-row justify-between">
-    <h1 class="text-2xl font-title">Personal access tokens</h1>
+    <h1 class="text-2xl font-title">@lang('API Tokens')</h1>
     <div>
       <x-button size="small" style="outline" :href="route('account.tokens.store')">
         Create token

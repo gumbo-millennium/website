@@ -99,12 +99,5 @@ module.exports = {
 
     // Disable table layout
     tableLayout: false,
-
-    // Ring stuff
-    ringColor: false,
-    ringOffsetColor: false,
-    ringOffsetWidth: false,
-    ringOpacity: false,
-    ringWidth: false,
   },
 }

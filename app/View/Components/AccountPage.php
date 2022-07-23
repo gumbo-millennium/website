@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Illuminate\View\Component;
 
 class AccountPage extends Page
 {
@@ -40,10 +39,10 @@ class AccountPage extends Page
      * @return void
      */
     public function __construct(
-        array|string $title = '',
+        array|string $title = null,
         bool $hideFlash = false,
-        ?string $activeRoute = null,
         bool $hideTitle = false,
+        ?string $activeRoute = null,
     ) {
         $this->hideTitle = $hideTitle;
         $this->activeRoute = $activeRoute ?? Route::currentRouteName();
