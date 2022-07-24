@@ -93,7 +93,7 @@ class AlbumPolicy
             return $this->allow();
         }
 
-        $this->deny(__(self::REASON_NO_ACCESS));
+        return $this->deny(__(self::REASON_NO_ACCESS));
     }
 
     /**
