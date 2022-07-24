@@ -18,6 +18,29 @@ class HomepageControllerTest extends TestCase
         $this->get('/')->assertOk();
     }
 
+    /**
+     * Check if the email verification banner is showing, and if it's properly rendering.
+     */
+    public function test_email_verification_banner(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('data-action="verify-email"', false);
+
+        $this->actingAs($user = $this->getGuestUser());
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('data-action="verify-email"', false);
+
+        $user->markEmailAsVerified();
+        $user->save();
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('data-action="verify-email"', false);
+    }
+
     public function test_full_homepage(): void
     {
         Activity::query()->forceDelete();
