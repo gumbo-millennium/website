@@ -24,5 +24,8 @@
         "resources/json/schemas/redirects.schema.json": [
             "resources/yaml/redirects.yaml",
         ],
+        "resources/json/schemas/grants.schema.json": [
+            "resources/yaml/grants.yaml",
+        ]
     }
 }

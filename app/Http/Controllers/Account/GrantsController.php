@@ -11,19 +11,16 @@ use Generator;
 use Illuminate\Http\RedirectResponse as HttpRedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Allows a user to specify grants.
  */
 class GrantsController extends Controller
 {
-    public const GRANTS_FILE = 'assets/yaml/grants.yaml';
-
     /**
      * Returns customizable grants.
      *
@@ -31,15 +28,11 @@ class GrantsController extends Controller
      */
     public static function getGrants(): Generator
     {
-        $grantFile = resource_path(self::GRANTS_FILE);
-
-        $grants = Yaml::parseFile($grantFile);
-
-        foreach ($grants as $key => $grant) {
+        foreach (Config::get('gumbo.account.grants') as $key => $grant) {
             yield new Grant(
                 $key,
-                Arr::get($grant, 'name'),
-                str_replace(PHP_EOL, ' ', Arr::get($grant, 'description')),
+                $grant['name'],
+                str_replace(PHP_EOL, ' ', $grant['description']),
             );
         }
     }
