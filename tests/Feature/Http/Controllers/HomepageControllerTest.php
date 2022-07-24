@@ -15,7 +15,7 @@ class HomepageControllerTest extends TestCase
 
     public function test_empty_homepage(): void
     {
-        $this->get('/')->assertOk();
+        $this->get(route('home'))->assertOk();
     }
 
     /**
@@ -69,7 +69,7 @@ class HomepageControllerTest extends TestCase
         $advertisedProduct->advertise_on_home = true;
         $advertisedProduct->save();
 
-        $this->get('/')
+        $this->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -78,7 +78,7 @@ class HomepageControllerTest extends TestCase
 
         $this->actingAs($this->getGuestUser());
         $this
-            ->get('/')
+            ->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -87,7 +87,7 @@ class HomepageControllerTest extends TestCase
 
         $this->actingAs($this->getMemberUser());
         $this
-            ->get('/')
+            ->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -99,7 +99,7 @@ class HomepageControllerTest extends TestCase
     {
         flash()->warning('Something went wrong, this is the message');
 
-        $this->get('/')
+        $this->get(route('home'))
             ->assertOk()
             ->assertSee('Something went wrong, this is the message');
     }
