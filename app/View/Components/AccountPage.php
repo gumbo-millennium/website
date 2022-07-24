@@ -43,6 +43,7 @@ class AccountPage extends Page
         bool $hideFlash = false,
         bool $hideTitle = false,
         ?string $activeRoute = null,
+        ?string $accountTitle = null,
     ) {
         $this->hideTitle = $hideTitle;
         $this->activeRoute = $activeRoute ?? Route::currentRouteName();
@@ -55,7 +56,7 @@ class AccountPage extends Page
             ]);
 
         // Determine account title
-        $this->accountTitle = __('My :part', [
+        $this->accountTitle = $accountTitle ?? __('My :part', [
             'part' => $this->accountRoutes->get($this->activeRoute, [__('Account')])[0],
         ]);
 
