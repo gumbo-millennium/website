@@ -146,6 +146,25 @@
   "API token created successfully": "API token succesvol aangemaakt",
   "API token revoked successfully.": "API token succesvol verwijderd.",
 
+  "Change Password": "Wachtwoord wijzigen",
+  "Enter your old password, followed by a new password below. The new password must be at least 8 characters long.":
+    "Voer je oude wachtwoord in, gevolgd door een nieuw wachtwoord. Het nieuwe wachtwoord moet minstens 8 tekens lang zijn.",
+  "You cannot use a password that's been registered in a data breach. We use K-anonimity to safely check your password against known breaches on your email address":
+    "Je kunt geen wachtwoord gebruiken dat in een datalek voorkomt. We controleren of je wachtwoord in een datalek voorkomt via het K-anonimity protocol. Je wachtwoord wordt niet verstuurd naar derden.",
+
+  "Current password": "Huidig wachtwoord",
+  "New password": "Nieuw wachtwoord",
+  "Confirm new password": "Nieuw wachtwoord bevestigen",
+  "Log me out on all other devices": "Uitloggen op alle andere apparaten",
+  "If you want to secure your account after changing your password, check this box to terminate all other sessions.":
+    "Indien je extra zeker wil zijn dat je account beveiligd is, vink dan dit hokje aan, dan loggen we alle andere apparaten uit.",
+
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.":
+      "Het opgegeven :attribute komt voor in een datalek. Kies een ander :attribute.",
+  "The current password is incorrect.": "Het huidige wachtwoord is incorrect",
+  "Your password was changed succesfully.": "Je wachtwoord is succesvol aangepast.",
+  "You have been logged out of all other devices.": "Je bent uitgelogd op alle andere apparaten",
+
   "Your cart is empty": "Je winkelwagen is leeg",
 
   ":Product was already in your cart, so we've added :count more.": ":Product zat al in je winkelwagen, aantal bijgewerkt.",

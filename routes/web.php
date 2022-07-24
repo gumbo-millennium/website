@@ -204,6 +204,10 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::get('/profiel', 'Account\ProfileController@edit')->name('profile.edit');
     Route::patch('/profiel', 'Account\ProfileController@update')->name('profile.update');
 
+    // Edit password
+    Route::get('/wachtwoord', 'Account\PasswordController@edit')->name('password.edit');
+    Route::post('/wachtwoord', 'Account\PasswordController@update')->name('password.update');
+
     // Quotes
     Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');
     Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');

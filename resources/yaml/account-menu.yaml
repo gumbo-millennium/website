@@ -6,6 +6,10 @@
   title: Profile
   icon: solid/user
 
+- route: account.password.edit
+  title: Change Password
+  icon: solid/key
+
 - route: account.quotes
   title: Bot Quotes
   icon: solid/comment-dots

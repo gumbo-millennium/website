@@ -27,7 +27,7 @@ $inputAttributes = $attributes
         'aria-describedby' => $hasError ? "{$name}-error" : ($hasHelp ? "{$name}-help" : null),
         'aria-labelledby' => $hideLabel ? null : "{$name}-label",
         'aria-label' => $hideLabel ? $label : null,
-        'value' => old($name) ?? $value,
+        'value' => $type === 'password' ? null : (old($name) ?? $value),
     ]));
 ?>
 <div>
