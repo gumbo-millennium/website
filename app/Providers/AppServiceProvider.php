@@ -159,16 +159,17 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Register Grants as Grant models
-        Config::set(
-            'gumbo.account.grants',
-            Collection::make(Config::get('gumbo.account.grants'))
-                ->map(fn ($grant, $key) => new Grant(
-                    $key,
-                    $grant['name'],
-                    str_replace(PHP_EOL, ' ', $grant['description']),
-                ))
-                ->values(),
-        );
+        $config = Collection::make(Config::get('gumbo.account.grants'))
+            ->map(fn ($grant, $key) => new Grant(
+                $key,
+                $grant['name'],
+                str_replace(PHP_EOL, ' ', $grant['description']),
+            ))
+            ->values()
+            ->all();
+
+        // Re-assign value
+        Config::set('gumbo.account.grants', $config);
     }
 
     /**

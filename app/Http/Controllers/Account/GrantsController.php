@@ -51,7 +51,7 @@ class GrantsController extends Controller
         // Get current user
         /** @var User $user */
         $user = $request->user();
-        $inputValues = Config::get('gumbo.account.grants')
+        $inputValues = Collection::make(Config::get('gumbo.account.grants'))
             ->mapWithKeys(fn (Grant $grant) => [
                 $grant->key => (bool) $request->input($grant->key),
             ]);

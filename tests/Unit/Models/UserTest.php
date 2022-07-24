@@ -68,22 +68,13 @@ class UserTest extends TestCase
     {
         $config = Config::get('gumbo.account.grants');
 
-        $this->assertInstanceOf(
-            Collection::class,
-            $config,
-            'Config should be a collection',
-        );
+        $this->assertIsIterable($config, 'Grants list should be iterable');
+        $this->assertTrue(array_is_list($config), 'Grants list should be a list');
 
         $this->assertContainsOnlyInstancesOf(
             Grant::class,
-            $config->all(),
-            'Grants config should contain only Grant instances',
-        );
-
-        $this->assertEquals(
-            range(0, count($config) - 1),
-            $config->keys()->toArray(),
-            'Grants list should be non-associative',
+            $config,
+            'Grants list should contain only Grant instances',
         );
     }
 }
