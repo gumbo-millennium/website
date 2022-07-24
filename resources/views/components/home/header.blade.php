@@ -13,7 +13,7 @@
           Welkom bij de gezelligste studentenvereniging van Zwolle.
         </p>
         <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
-          <x-button color="primary" href="{{ route('join.form') }}">
+          <x-button style="primary" href="{{ route('join.form') }}">
             Schrijf je in
           </x-button>
           {{-- <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">

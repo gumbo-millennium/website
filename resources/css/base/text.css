@@ -3,21 +3,21 @@
 */
 
 .text-danger {
-  @apply text-red-primary-1;
+  @apply text-red-500;
 }
 
 .text-success {
-  @apply text-green-primary-1;
+  @apply text-green-500;
 }
 
 .text-warning {
-  @apply text-orange-primary-1;
+  @apply text-orange-500;
 }
 
 .text-brand {
-  @apply text-brand-primary-1;
+  @apply text-brand-500;
 }
 
 .text-gray {
-  @apply text-gray-primary-2;
+  @apply text-gray-600;
 }

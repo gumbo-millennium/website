@@ -29,7 +29,7 @@
 }
 
 .partner-card__image-wrapper {
-  @apply h-48 w-full bg-gray-secondary-3 relative;
+  @apply h-48 w-full bg-gray-300 relative;
 }
 
 .partner-card__image-backdrop {
@@ -49,7 +49,7 @@
 
 .partner-card__image-logo-wrapper::before {
   @apply absolute h-48 block;
-  @apply bg-gray-secondary-1 opacity-50;
+  @apply bg-gray-100 opacity-50;
   top: 0;
   right: 0;
   left: 0;
@@ -64,7 +64,7 @@
 }
 
 .partner-card__main {
-  @apply bg-light p-8;
+  @apply bg-white p-8;
 }
 
 .partner-card__main-title {
@@ -78,15 +78,15 @@
 .partner-card__link {
   @apply appearance-none;
   @apply flex items-center flex-row;
-  @apply text-brand-primary-3 font-bold no-underline;
+  @apply text-brand-700 font-bold no-underline;
 }
 
 .partner-card__link:hover, .partner-card__link:focus {
-  @apply text-brand-primary-1;
+  @apply text-brand-500;
 }
 
 .partner-card__link:active {
-  @apply text-brand-primary-2;
+  @apply text-brand-600;
 }
 
 .partner-link {

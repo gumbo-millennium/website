@@ -2,18 +2,18 @@
 
 .badge {
   @apply py-2 px-4;
-  @apply border border-gray-primary-1;
-  @apply uppercase text-sm text-gray-primary-2;
+  @apply border border-gray-500;
+  @apply uppercase text-sm text-gray-600;
 }
 
 .badge--danger {
-  @apply text-red-primary-1 border-red-primary-1;
+  @apply text-red-500 border-red-500;
 }
 
 .badge--warning {
-  @apply text-orange-primary-1 border-orange-primary-1;
+  @apply text-orange-500 border-orange-500;
 }
 
 .badge--brand {
-  @apply text-brand-primary-1 border-brand-primary-1;
+  @apply text-brand-500 border-brand-500;
 }

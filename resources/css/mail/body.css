@@ -17,7 +17,7 @@
 
 .mail-body__message {
   @apply py-4 px-8;
-  @apply border border-gray-secondary-1 border-t-0;
+  @apply border border-gray-100 border-t-0;
   @apply rounded-lg rounded-t-none;
   @apply leading-relaxed;
 }

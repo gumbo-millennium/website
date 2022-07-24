@@ -21,4 +21,13 @@ class Grant
         $this->name = $name;
         $this->description = $description;
     }
+
+    public static function __set_state($properties)
+    {
+        return new self(
+            $properties['key'],
+            $properties['name'],
+            $properties['description'],
+        );
+    }
 }

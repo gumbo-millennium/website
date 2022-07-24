@@ -138,6 +138,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ])->icon('users')->collapsable();
             }
 
+            if ($user->can('viewAny', Models\Webcam\Camera::class)) {
+                yield MenuSection::make('Apparaten', [
+                    MenuItem::resource(Resources\Webcam\Camera::class),
+                    MenuItem::resource(Resources\Webcam\Device::class),
+                ])->icon('camera')->collapsable();
+            }
+
             if ($user?->can('viewAny', Models\FileBundle::class)) {
                 yield MenuSection::make('Documentensysteem', [
                     MenuItem::resource(Resources\FileBundle::class),

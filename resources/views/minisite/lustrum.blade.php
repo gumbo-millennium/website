@@ -43,7 +43,7 @@
 <div class="py-8 bg-gray-100">
     <div class="container">
         {{-- Title --}}
-        <p class="text-center text-gray-primary-1 mb-4">{{ $page->summary }}</p>
+        <p class="text-center text-gray-500 mb-4">{{ $page->summary }}</p>
         <h2 class="text-3xl text-medium font-title mb-8 text-center">{{ $page->title }}</h2>
 
         {{-- Page body --}}
@@ -60,7 +60,7 @@
     <div class="container">
         <div class="container pt-8">
             {{-- Title --}}
-            <p class="text-center text-gray-primary-1 mb-4">Bomvol met activiteiten</p>
+            <p class="text-center text-gray-500 mb-4">Bomvol met activiteiten</p>
             <h2 class="text-3xl text-medium font-title mb-8 text-center">Activiteiten</h2>
 
             {{-- Activity cards --}}

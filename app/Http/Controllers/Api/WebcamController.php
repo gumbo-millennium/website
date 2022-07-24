@@ -6,84 +6,117 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Webcam;
-use App\Models\WebcamUpdate;
+use App\Models\Webcam\Camera;
+use App\Models\Webcam\Device;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class WebcamController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('signed');
-    }
-
     /**
-     * Renders a given webcam, unless it's not present or older than 3 hours.
+     * Render the given camera, if any.
      */
-    public function show(?string $user, Webcam $webcam)
+    public function show(Camera $camera): StreamedResponse
     {
-        // Find user
-        $user = User::find($user) ?? new User();
+        $device = $camera->device;
 
-        // Check permissions
-        abort_unless($user->hasPermissionTo('plazacam-view'), HttpResponse::HTTP_FORBIDDEN);
+        // Never had an upload, or not linked
+        abort_unless($device, HttpResponse::HTTP_NOT_FOUND);
 
-        // Check if expired
-        abort_if($webcam->is_expired, HttpResponse::HTTP_NOT_FOUND, 'No recent webcam image available', [
-            'Retry-After' => Date::parse('next hour')->toRfc7231String(),
-        ]);
+        // Upload expired
+        abort_if($device->is_expired, HttpResponse::HTTP_FORBIDDEN);
 
-        // Get update
-        $update = $webcam->lastUpdate;
+        // Check if the file exists
+        $disk = Config::get('gumbo.images.disk');
+        $path = $device->path;
 
-        // Check if found
-        abort_if(Storage::missing($update->path), HttpResponse::HTTP_INTERNAL_SERVER_ERROR, 'Webcam image seems lost', [
-            'Retry-After' => Date::parse('next hour')->toRfc7231String(),
-        ]);
+        // Skip if the file is not on the disk, or no file exists
+        abort_unless($path && Storage::disk($disk)->exists($path), HttpResponse::HTTP_NOT_FOUND);
 
-        // Send as file
-        return Storage::response($update->path, Str::ascii("{$update->name}.jpg"), [
+        // Return as inline response
+        return Storage::disk($disk)->response($device->path, Str::ascii("{$camera->name}.jpg"), [
             'Content-Type' => 'image/jpeg',
             'Cache-Control' => 'max-age=60, must-revalidate, no-transform',
             'Expires' => Date::now()->addMinute()->toRfc7231String(),
-            'Last-Modified' => $update->created_at->toRfc7231String(),
+            'Last-Modified' => $device->created_at->toRfc7231String(),
         ]);
     }
 
     /**
-     * Updates camera images using updates, requires jpeg uploads and proper rights.
+     * Submits a new photo for the given device.
      */
-    public function store(Request $request, ?string $user, Webcam $webcam)
+    public function update(Request $request): HttpResponse
     {
-        // Find user
-        $user = User::find($user) ?? new User();
-
-        // Check permissions
-        abort_unless($user->hasPermissionTo('plazacam-update'), HttpResponse::HTTP_FORBIDDEN);
-
-        // Make sure file is present
-        abort_unless($request->hasFile('file'), HttpResponse::HTTP_BAD_REQUEST, 'Expected a file on [file], but none was found');
-
-        // Make sure the file is valid
-        $file = $request->file('file');
-        $fileMime = $file->getMimeType();
-
-        // Make sure the image is a jpg
-        abort_unless($fileMime === 'image/jpeg', HttpResponse::HTTP_BAD_REQUEST, "Expected a JPEG image, got [{$fileMime}].");
-
-        // Create update
-        $webcam->updates()->create([
-            'ip' => $request->ip(),
-            'user_agent' => $request->header('User-Agent'),
-            'path' => $file->store(WebcamUpdate::STORAGE_LOCATION),
+        // Validate the request
+        $request->validate([
+            'device' => [
+                'required',
+                'string',
+                'uuid',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'between:5,60',
+            ],
+            'image' => [
+                'required',
+                'image',
+                'mimes:jpeg',
+                // Maximum of 1MB
+                'max:1024',
+                // Require something like 4:3 between 240p and 1080p
+                Rule::dimensions()
+                    ->minWidth(240)
+                    ->minHeight(180)
+                    ->maxWidth(1920)
+                    ->maxHeight(1080),
+            ],
         ]);
 
-        // Return accepted header
+        $device = $request->input('device');
+        $name = $request->input('name');
+        $image = $request->file('image');
+
+        // Check if an entry exists for this device
+        $model = Device::firstOrNew([
+            'device' => $device,
+            'name' => $name,
+        ]);
+
+        abort_if($model->owner?->is($request->user()) === false, HttpResponse::HTTP_FORBIDDEN);
+        if (! $model->owner) {
+            $model->owner()->associate($request->user());
+        }
+
+        // Store old path
+        $disk = Config::get('gumbo.images.disk');
+        $oldPath = $model->path;
+
+        try {
+            // Throw up a conflict if the local image is newer than the submitted one
+            abort_if($oldPath && Storage::disk($disk)->lastModified($oldPath) > $image->lastModified(), HttpResponse::HTTP_CONFLICT);
+        } catch (FileNotFoundException) {
+            // Ignore not found exceptions, we'll just put this new file in place
+        }
+
+        // Save new photo
+        $model->path = $image->store(Device::STORAGE_FOLDER, $disk);
+        $model->save();
+
+        // Delete the old file
+        if ($oldPath && Storage::disk($disk)->exists($oldPath)) {
+            Storage::disk($disk)->delete($oldPath);
+        }
+
+        // Return an accepted response
         return Response::noContent(HttpResponse::HTTP_ACCEPTED);
     }
 }

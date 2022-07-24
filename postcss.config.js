@@ -10,7 +10,6 @@ const postcssCalc = require('postcss-calc')
 const postcssImport = require('postcss-import')
 const postcssRem = require('postcss-rem')
 const postcssVariables = require('postcss-css-variables')
-const removeDarkMode = require('./resources/js-build/postcss-remove-darkmode')
 const responsiveImages = require('./resources/js-build/postcss-responsive-image')
 const tailwindcss = require('tailwindcss')
 
@@ -36,7 +35,6 @@ module.exports = ({ file, options, env }) => {
   if (path.basename(file) === 'mail.css') {
     // Remove dark, variables and convert rem to px
     plugins.splice(plugins.length - 1, 0, [
-      removeDarkMode(),
       postcssVariables({
         preserve: false,
       }),

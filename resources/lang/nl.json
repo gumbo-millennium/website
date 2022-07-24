@@ -131,6 +131,39 @@
   "Fees": "Transactiekosten",
 
   "My Account": "Mijn account",
+  "Account": "Account",
+  "Profile": "Profiel",
+  "Bot Quotes": "Wist-je-datjes",
+  "Grants": "Toestemmingen",
+  "Telegram Account": "Telegram account",
+  "Export": "Inzageverzoeken",
+  "My :part": "Mijn :part",
+
+  "API Tokens": "API tokens",
+  "Create new API Token": "Nieuwe API token aanmaken",
+  "Name of token": "Naam van token",
+  "Create token": "Token aanmaken",
+  "API token created successfully": "API token succesvol aangemaakt",
+  "API token revoked successfully.": "API token succesvol verwijderd.",
+
+  "Change Password": "Wachtwoord wijzigen",
+  "Enter your old password, followed by a new password below. The new password must be at least 8 characters long.":
+    "Voer je oude wachtwoord in, gevolgd door een nieuw wachtwoord. Het nieuwe wachtwoord moet minstens 8 tekens lang zijn.",
+  "You cannot use a password that's been registered in a data breach. We use K-anonimity to safely check your password against known breaches on your email address":
+    "Je kunt geen wachtwoord gebruiken dat in een datalek voorkomt. We controleren of je wachtwoord in een datalek voorkomt via het K-anonimity protocol. Je wachtwoord wordt niet verstuurd naar derden.",
+
+  "Current password": "Huidig wachtwoord",
+  "New password": "Nieuw wachtwoord",
+  "Confirm new password": "Nieuw wachtwoord bevestigen",
+  "Log me out on all other devices": "Uitloggen op alle andere apparaten",
+  "If you want to secure your account after changing your password, check this box to terminate all other sessions.":
+    "Indien je extra zeker wil zijn dat je account beveiligd is, vink dan dit hokje aan, dan loggen we alle andere apparaten uit.",
+
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.":
+      "Het opgegeven :attribute komt voor in een datalek. Kies een ander :attribute.",
+  "The current password is incorrect.": "Het huidige wachtwoord is incorrect",
+  "Your password was changed succesfully.": "Je wachtwoord is succesvol aangepast.",
+  "You have been logged out of all other devices.": "Je bent uitgelogd op alle andere apparaten",
 
   "Your cart is empty": "Je winkelwagen is leeg",
 
@@ -211,13 +244,13 @@
   "This export is ready to download.": "De export is klaar om te downloaden.",
   "This export is no longer available.": "De export is niet langer beschikbaar.",
 
-  "Webcams": "Camera's",
-  "Webcam": "Camera",
-  "Webcam Updates": "Updates",
-  "Webcam Update": "Update",
+  "Camera": "Camera",
+  "Cameras": "Camera's",
+  "Device": "Apparaat",
+  "Devices": "Apparaten",
   "Most recent image": "Meest recente afbeelding",
-  "Image": "Afbeelding",
   "The bot command that will show the cam, must end with \"cam\".": "Het bot commando dat de camera zal tonen, moet eindigen met \"cam\".",
+  ":name on :device": ":name op :device",
 
   "Ticket": "Ticket",
   "Tickets": "Tickets",

@@ -32,6 +32,6 @@
 
     <div class="p-2 rounded-lg bg-gray-50 grid grid-cols-2">
         <p class="font-bold">Totaal</p>
-        <p class="text-right font-title text-lg text-brand-primary-3">{{ Str::price($order->price) }}</p>
+        <p class="text-right font-title text-lg text-brand-700">{{ Str::price($order->price) }}</p>
     </div>
 </div>

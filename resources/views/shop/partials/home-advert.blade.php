@@ -10,7 +10,7 @@
                     Nieuw in de shop
                 </p>
 
-                <h3 class="shop-header-title font-title font-bold text-brand-primary-1 text-5xl lg:text-8xl">
+                <h3 class="shop-header-title font-title font-bold text-brand-500 text-5xl lg:text-8xl">
                     {{ $product->default_variant->display_name }}
                 </h3>
             </div>

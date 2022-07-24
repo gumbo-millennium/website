@@ -35,7 +35,7 @@ $colors = [
                                     <x-icon icon="solid/fill" class="icon icon-lg" />
                                 </div>
                             </div>
-                            <div class="ml-2 text-gray-primary-3 text-xs leading-none pl-1">
+                            <div class="ml-2 text-gray-700 text-xs leading-none pl-1">
                                 <div class="font-semibold">{{{ $code }}}</div>
                                 <div class="mt-1 font-normal opacity-75">{{ ucfirst($name) }}</div>
                             </div>

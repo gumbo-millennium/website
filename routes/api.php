@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api;
 use App\Http\Controllers\TelegramBotController;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,15 +22,18 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-// Plazacam submission
-Route::put('plazacam/{user}/{webcam}', [Api\WebcamController::class, 'store'])
-    ->middleware('signed')
-    ->name('webcam.store');
+// Old plazacam routes
+Route::addRoute(['GET', 'PUT'], 'plazacam/{user}/{webcam}', fn () => Response::json([
+    'success' => 0,
+    'error' => [
+        'message' => 'This route is deprecated, use the new Webcam API instead',
+    ],
+], 400));
 
-// Plazacam viewing via API
-Route::get('plazacam/{user}/{webcam}', [Api\WebcamController::class, 'show'])
-    ->middleware('signed')
-    ->name('webcam.view');
+Route::middleware(['auth:sanctum', 'member'])->name('webcam.')->prefix('/webcam/')->group(function () {
+    Route::get('/{camera}', [Api\WebcamController::class, 'show'])->name('show');
+    Route::put('/', [Api\WebcamController::class, 'update'])->name('update');
+});
 
 // Register Telegram webhooks
 Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('bots.telegram');

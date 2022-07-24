@@ -5,7 +5,7 @@
     :crumbs="['/' => 'Home']" />
 
   {{-- Main sponsors --}}
-  <div class="p-8 bg-gray-secondary-2">
+  <div class="p-8 bg-gray-200">
       <div class="container">
           <div class="partner-block partner-block--primary">
               @foreach ($branded as $sponsor)

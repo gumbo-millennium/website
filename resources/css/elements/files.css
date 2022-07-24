@@ -10,7 +10,7 @@
 
 .file-set__title {
   @apply inline-block mb-4;
-  @apply font-title text-lg text-dark no-underline;
+  @apply font-title text-lg text-gray-900 no-underline;
 }
 
 .file-set__show-all {
@@ -26,17 +26,17 @@
 }
 
 .file-set__empty-notice-body {
-  @apply text-lg text-gray-primary-2;
+  @apply text-lg text-gray-600;
 }
 
 .file-set__item {
   @apply flex flex-col items-start;
   @apply relative p-4 mb-4;
-  @apply border rounded border-gray-secondary-3;
+  @apply border rounded border-gray-300;
 }
 
 .file-set__item:hover {
-  @apply shadow border-brand-secondary-3;
+  @apply shadow border-brand-300;
 }
 
 .file-set__item-title {
@@ -50,7 +50,7 @@
 }
 
 .file-set__item-meta-item {
-  @apply text-gray-primary-2;
+  @apply text-gray-600;
 }
 
 .file-set__item-meta-item:not(:last-child) {

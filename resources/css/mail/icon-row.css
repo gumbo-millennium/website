@@ -37,6 +37,6 @@
 }
 
 .mail-icon-row__body-title {
-  @apply text-xl font-title font-bold text-brand-primary-2;
+  @apply text-xl font-title font-bold text-brand-600;
   @apply mb-4;
 }

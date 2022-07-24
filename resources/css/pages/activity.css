@@ -17,7 +17,7 @@
 
 .activity-summary__card {
   @apply relative py-8 px-12;
-  @apply shadow bg-white border border-gray-secondary-1;
+  @apply shadow bg-white border border-gray-100;
 }
 
 .activity-summary__main {
@@ -37,7 +37,7 @@
 }
 
 .activity-summary__subtitle {
-  @apply text-lg text-gray-primary-2;
+  @apply text-lg text-gray-600;
 }
 
 .activity-summary__action {

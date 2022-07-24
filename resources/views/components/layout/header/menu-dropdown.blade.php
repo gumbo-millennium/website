@@ -7,7 +7,7 @@
   <!-- Item active: "text-gray-900", Item inactive: "text-gray-500" -->
   <button type="button"
     @click.prevent="open = ! open"
-    class="text-gray-500 group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+    class="text-gray-500 group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
     ::aria-expanded="open">
     <span>{{ $slot }}</span>
     <x-icon aria-hidden="true" icon="solid/chevron-down" class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500" />

@@ -34,7 +34,7 @@ $stats = array_filter([
         </x-button>
 
         @if ($isPrivate)
-        <x-button type="submit" name="visibility" value="public" color="primary" size="small" form="edit-album-visibility"
+        <x-button type="submit" name="visibility" value="public" style="primary" size="small" form="edit-album-visibility"
           class="flex items-center">
           <x-icon icon="solid/eye" class="h-4" />
           <span class="ml-2 md:sr-only">Publiceren</span>
@@ -50,7 +50,7 @@ $stats = array_filter([
 
         @can('upload', $album)
         <div class="col-start-1 col-end-3">
-          <x-button color="primary" size="small" href="{{ route('gallery.album.upload', $album) }}" class="flex items-center">
+          <x-button style="primary" size="small" href="{{ route('gallery.album.upload', $album) }}" class="flex items-center">
             <x-icon icon="solid/upload" class="h-4 mr-2" />
             Uploaden
           </x-button>

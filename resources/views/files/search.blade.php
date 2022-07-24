@@ -21,7 +21,7 @@
     </form>
 
     {{-- Spacer --}}
-    <div class="container my-8 border-b border-gray-secondary-2"></div>
+    <div class="container my-8 border-b border-gray-200"></div>
 </div>
 
 {{-- Categories --}}
@@ -45,14 +45,14 @@
         </a>
 
         {{-- Get count --}}
-        <p class="file-set__item-meta flex flex-row items-center text-gray-primary-2">
+        <p class="file-set__item-meta flex flex-row items-center text-gray-600">
             {{ $file->bundle->category->title }}
         </p>
     </div>
     @endforeach
 
     {{-- Spacer --}}
-    <div class="my-8 border-b border-gray-secondary-2"></div>
+    <div class="my-8 border-b border-gray-200"></div>
 
     <div class="flex flex-row items-center">
         {{-- Back link --}}

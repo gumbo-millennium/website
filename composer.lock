@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "2be40c75855cb230dafbdf772229a133a203d842"
+                "reference": "847187cad7807dae0eb3a310968ec8e0ca3210e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/2be40c75855cb230dafbdf772229a133a203d842",
-                "reference": "2be40c75855cb230dafbdf772229a133a203d842",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/847187cad7807dae0eb3a310968ec8e0ca3210e3",
+                "reference": "847187cad7807dae0eb3a310968ec8e0ca3210e3",
                 "shasum": ""
             },
             "require": {
@@ -59,9 +59,9 @@
             ],
             "support": {
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
-                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.3"
+                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.4"
             },
-            "time": "2022-07-17T00:27:17+00:00"
+            "time": "2022-07-17T15:33:40+00:00"
         },
         {
             "name": "artesaos/seotools",
@@ -7948,6 +7948,7 @@
                 "issues": "https://github.com/roelofr/laravel-encryption-cast/issues",
                 "source": "https://github.com/roelofr/laravel-encryption-cast/tree/v1.2.0"
             },
+            "abandoned": true,
             "time": "2020-09-09T20:25:33+00:00"
         },
         {

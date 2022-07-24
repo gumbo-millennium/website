@@ -1,5 +1,5 @@
 .mail-intro {
-  @apply opacity-0 text-gray-primary-3;
+  @apply opacity-0 text-gray-700;
   font-size: 0;
   line-height: 0;
 }

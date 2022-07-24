@@ -15,7 +15,7 @@ if (preg_match('/^(\d{4}-\d{2}-\d{2})([^a-z0-9])(.+)$/i', $file->name, $matches)
     {{-- Get title --}}
     <a href="{{ route('files.download-single', ['media' => $file]) }}" class="file-set__item-title">
         @if ($fileDate)
-        <span class="inline-block text-gray-primary-1 mr-1">{{ $fileDate }}</span>
+        <span class="inline-block text-gray-500 mr-1">{{ $fileDate }}</span>
         @endif
         {{ $fileName }}
     </a>

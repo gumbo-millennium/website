@@ -3,12 +3,12 @@
 }
 
 .shop-cart thead {
-  @apply border-b border-gray-secondary-1;
+  @apply border-b border-gray-100;
   @apply mb-2;
 }
 
 .shop-cart tfoot {
-  @apply border-t border-gray-secondary-1;
+  @apply border-t border-gray-100;
   @apply mt-2;
 }
 
@@ -18,12 +18,12 @@
 
 .shop-cart-amount {
   @apply appearance-none p-2;
-  @apply rounded border-gray-secondary-1;
-  @apply bg-gray-secondary-3 text-gray-primary-1;
+  @apply rounded border-gray-100;
+  @apply bg-gray-300 text-gray-500;
 }
 
 .shop-cart-button {
   @apply appearance-none p-2;
-  @apply rounded border-gray-secondary-1;
-  @apply bg-gray-secondary-3 text-light;
+  @apply rounded border-gray-100;
+  @apply bg-gray-300 text-white;
 }

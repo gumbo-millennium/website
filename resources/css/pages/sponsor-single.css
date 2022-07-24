@@ -2,7 +2,7 @@
 
 .sponsor-single {
   @apply py-8;
-  @apply bg-gray-secondary-2;
+  @apply bg-gray-200;
 }
 
 .sponsor-single__back {
@@ -13,7 +13,7 @@
 
 .sponsor-single__container {
   @apply p-8;
-  @apply shadow-md bg-light;
+  @apply shadow-md bg-white;
 }
 
 .sponsor-single__header {
@@ -29,7 +29,7 @@
 }
 
 .sponsor-single__header-subtitle {
-  @apply text-gray-primary-1;
+  @apply text-gray-500;
   @apply flex flex-row items-center;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .sponsor-single__footer {
-  @apply mt-4 border-gray-secondary-2 border-t pt-4;
+  @apply mt-4 border-gray-200 border-t pt-4;
   @apply flex flex-row items-center;
 }
 

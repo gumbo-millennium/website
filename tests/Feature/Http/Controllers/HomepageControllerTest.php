@@ -15,7 +15,30 @@ class HomepageControllerTest extends TestCase
 
     public function test_empty_homepage(): void
     {
-        $this->get('/')->assertOk();
+        $this->get(route('home'))->assertOk();
+    }
+
+    /**
+     * Check if the email verification banner is showing, and if it's properly rendering.
+     */
+    public function test_email_verification_banner(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('data-action="verify-email"', false);
+
+        $this->actingAs($user = $this->getGuestUser());
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('data-action="verify-email"', false);
+
+        $user->markEmailAsVerified();
+        $user->save();
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('data-action="verify-email"', false);
     }
 
     public function test_full_homepage(): void
@@ -46,7 +69,7 @@ class HomepageControllerTest extends TestCase
         $advertisedProduct->advertise_on_home = true;
         $advertisedProduct->save();
 
-        $this->get('/')
+        $this->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -55,7 +78,7 @@ class HomepageControllerTest extends TestCase
 
         $this->actingAs($this->getGuestUser());
         $this
-            ->get('/')
+            ->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -64,7 +87,7 @@ class HomepageControllerTest extends TestCase
 
         $this->actingAs($this->getMemberUser());
         $this
-            ->get('/')
+            ->get(route('home'))
             ->assertOk()
             ->assertSee($advertisedProduct->name)
             ->assertSee($public1->name)
@@ -76,7 +99,7 @@ class HomepageControllerTest extends TestCase
     {
         flash()->warning('Something went wrong, this is the message');
 
-        $this->get('/')
+        $this->get(route('home'))
             ->assertOk()
             ->assertSee('Something went wrong, this is the message');
     }

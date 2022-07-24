@@ -4,34 +4,16 @@
 
 .prose button,
 .btn {
-  @apply inline-block mx-0 my-4 py-4 px-10;
-  @apply rounded border border-gray-500;
-  @apply font-bold no-underline;
-  @apply bg-white text-gray-700;
-}
+  /* Large size */
+  @apply inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2;
 
-.prose button:hover, .prose button:active,
-.btn:hover, .btn:active {
-  @apply bg-gray-secondary-2 text-gray-primary-3;
-}
-
-.btn--link {
-  @apply border-0 bg-transparent text-brand-primary-2;
-}
-
-.btn--link:hover, .btn--link:active {
-  @apply border-0 bg-transparent text-brand-primary-1;
+  /* Outline style */
+  @apply border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:ring-brand-500;
 }
 
 .prose button[type="submit"],
 .btn--brand {
-  @apply bg-brand-primary-1 border-brand-primary-2 text-light;
-  @apply border-none;
-}
-
-.prose button[type="submit"]:hover, .prose button[type="submit"]:active,
-.btn--brand:hover, .btn--brand:active {
-  @apply bg-brand-primary-2 border-brand-primary-3 text-white shadow-lg;
+  @apply border-transparent shadow-sm text-white bg-brand-600 hover:bg-brand-700 focus:ring-brand-500;
 }
 
 .prose button[disabled],
@@ -45,9 +27,5 @@
 }
 
 .btn--small {
-  @apply my-2 py-2 px-6;
-}
-
-.prose button {
-  @apply my-0;
+  @apply px-2.5 py-1.5 text-xs font-medium rounded;
 }

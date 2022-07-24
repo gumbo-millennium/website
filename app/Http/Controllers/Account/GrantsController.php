@@ -4,46 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Forms\AccountGrantsForm;
 use App\Http\Controllers\Controller;
 use App\Models\Grant;
 use App\Models\User;
-use Generator;
 use Illuminate\Http\RedirectResponse as HttpRedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Allows a user to specify grants.
  */
 class GrantsController extends Controller
 {
-    public const GRANTS_FILE = 'assets/yaml/grants.yaml';
-
-    /**
-     * Returns customizable grants.
-     *
-     * @return Generator<Grant>
-     */
-    public static function getGrants(): Generator
-    {
-        $grantFile = resource_path(self::GRANTS_FILE);
-
-        $grants = Yaml::parseFile($grantFile);
-
-        foreach ($grants as $key => $grant) {
-            yield new Grant(
-                $key,
-                Arr::get($grant, 'name'),
-                str_replace(PHP_EOL, ' ', Arr::get($grant, 'description')),
-            );
-        }
-    }
-
     /**
      * Force auth.
      */
@@ -55,62 +31,40 @@ class GrantsController extends Controller
     /**
      * Edit form.
      */
-    public function editGrants(FormBuilder $formBuilder, Request $request): HttpResponse
+    public function edit(Request $request): HttpResponse
     {
         // Get current user
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
 
         return Response::view('account.grants', [
             'user' => $user,
-            'form' => $this->getForm($formBuilder, $user),
+            'grants' => Config::get('gumbo.account.grants'),
         ]);
     }
 
     /**
      * Applying the changes.
      */
-    public function updateGrants(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
+    public function update(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
         // Get current user
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
+        $inputValues = Collection::make(Config::get('gumbo.account.grants'))
+            ->mapWithKeys(fn (Grant $grant) => [
+                $grant->key => (bool) $request->input($grant->key),
+            ]);
 
-        // Make form
-        $form = $this->getForm($formBuilder, $user);
+        $user->grants = Collection::make($user->grants)
+            ->merge($inputValues)
+            ->reject(fn ($value) => $value === null);
 
-        // Get values
-        $formValues = $form->getFieldValues();
-
-        // Apply new values
-        foreach ($this->getGrants() as $grant) {
-            $checked = $formValues[$grant->key];
-
-            $user->setGrant($grant->key, (bool) $checked);
-        }
         $user->save();
 
         // Flash OK
-        flash('Je toestemmingen zijn bijgewerkt', 'success');
+        flash()->success('Je toestemmingen zijn bijgewerkt');
 
-        return Response::redirectToRoute('account.index');
-    }
-
-    /**
-     * Returns the form for modifying the grants.
-     */
-    private function getForm(FormBuilder $formBuilder, User $user): AccountGrantsForm
-    {
-        // Make form
-        $form = $formBuilder->create(AccountGrantsForm::class, [
-            'method' => 'POST',
-            'url' => route('account.grants'),
-            'model' => $user,
-        ]);
-
-        // Create form
-        \assert($form instanceof AccountGrantsForm);
-
-        return $form;
+        return Response::redirectToRoute('account.grants');
     }
 }

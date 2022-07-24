@@ -1,5 +1,5 @@
 .sponsor {
-  @apply bg-gray-secondary-1;
+  @apply bg-gray-100;
   @apply py-8;
 }
 
@@ -16,18 +16,18 @@
 }
 
 .sponsor__simple-logo {
-  @apply h-32 text-gray-primary-1;
+  @apply h-32 text-gray-500;
   max-width: theme('spacing.64');
 }
 
 .sponsor__simple-logo:hover, .sponsor__simple-logo:active, .sponsor__simple-logo:focus {
-  @apply text-gray-primary-2;
+  @apply text-gray-600;
 }
 
 .sponsor__card {
   @apply flex flex-col items-start;
   @apply p-8 w-full;
-  @apply bg-light shadow;
+  @apply bg-white shadow;
 }
 
 .sponsor__card-logo {

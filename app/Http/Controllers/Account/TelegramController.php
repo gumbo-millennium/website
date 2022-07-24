@@ -7,12 +7,15 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use App\Models\BotUserLink;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
@@ -26,30 +29,54 @@ class TelegramController extends Controller
     }
 
     /**
+     * Show the information page about the Telegram account.
+     */
+    public function show(Request $request): HttpResponse
+    {
+        $user = $request->user();
+        if ($connected = (bool) $user->telegram_id) {
+            $telegramName = BotUserLink::getName('telegram', $user->telegram_id);
+        } else {
+            $this->alterCspPolicy()
+                ->addDirective('connect-src', 'https://telegram.org/')
+                ->addDirective('script-src', 'https://telegram.org/')
+                ->addDirective('default-src', 'https://oauth.telegram.org/');
+        }
+
+        $botUsername = Config::get('telegram.bots.gumbot.username');
+
+        return Response::view('account.telegram.show', [
+            'user' => $request->user(),
+            'connected' => $connected,
+            'telegramBotUsername' => $botUsername,
+            'telegramName' => $telegramName ?? null,
+            'telegramLink' => "https://t.me/{$botUsername}?start=login",
+        ]);
+    }
+
+    /**
      * Connects a Telegram account to a user, often called from the Telegram
      * Login API.
      *
-     * @return HttpResponse|RedirectResponse
-     * @throws BadRequestHttpException
      * @link https://core.telegram.org/widgets/login#receiving-authorization-data
      */
-    public function create(Request $request)
+    public function create(Request $request): HttpResponse|RedirectResponse
     {
         // Get telegram ID
         $telegramId = $this->getTelegramId($request);
 
         // Fail if no ID
         if (! $telegramId) {
-            \flash('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen', 'error');
+            flash()->error('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen');
 
-            return Response::redirectToRoute('account.index');
+            return Response::redirectToRoute('account.tg.show');
         }
 
         // Get username
         $username = BotUserLink::getName('telegram', $telegramId);
 
         // Render the view
-        return Response::view('account.telegram-connect', [
+        return Response::view('account.telegram.create', [
             'telegramName' => $username,
             'telegramId' => $telegramId,
         ]);
@@ -57,25 +84,22 @@ class TelegramController extends Controller
 
     /**
      * Save the new connection.
-     *
-     * @return RedirectResponse
-     * @throws BadRequestHttpException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         // Get telegram ID
         $telegramId = $this->getTelegramId($request);
 
         // Fail if no ID
         if (! $telegramId) {
-            \flash('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen', 'error');
+            flash()->error('Dit lijkt geen geldige koppel-aanvraag, of de aanvraag is verlopen');
 
-            return Response::redirectToRoute('account.index');
+            return Response::redirectToRoute('account.tg.show');
         }
 
         // Connect
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
         $user->telegram_id = $telegramId;
         $user->save();
 
@@ -83,26 +107,24 @@ class TelegramController extends Controller
         $username = BotUserLink::getName('telegram', $telegramId);
 
         // Forward
-        \flash("Je account is nu gekoppeld aan de Telegram account \"${username}\"", 'success');
+        flash()->success("Je account is nu gekoppeld aan de Telegram account \"${username}\"");
 
-        return Response::redirectToRoute('account.index');
+        return Response::redirectToRoute('account.tg.show');
     }
 
     /**
      * Submit a deletion request.
-     *
-     * @return void
      */
-    public function delete(Request $request)
+    public function delete(Request $request): RedirectResponse
     {
         // Just always delete it
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
         $user->telegram_id = null;
-        $user->save();
+        $user->save(['telegram_id']);
 
         // Forward
-        \flash('Je account is niet meer aan een Telegram account gekoppeld', 'success');
+        flash()->success('Je account is niet meer aan een Telegram account gekoppeld', 'success');
 
         return Response::redirectToRoute('account.index');
     }
@@ -110,8 +132,7 @@ class TelegramController extends Controller
     /**
      * Validates that the request came from Telegram.
      *
-     * @throws BadRequestHttpException if the request is invalid
-     * @throws ServiceUnavailableHttpException if the app's config is invalid
+     * @throws HttpException if the authentication failed, for whatever reason
      */
     private function validateSignature(Request $request): void
     {
@@ -125,32 +146,24 @@ class TelegramController extends Controller
             ->implode("\n");
 
         // Validate hash and list
-        if (empty($hash) || empty($dataList)) {
-            throw new BadRequestHttpException('Request missing parameters');
-        }
+        abort_if(empty($hash) || empty($dataList), HttpResponse::HTTP_BAD_REQUEST, 'Request missing parameters');
 
         // Get token
-        $botToken = optional(Telegram::bot())->getAccessToken();
+        $botToken = Telegram::bot()?->getAccessToken();
 
         // Fail if no token is available
-        if (! $botToken) {
-            throw new ServiceUnavailableHttpException('Validation system is not available');
-        }
+        abort_unless($botToken, HttpResponse::HTTP_SERVICE_UNAVAILABLE, 'Telegram bot token not available');
 
         // Compute expected content hash
         $botSecret = hash('sha256', $botToken, true);
         $signed = hash_hmac('sha256', $dataList, $botSecret);
 
         // Compare using a timing-safe function
-        if (! hash_equals($signed, $hash)) {
-            throw new BadRequestHttpException('The data signature is invalid');
-        }
+        abort_unless(hash_equals($signed, $hash), HttpResponse::HTTP_BAD_REQUEST, 'Request signature is invalid');
 
         // Validate expiration
         $date = $request->get('auth_date');
-        if (time() - $date > 60 * 60) {
-            throw new BadRequestHttpException('The data signature is no longer valid');
-        }
+        abort_if(time() - $date > 60 * 60, HttpResponse::HTTP_BAD_REQUEST, 'The data signature is no longer valid');
     }
 
     /**

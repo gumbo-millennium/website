@@ -36,7 +36,7 @@
                             {{ $transferLink }}
                         </a>
                     @else
-                    <span class="text-gray-primary-3">
+                    <span class="text-gray-700">
                         @lang("You haven't requested a transfer code yet")
                     </span>
                     @endif

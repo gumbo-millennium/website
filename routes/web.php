@@ -192,24 +192,32 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
-    Route::get('/', 'Account\DisplayController@index')->name('index');
+    Route::get('/', 'Account\ProfileController@index')->name('index');
 
     // Urls
-    Route::get('/api-urls', 'Account\DisplayController@showUrls')->name('urls');
+    Route::get('/api-tokens', 'Account\ApiTokenController@index')->name('tokens.index');
+    Route::post('/api-tokens', 'Account\ApiTokenController@store')->name('tokens.store');
+    Route::delete('/api-tokens', 'Account\ApiTokenController@destroy')->name('tokens.destroy');
+    Route::get('/api-tokens/aanmaken', 'Account\ApiTokenController@create')->name('tokens.create');
 
     // Edit profile
-    Route::get('/bewerk-profiel', 'Account\DetailsController@editDetails')->name('edit');
-    Route::patch('/bewerk-profiel', 'Account\DetailsController@updateDetails')->name('update');
+    Route::get('/profiel', 'Account\ProfileController@edit')->name('profile.edit');
+    Route::patch('/profiel', 'Account\ProfileController@update')->name('profile.update');
+
+    // Edit password
+    Route::get('/wachtwoord', 'Account\PasswordController@edit')->name('password.edit');
+    Route::post('/wachtwoord', 'Account\PasswordController@update')->name('password.update');
 
     // Quotes
     Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');
     Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');
 
     // Permissions
-    Route::get('/toestemmingen', 'Account\GrantsController@editGrants')->name('grants');
-    Route::post('/toestemmingen', 'Account\GrantsController@updateGrants');
+    Route::get('/toestemmingen', 'Account\GrantsController@edit')->name('grants');
+    Route::post('/toestemmingen', 'Account\GrantsController@update');
 
     // Telegram
+    Route::get('/telegram', 'Account\TelegramController@show')->name('tg.show');
     Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
     Route::post('/telegram/connect', 'Account\TelegramController@store');
     Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');

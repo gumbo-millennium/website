@@ -9,11 +9,11 @@
 
 .pagination .page-link {
   @apply px-8 py-2 inline-block;
-  @apply rounded border-brand-primary-2;
-  @apply bg-brand-primary-1 text-white;
+  @apply rounded border-brand-600;
+  @apply bg-brand-500 text-white;
 }
 
 .pagination .disabled .page-link {
-  @apply border-gray-primary-2;
-  @apply bg-gray-primary-1;
+  @apply border-gray-600;
+  @apply bg-gray-500;
 }

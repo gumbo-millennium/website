@@ -1,4 +1,4 @@
-<div class="card border-gray-secondary-2 border">
+<div class="card border-gray-200 border">
     <form method="POST" action="{{ route('login') }}" class="login__form card__body">
         @csrf
         <input type="hidden" name="password" value="Gumbo" />
@@ -10,7 +10,7 @@
         <div class="flex flex-col md:flex-row md:items-center">
             <div class="flex-grow mb-4 md:mb-0">
                 {{-- Field --}}
-                <select name="email" id="user" class="form-select w-full text-dark">
+                <select name="email" id="user" class="form-select w-full text-gray-900">
                     @foreach ($testUsers as $user)
                     <option value="{{ $user->email }}">{{ $user->name }}</option>
                     @endforeach

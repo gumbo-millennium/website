@@ -17,7 +17,7 @@ $statusStyle = '';
 if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
     $statusText = 'Actie vereist';
     $statusIcon = 'solid/exclamation-triangle';
-    $statusStyle = 'text-red-primary-2';
+    $statusStyle = 'text-red-600';
 } elseif ($isEnrolled) {
     $statusText = "Ingeschreven";
     $statusIcon = 'solid/user-check';

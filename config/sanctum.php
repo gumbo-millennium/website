@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'expiration' => Date::now()->addDays(90)->diffInMinutes(),
+    'expiration' => Date::now()->addYear()->diffInMinutes(),
 
     /*
     |--------------------------------------------------------------------------

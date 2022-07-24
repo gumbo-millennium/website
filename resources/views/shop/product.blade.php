@@ -90,11 +90,11 @@
                 </div>
 
 
-                <p class="text-center text-sm text-gray-primary-2 mb-2 mt-n1">
+                <p class="text-center text-sm text-gray-600 mb-2 mt-n1">
                     Maximaal {{ $variant->applied_order_limit }} per bestelling
                 </p>
 
-                <p class="text-center text-gray-primary-2">
+                <p class="text-center text-gray-600">
                     <strong>Let op:</strong>
                     Je kan webshop aankopen alleen afhalen
                 </p>

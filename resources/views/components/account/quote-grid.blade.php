@@ -10,7 +10,7 @@
     ?>
 
     @if ($currentDate !== $lastDate)
-    <p class="my-4 text-gray-secondary-3 text-center text-sm">
+    <p class="my-4 text-gray-300 text-center text-sm">
         {{ $currentDate }}
     </p>
     @endif
@@ -22,12 +22,12 @@
         {{-- Start of chat bubble --}}
         <blockquote class="mb-4 text-right">
             {{-- Message --}}
-            <p class="rounded-lg bg-blue-secondary-2 p-2">
+            <p class="rounded-lg bg-blue-200 p-2">
                 {{ $quote->formatted_quote }}
             </p>
 
             {{-- Footer --}}
-            <footer class="text-right m-2 text-gray-primary-3 text-sm">
+            <footer class="text-right m-2 text-gray-700 text-sm">
                 {{-- Author --}}
                 <cite>{{ $quote->author }}</cite>
 

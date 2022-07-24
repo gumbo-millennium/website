@@ -4,7 +4,7 @@
   @apply px-4;
 }
 
-@responsive {
+@layer components {
   .row {
     display: flex;
     flex-wrap: wrap;

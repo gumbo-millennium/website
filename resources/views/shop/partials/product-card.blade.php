@@ -3,7 +3,7 @@
     @if ($cartItems->count() > 0)
     @include('shop.partials.product-list')
     @else
-    <div class="p-8 text-center text-lg font-light border rounded border-gray-primary-1 text-gray-primary-1">
+    <div class="p-8 text-center text-lg font-white border rounded border-gray-500 text-gray-500">
         @lang('Your cart is empty')
     </div>
     @endif

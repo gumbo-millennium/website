@@ -89,6 +89,14 @@ mix.override(webpack => {
   // Override the ruleset
   webpack.module.rules = allowedWebpackLoaders
 
+  // Mute warnings we deem unworthy (or cannot fix)
+  webpack.stats ??= {}
+  webpack.stats.warningsFilter = [
+    ...(webpack.stats.warningsFilter ?? []),
+    'Replace color-adjust to print-color-adjust.',
+    /--tw-([a-z0-9-]+-)*[a-z0-9]+/,
+  ]
+
   // Done
   return webpack
 })

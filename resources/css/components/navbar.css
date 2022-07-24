@@ -1,7 +1,7 @@
 /* Navbar */
 
 .navbar {
-  @apply bg-light py-4 text-dark;
+  @apply bg-white py-4 text-white;
   @apply shadow;
 }
 
@@ -25,8 +25,8 @@
 .navbar__toggle {
   @apply py-2 px-4;
   @apply flex flex-col items-center;
-  @apply rounded border border-dark;
-  @apply text-dark cursor-pointer;
+  @apply rounded border border-gray-900;
+  @apply text-gray-900 cursor-pointer;
 }
 
 .navbar__toggle-icon {
@@ -35,7 +35,7 @@
 
 .navbar__nav {
   @apply hidden flex-col items-start;
-  @apply list-none rounded bg-light shadow-lg;
+  @apply list-none rounded bg-white shadow-lg;
   @apply absolute p-4;
   top: calc(theme('spacing.16') + theme('spacing.4'));
   right: theme('spacing.4');
@@ -84,7 +84,7 @@
   }
   .navbar__dropdown {
     @apply hidden flex-col items-start;
-    @apply py-2 px-4 shadow bg-light;
+    @apply py-2 px-4 shadow bg-white;
     @apply absolute z-40;
     top: calc(theme('spacing.2') * 2 + 1rem);
     left: 0;

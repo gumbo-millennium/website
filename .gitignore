@@ -113,9 +113,6 @@ storage/debugbar
 /_ide_helper.php
 /.phpstorm.meta.php
 
-# Allow vendored views
-!/resources/views/vendor
-
 # Ignore medialibrary temp
 /storage/medialibrary
 

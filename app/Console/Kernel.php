@@ -40,6 +40,9 @@ class Kernel extends ConsoleKernel
         // Wipe old data exports
         $schedule->job(CleanExpiredExportsJob::class)->daily();
 
+        // Wipe old Personal Access Tokens
+        $schedule->command('sanctum:prune-expired --hours=24')->daily();
+
         // Update enrollments' user_type every day
         $schedule->job(UpdateEnrollmentUserTypes::class)->daily();
 

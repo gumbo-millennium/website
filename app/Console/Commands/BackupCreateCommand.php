@@ -235,7 +235,14 @@ class BackupCreateCommand extends Command
 
         // Check if found
         if (! Storage::disk($disk)->exists($path)) {
-            $this->line("{$logPrefix} <error>Failed to write [{$asset}]: no such file named \"{$path}\"</>");
+            $this->line("{$logPrefix} <error>Failed to write [{$asset}]: no such file named \"{$path}\" on disk [{$disk}]</>");
+
+            // Try local disk if it's not currently on that
+            if ($disk !== null && $disk !== 'local') {
+                $this->line("{$logPrefix} <fg=gray>Trying local disk for [{$asset}]</>");
+
+                return $this->createBackupForResourceProperty($model, $asset, $path, 'local');
+            }
 
             return false;
         }

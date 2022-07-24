@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Laravel\Sanctum\HasApiTokens;
 use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -39,7 +41,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $password
  * @property null|string $remember_token
  * @property null|string $alias
- * @property array $grants
+ * @property \Illuminate\Support\Collection $grants
  * @property null|string $gender
  * @property null|array $address
  * @property null|string $phone
@@ -70,6 +72,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable implements MustVerifyEmailContract
 {
+    use HasApiTokens;
     use HasFactory;
     use HasRoles;
     use MustVerifyEmail;
@@ -124,7 +127,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $casts = [
         'conscribo_id' => 'int',
         'address' => EncryptedAttribute::class . ':json',
-        'grants' => EncryptedAttribute::class . ':json',
+        'grants' => 'collection',
 
         'deleted_at' => 'datetime',
         'email_verified_at' => 'datetime',
@@ -263,15 +266,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     public function setGrant(string $key, ?bool $granted): self
     {
-        $grants = $this->grants;
-
-        if ($granted === null) {
-            Arr::forget($grants, $key);
-        } else {
-            Arr::set($grants, $key, $granted);
-        }
-
-        $this->grants = $grants;
+        $this->grants = Collection::make($this->grants)
+            ->put($key, $granted)
+            ->reject(fn ($value) => $value === null)
+            ->sort();
 
         return $this;
     }
@@ -281,9 +279,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     public function hasGrant(string $key, bool $default = false): bool
     {
-        $grants = $this->grants;
-
-        return (bool) Arr::get($grants, $key, $default);
+        return (bool) $this->grants?->get($key, $default);
     }
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use App\Helpers\Str;
-use App\Models\Webcam;
+use App\Models\Webcam\Camera;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -105,7 +105,7 @@ class WebcamCommand extends Command
 
         // Get image
         $requested = Str::slug($this->getCommandName() ?? $this->getName());
-        $webcam = Webcam::query()
+        $webcam = Camera::query()
             ->where(function (Builder $query) use ($requested) {
                 $query
                     ->where('slug', $requested)
@@ -130,24 +130,26 @@ class WebcamCommand extends Command
             return;
         }
 
+        $device = $webcam->device;
+
         // Send upload status
         $this->replyWithChatAction(['action' => Actions::UPLOAD_PHOTO]);
 
         // Check if image exists
-        if (Storage::missing($webcam->path)) {
+        if (Storage::missing($device->path)) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_FILE_LOST),
             ]);
 
             report(new RuntimeException(
-                "Failed to retrieve photo file [{$webcam->path}] for webcam [{$webcam->id}]!",
+                "Failed to retrieve photo file [{$device->path}] for webcam [{$webcam->id}] (device [{$device->id}]!",
             ));
 
             return;
         }
 
         // Get file
-        $stream = Storage::readStream($webcam->path);
+        $stream = Storage::readStream($device->path);
 
         // Prep file
         $file = new InputFile($stream, strtolower("{$webcam->slug}.jpg"));
@@ -155,12 +157,12 @@ class WebcamCommand extends Command
         // Return message
         $this->replyWithPhoto([
             'photo' => $file,
-            'caption' => sprintf('%s van %s', $webcam->name, $webcam->lastUpdate->created_at->isoFormat('ddd D MMM YYYY, HH:mm (z)')),
+            'caption' => sprintf('%s van %s', $webcam->name, $device->lastUpdate->created_at->isoFormat('ddd D MMM YYYY, HH:mm (z)')),
         ]);
     }
 
     protected function getCameras(): Collection
     {
-        return $this->cams ??= Webcam::all();
+        return $this->cams ??= Camera::all();
     }
 }

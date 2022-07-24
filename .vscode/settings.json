@@ -9,7 +9,7 @@
     // PHP-CS-Fixer
     "php-cs-fixer.allowRisky": true,
     "php-cs-fixer.config": ".php-cs-fixer.php;.php-cs-fixer.dist.php",
-    "php-cs-fixer.executablePath": "./vendor/bin/php-cs-fixer",
+    "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
 
     "yaml.schemas": {
         "resources/json/schemas/menu.schema.json": [
@@ -24,5 +24,8 @@
         "resources/json/schemas/redirects.schema.json": [
             "resources/yaml/redirects.yaml",
         ],
+        "resources/json/schemas/grants.schema.json": [
+            "resources/yaml/grants.yaml",
+        ]
     }
 }

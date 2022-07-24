@@ -1,6 +1,6 @@
 .mail-infobar {
   @apply p-0 m-0;
-  @apply bg-brand-primary-2;
+  @apply bg-brand-600;
 }
 
 .mail-infobar__cell {
@@ -20,5 +20,5 @@
 }
 
 .mail-infobar__link:hover, .mail-infobar__link:focus {
-  @apply no-underline text-gray-secondary-3;
+  @apply no-underline text-gray-300;
 }
