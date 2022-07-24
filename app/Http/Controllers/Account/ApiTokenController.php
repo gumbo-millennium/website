@@ -11,7 +11,7 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class PersonalAccessTokenController extends Controller
+class ApiTokenController extends Controller
 {
     /**
      * Displays existing access tokens.

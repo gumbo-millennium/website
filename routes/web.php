@@ -195,9 +195,9 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::get('/', 'Account\ProfileController@index')->name('index');
 
     // Urls
-    Route::get('/personal-access-tokens', 'Account\PersonalAccessTokenController@index')->name('tokens.index');
-    Route::post('/personal-access-tokens', 'Account\PersonalAccessTokenController@store')->name('tokens.store');
-    Route::delete('/personal-access-tokens/{token}', 'Account\PersonalAccessTokenController@delete')->name('tokens.delete');
+    Route::get('/personal-access-tokens', 'Account\ApiTokenController@index')->name('tokens.index');
+    Route::post('/personal-access-tokens', 'Account\ApiTokenController@store')->name('tokens.store');
+    Route::delete('/personal-access-tokens/{token}', 'Account\ApiTokenController@delete')->name('tokens.delete');
 
     // Edit profile
     Route::get('/profiel', 'Account\ProfileController@edit')->name('profile.edit');

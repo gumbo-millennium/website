@@ -6,7 +6,7 @@ namespace Tests\Feature\Http\Controllers\Account;
 
 use Tests\TestCase;
 
-class PersonalAccessTokenControllerTest extends TestCase
+class ApiTokenControllerTest extends TestCase
 {
     /**
      * test fetching the index.
