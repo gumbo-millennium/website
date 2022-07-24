@@ -31,10 +31,16 @@ class DeviceFactory extends Factory
     public function withImage(): self
     {
         return $this->afterMaking(function (Device $device) {
-            $imageFile = $this->faker->image(sys_get_temp_dir(), 64, 64);
+            $image = $this->faker->randomElement([
+                'test-assets/images/squares/square-blue.png',
+                'test-assets/images/squares/square-green.png',
+                'test-assets/images/squares/square-orange.png',
+                'test-assets/images/squares/square-red.png',
+                'test-assets/images/squares/square-yellow.png',
+            ]);
 
-            $device->image = Storage::disk(Config::get('gumbo.images.disk'))
-                ->putFile(Device::STORAGE_FOLDER, new File($imageFile));
+            $device->path = Storage::disk(Config::get('gumbo.images.disk', 'local'))
+                ->putFile(Device::STORAGE_FOLDER, new File(resource_path($image)));
         });
     }
 }

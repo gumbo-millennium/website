@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PruneWebcamUpdates extends Command
+class PruneWebcams extends Command
 {
     /**
      * The name and signature of the console command.
@@ -62,7 +62,7 @@ class PruneWebcamUpdates extends Command
             return Command::FAILURE;
         }
 
-        Storage::disk($photoDisk)->delete($filesToDelete);
+        $this->withProgressBar($filesToDelete, fn ($path) => Storage::disk($photoDisk)->delete($path));
 
         $this->line("Removed <info>{$filesToDelete->count()}</> photos.");
 
