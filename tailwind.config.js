@@ -12,7 +12,7 @@ module.exports = {
 
   content: [
     'resources/views/**/*.blade.php',
-    'resources/assets/yaml/**/*.yaml',
+    'resources/yaml/**/*.yaml',
     'app/**/*.php',
   ],
 

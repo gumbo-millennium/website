@@ -9,7 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class ApiTokenController extends Controller
 {
@@ -20,10 +19,18 @@ class ApiTokenController extends Controller
     {
         $user = $request->user();
 
-        return Response::view('account.tokens', [
+        return Response::view('account.tokens.index', [
             'tokens' => $user->tokens,
             'newToken' => $request->session()->get('created_token'),
         ]);
+    }
+
+    /**
+     * Creates a new API token.
+     */
+    public function create(): HttpResponse
+    {
+        return Response::view('account.tokens.create');
     }
 
     /**
@@ -35,13 +42,12 @@ class ApiTokenController extends Controller
             'name' => [
                 'required',
                 'string',
+                'min:2',
                 'max:200',
             ],
         ]);
 
-        $token = $request->user()->createToken($request->name);
-
-        flash()->success('API token created successfully.');
+        $token = $request->user()->createToken($request->name, ['openapi']);
 
         return Response::redirectToRoute('account.tokens.index')
             ->with('created_token', $token);
@@ -50,15 +56,17 @@ class ApiTokenController extends Controller
     /**
      * Revokes access tokens.
      */
-    public function delete(Request $request, PersonalAccessToken $token): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
-        $user = $request->user();
+        abort_unless($request->input('token'), HttpResponse::HTTP_BAD_REQUEST);
 
-        abort_unless($token->tokenable->is($user), HttpResponse::HTTP_NOT_FOUND);
+        $token = $request->user()->tokens()->find($request->input('token'));
 
-        $user->tokens()->where('id', $token->id)->delete();
+        abort_unless($token, HttpResponse::HTTP_NOT_FOUND);
 
-        flash()->success('API token revoked successfully.');
+        $token->delete();
+
+        flash()->success(__('API token revoked successfully.'));
 
         return Response::redirectToRoute('account.tokens.index');
     }

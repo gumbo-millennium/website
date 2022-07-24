@@ -137,8 +137,14 @@
   "Grants": "Toestemmingen",
   "Telegram Account": "Telegram account",
   "Export": "Inzageverzoeken",
-  "API Tokens": "API tokens",
   "My :part": "Mijn :part",
+
+  "API Tokens": "API tokens",
+  "Create new API Token": "Nieuwe API token aanmaken",
+  "Name of token": "Naam van token",
+  "Create token": "Token aanmaken",
+  "API token created successfully": "API token succesvol aangemaakt",
+  "API token revoked successfully.": "API token succesvol verwijderd.",
 
   "Your cart is empty": "Je winkelwagen is leeg",
 
