@@ -66,7 +66,7 @@ class WebcamController extends Controller
                 'string',
                 'between:5,60',
             ],
-            'photo' => [
+            'image' => [
                 'required',
                 'image',
                 'mimes:jpeg',
@@ -83,7 +83,7 @@ class WebcamController extends Controller
 
         $device = $request->input('device');
         $name = $request->input('name');
-        $photo = $request->file('photo');
+        $image = $request->file('image');
 
         // Check if an entry exists for this device
         $model = Device::firstOrNew([
@@ -91,19 +91,24 @@ class WebcamController extends Controller
             'name' => $name,
         ]);
 
+        abort_if($model->owner?->is($request->user()) === false, HttpResponse::HTTP_FORBIDDEN);
+        if (! $model->owner) {
+            $model->owner()->associate($request->user());
+        }
+
         // Store old path
         $disk = Config::get('gumbo.images.disk');
         $oldPath = $model->path;
 
         try {
             // Throw up a conflict if the local image is newer than the submitted one
-            abort_if($oldPath && Storage::disk($disk)->lastModified($oldPath) > $photo->lastModified(), HttpResponse::HTTP_CONFLICT);
+            abort_if($oldPath && Storage::disk($disk)->lastModified($oldPath) > $image->lastModified(), HttpResponse::HTTP_CONFLICT);
         } catch (FileNotFoundException) {
             // Ignore not found exceptions, we'll just put this new file in place
         }
 
         // Save new photo
-        $model->path = $photo->store(Device::STORAGE_FOLDER, $disk);
+        $model->path = $image->store(Device::STORAGE_FOLDER, $disk);
         $model->save();
 
         // Delete the old file

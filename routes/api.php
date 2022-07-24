@@ -30,7 +30,7 @@ Route::addRoute(['GET', 'PUT'], 'plazacam/{user}/{webcam}', fn () => Response::j
     ],
 ], 400));
 
-Route::middleware(['auth:sanctum', 'member'])->name('api.webcam.')->prefix('/webcam/')->group(function () {
+Route::middleware(['auth:sanctum', 'member'])->name('webcam.')->prefix('/webcam/')->group(function () {
     Route::get('/{camera}', [Api\WebcamController::class, 'show'])->name('show');
     Route::put('/', [Api\WebcamController::class, 'update'])->name('update');
 });

@@ -55,7 +55,8 @@ class ResourceBaselineTest extends TestCase
             Resources\Page::class,
             Resources\RedirectInstruction::class,
             Resources\User::class,
-            Resources\Webcam::class,
+            Resources\Webcam\Camera::class,
+            Resources\Webcam\Device::class,
         ];
 
         return Collection::make($models)

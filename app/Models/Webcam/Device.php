@@ -44,6 +44,17 @@ class Device extends Model
     protected $table = 'webcam_devices';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'device',
+        'name',
+        'path',
+    ];
+
+    /**
      * The camera associated with this device.
      */
     public function camera(): BelongsTo
