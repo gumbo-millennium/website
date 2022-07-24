@@ -40,7 +40,6 @@
         "mischiefcollective/colorjizz": "^1.0",
         "mollie/laravel-mollie": "^2.14",
         "predis/predis": "^1.1",
-        "roelofr/laravel-encryption-cast": "^1.2",
         "sentry/sentry-laravel": "^2.5",
         "sloveniangooner/searchable-select": "^1.3",
         "smalot/pdfparser": "^0.13",

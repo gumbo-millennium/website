@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use LogicException;
-use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -96,7 +95,7 @@ class Enrollment extends UuidModel implements Payable
         'deleted_at' => 'datetime',
         'expire' => 'datetime',
 
-        'data' => EncryptedAttribute::class . ':json',
+        'data' => 'encrypted:collection',
         'paid' => 'bool',
         'price' => 'int',
         'total_price' => 'int',

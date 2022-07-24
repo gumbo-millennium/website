@@ -19,7 +19,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Laravel\Sanctum\HasApiTokens;
-use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -126,9 +125,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
      */
     protected $casts = [
         'conscribo_id' => 'int',
-        'address' => EncryptedAttribute::class . ':json',
+        'address' => 'encrypted:collection',
         'grants' => 'collection',
-
         'deleted_at' => 'datetime',
         'email_verified_at' => 'datetime',
     ];

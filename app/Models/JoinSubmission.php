@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\EncryptedDateCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Support\Facades\Date;
-use Roelofr\EncryptionCast\Casts\EncryptedAttribute;
 
 /**
  * App\Models\JoinSubmission.
@@ -50,13 +50,13 @@ class JoinSubmission extends Model
      * @var array
      */
     protected $casts = [
-        'phone' => EncryptedAttribute::class,
-        'date_of_birth' => EncryptedAttribute::class . ':date',
-        'street' => EncryptedAttribute::class,
-        'number' => EncryptedAttribute::class,
-        'city' => EncryptedAttribute::class,
-        'postal_code' => EncryptedAttribute::class,
-        'country' => EncryptedAttribute::class,
+        'phone' => 'encrypted',
+        'date_of_birth' => EncryptedDateCast::class,
+        'street' => 'encrypted',
+        'number' => 'encrypted',
+        'city' => 'encrypted',
+        'postal_code' => 'encrypted',
+        'country' => 'encrypted',
     ];
 
     /**

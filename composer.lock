@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6f7d78e628b01dc692e3899443310eb",
+    "content-hash": "aca611aed9dbfd81104563c8f280a5c5",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -7897,59 +7897,6 @@
                 "source": "https://github.com/rap2hpoutre/fast-excel/tree/v3.2.0"
             },
             "time": "2022-02-09T16:04:44+00:00"
-        },
-        {
-            "name": "roelofr/laravel-encryption-cast",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/roelofr/laravel-encryption-cast.git",
-                "reference": "73323a0e2bb2d4df83ac4576fc1ef61c149e0da3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/roelofr/laravel-encryption-cast/zipball/73323a0e2bb2d4df83ac4576fc1ef61c149e0da3",
-                "reference": "73323a0e2bb2d4df83ac4576fc1ef61c149e0da3",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "^7.0 || ^8.0",
-                "illuminate/database": "^7.0 || ^8.0",
-                "illuminate/support": "^7.0 || ^8.0",
-                "php": "^7.4 || ^8.0"
-            },
-            "require-dev": {
-                "nunomaduro/collision": "^4.2 || ^5.0",
-                "orchestra/testbench": "^5.0 || ^6.0",
-                "php-parallel-lint/php-console-highlighter": "^0.5.0",
-                "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpunit/phpunit": "^9.0",
-                "slevomat/coding-standard": "^6.3",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Roelofr\\EncryptionCast\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Roelof Roos",
-                    "email": "github@roelof.io"
-                }
-            ],
-            "description": "An Eloquent cast to encrypt and decrypt data, whilst still allowing your own casts",
-            "support": {
-                "issues": "https://github.com/roelofr/laravel-encryption-cast/issues",
-                "source": "https://github.com/roelofr/laravel-encryption-cast/tree/v1.2.0"
-            },
-            "abandoned": true,
-            "time": "2020-09-09T20:25:33+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
