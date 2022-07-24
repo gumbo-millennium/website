@@ -9,6 +9,7 @@ use App\Contracts\EnrollmentServiceContract;
 use App\Contracts\MarkdownServiceContract;
 use App\Contracts\Payments\PaymentManager;
 use App\Contracts\SponsorService as SponsorServiceContract;
+use App\Models\Grant;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\EventService;
@@ -17,6 +18,7 @@ use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
@@ -155,6 +157,18 @@ class AppServiceProvider extends ServiceProvider
             $options = Yaml::parseFile(resource_path($file));
             Config::set($configKey, array_merge(Config::get($configKey, []), $options));
         }
+
+        // Register Grants as Grant models
+        Config::set(
+            'gumbo.account.grants',
+            Collection::make(Config::get('gumbo.account.grants'))
+                ->map(fn ($grant, $key) => new Grant(
+                    $key,
+                    $grant['name'],
+                    str_replace(PHP_EOL, ' ', $grant['description']),
+                ))
+                ->values(),
+        );
     }
 
     /**

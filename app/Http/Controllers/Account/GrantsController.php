@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\Controller;
 use App\Models\Grant;
 use App\Models\User;
-use Generator;
 use Illuminate\Http\RedirectResponse as HttpRedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -22,22 +21,6 @@ use Kris\LaravelFormBuilder\FormBuilder;
 class GrantsController extends Controller
 {
     /**
-     * Returns customizable grants.
-     *
-     * @return Generator<Grant>
-     */
-    public static function getGrants(): Generator
-    {
-        foreach (Config::get('gumbo.account.grants') as $key => $grant) {
-            yield new Grant(
-                $key,
-                $grant['name'],
-                str_replace(PHP_EOL, ' ', $grant['description']),
-            );
-        }
-    }
-
-    /**
      * Force auth.
      */
     public function __construct()
@@ -48,7 +31,7 @@ class GrantsController extends Controller
     /**
      * Edit form.
      */
-    public function editGrants(Request $request): HttpResponse
+    public function edit(Request $request): HttpResponse
     {
         // Get current user
         /** @var User $user */
@@ -56,34 +39,32 @@ class GrantsController extends Controller
 
         return Response::view('account.grants', [
             'user' => $user,
-            'grants' => self::getGrants(),
+            'grants' => Config::get('gumbo.account.grants'),
         ]);
     }
 
     /**
      * Applying the changes.
      */
-    public function updateGrants(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
+    public function update(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
         // Get current user
         /** @var User $user */
         $user = $request->user();
-        $grants = Collection::make(self::getGrants());
+        $inputValues = Config::get('gumbo.account.grants')
+            ->mapWithKeys(fn (Grant $grant) => [
+                $grant->key => (bool) $request->input($grant->key),
+            ]);
 
-        // Check the request
-        $validValues = $request->only($grants->pluck('key'));
+        $user->grants = Collection::make($user->grants)
+            ->merge($inputValues)
+            ->reject(fn ($value) => $value === null);
 
-        // Apply new values
-        foreach ($grants as $grant) {
-            $checked = $validValues[$grant->key] ?? false;
-
-            $user->setGrant($grant->key, (bool) $checked);
-        }
         $user->save();
 
         // Flash OK
         flash()->success('Je toestemmingen zijn bijgewerkt');
 
-        return Response::redirectToRoute('account.index');
+        return Response::redirectToRoute('account.grants');
     }
 }

@@ -208,8 +208,8 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');
 
     // Permissions
-    Route::get('/toestemmingen', 'Account\GrantsController@editGrants')->name('grants');
-    Route::post('/toestemmingen', 'Account\GrantsController@updateGrants');
+    Route::get('/toestemmingen', 'Account\GrantsController@edit')->name('grants');
+    Route::post('/toestemmingen', 'Account\GrantsController@update');
 
     // Telegram
     Route::get('/telegram', 'Account\TelegramController@show')->name('tg.show');
