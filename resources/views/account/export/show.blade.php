@@ -23,7 +23,7 @@ $data = [
                       {{ $key }}
                   </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                   {{ $value }}
               </td>
           </tr>
@@ -32,12 +32,12 @@ $data = [
   </table>
 
   {{-- Download --}}
-  <div class="w-full grid grid-cols-1">
+  <div class="w-full">
       @if ($export->path && !$export->is_expired)
-          <a href="{{ route('account.export.download', [$export->id, $export->token]) }}" class="btn btn-small btn-primary text-center">
-              <x-icon icon="solid/download" class="h-8 mr-4" />
-              Download
-          </a>
+      <x-button style="primary" :href="route('account.export.download', [$export->id, $export->token])">
+        <x-icon icon="solid/download" class="h-4 mr-2" />
+          Download
+      </x-button>
       @else
           <button disabled class="btn btn-small text-center" aria-label="Download niet beschikbaar">
               <x-icon icon="solid/download" class="h-8 mr-4" />
