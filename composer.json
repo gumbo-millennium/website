@@ -143,8 +143,7 @@
         }
     },
     "scripts-descriptions": {
-        "format": "Format code using php-cs-fixer",
-        "contribute": "Perform all required steps to setup the project"
+        "format": "Format code using php-cs-fixer"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
