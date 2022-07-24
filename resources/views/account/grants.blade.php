@@ -13,5 +13,29 @@
   </p>
 
   {{-- Render form --}}
-  {!! form($form, ['class' => 'form']) !!}
+  <form action="{{ route('account.grants') }}" method="post" class="space-y-5">
+    @csrf
+
+    @foreach ($grants as $id => $grant)
+    <div class="relative flex items-start">
+      <div class="flex items-center h-6">
+        <input id="{{ $grant->key }}" aria-describedby="{{ $grant->key }}-description" name="{{ $grant->key }}" type="checkbox"
+          class="focus:ring-brand-500 h-4 w-4 text-brand-600 border-gray-300 rounded" @if($user->hasGrant($grant->key)) checked @endif>
+      </div>
+      <div class="ml-3 space-y-2">
+        <label for="{{ $grant->key }}" class="font-medium text-gray-900">{{ $grant->name }}</label>
+        <p id="{{ $grant->key }}-description" class="text-gray-500 text-sm">
+          {{ $grant->description }}
+        </p>
+      </div>
+    </div>
+    @endforeach
+
+    <div class="flex items-start">
+      <div class="w-4 mr-3"></div>
+      <x-button style="primary" type="submit">
+          Opslaan
+      </x-button>
+    </div>
+  </form>
 </x-account-page>

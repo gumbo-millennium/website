@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Forms\AccountGrantsForm;
 use App\Http\Controllers\Controller;
 use App\Models\Grant;
 use App\Models\User;
@@ -13,6 +12,7 @@ use Illuminate\Http\RedirectResponse as HttpRedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Symfony\Component\Yaml\Yaml;
@@ -55,15 +55,15 @@ class GrantsController extends Controller
     /**
      * Edit form.
      */
-    public function editGrants(FormBuilder $formBuilder, Request $request): HttpResponse
+    public function editGrants(Request $request): HttpResponse
     {
         // Get current user
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
 
         return Response::view('account.grants', [
             'user' => $user,
-            'form' => $this->getForm($formBuilder, $user),
+            'grants' => self::getGrants(),
         ]);
     }
 
@@ -73,44 +73,24 @@ class GrantsController extends Controller
     public function updateGrants(FormBuilder $formBuilder, Request $request): HttpRedirectResponse
     {
         // Get current user
+        /** @var User $user */
         $user = $request->user();
-        \assert($user instanceof User);
+        $grants = Collection::make(self::getGrants());
 
-        // Make form
-        $form = $this->getForm($formBuilder, $user);
-
-        // Get values
-        $formValues = $form->getFieldValues();
+        // Check the request
+        $validValues = $request->only($grants->pluck('key'));
 
         // Apply new values
-        foreach ($this->getGrants() as $grant) {
-            $checked = $formValues[$grant->key];
+        foreach ($grants as $grant) {
+            $checked = $validValues[$grant->key] ?? false;
 
             $user->setGrant($grant->key, (bool) $checked);
         }
         $user->save();
 
         // Flash OK
-        flash('Je toestemmingen zijn bijgewerkt', 'success');
+        flash()->success('Je toestemmingen zijn bijgewerkt');
 
         return Response::redirectToRoute('account.index');
-    }
-
-    /**
-     * Returns the form for modifying the grants.
-     */
-    private function getForm(FormBuilder $formBuilder, User $user): AccountGrantsForm
-    {
-        // Make form
-        $form = $formBuilder->create(AccountGrantsForm::class, [
-            'method' => 'POST',
-            'url' => route('account.grants'),
-            'model' => $user,
-        ]);
-
-        // Create form
-        \assert($form instanceof AccountGrantsForm);
-
-        return $form;
     }
 }
