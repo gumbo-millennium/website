@@ -26,7 +26,7 @@ class ReEncryptJoinSubmissionModel extends Migration
             try {
                 $dateOfBirth = Date::parse($this->decryptValue($row->date_of_birth));
 
-                DB::update(<<<SQL
+                DB::update(<<<'SQL'
                     UPDATE
                         `join_submissions`
                     SET

@@ -23,6 +23,7 @@ class ReEncryptUserModel extends Migration
 
         foreach ($query as $row) {
             $newValue = null;
+
             try {
                 $newValue = Crypt::encrypt($this->decryptJsonValue($row->address));
                 Log::info('Decrypted address on user {email}', ['email' => $row->email]);
