@@ -133,9 +133,8 @@ trait HandlesSettingMetadata
         ];
 
         // Add location
-        if (filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
-            $data['eventAttendanceMode'] = 'OnlineEventAttendanceMode';
-        }
+        $isOnlineEvent = filter_var($activity->location_address, FILTER_VALIDATE_URL);
+        $data['eventAttendanceMode'] = $isOnlineEvent ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode';
 
         if ($activity->is_cancelled) {
             // Check if the event was cancelled
@@ -168,70 +167,61 @@ trait HandlesSettingMetadata
      */
     private function buildPricingAndTicketMeta(Activity $activity): ?array
     {
-        // Add price info
-        JsonLd::addValue('isAccessibleForFree', $activity->is_free);
+        if ($activity->tickets->isEmpty()) {
+            JsonLd::addValue('isAccessibleForFree', $activity->tickets->isEmpty());
 
-        // Add regular ticket
-        $url = $this->getCanonical($activity);
-        $offers = [
-            ["{$url}/regular", $activity->total_price, $activity->available_seats > 0],
-        ];
-
-        // Add discounted ticket
-        if ($activity->total_discount_price && $activity->total_price) {
-            $offers[] = ["{$url}/discount", $activity->total_discount_price, $activity->discounts_available !== 0];
+            return [];
         }
-
         // Prep list
         $offerList = [];
 
-        // Prep dates
-        $validFromDate = ($activity->enrollment_start ?? now());
-        $validThroughDate = ($activity->enrollment_end ?? $activity->end_date);
+        // Add regular ticket
+        $url = $this->getCanonical($activity);
 
-        $validFrom = $validFromDate->toIso8601String();
-        $validThrough = $validThroughDate->toIso8601String();
-
-        // Prep default org
-        $gumboOrg = [
-            '@type' => 'Organization',
-            'name' => 'Gumbo Millennium',
-            'url' => url('/'),
-        ];
-
-        // A default offer
+        // Build default ticket
         $defaultOffer = [
             '@type' => 'Offer',
-            'identifier' => null,
-            'url' => null,
+            'url' => $url,
             'priceCurrency' => 'EUR',
-            'price' => null,
             'eligibleQuantity' => 1,
-            'eligibleRegion' => 'NL',
-            'validFrom' => $validFrom,
-            'validThrough' => $validThrough,
-            'availability' => null,
-            'acceptedPaymentMethod' => 'http://purl.org/goodrelations/v1#ByInvoice',
+            'eligibleRegion' => [
+                '@type' => 'Country',
+                'name' => 'Netherlands',
+                'alternateName' => 'Holland',
+                'identifier' => 'NL',
+                'sameAs' => 'https://en.wikipedia.org/wiki/Netherlands',
+            ],
+            'eligibleCustomerType' => 'http://purl.org/goodrelations/v1#Enduser',
+            'acceptedPaymentMethod' => 'http://purl.org/goodrelations/v1#ByBankTransferInAdvance',
             'availableDeliveryMethod' => 'http://purl.org/goodrelations/v1#DeliveryModeDirectDownload',
-            'offeredBy' => $gumboOrg,
+            'offeredBy' => [
+                '@type' => 'Organization',
+                'name' => 'Gumbo Millennium',
+                'url' => route('home'),
+            ],
         ];
 
-        // Add offers
-        foreach ($offers as [$id, $price, $available]) {
-            $offerList[] = array_merge($defaultOffer, [
-                'identifier' => $id,
-                'url' => $url,
-                'price' => $price ? $price / 100 : '0.00',
-                'availability' => $available ? 'https://schema.org/OnlineOnly' : 'https://schema.org/SoldOut',
-            ]);
+        foreach ($activity->tickets as $ticket) {
+            $ticketId = sprintf('%04d-%04d', $activity->id, $ticket->id);
+
+            $availability = $ticket->quantity_available === 0
+                ? 'https://schema.org/SoldOut'
+                : ($ticket->quantity > 0 ? 'https://schema.org/LimitedAvailability' : 'https://schema.org/InStock');
+
+            $offerList[] = [
+                ...$defaultOffer,
+                'price' => sprintf('%.2f', $ticket->price / 100),
+                'availability' => $availability,
+                'validFrom' => $activity->start_date->toIso8601String(),
+                'validThrough' => $activity->end_date->toIso8601String(),
+                'name' => $ticket->name,
+                'description' => $ticket->description,
+                'sku' => $ticketId,
+                'identifier' => $ticketId,
+            ];
         }
 
-        // Remove 'availability' from data if the tickets are not available right now.
-        if ($validFrom > now() || $validThrough < now()) {
-            Arr::forget($offerList, '*.availability');
-        }
-
-        // Add offers
+        // Return offers
         return $offerList;
     }
 }
