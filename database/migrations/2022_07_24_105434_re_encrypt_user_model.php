@@ -6,7 +6,6 @@ use App\Traits\DecryptsOldValues;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use InvalidArgumentException;
 
 class ReEncryptUserModel extends Migration
 {
