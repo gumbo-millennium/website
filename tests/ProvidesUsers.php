@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Models\User;
+use Illuminate\Support\Arr;
 
 /**
  * Provides users with various ranks.
@@ -13,9 +14,13 @@ trait ProvidesUsers
 {
     /**
      * Creates a user with the given roles.
+     *
+     * @param string|string[] $roles
      */
-    public function getTemporaryUser(?array $roles = null): User
+    public function getTemporaryUser(array|string $roles = []): User
     {
+        $roles = Arr::wrap($roles);
+
         /** @var User $user */
         return tap(
             User::factory()->create(),

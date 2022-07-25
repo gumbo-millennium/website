@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Testing\TestResponse;
 use Tests\Fixtures\Services\DummyPaymentService;
 use Tests\Traits\RefreshDatabase;
+use Tests\Traits\TestsFlashMessages;
 
 /**
  * @method void actingAs(User $user)
@@ -20,6 +21,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     use ProvidesUsers;
     use RefreshDatabase;
+    use TestsFlashMessages;
 
     public function setUp(): void
     {

@@ -56,9 +56,15 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
                     @endif
                 </x-activities.header-tile>
 
+                @if ($activity->tickets->isEmpty())
+                <x-activities.header-tile icon="solid/ticket-alt" title="Openbare activiteit">
+                  <p>Je hebt geen kaartje nodig</p>
+                </x-activities.header-tile>
+                @else
                 <x-activities.header-tile icon="solid/ticket-alt" :title="$ticketPrices">
                     <p>{{ $activity->tickets->count() }} soorten tickets</p>
                 </x-activities.header-tile>
+                @endif
 
                 <div class="grid grid-cols-1 lg:hidden">
                     <x-activities.header-tile :icon="$visibilityIcon" :title="$visibilityTitle" />

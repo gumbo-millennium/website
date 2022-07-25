@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Activities;
 
 use App\Facades\Enroll;
 use App\Models\Activity;

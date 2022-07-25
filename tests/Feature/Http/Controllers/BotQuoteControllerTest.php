@@ -7,9 +7,9 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\BotQuote;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Feature\FeatureTestCase;
+use Tests\TestCase;
 
-class BotQuoteControllerTest extends FeatureTestCase
+class BotQuoteControllerTest extends TestCase
 {
     use DatabaseTransactions;
     use WithFaker;
