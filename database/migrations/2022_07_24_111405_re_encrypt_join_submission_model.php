@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Traits\DecryptsOldValues;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Date;
@@ -22,11 +21,25 @@ class ReEncryptJoinSubmissionModel extends Migration
     public function up()
     {
         $query = DB::select('SElECT id, phone, date_of_birth, street, number, city, postal_code, country FROM join_submissions');
+
         foreach ($query as $row) {
             try {
                 $dateOfBirth = Date::parse($this->decryptValue($row->date_of_birth));
 
-                DB::update('UPDATE join_submissions SET phone = ?, date_of_birth = ?, street = ?, number = ?, city = ?, postal_code = ?, country = ? WHERE id = ?', [
+                DB::update(<<<'SQL'
+                    UPDATE
+                        `join_submissions`
+                    SET
+                        `phone` = ?,
+                        `date_of_birth` = ?,
+                        `street` = ?,
+                        `number` = ?,
+                        `city` = ?,
+                        `postal_code` = ?,
+                        `country` = ?
+                    WHERE
+                        `id` = ?
+                SQL, [
                     Crypt::encryptString($this->decryptValue($row->phone)),
                     Crypt::encryptString($dateOfBirth->format('Y-m-d')),
                     Crypt::encryptString($this->decryptValue($row->street)),
@@ -38,7 +51,7 @@ class ReEncryptJoinSubmissionModel extends Migration
                 ]);
 
                 Log::info('Updated fields on join submission {id}', ['id' => $row->id]);
-            } catch (JsonException|DecryptException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 Log::warning('Failed to update fields on join submission {id}: {exception}', [
                     'id' => $row->id,
                     'exception' => $exception,
