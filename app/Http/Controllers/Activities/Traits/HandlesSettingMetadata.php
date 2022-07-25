@@ -26,15 +26,15 @@ trait HandlesSettingMetadata
         SEOTools::setDescription($activity->tagline);
         SEOTools::setCanonical($this->getCanonical($activity));
         SEOTools::addImages([
-            image_asset($activity->cover)->preset('social'),
-            image_asset($activity->cover)->preset('social')->dpi(2),
+            image_asset($activity->cover)->preset('social')->getUrl(),
+            image_asset($activity->cover)->preset('social')->dpi(2)->getUrl(),
         ]);
 
         // Set Open Graph
         OpenGraph::setUrl($url);
         OpenGraph::addImages([
-            image_asset($activity->cover)->preset('social'),
-            image_asset($activity->cover)->preset('social')->dpi(2),
+            image_asset($activity->cover)->preset('social')->getUrl(),
+            image_asset($activity->cover)->preset('social')->dpi(2)->getUrl(),
         ]);
 
         // Build JSON
@@ -123,7 +123,7 @@ trait HandlesSettingMetadata
             'identifier' => $url,
             'name' => $activity->name,
             'description' => $activity->tagline,
-            'image' => image_asset($activity->cover)->preset('social'),
+            'image' => image_asset($activity->cover)->preset('social')->getUrl(),
             'startDate' => $activity->start_date->toIso8601String(),
             'endDate' => $activity->start_date->toIso8601String(),
             'organizer' => $performer,
