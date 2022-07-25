@@ -22,6 +22,7 @@ class ReEncryptJoinSubmissionModel extends Migration
     public function up()
     {
         $query = DB::select('SElECT id, phone, date_of_birth, street, number, city, postal_code, country FROM join_submissions');
+
         foreach ($query as $row) {
             try {
                 $dateOfBirth = Date::parse($this->decryptValue($row->date_of_birth));
