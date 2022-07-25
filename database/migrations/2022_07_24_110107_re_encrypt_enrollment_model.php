@@ -46,7 +46,11 @@ class ReEncryptEnrollmentModel extends Migration
             }
         }
 
-        DB::update('UPDATE enrollments SET data = null WHERE id IN (?)', [
+        Log::info('Resetting broken enrollment data on {count} models.', [
+            'count' => count($resetModels),
+        ]);
+
+        DB::update('UPDATE `enrollments` SET `data` = null WHERE `id` IN (?)', [
             implode(', ', $resetModels),
         ]);
     }
