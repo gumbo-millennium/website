@@ -1,4 +1,4 @@
-<x-page title="Welkom">
+<x-page title="Welkom bij studentenvereniging Gumbo Millennium - Dubbel L, Dubbel N, Dubbel genieten!">
   <x-slot name="navbar">
     <x-layout.header class="shadow-none" />
   </x-slot>
