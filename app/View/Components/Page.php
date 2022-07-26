@@ -7,6 +7,7 @@ namespace App\View\Components;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Closure;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Page extends Component
@@ -32,11 +33,11 @@ class Page extends Component
     ) {
         // Build title
         if (empty($title)) {
-            $title = 'Gumbo Millennium';
+            $title = 'Studentenvereniging Gumbo Millennium';
         } else {
             $title = is_string($title) ? explode(' - ', $title) : $title;
-            if (last($title) !== 'Gumbo Millennium') {
-                $title[] = 'Gumbo Millennium';
+            if (Str::endsWith($title, 'Gumbo Millennium')) {
+                $title[] = 'Studentenvereniging Gumbo Millennium';
             }
             $title = implode(' - ', $title);
         }
