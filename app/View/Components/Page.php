@@ -36,7 +36,7 @@ class Page extends Component
             $title = 'Studentenvereniging Gumbo Millennium';
         } else {
             $title = is_string($title) ? explode(' - ', $title) : $title;
-            if (Str::endsWith(last($title), 'Gumbo Millennium')) {
+            if (! Str::endsWith(last($title), 'Gumbo Millennium')) {
                 $title[] = 'Studentenvereniging Gumbo Millennium';
             }
             $title = implode(' - ', $title);
