@@ -55,6 +55,15 @@ return [
             'activiteiten.gumbo-millennium.nl',
             'organen.gumbo-millennium.nl',
         ],
+
+        // Google Wallet configuration
+        'wallet' => [
+            // JSON key
+            'key_file' => env('GOOGLE_WALLET_AUTH_FILE', storage_path('auth/google.json')),
+
+            // Google Wallet Issuer ID
+            'issuer_id' => env('GOOGLE_WALLET_ISSUER_ID', null),
+        ],
     ],
 
     // Tenor gif search
