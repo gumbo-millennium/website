@@ -38,7 +38,7 @@ return [
         'key-file' => env('GOOGLE_AUTH_FILE', storage_path('auth/google.json')),
 
         // Set user who we use to sign in as
-        'subject' => env('GOOGLE_AUTH_USER', 'domain-admin@gumbo-millennium.nl'),
+        'subject' => $googleSubject = env('GOOGLE_AUTH_USER', 'domain-admin@gumbo-millennium.nl'),
 
         // Make sure our Service Account logged in using the auth file is granted
         // domain-wide authority. For more information, read this:
@@ -59,7 +59,10 @@ return [
         // Google Wallet configuration
         'wallet' => [
             // JSON key
-            'key_file' => env('GOOGLE_WALLET_AUTH_FILE', storage_path('auth/google.json')),
+            'key_file' => env('GOOGLE_WALLET_AUTH_FILE', env('GOOGLE_AUTH_FILE', storage_path('auth/google-wallet.json'))),
+
+            // Subject
+            'subject' => env('GOOGLE_WALLET_SUBJECT', $googleSubject),
 
             // Google Wallet Issuer ID
             'issuer_id' => env('GOOGLE_WALLET_ISSUER_ID', null),
