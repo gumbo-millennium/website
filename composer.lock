@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "847187cad7807dae0eb3a310968ec8e0ca3210e3"
+                "reference": "e8f2fedade2eff34369ade2a502337bfff669d24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/847187cad7807dae0eb3a310968ec8e0ca3210e3",
-                "reference": "847187cad7807dae0eb3a310968ec8e0ca3210e3",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/e8f2fedade2eff34369ade2a502337bfff669d24",
+                "reference": "e8f2fedade2eff34369ade2a502337bfff669d24",
                 "shasum": ""
             },
             "require": {
@@ -59,9 +59,9 @@
             ],
             "support": {
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
-                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.4"
+                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.5"
             },
-            "time": "2022-07-17T15:33:40+00:00"
+            "time": "2022-08-12T13:48:29+00:00"
         },
         {
             "name": "artesaos/seotools",
