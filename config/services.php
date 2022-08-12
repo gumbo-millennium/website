@@ -44,8 +44,8 @@ return [
         // domain-wide authority. For more information, read this:
         // https://github.com/googleapis/google-api-php-client/blob/master/docs/oauth-server.md#delegating-domain-wide-authority-to-the-service-account
         'scopes' => [
-            \Google_Service_Directory::ADMIN_DIRECTORY_GROUP,
-            \Google_Service_Groupssettings::APPS_GROUPS_SETTINGS,
+            \Google\Service\Directory::ADMIN_DIRECTORY_GROUP,
+            \Google\Service\Groupssettings::APPS_GROUPS_SETTINGS,
         ],
 
         // Allowed domains
