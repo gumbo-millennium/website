@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services\Google\WalletObjects;
 
-enum SecurityAnimation: string
+class SecurityAnimation extends \Google\Model
 {
-    case ANIMATION_UNSPECIFIED = 'ANIMATION_UNSPECIFIED';
-    case FOIL_SHIMMER = 'FOIL_SHIMMER';
+    /**
+     * @var AnimationType
+     */
+    public $animationType;
+
+    public static function create(?AnimationType $animationType): self
+    {
+        return new self([
+            'animationType' => $animationType ?? AnimationType::ANIMATION_UNSPECIFIED,
+        ]);
+    }
 }

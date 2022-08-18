@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Google\WalletObjects;
 
-class EventTicketClass extends \Google\Model
+use App\Services\Google\SmartModel;
+
+class EventTicketClass extends SmartModel
 {
     /**
      * @var string
@@ -220,4 +222,40 @@ class EventTicketClass extends \Google\Model
      * @var ViewUnlockRequirements
      */
     public $viewUnlockRequirements;
+
+    protected array $casts = [
+        'eventName' => LocalizedString::class,
+        'logo' => Image::class,
+        'venue' => EventVenue::class,
+        'dateTime' => EventDateTime::class,
+        'customConfirmationCodeLabel' => LocalizedString::class,
+        'customSeatLabel' => LocalizedString::class,
+        'customRowLabel' => LocalizedString::class,
+        'customSectionLabel' => LocalizedString::class,
+        'customGateLabel' => LocalizedString::class,
+        'finePrint' => LocalizedString::class,
+        'classTemplateInfo' => ClassTemplateInfo::class,
+        'messages' => [Message::class],
+        'homepageUri' => Uri::class,
+        'locations' => [LatLongPoint::class],
+        'review' => Review::class,
+        'imageModuleData' => [ImageModuleData::class],
+        'textModulesData' => [TextModuleData::class],
+        'linksModuleData' => LinksModuleData::class,
+        'heroImage' => Image::class,
+        'localizedIssuerName' => LocalizedString::class,
+        'callbackOptions' => CallbackOptions::class,
+        'securityAnimation' => SecurityAnimation::class,
+    ];
+
+    protected array $enums = [
+        'confirmationCodeLabel' => ConfirmationCodeLabel::class,
+        'seatLabel' => SeatLabel::class,
+        'rowLabel' => RowLabel::class,
+        'sectionLabel' => SetionLabel::class,
+        'reviewStatus' => ReviewStatus::class,
+        'gateLabel' => GateLabel::class,
+        'multipleDevicesAndHoldersAllowedStatus' => MultipleDevicesAndHoldersAllowedStatus::class,
+        'viewUnlockRequirements' => ViewUnlockRequirements::class,
+    ];
 }

@@ -61,9 +61,6 @@ return [
             // JSON key
             'key_file' => env('GOOGLE_WALLET_AUTH_FILE', env('GOOGLE_AUTH_FILE', storage_path('auth/google-wallet.json'))),
 
-            // Subject
-            'subject' => env('GOOGLE_WALLET_SUBJECT', $googleSubject),
-
             // Google Wallet Issuer ID
             'issuer_id' => env('GOOGLE_WALLET_ISSUER_ID', null),
         ],

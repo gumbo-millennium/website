@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Activity;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
 /**
@@ -42,6 +44,26 @@ class ActivityObserver
         // Ensure an end date is set if a start date is too
         if ($activity->enrollment_start !== null && $activity->enrollment_end === null) {
             $activity->enrollment_end = $activity->start_date;
+        }
+    }
+
+    /**
+     * Make sure a Google Wallet EventTicketClass is created after the activity is created.
+     */
+    public function created(Activity $activity): void
+    {
+        if (! App::runningUnitTests()) {
+            GoogleWalletJobs\CreateEventTicketClassJob::dispatch($activity);
+        }
+    }
+
+    /**
+     * Make sure the Google Wallet EventTicketClass for this activity is updated after the activity is updated.
+     */
+    public function updated(Activity $activity): void
+    {
+        if (! App::runningUnitTests()) {
+            GoogleWalletJobs\UpdateEventTicketClassJob::dispatch($activity);
         }
     }
 }

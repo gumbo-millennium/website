@@ -16,6 +16,7 @@ enum BarcodeType: string
     case EAN_13 = 'EAN_13';
     case ITF_14 = 'ITF_14';
     case PDF_417 = 'PDF_417';
+    case QR_CODE = 'QR_CODE';
     case UPC_A = 'UPC_A';
     case TEXT_ONLY = 'TEXT_ONLY';
 }

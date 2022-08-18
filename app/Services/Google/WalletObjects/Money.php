@@ -24,12 +24,12 @@ class Money extends \Google\Model
 
     /**
      * Creates the Money object for the price of the given cents.
-     * @return Money
      */
-    public static function createForCents(int $cents, string $currencyCode = 'EUR'): self
+    public static function createForCents(?int $cents, string $currencyCode = 'EUR'): self
     {
         return new self([
-            'micros' => $cents * 10000,
+            // To avoid having to compute large sums, use the cents and just add the missing zeros.
+            'micros' => sprintf('%d', ($cents ?? 0) * 10000),
             'currencyCode' => $currencyCode,
         ]);
     }

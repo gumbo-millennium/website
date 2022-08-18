@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
 /**
@@ -38,5 +40,25 @@ class EnrollmentObserver
 
         // Expire enrollments in 1 hour, unless already set.
         $enrollment->expire ??= Date::now()->addHour();
+    }
+
+    /**
+     * Make sure a Google Wallet EventTicketObject is created after an enrollment is created.
+     */
+    public function created(Enrollment $enrollment): void
+    {
+        if (! App::runningUnitTests()) {
+            GoogleWalletJobs\CreateEventTicketObjectJob::dispatch($enrollment);
+        }
+    }
+
+    /**
+     * Make sure the Google Wallet EventTicketObject for this enrollment is updated after the activity is updated.
+     */
+    public function updated(Enrollment $enrollment): void
+    {
+        if (! App::runningUnitTests()) {
+            GoogleWalletJobs\UpdateEventTicketObjectJob::dispatch($enrollment);
+        }
     }
 }

@@ -21,7 +21,7 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
      */
     public function register()
     {
-        $this->app->bind(GoogleApi::class, static function ($app) {
+        $this->app->singleton(GoogleApi::class, static function ($app) {
             try {
                 // Config
                 $config = $app['config'];
@@ -47,7 +47,7 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
             }
         });
 
-        $this->app->bind('google_wallet_api', function ($app) {
+        $this->app->singleton('google_wallet_api', function ($app) {
             $config = $app->get('config');
             assert($config instanceof ConfigRepository);
 
@@ -56,7 +56,6 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 
             // Apply configs
             $client->setAuthConfig($config->get('services.google.wallet.key_file'));
-            $client->setSubject($config->get('services.google.wallet.subject'));
             $client->setApplicationName($config->get('app.name'));
             $client->setScopes([
                 'https://www.googleapis.com/auth/wallet_object.issuer',

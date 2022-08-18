@@ -21,4 +21,16 @@ class TranslatedString extends \Google\Model
      * @var string
      */
     public $value;
+
+    public static function create(string $locale, string $text): self
+    {
+        if (empty($text)) {
+            return self::NULL_VALUE;
+        }
+
+        return new self([
+            'language' => $locale,
+            'value' => $text,
+        ]);
+    }
 }
