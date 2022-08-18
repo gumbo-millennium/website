@@ -18,10 +18,12 @@
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.2",
     "alpinejs": "^3.10.2",
+    "crypto-js": "^4.1.1",
     "filepond": "^4.30.3",
     "filepond-plugin-file-validate-size": "^2.2.6",
     "filepond-plugin-file-validate-type": "^1.2.7",
     "laravel-mix": "^6.0.31",
+    "qr-scanner": "^1.4.1",
     "tailwindcss": "^3.1.6"
   },
   "devDependencies": {

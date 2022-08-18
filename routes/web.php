@@ -322,6 +322,14 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
     });
 });
 
+// Barcode
+Route::middleware('auth')->group(function () {
+    Route::get('/scanner/', [Controllers\BarcodeController::class, 'index'])->name('barcode.index');
+    Route::get('/scanner/{activity}', [Controllers\BarcodeController::class, 'show'])->name('barcode.show');
+    Route::get('/api/scanner/{activity}/preload', [Controllers\BarcodeController::class, 'preload'])->name('barcode.preload');
+    Route::post('/api/scanner/{activity}/consume', [Controllers\BarcodeController::class, 'consume'])->name('barcode.consume');
+});
+
 // Common mistakes handler
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');

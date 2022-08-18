@@ -94,6 +94,7 @@ class Enrollment extends UuidModel implements Payable
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'expire' => 'datetime',
+        'consumed_at' => 'datetime',
 
         'data' => 'encrypted:collection',
         'paid' => 'bool',
@@ -186,6 +187,14 @@ class Enrollment extends UuidModel implements Payable
     public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class);
+    }
+
+    /**
+     * The user who consumed this ticket using the scan app.
+     */
+    public function consumedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
