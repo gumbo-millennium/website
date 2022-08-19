@@ -10,7 +10,7 @@ use App\Services\Google\WalletService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 
-class WriteActivityCommand extends Command
+class WriteActivityCommand extends GoogleWalletCommand
 {
     /**
      * The name and signature of the console command.

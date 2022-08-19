@@ -16,11 +16,15 @@ trait MakesWalletApiCalls
 
     protected GoogleClient $googleClient;
 
+    abstract public function isEnabled(): bool;
+
     /**
      * Returns an authorized Guzzle Client.
      */
     protected function getGoogleClient(): GuzzleClient
     {
+        throw_unless($this->isEnabled(), RuntimeException::class, 'Google Wallet service is diabled');
+
         return ($this->googleHttpClient ??= $this->googleClient->authorize());
     }
 

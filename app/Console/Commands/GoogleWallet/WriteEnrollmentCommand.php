@@ -11,7 +11,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 
-class WriteEnrollmentCommand extends Command
+class WriteEnrollmentCommand extends GoogleWalletCommand
 {
     /**
      * The name and signature of the console command.

@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Activity;
+use App\Services\Google\WalletService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Date;
  */
 class ActivityObserver
 {
+    public function __construct(private WalletService $walletService)
+    {
+        //
+    }
+
     /**
      * Validates values of an Activity. Has a high complexity but isn't run too often.
      *
@@ -52,7 +58,7 @@ class ActivityObserver
      */
     public function created(Activity $activity): void
     {
-        if (! App::runningUnitTests()) {
+        if ($this->walletService->isEnabled()) {
             GoogleWalletJobs\CreateEventTicketClassJob::dispatch($activity);
         }
     }
@@ -62,7 +68,7 @@ class ActivityObserver
      */
     public function updated(Activity $activity): void
     {
-        if (! App::runningUnitTests()) {
+        if ($this->walletService->isEnabled()) {
             GoogleWalletJobs\UpdateEventTicketClassJob::dispatch($activity);
         }
     }

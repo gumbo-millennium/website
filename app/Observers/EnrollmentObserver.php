@@ -7,6 +7,7 @@ namespace App\Observers;
 use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
+use App\Services\Google\WalletService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
@@ -16,6 +17,11 @@ use Illuminate\Support\Facades\Date;
  */
 class EnrollmentObserver
 {
+    public function __construct(private WalletService $walletService)
+    {
+        //
+    }
+
     /**
      * Ensure an expire date is present if required.
      */
@@ -47,7 +53,7 @@ class EnrollmentObserver
      */
     public function created(Enrollment $enrollment): void
     {
-        if (! App::runningUnitTests()) {
+        if ($this->walletService->isEnabled()) {
             GoogleWalletJobs\CreateEventTicketObjectJob::dispatch($enrollment);
         }
     }
@@ -57,7 +63,7 @@ class EnrollmentObserver
      */
     public function updated(Enrollment $enrollment): void
     {
-        if (! App::runningUnitTests()) {
+        if ($this->walletService->isEnabled()) {
             GoogleWalletJobs\UpdateEventTicketObjectJob::dispatch($enrollment);
         }
     }

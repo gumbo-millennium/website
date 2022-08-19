@@ -20,7 +20,10 @@ class WalletServiceTest extends TestCase
      */
     public function setupIssuerIdAndTraitBeforeTest(): void
     {
-        $this->afterApplicationCreated(fn () => Config::set('services.google.wallet.issuer_id', '1001337'));
+        $this->afterApplicationCreated(fn () => Config::set([
+            'services.google.wallet.enabled' => true,
+            'services.google.wallet.issuer_id' => '1001337'
+        ]));
     }
 
     /**

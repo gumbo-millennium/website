@@ -58,6 +58,9 @@ return [
 
         // Google Wallet configuration
         'wallet' => [
+            // Should Google Wallet be enabled to start with
+            'enabled' => env('GOOGLE_WALLET_ENABLED', false),
+
             // JSON key
             'key_file' => env('GOOGLE_WALLET_AUTH_FILE', env('GOOGLE_AUTH_FILE', storage_path('auth/google-wallet.json'))),
 

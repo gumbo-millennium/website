@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateMissingActivitiesCommand extends Command
+class CreateMissingActivitiesCommand extends GoogleWalletCommand
 {
     /**
      * The name and signature of the console command.

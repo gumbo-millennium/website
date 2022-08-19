@@ -17,6 +17,13 @@ class MakesWalletApiCallsTest extends TestCase
 {
     use MakesWalletApiCalls;
 
+    /**
+     * Mark the Wallet service as enabled.
+     */
+    public function isEnabled(): bool {
+        return true;
+    }
+
     public function test_proper_client_initialisation(): void
     {
         $response1 = new Response(200, [], json_encode($responseBody1 = ['foo' => 'bar']));
