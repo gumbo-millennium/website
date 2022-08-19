@@ -23,8 +23,6 @@ class CreatesWalletIdsTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Google Wallet issuer ID not configured');
-
-        $this->initializeCreatesWalletIds();
     }
 
     /**
@@ -33,8 +31,6 @@ class CreatesWalletIdsTest extends TestCase
     public function test_id_creation(): void
     {
         Config::set('services.google.wallet.issuer_id', '240000044');
-
-        $this->initializeCreatesWalletIds();
 
         $activity = Activity::make()->forceFill([
             'id' => 39,

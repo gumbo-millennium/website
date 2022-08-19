@@ -32,7 +32,6 @@ class CreatesWalletObjectsTest extends TestCase
     {
         $this->afterApplicationCreated(function () {
             Config::set('services.google.wallet.issuer_id', '1001337');
-            $this->initializeCreatesWalletIds();
         });
     }
 

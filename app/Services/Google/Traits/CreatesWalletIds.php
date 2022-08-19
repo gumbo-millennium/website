@@ -21,6 +21,11 @@ trait CreatesWalletIds
      */
     public function getIssuerId(): string
     {
+        if (! $this->issuerId) {
+            $this->issuerId = Config::get('services.google.wallet.issuer_id');
+            throw_unless($this->issuerId, new RuntimeException('Google Wallet issuer ID not configured'));
+        }
+
         return $this->issuerId;
     }
 
@@ -38,16 +43,5 @@ trait CreatesWalletIds
     public function getEnrollmentObjectId(Enrollment $enrollment): string
     {
         return sprintf('%s_%05d', $this->getActivityClassId($enrollment->activity), $enrollment->id);
-    }
-
-    /**
-     * Autoload Google Wallet API client.
-     */
-    private function initializeCreatesWalletIds(): void
-    {
-        $issuerId = Config::get('services.google.wallet.issuer_id');
-        throw_unless($issuerId, new RuntimeException('Google Wallet issuer ID not configured'));
-
-        $this->issuerId = $issuerId;
     }
 }

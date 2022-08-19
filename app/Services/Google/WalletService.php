@@ -18,7 +18,6 @@ final class WalletService
 
     public function __construct()
     {
-        $this->initializeCreatesWalletIds();
         $this->initializeMakesWalletApiCalls();
 
         $this->isEnabled = (bool) Config::get('services.google.wallet.enabled', false);
