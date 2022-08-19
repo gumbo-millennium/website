@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
 
       - name: Copy environment config
-        run: cp .github/actions.env .env
+        run: cp .github/assets/actions.env .env
 
       - name: Install Node dependencies
         run: npm clean-install
