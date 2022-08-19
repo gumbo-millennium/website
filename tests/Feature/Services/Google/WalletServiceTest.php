@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Google\WalletObjects;
 use App\Services\Google\WalletService;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class WalletServiceTest extends TestCase
