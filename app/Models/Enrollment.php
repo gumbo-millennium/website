@@ -292,6 +292,14 @@ class Enrollment extends UuidModel implements Payable
     }
 
     /**
+     * Returns if this enrollment has been consumed.
+     */
+    public function consumed(): bool
+    {
+        return $this->consumed_at !== null;
+    }
+
+    /**
      * Returns the filled in form.
      */
     public function getFormAttribute(): ?array
