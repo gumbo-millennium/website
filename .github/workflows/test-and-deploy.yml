@@ -110,6 +110,9 @@ jobs:
           MYSQL_USER: laravel
           MYSQL_PASSWORD: laravel
 
+          GOOGLE_AUTH_FILE: ${{ github.workspace }}/storage/google.json
+          GOOGLE_WALLET_AUTH_FILE: ${{ github.workspace }}/storage/google-wallet.json
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@master
@@ -147,6 +150,11 @@ jobs:
 
       - name: Prepare database
         run: php artisan migrate --seed
+
+      - name: Create required configuration files
+        run: |
+          echo '{}' > ${GOOGLE_AUTH_FILE}
+          echo '{}' > ${GOOGLE_WALLET_AUTH_FILE}
 
       - name: Test optimizing the config
         run: |
