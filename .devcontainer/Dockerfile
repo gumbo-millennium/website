@@ -30,6 +30,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/cache/apt /var/lib/apt
 
+# Configure en_US locale
+RUN apt-get update \
+    && apt-get install -y locales \
+    && echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
+    && apt-get clean \
+    && rm -rf /var/cache/apt /var/lib/apt
+
 # Install MySQL client
 COPY ./bin/mysql-apt-config_0.8.22-1_all.deb /tmp/mysql-apt-config_0.8.22-1_all.deb
 RUN apt-get update \
@@ -57,10 +65,10 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/cache/apt /var/lib/apt
 
-# Install zip, bcmath, mysqli, pdo and pdo for MySQL
+# Install zip, bcmath, mysqli, sqlite, pdo and pdo for MySQL and sqlite
 RUN docker-php-ext-configure zip \
-    && docker-php-ext-install zip gd \
-    && docker-php-ext-install bcmath mysqli pdo pdo_mysql \
+    && docker-php-ext-install zip gd bcmath \
+    && docker-php-ext-install sqlite3 mysqli pdo pdo_mysql pdo_sqlite \
     && docker-php-ext-configure gd \
     && docker-php-ext-install gd pcntl exif \
     && docker-php-source delete
