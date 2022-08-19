@@ -507,9 +507,8 @@ class EnrollmentServiceTest extends TestCase
         $activity->end_date = Date::now()->addHour();
         $activity->save();
 
-        $validEnrollment->refresh();
-        $this->assertFalse(Enroll::canTransfer($validEnrollment), 'Failed asserting a confirmed, cleanenrollment cannot be transferred after event start');
-        $this->assertFalse(Enroll::canTransfer($createdEnrollment), 'Failed asserting a created enrollment cannot be transferred after event start');
+        $this->assertFalse(Enroll::canTransfer($validEnrollment->fresh()), 'Failed asserting a confirmed, cleanenrollment cannot be transferred after event start');
+        $this->assertFalse(Enroll::canTransfer($createdEnrollment->fresh()), 'Failed asserting a created enrollment cannot be transferred after event start');
     }
 
     public function test_can_enroll_failure_cases(): void
