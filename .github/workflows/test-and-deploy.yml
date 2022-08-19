@@ -129,6 +129,11 @@ jobs:
       - name: Copy environment config
         run: cp .github/actions.env .env
 
+      - name: Create required configuration files
+        run: |
+          echo '{}' > ${{ env.GOOGLE_AUTH_FILE }}
+          echo '{}' > ${{ env.GOOGLE_WALLET_AUTH_FILE }}
+
       - name: Configure Laravel Nova auth
         run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
 
@@ -150,11 +155,6 @@ jobs:
 
       - name: Prepare database
         run: php artisan migrate --seed
-
-      - name: Create required configuration files
-        run: |
-          echo '{}' > ${{ env.GOOGLE_AUTH_FILE }}
-          echo '{}' > ${{ env.GOOGLE_WALLET_AUTH_FILE }}
 
       - name: Test optimizing the config
         run: |
