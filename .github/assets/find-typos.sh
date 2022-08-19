@@ -5,7 +5,7 @@ CODE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 cd "$CODE_DIR"
 
 # Get directories
-TYPOS="$( realpath "$CODE_DIR/.github/wrong-spellings" )"
+TYPOS="$( realpath "$CODE_DIR/.github/assets/wrong-spellings" )"
 declare -a TARGET_FILES=(app bootstrap config database docs html library resources routes tests)
 
 # Run quick check, stopping on first failure

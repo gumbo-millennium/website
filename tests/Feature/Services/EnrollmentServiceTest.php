@@ -469,6 +469,48 @@ class EnrollmentServiceTest extends TestCase
         $this->assertNull($enrollment->transfer_secret, 'Failed asserting transfer secret is cleared');
     }
 
+    /**
+     * Check if enrollment states and consumption state have the proper impact on the
+     * transferability of the enrollment.
+     */
+    public function test_transfer_ability(): void
+    {
+        $activity = Activity::factory()->withTickets()->create();
+        $ticket = $activity->tickets->first();
+
+        $factory = Enrollment::factory()->for($activity)->for($ticket)->has(User::factory());
+        $validEnrollment = $factory->create([
+            'state' => States\Confirmed::class,
+        ]);
+        $createdEnrollment = $factory->create([
+            'state' => States\Created::class,
+        ]);
+        $cancelledEnrollment = $factory->create([
+            'state' => States\Cancelled::class,
+        ]);
+        $consumedEnrollment = $factory->create([
+            'state' => States\Confirmed::class,
+            'consumed_at' => Date::now(),
+        ]);
+        $trashedEnrollment = $factory->create([
+            'state' => States\Confirmed::class,
+        ]);
+        $trashedEnrollment->delete();
+
+        $this->assertTrue(Enroll::canTransfer($validEnrollment), 'Failed asserting a confirmed, clean enrollment can be transferred');
+        $this->assertTrue(Enroll::canTransfer($createdEnrollment), 'Failed asserting a created enrollment cannot be transferred');
+        $this->assertFalse(Enroll::canTransfer($cancelledEnrollment), 'Failed asserting a cancelled enrollment cannot be transferred');
+        $this->assertFalse(Enroll::canTransfer($consumedEnrollment), 'Failed asserting a consumed enrollment cannot be transferred');
+        $this->assertFalse(Enroll::canTransfer($trashedEnrollment), 'Failed asserting a trashed enrollment cannot be transferred');
+
+        $activity->start_date = Date::now()->subHour();
+        $activity->end_date = Date::now()->addHour();
+        $activity->save();
+
+        $this->assertFalse(Enroll::canTransfer($validEnrollment->fresh()), 'Failed asserting a confirmed, cleanenrollment cannot be transferred after event start');
+        $this->assertFalse(Enroll::canTransfer($createdEnrollment->fresh()), 'Failed asserting a created enrollment cannot be transferred after event start');
+    }
+
     public function test_can_enroll_failure_cases(): void
     {
         $activity = Activity::factory()->withTickets()->create([

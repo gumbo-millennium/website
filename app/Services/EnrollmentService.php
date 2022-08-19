@@ -115,7 +115,7 @@ class EnrollmentService implements EnrollmentServiceContract
 
     public function canTransfer(Enrollment $enrollment): bool
     {
-        if ($enrollment->state instanceof States\Cancelled || $enrollment->trashed()) {
+        if ($enrollment->state instanceof States\Cancelled || $enrollment->trashed() || $enrollment->consumed()) {
             return false;
         }
 

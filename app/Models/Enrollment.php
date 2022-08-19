@@ -94,6 +94,7 @@ class Enrollment extends UuidModel implements Payable
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'expire' => 'datetime',
+        'consumed_at' => 'datetime',
 
         'data' => 'encrypted:collection',
         'paid' => 'bool',
@@ -189,6 +190,14 @@ class Enrollment extends UuidModel implements Payable
     }
 
     /**
+     * The user who consumed this ticket using the scan app.
+     */
+    public function consumedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Returns true if the state is stable and will not auto-delete.
      */
     public function getIsStableAttribute(): bool
@@ -280,6 +289,14 @@ class Enrollment extends UuidModel implements Payable
 
         // Re-apply
         $this->data = $data;
+    }
+
+    /**
+     * Returns if this enrollment has been consumed.
+     */
+    public function consumed(): bool
+    {
+        return $this->consumed_at !== null;
     }
 
     /**
