@@ -86,6 +86,10 @@ jobs:
     needs:
       - lint
 
+    env:
+      GOOGLE_AUTH_FILE: ${{ github.workspace }}/storage/google.json
+      GOOGLE_WALLET_AUTH_FILE: ${{ github.workspace }}/storage/google-wallet.json
+
     strategy:
       fail-fast: false
       matrix:
@@ -109,9 +113,6 @@ jobs:
           MYSQL_DATABASE: laravel
           MYSQL_USER: laravel
           MYSQL_PASSWORD: laravel
-
-          GOOGLE_AUTH_FILE: ${{ github.workspace }}/storage/google.json
-          GOOGLE_WALLET_AUTH_FILE: ${{ github.workspace }}/storage/google-wallet.json
 
     steps:
       - name: Setup PHP
