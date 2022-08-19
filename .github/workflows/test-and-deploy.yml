@@ -9,8 +9,8 @@ on:
     - develop
 
 jobs:
-  laravel-frontend:
-    name: "Front-end build and test"
+  build-frontend:
+    name: "Build and test frontend"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -37,29 +37,12 @@ jobs:
           path: public/
 
   lint:
-    name: Lint on PHP ${{ matrix.php }}
+    name: Lint configuration files
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental == true }}
-
-    strategy:
-      fail-fast: true
-      matrix:
-        php:
-          - '8.1'
-          - '8.2'
-        include:
-          - php: '8.2'
-            experimental: true
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@master
-        with:
-          php-version: ${{ matrix.php }}}
-          tools: php-parallel-lint/php-parallel-lint
 
       - uses: actions/setup-python@v3
         with:
@@ -68,17 +51,14 @@ jobs:
       - name: Install Yaml linter
         run: pip3 install pyyaml jsonschema-lint
 
-      - name: Lint PHP code
-        run: parallel-lint  --exclude vendor --exclude node_modules .
-
       - name: Check for Gumbo Millennium typos
-        run: .github/find-typos.sh
+        run: .github/assets/find-typos.sh
 
       - name: Lint Yaml files
         run: composer run yamllint
 
-  laravel-backend:
-    name: "Back-end build and test"
+  build-backend:
+    name: "Build and test backend on PHP ${{ matrix.php }}"
     runs-on: 'ubuntu-latest'
 
     continue-on-error: ${{ matrix.experimental == true }}
@@ -87,8 +67,8 @@ jobs:
       - lint
 
     env:
-      GOOGLE_AUTH_FILE: ${{ github.workspace }}/storage/google.json
-      GOOGLE_WALLET_AUTH_FILE: ${{ github.workspace }}/storage/google-wallet.json
+      GOOGLE_AUTH_FILE: ${{ github.workspace }}/.github/assets/google-auth.json
+      GOOGLE_WALLET_AUTH_FILE: ${{ github.workspace }}/.github/assets/google-auth.json
 
     strategy:
       fail-fast: false
@@ -121,6 +101,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
           coverage: pcov
+          tools: php-parallel-lint/php-parallel-lint
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -128,12 +109,10 @@ jobs:
           submodules: true
 
       - name: Copy environment config
-        run: cp .github/actions.env .env
+        run: cp .github/assets/actions.env .env
 
-      - name: Create required configuration files
-        run: |
-          echo '{}' > ${{ env.GOOGLE_AUTH_FILE }}
-          echo '{}' > ${{ env.GOOGLE_WALLET_AUTH_FILE }}
+      - name: Lint PHP code
+        run: parallel-lint  --exclude vendor --exclude node_modules .
 
       - name: Configure Laravel Nova auth
         run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
@@ -194,8 +173,8 @@ jobs:
     if: ${{ github.event_name == 'push' }}
 
     needs:
-      - laravel-frontend
-      - laravel-backend
+      - build-frontend
+      - build-backend
 
     uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@develop
     with:
