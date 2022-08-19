@@ -68,7 +68,7 @@ RUN apt-get update \
 # Install zip, bcmath, mysqli, sqlite, pdo and pdo for MySQL and sqlite
 RUN docker-php-ext-configure zip \
     && docker-php-ext-install zip gd bcmath \
-    && docker-php-ext-install sqlite3 mysqli pdo pdo_mysql pdo_sqlite \
+    && docker-php-ext-install mysqli pdo pdo_mysql pdo_sqlite \
     && docker-php-ext-configure gd \
     && docker-php-ext-install gd pcntl exif \
     && docker-php-source delete
