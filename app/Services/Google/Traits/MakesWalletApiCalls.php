@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
-use Google\Client as GoogleClient;
 use GuzzleHttp\ClientInterface as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\App;
@@ -13,8 +12,6 @@ use JsonException;
 trait MakesWalletApiCalls
 {
     protected ?GuzzleClient $googleHttpClient = null;
-
-    protected GoogleClient $googleClient;
 
     abstract public function isEnabled(): bool;
 
@@ -25,7 +22,12 @@ trait MakesWalletApiCalls
     {
         throw_unless($this->isEnabled(), RuntimeException::class, 'Google Wallet service is diabled');
 
-        return ($this->googleHttpClient ??= $this->googleClient->authorize());
+        if (! $this->googleHttpClient) {
+            $googleClient = App::make('google_wallet_api');
+            $this->googleHttpClient = $googleClient->authorize();
+        }
+
+        return $this->googleHttpClient;
     }
 
     /**
@@ -48,13 +50,5 @@ trait MakesWalletApiCalls
 
         // Decode the JSON
         return json_decode($response->getBody()->getContents(), true, 64, JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * Autoload Google Wallet API client.
-     */
-    private function initializeMakesWalletApiCalls(): void
-    {
-        $this->googleClient = App::make('google_wallet_api');
     }
 }
