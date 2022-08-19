@@ -34,7 +34,7 @@
           class="inline-flex {{ $containerColor }} rounded-md p-1.5 {{ $iconColor }} focus:outline-none focus:ring-2"
           @click.prevent="open = false">
           <span class="sr-only">Sluiten</span>
-          <x-icon icon="solid/times" class="h-5" aria-hidden="true" />
+          <x-icon icon="solid/xmark" class="h-5" aria-hidden="true" />
         </button>
       </div>
     </div>

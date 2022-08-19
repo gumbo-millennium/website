@@ -43,7 +43,7 @@ class BarcodeController extends Controller
         $activities = $this->getActivityQuery()->get()
             ->filter(fn ($activity) => $user->can('manage', $activity));
 
-        return Response::view('barcode.index', [
+        return Response::view('enrollments.scanner.index', [
             'activities' => $activities,
         ]);
     }
@@ -165,8 +165,6 @@ class BarcodeController extends Controller
     {
         return Activity::query()
             ->has('tickets')
-            // Starts in 6 hours or less
-            ->where('start_date', '<', Date::now()->addDays(4))
             // Hasn't ended, or ended less than 6 hours ago
             ->where('end_date', '>=', Date::now()->subHours(6))
             // Not cancelled

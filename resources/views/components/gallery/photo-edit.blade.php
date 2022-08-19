@@ -61,7 +61,7 @@
       ></button>
 
       <button class="btn btn-small btn-outline-danger m-0" @click.prevent="deleted = true" type="button" aria-label="Verwijder foto">
-        <x-icon icon="solid/times" class="h-4 mr-2" />
+        <x-icon icon="solid/xmark" class="h-4 mr-2" />
       </button>
     </div>
   </div>

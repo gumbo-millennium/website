@@ -83,7 +83,7 @@
                     </select>
 
                     <button class="btn btn--brand btn--wide w-full uppercase my-0">
-                        <x-icon icon="solid/shopping-cart" class="h-4 mr-2" />
+                        <x-icon icon="solid/cart-shopping" class="h-4 mr-2" />
                         {{-- Start Ye' Plunder --}}
                         Toevoegen <span class="hidden 2xl:inline">aan winkelmand</span>
                     </button>

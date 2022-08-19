@@ -20,7 +20,9 @@ class BarcodeControllerTest extends TestCase
     {
         $user = User::factory()->withRole(['member'])->create();
 
-        $activity = Activity::factory()->withTickets()->create();
+        $activity = Activity::factory()->withTickets()->create([
+            'end_date' => Date::now()->addDays(1),
+        ]);
         $ticket = $activity->tickets()->first();
 
         $enrollment = $activity->enrollments()->save(
@@ -44,7 +46,7 @@ class BarcodeControllerTest extends TestCase
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertUnauthorized();
 
-        $this->actingAs($user);
+        $this->actingAs($this->getBoardUser());
 
         $this->get($indexRoute)->assertOk();
         $this->get($showRoute)->assertOk();
@@ -56,31 +58,46 @@ class BarcodeControllerTest extends TestCase
 
     public function test_activity_scoping(): void
     {
-        $validActivity = Activity::factory()->withTickets()->create();
-        $pastActivity = Activity::factory()->withTickets()->create([
-            'start_date' => Date::now()->subDays(1),
+        $currentActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
         ]);
+
         $futureActivity = Activity::factory()->withTickets()->create([
-            'start_date' => Date::now()->addWeek(),
+            'start_date' => Date::now()->addDay(),
+            'end_date' => Date::now()->addDay()->addHours(7),
+        ]);
+
+        $pastActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subDays(1)->subHour(),
+            'end_date' => Date::now()->subDays(1),
         ]);
 
         $cancelledActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
             'cancelled_at' => Date::now(),
         ]);
-        $activityWithoutTickets = Activity::factory()->create();
+
+        $activityWithoutTickets = Activity::factory()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
+        ]);
 
         $this->actingAs($this->getBoardUser());
 
         $this->get(route('barcode.index'))
-            ->assertSee($validActivity->name)
+            ->assertSeeInOrder([
+                $currentActivity->name,
+                $futureActivity->name,
+            ])
             ->assertDontSee($pastActivity->name)
-            ->assertDontSee($futureActivity->name)
             ->assertDontSee($cancelledActivity->name)
             ->assertDontSee($activityWithoutTickets->name);
 
-        $this->get(route('barcode.show', $validActivity))->assertOk();
+        $this->get(route('barcode.show', $currentActivity))->assertOk();
+        $this->get(route('barcode.show', $futureActivity))->assertOk();
         $this->get(route('barcode.show', $pastActivity))->assertRedirect(route('barcode.index'));
-        $this->get(route('barcode.show', $futureActivity))->assertRedirect(route('barcode.index'));
         $this->get(route('barcode.show', $cancelledActivity))->assertRedirect(route('barcode.index'));
         $this->get(route('barcode.show', $activityWithoutTickets))->assertRedirect(route('barcode.index'));
     }

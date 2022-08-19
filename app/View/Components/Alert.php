@@ -32,7 +32,7 @@ class Alert extends Component
         ],
         'danger' => [
             'containerColor' => 'bg-red-50',
-            'iconName' => 'solid/times-circle',
+            'iconName' => 'solid/circle-xmark',
             'iconColor' => 'text-red-400',
             'textColor' => 'text-red-800',
         ],
