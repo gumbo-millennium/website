@@ -153,8 +153,8 @@ jobs:
 
       - name: Create required configuration files
         run: |
-          echo '{}' > ${GOOGLE_AUTH_FILE}
-          echo '{}' > ${GOOGLE_WALLET_AUTH_FILE}
+          echo '{}' > ${{ env.GOOGLE_AUTH_FILE }}
+          echo '{}' > ${{ env.GOOGLE_WALLET_AUTH_FILE }}
 
       - name: Test optimizing the config
         run: |
