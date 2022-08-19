@@ -18,7 +18,7 @@ class EnrollmentFactory extends Factory
     public function definition()
     {
         $activity = Activity::inRandomOrder()->first();
-        $user = User::inRandomOrder()->first();
+        $user = User::inRandomOrder()->first() ?? User::factory()->create();
 
         return [
             'user_id' => $user->id,
