@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Services\Google\WalletService;
 
+use App\Facades\Enroll;
 use App\Helpers\Arr;
 use App\Models\Activity;
 use App\Models\States\Enrollment as EnrollmentStates;
@@ -12,12 +13,11 @@ use App\Services\Google\Traits\CreatesWalletIds;
 use App\Services\Google\Traits\CreatesWalletObjects;
 use App\Services\Google\WalletObjects;
 use App\Services\Google\WalletObjects\EventTicketClass;
-use Enroll;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Tests\TestCase;
 
 class CreatesWalletObjectsTest extends TestCase
