@@ -8,7 +8,6 @@ use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Services\Google\WalletService;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
 /**

@@ -7,7 +7,6 @@ namespace App\Observers;
 use App\Jobs\GoogleWallet as GoogleWalletJobs;
 use App\Models\Activity;
 use App\Services\Google\WalletService;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
 
 /**

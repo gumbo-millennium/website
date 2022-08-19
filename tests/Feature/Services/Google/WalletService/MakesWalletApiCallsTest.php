@@ -20,7 +20,8 @@ class MakesWalletApiCallsTest extends TestCase
     /**
      * Mark the Wallet service as enabled.
      */
-    public function isEnabled(): bool {
+    public function isEnabled(): bool
+    {
         return true;
     }
 

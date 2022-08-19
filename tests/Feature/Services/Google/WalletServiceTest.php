@@ -22,7 +22,7 @@ class WalletServiceTest extends TestCase
     {
         $this->afterApplicationCreated(fn () => Config::set([
             'services.google.wallet.enabled' => true,
-            'services.google.wallet.issuer_id' => '1001337'
+            'services.google.wallet.issuer_id' => '1001337',
         ]));
     }
 
