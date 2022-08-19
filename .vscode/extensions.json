@@ -15,7 +15,7 @@
     "dbaeumer.jshint",
     "eg2.tslint",
     "felixfbecker.php-intellisense",
-    "ikappas.phpcs",
+    "higoka.php-cs-fixer",
     "linyang95.phpmd",
     "ms-mssql.mssql",
   ]
