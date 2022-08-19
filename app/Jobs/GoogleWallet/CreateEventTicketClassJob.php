@@ -43,7 +43,7 @@ class CreateEventTicketClassJob implements ShouldBeUnique, ShouldQueue
     public function handle(WalletService $walletService)
     {
         // Check if already exists
-        if ($walletService->getEventTicketClass($this->activity)) {
+        if ($walletService->getActivityTicketClass($this->activity)) {
             Log::warning('Tried to create a Google Wallet Ticket class for {activity}, but one already exists', [
                 'activity' => $this->activity->id,
             ]);
@@ -58,7 +58,7 @@ class CreateEventTicketClassJob implements ShouldBeUnique, ShouldQueue
 
         try {
             // Try inserting the class
-            $walletService->insertEventTicketClass($activityClass);
+            $walletService->insertActivityTicketClass($activityClass);
         } catch (RequestException $exception) {
             Log::warning('Failed to create Google Wallet Ticket class for {activity}: {exception}', [
                 'activity' => $this->activity->id,
