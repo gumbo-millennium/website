@@ -8,6 +8,7 @@ use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,12 +39,11 @@ class BarcodeController extends Controller
     public function index(Request $request): HttpResponse
     {
         $user = $request->user();
-        $activities = Activity::where([
-            ['cancelled_at', '=', null],
-            ['end_date', '>', Date::now()->addDay()],
-        ])->get()->filter(fn ($activity) => $user->can('manage', $activity));
 
-        return Response::view('enrollments.scanner.index', [
+        $activities = $this->getActivityQuery()->get()
+            ->filter(fn ($activity) => $user->can('manage', $activity));
+
+        return Response::view('barcode.index', [
             'activities' => $activities,
         ]);
     }
@@ -53,29 +53,34 @@ class BarcodeController extends Controller
      */
     public function show(Activity $activity, Request $request): HttpResponse| RedirectResponse
     {
-        if ($activity->end_date < Date::now()->addDay()) {
-            flash()->warning('Deze activiteit is afgelopen, kies een andere activiteit');
+        // Check if the activity is eligible for scanning
+        if (! $this->activityIsEligible($activity)) {
+            flash()->info('Deze activiteit is niet beschikbaar voor scannen.');
 
-            return Response::redirectToRoute('enrollments.scanner.index');
-        }
-
-        if ($activity->is_cancelled) {
-            flash()->warning('Deze activiteit is geannuleerd, kies een andere activiteit');
-
-            return Response::redirectToRoute('enrollments.scanner.index');
+            return Response::redirectToRoute('barcode.index');
         }
 
         $csp = $this->alterCspPolicy();
         $csp->addDirective(Directive::WORKER, 'blob:');
-        $csp->addDirective(Directive::IMG, 'blob:');
 
         return Response::view('enrollments.scanner.show', [
             'activity' => $activity,
         ]);
     }
 
-    public function preload(Activity $activity, Request $request): JsonResponse
+    /**
+     * Returns a list of partial hashes for barcodes that match this
+     * activity.
+     */
+    public function preload(Activity $activity): JsonResponse
     {
+        if (! $this->activityIsEligible($activity)) {
+            Response::json([
+                'ok' => false,
+                'message' => 'Deze activiteit is niet beschikbaar voor scannen.',
+            ], HttpResponse::HTTP_BAD_REQUEST);
+        }
+
         $enrollments = $activity
             ->enrollments()
             ->whereState('state', [States\Confirmed::class, States\Paid::class])
@@ -100,6 +105,14 @@ class BarcodeController extends Controller
      */
     public function consume(Activity $activity, Request $request): JsonResponse
     {
+        if (! $this->activityIsEligible($activity)) {
+            Response::json([
+                'ok' => false,
+                'code' => 400,
+                'message' => 'Deze activiteit is niet beschikbaar voor scannen.',
+            ], HttpResponse::HTTP_BAD_REQUEST);
+        }
+
         $request->validate([
             'barcode' => 'required|string',
         ]);
@@ -141,5 +154,33 @@ class BarcodeController extends Controller
             'code' => 200,
             'message' => 'Barcode consumed',
         ]);
+    }
+
+    /**
+     * Returns a query that matches activities that the user can scan.
+     *
+     * @return Activity|Builder
+     */
+    private function getActivityQuery(): Builder
+    {
+        return Activity::query()
+            ->has('tickets')
+            // Starts in 6 hours or less
+            ->where('start_date', '<', Date::now()->addDays(4))
+            // Hasn't ended, or ended less than 6 hours ago
+            ->where('end_date', '>=', Date::now()->subHours(6))
+            // Not cancelled
+            ->whereNull('canncelled_at')
+            // Order by start date, and end date
+            ->orderBy('start_date', 'asc')
+            ->orderBy('end_date', 'asc');
+    }
+
+    /**
+     * Returns if this activity is eligible for scanning.
+     */
+    private function activityIsEligible(Activity $activity): bool
+    {
+        return $this->getActivityQuery()->where('id', $activity->id)->exists();
     }
 }

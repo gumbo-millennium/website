@@ -11,6 +11,7 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class BarcodeControllerTest extends TestCase
@@ -31,8 +32,13 @@ class BarcodeControllerTest extends TestCase
                 ]),
         );
 
+        $indexRoute = route('barcode.index');
+        $showRoute = route('barcode.show', $activity);
         $preloadRoute = route('barcode.preload', $activity);
         $consumeRoute = route('barcode.consume', $activity);
+
+        $this->get($indexRoute)->assertRedirect(route('login'));
+        $this->get($showRoute)->assertRedirect(route('login'));
 
         $this->getJson($preloadRoute)->assertUnauthorized();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
@@ -40,9 +46,43 @@ class BarcodeControllerTest extends TestCase
 
         $this->actingAs($user);
 
+        $this->get($indexRoute)->assertOk();
+        $this->get($showRoute)->assertOk();
+
         $this->getJson($preloadRoute)->assertForbidden();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertForbidden();
+    }
+
+    public function test_activity_scoping(): void
+    {
+        $validActivity = Activity::factory()->withTickets()->create();
+        $pastActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subDays(1),
+        ]);
+        $futureActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->addWeek(),
+        ]);
+
+        $cancelledActivity = Activity::factory()->withTickets()->create([
+            'cancelled_at' => Date::now(),
+        ]);
+        $activityWithoutTickets = Activity::factory()->create();
+
+        $this->actingAs($this->getBoardUser());
+
+        $this->get(route('barcode.index'))
+            ->assertSee($validActivity->name)
+            ->assertDontSee($pastActivity->name)
+            ->assertDontSee($futureActivity->name)
+            ->assertDontSee($cancelledActivity->name)
+            ->assertDontSee($activityWithoutTickets->name);
+
+        $this->get(route('barcode.show', $validActivity))->assertOk();
+        $this->get(route('barcode.show', $pastActivity))->assertRedirect(route('barcode.index'));
+        $this->get(route('barcode.show', $futureActivity))->assertRedirect(route('barcode.index'));
+        $this->get(route('barcode.show', $cancelledActivity))->assertRedirect(route('barcode.index'));
+        $this->get(route('barcode.show', $activityWithoutTickets))->assertRedirect(route('barcode.index'));
     }
 
     public function test_preload(): void

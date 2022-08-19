@@ -18,6 +18,7 @@ class Scanner {
     this.lastScannedBarcode = null
 
     // URLs
+    this.indexUrl = domNode.dataset.indexUrl
     this.preloadUrl = domNode.dataset.preloadUrl
     this.consumeUrl = domNode.dataset.consumeUrl
     this.csrfToken = domNode.dataset.csrfToken
@@ -31,15 +32,24 @@ class Scanner {
     this.videoNode = domNode.querySelector('video')
 
     this._setLoading('Toegangstoken ophalen...')
-    this._preload()
+    this._preload(true)
+
+    // Update preload list every 5 minutes
+    setInterval(() => this._preload(false), 60 * 5 * 1000)
 
     this.camera = new QrScanner(this.videoNode, result => this._foundBarcode(result), {
       returnDetailedScanResult: true,
     })
   }
 
-  _preload () {
-    this._setLoading('Barcodes ophalen...')
+  /**
+   * Preload a hashed, abbreviated set of barcodes
+   * @param {boolean} impactLoading
+   */
+  _preload (impactLoading) {
+    if (impactLoading) {
+      this._setLoading('Barcodes ophalen...')
+    }
 
     fetch(this.preloadUrl, {
       headers: {
@@ -48,12 +58,19 @@ class Scanner {
       },
     })
       .then(response => response.json())
-      .then(({ data }) => {
-        this._setLoading(false)
+      .then(({ ok, data }) => {
+        if (!ok) {
+          document.location.href = this.indexUrl
+          return
+        }
+
         this.salt = data.salt
         this.barcodes = data.barcodes
 
-        this.camera.start()
+        if (impactLoading) {
+          this._setLoading(false)
+          this.camera.start()
+        }
       })
   }
 
@@ -71,6 +88,11 @@ class Scanner {
     })
       .then(response => response.json())
       .then(({ ok, code }) => {
+        if (code === 400) {
+          document.location.href = this.indexUrl
+          this.camera.stop()
+        }
+
         this._setLoading(false)
         this._setResult(ok ? 'valid' : (code === 409 ? 'consumed' : 'invalid'))
       })
