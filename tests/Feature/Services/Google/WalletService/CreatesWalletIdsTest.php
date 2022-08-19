@@ -23,6 +23,8 @@ class CreatesWalletIdsTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Google Wallet issuer ID not configured');
+
+        $this->getIssuerId();
     }
 
     /**

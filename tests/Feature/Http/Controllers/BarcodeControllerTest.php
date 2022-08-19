@@ -11,7 +11,6 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
 use Illuminate\Http\Response;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class BarcodeControllerTest extends TestCase
@@ -39,7 +38,7 @@ class BarcodeControllerTest extends TestCase
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertUnauthorized();
 
-        Sanctum::actingAs($user, ['*']);
+        $this->actingAs($user);
 
         $this->getJson($preloadRoute)->assertForbidden();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
@@ -84,6 +83,8 @@ class BarcodeControllerTest extends TestCase
         $salt = $response->json('data.salt');
         $barcodes = $response->json('data.barcodes');
 
+        $this->assertCount($activityEnrollments->count(), $barcodes);
+
         foreach ($activityEnrollments as $enrollment) {
             $ticketHash = BarcodeController::barcodeToSecretHash($salt, $enrollment->ticket_code);
             $this->assertContains($ticketHash, $barcodes);
@@ -104,7 +105,7 @@ class BarcodeControllerTest extends TestCase
         $enrollment->transitionTo(States\Paid::class);
         $enrollment->save();
 
-        Sanctum::actingAs($user, ['*']);
+        $this->actingAs($user);
 
         $this->postJson(route('barcode.consume', $activity), [
             'barcode' => $enrollment->ticket_code,
@@ -134,7 +135,7 @@ class BarcodeControllerTest extends TestCase
         $enrollment->state = new $state($enrollment);
         $enrollment->save();
 
-        Sanctum::actingAs($user, ['*']);
+        $this->actingAs($user);
 
         $this->postJson(route('barcode.consume', $activity), [
             'barcode' => $enrollment->ticket_code,
