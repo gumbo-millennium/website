@@ -32,5 +32,6 @@
         <server name="SESSION_DRIVER" value="array"/>
         <server name="SCOUT_DRIVER" value="null"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
+        <server name="GOOGLE_AUTH_FILE" value="tests/Fixtures/google-auth.json" />
     </php>
 </phpunit>
