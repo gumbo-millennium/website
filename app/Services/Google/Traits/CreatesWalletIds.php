@@ -13,7 +13,7 @@ use RuntimeException;
 
 trait CreatesWalletIds
 {
-    private string $issuerId;
+    private ?string $issuerId = null;
 
     /**
      * Returns the Issuer ID, should be fairly consistent through application
