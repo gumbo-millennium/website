@@ -15,6 +15,14 @@ use Tests\TestCase;
 class WalletServiceTest extends TestCase
 {
     /**
+     * @before
+     */
+    public function setupIssuerIdAndTraitBeforeTest(): void
+    {
+        $this->afterApplicationCreated(fn () => Config::set('services.google.wallet.issuer_id', '1001337'));
+    }
+
+    /**
      * Test core functionality of the WalletService.
      */
     public function test_initialisation(): void
