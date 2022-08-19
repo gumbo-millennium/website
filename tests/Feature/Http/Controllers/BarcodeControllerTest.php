@@ -70,6 +70,8 @@ class BarcodeControllerTest extends TestCase
             ]),
         );
 
+        $this->actingAs(User::factory()->withRole('board')->create());
+
         $response = $this->getJson(route('barcode.preload', $activity))
             ->assertOk()
             ->assertJsonStructure([
@@ -86,7 +88,7 @@ class BarcodeControllerTest extends TestCase
         $this->assertCount($activityEnrollments->count(), $barcodes);
 
         foreach ($activityEnrollments as $enrollment) {
-            $ticketHash = BarcodeController::barcodeToSecretHash($salt, $enrollment->ticket_code);
+            $ticketHash = BarcodeController::barcodeToSecretHash($salt, $enrollment);
             $this->assertContains($ticketHash, $barcodes);
         }
     }
