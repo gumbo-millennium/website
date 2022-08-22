@@ -1,0 +1,22 @@
+.scanner-video .scan-region-highlight-svg {
+  @apply stroke-brand-500;
+}
+
+.scanner-video .code-outline-highlight {
+  stroke-dasharray: none;
+}
+
+.scanner-video--valid .code-outline-highlight {
+  @apply stroke-brand-600;
+  @apply opacity-80 fill-brand-200;
+}
+
+.scanner-video--consumed .code-outline-highlight {
+  @apply stroke-orange-600;
+  @apply opacity-80 fill-orange-200;
+}
+
+.scanner-video--invalid .code-outline-highlight {
+  @apply stroke-red-600;
+  @apply opacity-80 fill-red-200;
+}

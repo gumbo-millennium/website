@@ -9,7 +9,7 @@ $stats = array_filter([
     ? ['icon' => 'solid/eye-slash', 'label' => 'Privé album']
     : ['icon' => 'solid/users', 'label' => 'Zichtbaar voor leden'],
 
-  ['icon' => 'solid/calendar-alt', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
+  ['icon' => 'solid/calendar-days', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
   ['icon' => 'solid/user', 'label' => $album->user?->public_name],
   ['icon' => 'solid/images', 'label' => trans_choice(":count photo|:count photos", $album->photos->count())],
   ['icon' => 'solid/pencil-alt', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],

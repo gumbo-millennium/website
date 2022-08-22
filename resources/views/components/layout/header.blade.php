@@ -65,7 +65,7 @@
         <a href="{{ route('shop.cart') }}"
           class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand-600 hover:bg-brand-700">
           <div class="mr-3 w-6">
-            <x-icon icon="solid/shopping-cart" class="h-6" />
+            <x-icon icon="solid/cart-shopping" class="h-6" />
           </div>
 
           {{ Str::price(Cart::getTotal()) }}
@@ -100,7 +100,7 @@
               class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500">
               <span class="sr-only">Sluit menu</span>
               <div class="w-6" aria-hidden="true">
-                <x-icon icon="solid/times" class="h-6" />
+                <x-icon icon="solid/xmark" class="h-6" />
               </div>
             </button>
           </div>

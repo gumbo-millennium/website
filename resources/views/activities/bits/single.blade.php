@@ -23,7 +23,7 @@ if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
     $statusIcon = 'solid/user-check';
 } elseif ($isSoldOut) {
     $statusText = 'Uitverkocht';
-    $statusIcon = 'solid/times';
+    $statusIcon = 'solid/xmark';
 } elseif (!$activity->is_public) {
     $statusText = 'Besloten';
     $statusIcon = 'solid/user-friends';

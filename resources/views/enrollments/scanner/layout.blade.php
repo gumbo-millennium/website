@@ -13,11 +13,8 @@
     <script src="{{ mix('vendor.js') }}"></script>
 </head>
 <body class="bg-gray-900 min-h-screen">
-  &nbsp;
-  <div class="mx-auto min-h-screen">
-    <div class="mx-auto max-w-2xl my-4 px-4">
-        @yield('content')
-    </div>
+  <div class="h-screen mx-auto max-w-2xl py-4 px-4 flex flex-col">
+      @yield('content')
   </div>
 </body>
 </html>

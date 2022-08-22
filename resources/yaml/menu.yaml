@@ -41,11 +41,11 @@ menu:
         - title: Shop
           subtitle: Ga Gumbo-Groener door het leven
           href: /shop
-          icon: solid/shopping-cart
+          icon: solid/cart-shopping
         - title: Bestanden
           subtitle: Goed voorbereiden is het halve werk
           href: /bestanden
-          icon: solid/file-alt
+          icon: solid/file
 
     - title: Nieuws
       href: /nieuws
@@ -54,7 +54,7 @@ menu:
     main:
       - title: Activiteiten
         href: /activiteiten
-        icon: solid/calendar-alt
+        icon: solid/calendar-days
 
       - title: Foto's
         href: /gallery
@@ -62,11 +62,11 @@ menu:
 
       - title: Shop
         href: /shop
-        icon: solid/shopping-cart
+        icon: solid/cart-shopping
 
       - title: Bestanden
         href: /bestanden
-        icon: solid/file-alt
+        icon: solid/file
 
       - title: Nieuws
         href: /nieuws

@@ -11,38 +11,105 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class BarcodeControllerTest extends TestCase
 {
     public function test_unauthorized_access_request(): void
     {
-        $user = User::factory()->withRole(['member'])->create();
+        $memberUser = $this->getMemberUser();
+        $boardUser = $this->getBoardUser();
 
-        $activity = Activity::factory()->withTickets()->create();
+        $activity = Activity::factory()->withTickets()->create([
+            'end_date' => Date::now()->addDays(1),
+        ]);
         $ticket = $activity->tickets()->first();
 
         $enrollment = $activity->enrollments()->save(
             Enrollment::factory()
-                ->for($user)
+                ->for($memberUser)
                 ->for($ticket)
                 ->make([
                     'state' => States\Confirmed::class,
                 ]),
         );
 
+        $indexRoute = route('barcode.index');
+        $showRoute = route('barcode.show', $activity);
         $preloadRoute = route('barcode.preload', $activity);
         $consumeRoute = route('barcode.consume', $activity);
+
+        $this->get($indexRoute)->assertRedirect(route('login'));
+        $this->get($showRoute)->assertRedirect(route('login'));
 
         $this->getJson($preloadRoute)->assertUnauthorized();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertUnauthorized();
 
-        $this->actingAs($user);
+        $this->actingAs($memberUser);
+
+        $this->get($indexRoute)->assertForbidden();
+        $this->get($showRoute)->assertForbidden();
 
         $this->getJson($preloadRoute)->assertForbidden();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertForbidden();
+
+        $this->actingAs($boardUser);
+
+        $this->get($indexRoute)->assertOk();
+        $this->get($showRoute)->assertOk();
+
+        $this->getJson($preloadRoute)->assertOk();
+        $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
+            ->assertOk();
+    }
+
+    public function test_activity_scoping(): void
+    {
+        $currentActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
+        ]);
+
+        $futureActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->addDay(),
+            'end_date' => Date::now()->addDay()->addHours(7),
+        ]);
+
+        $pastActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subDays(1)->subHour(),
+            'end_date' => Date::now()->subDays(1),
+        ]);
+
+        $cancelledActivity = Activity::factory()->withTickets()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
+            'cancelled_at' => Date::now(),
+        ]);
+
+        $activityWithoutTickets = Activity::factory()->create([
+            'start_date' => Date::now()->subHour(),
+            'end_date' => Date::now()->addHours(6),
+        ]);
+
+        $this->actingAs($this->getBoardUser());
+
+        $this->get(route('barcode.index'))
+            ->assertSeeInOrder([
+                $currentActivity->name,
+                $futureActivity->name,
+            ])
+            ->assertDontSee($pastActivity->name)
+            ->assertDontSee($cancelledActivity->name)
+            ->assertDontSee($activityWithoutTickets->name);
+
+        $this->get(route('barcode.show', $currentActivity))->assertOk();
+        $this->get(route('barcode.show', $futureActivity))->assertOk();
+        $this->get(route('barcode.show', $pastActivity))->assertRedirect(route('barcode.index'));
+        $this->get(route('barcode.show', $cancelledActivity))->assertRedirect(route('barcode.index'));
+        $this->get(route('barcode.show', $activityWithoutTickets))->assertRedirect(route('barcode.index'));
     }
 
     public function test_preload(): void

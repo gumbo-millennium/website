@@ -1,4 +1,4 @@
-import { SHA256 } from 'crypto-js'
+import SHA256 from 'crypto-js/sha256'
 import QrScanner from 'qr-scanner'
 
 const cssMap = {
@@ -18,6 +18,7 @@ class Scanner {
     this.lastScannedBarcode = null
 
     // URLs
+    this.indexUrl = domNode.dataset.indexUrl
     this.preloadUrl = domNode.dataset.preloadUrl
     this.consumeUrl = domNode.dataset.consumeUrl
     this.csrfToken = domNode.dataset.csrfToken
@@ -28,18 +29,64 @@ class Scanner {
     this.loadingReasonNode = this.loadingNode.querySelector('[data-content="loading-reason"]')
     this.resultNode = domNode.querySelector('[data-content=result]')
     this.barcodeNode = domNode.querySelector('[data-content=barcode]')
-    this.videoNode = domNode.querySelector('video')
+    this.fullscreenToggle = domNode.querySelector('[data-action=fullscreen]')
 
+    // Find first child of the body that contains the scanner
+    const body = document.body
+    let bodyNodeContainingScanner = domNode
+    while (bodyNodeContainingScanner.parentNode !== body) {
+      bodyNodeContainingScanner = bodyNodeContainingScanner.parentNode
+    }
+
+    // Mark node as relative
+    bodyNodeContainingScanner.classList.add('relative')
+
+    const videoParentNode = document.createElement('div')
+    videoParentNode.classList.add(
+      'scanner-video',
+      'overflow-hidden',
+      'absolute', 'inset-0',
+      'w-screen', 'h-screen',
+      'flex', 'items-center', 'justify-center',
+    )
+    body.insertBefore(videoParentNode, bodyNodeContainingScanner)
+
+    this.videoNode = document.createElement('video')
+    this.videoNode.classList.add('w-screen', 'h-screen', 'object-cover', 'scanner-camera')
+    videoParentNode.appendChild(this.videoNode)
+
+    // Set loading state
     this._setLoading('Toegangstoken ophalen...')
-    this._preload()
+    this._preload(true)
 
+    // Update preload list every 5 minutes
+    setInterval(() => this._preload(false), 60 * 5 * 1000)
+
+    // Start camera
     this.camera = new QrScanner(this.videoNode, result => this._foundBarcode(result), {
       returnDetailedScanResult: true,
+      highlightScanRegion: true,
+      highlightCodeOutline: true,
     })
+    this._startCamera()
+
+    // Bind to changes in visibility
+    document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this))
+
+    // Bind fullscreen
+    if (this.fullscreenToggle) {
+      this._bindFullscreen()
+    }
   }
 
-  _preload () {
-    this._setLoading('Barcodes ophalen...')
+  /**
+   * Preload a hashed, abbreviated set of barcodes
+   * @param {boolean} impactLoading
+   */
+  _preload (impactLoading) {
+    if (impactLoading) {
+      this._setLoading('Barcodes ophalen...')
+    }
 
     fetch(this.preloadUrl, {
       headers: {
@@ -48,12 +95,19 @@ class Scanner {
       },
     })
       .then(response => response.json())
-      .then(({ data }) => {
-        this._setLoading(false)
+      .then(({ ok, data }) => {
+        if (!ok) {
+          document.location.href = this.indexUrl
+          return
+        }
+
         this.salt = data.salt
         this.barcodes = data.barcodes
 
-        this.camera.start()
+        if (impactLoading) {
+          this._setLoading(false)
+          this.camera.start()
+        }
       })
   }
 
@@ -71,6 +125,11 @@ class Scanner {
     })
       .then(response => response.json())
       .then(({ ok, code }) => {
+        if (code === 400) {
+          document.location.href = this.indexUrl
+          this.camera.stop()
+        }
+
         this._setLoading(false)
         this._setResult(ok ? 'valid' : (code === 409 ? 'consumed' : 'invalid'))
       })
@@ -99,7 +158,9 @@ class Scanner {
       result = 'invalid'
     }
 
-    console.log('Removed %o, added %o', allCssClasses, cssMap[result])
+    this.videoNode.parentNode.classList.toggle('scanner-video--valid', result === 'valid')
+    this.videoNode.parentNode.classList.toggle('scanner-video--consumed', result === 'consumed')
+    this.videoNode.parentNode.classList.toggle('scanner-video--invalid', result === 'invalid')
 
     this.resultNode.classList.remove(...allCssClasses)
     this.resultNode.classList.add(...cssMap[result])
@@ -127,8 +188,6 @@ class Scanner {
       return
     }
 
-    console.log('found barcode', result)
-
     this.lastScannedBarcode = result.data
     this.barcodeNode.innerText = result.data
     this.barcodeNode.classList.remove('hidden')
@@ -137,15 +196,75 @@ class Scanner {
   }
 
   _handleBarcode (barcode) {
+    // Noop if loading
+    if (this.loading || !this.salt) {
+      return
+    }
+
+    // Determine proper hash
     const barcodeHash = SHA256(`${this.salt}${barcode}`.toUpperCase()).toString().substring(0, 12)
 
+    // Check against local preload list
     if (!this.barcodes.includes(barcodeHash)) {
       this._setResult('invalid')
       return
     }
 
+    // Check online
     this._setLoading('Barcode controleren...')
     this._consume(barcode)
+  }
+
+  _startCamera () {
+    if (this.camera) {
+      this.camera.start()
+    }
+  }
+
+  _stopCamera () {
+    if (this.camera) {
+      this.camera.pause()
+    }
+  }
+
+  _handleVisibilityChange (visibilityChangeEvent) {
+    if (document.visibilityState === 'hidden') {
+      this._stopCamera()
+    } else {
+      this._startCamera()
+    }
+  }
+
+  _bindFullscreen () {
+    this.fullscreenToggle.addEventListener('click', this._requestFullscreen.bind(this))
+
+    document.addEventListener('fullscreenchange', () => this._setFullscreen(document.fullscreenElement ? 'close' : 'open'))
+    document.addEventListener('fullscreenerror', () => this._setFullscreen('error'))
+
+    this._setFullscreen('open')
+  }
+
+  _setFullscreen (icon) {
+    this.fullscreenToggle.querySelectorAll('[data-icon]').forEach(node => node.classList.add('hidden'))
+
+    const requestedIcon = this.fullscreenToggle.querySelector(`[data-icon="${icon}"]`)
+    const fallbackIcon = this.fullscreenToggle.querySelector('[data-icon=error]')
+
+    if (requestedIcon) {
+      requestedIcon.classList.remove('hidden')
+    } else {
+      fallbackIcon.classList.remove('hidden')
+    }
+  }
+
+  _requestFullscreen () {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      document.body.requestFullscreen({
+        navigationUI: 'hide',
+      })
+    }
   }
 }
 
