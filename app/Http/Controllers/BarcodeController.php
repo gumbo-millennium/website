@@ -30,6 +30,7 @@ class BarcodeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:manage,App\Models\Activity')->only('index');
         $this->middleware('can:manage,activity')->except('index');
     }
 
@@ -168,7 +169,7 @@ class BarcodeController extends Controller
             // Hasn't ended, or ended less than 6 hours ago
             ->where('end_date', '>=', Date::now()->subHours(6))
             // Not cancelled
-            ->whereNull('canncelled_at')
+            ->whereNull('cancelled_at')
             // Order by start date, and end date
             ->orderBy('start_date', 'asc')
             ->orderBy('end_date', 'asc');

@@ -18,7 +18,8 @@ class BarcodeControllerTest extends TestCase
 {
     public function test_unauthorized_access_request(): void
     {
-        $user = User::factory()->withRole(['member'])->create();
+        $memberUser = $this->getMemberUser();
+        $boardUser = $this->getBoardUser();
 
         $activity = Activity::factory()->withTickets()->create([
             'end_date' => Date::now()->addDays(1),
@@ -27,7 +28,7 @@ class BarcodeControllerTest extends TestCase
 
         $enrollment = $activity->enrollments()->save(
             Enrollment::factory()
-                ->for($user)
+                ->for($memberUser)
                 ->for($ticket)
                 ->make([
                     'state' => States\Confirmed::class,
@@ -46,14 +47,23 @@ class BarcodeControllerTest extends TestCase
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertUnauthorized();
 
-        $this->actingAs($this->getBoardUser());
+        $this->actingAs($memberUser);
 
-        $this->get($indexRoute)->assertOk();
-        $this->get($showRoute)->assertOk();
+        $this->get($indexRoute)->assertForbidden();
+        $this->get($showRoute)->assertForbidden();
 
         $this->getJson($preloadRoute)->assertForbidden();
         $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
             ->assertForbidden();
+
+        $this->actingAs($boardUser);
+
+        $this->get($indexRoute)->assertOk();
+        $this->get($showRoute)->assertOk();
+
+        $this->getJson($preloadRoute)->assertOk();
+        $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
+            ->assertOk();
     }
 
     public function test_activity_scoping(): void
