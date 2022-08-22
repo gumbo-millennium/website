@@ -15,12 +15,7 @@ const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
   const isProduction = env === 'production'
-  const remConfig = { convert: 'rem' }
-
-  // Mail needs pixels, instead of rem
-  if (file.basename === 'mail.css') {
-    remConfig.convert = 'px'
-  }
+  const isMail = file.basename === 'mail.css'
 
   const plugins = [
     postcssImport(),
@@ -32,13 +27,13 @@ module.exports = ({ file, options, env }) => {
   ]
 
   // Inline variables if required
-  if (path.basename(file) === 'mail.css') {
+  if (isMail && isProduction) {
     // Remove dark, variables and convert rem to px
     plugins.splice(plugins.length - 1, 0, [
       postcssVariables({
         preserve: false,
       }),
-      postcssRem(remConfig),
+      postcssRem({ convert: 'px' }),
       pixrem({ replace: false }),
     ])
   }
