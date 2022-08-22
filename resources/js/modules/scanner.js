@@ -29,6 +29,7 @@ class Scanner {
     this.loadingReasonNode = this.loadingNode.querySelector('[data-content="loading-reason"]')
     this.resultNode = domNode.querySelector('[data-content=result]')
     this.barcodeNode = domNode.querySelector('[data-content=barcode]')
+    this.fullscreenToggle = domNode.querySelector('[data-action=fullscreen]')
 
     // Find first child of the body that contains the scanner
     const body = document.body
@@ -71,6 +72,11 @@ class Scanner {
 
     // Bind to changes in visibility
     document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this))
+
+    // Bind fullscreen
+    if (this.fullscreenToggle) {
+      this._bindFullscreen()
+    }
   }
 
   /**
@@ -226,6 +232,38 @@ class Scanner {
       this._stopCamera()
     } else {
       this._startCamera()
+    }
+  }
+
+  _bindFullscreen () {
+    this.fullscreenToggle.addEventListener('click', this._requestFullscreen.bind(this))
+
+    document.addEventListener('fullscreenchange', () => this._setFullscreen(document.fullscreenElement ? 'close' : 'open'))
+    document.addEventListener('fullscreenerror', () => this._setFullscreen('error'))
+
+    this._setFullscreen('open')
+  }
+
+  _setFullscreen (icon) {
+    this.fullscreenToggle.querySelectorAll('[data-icon]').forEach(node => node.classList.add('hidden'))
+
+    const requestedIcon = this.fullscreenToggle.querySelector(`[data-icon="${icon}"]`)
+    const fallbackIcon = this.fullscreenToggle.querySelector('[data-icon=error]')
+
+    if (requestedIcon) {
+      requestedIcon.classList.remove('hidden')
+    } else {
+      fallbackIcon.classList.remove('hidden')
+    }
+  }
+
+  _requestFullscreen () {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      document.body.requestFullscreen({
+        navigationUI: 'hide',
+      })
     }
   }
 }

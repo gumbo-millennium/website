@@ -13,6 +13,14 @@
         Scannen voor {{ $activity->name }}
       </h2>
     </div>
+
+    <div class="flex-none">
+      <button class="rounded-full h-16 w-16 flex items-center justify-center bg-gray-200 text-brand-700" data-action="fullscreen">
+        <x-icon icon="solid/expand" class="h-8 w-8" data-icon="open" />
+        <x-icon icon="solid/compress" class="h-8 w-8" data-icon="close" />
+        <x-icon icon="solid/triangle-exclamation" class="h-8 w-8 text-orange-700" data-icon="error" />
+      </button>
+    </div>
   </div>
 
   {{-- Screen filler --}}
