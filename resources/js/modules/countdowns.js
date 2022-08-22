@@ -1,11 +1,27 @@
-import moment from 'moment'
-
 const mappedCountdowns = new Map()
 
+const timeInMillis = {
+  hour: (60 * 60 * 1000),
+  minute: (60 * 1000),
+  second: 1000,
+}
+
+/**
+ * Formats a human-readable diff, based from a time
+ * @param {Date} date
+ * @returns {String}
+ */
 const formatDiff = (date) => {
-  const diffHours = Math.max(0, date.diff(moment(), 'hours'))
-  const diffMinutes = Math.max(0, date.diff(moment(), 'minutes') - diffHours * 60)
-  const diffSeconds = Math.max(0, date.diff(moment(), 'seconds') - diffMinutes * 60)
+  let diffInMillis = Math.max(0, Date.now() - date.getTime())
+
+  const diffHours = Math.max(0, diffInMillis / timeInMillis.hour)
+  diffInMillis %= timeInMillis.hour
+
+  const diffMinutes = Math.max(0, diffInMillis / timeInMillis.minute)
+  diffInMillis %= timeInMillis.minute
+
+  const diffSeconds = Math.max(0, diffInMillis / timeInMillis.second)
+  diffInMillis %= timeInMillis.second
 
   return [
     diffHours < 10 ? `0${diffHours}` : diffHours,
@@ -20,7 +36,7 @@ const updateNodes = () => {
     node.innerText = formatDiff(date)
 
     // Remove from the list if done
-    if (date.diff(moment(), 'seconds') >= 0) {
+    if (node.innerText !== '00:00:00') {
       return
     }
 
@@ -36,11 +52,8 @@ const updateNodes = () => {
 }
 
 const init = () => {
-  console.log('Init!')
   document.querySelectorAll('[data-countdown]').forEach(node => {
-    console.log('Mapped %o to date %s → %o', node, node.dataset.countdown)
-
-    mappedCountdowns.set(node, moment(node.dataset.countdown))
+    mappedCountdowns.set(node, new Date(Date.parse(node.dataset.countdown)))
   })
 
   setTimeout(() => {
