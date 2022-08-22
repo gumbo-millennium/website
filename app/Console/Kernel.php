@@ -11,6 +11,7 @@ use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Config;
 
 class Kernel extends ConsoleKernel
 {
@@ -73,9 +74,11 @@ class Kernel extends ConsoleKernel
         // Weekly make a backup of the images
         $schedule->command('app:backup-images')->weeklyOn(0, '06:30');
 
-        // Send quotes weekly
-        $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
-        $schedule->command('bot:update')->hourly();
+        // Send quotes weekly, if Telegram bot is configured
+        if (Config::get('telegram.bots.gumbot.token')) {
+            $schedule->job(SendBotQuotes::class)->weeklyOn(1, '08:15');
+            $schedule->command('bot:update')->hourly();
+        }
 
         // Manually check payments every 30 minutes
         $schedule->command('payments:update', ['--all'])->everyThirtyMinutes();
