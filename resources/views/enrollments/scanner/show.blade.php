@@ -2,15 +2,17 @@
 
 @section('content')
 <div class="flex-grow flex flex-col items-center w-full" data-content="scanner" data-index-url="{{ route('barcode.index') }}" data-preload-url="{{ route('barcode.preload', $activity) }}" data-consume-url="{{ route('barcode.consume', $activity) }}" data-csrf-token="{{ csrf_token() }}">
-  <div class="relative z-10 w-full">
-    {{-- Page title --}}
-    <h1 class="font-title text-3xl text-white font-bold mb-4">
-      Ticket Scanner
-    </h1>
+  <div class="relative z-10 w-full flex flex-row">
+    <div class="flex-grow">
+      {{-- Page title --}}
+      <h1 class="font-title text-3xl text-white font-bold mb-4">
+        Ticket Scanner
+      </h1>
 
-    <h2 class="mb-8 text-gray-200 font-title text-lg">
-      Scannen voor {{ $activity->name }}
-    </h2>
+      <h2 class="mb-8 text-gray-200 font-title text-lg">
+        Scannen voor {{ $activity->name }}
+      </h2>
+    </div>
   </div>
 
   {{-- Screen filler --}}

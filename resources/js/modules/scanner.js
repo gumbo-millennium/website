@@ -61,6 +61,7 @@ class Scanner {
     // Update preload list every 5 minutes
     setInterval(() => this._preload(false), 60 * 5 * 1000)
 
+    // Start camera
     this.camera = new QrScanner(this.videoNode, result => this._foundBarcode(result), {
       returnDetailedScanResult: true,
       highlightScanRegion: true,
@@ -68,6 +69,7 @@ class Scanner {
     })
     this._startCamera()
 
+    // Bind to changes in visibility
     document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this))
   }
 
