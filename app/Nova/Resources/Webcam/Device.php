@@ -8,6 +8,7 @@ use App\Models\Webcam\Device as DeviceModel;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
 
 class Device extends Resource
