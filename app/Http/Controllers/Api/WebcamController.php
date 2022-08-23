@@ -8,7 +8,6 @@ use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Webcam\Camera;
 use App\Models\Webcam\Device;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;

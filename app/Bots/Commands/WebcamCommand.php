@@ -152,7 +152,7 @@ class WebcamCommand extends Command
 
         // Prep file
         $file = new InputFile(
-            $disk->readStream($device->path), 
+            $disk->readStream($device->path),
             (string) Str::of("{$webcam->slug}.jpg")->ascii()->lower(),
         );
 
