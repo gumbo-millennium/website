@@ -100,13 +100,6 @@ class WebcamController extends Controller
         $disk = Config::get('gumbo.images.disk');
         $oldPath = $model->path;
 
-        try {
-            // Throw up a conflict if the local image is newer than the submitted one
-            abort_if($oldPath && Storage::disk($disk)->lastModified($oldPath) > $image->lastModified(), HttpResponse::HTTP_CONFLICT);
-        } catch (FileNotFoundException) {
-            // Ignore not found exceptions, we'll just put this new file in place
-        }
-
         // Save new photo
         $model->path = $image->store(Device::STORAGE_FOLDER, $disk);
         $model->save();

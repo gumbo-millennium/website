@@ -25,11 +25,11 @@ class WebcamCommand extends Command
     Log in via /login.
     MSG;
 
-    private const REPLY_EXPIRED = <<<'MSG'
-    🕸 Deze foto is te stoffig...
+    private const REPLY_NOT_AVAILABLE = <<<'MSG'
+    😕 Deze foto is niet (meer) beschikbaar
 
-    De %s is te ver verouderd om nog nuttig te zijn,
-    en kan daarom niet meer worden opgevraagd.
+    De opgevraagde webcam is momenteel niet beschikbaar,
+    De foto is mogelijk verouderd.
     MSG;
 
     private const REPLY_NO_SUCH_CAMERA = <<<'MSG'
@@ -123,9 +123,9 @@ class WebcamCommand extends Command
         }
 
         // Check if expired
-        if ($webcam->is_expired) {
+        if ($webcam->is_expired || $webcam->device?->path === null) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_EXPIRED, $webcam->name),
+                'text' => $this->formatText(self::REPLY_NOT_AVAILABLE, $webcam->name),
             ]);
 
             return;
