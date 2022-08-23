@@ -8,6 +8,7 @@ use App\Helpers\Str;
 use App\Models\Webcam\Camera;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Telegram\Bot\Actions;
@@ -131,12 +132,13 @@ class WebcamCommand extends Command
         }
 
         $device = $webcam->device;
+        $disk = Storage::disk(Config::get('gumbo.images.disk'));
 
         // Send upload status
         $this->replyWithChatAction(['action' => Actions::UPLOAD_PHOTO]);
 
         // Check if image exists
-        if (Storage::missing($device->path)) {
+        if ($disk->missing($device->path)) {
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_FILE_LOST),
             ]);
@@ -148,16 +150,16 @@ class WebcamCommand extends Command
             return;
         }
 
-        // Get file
-        $stream = Storage::readStream($device->path);
-
         // Prep file
-        $file = new InputFile($stream, strtolower("{$webcam->slug}.jpg"));
+        $file = new InputFile(
+            $disk->readStream($device->path), 
+            (string) Str::of("{$webcam->slug}.jpg")->ascii()->lower(),
+        );
 
         // Return message
         $this->replyWithPhoto([
             'photo' => $file,
-            'caption' => sprintf('%s van %s', $webcam->name, $device->lastUpdate->created_at->isoFormat('ddd D MMM YYYY, HH:mm (z)')),
+            'caption' => sprintf('%s van %s', $webcam->name, $device->updated_at->isoFormat('ddd D MMM YYYY, HH:mm (z)')),
         ]);
     }
 

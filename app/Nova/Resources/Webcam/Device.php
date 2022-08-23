@@ -58,12 +58,22 @@ class Device extends Resource
                 ->sortable()
                 ->readonly(),
 
-            Fields\Text::make(__('Name'), 'device')
+            Fields\Text::make(__('Name'), 'name')
                 ->sortable()
                 ->readonly(),
 
             Fields\BelongsTo::make(__('User'), 'owner', User::class)
-                ->readonly(),
+                ->exceptOnForms(),
+
+            Fields\BelongsTo::make(__('Camera'), 'camera')
+                ->sortable()
+                ->nullable(),
+
+                Fields\Image::make(__('Most recent image'), 'path')
+                    ->disk(Config::get('gumbo.images.disk'))
+                    ->thumbnail(fn () => (string) image_asset($this->path)->preset('nova-thumbnail'))
+                    ->preview(fn () => (string) image_asset($this->path)->preset('nova-preview'))
+                    ->exceptOnForms(),
         ];
     }
 }

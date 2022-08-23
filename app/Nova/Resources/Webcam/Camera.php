@@ -7,6 +7,7 @@ namespace App\Nova\Resources\Webcam;
 use App\Models\Webcam\Camera as CameraModel;
 use App\Nova\Resources\Resource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
 
 class Camera extends Resource
@@ -77,9 +78,17 @@ class Camera extends Resource
                     'unique:webcam_cameras,command,{{resourceId}}',
                 ]),
 
-            Fields\HasOne::make(__('Webcam Device'), 'device', Device::class)
-                ->nullable()
-                ->showOnIndex(),
+            Fields\Text::make(__('Webcam Device'), function () {
+                return ($this->device)
+                    ? (new Device($this->device))->title()
+                    : null;
+            }),
+
+            Fields\Image::make(__('Most recent image'), 'device.path')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->thumbnail(fn () => (string) image_asset($this->device?->path)->preset('nova-thumbnail'))
+                ->preview(fn () => (string) image_asset($this->device?->path)->preset('nova-preview'))
+                ->exceptOnForms(),
         ];
     }
 }
