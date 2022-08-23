@@ -48,7 +48,7 @@ class Photo extends Resource
      *
      * @var string
      */
-    public static $group = 'Photo Galleries';
+    public static $group = 'Photo Gallery';
 
     /**
      * Build an "index" query for the given resource.

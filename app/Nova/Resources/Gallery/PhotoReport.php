@@ -33,7 +33,7 @@ class PhotoReport extends Resource
      *
      * @var string
      */
-    public static $group = 'Photo Galleries';
+    public static $group = 'Photo Gallery';
 
     /**
      * Get the fields displayed by the resource.

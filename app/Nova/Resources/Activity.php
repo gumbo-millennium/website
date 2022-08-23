@@ -55,7 +55,7 @@ class Activity extends Resource
      *
      * @var string
      */
-    public static $group = 'Activiteiten';
+    public static $group = 'Activities';
 
     /**
      * @inheritDoc

@@ -360,5 +360,9 @@
   "Last updated": "Laatst bijgewerkt",
   ":count photo|:count photos": ":count foto|:count foto's",
 
+  "Document System": "Documenten",
+  "Photo Gallery": "Fotoalbum",
+  "Board": "Bestuur",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

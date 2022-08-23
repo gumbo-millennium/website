@@ -36,7 +36,7 @@ class FileBundle extends Resource
      *
      * @var string
      */
-    public static $group = 'Documentensysteem';
+    public static $group = 'Document System';
 
     /**
      * The columns that should be searched.

@@ -25,7 +25,7 @@ class Device extends Resource
      *
      * @var string
      */
-    public static $group = 'Apparaten';
+    public static $group = 'Devices';
 
     /**
      * The columns that should be searched.

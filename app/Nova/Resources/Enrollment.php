@@ -45,7 +45,7 @@ class Enrollment extends Resource
      *
      * @var string
      */
-    public static $group = 'Activiteiten';
+    public static $group = 'Activities';
 
     /**
      * The columns that should be searched.

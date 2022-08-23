@@ -32,7 +32,7 @@ class ActivityMessage extends Resource
      *
      * @var string
      */
-    public static $group = 'Berichten';
+    public static $group = 'Messages';
 
     /**
      * Indicates if the resource should be displayed in the sidebar.

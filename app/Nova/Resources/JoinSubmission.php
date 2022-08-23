@@ -35,7 +35,7 @@ class JoinSubmission extends Resource
      *
      * @var string
      */
-    public static $group = 'Bestuurszaken';
+    public static $group = 'Board';
 
     /**
      * The columns that should be searched.

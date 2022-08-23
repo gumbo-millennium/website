@@ -36,7 +36,7 @@ class Ticket extends Resource
      *
      * @var string
      */
-    public static $group = 'Activiteiten';
+    public static $group = 'Activities';
 
     /**
      * Indicates if the resource should be displayed in the sidebar.

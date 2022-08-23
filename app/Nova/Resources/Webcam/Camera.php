@@ -24,7 +24,7 @@ class Camera extends Resource
      *
      * @var string
      */
-    public static $group = 'Apparaten';
+    public static $group = 'Devices';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
