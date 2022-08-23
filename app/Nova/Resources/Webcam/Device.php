@@ -74,6 +74,11 @@ class Device extends Resource
                 ->disk(Config::get('gumbo.images.disk'))
                 ->thumbnail(fn () => (string) image_asset($this->path)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->path)->preset('nova-preview'))
+                ->exceptOnForms()
+                ->disableDownload(),
+
+            Fields\DateTime::make(__('Updated at'), 'updated_at')
+                ->displayUsing(fn ($date) => $date?->format('d-m-Y, H:i T'))
                 ->exceptOnForms(),
         ];
     }
