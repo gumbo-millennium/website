@@ -99,17 +99,31 @@ class Order extends Model implements Payable
         $startOfMonth = Date::now()->firstOfMonth();
 
         // Find all orders of this period
-        $orderCount = self::query()
+        $orderNumbers = self::query()
             ->whereBetween('created_at', [$startOfMonth, (clone $startOfMonth)->endOfMonth()])
-            ->count();
+            ->pluck('number');
 
-        // Set invoice ID
-        return sprintf(
-            '%02d.%02d.%03d',
-            $targetDate->century % 100,
-            $targetDate->month,
-            $orderCount + 1,
-        );
+        // Find next order number
+        $orderCount = $orderNumbers->count();
+        $safetyMargin = 0;
+        $attemptsLeft = 100;
+        do {
+            $orderNumber = sprintf(
+                '%02d.%02d.%03d',
+                $targetDate->century % 100,
+                $targetDate->month,
+                $orderCount + $safetyMargin + 1,
+            );
+
+            if (! $orderNumbers->contains($orderNumber)) {
+                return $orderNumber;
+            }
+
+            $safetyMargin++;
+        } while ($attemptsLeft-- > 0);
+
+        // Throw exception if no order number found
+        throw new RuntimeException('Could not find an order number.');
     }
 
     /**
