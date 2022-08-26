@@ -92,14 +92,15 @@ class Order extends Model implements Payable
      */
     public static function determineOrderNumber(self $order): string
     {
+        // Get target
         $targetDate = $order->created_at ?? Date::now();
 
         // Get invoice number
         $startOfMonth = Date::now()->firstOfMonth();
 
+        // Find all orders of this period
         $orderCount = self::query()
-            ->whereBetween('created_at', [$startOfMonth, $targetDate])
-            ->when($order->id, fn (Builder $query) => $query->where('id', '<', $order->id))
+            ->whereBetween('created_at', [$startOfMonth, (clone $startOfMonth)->endOfMonth()])
             ->count();
 
         // Set invoice ID
