@@ -70,7 +70,7 @@ class Device extends Resource
                 ->sortable()
                 ->nullable(),
 
-           Fields\Image::make(__('Most recent image'), 'path')
+            Fields\Image::make(__('Most recent image'), 'path')
                 ->disk(Config::get('gumbo.images.disk'))
                 ->thumbnail(fn () => (string) image_asset($this->path)->preset('nova-thumbnail'))
                 ->preview(fn () => (string) image_asset($this->path)->preset('nova-preview'))
