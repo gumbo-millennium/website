@@ -10,6 +10,7 @@ use App\Exceptions\PaymentException;
 use App\Models\Data\PaymentLine;
 use App\Models\Payment;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -124,7 +125,10 @@ class MolliePaymentService implements PaymentService
         $fluent = $payable->toPayment();
         $user = $payment->user;
 
-        $userAddress = array_merge(Config::get('gumbo.fallbacks.address'), $user->address ?? []);
+        $userAddress = array_merge(
+            Config::get('gumbo.fallbacks.address'),
+            Collection::make($user->address ?? [])->toArray(),
+        );
 
         $address = [
             'givenName' => $user->first_name,
