@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Keyboard\Keyboard;
@@ -36,8 +37,8 @@ class LoginCommand extends Command
     private const LOGIN_MSG_FAIL = <<<'TEXT'
     ⚠ Inloggen niet mogelijk
 
-    Het is helaas niet mogelijk de benodigde gegevens naar Telegram te sturen,
-    neem even contact op met de DC.
+    Er is iets misgegaan bij het klaarzetten van het bericht.
+    Foutmelding: %s
     TEXT;
 
     /**
@@ -101,23 +102,37 @@ class LoginCommand extends Command
 
         // Return message
         try {
-            // Send as DM if in group chat
-            if ($this->isInGroupChat()) {
-                $this->getTelegram()->sendMessage(array_merge($loginMessage, [
-                    'chat_id' => $this->getTelegramUser()->id,
-                ]));
-
-                $this->replyWithMessage([
-                    'text' => 'Een link om mee in te loggen is verstuurd naar je DMs.',
-                ]);
+            // Send regularly if non-groupchat
+            if (! $this->isInGroupChat()) {
+                $this->replyWithMessage($loginMessage);
 
                 return;
             }
 
-            $this->replyWithMessage($loginMessage);
-        } catch (TelegramSDKException $e) {
+            // Send DM (this fails if the user has never interacted with the bot)
+            $this->getTelegram()->sendMessage(array_merge($loginMessage, [
+                'chat_id' => $this->getTelegramUser()->id,
+            ]));
+
+            // Send groupchat message
             $this->replyWithMessage([
-                'text' => $this->formatText(self::LOGIN_MSG_FAIL),
+                'text' => 'Een link om mee in te loggen is verstuurd naar je DMs.',
+            ]);
+        } catch (TelegramSDKException $e) {
+            $errorMessage = $e->getMessage();
+
+            // Check error code if the domain name is misconfigured
+            if (Str::contains($e->getMessage(), 'BOT_DOMAIN_INVALID')) {
+                $errorMessage = 'De bot is verkeerd geconfigureerd bij Telegram.';
+            } elseif ($this->isInGroupChat()) {
+                // The domain is valid but the API call failed. The user has probably
+                // never interacted with the bot, so we can't send a DM.
+                $errorMessage = 'De bot kan je niet DM\'en, probeer het opnieuw in een privé chat.';
+            }
+
+            // Reply to the source chat with the error message
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::LOGIN_MSG_FAIL, $errorMessage),
                 'parse_mode' => 'HTML',
             ]);
         }
