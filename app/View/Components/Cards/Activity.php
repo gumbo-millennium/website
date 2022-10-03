@@ -64,7 +64,7 @@ class Activity extends Component
             'image' => $activity->poster,
             'title' => $activity->name,
             'lead' => $activityLabel,
-            'description' => $activity->tagline ?? Str::words(strip_tags($activity->description_html ?? ''), 10),
+            'description' => $activity->tagline ?? Str::words(strip_tags((string) $activity->description_html ?? ''), 10),
         ]);
     }
 }
