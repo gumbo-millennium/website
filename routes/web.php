@@ -334,6 +334,9 @@ Route::middleware('auth')->group(function () {
 Route::redirect('/sign-up', '/word-lid');
 Route::redirect('/join', '/word-lid');
 
+// "Nova being weird" fix
+Route::redirect('/admin/login', '/auth/login');
+
 // Styling pages
 if (App::isLocal()) {
     Route::view('/test/colors', 'tests.colors');

@@ -8,29 +8,32 @@
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v3.0.5",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "e8f2fedade2eff34369ade2a502337bfff669d24"
+                "reference": "64b7471e6512cf8c0feb893be05f996de984fda7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/e8f2fedade2eff34369ade2a502337bfff669d24",
-                "reference": "e8f2fedade2eff34369ade2a502337bfff669d24",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/64b7471e6512cf8c0feb893be05f996de984fda7",
+                "reference": "64b7471e6512cf8c0feb893be05f996de984fda7",
                 "shasum": ""
             },
             "require": {
                 "codex-team/editor.js": "*",
                 "ext-exif": "*",
                 "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.0|^7.0",
                 "illuminate/support": "^8.0 || ^9.0",
                 "laravel/nova": "^4.0",
                 "php": "^8.1",
                 "spatie/image": "^1.7 || ^2.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^6.0 || ^7.0"
+                "friendsofphp/php-cs-fixer": "^3.9",
+                "orchestra/testbench": "^6.0 || ^7.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3"
             },
             "type": "library",
             "extra": {
@@ -59,9 +62,9 @@
             ],
             "support": {
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
-                "source": "https://github.com/advoor/nova-editor-js/tree/v3.0.5"
+                "source": "https://github.com/advoor/nova-editor-js/tree/v3.1.0"
             },
-            "time": "2022-08-12T13:48:29+00:00"
+            "time": "2022-09-25T14:37:44+00:00"
         },
         {
             "name": "artesaos/seotools",
