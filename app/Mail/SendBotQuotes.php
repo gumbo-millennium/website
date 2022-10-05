@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
-use App\Exports\BotQuoteExport;
+use App\Excel\Exports\BotQuoteExport;
 use DateTimeInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

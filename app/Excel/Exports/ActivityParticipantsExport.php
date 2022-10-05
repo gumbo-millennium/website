@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exports;
+namespace App\Excel\Exports;
 
 use App\Helpers\Str;
 use App\Models\Activity;

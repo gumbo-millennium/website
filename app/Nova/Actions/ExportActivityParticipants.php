@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Nova\Actions;
 
 use App\Enums\ActivityExportType;
-use App\Exports\ActivityParticipantsExport;
-use App\Exports\ActivityParticipantsFullExport;
-use App\Exports\ActivityParticipantsPresenceList;
+use App\Excel\Exports\ActivityParticipantsExport;
+use App\Excel\Exports\ActivityParticipantsFullExport;
+use App\Excel\Exports\ActivityParticipantsPresenceList;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;

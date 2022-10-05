@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\ActivityExportType;
-use App\Exports\ActivityParticipantsExport;
-use App\Exports\ActivityParticipantsFullExport;
-use App\Exports\ActivityParticipantsPresenceExport;
+use App\Excel\Exports\ActivityParticipantsExport;
+use App\Excel\Exports\ActivityParticipantsFullExport;
+use App\Excel\Exports\ActivityParticipantsPresenceExport;
 use App\Helpers\Str;
 use App\Models\Activity;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
