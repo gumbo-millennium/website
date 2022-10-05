@@ -19,13 +19,16 @@ class DownloadImportFormat extends Action
     use InteractsWithQueue;
     use Queueable;
 
-    public $name = 'Download import format';
-
     public function __construct(private string $format)
     {
         $this
             ->standalone()
             ->withoutConfirmation();
+    }
+
+    public function name()
+    {
+        return __('Download import format');
     }
 
     /**

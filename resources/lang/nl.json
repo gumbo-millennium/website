@@ -365,8 +365,13 @@
   "Board": "Bestuur",
 
   "Download import format": "Download importformaat",
+
   "Import items": "Items importeren",
+  "Group": "Groep",
+  "Import file": "Bestand",
   "Start import": "Start import",
+  "You are not allowed to import activities for this group.": "Je mag geen activiteiten importeren voor deze groep.",
+  "Import completed, your activities should now be visible.": "Importeren voltooid, je activiteiten moeten nu in het overzicht staan.",
 
   "Location": "Locatie",
   "Location Address": "Adres locatie",

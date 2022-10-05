@@ -27,11 +27,16 @@ class ImportActivities extends Action
     use InteractsWithQueue;
     use Queueable;
 
-    public $name = 'Import activities';
+    public $confirmButtonText = 'Start import';
 
     public function __construct()
     {
         $this->standalone();
+    }
+
+    public function name()
+    {
+        return __('Import items');
     }
 
     /**
@@ -54,21 +59,11 @@ class ImportActivities extends Action
             return Action::danger(__('You are not allowed to import activities for this group.'));
         }
 
-        $activityCounter = 0;
-
-        // Add a counter
-        Activity::created(fn () => $activityCounter++);
-
         // Run the import
         Excel::import(new ActivityImport($group), $upload);
 
-        // Report the result
-        if ($activityCounter > 0) {
-            return Action::message(__('Imported :count activities.', ['count' => $activityCounter]));
-        }
-
         // Zero imports, assume failure
-        return Action::danger(__('No activities were imported, maybe they already exist?'));
+        return Action::message(__('Import completed, your activities should now be visible.'));
     }
 
     /**
