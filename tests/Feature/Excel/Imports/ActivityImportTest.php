@@ -6,6 +6,7 @@ namespace Tests\Feature\Excel\Imports;
 
 use App\Excel\Imports\ActivityImport;
 use App\Models\Activity;
+use App\Models\Role;
 use finfo;
 use InvalidArgumentException;
 use Maatwebsite\Excel\Excel as ExcelExcel;
@@ -51,6 +52,28 @@ class ActivityImportTest extends TestCase
             $activity->start_date->subMonth()->startOfDay(),
             $activity->published_at,
         );
+    }
+
+    /**
+     * Check if the role is assigned correctly, if provided.
+     */
+    public function test_proper_role_assignment(): void
+    {
+        $role = Role::forceCreate([
+            'name' => 'testing',
+            'title' => 'Test Role',
+            'guard_name' => 'web',
+        ]);
+
+        Excel::import(new ActivityImport($role), test_path('Fixtures/resources/excel/valid-sheet.ods'));
+
+        $allActivities = Activity::with('role')->get();
+
+        $this->assertCount(3, $allActivities);
+
+        foreach ($allActivities as $activity) {
+            $this->assertTrue($role->is($activity->role));
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use LogicException;
 use Spatie\Permission\Models\Role as SpatieRole;
 
@@ -26,6 +27,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @method static Builder|Role newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Role permission($permissions)
  * @method static Builder|Role query()
+ * @method static Builder|Role whereActivityAssignable()
  * @mixin \Eloquent
  */
 class Role extends SpatieRole
@@ -65,10 +67,30 @@ class Role extends SpatieRole
     }
 
     /**
+     * Returns all roles that can host an activity, as name => title pairs.
+     * @return Collection|Role[]
+     */
+    public static function getActivityRoles(string $value = 'title', string $key = 'name'): Collection
+    {
+        return self::query()
+            ->whereActivityAssignable()
+            ->orderBy('name')
+            ->pluck($value, $key);
+    }
+
+    /**
      * Filter on default value.
      */
     public function scopeDefault(Builder $query): Builder
     {
         return $query->where('default', '1');
+    }
+
+    /**
+     * Scope the query to only include roles that are retrieved from Conscribo.
+     */
+    public function scopeWhereActivityAssignable(Builder $query): void
+    {
+        $query->whereNotNull('conscribo_id');
     }
 }

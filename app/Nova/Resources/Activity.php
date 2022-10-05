@@ -366,6 +366,10 @@ class Activity extends Resource
             new Actions\RescheduleActivity(),
             new Actions\SendActivityMail(),
             new Actions\ExportActivityParticipants(),
+
+            // Standalones
+            new Actions\ImportExport\DownloadImportFormat('activity'),
+            new Actions\ImportExport\ImportActivities(),
         ];
     }
 
