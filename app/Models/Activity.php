@@ -166,6 +166,23 @@ class Activity extends SluggableModel
         'postponed_at' => 'datetime',
     ];
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'tagline',
+        'poster',
+        'location',
+        'location_address',
+        'start_date',
+        'end_date',
+        'seats',
+        'is_public',
+        'published_at',
+        'enrollment_start',
+        'enrollment_end',
+        'features',
+    ];
+
     /**
      * Lists the next up activities.
      *

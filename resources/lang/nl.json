@@ -364,5 +364,16 @@
   "Photo Gallery": "Fotoalbum",
   "Board": "Bestuur",
 
+  "Download import format": "Download importformaat",
+  "Import items": "Items importeren",
+  "Start import": "Start import",
+
+  "Location": "Locatie",
+  "Location Address": "Adres locatie",
+  "Start Date": "Startdatum",
+  "Start Time": "Starttijd",
+  "End Date": "Einddatum",
+  "End Time": "Eindtijd",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

@@ -68,6 +68,9 @@ Route::prefix('admin/')->group(function () {
 
     Route::get('mollie/dashboard/{payment}', [AdminControllers\MollieRedirectController::class, 'show'])
         ->name('admin.mollie.show');
+
+    Route::get('import/template/{template}', [AdminControllers\ImportTemplateController::class, 'downloadTemplate'])
+        ->name('admin.import.template');
 });
 
 /**
