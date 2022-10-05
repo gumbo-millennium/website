@@ -30,7 +30,7 @@ trait HasOnlyHostedEnrollments
         return $query->whereIn('activity_id', $user->getHostedActivityIdQuery());
     }
 
-    protected function getCacheKey(NovaRequest $request)
+    public function getCacheKey(NovaRequest $request)
     {
         return sprintf('%s.%s', parent::getCacheKey($request), $request->user()->id);
     }
