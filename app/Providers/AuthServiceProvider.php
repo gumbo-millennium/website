@@ -54,6 +54,9 @@ class AuthServiceProvider extends ServiceProvider
         Models\Gallery\Album::class => Policies\Gallery\AlbumPolicy::class,
         Models\Gallery\Photo::class => Policies\Gallery\PhotoPolicy::class,
         Models\Gallery\PhotoReport::class => Policies\Gallery\PhotoReportPolicy::class,
+
+        // Payments
+        Models\Payments\Settlement::class => Policies\Payments\SettlementPolicy::class,
     ];
 
     /**

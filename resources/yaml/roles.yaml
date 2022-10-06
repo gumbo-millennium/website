@@ -118,6 +118,9 @@ board:
     # Allow managing gallery (full access and reports)
     - gallery-manage
 
+    # Allow managing payments
+    - payments-monitor
+
 # Digital committee
 dc:
   title: Digitale Commissie

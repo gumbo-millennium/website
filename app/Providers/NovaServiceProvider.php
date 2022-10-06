@@ -135,6 +135,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Resources\EmailList::class),
                     MenuItem::resource(Resources\JoinSubmission::class),
                     MenuItem::resource(Resources\Sponsor::class),
+                    MenuItem::resource(Resources\Payments\Settlement::class),
                 ])->icon('users')->collapsable();
             }
 

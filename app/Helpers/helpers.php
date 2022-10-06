@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Fluent\Image;
 use App\Helpers\Str;
+use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 if (! function_exists('mix_file')) {
@@ -64,5 +65,39 @@ if (! function_exists('path_join')) {
             ->implode('/');
 
         return $startsWithSlash ? "/{$joinedPaths}" : $joinedPaths;
+    }
+}
+
+if (! function_exists('money_value')) {
+    /**
+     * Converts an amount to a Money object, unless nil.
+     */
+    function money_value(null|string|array|object $value): ?Money
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        if (is_int($value)) {
+            return Money::ofMinor($value, 'EUR');
+        }
+
+        if (is_string($value)) {
+            return Money::of($value, 'EUR');
+        }
+
+        if (is_array($value)) {
+            $value = (object) $value;
+        }
+
+        if (property_exists($value, 'value') && property_exists($value, 'currency')) {
+            return Money::of($value->value, $value->currency);
+        }
+
+        if (property_exists($value, 'amount')) {
+            return Money::of($value->amount, 'EUR');
+        }
+
+        throw new InvalidArgumentException('Invalid money value');
     }
 }

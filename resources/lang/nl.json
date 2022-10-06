@@ -396,5 +396,8 @@
   "Thank you for letting us know there is no more coffee :name!": "Bedankt voor het melden dat er geen koffie meer is :name!",
   "Invalid coffee condition, please use one of the following: :conditions": "Ongeldige koffieconditie, gebruik een van de volgende: :conditions",
 
+  "Settlement": "Uitbetaling",
+  "Settlements": "Uitbetalingen",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }
