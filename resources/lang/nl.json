@@ -380,5 +380,21 @@
   "End Date": "Einddatum",
   "End Time": "Eindtijd",
 
+  "Request the current coffee condition": "Vraag de huidige koffieconditie op",
+  "The coffee condition is unknown.": "De koffieconditie is onbekend.",
+  "The coffee is :condition.": "De koffie is :condition.",
+  "There is no more coffee.": "Er is geen koffie meer.",
+  "The coffee was brewed by :user :ago.": "De koffie is :ago gebrouwen door :user.",
+  "The state was last updated by :user :ago.": "De koffieconditie is :ago bijgewerkt door :user.",
+  "very fresh": "supervers",
+  "fresh": "vers",
+  "okay": "oké",
+  "stale": "verouderd",
+  "old": "oud",
+  "yeasty": "stoffig",
+  "Thank you for brewing coffee :name!": "Bedankt voor het zetten van koffie :name!",
+  "Thank you for letting us know there is no more coffee :name!": "Bedankt voor het melden dat er geen koffie meer is :name!",
+  "Invalid coffee condition, please use one of the following: :conditions": "Ongeldige koffieconditie, gebruik een van de volgende: :conditions",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

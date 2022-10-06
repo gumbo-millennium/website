@@ -48,6 +48,7 @@ return [
                 App\Bots\Commands\SackCommand::class,
                 App\Bots\Commands\WebcamCommand::class,
                 App\Bots\Commands\StartCommand::class,
+                App\Bots\Commands\CoffeeConditionCommand::class,
             ],
         ],
     ],
