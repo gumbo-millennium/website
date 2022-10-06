@@ -5,6 +5,8 @@ declare(strict_types=1);
 return [
     'key' => env('MOLLIE_KEY', 'test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
 
+    'org_key' => env('MOLLIE_ORG_KEY', 'test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
+
     // If you intend on using Mollie Connect, place the following in the 'config/services.php'
     // 'mollie' => [
     //     'client_id'     => env('MOLLIE_CLIENT_ID', 'app_xxx'),
