@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
 
         // Expunge outdated non-critical data daily
         $schedule->command('avg:flush')->daily();
+        $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
 
         // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();
