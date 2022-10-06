@@ -10,6 +10,11 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 trait HasOnlyHostedEnrollments
 {
+    public function getCacheKey(NovaRequest $request)
+    {
+        return sprintf('%s.%s', parent::getCacheKey($request), $request->user()->id);
+    }
+
     /**
      * Returns a query for all enrollments this user can see.
      */
@@ -28,10 +33,5 @@ trait HasOnlyHostedEnrollments
 
         // User only has a subset of queries, filter it
         return $query->whereIn('activity_id', $user->getHostedActivityIdQuery());
-    }
-
-    public function getCacheKey(NovaRequest $request)
-    {
-        return sprintf('%s.%s', parent::getCacheKey($request), $request->user()->id);
     }
 }
