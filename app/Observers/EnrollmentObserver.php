@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
-use App\Jobs\GoogleWallet as GoogleWalletJobs;
+use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
 use App\Services\Google\WalletService;
@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\Date;
  */
 class EnrollmentObserver
 {
-    public function __construct(private WalletService $walletService)
-    {
-        //
-    }
-
     /**
      * Ensure an expire date is present if required.
      */
@@ -48,22 +43,10 @@ class EnrollmentObserver
     }
 
     /**
-     * Make sure a Google Wallet EventTicketObject is created after an enrollment is created.
+     * Make sure the Google Wallet integration works properly.
      */
-    public function created(Enrollment $enrollment): void
+    public function saved(Enrollment $enrollment): void
     {
-        if ($this->walletService->isEnabled()) {
-            GoogleWalletJobs\CreateEventTicketObjectJob::dispatch($enrollment);
-        }
-    }
-
-    /**
-     * Make sure the Google Wallet EventTicketObject for this enrollment is updated after the activity is updated.
-     */
-    public function updated(Enrollment $enrollment): void
-    {
-        if ($this->walletService->isEnabled()) {
-            GoogleWalletJobs\UpdateEventTicketObjectJob::dispatch($enrollment);
-        }
+        UpdateGoogleWalletResource::dispatch($enrollment);
     }
 }
