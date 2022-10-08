@@ -198,6 +198,9 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
     // Home
     Route::get('/', [Account\ProfileController::class, 'index'])->name('index');
 
+    // Create basic enrollment
+    Route::get('/tickets', [Account\TicketController::class, 'index'])->name('tickets');
+
     // Urls
     Route::get('/api-tokens', [Account\ApiTokenController::class, 'index'])->name('tokens.index');
     Route::post('/api-tokens', [Account\ApiTokenController::class, 'store'])->name('tokens.store');

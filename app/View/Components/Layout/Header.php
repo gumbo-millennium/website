@@ -32,6 +32,11 @@ class Header extends Component
                 'icon' => 'solid/user',
             ],
             [
+                'title' => 'Mijn tickets',
+                'href' => route('account.tickets'),
+                'icon' => 'solid/ticket-alt',
+            ],
+            [
                 'title' => 'Mijn wist-je-datjes',
                 'href' => route('account.quotes'),
                 'icon' => 'solid/comment-dots',
