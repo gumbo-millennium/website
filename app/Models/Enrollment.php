@@ -376,6 +376,17 @@ class Enrollment extends Model implements Payable
     }
 
     /**
+     * @param Builder<self> $query
+     */
+    public function scopeStable(Builder $query): void
+    {
+        $query->whereState('state', [
+            States\Confirmed::class,
+            States\Paid::class,
+        ]);
+    }
+
+    /**
      * Filter by the given user.
      */
     public function scopeForUser(Builder $query, User|int $user): void

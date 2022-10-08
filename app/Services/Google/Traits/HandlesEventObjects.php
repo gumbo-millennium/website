@@ -33,15 +33,10 @@ trait HandlesEventObjects
         // Try to fetch the event class
         $existing = $this->findEventObject($eventObject);
 
-        try {
-            return $this->updateEventObject($eventObject, $existing);
-        } catch (ServiceException $e) {
-            if ($e->getCode() === 404) {
-                return $this->createEventObject($eventObject);
-            }
-
-            throw $e;
-        }
+        // If it exists, update it
+        return $existing
+            ? $this->updateEventObject($eventObject, $existing)
+            : $this->createEventObject($eventObject, $existing);
     }
 
     /**
@@ -74,15 +69,9 @@ trait HandlesEventObjects
         $eventClass = $eventObject->class;
         $objectState = $this->determineProperState($eventObject);
 
-        // Show barcode if the event start time is within 9 hours from now (or in the past)
-        $shouldShowBarcode = $eventClass->start_time->isBefore(Date::now()->addHours(9));
-
         return [
             'id' => $eventObject->wallet_id,
             'classId' => $eventClass->wallet_id,
-            'reservationInfo' => [
-                'confirmationCode' => $eventObject->ticket_number,
-            ],
             'ticketHolderName' => $eventObject->owner->name,
             'ticketNumber' => $eventObject->ticket_number,
             'ticketType' => [
@@ -96,11 +85,11 @@ trait HandlesEventObjects
                 'currencyCode' => 'EUR',
             ],
             'state' => $objectState,
-            'barcode' => $shouldShowBarcode && $eventObject->barcode ? [
+            'barcode' => [
                 'type' => 'QR_CODE',
                 'renderEncoding' => 'UTF_8',
                 'value' => $eventObject->barcode,
-            ] : null,
+            ],
             'validTimeInterval' => [
                 'start' => [
                     'date' => $eventClass->start_time->clone()->subHours(6)->toIso8601String(),

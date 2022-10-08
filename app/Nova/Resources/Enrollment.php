@@ -190,7 +190,8 @@ class Enrollment extends Resource
     {
         return [
             (new CancelEnrollment())
-                ->onlyOnTableRow()
+                ->showInline()
+                ->showOnDetail()
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
                 ->cancelButtonText('Niet annuleren')
                 ->confirmButtonText('Inschrijving annuleren')
@@ -204,7 +205,8 @@ class Enrollment extends Resource
                     return $request->user()->can($action, $enrollment);
                 }),
             (new TransferEnrollment())
-                ->onlyOnTableRow()
+                ->showInline()
+                ->showOnDetail()
                 ->confirmText('Weet je zeker dat je deze inschrijving wil overschrijven naar een andere gebruiker?')
                 ->cancelButtonText('Annuleren')
                 ->confirmButtonText('Inschrijving overschrijven')

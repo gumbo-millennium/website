@@ -38,7 +38,9 @@ trait HandlesModels
             'end_time' => $activity->end_date,
             'uri' => route('activity.show', $activity),
             'hero_image' => $activity->poster ? Image::make($activity->poster)->preset('social')->getUrl() : null,
-        ])->save();
+        ]);
+
+        $eventClass->save();
 
         return $eventClass;
     }
@@ -50,7 +52,7 @@ trait HandlesModels
     protected function buildEventObjectForEnrollment(Enrollment $enrollment): EventObject
     {
         $activity = $enrollment->activity;
-        $eventObject = EventClass::forSubject($enrollment)->first();
+        $eventObject = EventObject::forSubject($enrollment)->first();
 
         if (! $eventObject) {
             $eventObject = new EventObject();
@@ -69,8 +71,10 @@ trait HandlesModels
             'ticket_type' => $enrollment->ticket->title,
 
             // Only provide barcode if the enrollment is confirmed.
-            'barcode' => $enrollment->state instanceof Confirmed ? $enrollment->ticket_code : null,
-        ])->save();
+            'barcode' => $enrollment->ticket_code,
+        ]);
+
+        $eventObject->save();
 
         return $eventObject;
     }

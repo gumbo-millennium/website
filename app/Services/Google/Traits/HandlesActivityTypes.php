@@ -21,7 +21,7 @@ trait HandlesActivityTypes
 
     abstract public function writeEventObject(EventObject $eventObject): EventObject;
 
-    abstract public function getImportUrl(User $user, EventObject $eventObject): string;
+    abstract public function getImportUrl(EventObject $eventObject): string;
 
     /**
      * Writes a given Activity to the Google Wallet API.
@@ -78,10 +78,10 @@ trait HandlesActivityTypes
             return null;
         }
 
-        try {
-            return $this->getImportUrl($user, $eventObject);
-        } catch (RuntimeException) {
-            return null;
-        }
+        // try {
+            return $this->getImportUrl($eventObject);
+        // } catch (RuntimeException) {
+            // return null;
+        // }
     }
 }

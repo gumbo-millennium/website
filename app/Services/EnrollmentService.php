@@ -142,7 +142,7 @@ class EnrollmentService implements EnrollmentServiceContract
         $enrollment->user()->associate($reciever);
 
         // Check expire, making sure it's at least 12 hours
-        if (! $enrollment->state->isStable()) {
+        if (! $enrollment->is_stable) {
             $enrollment->expire = max($enrollment->expire, now()->addHours(12));
         }
 
@@ -170,10 +170,10 @@ class EnrollmentService implements EnrollmentServiceContract
      */
     public function updateTicketCode(Enrollment $enrollment): void
     {
-        // Try to generate a new code 10 times
-        for ($i = 0; $i < 10; $i++) {
+        // Try to generate a new code 4 times
+        for ($i = 0; $i < 4; $i++) {
             try {
-                $enrollment->ticket_code = Str::upper(Str::random(8));
+                $enrollment->ticket_code = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
             } catch (QueryException $exception) {
                 if (Str::contains(Str::lower($exception->getMessage()), 'unqiue')) {
                     continue;

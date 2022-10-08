@@ -67,7 +67,7 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 
         // Bind two sub-apis via the container, to allow for test overrides
         $this->app->bind('google_wallet_eventticketclass_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketclass);
-        $this->app->bind('google_wallet_eventticketobjects_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketobjects);
+        $this->app->bind('google_wallet_eventticketobjects_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketobject);
 
         // Mail
         $this->app->singleton(MailListHandler::class, GoogleMailListService::class);

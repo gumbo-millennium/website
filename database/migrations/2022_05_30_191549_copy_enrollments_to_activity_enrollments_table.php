@@ -52,15 +52,15 @@ class CopyEnrollmentsToActivityEnrollmentsTable extends Migration
         $oldIdNewIdMap = DB::table('activity_enrollments')->get([
             'id',
             'previous_id',
-        ])->pluck('previous_id', 'id')->toArray();
+        ])->only('previous_id', 'id')->toArray();
 
         // Run query for each created enrollment
-        foreach ($oldIdNewIdMap as $uuid => $numericId) {
+        foreach ($oldIdNewIdMap as $data) {
             DB::table('payments')->where([
                 'payable_type' => Enrollment::class,
-                'payable_id' => $uuid,
+                'payable_id' => $data->id,
             ])->update([
-                'payable_id' => $numericId,
+                'payable_id' => $data->previous_id,
             ]);
         }
     }

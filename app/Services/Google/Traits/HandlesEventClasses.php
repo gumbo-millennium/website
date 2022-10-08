@@ -6,9 +6,11 @@ namespace App\Services\Google\Traits;
 
 use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Models\GoogleWallet\EventClass;
+use Config;
 use Google_Service_Exception as ServiceException;
 use Google_Service_Walletobjects_EventTicketClass  as EventTicketClass;
 use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\URL;
 use RuntimeException;
 
@@ -44,7 +46,7 @@ trait HandlesEventClasses
      */
     protected function buildTicketClassData(EventClass $eventClass): array
     {
-        return [
+        $data = [
             'id' => $eventClass->wallet_id,
             'eventId' => $eventClass->wallet_id,
             'eventName' => [
@@ -100,11 +102,6 @@ trait HandlesEventClasses
                 'uri' => URL::secure(route('home')),
             ],
             'countryCode' => 'NL',
-            'heroImage' => $eventClass->hero_image ? [
-                'sourceUri' => [
-                    'uri' => URL::secure($eventClass->hero_image),
-                ],
-            ] : null,
             'hexBackgroundColor' => '#006b00',
             'securityAnimation' => [
                 'animationType' => 'FOIL_SHIMMER',
@@ -114,6 +111,30 @@ trait HandlesEventClasses
                 'url' => URL::secure(route('api.webhooks.google-wallet')),
             ],
         ];
+
+        if (! Arr::get($eventClass, 'venue.address')) {
+            $defaultAddress = (object) Config::get('gumbo.fallbacks.address');
+            Arr::set($data, 'venue.address', [
+                'defaultValue' => [
+                    'language' => 'nl',
+                    'value' => <<<ADDRESS
+                    {$defaultAddress->line1}
+                    {$defaultAddress->postal_code} {$defaultAddress->city}
+                    {$defaultAddress->country}
+                    ADDRESS,
+                ],
+            ]);
+        }
+
+        if ($eventClass['heroImage']) {
+            $data['heroImage'] = [
+                'sourceUri' => [
+                    'uri' => URL::secure($eventClass->hero_image),
+                ],
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -169,8 +190,11 @@ trait HandlesEventClasses
             throw $exception;
         }
 
-        $eventClass->review_status = ReviewStatus::tryFrom($result->getReviewStatus()) ?? ReviewStatus::Unspecficied;
-        $eventClass->review = $result->getReviewStatus();
+        $reviewStatus = ReviewStatus::tryFrom($result->getReviewStatus()) ?? ReviewStatus::Unspecficied;
+        $review = $reviewStatus === ReviewStatus::Rejected ? Arr::wrap($result->getReview()) : null;
+
+        $eventClass->review_status = $reviewStatus;
+        $eventClass->review = $review;
         $eventClass->save();
 
         return $eventClass;

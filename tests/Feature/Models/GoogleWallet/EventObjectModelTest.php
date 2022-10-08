@@ -28,6 +28,6 @@ class EventObjectModelTest extends TestCase
         $class->save();
 
         $this->assertNotNull($class->wallet_id);
-        $this->assertStringContainsString(sprintf('AC%04d', $activity->id), $class->wallet_id);
+        $this->assertStringContainsString(sprintf('AC%06d', $activity->id), $class->wallet_id);
     }
 }

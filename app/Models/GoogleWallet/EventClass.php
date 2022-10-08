@@ -58,6 +58,7 @@ class EventClass extends Model
      */
     protected $casts = [
         'review_status' => ReviewStatus::class,
+        'review' => 'json',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
     ];
