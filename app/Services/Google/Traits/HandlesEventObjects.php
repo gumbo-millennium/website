@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
-use App\Enums\Models\GoogleWallet\ObjectState;
-use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventObject;
 use Brick\Money\Money;
 use Google_Service_Exception as ServiceException;
 use Google_Service_Walletobjects_EventTicketObject  as EventTicketObject;
 use Google_Service_Walletobjects_Eventticketobject_Resource as EventTicketObjectResource;
-use Illuminate\Support\Facades\Date;
 
 trait HandlesEventObjects
 {
@@ -40,34 +37,12 @@ trait HandlesEventObjects
     }
 
     /**
-     * Determine the proper state of this EventObject.
-     */
-    protected function determineProperState(EventObject $object): ObjectState
-    {
-        if ($object->class->end_date < Date::now()) {
-            return ObjectState::Expired;
-        }
-
-        $subject = $object->subject;
-        if ($subject instanceof Enrollment) {
-            return match (true) {
-                $subject->trashed() => ObjectState::Inactive,
-                $subject->consumed() => ObjectState::Completed,
-                default => ObjectState::Active,
-            };
-        }
-
-        return ObjectState::Inactive;
-    }
-
-    /**
      * Returns an array of data that's expected to be present on the event object, to
      * allow for PATCH updates.
      */
     protected function buildTicketObjectData(EventObject $eventObject): array
     {
         $eventClass = $eventObject->class;
-        $objectState = $this->determineProperState($eventObject);
 
         return [
             'id' => $eventObject->wallet_id,
@@ -84,7 +59,7 @@ trait HandlesEventObjects
                 'micros' => ($eventObject->value ?? Money::zero('EUR'))->getAmount()->toFloat() * 1_000_000,
                 'currencyCode' => 'EUR',
             ],
-            'state' => $objectState,
+            'state' => $eventObject->state->value,
             'barcode' => [
                 'type' => 'QR_CODE',
                 'renderEncoding' => 'UTF_8',

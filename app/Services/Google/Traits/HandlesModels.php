@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
+use App\Enums\Models\GoogleWallet\ObjectState;
 use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Fluent\Image;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventClass;
 use App\Models\GoogleWallet\EventObject;
+use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
 use LogicException;
 
@@ -64,14 +66,24 @@ trait HandlesModels
             $eventObject->class()->associate($eventClass);
         }
 
+        $properState = ObjectState::Inactive;
+        if ($enrollment->consumed()) {
+            $properState = ObjectState::Completed;
+        } elseif ($enrollment->trashed() || $enrollment->state instanceof Cancelled) {
+            $properState = ObjectState::Expired;
+        } elseif ($enrollment->state instanceof Confirmed) {
+            $properState = ObjectState::Active;
+        }
+
         // Set data and save object
         $eventObject->fill([
             'value' => money_value($enrollment->total_price),
             'ticket_number' => $enrollment->id,
             'ticket_type' => $enrollment->ticket->title,
 
-            // Only provide barcode if the enrollment is confirmed.
+            // Always provide the barcode.
             'barcode' => $enrollment->ticket_code,
+            'state' => $properState,
         ]);
 
         $eventObject->save();
