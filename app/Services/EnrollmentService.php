@@ -193,7 +193,7 @@ class EnrollmentService implements EnrollmentServiceContract
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size($size)
             ->margin(0)
-            ->data(Str::ascii($enrollment->enrollment_code))
+            ->data(Str::ascii($enrollment->ticket_code))
             ->build()
             ->getDataUri();
     }

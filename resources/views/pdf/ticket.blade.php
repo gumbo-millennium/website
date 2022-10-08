@@ -33,7 +33,7 @@
           <img src="{{ Enroll::getTicketQrCode($enrollment) }}" alt="QR Code" height="200" width="200">
         </div>
 
-        <data class="font-bold block uppercase font-mono">{{ $enrollment->enrollment_code }}</data>
+        <data class="font-bold block uppercase font-mono">{{ $enrollment->ticket_code }}</data>
       </x-pdf.ticket-box>
     </div>
 

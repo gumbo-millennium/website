@@ -44,7 +44,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|string $ticket_code
  * @property null|array $data
  * @property-read \App\Models\Activity $activity
- * @property-read null|string $enrollment_code
  * @property-read null|array $form
  * @property-read mixed $form_data
  * @property-read bool $has_been_paid
@@ -396,15 +395,6 @@ class Enrollment extends Model implements Payable
         }
 
         $query->whereHas('user', fn (Builder $query) => $query->where('id', $user));
-    }
-
-    public function getEnrollmentCodeAttribute(): ?string
-    {
-        if (! $this->activity?->id || ! $this->ticket_code) {
-            return null;
-        }
-
-        return sprintf('GMT-%03d%s', $this->activity->id, $this->ticket_code ?? 'TEST');
     }
 
     public function getPdfPathAttribute(): string
