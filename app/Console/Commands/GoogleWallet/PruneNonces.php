@@ -16,7 +16,7 @@ class PruneNonces extends GoogleWalletCommand
      *
      * @var string
      */
-    protected $signature = 'wallet:prune-nonces';
+    protected $signature = 'google-wallet:prune-nonces';
 
     /**
      * The console command description.
