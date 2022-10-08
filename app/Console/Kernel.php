@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         // Expunge data past it's retention period
         $schedule->command('avg:flush')->daily();
         $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
+        $schedule->command('wallet:prune-nonces')->daily();
         $schedule->command('telescope:prune')->daily();
         $schedule->command('model:prune')->weeklyOn(6, '22:00');
 

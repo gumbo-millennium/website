@@ -141,6 +141,7 @@ return [
     'retention' => [
         'data-exports' => 'P30D',
         'enrollment-data' => 'P6M',
+        'wallet-nonces' => 'PT6H',
     ],
 
     /**

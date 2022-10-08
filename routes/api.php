@@ -43,3 +43,6 @@ Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name(
 
 // Register ical route
 Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->name('calendar.show');
+
+// Register Google Wallet webhook URL
+Route::post('/webhooks/google-wallet', [Api\WebhookController::class, 'googleWallet'])->name('webhooks.google-wallet');
