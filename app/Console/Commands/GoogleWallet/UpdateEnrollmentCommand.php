@@ -14,14 +14,14 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 
-class WriteEnrollmentCommand extends GoogleWalletCommand
+class UpdateEnrollmentCommand extends GoogleWalletCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'google-wallet:write-enrollment {enrollment}';
+    protected $signature = 'google-wallet:enrollment {enrollment}';
 
     /**
      * The console command description.

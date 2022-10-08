@@ -103,9 +103,6 @@ trait HandlesEventClasses
             ],
             'countryCode' => 'NL',
             'hexBackgroundColor' => '#006b00',
-            'securityAnimation' => [
-                'animationType' => '',
-            ],
             'MultipleDevicesAndHoldersAllowedStatus' => 'ONE_USER_ALL_DEVICES',
             'viewUnlockRequirement' => 'UNLOCK_REQUIRED_TO_VIEW',
             'callbackOptions' => [
