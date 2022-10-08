@@ -26,6 +26,8 @@ class CopyEnrollmentsToActivityEnrollmentsTable extends Migration
         'expire',
         'transfer_secret',
         'ticket_code',
+        'consumed_at',
+        'consumed_by_id',
         'data',
     ];
 

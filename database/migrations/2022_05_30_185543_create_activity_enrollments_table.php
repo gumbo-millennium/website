@@ -29,6 +29,9 @@ class CreateActivityEnrollmentsTable extends Migration
 
             $table->string('transfer_secret')->nullable();
             $table->string('ticket_code', 16)->nullable();
+            $table->timestamp('consumed_at')->nullable();
+            $table->foreignId('consumed_by_id')->nullable()->constrained('users')->nullOnDelete();
+
             $table->mediumText('data')->nullable();
 
             $table->timestamps();

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\GoogleWallet;
 
+use App\Helpers\Str;
 use App\Jobs\GoogleWallet\UpdateEventTicketClassJob;
 use App\Models\Activity;
+use App\Models\GoogleWallet\EventClass;
 use App\Services\Google\WalletService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
@@ -17,7 +19,7 @@ class WriteActivityCommand extends GoogleWalletCommand
      *
      * @var string
      */
-    protected $signature = 'google-wallet:write-activity {activity}';
+    protected $signature = 'google-wallet:activity {activity}';
 
     /**
      * The console command description.
@@ -35,14 +37,8 @@ class WriteActivityCommand extends GoogleWalletCommand
     {
         $activity = $this->argument('activity');
         $activity = Activity::query(fn ($query) => $query->orWhere([
-            [
-                'id',
-                $activity,
-            ],
-            [
-                'slug',
-                $activity,
-            ],
+            ['id',$activity],
+            ['slug',$activity],
         ]))->first();
 
         if (! $activity) {
@@ -52,33 +48,20 @@ class WriteActivityCommand extends GoogleWalletCommand
         }
 
         // Check state
-        if ($walletService->makeActivityTicketClass($activity)) {
-            $this->line('Updating existing EventTicketClass...');
+        $exists = EventClass::forSubject($activity)->exists();
+        $action = $exists ? "Update" : "Create";
 
-            try {
-                UpdateEventTicketClassJob::dispatchSync($activity);
-
-                $this->line('Update <info>OK</info>');
-
-                return Command::SUCCESS;
-            } catch (GuzzleException $e) {
-                $this->line('HTTP error while updating!');
-                $this->error($e->getMessage());
-
-                return Command::FAILURE;
-            }
-        }
-
-        $this->line('Creating new EventTicketClass...');
+        // Check state
+        $this->line("Starting $action of EventTicketClass...");
 
         try {
-            UpdateEventTicketClassJob::dispatchSync($activity);
+            $walletService->writeEventClassForActivity($activity);
 
-            $this->line('Create <info>OK</info>');
+            $this->line(Str::ucfirst("$action <info>OK</>"));
 
             return Command::SUCCESS;
         } catch (GuzzleException $e) {
-            $this->line('HTTP error while creating!');
+            $this->line(Str::ucfirst("$action <fg=red>FAIL</>"));
             $this->error($e->getMessage());
 
             return Command::FAILURE;

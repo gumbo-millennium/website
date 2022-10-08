@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\GoogleWallet;
 
+use App\Helpers\Str;
 use App\Jobs\GoogleWallet\UpdateEventTicketClassJob;
 use App\Models\Activity;
+use App\Models\Enrollment;
+use App\Models\GoogleWallet\EventObject;
 use App\Services\Google\WalletService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
@@ -18,14 +21,14 @@ class WriteEnrollmentCommand extends GoogleWalletCommand
      *
      * @var string
      */
-    protected $signature = 'google-wallet:write-enrollment {activity} {enrollment}';
+    protected $signature = 'google-wallet:write-enrollment {enrollment}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Writes the Google Wallet Event Ticket Class for the given Activity (creates or updates)';
+    protected $description = 'Writes the Google Wallet Event Ticket Object for the given Enrollment ID (creates or updates)';
 
     /**
      * Execute the console command.
@@ -34,59 +37,30 @@ class WriteEnrollmentCommand extends GoogleWalletCommand
      */
     public function handle(WalletService $walletService)
     {
-        $activityArgument = $this->argument('activity');
-        $activity = Activity::query(fn (Builder $query) => $query->orWhere([
-            ['id', $activityArgument],
-            ['slug', $activityArgument],
-        ]))->first();
-
-        if (! $activity) {
-            $this->error("Cannot find activity <fg=white>{$activityArgument}</>.");
-
-            return Command::FAILURE;
-        }
-
-        $enrollmentArgument = $this->argument('enrollment');
-        $enrollment = $activity->enrollments()->query(
-            fn (Builder $query) => $query
-                ->where('id', $enrollmentArgument)
-                ->orWhereHas('user', fn (Builder $query) => $query->where(['email', $enrollmentArgument])),
-        )->first();
+        $enrollment = $this->argument('enrollment');
+        $enrollment = Enrollment::find($enrollment);
 
         if (! $enrollment) {
-            $this->error("Cannot find enrollment <fg=white>{$enrollmentArgument}</> in activity <fg=gray>{$activity->name}</>");
+            $this->error('Enrollment not found');
 
-            return Command::FAILURE;
+            return 1;
         }
 
         // Check state
-        if ($walletService->getEventTicketClass($activity)) {
-            $this->line('Updating existing EventTicketClass...');
+        $exists = EventObject::forSubject($enrollment)->exists();
+        $action = $exists ? "Update" : "Create";
 
-            try {
-                UpdateEventTicketClassJob::dispatchSync($activity);
-
-                $this->line('Update <info>OK</info>');
-
-                return Command::SUCCESS;
-            } catch (GuzzleException $e) {
-                $this->line('HTTP error while updating!');
-                $this->error($e->getMessage());
-
-                return Command::FAILURE;
-            }
-        }
-
-        $this->line('Creating new EventTicketClass...');
+        // Check state
+        $this->line("Starting $action of EventTicketObject...");
 
         try {
-            UpdateEventTicketClassJob::dispatchSync($activity);
+            $walletService->writeEventObjectForEnrollment($enrollment);
 
-            $this->line('Create <info>OK</info>');
+            $this->line(Str::ucfirst("$action <info>OK</>"));
 
             return Command::SUCCESS;
         } catch (GuzzleException $e) {
-            $this->line('HTTP error while creating!');
+            $this->line(Str::ucfirst("$action <fg=red>FAIL</>"));
             $this->error($e->getMessage());
 
             return Command::FAILURE;
