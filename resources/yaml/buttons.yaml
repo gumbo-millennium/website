@@ -7,3 +7,4 @@ styles:
     light: border-transparent text-brand-700 bg-brand-50 hover:bg-brand-100 focus:ring-brand-500
     danger: border-transparent text-red-700 bg-red-100 hover:bg-red-200 focus:ring-red-500
     outline: border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:ring-brand-500
+    night: border-transparent text-white bg-gray-900 hover:bg-gray-800 focus:ring-brand-500

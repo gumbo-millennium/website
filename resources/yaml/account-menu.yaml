@@ -2,6 +2,10 @@
   title: Account
   icon: solid/house
 
+- route: account.tickets
+  title: Tickets
+  icon: solid/ticket-alt
+
 - route: account.profile.edit
   title: Profile
   icon: solid/user

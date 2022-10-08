@@ -4,14 +4,21 @@
     aan Google Wallet, of de QR code bekijken.
   </p>
 
-    <x-card-grid>
+    <x-card-grid narrow>
       {{-- Add all events --}}
       @foreach ($activities as $activity)
         <x-cards.activity :activity="$activity">
           <x-slot name="footer">
-            <x-button href="{{ route('enroll.show', $activity) }}" class="w-full">
-              Beheren
-            </x-button>
+            <div class="flex flex-col lg:flex-row w-full gap-4">
+              <x-button href="{{ route('enroll.show', $activity) }}" class="w-full" :disabled="$activity->end_date < now()">
+                Beheren
+              </x-button>
+              @if ($googleWalletUrls->has($activity->id))
+                <x-button href="{{ $googleWalletUrls->get($activity->id) }}" target="_blank" style="night" class="w-full">
+                  Add to Google Wallet
+                </x-button>
+              @endif
+            </div>
           </x-slot>
         </x-cards.activity>
       @endforeach

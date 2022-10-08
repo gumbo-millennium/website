@@ -16,8 +16,9 @@
     </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
-
-        @include('enrollments.partials.enrollment-data')
+        <div class="enroll-card prose">
+            @include('enrollments.partials.enrollment-data')
+        </div>
 
         <hr class="mb-8 bg-gray-200" />
 

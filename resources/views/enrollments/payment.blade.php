@@ -16,24 +16,25 @@
     </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
+        <div class="enroll-card">
+            @include('enrollments.partials.enrollment-data')
 
-        @include('enrollments.partials.enrollment-data')
+          <hr class="my-2 bg-gray-400" />
 
-        <hr class="my-8 bg-gray-400" />
+          <form formaction="{{ route('enroll.payStore', [$activity]) }}" method="POST">
+              @csrf
 
-        <form formaction="{{ route('enroll.payStore', [$activity]) }}" method="POST">
-            @csrf
+              <div class="flex flex-col gap-4 md:flex-row-reverse" method="POST">
+                  <button type="submit" class="w-full btn m-0 btn--brand text-center">
+                      @lang('Continue')
+                  </button>
 
-            <div class="flex flex-col gap-4 md:flex-row-reverse" method="POST">
-                <button type="submit" class="w-full btn btn--small m-0 btn--brand text-center">
-                    @lang('Continue')
-                </button>
-
-                <button formnovalidate formaction="{{ route('enroll.cancel', [$activity]) }}" type="submit" class="w-full btn btn--small m-0 text-center">
-                    @lang('Unenroll')
-                </button>
-            </div>
-        </form>
+                  <button formnovalidate formaction="{{ route('enroll.cancel', [$activity]) }}" type="submit" class="w-full btn m-0 text-center">
+                      @lang('Unenroll')
+                  </button>
+              </div>
+          </form>
+        </div>
     </div>
 </div>
 @endsection

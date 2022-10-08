@@ -38,7 +38,7 @@ class TicketController extends Controller
                 }
 
                 // Find event object
-                $importUrl = $walletService->getImportUrl($user, $activity->enrollment);
+                $importUrl = $walletService->getImportUrlForEnrollment($user, $activity->enrollment);
                 if ($importUrl) {
                     $googleWalletUrls->put($activity->id, $importUrl);
                 }
