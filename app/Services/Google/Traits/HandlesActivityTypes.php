@@ -78,6 +78,11 @@ trait HandlesActivityTypes
             return null;
         }
 
+        // Ensure the state is valid and the token isn't consumed
+        if (! $enrollment->is_stable || $enrollment->consumed()) {
+            return null;
+        }
+
         try {
             return $this->getImportUrl($eventObject);
         } catch (RuntimeException) {

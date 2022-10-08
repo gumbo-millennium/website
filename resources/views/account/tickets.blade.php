@@ -11,10 +11,10 @@
           <x-slot name="footer">
             <div class="flex flex-col lg:flex-row w-full gap-4">
               <x-button href="{{ route('enroll.show', $activity) }}" class="w-full" :disabled="$activity->end_date < now()">
-                @if ($activiy->is_stable)
-                Beheren
+                @if ($activity->is_stable)
+                  Beheren
                 @else
-                Afronden
+                  Afronden
                 @endif
               </x-button>
               @if ($googleWalletUrls->has($activity->id))
