@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
 use App\Models\Activity;
-use App\Services\Google\WalletService;
 use Illuminate\Support\Facades\Date;
 
 /**

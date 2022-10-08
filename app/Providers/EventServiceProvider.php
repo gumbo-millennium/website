@@ -11,19 +11,7 @@ use App\Listeners\CheckConscriboWhenVerified;
 use App\Listeners\EnrollmentStateListener;
 use App\Listeners\MediaUploadListener;
 use App\Models;
-use App\Models\Activity;
-use App\Models\Enrollment;
-use App\Models\FileBundle;
-use App\Models\NewsItem;
-use App\Models\Sponsor;
-use App\Models\User;
 use App\Observers;
-use App\Observers\ActivityObserver;
-use App\Observers\EnrollmentObserver;
-use App\Observers\FileBundleObserver;
-use App\Observers\NewsItemObserver;
-use App\Observers\SponsorObserver;
-use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -68,12 +56,12 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         // Register observers
-        Activity::observe(ActivityObserver::class);
-        Enrollment::observe(EnrollmentObserver::class);
-        FileBundle::observe(FileBundleObserver::class);
-        NewsItem::observe(NewsItemObserver::class);
-        Sponsor::observe(SponsorObserver::class);
-        User::observe(UserObserver::class);
+        Models\Activity::observe(Observers\ActivityObserver::class);
+        Models\Enrollment::observe(Observers\EnrollmentObserver::class);
+        Models\FileBundle::observe(Observers\FileBundleObserver::class);
+        Models\NewsItem::observe(Observers\NewsItemObserver::class);
+        Models\Sponsor::observe(Observers\SponsorObserver::class);
+        Models\User::observe(Observers\UserObserver::class);
 
         Models\Payment::observe(Observers\PaymentObserver::class);
     }

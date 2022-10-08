@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers;
+use App\Http\Controllers\Account;
 use App\Http\Controllers\Activities;
 use App\Http\Controllers\Admin as AdminControllers;
 use App\Http\Controllers\Auth;
@@ -195,35 +196,35 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 // My account
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
-    Route::get('/', 'Account\ProfileController@index')->name('index');
+    Route::get('/', [Account\ProfileController::class, 'index'])->name('index');
 
     // Urls
-    Route::get('/api-tokens', 'Account\ApiTokenController@index')->name('tokens.index');
-    Route::post('/api-tokens', 'Account\ApiTokenController@store')->name('tokens.store');
-    Route::delete('/api-tokens', 'Account\ApiTokenController@destroy')->name('tokens.destroy');
-    Route::get('/api-tokens/aanmaken', 'Account\ApiTokenController@create')->name('tokens.create');
+    Route::get('/api-tokens', [Account\ApiTokenController::class, 'index'])->name('tokens.index');
+    Route::post('/api-tokens', [Account\ApiTokenController::class, 'store'])->name('tokens.store');
+    Route::delete('/api-tokens', [Account\ApiTokenController::class, 'destroy'])->name('tokens.destroy');
+    Route::get('/api-tokens/aanmaken', [Account\ApiTokenController::class, 'create'])->name('tokens.create');
 
     // Edit profile
-    Route::get('/profiel', 'Account\ProfileController@edit')->name('profile.edit');
-    Route::patch('/profiel', 'Account\ProfileController@update')->name('profile.update');
+    Route::get('/profiel', [Account\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profiel', [Account\ProfileController::class, 'update'])->name('profile.update');
 
     // Edit password
-    Route::get('/wachtwoord', 'Account\PasswordController@edit')->name('password.edit');
-    Route::post('/wachtwoord', 'Account\PasswordController@update')->name('password.update');
+    Route::get('/wachtwoord', [Account\PasswordController::class, 'edit'])->name('password.edit');
+    Route::post('/wachtwoord', [Account\PasswordController::class, 'update'])->name('password.update');
 
     // Quotes
-    Route::get('/wist-je-datjes', 'Account\BotQuoteController@index')->name('quotes');
-    Route::delete('/wist-je-datjes', 'Account\BotQuoteController@destroy')->name('quotes.delete');
+    Route::get('/wist-je-datjes', [Account\BotQuoteController::class, 'index'])->name('quotes');
+    Route::delete('/wist-je-datjes', [Account\BotQuoteController::class, 'destroy'])->name('quotes.delete');
 
     // Permissions
-    Route::get('/toestemmingen', 'Account\GrantsController@edit')->name('grants');
-    Route::post('/toestemmingen', 'Account\GrantsController@update');
+    Route::get('/toestemmingen', [Account\GrantsController::class, 'edit'])->name('grants');
+    Route::post('/toestemmingen', [Account\GrantsController::class, 'update']);
 
     // Telegram
-    Route::get('/telegram', 'Account\TelegramController@show')->name('tg.show');
-    Route::get('/telegram/connect', 'Account\TelegramController@create')->name('tg.link');
-    Route::post('/telegram/connect', 'Account\TelegramController@store');
-    Route::delete('/telegram/disconnect', 'Account\TelegramController@delete')->name('tg.unlink');
+    Route::get('/telegram', [Account\TelegramController::class, 'show'])->name('tg.show');
+    Route::get('/telegram/connect', [Account\TelegramController::class, 'create'])->name('tg.link');
+    Route::post('/telegram/connect', [Account\TelegramController::class, 'store']);
+    Route::delete('/telegram/disconnect', [Account\TelegramController::class, 'delete'])->name('tg.unlink');
 
     // Data Exports
     Route::get('/inzageverzoek', [Controllers\Account\DataExportController::class, 'index'])->name('export.index');

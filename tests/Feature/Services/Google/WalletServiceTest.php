@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Services\Google;
 
+use App\Facades\Enroll;
+use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\User;
@@ -42,20 +44,10 @@ class WalletServiceTest extends TestCase
 
         $user = User::factory()->create();
         $activity = Activity::factory()->withTickets()->create();
-        $enrollment = $activity->enrollments()->save(
-            Enrollment::factory()
-                ->for($user)
-                ->for($activity->tickets->first())
-                ->create(),
-        );
+        $this->actingAs($user);
 
-        $this->assertInstanceOf(WalletObjects\EventTicketClass::class, $service->makeActivityTicketClass($activity));
-        $this->assertInstanceOf(WalletObjects\EventTicketObject::class, $service->makeEnrollmentTicketObject($enrollment));
-    }
+        $enrollment = Enroll::createEnrollment($activity, $activity->tickets->first());
 
-    private function setTestObjectResponse(): void
-    {
-        $walletobjectsApiMock = $this->createMock(Google_Service_Walletobjects::class, fn ($mock) => $mock->shouldReceive(''));
-        $googleClientMock = mock(GoogleClient::class, fn ($mock) => $mock->shouldReceive('setApplicationName')->once());
+        Bus::assertDispatchedTimes(UpdateGoogleWalletResource::class, 2);
     }
 }

@@ -29,5 +29,6 @@
         <server name="SCOUT_DRIVER" value="null"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
         <server name="GOOGLE_AUTH_FILE" value="tests/Fixtures/google-auth.json" />
+        <server name="GOOGLE_WALLET_ENABLED" value="false" />
     </php>
 </phpunit>

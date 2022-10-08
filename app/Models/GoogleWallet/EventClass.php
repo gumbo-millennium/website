@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace App\Models\GoogleWallet;
 
 use App\Enums\Models\GoogleWallet\ReviewStatus;
-use App\Helpers\Str;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\URL;
-use LogicException;
 
 /**
  * A Google Wallet Event Class, which describes a single event,
@@ -86,27 +83,5 @@ class EventClass extends Model
     public function objects(): HasMany
     {
         return $this->hasMany(EventObject::class, 'class_id');
-    }
-
-    /**
-     * Create a proper random wallet ID.
-     * @throws LogicException
-     */
-    public function assignWalletId(): void
-    {
-        if ($this->exists) {
-            throw new LogicException('Cannot assign wallet ID to existing object');
-        }
-
-        // Create a proper ID, with some randomness.
-        // If creating for an Activity(id: 285), the ID will look like:
-        // AC0285skyu2ngt
-        $this->wallet_id = sprintf(
-            '%s_%s%04d%s',
-            Str::of(md5(URL::to('/')))->lower()->substr(0, 5),
-            Str::of(class_basename($this->subject))->studly()->upper()->substr(0, 2),
-            $this->subject->id,
-            Str::of(Str::random(8))->lower()->ascii(),
-        );
     }
 }

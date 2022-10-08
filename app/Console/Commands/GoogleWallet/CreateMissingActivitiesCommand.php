@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\GoogleWallet;
 
-use App\Jobs\GoogleWallet\CreateEventTicketClassJob;
+use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Models\Activity;
+use App\Models\GoogleWallet\EventClass;
 use App\Services\Google\WalletService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -41,36 +40,41 @@ class CreateMissingActivitiesCommand extends GoogleWalletCommand
     {
         $dryRun = $this->option('dry-run');
 
-        $expectedActivities = Activity::query(fn (Builder $query) => $query->orWhere([
-            ['start_date', '>', Date::today()->subMonths(2)],
-            ['end_date', '>', Date::today()->subMonths(2)],
-        ]))->get();
+        $expectedActivities = Activity::query()
+            ->where('start_date', '>', Date::today())
+            ->get();
 
-        $existingEventTicketClasses = Collection::make($walletService->listEventTicketClasses())
-            ->keyBy('id');
+        $walletClasses = EventClass::query()
+            ->whereHasMorph('subject', Activity::class)
+            ->whereIn('review_status', [ReviewStatus::Approved, ReviewStatus::Rejected])
+            ->get()
+            ->keyBy('subject_id');
 
         foreach ($expectedActivities as $activity) {
-            $activityClassId = $walletService->getActivityClassId($activity);
-            if ($existingEventTicketClasses->has($activityClassId)) {
+            if ($walletClasses->has($activity->id)) {
                 if ($dryRun) {
-                    $this->line("Activity {$activity->id}: <fg=gray>EventTicketClass exists</fg>");
+                    $this->line("Activity {$activity->id}: <fg=gray>EventTicketClass exists</>");
                 }
 
                 continue;
             }
 
             if ($dryRun) {
-                $this->line("Activity {$activity->id}: <fg=green>Will create EventTicketClass</fg>");
+                $this->line("Activity {$activity->id}: <fg=green>Will create EventTicketClass</>");
 
                 continue;
             }
 
             try {
                 $this->line("Activity {$activity->id}: Creating EventTicketClass...", null, OutputInterface::VERBOSITY_VERBOSE);
-                CreateEventTicketClassJob::dispatchSync($activity);
+
+                $result = $walletService->writeEventClassForActivity($activity);
+
                 $this->line("Activity {$activity->id}: <fg=green>EventTicketClass created succesfully</>");
+                $this->line("Activity {$activity->id}: <fg=green>EventTicketClass ID: {$result->id}</>");
             } catch (GuzzleException $exception) {
                 $this->error("HTTP error while creating EventTicketClass for activity {$activity->id}");
+
                 $this->line($exception->getMessage());
             }
         }

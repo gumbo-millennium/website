@@ -11,12 +11,12 @@ use App\Models\GoogleWallet\EventObject;
 use App\Models\States\Enrollment\Confirmed;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Services\Google\Traits\BuildsModels;
+use App\Services\Google\Traits\HandlesModels;
 use Tests\TestCase;
 
-class BuildsModelsTest extends TestCase
+class HandlesModelsTest extends TestCase
 {
-    use BuildsModels;
+    use HandlesModels;
 
     /**
      * Test if regular conversion works as expected from activities.

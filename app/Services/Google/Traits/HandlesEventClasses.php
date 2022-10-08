@@ -10,6 +10,7 @@ use Google_Service_Exception as ServiceException;
 use Google_Service_Walletobjects_EventTicketClass  as EventTicketClass;
 use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
 use Illuminate\Support\Facades\URL;
+use RuntimeException;
 
 trait HandlesEventClasses
 {
@@ -31,15 +32,10 @@ trait HandlesEventClasses
         // Try to fetch the event class
         $existing = $this->findEventClass($eventClass);
 
-        try {
-            return $this->updateEventClass($eventClass, $existing);
-        } catch (ServiceException $e) {
-            if ($e->getCode() === 404) {
-                return $this->createEventClass($eventClass);
-            }
-
-            throw $e;
-        }
+        // If it exists, update it
+        return $existing
+            ? $this->updateEventClass($eventClass, $existing)
+            : $this->createEventClass($eventClass, $existing);
     }
 
     /**
@@ -52,22 +48,34 @@ trait HandlesEventClasses
             'id' => $eventClass->wallet_id,
             'eventId' => $eventClass->wallet_id,
             'eventName' => [
-                'defaultValue' => $eventClass->name,
+                'defaultValue' => [
+                    'language' => 'nl',
+                    'value' => $eventClass->name,
+                ],
             ],
             'logo' => [
                 'sourceUri' => [
-                    'uri' => URL::to(mix('images/logo-google-wallet.png')),
+                    'uri' => URL::secure(mix('images/logo-google-wallet.png')),
                 ],
                 'contentDescription' => [
-                    'defaultValue' => 'Gumbo Millennium logo',
+                    'defaultValue' => [
+                        'language' => 'nl',
+                        'value' => 'Gumbo Millennium logo',
+                    ],
                 ],
             ],
             'venue' => array_filter([
                 'name' => [
-                    'defaultValue' => $eventClass->location,
+                    'defaultValue' => [
+                        'language' => 'nl',
+                        'value' => $eventClass->location_name,
+                    ],
                 ],
-                'address' => $eventClass->address ? [
-                    'defaultValue' => $eventClass->address,
+                'address' => $eventClass->location_address ? [
+                    'defaultValue' => [
+                        'language' => 'nl',
+                        'value' => $eventClass->location_address,
+                    ],
                 ] : null,
             ]),
             'dateTime' => [
@@ -76,19 +84,25 @@ trait HandlesEventClasses
             ],
             'confirmationCodeLabel' => 'ORDER_NUMBER',
             'finePrint' => [
-                'defaultValue' => 'Dit ticket is niet inwisselbaar voor geld. Voor alle voorwaarden tijdens het evenement, zie ons privacybeleid.',
-                'localizedValue' => [
-                    'en' => 'This ticket is non-refundable. For all terms and conditions, please refer to our privacy policy.',
+                'defaultValue' => [
+                    'language' => 'nl',
+                    'value' => 'Dit ticket is niet inwisselbaar voor geld. Voor alle voorwaarden tijdens het evenement, zie ons privacybeleid.',
+                ],
+                'translatedValues' => [
+                    [
+                        'language' => 'en',
+                        'value' => 'This ticket is non-refundable. For all terms and conditions, please refer to our privacy policy.',
+                    ],
                 ],
             ],
             'issuerName' => 'Gumbo Millennium',
             'homepageUri' => [
-                'uri' => URL::to('/'),
+                'uri' => URL::secure(route('home')),
             ],
             'countryCode' => 'NL',
             'heroImage' => $eventClass->hero_image ? [
                 'sourceUri' => [
-                    'uri' => $eventClass->hero_image,
+                    'uri' => URL::secure($eventClass->hero_image),
                 ],
             ] : null,
             'hexBackgroundColor' => '#006b00',
@@ -96,6 +110,9 @@ trait HandlesEventClasses
                 'animationType' => 'FOIL_SHIMMER',
             ],
             'viewUnlockRequirement' => 'UNLOCK_REQUIRED_TO_VIEW',
+            'callbackOptions' => [
+                'url' => URL::secure(route('api.webhooks.google-wallet')),
+            ],
         ];
     }
 
@@ -144,7 +161,13 @@ trait HandlesEventClasses
             'reviewStatus' => $eventClass->review_status === ReviewStatus::Draft ? 'DRAFT' : 'UNDER_REVIEW',
         ]);
 
-        $result = $this->getEventTicketClassApi()->insert(new EventTicketClass($ticketClassData));
+        try {
+            $result = $this->getEventTicketClassApi()->insert(new EventTicketClass($ticketClassData));
+        } catch (Serviceexception $exception) {
+            report(new RuntimeException("Failed to createEventClass for event {$eventClass->id}: {$exception->getMessage()}", 0, $exception));
+
+            throw $exception;
+        }
 
         $eventClass->review_status = ReviewStatus::tryFrom($result->getReviewStatus()) ?? ReviewStatus::Unspecficied;
         $eventClass->review = $result->getReviewStatus();

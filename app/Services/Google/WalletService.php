@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services\Google;
 
-use App\Services\Google\Traits\BuildsModels;
 use App\Services\Google\Traits\HandlesActivityTypes;
 use App\Services\Google\Traits\HandlesEventClasses;
+use App\Services\Google\Traits\HandlesEventObjects;
+use App\Services\Google\Traits\HandlesJwtUrls;
+use App\Services\Google\Traits\HandlesModels;
 use Google\Client as GoogleClient;
 use Google_Service_Walletobjects as Walletobjects;
 use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
@@ -16,9 +18,11 @@ use Illuminate\Support\Facades\Config;
 
 final class WalletService
 {
-    use BuildsModels;
     use HandlesActivityTypes;
     use HandlesEventClasses;
+    use HandlesEventObjects;
+    use HandlesJwtUrls;
+    use HandlesModels;
 
     private bool $isEnabled;
 

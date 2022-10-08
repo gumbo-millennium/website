@@ -8,6 +8,7 @@ use App\Contracts\Mail\MailListHandler;
 use App\Services\Mail\GoogleMailListService;
 use Google_Client as GoogleApi;
 use Google_Exception as GoogleException;
+use Google_Service_Walletobjects;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -63,6 +64,10 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
 
             return $client;
         });
+
+        // Bind two sub-apis via the container, to allow for test overrides
+        $this->app->bind('google_wallet_eventticketclass_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketclass);
+        $this->app->bind('google_wallet_eventticketobjects_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketobjects);
 
         // Mail
         $this->app->singleton(MailListHandler::class, GoogleMailListService::class);

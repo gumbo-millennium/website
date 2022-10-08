@@ -16,13 +16,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use LogicException;
 
-class UpdateGoogleWalletResource implements ShouldQueue
+class UpdateGoogleWalletResource implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    use ShouldBeUnique;
 
     protected Model $model;
 
@@ -44,6 +43,10 @@ class UpdateGoogleWalletResource implements ShouldQueue
     public function handle(WalletService $service)
     {
         $model = $this->model;
+
+        if (! $service->isEnabled()) {
+            return;
+        }
 
         match (get_class($model)) {
             Activity::class => $service->writeEventClassForActivity($model),

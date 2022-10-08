@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
+use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Fluent\Image;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventClass;
 use App\Models\GoogleWallet\EventObject;
 use App\Models\States\Enrollment\Confirmed;
-use Illuminate\Support\Facades\URL;
 use LogicException;
 
-trait BuildsModels
+trait HandlesModels
 {
     /**
      * Converts an Activity to a new or existing EventClass object, with the
@@ -31,11 +31,12 @@ trait BuildsModels
         // Set data and save object
         $eventClass->fill([
             'name' => $activity->name,
+            'review_status' => ReviewStatus::Draft,
             'location_name' => $activity->location,
             'location_address' => $activity->location_address,
             'start_time' => $activity->start_date,
             'end_time' => $activity->end_date,
-            'uri' => URL::to(route('activity.show', $activity)),
+            'uri' => route('activity.show', $activity),
             'hero_image' => $activity->poster ? Image::make($activity->poster)->preset('social')->getUrl() : null,
         ])->save();
 
