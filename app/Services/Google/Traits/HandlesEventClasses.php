@@ -110,7 +110,7 @@ trait HandlesEventClasses
             ],
         ];
 
-        if (! Arr::get($eventClass, 'venue.address')) {
+        if (! Arr::get($data, 'venue.address')) {
             $defaultAddress = (object) Config::get('gumbo.fallbacks.address');
             Arr::set($data, 'venue.address', [
                 'defaultValue' => [
@@ -124,7 +124,7 @@ trait HandlesEventClasses
             ]);
         }
 
-        if ($eventClass['heroImage']) {
+        if ($eventClass->hero_image) {
             $data['heroImage'] = [
                 'sourceUri' => [
                     'uri' => (string) URL::secure($eventClass->hero_image),
