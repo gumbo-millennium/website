@@ -36,15 +36,5 @@ class WalletServiceTest extends TestCase
         $service = App::make(WalletService::class);
 
         $this->assertInstanceOf(WalletService::class, $service);
-
-        Bus::fake();
-
-        $user = User::factory()->create();
-        $activity = Activity::factory()->withTickets()->create();
-        $this->actingAs($user);
-
-        $enrollment = Enroll::createEnrollment($activity, $activity->tickets->first());
-
-        Bus::assertDispatchedTimes(UpdateGoogleWalletResource::class, 2);
     }
 }
