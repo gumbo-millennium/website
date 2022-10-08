@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models\GoogleWallet;
 
-use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Helpers\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,10 +28,6 @@ trait HasGoogleWalletProperties
      */
     public function initializeHasGoogleWalletProperties(): void
     {
-        $this->mergeCasts([
-            'review_status' => ReviewStatus::class,
-        ]);
-
         $this->hidden = array_merge($this->hidden, [
             'wallet_id',
         ]);

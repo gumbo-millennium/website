@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Services\Google;
 
+use App\Services\Google\Traits\BuildsModels;
+use App\Services\Google\Traits\HandlesActivityTypes;
+use App\Services\Google\Traits\HandlesEventClasses;
+use Google\Client as GoogleClient;
+use Google_Service_Walletobjects as Walletobjects;
+use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
+use Google_Service_Walletobjects_Eventticketobject_Resource as EventTicketObjectResource;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 final class WalletService
 {
-    use Traits\CreatesWalletIds;
-    use Traits\CreatesWalletObjects;
-    use Traits\MakesTicketClassApiCalls;
-    use Traits\MakesTicketObjectApiCalls;
-    use Traits\MakesWalletApiCalls;
+    use BuildsModels;
+    use HandlesActivityTypes;
+    use HandlesEventClasses;
 
     private bool $isEnabled;
 
@@ -27,5 +33,24 @@ final class WalletService
     public function isEnabled(): bool
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * Returns the Google Walletobjects API.
+     * @return Walletobjects
+     */
+    protected function getGoogleWalletClient(): GoogleClient
+    {
+        return App::make('google_wallet_api');
+    }
+
+    protected function getEventTicketClassApi(): EventTicketClassResource
+    {
+        return App::make('google_wallet_eventticketclass_api');
+    }
+
+    protected function getEventTicketObjectApi(): EventTicketObjectResource
+    {
+        return App::make('google_wallet_eventticketobjects_api');
     }
 }

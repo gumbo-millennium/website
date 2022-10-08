@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\GoogleWallet;
 
+use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Helpers\Str;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -59,6 +60,7 @@ class EventClass extends Model
      * @var array
      */
     protected $casts = [
+        'review_status' => ReviewStatus::class,
         'start_time' => 'datetime',
         'end_time' => 'datetime',
     ];

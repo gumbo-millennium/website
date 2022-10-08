@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\GoogleWallet;
 
 use App\Casts\MoneyCast;
+use App\Enums\Models\GoogleWallet\ObjectState;
 use App\Models\User;
 use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,9 +22,7 @@ use LogicException;
  * @property string $subject_type
  * @property int $subject_id
  * @property null|int $owner_id
- * @property string $state
- * @property \App\Enums\Models\GoogleWallet\ReviewStatus $review_status
- * @property null|mixed $review
+ * @property ObjectState $state
  * @property null|\Brick\Money\Money $value
  * @property string $ticket_number
  * @property string $ticket_type
@@ -64,6 +63,7 @@ class EventObject extends Model
      */
     protected $casts = [
         'value' => MoneyCast::class,
+        'state' => ObjectState::class,
         'installs' => 'integer',
         'removals' => 'integer',
     ];

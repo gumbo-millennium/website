@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\User;
 use App\Services\Google\WalletObjects;
 use App\Services\Google\WalletService;
+use Google_Service_Walletobjects;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
@@ -50,5 +51,11 @@ class WalletServiceTest extends TestCase
 
         $this->assertInstanceOf(WalletObjects\EventTicketClass::class, $service->makeActivityTicketClass($activity));
         $this->assertInstanceOf(WalletObjects\EventTicketObject::class, $service->makeEnrollmentTicketObject($enrollment));
+    }
+
+    private function setTestObjectResponse(): void
+    {
+        $walletobjectsApiMock = $this->createMock(Google_Service_Walletobjects::class, fn ($mock) => $mock->shouldReceive(''));
+        $googleClientMock = mock(GoogleClient::class, fn ($mock) => $mock->shouldReceive('setApplicationName')->once());
     }
 }

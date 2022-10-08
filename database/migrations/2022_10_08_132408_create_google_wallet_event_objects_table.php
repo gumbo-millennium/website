@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\Models\GoogleWallet\ObjectState;
-use App\Enums\Models\GoogleWallet\ReviewStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,9 +24,6 @@ class CreateGoogleWalletEventObjectsTable extends Migration
             $table->foreignId('owner_id')->nullable()->constrained('users')->nullOnDelete();
 
             $table->string('state', 10)->default(ObjectState::Unspecified->value);
-
-            $table->string('review_status', 20)->default(ReviewStatus::Unspecficied->value);
-            $table->json('review')->nullable();
 
             $table->unsignedSmallInteger('value')->nullable(); // Max value of € 665,35
             $table->string('ticket_number');
