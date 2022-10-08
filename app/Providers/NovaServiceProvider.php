@@ -166,6 +166,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 yield MenuSection::make(__('DevOps'), [
                     MenuItem::externalLink('Telescope', URL::to(Config::get('telescope.path'))),
                     MenuItem::externalLink('Horizon', URL::to(Config::get('horizon.path'))),
+                    MenuItem::resource(Resources\GoogleWallet\EventClass::class),
+                    MenuItem::resource(Resources\GoogleWallet\EventObject::class),
                 ])->icon('server');
             }
         });

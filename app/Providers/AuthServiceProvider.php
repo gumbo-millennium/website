@@ -57,6 +57,10 @@ class AuthServiceProvider extends ServiceProvider
 
         // Payments
         Models\Payments\Settlement::class => Policies\Payments\SettlementPolicy::class,
+
+        // Google Wallet
+        Models\GoogleWallet\EventClass::class => Policies\GoogleWallet\EventClassPolicy::class,
+        Models\GoogleWallet\EventObject::class => Policies\GoogleWallet\EventObjectPolicy::class,
     ];
 
     /**
