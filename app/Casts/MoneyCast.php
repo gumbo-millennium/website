@@ -14,7 +14,7 @@ class MoneyCast implements CastsAttributes
     private string $currency;
 
     public function __construct(
-        string $currency,
+        ?string $currency = null,
     ) {
         $this->currency = $currency ?? 'EUR';
     }

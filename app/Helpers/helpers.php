@@ -72,7 +72,7 @@ if (! function_exists('money_value')) {
     /**
      * Converts an amount to a Money object, unless nil.
      */
-    function money_value(null|string|array|object $value): ?Money
+    function money_value(null|int|string|array|object $value): ?Money
     {
         if (null === $value) {
             return null;
