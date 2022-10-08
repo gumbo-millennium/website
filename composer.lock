@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aca611aed9dbfd81104563c8f280a5c5",
+    "content-hash": "d480c2e2f0a8c4b0496a002e95e3d55c",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -2661,6 +2661,24 @@
                 "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.21.1"
             },
             "time": "2022-05-16T19:34:15+00:00"
+        },
+        {
+            "name": "google/google-apiclient-walletobjects",
+            "version": "v1.20220426",
+            "dist": {
+                "type": "zip",
+                "url": "./vendor-bundled/google-walletobjects-v1-rev_20220426-php.zip"
+            },
+            "require": {
+                "google/apiclient": "^1.1 | ^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./"
+                ]
+            },
+            "homepage": "https://developers.google.com/wallet/generic/resources/libraries#php"
         },
         {
             "name": "graham-campbell/result-type",

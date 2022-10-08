@@ -20,6 +20,7 @@
         "fideloper/proxy": "^4.4",
         "giggsey/libphonenumber-for-php": "^8.10",
         "google/apiclient": "^2.4",
+        "google/google-apiclient-walletobjects": "^1.20220426",
         "guzzlehttp/guzzle": "^6.3",
         "html2text/html2text": "^4.2",
         "irazasyed/telegram-bot-sdk": "^3.3",
@@ -159,6 +160,26 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "google/google-apiclient-walletobjects",
+                "version": "v1.20220426",
+                "homepage":"https://developers.google.com/wallet/generic/resources/libraries#php",
+                "dist": {
+                    "url": "./vendor-bundled/google-walletobjects-v1-rev_20220426-php.zip",
+                    "type": "zip"
+                },
+                "require": {
+                    "google/apiclient": "^1.1 | ^2.0"
+                },
+                "autoload": {
+                    "classmap": [
+                        "./"
+                    ]
+                }
+            }
         }
     ]
 }
