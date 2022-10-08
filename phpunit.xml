@@ -14,10 +14,6 @@
         <include>
             <directory suffix=".php">./app</directory>
         </include>
-        <exclude>
-            <!-- Google Wallet objects are only models -->
-            <directory suffix=".php">./app/Services/Google/WalletObjects</directory>
-        </exclude>
     </coverage>
 
     <php>
