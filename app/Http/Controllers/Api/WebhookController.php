@@ -67,7 +67,7 @@ class WebhookController extends Controller
         // Check if all data is correct
         abort_unless($body->has(['classId', 'objectId', 'expTimeMillis', 'eventType', 'nonce']), HttpResponse::HTTP_BAD_REQUEST);
         abort_unless(in_array($body['eventType'], ['del', 'save'], true), HttpResponse::HTTP_BAD_REQUEST);
-        abort_unless($body['expTimeMillis'] < (time() * 1000), HttpResponse::HTTP_BAD_REQUEST);
+        abort_unless($body['expTimeMillis'] > (time() * 1000), HttpResponse::HTTP_BAD_REQUEST);
 
         // From this point on, for security purposes, report all requests as valid, even if they're not.
 
