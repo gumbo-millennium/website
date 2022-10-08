@@ -242,7 +242,7 @@ class Enrollment extends Resource
     {
         return [
             new EnrollmentStateFilter(),
-            new PaymentStatusFilter(),
+            // new PaymentStatusFilter(),
         ];
     }
 }
