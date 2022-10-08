@@ -128,7 +128,9 @@ return [
         ],
     ],
 
-    // Activity features, seeded from Yaml file in resources
+    /**
+     * Activity features, seeded from Yaml file in resources.
+     */
     'activity-features' => [
         // Don't add content here.
     ],
@@ -148,7 +150,9 @@ return [
         'ideal_INGBNL2A',
     ],
 
-    // Presets
+    /**
+     * Presets for Glide images.
+     */
     'image-presets' => [
         'social' => [
             'width' => 1200,
@@ -178,7 +182,9 @@ return [
         ],
     ],
 
-    // Glide settings
+    /**
+     * Glide settings.
+     */
     'glide' => [
         'source-disk' => env('GLIDE_SOURCE_DISK', 'public'),
         'source-path' => env('GLIDE_SOURCE_PATH', null),
@@ -186,13 +192,17 @@ return [
         'cache-path' => env('GLIDE_PATH', '.glide/image-cache'),
     ],
 
-    // Image settings
+    /**
+     * Image settings.
+     */
     'images' => [
         'disk' => env('GUMBO_IMAGE_DISK', 'public'),
         'path' => env('GUMBO_IMAGE_PATH', 'images'),
     ],
 
-    // Gallery settings
+    /**
+     * Gallery settings.
+     */
     'gallery' => [
         'max_photo_size' => env('GUMBO_GALLERY_MAX_PHOTO_SIZE', 8 * 1024 * 1024),
         'filepond' => [
@@ -201,6 +211,9 @@ return [
         ],
     ],
 
+    /**
+     * Backup settings.
+     */
     'backups' => [
         /**
          * Flag to indicate if backups will run.

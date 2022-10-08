@@ -16,7 +16,7 @@ if ($ticketPrices->isEmpty()) {
 } elseif ($ticketPrices->count() == 2) {
     $ticketPrices = $ticketPrices->join(' of ');
 } else {
-    $ticketPrices = sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last());
+    $ticketPrices = Str::lower(sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last()));
 }
 $visibilityIcon = $activity->is_public ? 'solid/globe-europe' : 'solid/user-friends';
 $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten activiteit";
@@ -57,7 +57,7 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
                 </x-activities.header-tile>
 
                 @if ($activity->tickets->isEmpty())
-                <x-activities.header-tile icon="solid/ticket-alt" title="Openbare activiteit">
+                <x-activities.header-tile icon="solid/ticket-alt" title="Geen kaartjes">
                   <p>Je hebt geen kaartje nodig</p>
                 </x-activities.header-tile>
                 @else
