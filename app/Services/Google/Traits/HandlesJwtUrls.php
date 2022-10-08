@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Google\Traits;
 
 use App\Models\GoogleWallet\EventObject;
-use App\Models\User;
 use Firebase\JWT\JWT;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
@@ -66,7 +64,7 @@ trait HandlesJwtUrls
      */
     private function getServiceAccountData(string $key): string
     {
-        throw_unless(in_array($key, ['client_email', 'private_key']), LogicException::class, 'The key must be either client_email or private_key.');
+        throw_unless(in_array($key, ['client_email', 'private_key'], true), LogicException::class, 'The key must be either client_email or private_key.');
 
         if (! $this->cachedCredentialData) {
             $jwtPath = $this->getJwtUrl();

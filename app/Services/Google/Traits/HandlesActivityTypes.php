@@ -78,10 +78,10 @@ trait HandlesActivityTypes
             return null;
         }
 
-        // try {
+        try {
             return $this->getImportUrl($eventObject);
-        // } catch (RuntimeException) {
-            // return null;
-        // }
+        } catch (RuntimeException) {
+            return null;
+        }
     }
 }

@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace App\Console\Commands\GoogleWallet;
 
 use App\Helpers\Str;
-use App\Jobs\GoogleWallet\UpdateEventTicketClassJob;
-use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventObject;
 use App\Services\Google\WalletService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
 
 class UpdateEnrollmentCommand extends GoogleWalletCommand
 {
@@ -48,19 +45,19 @@ class UpdateEnrollmentCommand extends GoogleWalletCommand
 
         // Check state
         $exists = EventObject::forSubject($enrollment)->exists();
-        $action = $exists ? "Update" : "Create";
+        $action = $exists ? 'Update' : 'Create';
 
         // Check state
-        $this->line("Starting $action of EventTicketObject...");
+        $this->line("Starting {$action} of EventTicketObject...");
 
         try {
             $walletService->writeEventObjectForEnrollment($enrollment);
 
-            $this->line(Str::ucfirst("$action <info>OK</>"));
+            $this->line(Str::ucfirst("{$action} <info>OK</>"));
 
             return Command::SUCCESS;
         } catch (GuzzleException $e) {
-            $this->line(Str::ucfirst("$action <fg=red>FAIL</>"));
+            $this->line(Str::ucfirst("{$action} <fg=red>FAIL</>"));
             $this->error($e->getMessage());
 
             return Command::FAILURE;

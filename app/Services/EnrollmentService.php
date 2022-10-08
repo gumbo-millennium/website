@@ -17,12 +17,12 @@ use Endroid\QrCode\Builder\Builder as QRBuilder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Writer\PngWriter;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use LogicException;
+use RuntimeException;
 
 class EnrollmentService implements EnrollmentServiceContract
 {
@@ -172,16 +172,17 @@ class EnrollmentService implements EnrollmentServiceContract
     {
         // Try to generate a new code 4 times
         for ($i = 0; $i < 4; $i++) {
-            try {
-                $enrollment->ticket_code = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
-            } catch (QueryException $exception) {
-                if (Str::contains(Str::lower($exception->getMessage()), 'unqiue')) {
-                    continue;
-                }
+            $triedCode = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
 
-                throw $exception;
+            if (! Enrollment::withoutGlobalScopes()->where('ticket_code', $triedCode)->exists()) {
+                $enrollment->ticket_code = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
+                $enrollment->save();
+
+                return;
             }
         }
+
+        throw new RuntimeException('Could not generate a unique ticket code');
     }
 
     public function getTicketQrCode(Enrollment $enrollment, int $size = 400): string

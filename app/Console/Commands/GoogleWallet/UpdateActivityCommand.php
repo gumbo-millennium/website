@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands\GoogleWallet;
 
 use App\Helpers\Str;
-use App\Jobs\GoogleWallet\UpdateEventTicketClassJob;
 use App\Models\Activity;
 use App\Models\GoogleWallet\EventClass;
 use App\Services\Google\WalletService;
@@ -37,8 +36,8 @@ class UpdateActivityCommand extends GoogleWalletCommand
     {
         $activity = $this->argument('activity');
         $activity = Activity::query(fn ($query) => $query->orWhere([
-            ['id',$activity],
-            ['slug',$activity],
+            ['id', $activity],
+            ['slug', $activity],
         ]))->first();
 
         if (! $activity) {
@@ -49,19 +48,19 @@ class UpdateActivityCommand extends GoogleWalletCommand
 
         // Check state
         $exists = EventClass::forSubject($activity)->exists();
-        $action = $exists ? "Update" : "Create";
+        $action = $exists ? 'Update' : 'Create';
 
         // Check state
-        $this->line("Starting $action of EventTicketClass...");
+        $this->line("Starting {$action} of EventTicketClass...");
 
         try {
             $walletService->writeEventClassForActivity($activity);
 
-            $this->line(Str::ucfirst("$action <info>OK</>"));
+            $this->line(Str::ucfirst("{$action} <info>OK</>"));
 
             return Command::SUCCESS;
         } catch (GuzzleException $e) {
-            $this->line(Str::ucfirst("$action <fg=red>FAIL</>"));
+            $this->line(Str::ucfirst("{$action} <fg=red>FAIL</>"));
             $this->error($e->getMessage());
 
             return Command::FAILURE;

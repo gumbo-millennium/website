@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Services\Google;
 
-use App\Facades\Enroll;
-use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
-use App\Models\Activity;
-use App\Models\User;
 use App\Services\Google\WalletService;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
