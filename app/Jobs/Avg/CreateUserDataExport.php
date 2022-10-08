@@ -107,7 +107,7 @@ class CreateUserDataExport implements ShouldQueue
 
         // Update dates
         $this->export->completed_at = Date::now();
-        $this->export->expires_at = Date::now()->addDays(Config::get('gumbo.export-expire-days'));
+        $this->export->expires_at = Date::now()->add(Config::get('gumbo.retention.data-exports'));
 
         // Save
         $this->export->save();

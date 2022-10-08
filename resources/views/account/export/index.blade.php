@@ -78,7 +78,7 @@
               <div class="max-w-xl text-sm text-gray-500">
                   <p>
                       @lang('The export will be downloadable for :days days after completion.', [
-                          'days' => Config::get('gumbo.export-expire-days')
+                          'days' => Config::now()->add('gumbo.retention.data-exports')->diffInDays(),
                       ])
                   </p>
               </div>

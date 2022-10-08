@@ -72,7 +72,7 @@ class DataExportControllerTest extends TestCase
         $this->assertDatabaseHas(DataExport::make()->getTable(), [
             'user_id' => $this->user->id,
             'created_at' => Date::now(),
-            'expires_at' => Date::now()->addDays(Config::get('gumbo.export-expire-days')),
+            'expires_at' => Date::now()->add(Config::get('gumbo.retention.data-exports')),
         ]);
 
         $expectedDataExport = DataExport::latest()->first();

@@ -74,7 +74,7 @@ class DataExport extends Model
         parent::boot();
 
         self::creating(function (self $dataExport) {
-            $dataExport->expires_at = Date::now()->addDays(Config::get('gumbo.export-expire-days'));
+            $dataExport->expires_at = Date::now()->add(Config::get('gumbo.retention.data-exports'));
             $dataExport->token = Str::random(20);
         });
     }

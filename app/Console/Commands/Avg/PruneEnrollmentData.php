@@ -6,6 +6,7 @@ namespace App\Console\Commands\Avg;
 
 use App\Models\Enrollment;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 
 class PruneEnrollmentData extends Command
@@ -32,7 +33,7 @@ class PruneEnrollmentData extends Command
     public function handle()
     {
         $count = Enrollment::query()
-            ->whereHas('activity', fn ($query) => $query->where('end_date', '<', Date::now()->subMonths(6)))
+            ->whereHas('activity', fn ($query) => $query->where('end_date', '<', Date::now()->sub(Config::get('gumbo.retention.enrollment-data'))))
             ->whereNotNull('data')
             ->update(['data' => null]);
 

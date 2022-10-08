@@ -133,8 +133,13 @@ return [
         // Don't add content here.
     ],
 
-    // Data Exports
-    'export-expire-days' => 30,
+    /**
+     * Data Retention settings.
+     */
+    'retention' => [
+        'data-exports' => 'P30D',
+        'enrollment-data' => 'P6M',
+    ],
 
     // Preferred banks
     'preferred-banks' => [
