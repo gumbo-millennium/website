@@ -168,4 +168,15 @@ class FileExport extends Model implements Responsable
     {
         return $this->query()->wherePurgeable();
     }
+
+    /**
+     * Remove existing files when pruning.
+     * @return void
+     */
+    public function pruning()
+    {
+        if ($this->is_valid_export && Storage::exists($this->path)) {
+            Storage::delete($this->path);
+        }
+    }
 }

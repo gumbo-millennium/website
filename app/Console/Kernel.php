@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Console\Commands\Enrollments\PruneExpiredEnrollments;
-use App\Jobs\CleanExpiredExportsJob;
 use App\Jobs\Mail\ConstructGoogleActionList;
 use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
@@ -26,21 +25,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:create')->daily()->at('01:00');
         $schedule->command('backup:create', ['--full' => true])->weekly()->at('01:30');
 
-        // Expunge outdated non-critical data daily
+        // Expunge data past it's retention period
         $schedule->command('avg:flush')->daily();
         $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
-
-        // Wipe old Telescope records
         $schedule->command('telescope:prune')->daily();
+        $schedule->command('model:prune')->weeklyOn(6, '22:00');
 
         // Wipe old enrollment exports
         $schedule->command('enrollment:prune-exports')->daily();
-
-        // Wipe old data
-        $schedule->command('model:prune')->weeklyOn(6, '22:00');
-
-        // Wipe old data exports
-        $schedule->job(CleanExpiredExportsJob::class)->daily();
 
         // Wipe old Personal Access Tokens
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
