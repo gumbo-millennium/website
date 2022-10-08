@@ -57,7 +57,7 @@ trait HandlesEventClasses
             ],
             'logo' => [
                 'sourceUri' => [
-                    'uri' => URL::secure(mix('images/logo-google-wallet.png')),
+                    'uri' => (string) URL::secure(mix('images/logo-google-wallet.png')),
                 ],
                 'contentDescription' => [
                     'defaultValue' => [
@@ -99,14 +99,14 @@ trait HandlesEventClasses
             ],
             'issuerName' => 'Gumbo Millennium',
             'homepageUri' => [
-                'uri' => URL::secure(route('home')),
+                'uri' => (string) URL::secure(route('home')),
             ],
             'countryCode' => 'NL',
             'hexBackgroundColor' => '#006b00',
             'MultipleDevicesAndHoldersAllowedStatus' => 'ONE_USER_ALL_DEVICES',
             'viewUnlockRequirement' => 'UNLOCK_REQUIRED_TO_VIEW',
             'callbackOptions' => [
-                'url' => URL::secure(route('api.webhooks.google-wallet')),
+                'url' => (string) URL::secure(route('api.webhooks.google-wallet')),
             ],
         ];
 
@@ -127,7 +127,7 @@ trait HandlesEventClasses
         if ($eventClass['heroImage']) {
             $data['heroImage'] = [
                 'sourceUri' => [
-                    'uri' => URL::secure($eventClass->hero_image),
+                    'uri' => (string) URL::secure($eventClass->hero_image),
                 ],
             ];
         }
