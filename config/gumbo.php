@@ -143,13 +143,6 @@ return [
         'enrollment-data' => 'P6M',
     ],
 
-    // Preferred banks
-    'preferred-banks' => [
-        'ideal_RABONL2U',
-        'ideal_ABNANL2A',
-        'ideal_INGBNL2A',
-    ],
-
     /**
      * Presets for Glide images.
      */
