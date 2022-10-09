@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
+use App\Facades\Enroll;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Services\Google\WalletService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 
 class TicketController extends Controller
 {
-    public function index(Request $request, WalletService $walletService)
+    public function index(Request $request): HttpResponse
     {
         $user = $request->user();
         $showOld = (bool) $request->query('include-past', false);
@@ -30,24 +32,39 @@ class TicketController extends Controller
             ->sortBy('start_date')
             ->each(fn (Activity & $activity) => $activity->enrollment = $activity->enrollments->first());
 
-        $googleWalletUrls = Collection::make();
-        if ($walletService->isEnabled()) {
-            foreach ($activities->where('end_date', '>', Date::now()) as $activity) {
-                if (! $activity->enrollment) {
-                    continue;
-                }
-
-                // Find event object
-                $importUrl = $walletService->getImportUrlForEnrollment($user, $activity->enrollment);
-                if ($importUrl) {
-                    $googleWalletUrls->put($activity->id, $importUrl);
-                }
-            }
-        }
-
         return Response::view('account.tickets', [
             'activities' => $activities,
-            'googleWalletUrls' => $googleWalletUrls,
         ]);
+    }
+
+    /**
+     * Redirect the user to their personal redeem URL for the given activity.
+     * Only if the conditions allow it.
+     */
+    public function addToWallet(WalletService $walletService, Request $request, Activity $activity): RedirectResponse
+    {
+        $enrollment = Enroll::getEnrollment($activity);
+
+        if (! $enrollment) {
+            flash()->warning(__(
+                "You're not currently enrolled into :activity.",
+                ['activity' => $activity->name],
+            ));
+
+            return Response::redirectToRoute('account.tickets');
+        }
+
+        $jwtUrl = $walletService->getImportUrlForEnrollment($request->user(), $enrollment);
+
+        if ($enrollment->is_stable && $activity->end_date > Date::now() && $jwtUrl) {
+            return Response::redirectTo($jwtUrl);
+        }
+
+        flash()->warning(__(
+            "You can't add this ticket for :activity to your Google Wallet.",
+            ['activity' => $activity->name],
+        ));
+
+        return Response::redirectToRoute('account.tickets');
     }
 }

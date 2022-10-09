@@ -200,6 +200,7 @@ Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')-
 
     // Create basic enrollment
     Route::get('/tickets', [Account\TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/wallet/{activity}', [Account\TicketController::class, 'addToWallet'])->name('tickets.wallet');
 
     // Urls
     Route::get('/api-tokens', [Account\ApiTokenController::class, 'index'])->name('tokens.index');

@@ -41,7 +41,7 @@ class EnrollmentController extends Controller
             $request->session()->reflash();
 
             flash()->warning(__(
-                "You're currently not enrolled into :activity",
+                "You're not currently enrolled into :activity.",
                 ['activity' => $activity->name],
             ));
 

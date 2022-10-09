@@ -407,6 +407,17 @@ class Enrollment extends Model implements Payable
     }
 
     /**
+     * Returns true if this enrollment is still active.
+     */
+    public function active(): bool
+    {
+        return $this->state instanceof States\Created
+            || $this->state instanceof States\Seeded
+            || $this->state instanceof States\Confirmed
+            || $this->state instanceof States\Paid;
+    }
+
+    /**
      * Register the states an enrollment can have.
      */
     protected function registerStates(): void
