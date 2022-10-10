@@ -17,6 +17,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Stringable;
 
 class UpdateGoogleList implements ShouldQueue
 {
@@ -253,9 +254,23 @@ class UpdateGoogleList implements ShouldQueue
         }
 
         // Add missing and invalid
-        foreach ($this->members as [$email, $role]) {
+        foreach ($this->members as $index => [$email, $role]) {
+            // Skip non-emails
+            if (! is_string($email) && ! $email instanceof Stringable) {
+                Log::warning('Invalid email on index {index}, skipping', [
+                    'email' => $email,
+                    'role' => $role,
+                    'index' => $index,
+                ]);
+
+                continue;
+            }
+
+            // Ensure email is a string, for the next functions
+            $email = (string) $email;
+
             // Add missing
-            if (! \array_key_exists($email, $existingMembers)) {
+            if (! array_key_exists($email, $existingMembers)) {
                 Log::notice('Flagging member {email} as {role}', compact('email', 'role'));
                 $list->addEmail($email, $role);
 
