@@ -34,6 +34,9 @@ return [
 
     // Google APIs
     'google' => [
+        // Set if the Google APIs are enabled
+        'enabled' => env('GOOGLE_ENABLED', false),
+
         // Key file
         'key-file' => env('GOOGLE_AUTH_FILE', storage_path('auth/google.json')),
 

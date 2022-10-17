@@ -16,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Stringable;
 
@@ -64,6 +65,10 @@ class UpdateGoogleList implements ShouldQueue
      */
     public function handle(MailListHandler $handler): void
     {
+        if (! Config::get('services.google.enabled')) {
+            return;
+        }
+
         // Get list
         $list = $this->getEmailList($handler);
 

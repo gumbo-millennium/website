@@ -38,6 +38,12 @@ class UpdateEmailLists extends Command
      */
     public function handle()
     {
+        if (! Config::get('services.google.enabled')) {
+            $this->error('Google services not enabled, aborting');
+
+            return Command::INVALID;
+        }
+
         // Ensure verbosity is set
         $verbosity = $this->output->getVerbosity();
         $this->setVerbosity($verbosity);
@@ -75,5 +81,7 @@ class UpdateEmailLists extends Command
         // Print end
         $time = Date::now()->locale('en')->diffForHumans($start, CarbonInterface::DIFF_ABSOLUTE);
         $this->info("Updated all mail groups in {$time}.");
+
+        return Command::SUCCESS;
     }
 }
