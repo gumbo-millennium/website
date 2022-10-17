@@ -8,6 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Facades\Payments;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read string $status
  * @property-read Eloquent|Model $payable
  * @property-read null|\App\Models\User $user
+ * @method static \Database\Factories\PaymentFactory factory(...$parameters)
  * @method static Builder|Payment newModelQuery()
  * @method static Builder|Payment newQuery()
  * @method static Builder|Payment pending()
@@ -41,6 +43,8 @@ use Illuminate\Support\Facades\Date;
  */
 class Payment extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that should be cast.
      *

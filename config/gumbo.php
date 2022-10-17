@@ -12,6 +12,16 @@ return [
     // Cost of a single payment transaction
     'transfer-fee' => 40,
 
+    'payments' => [
+        /**
+         * Payment verification rates, all values are in milliseconds.
+         */
+        'verify' => [
+            'refresh_rate' => 500,
+            'timeout' => 1000,
+        ],
+    ],
+
     'tickets' => [
         'expiration' => [
             'anonymous' => 'PT15M',

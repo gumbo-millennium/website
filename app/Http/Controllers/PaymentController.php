@@ -12,6 +12,7 @@ use App\Models\Shop\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Spatie\Csp\Directive;
 
@@ -75,8 +76,9 @@ class PaymentController extends Controller
                 return Response::redirectTo($next);
             }
 
-            flash()
-                ->warning(__('This payment is currently processing, please hold.'));
+            flash()->warning(
+                __('This payment is currently processing, please hold.'),
+            );
 
             return $this->getDestination($payment);
         } catch (PaymentException $e) {
@@ -93,14 +95,16 @@ class PaymentController extends Controller
     {
         abort_unless($request->user()->is($payment->user), HttpResponse::HTTP_NOT_FOUND);
 
-        // Wait 500ms between checks
-        $sleepDuration = 500_000;
+        // Determine wait time in microseconds
+        $sleepDuration = Config::get('gumbo.payments.verify.refresh_rate', 500) * 1000;
+        $maxDuration = Config::get('gumbo.payments.verify.timeout', 5_000) * 1000;
 
-        // Backup
-        $startTime = microtime(true);
+        // Ensure some values are sane, making us wait for a maximum of 10 seconds
+        $sleepDuration = min($sleepDuration, 1_000_000);
+        $maxDuration = min($maxDuration, 10_000_000);
 
-        // Allow for 10 seconds at most
-        $maxIterations = 5 / ($sleepDuration / 1_000_000);
+        // Determine safe maximum iteration count
+        $maxIterations = ceil($maxDuration / min($sleepDuration, 1));
 
         for ($iteration = 0; $iteration < $maxIterations; $iteration++) {
             $payment->refresh();
@@ -112,11 +116,6 @@ class PaymentController extends Controller
                 );
 
                 return $this->getDestination($payment);
-            }
-
-            // Check if safetynet is broken
-            if (microtime(true) - $startTime > 5) {
-                break;
             }
 
             // Sleep
