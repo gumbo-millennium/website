@@ -9,7 +9,6 @@ use App\Services\Mail\GoogleMailListService;
 use Google_Client as GoogleApi;
 use Google_Exception as GoogleException;
 use Google_Service_Walletobjects;
-use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -28,8 +27,16 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
             try {
                 $client = new GoogleApi();
 
-                $client->setAuthConfig(Config::get('services.google.key-file'));
-                $client->setSubject(Config::get('services.google.subject'));
+                // Apply settings based on key file or default credentials
+                $keyFile = Config::get('services.google.key-file');
+                if (! $keyFile) {
+                    $client->useApplicationDefaultCredentials();
+                } else {
+                    $client->setAuthConfig($keyFile);
+                    $client->setSubject(Config::get('services.google.subject') ?: null);
+                }
+
+                // Set scopes and name anyway, they're required
                 $client->setScopes(Config::get('services.google.scopes'));
                 $client->setApplicationName(Config::get('app.name'));
 
