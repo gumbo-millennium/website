@@ -25,7 +25,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:create', ['--full' => true])->weekly()->at('01:30');
 
         // Expunge data past it's retention period
-        $schedule->command('avg:flush')->daily();
         $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
         $schedule->command('google-wallet:prune-nonces')->daily();
         $schedule->command('telescope:prune')->daily();
