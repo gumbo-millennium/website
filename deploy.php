@@ -26,10 +26,8 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 // [Optional] if deploy fails automatically unlock.
-after('deploy:failed', [
-    'deploy:unlock',
-    'gumbo:up',
-]);
+after('deploy:failed', 'gumbo:up');
+after('deploy:failed', 'deploy:unlock');
 
 // Re-map all tasks
 desc('Deploy your project');
