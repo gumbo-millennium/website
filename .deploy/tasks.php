@@ -18,6 +18,16 @@ task('gumbo:horizon:terminate', function () {
     run('{{bin/php}} {{release_path}}/artisan horizon:terminate || true');
 });
 
+desc('Execute artisan down');
+task('gumbo:down', function () {
+    run('{{bin/php}} {{release_path}}/artisan down --render="errors::503" || true');
+});
+
+desc('Execute artisan up');
+task('gumbo:up', function () {
+    run('{{bin/php}} {{release_path}}/artisan up || true');
+});
+
 desc('Prints the URL of the environment, for debug purposes.');
 task('gumbo:url', function () {
     $appUrl = run('php {{release_path}}/artisan gumbo:url');

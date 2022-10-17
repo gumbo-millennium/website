@@ -26,7 +26,10 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 // [Optional] if deploy fails automatically unlock.
-after('deploy:failed', 'deploy:unlock');
+after('deploy:failed', [
+    'deploy:unlock',
+    'gumbo:up',
+]);
 
 // Re-map all tasks
 desc('Deploy your project');
@@ -41,6 +44,7 @@ task('deploy', [
     'gumbo:front-end', // Upload compiled front-end
     'deploy:writable',
     'artisan:storage:link',
+    'gumbo:down',
     'gumbo:horizon:pause', // Pause the horizon supervisor
     'gumbo:migrate', // Run the database migrations
     'artisan:view:cache',
@@ -49,6 +53,7 @@ task('deploy', [
     'artisan:event:cache', // Cache the events
     'gumbo:horizon:terminate', // Terminate all horizon supervisors
     'deploy:symlink',
+    'gumbo:up',
     'gumbo:url', // Print the URL to the environment
     'deploy:unlock',
     'cleanup',
