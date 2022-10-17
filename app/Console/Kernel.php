@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Console\Commands\Enrollments\PruneExpiredEnrollments;
-use App\Jobs\Mail\ConstructGoogleActionList;
 use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;

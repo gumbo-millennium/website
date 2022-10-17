@@ -11,6 +11,8 @@ use Google_Exception as GoogleException;
 use Google_Service_Walletobjects;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class GoogleServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -22,42 +24,35 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
      */
     public function register()
     {
-        $this->app->singleton(GoogleApi::class, static function ($app) {
+        $this->app->singleton(GoogleApi::class, function () {
             try {
-                // Config
-                $config = $app['config'];
-                \assert($config instanceof ConfigRepository);
-
-                // Log in client as service worker
                 $client = new GoogleApi();
 
-                // Apply configs
-                $client->setAuthConfig($config->get('services.google.key-file'));
-                $client->setScopes($config->get('services.google.scopes'));
-                $client->setSubject($config->get('services.google.subject'));
-                $client->setApplicationName($config->get('app.name'));
+                $client->setAuthConfig(Config::get('services.google.key-file'));
+                $client->setSubject(Config::get('services.google.subject'));
+                $client->setScopes(Config::get('services.google.scopes'));
+                $client->setApplicationName(Config::get('app.name'));
 
-                // Return client
                 return $client;
             } catch (GoogleException $exception) {
-                // Log the error
-                logger()->critical('Failed to create Google API client: {exception}', compact('exception'));
+                Log::critical('Failed to create Google API client: {exception}', compact('exception'));
 
-                // Return null
                 return null;
             }
         });
 
-        $this->app->singleton('google_wallet_api', function ($app) {
-            $config = $app->get('config');
-            assert($config instanceof ConfigRepository);
-
+        /**
+         * The google_wallet_api is an entirely separate GoogleApi instance, since
+         * the credentials used should not be overlapping with access to Gmail signatures
+         * and Google Directory groups.
+         */
+        $this->app->singleton('google_wallet_api', function () {
             // Log in client as service worker
             $client = new GoogleApi();
 
             // Apply configs
-            $client->setAuthConfig($config->get('services.google.wallet.key_file'));
-            $client->setApplicationName($config->get('app.name'));
+            $client->setAuthConfig(Config::get('services.google.wallet.key_file'));
+            $client->setApplicationName(Config::get('app.name'));
             $client->setScopes([
                 'https://www.googleapis.com/auth/wallet_object.issuer',
             ]);

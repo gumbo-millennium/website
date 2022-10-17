@@ -74,9 +74,9 @@ class UpdateGoogleList implements ShouldQueue
 
         // Get change flags
         $mailHandle = Str::beforeLast($list->getEmail(), '@');
-        $updateAny = ! \in_array($mailHandle, self::NO_CHANGE, true);
-        $updateAliases = ! \in_array($mailHandle, self::NO_ALIAS_CHANGE, true);
-        $updateMembers = ! \in_array($mailHandle, self::NO_MEMBER_CHANGE, true);
+        $updateAny = ! in_array($mailHandle, self::NO_CHANGE, true);
+        $updateAliases = ! in_array($mailHandle, self::NO_ALIAS_CHANGE, true);
+        $updateMembers = ! in_array($mailHandle, self::NO_MEMBER_CHANGE, true);
 
         // Update model
         $this->updateModel($list);
@@ -188,13 +188,13 @@ class UpdateGoogleList implements ShouldQueue
     private function updateAliases(MailList $list): void
     {
         // Speed up search
-        $wantedAliases = \array_flip($this->aliases);
+        $wantedAliases = array_flip($this->aliases);
         $existingAliases = [];
 
         // Remove extra aliases
         foreach ($list->listAliases() as $alias) {
             // Skip if ok
-            if (\array_key_exists($alias, $wantedAliases)) {
+            if (array_key_exists($alias, $wantedAliases)) {
                 Log::debug('Found required alias {alias} on list', compact('alias'));
                 $existingAliases[$alias] = true;
 
@@ -209,7 +209,7 @@ class UpdateGoogleList implements ShouldQueue
         // Add missing aliases
         foreach ($this->aliases as $alias) {
             // Skip if exists
-            if (\array_key_exists($alias, $existingAliases)) {
+            if (array_key_exists($alias, $existingAliases)) {
                 Log::debug('Already found alias {alias} on list', compact('alias'));
                 echo "Found existing {$alias}\n";
 
@@ -229,13 +229,13 @@ class UpdateGoogleList implements ShouldQueue
      */
     private function updateMembers(MailList $list): void
     {
-        $wantedMembers = \array_combine(Arr::pluck($this->members, 0), $this->members);
+        $wantedMembers = array_combine(Arr::pluck($this->members, 0), $this->members);
         $existingMembers = [];
 
         // Remove extra aliases
         foreach ($list->listEmails() as [$email, $role]) {
             // Add if found
-            if (\array_key_exists($email, $wantedMembers)) {
+            if (array_key_exists($email, $wantedMembers)) {
                 Log::debug('Found required member {email} on list', compact('email'));
                 $existingMembers[$email] = $role;
 
@@ -244,7 +244,7 @@ class UpdateGoogleList implements ShouldQueue
 
             // Don't remove internal members
             $domain = Str::afterLast($email, '@');
-            if (\in_array($domain, \config('services.google.domains'), true)) {
+            if (in_array($domain, Config::get('services.google.domains'), true)) {
                 Log::info('Found internal member {email}, whitelisting it', compact('email'));
                 $existingMembers[$email] = $role;
 

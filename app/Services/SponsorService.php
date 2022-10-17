@@ -85,7 +85,7 @@ class SponsorService implements SponsorServiceContract
         $cacheKey = vsprintf('sponsor.%d-%s.%s', [
             $sponsor->id,
             substr(md5($sponsor->{$property}), 0, 16),
-            substr(md5(\http_build_query($attrs)), 0, 16),
+            substr(md5(http_build_query($attrs)), 0, 16),
         ]);
 
         // Load from cache
@@ -117,13 +117,13 @@ class SponsorService implements SponsorServiceContract
         $attributes = [''];
         foreach ($attrs as $name => $value) {
             $value = implode(' ', Arr::wrap($value));
-            $value = \htmlspecialchars($value, \ENT_COMPAT | \ENT_NOQUOTES | \ENT_HTML5);
+            $value = htmlspecialchars($value, \ENT_COMPAT | \ENT_NOQUOTES | \ENT_HTML5);
             $value = str_replace('"', '\\"', $value);
             $attributes[] = sprintf('%s="%s"', $name, $value);
         }
 
         // Replace SVG tag with new tag
-        $content = \str_replace('<svg', sprintf('<svg%s', implode(' ', $attributes)), $content, $count);
+        $content = str_replace('<svg', sprintf('<svg%s', implode(' ', $attributes)), $content, $count);
 
         // Ensure we've seen an SVG
         if ($count !== 1) {
