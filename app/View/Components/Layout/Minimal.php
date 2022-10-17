@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\View\Components;
+namespace App\View\Components\Layout;
 
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Closure;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
-class Page extends Component
+class Minimal extends Component
 {
     /**
      * The page title.
@@ -18,19 +18,11 @@ class Page extends Component
     public string $title;
 
     /**
-     * Should the page's flash message be hidden.
-     */
-    public bool $hideFlash;
-
-    /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(
-        array|string $title = '',
-        bool $hideFlash = false,
-    ) {
+    public function __construct(array|string $title = '') {
         // Build title
         if (empty($title)) {
             $title = 'Studentenvereniging Gumbo Millennium';
@@ -44,10 +36,6 @@ class Page extends Component
 
         SEOMeta::setTitle($title, false);
         $this->title = $title;
-        ;
-
-        // Other properties
-        $this->hideFlash = $hideFlash;
     }
 
     /**
@@ -57,6 +45,6 @@ class Page extends Component
      */
     public function render()
     {
-        return View::make('components.layout.page.default');
+        return View::make('components.layout.page.minimal');
     }
 }

@@ -1,10 +1,9 @@
-@extends('layout.variants.error')
-
-@section('error.title', 'Kah BOOOHM!')
-@section('error.code', '500 Internal Server Error')
-@section('error.message')
-Oh nee, er is iets erg fout gegaan en nu is alles stuk.<br />
-Maar geen paniek, de fout is gemeld en de DC zal er naar gaan kijken.<br /><br />
-Sorry voor de vertraging.
-@endsection
-
+<x-layout.minimal title="500 - Internal Server Error">
+  <x-layout.loading-header no-logo no-dots title="500 - Helemaal stuk">
+    <x-slot name="footnote">
+      <p>Oh nee, er is iets erg fout gegaan en nu is alles stuk.</p>
+      <p>Geen zorgen, de foutmelding is opgeslagen en er zal binnenkort naar gekeken worden.</p>
+      <p class="mt-4">Werkte dit net nog wel? Stuur dan even een berichtje naar de DC, dan kijken ze misschien er wat sneller naar.</p>
+    </x-slot>
+  </x-layout.loading-header>
+</x-layout.minimal>

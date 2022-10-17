@@ -1,13 +1,8 @@
-@extends('layout.variants.error')
-
-@section('title', 'Systeem tijdelijk niet beschikbaar')
-@section('code', '503 Service Unavailable')
-@section('message')
-@if ($exception->getMessage())
-{{ __($exception->getMessage()) }}
-@else
-De site is tijdelijk niet beschikbaar.<br />
-Probeer het later nog eens
-@endif
-@endsection
-
+<x-layout.minimal title="503 - Service Unavailable">
+  <x-layout.loading-header no-logo no-dots title="503 - Tijdelijk niet beschikbaar">
+    <x-slot name="footnote">
+      <p>De Gumbo Millennium website is momenteel niet beschikbaar</p>
+      <p>Probeer het later opnieuw</p>
+    </x-slot>
+  </x-layout.loading-header>
+</x-layout.minimal>

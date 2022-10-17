@@ -1,46 +1,15 @@
 /* Payment redirection page */
 
-.payment-redirect {
-  @apply my-32;
-}
-
-.payment-redirect__logo {
-  @apply flex flex-col items-center;
-}
-
-.payment-redirect__logo-image {
-  width: 250px;
-  height: 100px;
-}
-
-.payment-redirect__loading {
-  @apply flex flex-row items-center justify-center;
-  @apply my-8;
-}
-
-.payment-redirect__loading-dot {
-  @apply h-4 w-4 rounded-full bg-gray-200 mr-4;
+.loading-dot {
   animation: 1.5s infinite payment-redirect__glow-1;
 }
 
-.payment-redirect__loading-dot:nth-child(2) {
+.loading-dot:nth-child(2) {
   animation-name: payment-redirect__glow-2;
 }
 
-.payment-redirect__loading-dot:nth-child(3) {
+.loading-dot:nth-child(3) {
   animation-name: payment-redirect__glow-3;
-}
-
-.payment-redirect__loading-dot:last-child {
-  @apply mr-0;
-}
-
-.payment-redirect__title {
-  @apply text-xl leading-relaxed text-center mb-8;
-}
-
-.payment-redirect__footnote {
-  @apply text-gray-600 text-center text-sm;
 }
 
 @keyframes payment-redirect__glow-1 {
