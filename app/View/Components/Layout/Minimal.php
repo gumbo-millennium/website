@@ -22,7 +22,8 @@ class Minimal extends Component
      *
      * @return void
      */
-    public function __construct(array|string $title = '') {
+    public function __construct(array|string $title = '')
+    {
         // Build title
         if (empty($title)) {
             $title = 'Studentenvereniging Gumbo Millennium';
