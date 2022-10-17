@@ -12,6 +12,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use InvalidArgumentException;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Fields\ActionFields;
@@ -60,7 +61,11 @@ class ImportActivities extends Action
         }
 
         // Run the import
-        Excel::import(new ActivityImport($group), $upload);
+        try {
+            Excel::import(new ActivityImport($group), $upload);
+        } catch (InvalidArgumentException $e) {
+            return Action::danger(__('The uploaded file is invalid: :message.', ['message' => rtrim($e->getMessage(), '.')]));
+        }
 
         // Zero imports, assume failure
         return Action::message(__('Import completed, your activities should now be visible.'));
