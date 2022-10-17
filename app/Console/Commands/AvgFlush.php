@@ -37,15 +37,16 @@ class AvgFlush extends Command
             ->whereNotNull('ip');
 
         if ($this->option('more-recent')) {
-            $query = $query->where('downloaded_at', '<', today()->subDays(30));
+            $query = $query->where('created_at', '<', today()->subDays(30));
         } elseif (! $this->option('all')) {
-            $query = $query->where('downloaded_at', '<', today()->subDays(90));
+            $query = $query->where('created_at', '<', today()->subDays(90));
         }
 
-        // Run query
-        $ipCount = $query->update(['ip' => null])->count();
+        // Count results
+        $count = $query->count();
+        $result = $query->update(['ip' => null]);
 
         // Report result
-        $this->line(sprintf('Cleansed <info>%d</> download logs.', $ipCount));
+        $this->line(sprintf('Cleansed <info>%d</> download logs.', $result ? $count : 0));
     }
 }
