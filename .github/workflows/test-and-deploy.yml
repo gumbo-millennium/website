@@ -13,10 +13,10 @@ jobs:
     name: "Build and test frontend"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup NodeJS and cache
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
           cache: 'npm'
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: actions/setup-python@v3
         with:
@@ -104,7 +104,7 @@ jobs:
           tools: php-parallel-lint/php-parallel-lint
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
 

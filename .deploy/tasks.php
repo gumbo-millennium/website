@@ -32,7 +32,9 @@ desc('Prints the URL of the environment, for debug purposes.');
 task('gumbo:url', function () {
     $appUrl = run('php {{release_path}}/artisan gumbo:url');
     writeln("Application live on <<info>{$appUrl}</>>.");
-    writeln("::set-output name=url::{$appUrl}");
+    if ($githubOutput = getenv('GITHUB_OUTPUT')) {
+        file_put_contents($githubOutput, "name={$appUrl}", FILE_APPEND);
+    }
 });
 
 desc('Uploads the front-end');
