@@ -29,7 +29,7 @@ class ActivityExportServiceTest extends TestCase
             $activity->enrollments()->create([
                 'user_id' => $pendingUser->id,
                 'ticket_id' => $activity->tickets->random()->id,
-                'state' => Created::NAME,
+                'state' => Created::$name,
             ]);
         }
 
@@ -37,7 +37,7 @@ class ActivityExportServiceTest extends TestCase
             $activity->enrollments()->create([
                 'user_id' => $confirmedUser->id,
                 'ticket_id' => $activity->tickets->random()->id,
-                'state' => Confirmed::NAME,
+                'state' => Confirmed::$name,
             ]);
         }
 

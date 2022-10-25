@@ -62,7 +62,7 @@ class CancelEnrollmentJob implements ShouldQueue
             : EnrollmentCancellationReason::USER_REQUEST;
 
         // Cancel the enrollment
-        $enrollment->transitionTo(States\Cancelled::class);
+        $enrollment->state->transitionTo(States\Cancelled::class);
 
         // Done
         $enrollment->save();

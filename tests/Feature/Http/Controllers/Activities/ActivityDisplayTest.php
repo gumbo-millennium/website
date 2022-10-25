@@ -115,7 +115,7 @@ class ActivityDisplayTest extends TestCase
             ->assertDontSee('data-action="transfer-enrollment"', false);
 
         // Make the enrollment stable
-        $enrollment->transitionTo(Confirmed::class);
+        $enrollment->state->transitionTo(Confirmed::class);
         $enrollment->refresh();
 
         // Ensure the state is right

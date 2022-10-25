@@ -75,7 +75,7 @@ class PruneExpiredEnrollments extends Command
             $enrollment->deleted_reason = EnrollmentCancellationReason::TIMEOUT;
             $enrollment->save();
 
-            $enrollment->transitionTo(States\Cancelled::class);
+            $enrollment->state->transitionTo(States\Cancelled::class);
             $enrollment->save();
 
             $this->line("Expired <info>{$enrollment->id}</> ({$enrollment->user->name}, {$enrollment->activity->name})");

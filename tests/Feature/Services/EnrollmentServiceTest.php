@@ -163,7 +163,7 @@ class EnrollmentServiceTest extends TestCase
         $this->assertSame(0, $ticket->quantity_available);
 
         // Transition enrollment
-        $enrollment1->transitionTo(States\Cancelled::class);
+        $enrollment1->state->transitionTo(States\Cancelled::class);
         $enrollment1->save();
 
         // Re-check count
@@ -341,8 +341,8 @@ class EnrollmentServiceTest extends TestCase
         $this->assertTrue(Enroll::canTransfer($enrollment), 'Failed asserting the enrollment can be transferred');
 
         // Cancel enrollment
-        $this->assertTrue($enrollment->canTransitionTo(States\Cancelled::class), 'Failed asserting the enrollment can be cancelled');
-        $enrollment = $enrollment->transitionTo(States\Cancelled::class)->refresh();
+        $this->assertTrue($enrollment->state->canTransitionTo(States\Cancelled::class), 'Failed asserting the enrollment can be cancelled');
+        $enrollment = $enrollment->state->transitionTo(States\Cancelled::class)->refresh();
 
         // Check the enrollment can't transfer anymore
         $this->assertTrue($enrollment->state instanceof States\Cancelled);

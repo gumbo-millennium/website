@@ -43,12 +43,12 @@ class PushEnrollmentStates extends Command
 
             $activity = $enrollment->activity;
             if ($enrollment->state instanceof States\Created && ! $activity->form) {
-                $enrollment->transitionTo(States\Seeded::class);
+                $enrollment->state->transitionTo(States\Seeded::class);
                 $changed = true;
             }
 
             if ($enrollment->state instanceof States\Seeded && $enrollment->price === null) {
-                $enrollment->transitionTo(States\Confirmed::class);
+                $enrollment->state->transitionTo(States\Confirmed::class);
                 $changed = true;
             }
 

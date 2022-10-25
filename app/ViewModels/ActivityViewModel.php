@@ -76,7 +76,7 @@ class ActivityViewModel extends GumboViewModel
     {
         $enrollment = $this->getEnrollment();
 
-        return $enrollment ? $enrollment->state->is(Paid::class) : false;
+        return $enrollment ? $enrollment->state instanceof Paid : false;
     }
 
     /**

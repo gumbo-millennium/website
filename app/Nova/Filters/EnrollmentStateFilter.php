@@ -19,23 +19,23 @@ class EnrollmentStateFilter extends BooleanFilter
     /**
      * All available states.
      */
-    private const VALID_STATES = [
-        Created::class => Created::NAME,
-        Seeded::class => Seeded::NAME,
-        Confirmed::class => Confirmed::NAME,
-        Paid::class => Paid::NAME,
-        Cancelled::class => Cancelled::NAME,
-        Refunded::class => Refunded::NAME,
+    private static $validStates = [
+        Created::class => Created::$name,
+        Seeded::class => Seeded::$name,
+        Confirmed::class => Confirmed::$name,
+        Paid::class => Paid::$name,
+        Cancelled::class => Cancelled::$name,
+        Refunded::class => Refunded::$name,
     ];
 
     /**
      * All default states.
      */
-    private const DEFAULT_STATES = [
-        Created::NAME,
-        Seeded::NAME,
-        Confirmed::NAME,
-        Paid::NAME,
+    private static $defaultStates = [
+        Created::$name,
+        Seeded::$name,
+        Confirmed::$name,
+        Paid::$name,
     ];
 
     /**
@@ -57,7 +57,7 @@ class EnrollmentStateFilter extends BooleanFilter
         $states = collect($value)
             ->filter()
             ->keys()
-            ->filter(static fn ($val) => \in_array($val, self::VALID_STATES, true))
+            ->filter(static fn ($val) => \in_array($val, self::$validStates, true))
             ->values()
             ->all();
 
@@ -76,7 +76,7 @@ class EnrollmentStateFilter extends BooleanFilter
         $namingModel = new Enrollment();
 
         // Collect names
-        return collect(self::VALID_STATES)
+        return collect(self::$validStates)
             ->mapWithKeys(static fn ($val, $className) => [(new $className($namingModel))->title => $val])
             ->toArray();
     }
@@ -88,8 +88,8 @@ class EnrollmentStateFilter extends BooleanFilter
      */
     public function default()
     {
-        return collect(self::VALID_STATES)
-            ->mapWithKeys(static fn ($state) => [$state => \in_array($state, self::DEFAULT_STATES, true)])
+        return collect(self::$validStates)
+            ->mapWithKeys(static fn ($state) => [$state => \in_array($state, self::$defaultStates, true)])
             ->all();
     }
 }

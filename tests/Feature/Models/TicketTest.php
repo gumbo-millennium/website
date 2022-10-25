@@ -129,13 +129,13 @@ class TicketTest extends TestCase
 
         // Cancel 5 without limit
         $enrollmentsWithoutLimit->random(5)->each(function (Enrollment $enrollment) {
-            $enrollment->transitionTo(States\Cancelled::class);
+            $enrollment->state->transitionTo(States\Cancelled::class);
             $enrollment->save();
         });
 
         // Cancel 3 with limit
         $enrollmentsWithLimit->random(3)->each(function (Enrollment $enrollment) {
-            $enrollment->transitionTo(States\Cancelled::class);
+            $enrollment->state->transitionTo(States\Cancelled::class);
             $enrollment->save();
         });
 

@@ -12,14 +12,7 @@ class Created extends State
     /**
      * Name of the state.
      */
-    public const NAME = 'created';
-
-    /**
-     * Name of the state, as human-readable version.
-     *
-     * @var string
-     */
-    public static $name = self::NAME;
+    public static $name = 'created';
 
     public function getTitleAttribute(): string
     {

@@ -50,7 +50,7 @@ class HandlesModelsTest extends TestCase
 
         $this->actingAs($user);
         $enrollment = Enroll::createEnrollment($activity, $ticket);
-        $enrollment->transitionTo(Confirmed::class);
+        $enrollment->state->transitionTo(Confirmed::class);
 
         $eventClass = $this->buildEventClassForActivity($activity);
         $this->assertTrue($eventClass->exists, 'Failed to create the eventClass');

@@ -120,7 +120,7 @@ class CalendarControllerTest extends TestCase
         $pendingEnrollment = Enroll::createEnrollment($pendingActivity, $pendingTicket);
 
         // Change the state of the confirmed enrollment
-        $confirmedEnrollment->transitionTo(EnrollmentStates\Confirmed::class);
+        $confirmedEnrollment->state->transitionTo(EnrollmentStates\Confirmed::class);
 
         // Ensure states are correct
         $this->assertTrue($confirmedEnrollment->is_stable, 'Failed asserting confirmed enrollment is stable');
@@ -178,7 +178,7 @@ class CalendarControllerTest extends TestCase
             $ticket = $activity->tickets->first();
 
             $enrollment = Enroll::createEnrollment($activity, $ticket);
-            $enrollment->transitionTo(EnrollmentStates\Confirmed::class);
+            $enrollment->state->transitionTo(EnrollmentStates\Confirmed::class);
         });
 
         // Fast forward 5 days
@@ -296,7 +296,7 @@ class CalendarControllerTest extends TestCase
 
         // Enroll and cancel
         $enrollment = Enroll::createEnrollment($activity, $ticket);
-        $enrollment->transitionTo(EnrollmentStates\Cancelled::class);
+        $enrollment->state->transitionTo(EnrollmentStates\Cancelled::class);
 
         // Fetch the calendar
         $response = $this->get(URL::signedRoute('api.calendar.show', $user))

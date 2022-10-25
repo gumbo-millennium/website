@@ -171,7 +171,7 @@ class BarcodeControllerTest extends TestCase
         $ticket = $activity->tickets()->first();
 
         $enrollment = Enroll::createEnrollment($activity, $ticket);
-        $enrollment->transitionTo(States\Paid::class);
+        $enrollment->state->transitionTo(States\Paid::class);
         $enrollment->save();
 
         $this->actingAs($user);

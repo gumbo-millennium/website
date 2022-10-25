@@ -42,7 +42,7 @@ class FormController extends Controller
         if (! $activity->form) {
             // Transition if required
             if ($enrollment->state instanceof States\Created) {
-                $enrollment->transitionTo(States\Seeded::class);
+                $enrollment->state->transitionTo(States\Seeded::class);
                 $enrollment->save();
             }
 
@@ -94,8 +94,8 @@ class FormController extends Controller
         $enrollment->setFormData($form->getFieldValues());
 
         // Advance stage to seeded, if not yet seeded
-        if ($enrollment->canTransitionTo(States\Seeded::class)) {
-            $enrollment->transitionTo(States\Seeded::class);
+        if ($enrollment->state->canTransitionTo(States\Seeded::class)) {
+            $enrollment->state->transitionTo(States\Seeded::class);
         }
 
         // Store changes

@@ -97,12 +97,12 @@ class ConfirmEnrollment extends Action
 
         // Transition from created → seeded
         if ($model->state instanceof States\Created) {
-            $model->transitionTo(States\Seeded::class);
+            $model->state->transitionTo(States\Seeded::class);
         }
 
         // Transition from seeded → confirmed
         if ($model->state instanceof States\Seeded) {
-            $model->transitionTo(States\Confirmed::class);
+            $model->state->transitionTo(States\Confirmed::class);
         }
 
         // Save the model

@@ -16,11 +16,6 @@ abstract class State extends BaseState
     use HasAttributes;
 
     /**
-     * Name of the state.
-     */
-    public const NAME = '_state';
-
-    /**
      * States not yet confirmed.
      */
     public const PENDING_STATES = [
@@ -77,14 +72,6 @@ abstract class State extends BaseState
      * Get the title of this status.
      */
     abstract public function getTitleAttribute(): string;
-
-    /**
-     * Returns a nice name for this object.
-     */
-    public function getNameAttribute(): string
-    {
-        return static::NAME;
-    }
 
     /**
      * Returns if the enrollment is able to expire in this state.

@@ -12,14 +12,7 @@ class Refunded extends Cancelled
     /**
      * Name of the state.
      */
-    public const NAME = 'refunded';
-
-    /**
-     * Name of the state, as human-readable version.
-     *
-     * @var string
-     */
-    public static $name = self::NAME;
+    public static $name = 'refunded';
 
     public function getTitleAttribute(): string
     {

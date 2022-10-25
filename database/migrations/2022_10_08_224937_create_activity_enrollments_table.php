@@ -19,7 +19,7 @@ class CreateActivityEnrollmentsTable extends Migration
             $table->foreignId('ticket_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('user_id')->constrained();
 
-            $table->string('state', 40)->default(Created::NAME);
+            $table->string('state', 40)->default(Created::$name);
 
             $table->unsignedSmallInteger('price')->nullable();
             $table->unsignedSmallInteger('total_price')->nullable();
