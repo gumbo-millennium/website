@@ -81,7 +81,9 @@ class InventoryService
         }
 
         // Get guzzle token
-        $guzzle = App::make(GuzzleClient::class);
+        $guzzle = new GuzzleClient([
+            \GuzzleHttp\RequestOptions::HTTP_ERRORS => true,
+        ]);
         $izettleClient = new IZettleClient($guzzle, $this->clientId, $this->clientAssertion);
 
         // Check cache for access token
