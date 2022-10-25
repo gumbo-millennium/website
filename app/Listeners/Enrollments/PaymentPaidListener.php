@@ -23,7 +23,7 @@ class PaymentPaidListener
             return;
         }
 
-        if ($subject->canTransitionTo(States\Paid::class)) {
+        if ($subject->state->canTransitionTo(States\Paid::class)) {
             $subject->state->transitionTo(States\Paid::class);
             $subject->save();
         }
