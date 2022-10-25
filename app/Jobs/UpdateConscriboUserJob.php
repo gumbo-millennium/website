@@ -14,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -61,7 +62,7 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Skip if user e-mail is not verified
         if (! $user->hasVerifiedEmail()) {
-            logger()->info('A role update job was started, but this user is not verified');
+            Log::info('A role update job was started, but this user is not verified');
 
             return;
         }
@@ -71,7 +72,9 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         if (! $accountingUser) {
             // Log it
-            logger()->notice('No user in Conscribo this e-mail address', compact('user'));
+            Log::notice('No user in Conscribo this e-mail address', [
+                'email' => $user->email,
+            ]);
 
             // Remove Conscribo-provided data
             $user->conscribo_id = null;
@@ -85,7 +88,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             return;
         }
 
-        logger()->debug('Got user from Conscribo');
+        Log::debug('Got user from Conscribo');
 
         // Start transaction
         DB::beginTransaction();
@@ -119,7 +122,9 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Remove member if member without permission
         if ($isMember !== $user->is_member && ! $isMember) {
-            logger()->info('Removing member role from user.', compact('user'));
+            Log::info('Removing member role from user.', [
+                'user' => $user->email,
+            ]);
             $user->removeRole('member');
 
             return;
@@ -127,13 +132,15 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         // Add member if not member yet
         if ($isMember !== $user->is_member && $isMember) {
-            logger()->info('Adding member role to user.', compact('user'));
+            Log::info('Adding member role to user.', [
+                'user' => $user->email,
+            ]);
             $user->assignRole('member');
         }
 
         // No change
-        logger()->info("User's member-state is already up-to-date.", [
-            'user' => $user,
+        Log::info("User's member-state is already up-to-date.", [
+            'user' => $user->email,
             'checks' => [
                 'is-member' => $isMember,
                 'member-started' => $memberStarted,
@@ -187,7 +194,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             }
 
             // Print result
-            logger()->info('Recieved {user} for {query}', [
+            Log::info('Recieved {user} for {query}', [
                 'user' => [
                     'code' => Arr::get($user, 'code'),
                     'name' => Arr::get($user, 'name'),
@@ -207,7 +214,7 @@ class UpdateConscriboUserJob implements ShouldQueue
             ], ['code', 'naam', 'leden'], ['limit' => 100]);
 
             // Print result
-            logger()->info('Recieved {groups} for user', compact('groups'));
+            Log::info('Recieved {groups} for user', ['groups' => $groups]);
         } catch (HttpExceptionInterface $exception) {
             report(new RuntimeException('Failed to get groups from API', 0, $exception));
 
@@ -290,7 +297,10 @@ class UpdateConscriboUserJob implements ShouldQueue
             // Check if in list
             if (! in_array($role->name, $allowedRoles, true)) {
                 $removedRoles[] = $role->name;
-                logger()->info('Removing role [{role}] from user.', compact('role', 'user'));
+                Log::info('Removing role [{role}] from user.', [
+                    'role' => $role->name,
+                    'user' => $user->email,
+                ]);
                 $user->removeRole($role);
 
                 continue;
@@ -307,7 +317,10 @@ class UpdateConscriboUserJob implements ShouldQueue
             }
 
             // Add role
-            logger()->info('Adding role [{role}] from user.', compact('role', 'user'));
+            Log::info('Adding role [{role}] from user.', [
+                'role' => $role->name,
+                'user' => $user->email,
+            ]);
             $user->assignRole($role);
 
             // Add new role to list
