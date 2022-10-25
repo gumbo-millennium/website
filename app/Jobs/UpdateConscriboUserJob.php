@@ -90,6 +90,22 @@ class UpdateConscriboUserJob implements ShouldQueue
 
         Log::debug('Got user from Conscribo');
 
+        // Previously connected user
+        $preboundUser = User::where([
+            ['conscribo_id', '=', $accountingUser['code']],
+            ['id', '!=', $user->id],
+        ])->first();
+
+        // Update the previous user to remove the occupied Conscribo ID
+        if ($preboundUser) {
+            Log::notice('A user ({preboudUser}) was found with the same Conscribo ID, updating that one before updating {user}.', [
+                'user' => $user->email,
+                'preboundUser' => $preboundUser->email,
+            ]);
+
+            self::dispatchSync($preboundUser);
+        }
+
         // Start transaction
         DB::beginTransaction();
 
