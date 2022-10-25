@@ -195,9 +195,9 @@ class Enrollment extends Resource
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
                 ->cancelButtonText('Niet annuleren')
                 ->confirmButtonText('Inschrijving annuleren')
-                ->canSee(fn () => ! $this->state->isOneOf([Cancelled::class]))
-                ->canRun(static function ($request, $enrollment) {
-                    if ($enrollment->state->isOneOf([Cancelled::class])) {
+                ->canSee(fn () => ! $this->state->equals(Cancelled::class))
+                ->canRun(static function ($request, EnrollmentModel $enrollment) {
+                    if ($enrollment->state->equals(Cancelled::class)) {
                         return false;
                     }
                     $action = $enrollment->price !== null ? 'refund' : 'cancel';
@@ -210,9 +210,9 @@ class Enrollment extends Resource
                 ->confirmText('Weet je zeker dat je deze inschrijving wil overschrijven naar een andere gebruiker?')
                 ->cancelButtonText('Annuleren')
                 ->confirmButtonText('Inschrijving overschrijven')
-                ->canSee(fn () => ! $this->state->isOneOf([Cancelled::class]))
+                ->canSee(fn () => ! $this->state->equals(Cancelled::class))
                 ->canRun(static function ($request, $enrollment) {
-                    if ($enrollment->state->isOneOf([Cancelled::class])) {
+                    if ($enrollment->state->equals(Cancelled::class)) {
                         return false;
                     }
 

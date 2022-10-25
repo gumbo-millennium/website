@@ -20,22 +20,22 @@ class EnrollmentStateFilter extends BooleanFilter
      * All available states.
      */
     private static $validStates = [
-        Created::class => Created::$name,
-        Seeded::class => Seeded::$name,
-        Confirmed::class => Confirmed::$name,
-        Paid::class => Paid::$name,
-        Cancelled::class => Cancelled::$name,
-        Refunded::class => Refunded::$name,
+        Created::class,
+        Seeded::class,
+        Confirmed::class,
+        Paid::class,
+        Cancelled::class,
+        Refunded::class,
     ];
 
     /**
      * All default states.
      */
     private static $defaultStates = [
-        Created::$name,
-        Seeded::$name,
-        Confirmed::$name,
-        Paid::$name,
+        Created::class,
+        Seeded::class,
+        Confirmed::class,
+        Paid::class,
     ];
 
     /**
