@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d480c2e2f0a8c4b0496a002e95e3d55c",
+    "content-hash": "be913f321ee3128d39d3da1c81269ef7",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -8697,30 +8697,40 @@
         },
         {
             "name": "spatie/laravel-model-states",
-            "version": "1.9.1",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-model-states.git",
-                "reference": "b2899c0b012b5cc5325f6f017d829ac9b413dc75"
+                "reference": "240ca661acffd4ca144b6ef22e5ded858b8cfe9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-model-states/zipball/b2899c0b012b5cc5325f6f017d829ac9b413dc75",
-                "reference": "b2899c0b012b5cc5325f6f017d829ac9b413dc75",
+                "url": "https://api.github.com/repos/spatie/laravel-model-states/zipball/240ca661acffd4ca144b6ef22e5ded858b8cfe9e",
+                "reference": "240ca661acffd4ca144b6ef22e5ded858b8cfe9e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "facade/ignition-contracts": "^1.0",
-                "laravel/framework": "~5.8|^6.0|^7.0|^8.0",
-                "php": "^7.2|^8.0"
+                "illuminate/contracts": "^8.73 | ^9.0",
+                "illuminate/database": "^8.73 | ^9.0",
+                "illuminate/support": "^8.73 | ^9.0",
+                "php": "^7.4|^8.0",
+                "spatie/laravel-package-tools": "^1.9"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.8|^4.0|^5.0|^6.0",
-                "phpunit/phpunit": "^8.2|^9.0",
-                "symfony/var-dumper": "^4.4|^5.0"
+                "orchestra/testbench": "^6.23 | ^7.0",
+                "phpunit/phpunit": "^9.4",
+                "symfony/var-dumper": "^5.3 | ^6.0"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\ModelStates\\ModelStatesServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Spatie\\ModelStates\\": "src"
@@ -8745,16 +8755,19 @@
                 "state"
             ],
             "support": {
-                "issues": "https://github.com/spatie/laravel-model-states/issues",
-                "source": "https://github.com/spatie/laravel-model-states/tree/1.9.1"
+                "source": "https://github.com/spatie/laravel-model-states/tree/2.4.2"
             },
             "funding": [
                 {
                     "url": "https://spatie.be/open-source/support-us",
                     "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
                 }
             ],
-            "time": "2020-12-01T12:38:11+00:00"
+            "time": "2022-08-01T14:02:17+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
