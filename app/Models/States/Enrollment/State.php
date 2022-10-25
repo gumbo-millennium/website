@@ -6,9 +6,10 @@ namespace App\Models\States\Enrollment;
 
 use App\Models\States\Traits\HasAttributes;
 use Spatie\ModelStates\State as BaseState;
+use Spatie\ModelStates\StateConfig;
 
 /**
- * Enrollment state. Has no properties.
+ * Base Enrollment state, configures itself.
  */
 abstract class State extends BaseState
 {
@@ -44,6 +45,34 @@ abstract class State extends BaseState
         Paid::class,
     ];
 
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            // Default to Created
+            ->default(Created::class)
+
+            // Create → Seeded
+            ->allowTransition(Created::class, Seeded::class)
+
+            // Created, Seeded → Confirmed
+            ->allowTransition([Created::class, Seeded::class], Confirmed::class)
+
+            // Created, Seeded, Confirmed → Paid
+            ->allowTransition([Created::class, Seeded::class, Confirmed::class], Paid::class)
+
+            // Created, Seeded, Confirmed, Paid → Cancelled
+            ->allowTransition(
+                [Created::class, Seeded::class, Confirmed::class, Paid::class],
+                Cancelled::class,
+            )
+
+            // Paid, Cancelled → Refunded
+            ->allowTransition(
+                [Paid::class, Cancelled::class],
+                Refunded::class,
+            );
+    }
+
     /**
      * Get the title of this status.
      */
@@ -62,6 +91,8 @@ abstract class State extends BaseState
      */
     public function isStable(): bool
     {
-        return $this->isOneOf(self::STABLE_STATES);
+        return $this instanceof Cancelled
+            || $this instanceof Paid
+            || $this instanceof Confirmed;
     }
 }

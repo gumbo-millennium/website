@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
- * @property string $state
+ * @property EnrollmentState $state
  * @property null|string $deleted_reason
  * @property null|int $price
  * @property null|int $total_price
@@ -103,6 +103,7 @@ class Enrollment extends Model implements Payable
         'expire' => 'datetime',
         'consumed_at' => 'datetime',
 
+        'state' => EnrollmentState::class,
         'data' => 'encrypted:collection',
         'paid' => 'bool',
         'price' => 'int',
@@ -415,40 +416,6 @@ class Enrollment extends Model implements Payable
             || $this->state instanceof States\Seeded
             || $this->state instanceof States\Confirmed
             || $this->state instanceof States\Paid;
-    }
-
-    /**
-     * Register the states an enrollment can have.
-     */
-    protected function registerStates(): void
-    {
-        // Register enrollment state
-        $this
-            ->addState('state', EnrollmentState::class)
-
-            // Default to Created
-            ->default(States\Created::class)
-
-            // Create → Seeded
-            ->allowTransition(States\Created::class, States\Seeded::class)
-
-            // Created, Seeded → Confirmed
-            ->allowTransition([States\Created::class, States\Seeded::class], States\Confirmed::class)
-
-            // Created, Seeded, Confirmed → Paid
-            ->allowTransition([States\Created::class, States\Seeded::class, States\Confirmed::class], States\Paid::class)
-
-            // Created, Seeded, Confirmed, Paid → Cancelled
-            ->allowTransition(
-                [States\Created::class, States\Seeded::class, States\Confirmed::class, States\Paid::class],
-                States\Cancelled::class,
-            )
-
-            // Paid, Cancelled → Refunded
-            ->allowTransition(
-                [States\Paid::class, States\Cancelled::class],
-                States\Refunded::class,
-            );
     }
 
     public function __toString()
