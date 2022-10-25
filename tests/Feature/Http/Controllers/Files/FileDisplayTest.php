@@ -84,7 +84,7 @@ class FileDisplayTest extends TestCase
     /**
      * Check anonymous routes.
      */
-    public function test_index_view(): void
+    public function test_full_flow(): void
     {
         /** @var FileCategory $category */
         [$category, $emptyCategory, $deletedCategory] = FileCategory::factory()->createMany([
@@ -162,6 +162,10 @@ class FileDisplayTest extends TestCase
                 'attachment; filename="%s.zip"',
                 Str::ascii($normalBundle->title, 'nl'),
             ));
+
+        // Change the name of the media file to contain non-ascii characters
+        $normalMedia->file_name = "Test File ♯22.pdf";
+        $normalMedia->save();
 
         $response = $this->get(route('files.download-single', $normalMedia));
 
