@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console;
 
-use App\Console\Commands\Enrollments\PruneExpiredEnrollments;
 use App\Jobs\SendBotQuotes;
 use App\Jobs\UpdateEnrollmentUserTypes;
 use Illuminate\Console\Scheduling\Schedule;
@@ -58,7 +57,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('gumbo:update-lists')->dailyAt('06:00');
 
         // Clean enrollments hourly
-        $schedule->job(PruneExpiredEnrollments::class)->hourlyAt(55);
+        $schedule->command('enrollment:prune')->hourlyAt(55);
 
         // Update ticket PDFs from enrollments hourly
         $schedule->command('gumbo:update-ticket-pdfs')->hourly();
