@@ -77,7 +77,7 @@ class EnrollmentStateFilter extends BooleanFilter
 
         // Collect names
         return collect(self::$validStates)
-            ->mapWithKeys(static fn ($val, $className) => [(new $className($namingModel))->title => $val])
+            ->mapWithKeys(fn ($className) => [(new $className($namingModel))->title => $className])
             ->toArray();
     }
 
