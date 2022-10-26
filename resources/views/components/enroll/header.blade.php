@@ -13,12 +13,14 @@ $canExpire = $timeout = null;
 if ($enrollment) {
     $canExpire = ! $enrollment->state->isStable();
 
-    $timeout = sprintf(
-        '%02d:%02d:%02d',
-        $enrollment->expire->diffInHours(),
-        $enrollment->expire->diffInMinutes() % 60,
-        $enrollment->expire->diffInSeconds() % 60
-    );
+    if ($enrollment->expire) {
+        $timeout = sprintf(
+            '%02d:%02d:%02d',
+            $enrollment->expire->diffInHours(),
+            $enrollment->expire->diffInMinutes() % 60,
+            $enrollment->expire->diffInSeconds() % 60
+        );
+    }
 }
 ?>
 <div class="relative">
