@@ -6,7 +6,7 @@
               <tr>
                   @foreach ($row as $content)
                       <td>
-                          {{ $content }}
+                        {!! $content !!}
                       </td>
                   @endforeach
               </tr>

@@ -1,7 +1,7 @@
 <div class="editor-js-block">
   <div class="container container--md">
     <p class="prose">
-        {{ $text }}
+        {!! $text !!}
     </p>
   </div>
 </div>
