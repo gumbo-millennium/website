@@ -6,7 +6,7 @@
   <picture class="block">
     @if ($url = image_asset($photo->path)->preset('tile')->jpg())
       <source srcset="{{ (clone $url)->webp()->dpr(2) }} 2x, {{ (clone $url)->webp() }}" type="image/webp" />
-      <img src="{{ $url }}" class="h-[400px] w-full object-cover rounded" />
+      <img src="{{ $url }}" class="h-[400px] w-full object-cover rounded" loading="lazy" />
     @else
       <x-empty-state.image class="h-64 w-full rounded-t" />
     @endif
