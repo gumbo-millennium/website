@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be913f321ee3128d39d3da1c81269ef7",
+    "content-hash": "d9ab7ab020d2bb183994cfb1ebd41f3a",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
-            "version": "v3.1.0",
+            "version": "dev-image-service",
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "64b7471e6512cf8c0feb893be05f996de984fda7"
+                "reference": "93c2273edbb16d017825737382c3f2f61725bd7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/64b7471e6512cf8c0feb893be05f996de984fda7",
-                "reference": "64b7471e6512cf8c0feb893be05f996de984fda7",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/93c2273edbb16d017825737382c3f2f61725bd7b",
+                "reference": "93c2273edbb16d017825737382c3f2f61725bd7b",
                 "shasum": ""
             },
             "require": {
@@ -62,9 +62,9 @@
             ],
             "support": {
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
-                "source": "https://github.com/advoor/nova-editor-js/tree/v3.1.0"
+                "source": "https://github.com/advoor/nova-editor-js/tree/image-service"
             },
-            "time": "2022-09-25T14:37:44+00:00"
+            "time": "2022-10-23T11:11:36+00:00"
         },
         {
             "name": "artesaos/seotools",
@@ -16149,6 +16149,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "advoor/nova-editor-js": 20,
         "eduardokum/laravel-mail-auto-embed": 20,
         "laulamanapps/izettle-api": 20
     },

@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 return [
     /**
+     * This plugin uses services to allow you to override certain behaviour.
+     */
+    'services' => [
+        /**
+         * The service used for storing images and thumbnails, and returning URLs.
+         */
+        'image_upload' => \App\Nova\Plugins\NovaEditorJs\ImageService::class,
+    ],
+
+    /**
      * Configure tools.
      */
     'toolSettings' => [
@@ -29,8 +39,8 @@ return [
         'image' => [
             'activated' => true,
             'shortcut' => 'CMD+SHIFT+I',
-            'path' => path_join(env('GUMBO_IMAGE_PATH', 'images/'), 'content'),
-            'disk' => env('GUMBO_IMAGE_DISK', 'local'),
+            'path' => path_join(env('GUMBO_IMAGE_PATH', 'images'), 'content'),
+            'disk' => env('GUMBO_IMAGE_DISK', 'public'),
             'alterations' => [
                 'resize' => [
                     'width' => 1280, // integer
