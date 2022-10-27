@@ -5,12 +5,10 @@
 <div class="rounded shadow grid grid-cols-2" x-data="{ deleted: false, hidden: @json(!$photo->is_visible) }">
   <div class="relative h-full">
     <div class="relative h-full" x-bind:class="deleted ? 'filter grayscale contrast-50' : (hidden ? 'filter contrast-50' : '')">
-      @if ($url = (string) image_asset($photo->path)->preset('tile'))
-      <picture>
-        <img src="{{ $url }}" class="max-h-[400px] h-full w-full object-cover rounded" />
-      </picture>
+      @if ($url = (string) image_asset($photo->path)->preset('tile')->webp())
+        <img src="{{ $url }}" class="block max-h-[400px] h-full w-full object-cover rounded" loading="lazy" />
       @else
-      <x-empty-state.image class="h-64 w-full rounded-t" />
+        <x-empty-state.image class="h-64 w-full rounded-t" />
       @endif
     </div>
     <div class="absolute inset-0 flex items-center justify-center">

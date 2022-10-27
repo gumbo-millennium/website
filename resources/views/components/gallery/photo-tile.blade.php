@@ -3,14 +3,11 @@
   'readOnly' => false,
 ])
 <div class="rounded shadow group">
-  <picture class="block">
-    @if ($url = image_asset($photo->path)->preset('tile')->jpg())
-      <source srcset="{{ (clone $url)->webp()->dpr(2) }} 2x, {{ (clone $url)->webp() }}" type="image/webp" />
-      <img src="{{ $url }}" class="h-[400px] w-full object-cover rounded" loading="lazy" />
-    @else
-      <x-empty-state.image class="h-64 w-full rounded-t" />
-    @endif
-  </picture>
+  @if ($url = image_asset($photo->path)->preset('tile')->webp())
+    <img srcset="{{ (clone $url)->dpr(2) }} 2x, {{ $url }}" class="block h-[400px] w-full object-cover rounded" loading="lazy" />
+  @else
+    <x-empty-state.image class="h-64 w-full rounded-t" />
+  @endif
 
   <div class="p-2 flex items-center">
     <div class="text-sm flex-grow">

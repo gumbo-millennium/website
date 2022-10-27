@@ -2,14 +2,11 @@
   'album',
 ])
 <div class="rounded shadow">
-  <picture>
-    @if ($url = image_asset($album->cover_image)->preset('tile')->height(256)->width(224))
-      <source srcset="{{ (clone $url)->webp()->dpr(2) }} 2x, {{ (clone $url)->webp() }}" type="image/webp" />
-      <img src="{{ $url }}" class="h-64 w-full object-cover rounded-t" />
-    @else
+  @if ($url = image_asset($album->cover_image)->preset('tile')->height(256)->width(224)->webp())
+    <img srcset="{{ (clone $url)->dpr(2) }} 2x, {{ $url }}" class="block h-64 w-full object-cover rounded-t" />
+  @else
     <x-empty-state.image class="h-64 w-full rounded-t" />
-    @endif
-  </picture>
+  @endif
 
   <div class="p-4">
     <h2 class="mb-4">
