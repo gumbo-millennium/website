@@ -106,6 +106,13 @@ RUN groupadd --gid $USER_GID $USERNAME \
 COPY ./fpm/docker-pool.conf $PHP_INI_DIR/../php-fpm.d/zz-docker.conf
 RUN php-fpm --test
 
+# Install phpmyadmin
+RUN curl -o /tmp/pma.tar.gz -L https://files.phpmyadmin.net/phpMyAdmin/5.2.0/phpMyAdmin-5.2.0-english.tar.xz \
+    && mkdir /var/www/phmyadmin \
+    && tar -xf /tmp/pma.tar.gz -C /var/www/phmyadmin --strip-components=1 \
+    && rm /tmp/pma.tar.gz
+COPY ./phpmyadmin/config.inc.php /var/www/phmyadmin/config.inc.php
+
 # Configure nginx and self-test
 RUN sed -i "s/worker_processes /daemon off;\nworker_processes /" /etc/nginx/nginx.conf
 COPY ./nginx/default.conf /etc/nginx/sites-available/default

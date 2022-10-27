@@ -6,18 +6,7 @@
     "workspaceFolder": "/workspace",
 
     // Set *default* container specific settings.json values on container create.
-    "settings": {
-        "sqltools.connections": [{
-            "name": "Container database",
-            "driver": "MySQL",
-            "server": "localhost",
-            "previewLimit": 50,
-            "port": 3306,
-            "database": "vscode",
-            "username": "vscode",
-            "password": "vscode"
-        }]
-    },
+    "settings": {},
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
@@ -25,7 +14,6 @@
         "felixfbecker.php-debug",
         "GitHub.copilot",
         "sleistner.vscode-fileutils",
-        "william-voyek.vscode-nginx",
     ],
 
     // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
