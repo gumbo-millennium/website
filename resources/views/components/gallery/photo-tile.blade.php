@@ -16,6 +16,9 @@
       </p>
       <p class="text-xs">
         Door <strong>{{ $photo->user?->name ?? 'onbekend' }}</strong>
+        @if($photo->taken_at)
+          op <time datetime="{{ $photo->taken_at->toIso8601String() }}">{{ $photo->taken_at?->isoFormat('d MMM YYYY') }}</time>
+        @endif
       </p>
     </div>
 
