@@ -24,24 +24,7 @@ services:
       - "1025"
       - "8025"
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    expose:
-      - "80"
-    environment:
-      PMA_HOST: environment
-      PMA_USER: environment
-      PMA_PASSWORD: environment
-    depends_on:
-      - mysql
-
   redis:
     image: redis:alpine
     expose:
       - "6379"
-    environment:
-      PMA_HOST: environment
-      PMA_USER: environment
-      PMA_PASSWORD: environment
-    depends_on:
-      - mysql
