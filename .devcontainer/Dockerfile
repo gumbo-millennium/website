@@ -61,7 +61,7 @@ RUN yes '' | pecl install redis \
 
 # Install libzip-dev
 RUN apt-get update \
-    && apt-get install -y libzip-dev libpng-dev libjpeg-dev \
+    && apt-get install -y libzip-dev libpng-dev libjpeg-dev libsqlite3-dev \
     && apt-get clean \
     && rm -rf /var/cache/apt /var/lib/apt
 
