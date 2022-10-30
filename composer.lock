@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/advoor/nova-editor-js.git",
-                "reference": "93c2273edbb16d017825737382c3f2f61725bd7b"
+                "reference": "8d9e0b98ecac100d44097de1629ae96f6ce2e973"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/93c2273edbb16d017825737382c3f2f61725bd7b",
-                "reference": "93c2273edbb16d017825737382c3f2f61725bd7b",
+                "url": "https://api.github.com/repos/advoor/nova-editor-js/zipball/8d9e0b98ecac100d44097de1629ae96f6ce2e973",
+                "reference": "8d9e0b98ecac100d44097de1629ae96f6ce2e973",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
                 "issues": "https://github.com/advoor/nova-editor-js/issues",
                 "source": "https://github.com/advoor/nova-editor-js/tree/image-service"
             },
-            "time": "2022-10-23T11:11:36+00:00"
+            "time": "2022-10-27T16:13:16+00:00"
         },
         {
             "name": "artesaos/seotools",
