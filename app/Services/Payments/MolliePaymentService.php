@@ -125,10 +125,10 @@ class MolliePaymentService implements PaymentService
         $fluent = $payable->toPayment();
         $user = $payment->user;
 
-        $userAddress = array_merge(
-            Config::get('gumbo.fallbacks.address'),
-            Collection::make($user->address ?? [])->toArray(),
-        );
+        $userAddress = Config::get('gumbo.fallbacks.address');
+        foreach (Collection::make($user->address ?? []) as $field => $value) {
+            $userAddress[$field] = $value ?: $userAddress[$field];
+        }
 
         $address = [
             'givenName' => $user->first_name,
