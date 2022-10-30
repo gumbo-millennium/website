@@ -28,7 +28,7 @@
       <picture>
         {{-- <source src="{{ asset('images/header-bg-fhd.webp') }}" type="image/webp"> --}}
         <img class="absolute inset-0 w-full h-full object-cover bg-brand-600"
-          src="{{ asset('images/homepage/scaled-header-4.jpg') }}"
+          src="{{ mix('images/homepage/scaled-header-4.jpg') }}"
           alt="">
       </picture>
       <div class="inset-0 absolute flex items-center justify-center">
