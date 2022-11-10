@@ -149,9 +149,9 @@ class Ticket extends Resource
             Fields\Heading::make(__('Pricing and quantity')),
 
             Price::make(__('Price'), 'price')
-                ->hideWhenUpdating()
                 ->hideFromIndex()
                 ->nullable()
+                ->step('0.01')
                 ->rules('nullable', 'gt:0')
                 ->help('Prijs in Euro'),
 
