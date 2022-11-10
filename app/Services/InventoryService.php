@@ -6,7 +6,6 @@ namespace App\Services;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use JsonException;

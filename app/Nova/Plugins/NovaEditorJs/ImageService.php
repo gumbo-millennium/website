@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Nova\Plugins\NovaEditorJs;
 
 use Advoor\NovaEditorJs\Services\DefaultImageUploadHandler;
@@ -11,8 +13,6 @@ class ImageService extends DefaultImageUploadHandler
     /**
      * Use custom image handler to build image URL if the image
      * is stored on the image disk.
-     * @param string $path
-     * @return string
      */
     protected function determineImageUrl(string $path): string
     {
