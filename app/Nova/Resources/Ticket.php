@@ -156,8 +156,8 @@ class Ticket extends Resource
                 ->step('0.01')
                 ->rules('nullable', 'gt:0')
                 ->help(
-                    __("Price in euro, without :price fees. Leave empty for free tickets.", [
-                        'charge' => Str::price(Config::get('gumbo.transfer-fee')),
+                    __("Price in euro, excluding :price fees. Leave empty for free tickets.", [
+                        'price' => Str::price(Config::get('gumbo.transfer-fee')),
                     ])
                 ),
 
