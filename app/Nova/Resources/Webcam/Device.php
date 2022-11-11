@@ -34,7 +34,6 @@ class Device extends Resource
      */
     public static $search = [
         'name',
-        'slug',
     ];
 
     public function title()
