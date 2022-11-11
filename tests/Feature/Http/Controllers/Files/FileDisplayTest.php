@@ -164,7 +164,7 @@ class FileDisplayTest extends TestCase
             ));
 
         // Change the name of the media file to contain non-ascii characters
-        $normalMedia->file_name = "Test File ♯22.pdf";
+        $normalMedia->file_name = 'Test File ♯22.pdf';
         $normalMedia->save();
 
         $response = $this->get(route('files.download-single', $normalMedia));
