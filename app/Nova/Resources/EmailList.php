@@ -36,6 +36,7 @@ class EmailList extends Resource
      * @var array
      */
     public static $search = [
+        'name',
         'email',
     ];
 
