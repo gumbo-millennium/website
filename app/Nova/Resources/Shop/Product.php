@@ -61,7 +61,6 @@ class Product extends Resource
             Fields\Text::make(__('Name'), 'name'),
             Fields\Slug::make(__('Slug'), 'slug')
                 ->from('name')
-                ->showUrlPreview(url('/shop/<category>/'))
                 ->hideFromIndex()
                 ->nullable(),
 
