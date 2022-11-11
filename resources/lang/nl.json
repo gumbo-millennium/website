@@ -130,6 +130,10 @@
 
   "Fees": "Transactiekosten",
 
+  "Price in euro, excluding :price fees. Leave empty for free tickets.":
+    "Prijs in euro, zonder :price transactiekosten. Laat leeg voor gratis tickets.",
+  "Price in euro, including fees.": "Prijs in euro, inclusief transactiekosten.",
+
   "My Account": "Mijn account",
   "Account": "Account",
   "Profile": "Profiel",

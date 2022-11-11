@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
+use App\Helpers\Str;
 use App\Models\Enrollment as EnrollmentModel;
 use App\Models\Ticket as TicketModel;
 use App\Models\User as UserModel;
 use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -153,11 +155,15 @@ class Ticket extends Resource
                 ->nullable()
                 ->step('0.01')
                 ->rules('nullable', 'gt:0')
-                ->help('Prijs in Euro'),
+                ->help(
+                    __("Price in euro, without :price fees. Leave empty for free tickets.", [
+                        'charge' => Str::price(Config::get('gumbo.transfer-fee')),
+                    ])
+                ),
 
             Price::make(__('Total price'), 'total_price')
                 ->exceptOnForms()
-                ->help('Prijs in Euro, incl. transactiekosten'),
+                ->help(__('Price in euro, including fees.')),
 
             Fields\Number::make(__('Max Quantity'), 'quantity')
                 ->rules([
