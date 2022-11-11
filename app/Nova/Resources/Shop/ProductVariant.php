@@ -59,7 +59,6 @@ class ProductVariant extends Resource
 
             Fields\Slug::make(__('Slug'), 'slug')
                 ->from('name')
-                ->disableAutoUpdateWhenUpdating()
                 ->onlyOnDetail()
                 ->nullable(),
 
