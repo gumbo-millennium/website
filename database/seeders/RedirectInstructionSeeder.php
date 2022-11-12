@@ -31,16 +31,12 @@ class RedirectInstructionSeeder extends Seeder
             $slug = Str::start(trim($slug, '/'), '/');
             $path = URL::to($path);
 
-            $redirectInstance = RedirectInstruction::query()
+            RedirectInstruction::query()
                 ->withoutGlobalScopes()
-                ->firstOrNew(
+                ->firstOrCreate(
                     ['slug' => $slug],
                     ['path' => $path],
                 );
-
-            if (! $redirectInstance->exists) {
-                $redirectInstance->save();
-            }
         }
     }
 }

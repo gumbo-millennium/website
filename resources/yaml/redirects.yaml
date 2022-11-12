@@ -31,15 +31,3 @@ redirects:
 
   - slug: bestuurpublicatie
     path: /bestuurspublicaties
-
-  - slug: stemmen
-    path: https://e-voting.gumbo-millennium.nl/
-
-  - slug: stem
-    path: https://e-voting.gumbo-millennium.nl/
-
-  - slug: vote
-    path: https://e-voting.gumbo-millennium.nl/
-
-  - slug: github
-    path: https://github.com/gumbo-millennium
