@@ -67,8 +67,6 @@ class ScheduledMail extends Model
 
     /**
      * Returns a ScheduledMail with the given name, optionally scoped to the user.
-     *
-     * @return ScheduledMail
      */
     public static function findForModelMail(Model $model, string $name, ?User $user = null): self
     {

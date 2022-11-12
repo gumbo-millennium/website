@@ -162,7 +162,6 @@ class Order extends Model implements Payable
 
     /**
      * Eagerly load data used in common views.
-     * @return Order
      */
     public function hungry(): self
     {

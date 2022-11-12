@@ -36,7 +36,6 @@ class AlbumFactory extends Factory
 
     /**
      * Mark album as private, associating a user.
-     * @return AlbumFactory
      */
     public function privateFor(User $forUser): self
     {

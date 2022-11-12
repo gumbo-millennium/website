@@ -38,7 +38,6 @@ class PaymentServiceManager implements PaymentManager
      * Adds the specified service to the manager, should be the name of the class,
      * not an instance.
      *
-     * @return PaymentServiceManager
      * @throws LogicException If the service isn't a PaymentService class name
      */
     public function addService(string $service): self
@@ -56,7 +55,6 @@ class PaymentServiceManager implements PaymentManager
     }
 
     /**
-     * @return PaymentServiceManager
      * @throws LogicException if the service isn't registered
      */
     public function setDefaultService($paymentService): self

@@ -102,7 +102,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
     /**
      * Creates a new image for the given path.
      * @param string $path
-     * @return Image
      */
     public static function make(?string $path): self
     {
@@ -113,7 +112,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Specify how this image will fit in the given width and height.
-     * @return Image
      * @throws DomainException if $fit is invalid
      */
     public function fit(string $fit): self
@@ -127,7 +125,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Specify the output format to transcode to.
-     * @return Image
      * @throws DomainException if $format is invalid
      */
     public function format(string $format): self
@@ -141,7 +138,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Specify the max width of the image. Use fit to determine how the image is sized.
-     * @return Image
      * @throws OutOfRangeException if $width is zero or negative
      */
     public function width(int $width): self
@@ -155,7 +151,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Specify the max height of the image. Use fit to determine how the image is sized.
-     * @return Image
      * @throws OutOfRangeException if $width is zero or negative
      */
     public function height(int $height): self
@@ -169,7 +164,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Make this image a square of the given size, excess space is cropped off.
-     * @return Image
      * @throws OutOfRangeException if $size is zero or negative
      */
     public function square(int $size): self
@@ -181,7 +175,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Set quality, only works if format is jpeg.
-     * @return Image
      * @throws OutOfRangeException if quality isn't between 1 and 100, inclusive
      */
     public function quality(int $quality): self
@@ -195,7 +188,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Transcode to jpeg with optional quality specified.
-     * @return Image
      */
     public function jpg(int $quality = 95): self
     {
@@ -204,7 +196,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Transcode to webp.
-     * @return Image
      */
     public function webp(): self
     {
@@ -213,7 +204,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Transcode to png.
-     * @return Image
      */
     public function png(): self
     {
@@ -244,7 +234,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Flag to indicate the URLs should expire, making them auto-expire after 1 hour.
-     * @return Image
      */
     public function shouldExpire(bool $shouldExpire = true): self
     {

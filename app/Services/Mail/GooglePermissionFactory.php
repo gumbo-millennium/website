@@ -123,7 +123,6 @@ class GooglePermissionFactory
     /**
      * Appends raw settings.
      *
-     * @return GooglePermissionFactory
      * @throws InvalidArgumentException
      */
     public function appendRaw(array $options): self
@@ -188,8 +187,6 @@ class GooglePermissionFactory
 
     /**
      * Sets footer on all inbound mail.
-     *
-     * @return GooglePermissionFactory
      */
     public function setFooter(?string $footer): self
     {
@@ -206,8 +203,6 @@ class GooglePermissionFactory
 
     /**
      * Sets message sent when an e-mail is bounced.
-     *
-     * @return GooglePermissionFactory
      */
     public function setDenyReply(?string $reply): self
     {

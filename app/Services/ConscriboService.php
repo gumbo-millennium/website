@@ -90,7 +90,6 @@ final class ConscriboService implements ConscriboServiceContract
      * Returns a service from data in the config. Throws a fit
      * if the config is missing.
      *
-     * @return ConscriboService
      * @throws RuntimeException
      */
     public static function fromConfig(): self

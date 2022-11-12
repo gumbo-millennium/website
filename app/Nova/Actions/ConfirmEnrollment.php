@@ -47,8 +47,6 @@ class ConfirmEnrollment extends Action
 
     /**
      * Makes a new Confirm Enrollment configured to this model.
-     *
-     * @return ConfirmEnrollment
      */
     public static function make(...$arguments): self
     {

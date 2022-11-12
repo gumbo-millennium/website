@@ -114,7 +114,6 @@ class FileExport extends Model implements Responsable
      * Set the file, needs an actual file.
      *
      * @param string $filename
-     * @return FileExport
      */
     public function attachFile(File $file, ?string $filename = null): self
     {

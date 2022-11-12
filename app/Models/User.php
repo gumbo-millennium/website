@@ -259,8 +259,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     /**
      * Sets a grant on the user.
-     *
-     * @return User
      */
     public function setGrant(string $key, ?bool $granted): self
     {
