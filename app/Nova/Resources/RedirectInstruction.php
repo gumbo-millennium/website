@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
+use App\Helpers\Str;
 use App\Models\RedirectInstruction as RedirectInstructionModel;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
@@ -66,6 +67,9 @@ class RedirectInstruction extends Resource
                     'required',
                     'max:255',
                 ])
+                ->fillUsing(function ($request, $model, $attribute) {
+                    $model->{$attribute} = Str::lower($request->input($attribute));
+                })
                 ->creationRules('unique:redirect_instructions')
                 ->updateRules('unique:redirect_instructions,slug,{{resourceId}}'),
 
