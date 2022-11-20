@@ -27,13 +27,6 @@ class ProfileController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request): HttpResponse
-    {
-        return Response::view('account.index', [
-            'user' => $request->user(),
-        ]);
-    }
-
     /**
      * Edit form.
      */

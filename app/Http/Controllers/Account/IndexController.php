@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
-use App\Models\BotUserLink;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
@@ -29,11 +28,15 @@ class IndexController extends Controller
     public function index(Request $request): HttpResponse
     {
         $user = $request->user();
-        $telegramName = null;
-        if ($user->telegram_id) {
-            $telegramName = BotUserLink::getName('telegram', $user->telegram_id);
-        }
 
-        return Response::view('account.index', compact('user', 'telegramName'));
+        $recognizedRoles = $user->roles()->whereNotNull('conscribo_id')->pluck('title');
+
+        $isMember = $user->is_member;
+
+        return Response::view('account.index', [
+            'user' => $user,
+            'isMember' => $isMember,
+            'recognizedRoles' => $recognizedRoles,
+        ]);
     }
 }
