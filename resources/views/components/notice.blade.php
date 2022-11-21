@@ -19,6 +19,6 @@
 </div>
 @else
 <div {{ $attrs }}>
-    {{ $title }}
+    {{ $slot }}
 </div>
 @endif
