@@ -77,17 +77,22 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
         </x-slot>
 
         {{-- Activity has ended --}}
-        @if ($activity->end_date < Date::now())
-        <x-notice class="mx-8">
+        @if ($activity->cancelled_at)
+        <x-notice class="mx-8" type="warning" title="Activiteit geannuleerd">
+            @if($activity->cancelled_reason)
+                Deze activiteit is geannuleerd: {{ Str::finish($activity->cancelled_reason, '.') }}
+            @else
+                Deze activiteit is geannuleerd.
+            @endif
+        </x-notice>
+        @elseif ($activity->end_date < Date::now())
+        <x-notice class="mx-8" type="info">
             Deze activiteit is al afgelopen.
         </x-notice>
-        @else
-            {{-- Unlisted --}}
-            @if (!$activity->is_published)
-            <x-notice type="brand" class="mx-8">
-                Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
-            </x-notice>
-            @endif
+        @elseif (!$activity->is_published)
+        <x-notice class="mx-8" type="brand">
+            Deze activiteit is nog niet gepubliceerd, alleen gebruikers met de link kunnen hem vinden.
+        </x-notice>
         @endif
 
         <div class="p-8">
