@@ -119,7 +119,7 @@ class CalendarController extends Controller
             }
 
             // Join bodylines and re-trim
-            return trim(implode("\n", $bodyLines));
+            return (string) Str::of(implode("\n", $bodyLines))->trim()->ascii('nl');
         });
     }
 
