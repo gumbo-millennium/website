@@ -118,8 +118,10 @@ class CalendarController extends Controller
                 // All other HTML types are skipped
             }
 
-            // Join bodylines and re-trim
-            return (string) Str::ascii(trim(implode("\n", $bodyLines)), 'nl');
+            // Convert to ascii and trim lines
+            return Collection::make($bodyLines)
+                ->filter(fn ($val) => (string) Str::of($val)->trim()->ascii('nl'))
+                ->join("\n");
         });
     }
 
