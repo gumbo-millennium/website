@@ -35,6 +35,7 @@ use Eluceo\iCal\Presentation\Component\Property\Value\UriValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
