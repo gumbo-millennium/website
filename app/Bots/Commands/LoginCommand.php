@@ -41,6 +41,13 @@ class LoginCommand extends Command
     Foutmelding: %s
     TEXT;
 
+    private const LOGIN_MSG_NO_DMS = <<<'TEXT'
+    ⚠ Inloggen niet mogelijk
+
+    De bot mag geen privégesprek <i>starten</i> met gebruikers, en je hebt nog geen chat met de bot lopen.
+    Stuur zelf even /login in een privechat naar de Gumbot.
+    TEXT;
+
     /**
      * The name of the Telegram command.
      *
@@ -120,6 +127,7 @@ class LoginCommand extends Command
             ]);
         } catch (TelegramSDKException $e) {
             $errorMessage = $e->getMessage();
+            $fullErrorMessage = null;
 
             // Check error code if the domain name is misconfigured
             if (Str::contains($e->getMessage(), 'BOT_DOMAIN_INVALID')) {
@@ -127,12 +135,12 @@ class LoginCommand extends Command
             } elseif ($this->isInGroupChat()) {
                 // The domain is valid but the API call failed. The user has probably
                 // never interacted with the bot, so we can't send a DM.
-                $errorMessage = 'De bot kan je niet DM\'en, probeer het opnieuw in een privé chat.';
+                $fullErrorMessage = $this->formatText(self::LOGIN_MSG_NO_DMS);
             }
 
             // Reply to the source chat with the error message
             $this->replyWithMessage([
-                'text' => $this->formatText(self::LOGIN_MSG_FAIL, $errorMessage),
+                'text' => $fullErrorMessage ?? $this->formatText(self::LOGIN_MSG_FAIL, $errorMessage),
                 'parse_mode' => 'HTML',
             ]);
         }
