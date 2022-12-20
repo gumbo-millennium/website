@@ -137,6 +137,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     MenuItem::resource(Resources\Sponsor::class),
                     MenuItem::resource(Resources\Payments\Settlement::class),
                 ])->icon('users')->collapsable();
+            } elseif ($user?->can('viewAny', Models\Sponsor::class)) {
+                yield MenuSection::make('Sponsorcommissie', [
+                    MenuItem::resource(Resources\Sponsor::class),
+                ])->icon('users')->collapsable();
             }
 
             if ($user->can('viewAny', Models\Webcam\Camera::class)) {
