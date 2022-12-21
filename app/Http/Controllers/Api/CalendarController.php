@@ -35,6 +35,7 @@ use Eluceo\iCal\Presentation\Component\Property\Value\UriValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -65,6 +66,7 @@ class CalendarController extends Controller
 
             // Prep body text
             $bodyLines = [];
+            $newLine = (string) Str::uuid();
 
             // Iterate over all items, only preserving headers and paragraphs
             foreach ($xpath->query('//div[contains(@class, "container")]/*') as $childNode) {
@@ -79,7 +81,7 @@ class CalendarController extends Controller
                 if ($childNode->nodeName === 'h1' || $childNode->nodeName === 'h2') {
                     $bodyLines[] = $asciiValue->upper();
                     $bodyLines[] = str_repeat('=', $asciiValue->length());
-                    $bodyLines[] = '';
+                    $bodyLines[] = $newLine;
 
                     continue;
                 }
@@ -88,7 +90,7 @@ class CalendarController extends Controller
                 if ($childNode->nodeName === 'h3') {
                     $bodyLines[] = $asciiValue->title();
                     $bodyLines[] = str_repeat('-', $asciiValue->length());
-                    $bodyLines[] = '';
+                    $bodyLines[] = $newLine;
 
                     continue;
                 }
@@ -96,7 +98,7 @@ class CalendarController extends Controller
                 // Format other headers and paragraphs as plain text
                 if (preg_match('/^(p|h\d)$/i', $childNode->nodeName)) {
                     $bodyLines[] = $asciiValue;
-                    $bodyLines[] = '';
+                    $bodyLines[] = $newLine;
 
                     continue;
                 }
@@ -111,7 +113,7 @@ class CalendarController extends Controller
                         $bodyLines[] = '* ' . Str::of($listItem->nodeValue)->trim();
                     }
 
-                    $bodyLines[] = '';
+                    $bodyLines[] = $newLine;
 
                     continue;
                 }
@@ -120,9 +122,12 @@ class CalendarController extends Controller
             }
 
             // Convert to ascii and trim lines
-            return Collection::make($bodyLines)
+            $asciiString = Collection::make($bodyLines)
                 ->filter(fn ($val) => (string) Str::of($val)->trim()->ascii('nl'))
                 ->join("\n");
+
+            // Replace newline UUID with empty string, a newline is added via the join above.
+            return str_replace($newLine, "", $asciiString);
         });
     }
 
