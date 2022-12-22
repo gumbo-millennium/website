@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use App\Helpers\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 use Telegram\Bot\Actions;
 
 /**
@@ -83,6 +87,16 @@ class SackCommand extends Command
             $user->name,
             $target,
         );
+
+        // Write the file away
+        try {
+            Storage::append('sack.tsv', sprintf("%s\t%s\t%s\n", date('Y-m-d H:i:s'), Str::ascii($user->name), Str::ascii($target)));
+        } catch (FilesystemException) {
+            Log::warning('Could not write sack.txt file for {user} sacking {target}', [
+                'user' => $user->name,
+                'target' => $target,
+            ]);
+        }
 
         // Send as-is, but with a gif
         if ($gif = $this->getReplyGifUrl('kicked out')) {
