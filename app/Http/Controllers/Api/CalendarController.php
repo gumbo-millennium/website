@@ -35,7 +35,6 @@ use Eluceo\iCal\Presentation\Component\Property\Value\UriValue;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -127,7 +126,7 @@ class CalendarController extends Controller
                 ->join("\n");
 
             // Replace newline UUID with empty string, a newline is added via the join above.
-            return str_replace($newLine, "", $asciiString);
+            return (string) Str::of($asciiString)->replace($newLine, '')->trim();
         });
     }
 
