@@ -243,6 +243,23 @@ class UpdateConscriboUserJob implements ShouldQueue
         ]);
     }
 
+    /**
+     * Ensure no users exist with this Conscribo ID by clearing any existing
+     * assignments of the ID.
+     *
+     * @param User $user User to skip
+     * @param string $code Conscribo ID to check
+     */
+    private function ensureConscriboIdIsUnique(User $user, string $code): void
+    {
+        User::where([
+            ['id', '!=', $user->id],
+            ['conscribo_id', '=', $code],
+        ])->update([
+            'conscribo_id' => null,
+        ]);
+    }
+
     private function updateUserDetails(User $user, array $accountingUser): void
     {
         $notEmptyGet = static function ($key) use ($accountingUser) {
@@ -250,6 +267,8 @@ class UpdateConscriboUserJob implements ShouldQueue
 
             return ! empty($val) ? $val : null;
         };
+
+        $this->ensureConscriboIdIsUnique($user, $accountingUser['code']);
 
         // Store ID
         $user->conscribo_id = $accountingUser['code'];
