@@ -177,7 +177,7 @@ jobs:
       - build-frontend
       - build-backend
 
-    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@develop
+    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@main
     with:
       environment: acceptance
     secrets:
@@ -198,7 +198,7 @@ jobs:
     needs:
       - deploy-acceptance
 
-    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@develop
+    uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@main
     with:
       environment: production
     secrets:
