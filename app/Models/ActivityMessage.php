@@ -9,6 +9,8 @@ use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\LazyCollection;
 
 /**
@@ -31,6 +33,10 @@ use Illuminate\Support\LazyCollection;
  * @method static Builder|ActivityMessage query()
  * @method static Builder|ActivityMessage unsent()
  * @mixin \Eloquent
+ * @property \Illuminate\Support\Carbon|null $scheduled_at
+ * @property-read bool $has_tickets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
+ * @method static Builder|ActivityMessage scheduledToSend()
  */
 class ActivityMessage extends Model
 {
@@ -53,6 +59,7 @@ class ActivityMessage extends Model
      */
     protected $casts = [
         'recipients' => 'int',
+        'scheduled_at' => 'datetime',
         'sent_at' => 'datetime',
     ];
 
@@ -100,9 +107,24 @@ class ActivityMessage extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function tickets(): BelongsToMany
+    {
+        return $this->belongsToMany(Ticket::class);
+    }
+
+    public function getHasTicketsAttribute(): bool
+    {
+        return $this->tickets()->exists();
+    }
+
     public function scopeUnsent(Builder $query): Builder
     {
         return $query->whereNull('sent_at');
+    }
+
+    public function scopeScheduledToSend(Builder $query): Builder
+    {
+        return $query->where(fn (Builder $query) => $query->whereNull('scheduled_at')->orWhere('scheduled_at', '<=', Date::now()));
     }
 
     public function getEnrollmentsCursor(): LazyCollection

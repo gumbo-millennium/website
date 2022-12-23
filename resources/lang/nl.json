@@ -106,7 +106,9 @@
   "Number of recipients": "Number of recipients",
 
   "Please specify the target audience, the message title and the message body.":
-    "Geef de doelgroep aan en typ daarna je bericht.",
+    "Geef de doelgroep, de titel en de inhoud van het bericht op.",
+  "Optionally, you can specify when the message should be sent, and to which tickets.":
+    "Eventueel kun je aangeven wanneer het bericht verstuurd moet worden, en aan welke tickets.",
   "Send message": "Verstuur bericht",
   "Cancel": "Annuleren",
   "Send mail to participants": "Mail versturen naar deelnemers",

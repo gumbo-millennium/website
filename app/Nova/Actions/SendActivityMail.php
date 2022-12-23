@@ -25,7 +25,12 @@ class SendActivityMail extends Action
     {
         $this
             // The 'confirmation' is the body
-            ->confirmText(__('Please specify the target audience, the message title and the message body.'))
+            ->confirmText(
+                implode(PHP_EOL, [
+                    __('Please specify the target audience, the message title and the message body.'),
+                    __('Optionally, you can specify when the message should be sent, and to which tickets.'),
+                ]),
+            )
 
             // The buttons
             ->confirmButtonText(__('Send message'))
