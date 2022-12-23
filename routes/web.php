@@ -77,10 +77,11 @@ Route::prefix('admin/')->group(function () {
 /**
  * Ticket routes.
  */
-Route::prefix('tickets')->name('tickets.')->group(function () {
-    Route::get('/', [Controllers\TicketController::class, 'index'])->name('index');
-    Route::get('/{ticket}', [Controllers\TicketController::class, 'show'])->name('show');
-});
+// Route::prefix('tickets')->name('tickets.')->group(function () {
+//     Route::get('/', [Controllers\TicketController::class, 'index'])->name('index');
+//     Route::get('/{ticket}', [Controllers\TicketController::class, 'show'])->name('show');
+// });
+Route::redirect('/tickets', '/mijn-account/tickets')->name('tickets.index');
 
 /**
  * Files route.
