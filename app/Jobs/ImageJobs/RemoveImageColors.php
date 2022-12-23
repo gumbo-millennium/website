@@ -55,13 +55,13 @@ class RemoveImageColors extends SvgJob
         $doc->strictErrorChecking = false;
 
         // Disable errors
-        \libxml_use_internal_errors(true);
+        libxml_use_internal_errors(true);
 
         // Try loading the XML (should work)
         $loadOk = $doc->load($filePath);
 
         // Enable errors
-        \libxml_use_internal_errors(false);
+        libxml_use_internal_errors(false);
 
         // Remove if conversion failed
         if (! $loadOk) {
@@ -80,15 +80,15 @@ class RemoveImageColors extends SvgJob
         }
 
         // Remove non-whitelisted nodes
-        $whitelistNodes = \array_merge(self::SVG_END_NODES, self::SVG_RECURSABLE);
+        $whitelistNodes = array_merge(self::SVG_END_NODES, self::SVG_RECURSABLE);
         foreach ($doc->documentElement->getElementsByTagName('*') as $node) {
-            \assert($node instanceof \DOMElement);
+            assert($node instanceof \DOMElement);
 
             // Get clean name
             $nodeName = Str::lower($node->nodeName);
 
             // Check whitelist
-            if (\in_array($nodeName, $whitelistNodes, true)) {
+            if (in_array($nodeName, $whitelistNodes, true)) {
                 continue;
             }
 
@@ -133,7 +133,7 @@ class RemoveImageColors extends SvgJob
 
             // Check type
             $hasChildren = $node->hasChildNodes();
-            $isEndNode = \in_array($nodeName, self::SVG_END_NODES, true);
+            $isEndNode = in_array($nodeName, self::SVG_END_NODES, true);
 
             // We're at the end of the tree, and no color is set, so assign a new one
             if (($isEndNode || ! $hasChildren) && $this->hasNoConfiguredFill($node)) {
@@ -150,7 +150,7 @@ class RemoveImageColors extends SvgJob
             }
 
             // Only recurse if allowed by standard
-            if (! \in_array($nodeName, self::SVG_RECURSABLE, true)) {
+            if (! in_array($nodeName, self::SVG_RECURSABLE, true)) {
                 continue;
             }
 
