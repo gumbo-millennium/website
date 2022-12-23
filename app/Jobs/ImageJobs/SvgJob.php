@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\File;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
@@ -116,8 +117,8 @@ abstract class SvgJob implements ShouldQueue
             $fileTarget = sprintf(
                 '%s.%s.%s.svg',
                 $this->model->slug,
-                substr(\sha1("{$this->attribute}-{$this->model->id}"), 0, 4),
-                substr(\sha1_file($path), 0, 16),
+                substr(sha1("{$this->attribute}-{$this->model->id}"), 0, 4),
+                substr(sha1_file($path), 0, 16),
             );
 
             // Store original version
@@ -147,31 +148,39 @@ abstract class SvgJob implements ShouldQueue
     {
         // Fail if missing
         if (! $this->exists()) {
-            echo "NOT FOUND\n";
+            Log::warning('Failed to create temp file, {source} not found', [
+                'source' => $this->getPath(),
+            ]);
 
             return null;
         }
 
         // Get handle on source
         $sourceHandle = Storage::disk(Sponsor::LOGO_DISK)->readStream($this->getPath());
-        if (! $sourceHandle || ! \is_resource($sourceHandle)) {
-            echo "HANDLE FAILED\n";
+        if (! $sourceHandle || ! is_resource($sourceHandle)) {
+            Log::warning('Failed to create read stream on {source}', [
+                'source' => $this->getPath(),
+            ]);
 
             return null;
         }
 
         // Get handle on target
-        $targetFile = \tempnam(\sys_get_temp_dir(), 'svg');
+        $targetFile = tempnam(sys_get_temp_dir(), 'svg');
         $targetHandle = fopen($targetFile, 'w');
-        if (! $targetHandle || ! \is_resource($targetHandle)) {
-            echo "HANDLE TARGET FAILED\n";
+        if (! $targetHandle || ! is_resource($targetHandle)) {
+            Log::warning('Failed to create read write on {target} for {source}', [
+                'source' => $this->getPath(),
+                'target' => $targetFile,
+            ]);
+
             fclose($sourceHandle);
 
             return null;
         }
 
         // Copy over file
-        $copyOk = \stream_copy_to_stream($sourceHandle, $targetHandle);
+        $copyOk = stream_copy_to_stream($sourceHandle, $targetHandle);
 
         // Close handles
         fclose($sourceHandle);
@@ -180,10 +189,20 @@ abstract class SvgJob implements ShouldQueue
         // Return null on failure
         if ($copyOk === false) {
             @unlink($targetFile);
-            echo "COPY FAILED\n";
+
+            Log::warning('Failed to copy {source} to {target}', [
+                'source' => $this->getPath(),
+                'target' => $targetFile,
+            ]);
 
             return null;
         }
+
+        // Log it
+        Log::debug('Copied Storage path {source} to {target}', [
+            'source' => $this->getPath(),
+            'target' => $targetFile,
+        ]);
 
         // Return file
         return new File($targetFile);

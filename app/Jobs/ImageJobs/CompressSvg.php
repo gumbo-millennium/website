@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\ImageJobs;
 
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
 class CompressSvg extends SvgJob
@@ -19,23 +20,19 @@ class CompressSvg extends SvgJob
         $file = $this->getTempFile();
         $filePath = $file->getPathname();
 
+        $configPath = resource_path('js/sponsors.svgo.config.js');
+
         // Run it through SVGO
         $process = new Process([
             'svgo',
-            '--multipass', // leeloo?
-            '--disable=removeViewBox',
-            '--enable=convertStyleToAttrs',
-            '--enable=removeDimensions',
-            '--enable=removeRasterImages',
-            '--enable=removeScriptElement',
-            '--enable=removeStyleElement',
+            "--config={$configPath}",
             $filePath,
         ]);
         $process->run();
 
         // Log if SVGO failed
         if (! $process->isSuccessful()) {
-            \logger()->warning('Cannot process svg');
+            Log::warning('Cannot process svg');
         }
 
         // Save attribute

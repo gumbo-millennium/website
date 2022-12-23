@@ -54,6 +54,7 @@
     "poll": "npx mix watch -- --watch-options-poll=1000",
     "dev": "npx mix build",
     "build": "npx mix build -p",
+    "format": "eslint resources/js resources/js-build --fix",
     "postinstall": "resources/bin/install-font-awesome"
   }
 }
