@@ -25,9 +25,14 @@ class Kernel extends ConsoleKernel
 
         // Expunge data past it's retention period
         $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
-        $schedule->command('google-wallet:prune-nonces')->daily();
         $schedule->command('telescope:prune')->daily();
         $schedule->command('model:prune')->weeklyOn(6, '22:00');
+
+        // Ensure Google Wallet data is updated, if enabled
+        if (Config::get('services.google.wallet.enabled', false)) {
+            $schedule->command('google-wallet:prune-nonces')->daily();
+            $schedule->command('google-wallet:create-missing-activities')->twiceDaily();
+        }
 
         // Wipe old enrollment exports
         $schedule->command('enrollment:prune-exports')->daily();
