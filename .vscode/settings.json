@@ -6,6 +6,11 @@
     "css.lint.unknownAtRules": "ignore",
     "css.validate": false,
 
+    "[php]":{
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
+    },
+
     "yaml.schemas": {
         "resources/json/schemas/menu.schema.json": [
             "resources/yaml/menu.yaml",
