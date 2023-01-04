@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'accept-json' => \App\Http\Middleware\MustAcceptJson::class,
         'member' => \App\Http\Middleware\MembersOnlyMiddleware::class,
         'no-sponsor' => \App\Http\Middleware\HideSponsor::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
