@@ -30,7 +30,7 @@ class ActivityMessagePolicy
      */
     public function view(User $user, ActivityMessage $activityMessage)
     {
-        return $user->can('manage', $activityMessage->activity);
+        return $user->can('update', $activityMessage->activity);
     }
 
     /**
