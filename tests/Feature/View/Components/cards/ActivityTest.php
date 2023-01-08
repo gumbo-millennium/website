@@ -27,7 +27,7 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Public activity'));
+            ->assertSee(__('Public Activity'));
     }
 
     /**
@@ -47,7 +47,7 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Public activity'));
+            ->assertSee(__('Public Activity'));
     }
 
     /**
@@ -68,7 +68,7 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Paid activity'));
+            ->assertSee(__('Paid Activity'));
     }
 
     /**
@@ -84,7 +84,7 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Private activity'));
+            ->assertSee(__('Private Activity'));
     }
 
     /**
@@ -104,7 +104,7 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Private activity'));
+            ->assertSee(__('Private Activity'));
     }
 
     /**
@@ -124,6 +124,6 @@ class ActivityTest extends TestCase
             'activity' => $activity,
         ])
             ->assertOk()
-            ->assertSee(__('Paid activity'));
+            ->assertSee(__('Paid Activity'));
     }
 }
