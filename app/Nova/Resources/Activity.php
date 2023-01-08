@@ -441,8 +441,8 @@ class Activity extends Resource
             new Actions\ExportActivityParticipants(),
 
             // Standalones
-            new Actions\ImportExport\DownloadImportFormat('activity'),
-            new Actions\ImportExport\ImportActivities(),
+            Actions\ImportExport\DownloadImportFormat::make('activity')->standalone(),
+            Actions\ImportExport\ImportActivities::make()->standalone(),
         ];
     }
 

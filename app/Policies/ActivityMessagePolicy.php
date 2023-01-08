@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Activity;
 use App\Models\ActivityMessage;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -19,7 +20,7 @@ class ActivityMessagePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('activity-admin');
+        return $user->can('viewAny', Activity::class);
     }
 
     /**
