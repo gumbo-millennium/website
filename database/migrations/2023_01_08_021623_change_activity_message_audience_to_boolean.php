@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\ActivityMessage;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,8 +20,8 @@ class ChangeActivityMessageAudienceToBoolean extends Migration
         });
 
         DB::table('activity_messages')->whereIn('target_audience', [
-            ActivityMessage::AUDIENCE_ANY,
-            ActivityMessage::AUDIENCE_PENDING,
+            'any',
+            'pending',
         ])->update(['include_pending' => 1]);
 
         Schema::table('activity_messages', function (Blueprint $table) {
@@ -43,7 +42,7 @@ class ChangeActivityMessageAudienceToBoolean extends Migration
 
         DB::table('activity_messages')
             ->where('include_pending', true)
-            ->update(['target_audience' => ActivityMessage::AUDIENCE_ANY]);
+            ->update(['target_audience' => 'any']);
 
         Schema::table('activity_messages', function (Blueprint $table) {
             $table->dropColumn('include_pending');

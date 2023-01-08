@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\States\Enrollment\State;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,6 +34,7 @@ use Illuminate\Support\LazyCollection;
  * @property-read bool $has_tickets
  * @property-read null|\App\Models\User $sender
  * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
+ * @method static \Database\Factories\ActivityMessageFactory factory(...$parameters)
  * @method static Builder|ActivityMessage forEnrollment(\App\Models\Enrollment $enrollment)
  * @method static Builder|ActivityMessage newModelQuery()
  * @method static Builder|ActivityMessage newQuery()
@@ -47,19 +49,8 @@ use Illuminate\Support\LazyCollection;
  */
 class ActivityMessage extends Model
 {
+    use HasFactory;
     use SoftDeletes;
-
-    public const AUDIENCE_ANY = 'any';
-
-    public const AUDIENCE_CONFIRMED = 'confirmed';
-
-    public const AUDIENCE_PENDING = 'pending';
-
-    public const VALID_AUDIENCES = [
-        self::AUDIENCE_ANY,
-        self::AUDIENCE_CONFIRMED,
-        self::AUDIENCE_PENDING,
-    ];
 
     /**
      * The attributes that should be cast.
@@ -151,6 +142,10 @@ class ActivityMessage extends Model
         return $this->activity
             ->enrollments()
             ->whereState('state', $states)
+            ->when(
+                $this->tickets->isNotEmpty(),
+                fn ($query) => $query->whereHas('ticket', fn ($query) => $query->whereIn('id', $this->tickets->pluck('id'))),
+            )
             ->with('user')
             ->cursor();
     }

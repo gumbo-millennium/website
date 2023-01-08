@@ -23,11 +23,22 @@ class UserFactory extends Factory
             'telegram_id' => $this->faker->optional(0.8)->numerify(str_repeat('#', 31)),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'email' => $this->faker->unique()->safeEmail,
             'gender' => $this->faker->randomElement(['Man', 'Vrouw', $this->faker->word, null]),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Ensure the user e-mail address looks like a real e-mail address.
+     */
+    public function configure(): self
+    {
+        return parent::configure()
+            ->afterMaking(fn (User $user) => $user->fill([
+                // Make email like "<first-name>.<last-name><random-number>@<domain>"
+                'email' => (string) Str::of("{$user->first_name} {$user->last_name}{$this->faker->buildingNumber()}")->slug('.')->finish("@{$this->faker->safeEmailDomain()}"),
+            ]));
     }
 
     /**
