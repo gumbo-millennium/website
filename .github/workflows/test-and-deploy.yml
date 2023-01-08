@@ -83,6 +83,9 @@ jobs:
           - php: '8.2'
             experimental: true
             composer-options: "--ignore-platform-reqs"
+          - php: nightly
+            experimental: true
+            composer-options: "--ignore-platform-reqs"
 
     services:
       database:
