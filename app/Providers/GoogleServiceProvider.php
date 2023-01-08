@@ -8,7 +8,7 @@ use App\Contracts\Mail\MailListHandler;
 use App\Services\Mail\GoogleMailListService;
 use Google_Client as GoogleApi;
 use Google_Exception as GoogleException;
-use Google_Service_Walletobjects;
+use Google_Service_Walletobjects as GoogleWalletService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -53,23 +53,21 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
          * the credentials used should not be overlapping with access to Gmail signatures
          * and Google Directory groups.
          */
-        $this->app->singleton('google_wallet_api', function () {
+        $this->app->singleton(GoogleWalletService::class, function () {
             // Log in client as service worker
             $client = new GoogleApi();
 
-            // Apply configs
-            $client->setAuthConfig(Config::get('services.google.wallet.key_file'));
-            $client->setApplicationName(Config::get('app.name'));
-            $client->setScopes([
-                'https://www.googleapis.com/auth/wallet_object.issuer',
-            ]);
+            // Apply configs, if enabled
+            if (Config::get('services.google.wallet.enabled')) {
+                $client->setAuthConfig(Config::get('services.google.wallet.key_file'));
+                $client->setApplicationName(Config::get('app.name'));
+                $client->setScopes([
+                    'https://www.googleapis.com/auth/wallet_object.issuer',
+                ]);
+            }
 
-            return $client;
+            return new GoogleWalletService($client);
         });
-
-        // Bind two sub-apis via the container, to allow for test overrides
-        $this->app->bind('google_wallet_eventticketclass_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketclass);
-        $this->app->bind('google_wallet_eventticketobjects_api', fn ($app) => (new Google_Service_Walletobjects($app->get('google_wallet_api')))->eventticketobject);
 
         // Mail
         $this->app->singleton(MailListHandler::class, GoogleMailListService::class);
@@ -83,7 +81,13 @@ class GoogleServiceProvider extends ServiceProvider implements DeferrableProvide
     public function provides()
     {
         return [
+            // Classes
             GoogleApi::class,
+
+            // Google Wallet
+            GoogleWalletService::class,
+
+            // Mail updates
             MailListHandler::class,
         ];
     }

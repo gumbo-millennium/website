@@ -15,6 +15,7 @@ use App\Nova\Metrics;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\MergeValue;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -23,6 +24,7 @@ use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked.
+ * @mixin \App\Models\Activity
  */
 class Activity extends Resource
 {
@@ -82,7 +84,8 @@ class Activity extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return self::queryAllOrManaged($request, parent::indexQuery($request, $query));
+        return self::queryAllOrManaged($request, parent::indexQuery($request, $query))
+            ->withCount('seatedEnrollments');
     }
 
     /**
@@ -146,7 +149,7 @@ class Activity extends Resource
         }
 
         // Otherwise, show date and time
-        return sprintf('%s (%s - %s)', $startDate, $startTime, $endTime);
+        return sprintf('%s (%s – %s)', $startDate, $startTime, $endTime);
     }
 
     /**
@@ -161,16 +164,16 @@ class Activity extends Resource
             ->all();
 
         return [
+            Fields\ID::make()->sortable(),
+
             $this->mainFields($request),
 
             new Panel('Evenement-details', [
                 Fields\Text::make('Weergavenaam locatie', 'location')
-                    ->hideFromIndex()
                     ->rules('required', 'string', 'between:2,64')
                     ->help('Weergavenaam van de locatie.'),
 
                 Fields\Text::make('Adres locatie', 'location_address')
-                    ->hideFromIndex()
                     ->rules([
                         'max:190',
                     ])
@@ -192,16 +195,102 @@ class Activity extends Resource
         ];
     }
 
+    /**
+     * Get the fields for the index page, which is quite different from
+     * forms and detail pages, so it's a separate method.
+     *
+     * @return array<Fields\Field>
+     */
+    public function fieldsForIndex(NovaRequest $request): array
+    {
+        return [
+            Fields\ID::make(),
+
+            Fields\Image::make('Image', 'poster')
+                ->disk(Config::get('gumbo.images.disk'))
+                ->path(path_join(Config::get('gumbo.images.path'), 'activities'))
+                ->thumbnail(fn () => (string) image_asset($this->poster)->preset('nova-thumbnail'))
+                ->preview(fn () => (string) image_asset($this->poster)->preset('nova-preview')),
+
+            Fields\Stack::make(__('Title and Path'), 'name', [
+                Fields\Line::make('Titel', 'name')
+                    ->asHeading(),
+                Fields\Line::make('Pad', 'slug')
+                    ->displayUsing(fn ($slug) => "/activiteiten/{$slug}")
+                    ->asSmall(),
+            ])->sortable(),
+
+            Fields\Stack::make(__('Date and Time'), 'start_date', [
+                Fields\Line::make('Datum', 'start_date')
+                    ->displayUsing(fn ($date) => $date->isoFormat('dd D MMM YYYY'))
+                    ->sortable(),
+                Fields\Line::make('Tijd', function () {
+                    if ($this->end_date->diffInHours($this->start_date) > 12) {
+                        return "{$this->start_date->isoFormat('HH:mm')} - {$this->end_date->isoFormat('D MMM, HH:mm')}";
+                    }
+
+                    return "{$this->start_date->isoFormat('HH:mm')} - {$this->end_date->isoFormat('HH:mm')}";
+                })->asSmall(),
+            ])->sortable(),
+
+            Fields\Stack::make(__('Location'), 'location', [
+                Fields\Line::make('Weergavenaam', 'location')->asHeading(),
+                Fields\Line::make('Adres', 'location_address')
+                    ->displayUsing(fn ($value) => filter_var($value, FILTER_VALIDATE_URL) ? __('Online') : Str::of($this->location_address)->limit(40))
+                    ->asSmall(),
+            ])->sortable(),
+
+            Fields\Text::make(__('Availability'), fn () => sprintf(
+                '%d / %s',
+                $this->seated_enrollment_count ?? $this->seatedEnrollments->count(),
+                $this->effective_seat_limit ?? '∞',
+            )),
+
+            Fields\Stack::make('Status inschrijvingen', [
+                Fields\Status::make('enrollment_status_line', function () {
+                    // Edge case for no-enrollment events
+                    if ($this->enrollment_start === null && $this->enrollment_end === null) {
+                        return 'n.v.t.';
+                    }
+
+                    // Label
+                    return __($this->enrollment_open ? 'Open' : 'Closed');
+                })
+                    ->loadingWhen([])
+                    ->failedWhen([__('Closed')])
+                    ->displayUsing(fn ($val) => __(Str::title($val))),
+                Fields\Line::make('enrollment_eta', function () {
+                    // Edge case for no-enrollment events
+                    if ($this->enrollment_start === null && $this->enrollment_end === null) {
+                        return 'n.v.t.';
+                    }
+
+                    // Label
+                    if ($this->enrollment_start > Date::now()) {
+                        return __('Opens :date', ['date' => $this->enrollment_start->isoFormat('D MMM, HH:mm')]);
+                    }
+                    if ($this->enrollment_end > Date::now()) {
+                        return __('Closes :date', ['date' => $this->enrollment_end->isoFormat('D MMM, HH:mm')]);
+                    }
+
+                    return __('Closed :date', ['date' => $this->enrollment_end->isoFormat('D MMM \'YY, HH:mm')]);
+                })->asSmall(),
+            ]),
+
+            // Visibility
+            Fields\Status::make('Zichtbaarheid', fn () => __($this->is_published ? ($this->is_public ? 'Public' : 'Members') : 'Hidden'))
+                ->failedWhen([__('Hidden')])
+                ->loadingWhen([]),
+        ];
+    }
+
     public function mainFields(NovaRequest $request): MergeValue
     {
         $user = $request->user();
         $groupRules = $user->can('admin', self::class) ? 'nullable' : 'required';
 
         return $this->merge([
-            Fields\ID::make()->sortable(),
-
             Fields\Text::make('Titel', 'name')
-                ->sortable()
                 ->rules([
                     'required',
                     'between:4,255',
@@ -212,26 +301,22 @@ class Activity extends Resource
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
                 ->readonly(fn () => $this->exists)
-                ->hideFromIndex()
                 ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
                     $slug = $request->input($requestAttribute);
                     $model->{$attribute} = Str::slug($slug, '-', 'nl');
                 }),
 
             Fields\Text::make('Slagzin', 'tagline')
-                ->hideFromIndex()
                 ->help('Korte slagzin om de activiteit te omschrijven')
                 ->rules('nullable', 'string', 'between:4,255'),
 
             Fields\BelongsTo::make('Groep', 'role', Role::class)
                 ->help('Groep of commissie die deze activiteit beheert')
                 ->rules($groupRules)
-                ->hideFromIndex()
                 ->nullable(),
 
             NovaEditorJsField::make('Omschrijving', 'description')
                 ->nullable()
-                ->hideFromIndex()
                 ->stacked(),
 
             Fields\Image::make('Afbeelding', 'poster')
@@ -272,8 +357,7 @@ class Activity extends Resource
             Fields\DateTime::make('Publiceren op', 'published_at')
                 ->help('Indien je de activiteit nog even wilt verbergen. Dit werkt hetzelfde als een ‘unlisted’ video op YouTube')
                 ->rules('nullable', 'date', 'before:start_date')
-                ->nullable()
-                ->hideFromIndex(),
+                ->nullable(),
         ]);
     }
 
@@ -289,67 +373,56 @@ class Activity extends Resource
                 ->help('Let op! Als de activiteit (door overmacht) ver is verplaatst, gebruik dan "Verplaats activiteit"'),
 
             Fields\DateTime::make('Einde activiteit', 'end_date')
-                ->rules('required', 'date', 'after:start_date')
-                ->hideFromIndex(),
+                ->rules('required', 'date', 'after:start_date'),
         ];
     }
 
     public function enrollmentFields(): array
     {
         return [
-            Fields\Number::make(__('Ticket Count'), 'tickets_count')
-                ->exceptOnForms()
-                ->help(__('Number of different tickets available.')),
-
             Flexible::make('Form', 'enrollment_questions')
                 ->confirmRemove('Removing a field does not remove submitted data')
                 ->preset(ActivityForm::class),
 
-            Fields\DateTime::make('Opening inschrijvingen', 'enrollment_start')
+            Fields\DateTime::make(__('Enrollment Start'), 'enrollment_start')
                 ->rules('nullable', 'date', 'before:end_date')
-                ->hideFromIndex()
                 ->nullable(),
 
-            Fields\DateTime::make('Sluiting inschrijvingen', 'enrollment_end')
+            Fields\DateTime::make(__('Enrollment End'), 'enrollment_end')
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
-                ->hideFromIndex()
                 ->nullable(),
 
-            NovaEditorJsField::make('Ticket omschrijving', 'ticket_text')
+            NovaEditorJsField::make(__('Ticket Description'), 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
                 ->nullable()
-                ->hideFromIndex()
                 ->stacked(),
 
-            Fields\Text::make('Status inschrijvingen', function () {
-                // Edge case for no-enrollment events
-                if ($this->enrollment_start === null && $this->enrollment_end === null) {
-                    return 'n.v.t.';
-                }
+            Fields\Stack::make(__('Effective Seat Limit'), [
+                Fields\Line::make('Effective Seat Limit', 'effective_seat_limit')
+                    ->displayUsing(fn ($value) => $value === null ? __('Unlimited') : sprintf('%d', $value)),
+                Fields\Line::make(
+                    'Effective Seat Limit Reason',
+                    fn ($value) => $value !== $this->seats
+                    ? __('Calculated from available number of tickets')
+                    : __('Set on the activity'),
+                )->asSmall(),
+            ])->onlyOnDetail(),
 
-                // Label
-                return $this->enrollment_open ? 'Geopend' : 'Gesloten';
-            })->onlyOnIndex(),
-
-            Seats::make('Maximaal aantal plekken', 'seats')
+            Seats::make(__('Seat Limit'), 'seats')
                 ->min(0)
                 ->step(1)
                 ->nullable()
+                ->onlyOnForms()
                 ->nullValues(['', '0'])
                 ->rules('nullable', 'numeric', 'min:0')
                 ->help('Het absolute maximum aantal plekken, indien je dit niet met tickets wil doen.'),
 
             // Public
-            Fields\Boolean::make('Openbare activiteit', 'is_public'),
-
-            // Computed published flag
-            Fields\Boolean::make('Gepubliceerd', 'is_published')
-                ->onlyOnIndex(),
+            Fields\Boolean::make(__('Public Activity'), 'is_public'),
 
             // Ticket
             Fields\HasMany::make(__('Tickets'), 'tickets', Ticket::class)
-                ->nullable()
-                ->hideFromIndex(),
+                ->nullable(),
         ];
     }
 

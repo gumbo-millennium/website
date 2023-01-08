@@ -46,3 +46,11 @@ Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->na
 
 // Register Google Wallet webhook URL
 Route::post('/webhooks/google-wallet', [Api\WebhookController::class, 'googleWallet'])->name('webhooks.google-wallet');
+
+// Register resource routes, all protected
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('activities', 'Api\ActivityController')
+        ->only(['index', 'show']);
+    Route::apiResource('enrollments', 'Api\EnrollmentController')
+        ->only(['index', 'show']);
+});

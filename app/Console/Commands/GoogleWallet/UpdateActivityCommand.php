@@ -18,7 +18,11 @@ class UpdateActivityCommand extends GoogleWalletCommand
      *
      * @var string
      */
-    protected $signature = 'google-wallet:activity {activity}';
+    protected $signature = <<<'CMD'
+        google-wallet:activity
+            {activity : ID or slug of the activity}
+            {--with-enrollments : Also update the enrollments for this activity }
+    CMD;
 
     /**
      * The console command description.
@@ -35,10 +39,7 @@ class UpdateActivityCommand extends GoogleWalletCommand
     public function handle(WalletService $walletService)
     {
         $activity = $this->argument('activity');
-        $activity = Activity::query(fn ($query) => $query->orWhere([
-            ['id', $activity],
-            ['slug', $activity],
-        ]))->first();
+        $activity = Activity::find($activity) ?? Activity::findBySlug($activity);
 
         if (! $activity) {
             $this->error('Activity not found');
@@ -57,6 +58,18 @@ class UpdateActivityCommand extends GoogleWalletCommand
             $walletService->writeEventClassForActivity($activity);
 
             $this->line(Str::ucfirst("{$action} <info>OK</>"));
+
+            if ($this->option('with-enrollments')) {
+                $this->line('Starting update of enrollments...');
+
+                foreach ($activity->enrollments as $enrollment) {
+                    $this->call('google-wallet:enrollment', [
+                        'enrollment' => $enrollment->id,
+                    ]);
+                }
+
+                $this->info('Completed update of enrollments.');
+            }
 
             return Command::SUCCESS;
         } catch (GuzzleException $e) {

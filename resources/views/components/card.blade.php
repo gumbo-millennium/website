@@ -9,7 +9,7 @@
   'footerIcon' => null,
 ])
 <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
-  <div class="flex-shrink-0">
+  <div class="flex-shrink-0 bg-gray-200">
     @if ($image)
     <picture class="h-48 w-full bg-gray-200">
       <source src="{{ image_asset($image)->preset('tile')->webp() }}" type="image/webp" />

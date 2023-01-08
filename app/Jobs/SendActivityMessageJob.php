@@ -6,7 +6,6 @@ namespace App\Jobs;
 
 use App\Mail\ActivityMessageMail;
 use App\Models\ActivityMessage;
-use App\Models\Enrollment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -45,22 +44,35 @@ class SendActivityMessageJob implements ShouldQueue
     public function handle()
     {
         $activityMessage = $this->activityMessage;
+
+        // Stop if something seems off, prevent sending the same message twice.
+        if ($activityMessage->sent_at !== null || $activityMessage->trashed()) {
+            return;
+        }
+
         $count = 0;
 
         foreach ($activityMessage->getEnrollmentsCursor() as $enrollment) {
-            assert($enrollment instanceof Enrollment);
-
-            $count++;
-
             Mail::to($enrollment->user)
                 ->queue(new ActivityMessageMail(
                     $enrollment,
                     $activityMessage,
                 ));
+
+            $count++;
         }
 
-        $activityMessage->receipients = $count;
+        // Save the changes to the message.
+        $activityMessage->recipients = $count;
         $activityMessage->sent_at = Date::now();
         $activityMessage->save();
+
+        // If the model was trashed while sending the message, restore it.
+        if ($activityMessage->refresh()->trashed()) {
+            $activityMessage->restore();
+        }
+
+        // Touch the activity, to ensure third parties update accordingly.
+        $activityMessage->activity->touch();
     }
 }

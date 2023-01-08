@@ -52,7 +52,7 @@ use Spatie\Permission\Models\Role;
  * @property null|string $rescheduled_reason
  * @property null|\Illuminate\Support\Carbon $postponed_at
  * @property null|string $postponed_reason
- * @property |null $enrollment_questions
+ * @property null|array<\Whitecube\NovaFlexibleContent\Layouts\Layout>|\Whitecube\NovaFlexibleContent\Layouts\Collection $enrollment_questions
  * @property null|int $role_id
  * @property array $features
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
@@ -60,10 +60,11 @@ use Spatie\Permission\Models\Role;
  * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read null|int $discount_price
  * @property-read null|int $discounts_available
+ * @property-read null|int $effective_seat_limit
  * @property-read bool $enrollment_open
  * @property-read Collection $expanded_features
  * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
- * @property-read null|FormLayout[] $form
+ * @property-read null|\App\Contracts\FormLayoutContract[] $form
  * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
  * @property-read string $human_readable_dates
@@ -166,6 +167,23 @@ class Activity extends SluggableModel
         'postponed_at' => 'datetime',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'enrollment_start',
+        'enrollment_end',
+        'cancelled_reason',
+        'rescheduled_from',
+        'rescheduled_reason',
+        'postponed_at',
+        'postponed_reason',
+        'enrollment_questions',
+        'role_id',
+    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -229,6 +247,12 @@ class Activity extends SluggableModel
         return $this->hasMany(Enrollment::class);
     }
 
+    public function seatedEnrollments(): Relation
+    {
+        return $this->enrollments()
+            ->whereNotState('state', [CancelledState::class, RefundedState::class]);
+    }
+
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
@@ -263,9 +287,7 @@ class Activity extends SluggableModel
         }
 
         // Get enrollment count
-        $occupied = $this->enrollments()
-            ->whereNotState('state', [CancelledState::class, RefundedState::class])
-            ->count();
+        $occupied = $this->seatedEnrollments()->count();
 
         // Subtract active enrollments from active seats
         return (int) max(0, $this->seats - $occupied);
@@ -601,7 +623,7 @@ class Activity extends SluggableModel
     /**
      * Returns the form fields interpreted as a form field.
      *
-     * @return null|FormLayout[]
+     * @return null|FormLayoutContract[]
      */
     public function getFormAttribute(): ?array
     {
@@ -693,5 +715,30 @@ class Activity extends SluggableModel
             $user,
             fn ($query) => $query->with('enrollments', fn ($query) => $query->where('user_id', $user->id)),
         );
+    }
+
+    /**
+     * Returns the effective seat limit for this activity, which is
+     * always capped by the number of seats on the activity, but
+     * if less tickets are available, the number is lower.
+     * @return null|int Max number of seats, or null if not limited
+     */
+    public function getEffectiveSeatLimitAttribute(): ?int
+    {
+        $ticketLimits = $this->tickets->pluck('quantity');
+        $hasUnlimitedTicket = $ticketLimits->contains(null);
+
+        // There is a ticket that allows infinite seats, so the activity is unlimited, unless a number of seats is set.
+        if ($hasUnlimitedTicket) {
+            return $this->seats;
+        }
+
+        // Activity has no limit, so use the combined ticket limit
+        if ($this->seats === null) {
+            return $ticketLimits->sum();
+        }
+
+        // Activity has a limit, so use the lowest of the two
+        return min($ticketLimits->sum(), $this->seats);
     }
 }

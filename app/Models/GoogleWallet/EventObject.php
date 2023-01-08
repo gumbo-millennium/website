@@ -11,11 +11,13 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use LogicException;
 
 /**
  * A Google Wallet Event Object, which is a single ticket on a
  * Google Wallet Event Class. Usually maps to an Enrollment.
+ *
  * @property int $id
  * @property int $class_id
  * @property string $wallet_id
@@ -34,6 +36,7 @@ use LogicException;
  * @property-read \App\Models\GoogleWallet\EventClass $class
  * @property-read int $active_installations
  * @property-read null|\Illuminate\Database\Eloquent\Model $class_subject
+ * @property-read \App\Models\GoogleWallet\Message[]|\Illuminate\Database\Eloquent\Collection $messages
  * @property-read EventObject[]|\Illuminate\Database\Eloquent\Collection $objects
  * @property-read null|User $owner
  * @property-read Eloquent|Model $subject
@@ -103,6 +106,11 @@ class EventObject extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function messages(): MorphToMany
+    {
+        return $this->morphToMany(Message::class, 'object', 'google_wallet_message_morphs');
     }
 
     /**

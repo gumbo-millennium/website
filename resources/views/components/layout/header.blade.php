@@ -80,6 +80,7 @@
   <div
     class="absolute top-0 inset-x-0 z-20 w-full p-2 transition transform origin-top-right md:left-[unset] md:max-w-xl lg:hidden"
     x-show="menuOpen"
+    x-cloak
     @click.outside="menuOpen = false"
     x-transition:enter="duration-200 ease-out"
     x-transition:enter-start="opacity-0 scale-95"
