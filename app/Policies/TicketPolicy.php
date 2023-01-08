@@ -35,7 +35,7 @@ class TicketPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create', Activity::class);
+        return $user->can('viewAny', Ticket::class);
     }
 
     /**
