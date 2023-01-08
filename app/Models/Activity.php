@@ -167,6 +167,23 @@ class Activity extends SluggableModel
         'postponed_at' => 'datetime',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'enrollment_start',
+        'enrollment_end',
+        'cancelled_reason',
+        'rescheduled_from',
+        'rescheduled_reason',
+        'postponed_at',
+        'postponed_reason',
+        'enrollment_questions',
+        'role_id',
+    ];
+
     protected $fillable = [
         'name',
         'slug',
