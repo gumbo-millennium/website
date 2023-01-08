@@ -107,6 +107,11 @@ mix.override(webpack => {
     /--tw-([a-z0-9-]+-)*[a-z0-9]+/,
   ]
 
+  // Disable some polyfills
+  webpack.resolve ??= {}
+  webpack.resolve.fallback ??= {}
+  webpack.resolve.fallback.stream = false
+
   // Done
   return webpack
 })
