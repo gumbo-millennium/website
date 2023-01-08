@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Google\Traits;
 
 use App\Models\GoogleWallet\EventObject;
+use App\Models\GoogleWallet\Message;
 use Brick\Money\Money;
 use Google_Service_Exception as ServiceException;
 use Google_Service_Walletobjects_EventTicketObject  as EventTicketObject;
@@ -73,6 +74,21 @@ trait HandlesEventObjects
                     'date' => $eventClass->end_time->toIso8601String(),
                 ],
             ],
+            'messages' => $eventObject->messages->map(function (Message $message) {
+                return [
+                    'id' => $message->id,
+                    'header' => $message->header,
+                    'body' => $message->body,
+                    'displayInterval' => [
+                        'start' => [
+                            'date' => $message->start_time->toIso8601String(),
+                        ],
+                        'end' => [
+                            'date' => $message->end_time->toIso8601String(),
+                        ],
+                    ],
+                ];
+            }),
         ];
     }
 

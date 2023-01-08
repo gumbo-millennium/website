@@ -57,6 +57,7 @@ class EventServiceProvider extends ServiceProvider
 
         // Register observers
         Models\Activity::observe(Observers\ActivityObserver::class);
+        Models\ActivityMessage::observe(Observers\ActivityMessageObserver::class);
         Models\Enrollment::observe(Observers\EnrollmentObserver::class);
         Models\FileBundle::observe(Observers\FileBundleObserver::class);
         Models\NewsItem::observe(Observers\NewsItemObserver::class);

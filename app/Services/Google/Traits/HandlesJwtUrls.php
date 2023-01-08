@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
+use App\Helpers\Arr;
 use App\Models\GoogleWallet\EventObject;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Collection;
@@ -25,6 +26,9 @@ trait HandlesJwtUrls
         $ticketObjectData = $this->buildTicketObjectData($eventObject);
         $ticketClassData = $this->buildTicketClassData($eventObject->class);
 
+        $minimalObjectData = Arr::only($ticketObjectData, ['id', 'classId', 'ticketHolderName', 'ticketNumber', 'ticketType', 'state', 'barcode', 'validTimeInterval']);
+        $minimalClassData = Arr::only($ticketClassData, ['id', 'eventId', 'eventName', 'dateTime', 'callbackOptions']);
+
         $claims = [
             'iss' => $this->getServiceAccountData('client_email'),
             'aud' => 'google',
@@ -32,10 +36,10 @@ trait HandlesJwtUrls
             'typ' => 'savetowallet',
             'payload' => [
                 'eventTicketClasses' => [
-                    $ticketClassData,
+                    $minimalClassData,
                 ],
                 'eventTicketObjects' => [
-                    $ticketObjectData,
+                    $minimalObjectData,
                 ],
             ],
         ];

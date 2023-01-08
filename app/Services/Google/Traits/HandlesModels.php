@@ -8,11 +8,15 @@ use App\Enums\Models\GoogleWallet\ObjectState;
 use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Fluent\Image;
 use App\Models\Activity;
+use App\Models\ActivityMessage;
 use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventClass;
 use App\Models\GoogleWallet\EventObject;
+use App\Models\GoogleWallet\Message;
 use App\Models\States\Enrollment\Cancelled;
 use App\Models\States\Enrollment\Confirmed;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 use LogicException;
 
 trait HandlesModels
@@ -86,8 +90,63 @@ trait HandlesModels
             'state' => $properState,
         ]);
 
+        // Save object
         $eventObject->save();
 
+        // Add messages (requires the object to be saved first)
+        $messages = $this->findEnrollmentMessages($enrollment);
+        $eventObject->messages()->sync($messages->pluck('id'));
+
         return $eventObject;
+    }
+
+    /**
+     * Returns all messages that belong to the given enrollment.
+     * @return Collection|Message[]
+     */
+    private function findEnrollmentMessages(Enrollment $enrollment): Collection
+    {
+        $existingActivityMessages = ActivityMessage::query()
+            ->ForEnrollment($enrollment)
+            ->shouldBeSent()
+            ->orderByDesc('sent_at')
+            ->take(5)
+            ->get();
+
+        $upcommingActivityMessage = ActivityMessage::query()
+            ->forEnrollment($enrollment)
+            ->where('scheduled_at', '>', Date::now())
+            ->orderBy('scheduled_at')
+            ->take(1)
+            ->get();
+
+        $activityMessages = $upcommingActivityMessage
+            ->concat($existingActivityMessages);
+
+        $defaultMessageExpiration = $enrollment->activity->end_date->addDays(7)->startOfHour();
+
+        $walletMessages = Collection::make();
+
+        foreach ($activityMessages as $activityMessage) {
+            $messageStartTime = $activityMessage->sent_at ?? $activityMessage->scheduled_at ?? $activityMessage->created_at;
+            $messageEndTime = $defaultMessageExpiration->max((clone $messageStartTime)->addDays(7)->startOfHour());
+
+            $walletMessage = Message::firstOrNew([
+                'activity_message_id' => $activityMessage->id,
+            ]);
+
+            $walletMessage->fill([
+                'header' => $activityMessage->subject,
+                'body' => $activityMessage->body,
+                'start_time' => $messageStartTime,
+                'end_time' => $messageEndTime,
+            ]);
+
+            $walletMessage->save();
+
+            $walletMessages->push($walletMessage);
+        }
+
+        return $walletMessages;
     }
 }
