@@ -8,13 +8,11 @@ use App\Contracts\Mail\MailListHandler;
 use App\Services\Mail\GoogleMailListService;
 use Google_Client as GoogleApi;
 use Google_Exception as GoogleException;
+use Google_Service_Walletobjects as GoogleWalletService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Google_Service_Walletobjects as GoogleWalletService;
-use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
-use Google_Service_Walletobjects_Eventticketobject_Resource as EventTicketObjectResource;
 
 class GoogleServiceProvider extends ServiceProvider implements DeferrableProvider
 {
