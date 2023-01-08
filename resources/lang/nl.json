@@ -47,7 +47,7 @@
   "Paid at": "Betaald op",
   "Shipped at": "Verzonden op",
   "Status": "Status",
-  "Sent": "Betaald, verzonden",
+  "Sent": "Verzonden",
   "Paid": "Betaald",
   "Pending": "In afwachting",
   "Price": "Prijs",
@@ -97,25 +97,56 @@
 
   ":user with :count member|:user with :count members": ":user met :count lid|:user met :count leden",
 
+  ":count recipient(s)": ":count ontvanger(s)",
+  ":count expected recipient(s)": ":count verwachte ontvanger(s)",
+  "Sent :date": "Verzonden op :date",
+  "Scheduled for :date": "Ingepland voor :date",
+  "Will be sent shortly": "Wordt binnenkort verzonden",
+  "Sending": "Wordt verzonden",
+
   "Messages": "Berichten",
   "Sender": "Afzender",
-  "Target audience": "Doelgroep",
-  "Mail title": "Mail title",
-  "Mail body": "Mail body",
-  "Created at": "Created at",
-  "Sent at": "Sent at",
-  "Number of recipients": "Number of recipients",
 
-  "Please specify the target audience, the message title and the message body.":
-    "Geef de doelgroep, de titel en de inhoud van het bericht op.",
-  "Optionally, you can specify when the message should be sent, and to which tickets.":
-    "Eventueel kun je aangeven wanneer het bericht verstuurd moet worden, en aan welke tickets.",
-  "Send message": "Verstuur bericht",
+  "Audience and Schedule": "Doelgroep en planning",
+  "Send to Pending Enrollments": "Versturen naar niet-bevestigde inschrijvingen",
+  "Scheduled for": "Ingepland voor",
+  "Immediately": "Onmiddelijk",
+  "Number of Recipients": "Aantal ontvangers",
+  ":count (estimate)": ":count (schatting)",
+
+  "Message": "Bericht",
+  "Mail Subject": "Onderwerp bericht",
+  "Mail Body": "Bericht",
+  "Created at": "Aangemaakt op",
+  "Sent at": "Verzonden op",
+
+  "Send Message to Participants": "Bericht versturen naar deelnemers",
+  "To send a message to the (pending) enrollments of this activity, please type your message below.":
+    "Om een bericht te versturen naar de (nog niet bevestigde) inschrijvingen van deze activiteit, vul je hieronder je bericht in.",
+  "Afterwards, you may customize the audience and schedule when the message is to be sent.":
+    "Daarna kun je de doelgroep en planning aanpassen om te bepalen wanneer en aan wie het bericht wordt verzonden.",
+  "The subject is all yours, but it's advised to include the activity name in the subject.":
+    "Het onderwerp is helemaal aan jou, maar het is aan te raden om de naam van de activiteit in het onderwerp op te nemen.",
+
+  "Audience": "Doelgroep",
+  "Receiving Tickets": "Ontvangende tickets",
+  "Leave empty to include all current and future tickets.": "Laat leeg om alle huidige en toekomstige ticketsoorten te selecteren.",
+  "Include Pending": "Inclusief niet-bevestigde",
+  "If checked, pending enrollments will be included in the audience.": "Indien aangevinkt, worden niet-bevestigde inschrijvingen ook meegenomen in de doelgroep.",
+
+  "Scheduling": "Planning",
+  "Send at": "Versturen op",
+  "Leave empty to send the message immediately.": "Laat leeg om het bericht onmiddelijk te versturen.",
+  "You may only schedule a message up to 30 days after the event has ended (:date).":
+    "Je kunt een bericht maximaal 30 dagen afloop van de activiteit versturen (:date).",
+
+  "Do **not** use pictures, they will be removed from the message.": "Gebruik **geen** afbeeldingen, deze worden verwijderd uit het bericht.",
+
+  "Schedule / Send Message": "Inplannen / Bericht versturen",
   "Cancel": "Annuleren",
-  "Send mail to participants": "Mail versturen naar deelnemers",
-  "The message has been scheduled.": "Het bericht is ingepland voor verzending.",
-  "Body of the mail, basic markdown formatting is supported.":
-    "Het bericht voor de gebruikers. Basis markdown is ondersteund (plaatjes niet!)",
+  "This action can only be performed on a single activity.": "Deze actie kan alleen op een enkele activiteit worden uitgevoerd.",
+  "The message will be sent shortly.": "Het bericht wordt binnenkort verzonden.",
+  "The message has been scheduled for :date.": "Het bericht is ingepland voor verzending op :date.",
 
   "Your enrollment is being cancelled. This might take a bit, but we'll update you via email.":
     "Je inschrijving wordt geannuleerd. Dit kan even duren, maar we sturen je een mailtje.",

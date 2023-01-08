@@ -55,14 +55,14 @@ class ActivityMessagePolicy
     }
 
     /**
-     * Activity messages are read-only, so no changes are allowed.
+     * Unsent activity messages may be deleted, to prevent sending them.
      *
      * @param \App\ActivityMessage $activityMessage
      * @return bool
      */
     public function delete(User $user, ActivityMessage $activityMessage)
     {
-        return false;
+        return $user->can('view', $activityMessage) && $activityMessage->sent_at === null;
     }
 
     /**

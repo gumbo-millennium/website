@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\States\Enrollment\State;
-use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\LazyCollection;
 
@@ -19,27 +19,36 @@ use Illuminate\Support\LazyCollection;
  * @property int $id
  * @property int $activity_id
  * @property null|int $sender_id
- * @property string $target_audience
+ * @property bool $include_pending
  * @property string $subject
  * @property string $body
- * @property null|int $receipients
+ * @property null|int $recipients
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property null|\Illuminate\Support\Carbon $scheduled_at
  * @property null|\Illuminate\Support\Carbon $sent_at
  * @property-read \App\Models\Activity $activity
+ * @property-read int $expected_recipients
+ * @property-read bool $has_tickets
  * @property-read null|\App\Models\User $sender
+ * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
+ * @method static Builder|ActivityMessage forEnrollment(\App\Models\Enrollment $enrollment)
  * @method static Builder|ActivityMessage newModelQuery()
  * @method static Builder|ActivityMessage newQuery()
+ * @method static \Illuminate\Database\Query\Builder|ActivityMessage onlyTrashed()
  * @method static Builder|ActivityMessage query()
+ * @method static Builder|ActivityMessage sent()
+ * @method static Builder|ActivityMessage shouldBeSent()
  * @method static Builder|ActivityMessage unsent()
+ * @method static \Illuminate\Database\Query\Builder|ActivityMessage withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ActivityMessage withoutTrashed()
  * @mixin \Eloquent
- * @property \Illuminate\Support\Carbon|null $scheduled_at
- * @property-read bool $has_tickets
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
- * @method static Builder|ActivityMessage scheduledToSend()
  */
 class ActivityMessage extends Model
 {
+    use SoftDeletes;
+
     public const AUDIENCE_ANY = 'any';
 
     public const AUDIENCE_CONFIRMED = 'confirmed';
@@ -58,6 +67,7 @@ class ActivityMessage extends Model
      * @var array
      */
     protected $casts = [
+        'include_pending' => 'bool',
         'recipients' => 'int',
         'scheduled_at' => 'datetime',
         'sent_at' => 'datetime',
@@ -81,7 +91,8 @@ class ActivityMessage extends Model
     protected $fillable = [
         'activity_id',
         'sender_id',
-        'target_audience',
+        'include_pending',
+        'scheduled_at',
         'subject',
         'body',
     ];
@@ -89,12 +100,6 @@ class ActivityMessage extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::saving(static fn (self $message) => throw_unless(
-            in_array($message->target_audience, self::VALID_AUDIENCES, true),
-            DomainException::class,
-            "Target audience [{$message->target_audience}] is invalid.",
-        ));
     }
 
     public function activity(): BelongsTo
@@ -122,26 +127,59 @@ class ActivityMessage extends Model
         return $query->whereNull('sent_at');
     }
 
-    public function scopeScheduledToSend(Builder $query): Builder
+    public function scopeSent(Builder $query): Builder
+    {
+        return $query->whereNotNull('sent_at');
+    }
+
+    public function scopeShouldBeSent(Builder $query): Builder
     {
         return $query->where(fn (Builder $query) => $query->whereNull('scheduled_at')->orWhere('scheduled_at', '<=', Date::now()));
     }
 
+    /**
+     * Returns a lazy collection of the enrollments this message will be sent to.
+     * @return \App\Models\Enrollment[]|LazyCollection
+     */
     public function getEnrollmentsCursor(): LazyCollection
     {
-        $states = [];
-        if ($this->target_audience === self::AUDIENCE_ANY || $this->target_audience === self::AUDIENCE_PENDING) {
-            $states = array_merge($states, State::PENDING_STATES);
-        }
-
-        if ($this->target_audience === self::AUDIENCE_ANY || $this->target_audience === self::AUDIENCE_CONFIRMED) {
-            $states = array_merge($states, State::CONFIRMED_STATES);
-        }
+        $states = [
+            ...State::CONFIRMED_STATES,
+            ...($this->include_pending ? State::PENDING_STATES : []),
+        ];
 
         return $this->activity
             ->enrollments()
             ->whereState('state', $states)
             ->with('user')
             ->cursor();
+    }
+
+    /**
+     * Scopes the query to match the given enrollment.
+     */
+    public function scopeForEnrollment(Builder $query, Enrollment $enrollment): void
+    {
+        // Restrict to activity
+        $query->whereHas('activity', fn () => $query->where('id', $enrollment->activity->id));
+
+        // Restrict to ticket if applicable
+        $query->where(
+            fn ($query) => $query
+                ->doesntHave('tickets')
+                ->orWhereHas('tickets', fn () => $query->where('id', $enrollment->ticket->id)),
+        );
+    }
+
+    /**
+     * Returns the number of users that will likely recieve this message.
+     */
+    public function getExpectedRecipientsAttribute(): int
+    {
+        if ($this->send_at !== null) {
+            return $this->recipients;
+        }
+
+        return $this->getEnrollmentsCursor()->count();
     }
 }

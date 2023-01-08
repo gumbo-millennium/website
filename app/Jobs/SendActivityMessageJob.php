@@ -6,7 +6,6 @@ namespace App\Jobs;
 
 use App\Mail\ActivityMessageMail;
 use App\Models\ActivityMessage;
-use App\Models\Enrollment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -48,19 +47,21 @@ class SendActivityMessageJob implements ShouldQueue
         $count = 0;
 
         foreach ($activityMessage->getEnrollmentsCursor() as $enrollment) {
-            assert($enrollment instanceof Enrollment);
-
-            $count++;
-
             Mail::to($enrollment->user)
                 ->queue(new ActivityMessageMail(
                     $enrollment,
                     $activityMessage,
                 ));
+
+            $count++;
         }
 
-        $activityMessage->receipients = $count;
+        // Save the changes to the message.
+        $activityMessage->recipients = $count;
         $activityMessage->sent_at = Date::now();
         $activityMessage->save();
+
+        // Touch the activity, to ensure third parties update accordingly.
+        $activityMessage->activity->touch();
     }
 }

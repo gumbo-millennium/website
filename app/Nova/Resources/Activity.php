@@ -24,6 +24,7 @@ use Whitecube\NovaFlexibleContent\Flexible;
 
 /**
  * An activity resource, highly linked.
+ * @mixin \App\Models\Activity
  */
 class Activity extends Resource
 {
