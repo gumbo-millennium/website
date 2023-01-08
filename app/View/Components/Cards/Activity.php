@@ -38,11 +38,11 @@ class Activity extends Component
         $isFreeOrTicketless = $activity->tickets->count() === 0 || $activity->price_range === __('Free');
 
         if ($activity->is_public && $isFreeOrTicketless) {
-            $activityLabel = __('Public activity');
+            $activityLabel = __('Public Activity');
         } elseif ($isFreeOrTicketless) {
-            $activityLabel = __('Private activity');
+            $activityLabel = __('Private Activity');
         } else {
-            $activityLabel = __('Paid activity');
+            $activityLabel = __('Paid Activity');
         }
 
         /*

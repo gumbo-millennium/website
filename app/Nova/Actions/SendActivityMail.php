@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Fields\Markdown as MarkdownField;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
