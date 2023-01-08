@@ -301,6 +301,8 @@
   "Pricing and quantity": "Prijs en aantal",
   "Seat Limit": "Ticketlimiet",
   "Effective Seat Limit": "Effectieve ticketlimiet",
+  "Determined by total number of available tickets": "Bepaald door het totaal aantal beschikbare tickets",
+  "Determined by the activity seat limit": "Bepaald door het ticketlimiet",
   "Ticket Description": "Ticketbeschrijving",
   "Regular ticket": "Regulier ticket",
   "Member ticket": "Ledenticket",
