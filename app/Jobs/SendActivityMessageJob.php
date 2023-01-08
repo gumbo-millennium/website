@@ -44,6 +44,12 @@ class SendActivityMessageJob implements ShouldQueue
     public function handle()
     {
         $activityMessage = $this->activityMessage;
+
+        // Stop if something seems off, prevent sending the same message twice.
+        if ($activityMessage->sent_at !== null || $activityMessage->trashed()) {
+            return;
+        }
+
         $count = 0;
 
         foreach ($activityMessage->getEnrollmentsCursor() as $enrollment) {
@@ -60,6 +66,11 @@ class SendActivityMessageJob implements ShouldQueue
         $activityMessage->recipients = $count;
         $activityMessage->sent_at = Date::now();
         $activityMessage->save();
+
+        // If the model was trashed while sending the message, restore it.
+        if ($activityMessage->refresh()->trashed()) {
+            $activityMessage->restore();
+        }
 
         // Touch the activity, to ensure third parties update accordingly.
         $activityMessage->activity->touch();
