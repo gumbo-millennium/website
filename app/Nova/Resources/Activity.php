@@ -435,8 +435,6 @@ class Activity extends Resource
     {
         return [
             new Actions\CancelActivity(),
-            new Actions\PostponeActivity(),
-            new Actions\RescheduleActivity(),
             new Actions\SendActivityMail(),
             new Actions\ExportActivityParticipants(),
 
