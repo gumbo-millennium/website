@@ -14,7 +14,7 @@ class ImportTemplateControllerTest extends TestCase
      */
     public function test_fetch_unknown(): void
     {
-        $route = route('admin.import.template', 'steve');
+        $route = route('admin.activity.import-template');
 
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));
@@ -35,7 +35,7 @@ class ImportTemplateControllerTest extends TestCase
      */
     public function test_fetch_activity_sheet(): void
     {
-        $route = route('admin.import.template', 'activity');
+        $route = route('admin.activity.import-template');
 
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));

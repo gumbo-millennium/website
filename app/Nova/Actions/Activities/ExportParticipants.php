@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions;
+namespace App\Nova\Actions\Activities;
 
 use App\Enums\ActivityExportType;
 use App\Excel\Exports\ActivityParticipantsExport;
@@ -23,7 +23,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use RuntimeException;
 
-class ExportActivityParticipants extends Action
+class ExportParticipants extends Action
 {
     use BlocksCancelledActivityRuns;
 

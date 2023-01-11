@@ -70,8 +70,11 @@ Route::prefix('admin/')->group(function () {
     Route::get('mollie/dashboard/{payment}', [AdminControllers\MollieRedirectController::class, 'show'])
         ->name('admin.mollie.show');
 
-    Route::get('import/template/{template}', [AdminControllers\ImportTemplateController::class, 'downloadTemplate'])
-        ->name('admin.import.template');
+    Route::get('excel/templates/import/{template}', [AdminControllers\ActivityImportController::class, 'downloadImportFormat'])
+        ->name('admin.activity.import-template');
+
+    Route::get('excel/templates/activity-barcodes/{activity}', [AdminControllers\ActivityImportController::class, 'downloadReplaceBarcodesTemplate'])
+        ->name('admin.activity.replace-barcodes-template');
 });
 
 /**

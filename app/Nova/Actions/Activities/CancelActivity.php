@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions;
+namespace App\Nova\Actions\Activities;
 
 use App\Models\Activity;
 use App\Models\States\Enrollment\Cancelled;

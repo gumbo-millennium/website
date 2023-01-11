@@ -434,13 +434,13 @@ class Activity extends Resource
     public function actions(NovaRequest $request)
     {
         return [
-            new Actions\CancelActivity(),
-            new Actions\SendActivityMail(),
-            new Actions\ExportActivityParticipants(),
+            // Detail only
+            Actions\Activities\SendMessage::make()->onlyOnDetail()->fullscreen(),
+            Actions\Activities\ExportParticipants::make()->onlyOnDetail(),
+            Actions\Activities\CancelActivity::make()->onlyOnDetail(),
 
             // Standalones
-            Actions\ImportExport\DownloadImportFormat::make('activity')->standalone(),
-            Actions\ImportExport\ImportActivities::make()->standalone(),
+            Actions\Activities\ImportActivities::make()->standalone()->onlyOnIndex(),
         ];
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions;
+namespace App\Nova\Actions\Activities;
 
 use App\Helpers\Str;
 use App\Jobs\SendActivityMessageJob;
@@ -20,7 +20,7 @@ use Laravel\Nova\Fields\Markdown as MarkdownField;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class SendActivityMail extends Action
+class SendMessage extends Action
 {
     use BlocksCancelledActivityRuns;
 
