@@ -466,6 +466,16 @@
   "The uploaded file is invalid: :message.": "Het geüploade bestand is ongeldig: :message.",
   "Import completed, your activities should now be visible.": "Importeren voltooid, je activiteiten moeten nu in het overzicht staan.",
 
+  "Replace Barcodes": "Vervang barcodes",
+  "Select \":download\" to download a list of all enrollments. You can then modify the barcode type and actual barcode to replace the barcode on the enrollment.":
+    "Selecteer \":download\" om een lijst van alle inschrijvingen te downloaden. Je kunt vervolgens de barcode type en de barcode aanpassen om de barcode op de inschrijving te vervangen.",
+  "Leave entries empty (or remove them) to skip updating them. Their existing barcode will be retained.":
+    "Laat velden leeg (of verwijder ze) om ze over te slaan. De bestaande barcode wordt behouden.",
+  "Note that enrollments with custom barcodes will not have their barcodes rotated in case of a transfer. This may allow for barcode reuse.":
+    "Let op dat inschrijvingen met aangepaste barcodes niet een nieuwe barcode krijgen bij ticketoverdracht. Dit kan hergebruik van barcodes mogelijk maken.",
+  "Import Filled-in Template": "Importeer ingevuld sjabloon",
+  "Download Transfer Template": "Download overdrachtsjabloon",
+
   "Location": "Locatie",
   "Location Address": "Adres locatie",
   "Date and Time": "Datum en tijd",

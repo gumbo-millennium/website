@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
@@ -35,6 +36,17 @@ class ReplaceBarcodes extends Action
     use Traits\BlocksCancelledActivityRuns;
 
     public $confirmButtonText = 'Start';
+
+    public function __construct()
+    {
+        $this->confirmText = implode("\n\n", [
+            __('Select ":download" to download a list of all enrollments. You can then modify the barcode type and actual barcode to replace the barcode on the enrollment.', [
+                'download' => __('Download Transfer Template'),
+            ]),
+            __('Leave entries empty (or remove them) to skip updating them. Their existing barcode will be retained.'),
+            __('Note that enrollments with custom barcodes will not have their barcodes rotated in case of a transfer. This may allow for barcode reuse.'),
+        ]);
+    }
 
     public function name()
     {
@@ -78,6 +90,11 @@ class ReplaceBarcodes extends Action
         if ($fields->get('action') === 'export') {
             $filename = sprintf('%s.xlsx', __('Barcodes enrollments :name', ['name' => Str::of($activity->name)->ascii()]));
 
+            Log::info('User {user} is downloading a barcode transfer template for activity {activity}', [
+                'user' => $user->id,
+                'activity' => $activity->id,
+            ]);
+
             return Action::download(route('admin.activity.replace-barcodes-template', $activity), $filename);
         }
 
@@ -116,15 +133,15 @@ class ReplaceBarcodes extends Action
         return [
             Fields\Select::make(__('Action'), 'action')
                 ->options([
-                    'import' => __('Import new barcodes'),
-                    'export' => __('Export current barcodes'),
+                    'import' => __('Import Filled-in Template'),
+                    'export' => __('Download Transfer Template'),
                 ])
                 ->rules([
                     'required',
                     Rule::in(['import', 'export']),
                 ]),
 
-            Fields\File::make(__('Import file'), 'import')
+            Fields\File::make(__('Import File'), 'import')
                 ->dependsOn(['action'], function (Fields\Field $field, NovaRequest $request, FormData $formData) {
                     if ($formData->action === 'export') {
                         $field->hide();
