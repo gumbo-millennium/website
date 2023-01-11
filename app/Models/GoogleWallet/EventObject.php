@@ -29,6 +29,7 @@ use LogicException;
  * @property string $ticket_number
  * @property string $ticket_type
  * @property string $barcode
+ * @property string $barcode_type
  * @property int $installs
  * @property int $removals
  * @property null|\Illuminate\Support\Carbon $created_at

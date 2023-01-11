@@ -2,6 +2,22 @@
 
 @section('title', "Beheer inschrijving voor {$activity->name}")
 
+@php($ticket = $enrollment->ticket)
+
+@section('ticket-card')
+  <h2 class="heading-2 text-white mt-0 mb-0">{{ $user->name }}</h2>
+
+  <div class="mb-4 flex gap-4">
+      <p class="text-brand-50 flex-grow">
+        {{ $activity->name }}<br />
+        {{ $ticket->title }}
+      </p>
+      <p class="text-brand-50 mb-4 flex-none">{{ Str::price($ticket->total_price) ?? __('Free') }}</p>
+  </div>
+
+  <x-enroll.barcode :enrollment="$enrollment" />
+@endsection
+
 @section('content')
 <div class="bg-gray-50">
     <x-enroll.header :activity="$activity" :enrollment="$enrollment">
@@ -16,9 +32,20 @@
     </x-enroll.header>
 
     <div class="grid grid-cols-1 gap-8 enroll-column pb-8">
-        <div class="enroll-card prose">
-            @include('enrollments.partials.enrollment-data')
+      @if(Config::get('gumbo.features.barcodes'))
+      <div class="md:mt-8 lg:mt-0 w-full lg:max-w-3xl lg:mx-auto">
+        <div class="enroll-card bg-brand-800">
+          @yield('ticket-card')
         </div>
+      </div>
+      @endif
+
+      <div class="enroll-card prose">
+          @include('enrollments.partials.enrollment-data')
+      </div>
+    </div>
+
+<div class="grid grid-cols-1 gap-8 enroll-column pb-8 ">
 
         <hr class="mb-8 bg-gray-200" />
 

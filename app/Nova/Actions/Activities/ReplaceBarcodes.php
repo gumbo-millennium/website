@@ -12,7 +12,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
@@ -105,20 +104,19 @@ class ReplaceBarcodes extends Action
 
         // Require the user to be able to manage the activity
         if (! $user->can('manage', $activity)) {
-            return Action::danger(__('You are not allowed to import activities for this group.'));
+            return Action::danger(__('You are not allowed to alter enrollments on this activity.'));
         }
 
         try {
             // Map the import to a collection
-            $result = Excel::toCollection(new EnrollmentBarcodeImport($activity), $upload);
-
-            // Save all nodes, as a transaction
-            DB::transaction(fn () => $result->each->save());
+            $result = Excel::import(new EnrollmentBarcodeImport($activity), $upload);
 
             // Done :)
-            return Action::message(__('Succesfully updated the barcode of :count participants.', ['count' => $result->count()]));
+            return Action::message(__('Succesfully updated the barcodes.'));
         } catch (InvalidArgumentException $e) {
             // Oh no, fucky wucky
+            throw $e;
+
             return Action::danger(__('The uploaded file is invalid: :message.', ['message' => rtrim($e->getMessage(), '.')]));
         }
     }

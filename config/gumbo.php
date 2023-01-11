@@ -184,7 +184,7 @@ return [
         'tile' => [
             'width' => 607,
             'height' => 400,
-            'fit' => Image::FIT_MAX,
+            'fit' => Image::FIT_CROP,
         ],
     ],
 
@@ -249,5 +249,15 @@ return [
          * Location disk to use for backups.
          */
         'storage_disk' => env('BACKUP_DISK', 'glacier'),
+    ],
+
+    /**
+     * Feature flags.
+     */
+    'features' => [
+        /**
+         * Enable barcode display on tickets.
+         */
+        'barcodes' => env('FEATURE_BARCODES', false),
     ],
 ];

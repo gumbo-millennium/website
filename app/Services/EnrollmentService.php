@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\EnrollmentServiceContract;
+use App\Enums\Models\BarcodeType;
 use App\Exceptions\EnrollmentFailedException;
 use App\Helpers\Str;
 use App\Models\Activity;
@@ -13,11 +14,8 @@ use App\Models\States\Enrollment as States;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\EnrollmentTransferred;
-use Endroid\QrCode\Builder\Builder as QRBuilder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -26,6 +24,11 @@ use RuntimeException;
 
 class EnrollmentService implements EnrollmentServiceContract
 {
+    public function __construct(private BarcodeService $barcodeService)
+    {
+        // intentionally left blank
+    }
+
     public function getEnrollment(Activity $activity): ?Enrollment
     {
         if (! $user = Auth::user()) {
@@ -166,16 +169,21 @@ class EnrollmentService implements EnrollmentServiceContract
     }
 
     /**
-     * Generates a new unique ticket code for the enrollment.
+     * Generates a new unique barcode code for the enrollment.
      */
-    public function updateTicketCode(Enrollment $enrollment): void
+    public function updateBarcode(Enrollment $enrollment): void
     {
+        if ($enrollment->barcode_generated === false) {
+            return;
+        }
+
         // Try to generate a new code 4 times
         for ($i = 0; $i < 4; $i++) {
             $triedCode = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
 
-            if (! Enrollment::withoutGlobalScopes()->where('ticket_code', $triedCode)->exists()) {
-                $enrollment->ticket_code = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
+            if (! Enrollment::withoutGlobalScopes()->where('barcode', $triedCode)->exists()) {
+                $enrollment->barcode = sprintf('%03X%05X%s', $enrollment->activity_id, $enrollment->id, Str::upper(Str::random(12)));
+                $enrollment->barcode_type = BarcodeType::QRCODE;
                 $enrollment->save();
 
                 return;
@@ -185,16 +193,8 @@ class EnrollmentService implements EnrollmentServiceContract
         throw new RuntimeException('Could not generate a unique ticket code');
     }
 
-    public function getTicketQrCode(Enrollment $enrollment, int $size = 400): string
+    public function getBarcodeImage(Enrollment $enrollment, int $size = 128): string
     {
-        return QRBuilder::create()
-            ->writer(new PngWriter())
-            ->encoding(new Encoding('ISO-8859-1')) // Not UTF-8 for highest compatibility
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size($size)
-            ->margin(0)
-            ->data(Str::ascii($enrollment->ticket_code))
-            ->build()
-            ->getDataUri();
+        return App::make(BarcodeService::class)->toBase64($enrollment->barcode_type ?? BarcodeType::QRCODE, $enrollment->barcode, $size);
     }
 }

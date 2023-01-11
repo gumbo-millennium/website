@@ -35,7 +35,6 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
             'rules' => [
                 'required',
                 'integer',
-                'in:enrollments,id',
             ],
         ],
         'name' => [
@@ -55,7 +54,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
             'default' => 'qrcode',
             'rules' => [
                 'nullable',
-                'in:aztec,code39,code128,ean13,ean8,ean13,qrcode,text',
+                'in:codabar,code39,code128,ean8,ean13,qrcode,text',
             ],
         ],
         'barcode' => [
@@ -148,17 +147,16 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         $mappedValues = Collection::make(self::COLUMNS)
             ->keys()
             ->combine($this->headings())
-            ->map(fn ($heading) => Arr::get($row, Str::snake($heading)))
-            ->map(fn ($value) => empty(trim($value ?? '')) ? null : $value);
+            ->map(fn ($heading) => Arr::get($row, (string) Str::of($heading)->lower()->snake()))
+            ->map(fn ($value) => empty($value) ? null : (string) $value);
 
         // Get the enrollment corresponding with this entry
         $enrollment = $this->getEnrollments()->get($mappedValues->get('id'));
-
         if (! $enrollment) {
             return null;
         }
 
-        $assignedBarcode = $mappedValues->get('barcode');
+        $assignedBarcode = preg_replace('/[^a-z0-9-_]+/i', '', (string) $mappedValues->get('barcode'));
         if (! $assignedBarcode) {
             return null;
         }
@@ -180,10 +178,11 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         ]);
 
         // Verify data
-        $validator = Validator::make($localData, Arr::pluck(self::COLUMNS, 'rules'));
+        $rules = collect(self::COLUMNS)->map(fn ($row) => $row['rules'] ?? null)->filter()->toArray();
+        $validator = Validator::make($localData, $rules);
 
         // Skip this row if the validation fails
-        if ($validator->fails()) {
+        if (! $validator->valid()) {
             Log::info('Skipping enrollment {id} ({name}), data invalid.', [
                 'id' => $localData['id'],
                 'name' => $localData['user'],

@@ -391,6 +391,8 @@
   "The payment is still processing or has failed, please try again.": "De betaling wordt momenteel verwerkt of is mislukt, probeer het opnieuw.",
 
   "You're not currently enrolled into :activity.": "Je bent momenteel niet ingeschreven voor :activity.",
+  "Add to Google Wallet": "Toevoegen aan Google Wallet",
+  "Show barcode": "Toon barcode",
   "You can't add this ticket for :activity to your Google Wallet.": "Je kunt dit ticket voor :activity niet aan je Google Wallet toevoegen.",
 
   "Privacy Policy": "Privacybeleid",
@@ -478,6 +480,8 @@
   "Name of Participant": "Naam deelnemer",
   "Ticket Type": "Tickettype",
   "Barcode Type": "Barcodetype",
+  "You are not allowed to alter enrollments on this activity.": "Je mag geen inschrijvingen aanpassen voor deze activiteit.",
+  "Succesfully updated the barcodes.": "Barcodes succesvol bijgewerkt.",
 
   "Location": "Locatie",
   "Location Address": "Adres locatie",
