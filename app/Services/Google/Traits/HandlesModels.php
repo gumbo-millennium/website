@@ -86,7 +86,7 @@ trait HandlesModels
             'ticket_type' => $enrollment->ticket->title,
 
             // Always provide the barcode.
-            'barcode' => $enrollment->ticket_code,
+            'barcode' => $enrollment->barcode,
             'state' => $properState,
         ]);
 

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Excel\Imports;
 
+use App\Helpers\Str;
 use App\Models\Activity;
-use App\Models\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -19,12 +19,10 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithProperties;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use PhpOffice\PhpSpreadsheet\Cell\StringValueBinder;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Cell\StringValueBinder;
-use App\Helpers\Str;
 
 class EnrollmentBarcodeImport extends StringValueBinder implements FromCollection, ShouldAutoSize, ToModel, WithHeadingRow, WithHeadings, WithProperties, WithStyles
 {
@@ -61,7 +59,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         ],
         'barcode' => [
             'name' => 'Barcode',
-            'format' => NumberFormat::
+            'format' => NumberFormat::FORMAT_TEXT,
             'rules' => [
                 'required',
                 'string',
@@ -74,17 +72,6 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         private ?Collection $enrollments = null,
     ) {
         // Intentionally left empty
-    }
-
-    private function getEnrollments(): Collection
-    {
-        return $this->enrollments ??= $this->activity
-            ->enrollments()
-            ->with('user:id,first_name,insert,last_name')
-            ->with('ticket:id,title')
-            ->active()
-            ->get()
-            ->keyBy('id');
     }
 
     public function collection(): Collection
@@ -122,9 +109,9 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
     public function properties(): array
     {
         return [
-            'creator' => 'Gumbo Millennium',
-            'title' => 'Mass barcode assignment for enrollments',
-            'description' => 'Change enrollment barcodes in bulk using this template.',
+            'creator' => ($user = Request::user()) ? "Gumbo Millennium for {$user->name}" : 'Gumbo Millennium',
+            'title' => "Barcode Reassignment for {$this->activity->name}",
+            'description' => 'Change enrollment barcodes in bulk for enrollments.',
             'subject' => 'Activities',
             'category' => 'Templates',
             'company' => 'Gumbo Millennium',
@@ -160,7 +147,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
             ->keys()
             ->combine($this->headings())
             ->map(fn ($heading) => Arr::get($row, Str::snake($heading)))
-            ->map(fn ($value) => empty(trim($value?? '')) ? null : $value);
+            ->map(fn ($value) => empty(trim($value ?? '')) ? null : $value);
 
         // Get the enrollment corresponding with this entry
         $enrollment = $this->getEnrollments()->get($mappedValues->get('id'));
@@ -169,7 +156,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
             return null;
         }
 
-        $assignedBarcode = $mappedValues->get('barcode')
+        $assignedBarcode = $mappedValues->get('barcode');
         if (! $assignedBarcode) {
             return null;
         }
@@ -191,7 +178,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         ]);
 
         // Verify data
-        $validator = Validator::make($proposedData, Arr::pluck(self::COLUMNS, 'rules'));
+        $validator = Validator::make($localData, Arr::pluck(self::COLUMNS, 'rules'));
 
         // Skip this row if the validation fails
         if ($validator->fails()) {
@@ -218,5 +205,16 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
 
         // Return the updated enrollment
         return $enrollment;
+    }
+
+    private function getEnrollments(): Collection
+    {
+        return $this->enrollments ??= $this->activity
+            ->enrollments()
+            ->with('user:id,first_name,insert,last_name')
+            ->with('ticket:id,title')
+            ->active()
+            ->get()
+            ->keyBy('id');
     }
 }

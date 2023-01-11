@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Excel\Imports\ActivityImport;
+use App\Excel\Imports\EnrollmentBarcodeImport;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Gate;
@@ -26,5 +27,15 @@ class ActivityImportController extends Controller
         Gate::authorize('create', Activity::class);
 
         return Excel::download(new ActivityImport(), 'Activity Template.xslsx');
+    }
+
+    /**
+     * Returns the template to replace barcodes on the activities.
+     */
+    public function downloadReplaceBarcodesTemplate(Activity $activity): SymfonyResponse
+    {
+        Gate::authorize('manage', $activity);
+
+        return Excel::download(new EnrollmentBarcodeImport($activity), 'barcodes.xslx');
     }
 }

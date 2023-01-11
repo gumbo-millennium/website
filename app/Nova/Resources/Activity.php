@@ -437,6 +437,7 @@ class Activity extends Resource
             // Detail only
             Actions\Activities\SendMessage::make()->onlyOnDetail()->fullscreen(),
             Actions\Activities\ExportParticipants::make()->onlyOnDetail(),
+            Actions\Activities\ReplaceBarcodes::make()->onlyOnDetail(),
             Actions\Activities\CancelActivity::make()->onlyOnDetail(),
 
             // Standalones

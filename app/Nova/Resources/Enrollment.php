@@ -55,7 +55,7 @@ class Enrollment extends Resource
     public static $search = [
         'id',
         'previous_id',
-        'ticket_code',
+        'barcode',
     ];
 
     /**
