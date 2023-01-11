@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Controller\Http\Admin;
+namespace Tests\Feature\Http\Controllers\Admin;
 
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
-class ImportTemplateControllerTest extends TestCase
+class ActivityImportControllerTest extends TestCase
 {
     /**
      * Test authentication and proper response.
@@ -21,13 +21,13 @@ class ImportTemplateControllerTest extends TestCase
 
         // Assert guest and all others get a 404
         $this->actingAs($this->getGuestUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertForbidden();
 
         $this->actingAs($this->getCommissionUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertForbidden();
 
         $this->actingAs($this->getBoardUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertForbidden();
     }
 
     /**

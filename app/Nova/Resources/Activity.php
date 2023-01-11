@@ -402,9 +402,9 @@ class Activity extends Resource
                     ->displayUsing(fn ($value) => $value === null ? __('Unlimited') : sprintf('%d', $value)),
                 Fields\Line::make(
                     'Effective Seat Limit Reason',
-                    fn ($value) => $this->effective_seat_limit !== $this->seats
-                    ? __('Calculated from available number of tickets')
-                    : __('Set on the activity'),
+                    fn () => $this->effective_seat_limit !== $this->seats
+                    ? __('Determined by total number of available tickets')
+                    : __('Determined by the activity seat limit'),
                 )->asSmall(),
             ])->onlyOnDetail(),
 

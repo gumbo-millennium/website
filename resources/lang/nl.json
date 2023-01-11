@@ -457,10 +457,11 @@
 
   "Download import format": "Download importformaat",
 
-  "Import items": "Items importeren",
+  "Import Items": "Items importeren",
+  "Download Template": "Download sjabloon",
   "Group": "Groep",
-  "Import file": "Bestand",
-  "Start import": "Start import",
+  "Import File": "Bestand",
+  "Start": "Start",
   "You are not allowed to import activities for this group.": "Je mag geen activiteiten importeren voor deze groep.",
   "The uploaded file is invalid: :message.": "Het geüploade bestand is ongeldig: :message.",
   "Import completed, your activities should now be visible.": "Importeren voltooid, je activiteiten moeten nu in het overzicht staan.",

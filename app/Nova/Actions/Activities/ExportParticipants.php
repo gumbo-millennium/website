@@ -10,7 +10,6 @@ use App\Excel\Exports\ActivityParticipantsFullExport;
 use App\Excel\Exports\ActivityParticipantsPresenceList;
 use App\Helpers\Str;
 use App\Models\Activity;
-use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;
 use App\Services\ActivityExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -25,7 +24,7 @@ use RuntimeException;
 
 class ExportParticipants extends Action
 {
-    use BlocksCancelledActivityRuns;
+    use Traits\BlocksCancelledActivityRuns;
 
     public const TYPE_ARCHIVE = 'archive';
 

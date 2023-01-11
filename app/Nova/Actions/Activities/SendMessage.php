@@ -8,7 +8,6 @@ use App\Helpers\Str;
 use App\Jobs\SendActivityMessageJob;
 use App\Models\ActivityMessage;
 use App\Models\Ticket;
-use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +21,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class SendMessage extends Action
 {
-    use BlocksCancelledActivityRuns;
+    use Traits\BlocksCancelledActivityRuns;
 
     public function __construct()
     {

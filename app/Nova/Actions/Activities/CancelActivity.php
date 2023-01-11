@@ -6,7 +6,6 @@ namespace App\Nova\Actions\Activities;
 
 use App\Models\Activity;
 use App\Models\States\Enrollment\Cancelled;
-use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;
 use App\Nova\Resources\Activity as NovaActivity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,9 +18,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class CancelActivity extends Action
 {
-    use BlocksCancelledActivityRuns;
     use InteractsWithQueue;
     use Queueable;
+    use Traits\BlocksCancelledActivityRuns;
 
     /**
      * The displayable name of the action.

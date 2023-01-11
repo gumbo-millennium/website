@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions\Traits;
+namespace App\Nova\Actions\Activities\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 trait BlocksCancelledActivityRuns
 {
@@ -20,7 +21,7 @@ trait BlocksCancelledActivityRuns
             return false;
         }
 
-        if ($model->end_date < now() && ! $model->is_postponed) {
+        if ($model->end_date < Date::now() && ! $model->is_postponed) {
             return false;
         }
 
