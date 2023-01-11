@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controller\Http\Admin;
 
+use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
@@ -12,30 +13,9 @@ class ImportTemplateControllerTest extends TestCase
     /**
      * Test authentication and proper response.
      */
-    public function test_fetch_unknown(): void
+    public function test_fetch_import_sheet(): void
     {
-        $route = route('admin.import.template', 'steve');
-
-        // Assert guest users are redirected to login
-        $this->get($route)->assertRedirect(route('login'));
-
-        // Assert guest and all others get a 404
-        $this->actingAs($this->getGuestUser());
-        $this->get($route)->assertNotFound();
-
-        $this->actingAs($this->getCommissionUser());
-        $this->get($route)->assertNotFound();
-
-        $this->actingAs($this->getBoardUser());
-        $this->get($route)->assertNotFound();
-    }
-
-    /**
-     * Test authentication and proper response.
-     */
-    public function test_fetch_activity_sheet(): void
-    {
-        $route = route('admin.import.template', 'activity');
+        $route = URL::route('admin.activity.import-template');
 
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));
@@ -51,6 +31,6 @@ class ImportTemplateControllerTest extends TestCase
         $this->get($route)->assertOk();
 
         // Check download was sent
-        Excel::assertDownloaded('template-activity.ods');
+        Excel::assertDownloaded('template.xlsx');
     }
 }

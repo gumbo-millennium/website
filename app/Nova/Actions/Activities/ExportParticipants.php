@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions;
+namespace App\Nova\Actions\Activities;
 
 use App\Enums\ActivityExportType;
 use App\Excel\Exports\ActivityParticipantsExport;
@@ -10,7 +10,6 @@ use App\Excel\Exports\ActivityParticipantsFullExport;
 use App\Excel\Exports\ActivityParticipantsPresenceList;
 use App\Helpers\Str;
 use App\Models\Activity;
-use App\Nova\Actions\Traits\BlocksCancelledActivityRuns;
 use App\Services\ActivityExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -23,9 +22,9 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use RuntimeException;
 
-class ExportActivityParticipants extends Action
+class ExportParticipants extends Action
 {
-    use BlocksCancelledActivityRuns;
+    use Traits\BlocksCancelledActivityRuns;
 
     public const TYPE_ARCHIVE = 'archive';
 
