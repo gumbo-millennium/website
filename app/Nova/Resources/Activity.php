@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJsField;
 use App\Helpers\Str;
 use App\Models\Activity as ActivityModel;
 use App\Nova\Actions;
+use App\Nova\Fields\EditorJs;
 use App\Nova\Fields\Seats;
 use App\Nova\Filters;
 use App\Nova\Flexible\Presets\ActivityForm;
@@ -315,7 +315,7 @@ class Activity extends Resource
                 ->rules($groupRules)
                 ->nullable(),
 
-            NovaEditorJsField::make('Omschrijving', 'description')
+            EditorJs::make('Omschrijving', 'description')
                 ->nullable()
                 ->stacked(),
 
@@ -392,7 +392,7 @@ class Activity extends Resource
                 ->rules('nullable', 'date', 'before_or_equal:end_date')
                 ->nullable(),
 
-            NovaEditorJsField::make(__('Ticket Description'), 'ticket_text')
+            EditorJs::make(__('Ticket Description'), 'ticket_text')
                 ->help('De tekst die je op het ticket wil tonen. Vooral nuttig voor openbare evenementen.')
                 ->nullable()
                 ->stacked(),

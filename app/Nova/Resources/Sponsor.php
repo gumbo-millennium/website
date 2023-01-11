@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Models\Sponsor as SponsorModel;
+use App\Nova\Fields\EditorJs;
 use App\Nova\Fields\Logo;
 use App\Nova\Metrics\SponsorClicksPerDay;
 use Illuminate\Http\Request;
@@ -122,7 +122,7 @@ class Sponsor extends Resource
                     ->hideFromIndex(),
 
                 // Add data
-                NovaEditorJs::make('Detailpagina', 'contents')
+                EditorJs::make('Detailpagina', 'contents')
                     ->hideFromIndex()
                     ->stacked()
                     ->help('Inhoud van detailpagina'),

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
-use Advoor\NovaEditorJs\NovaEditorJs;
 use App\Helpers\Str;
 use App\Models\Page as PageModel;
+use App\Nova\Fields\EditorJs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
@@ -128,7 +128,7 @@ class Page extends Resource
             Fields\Text::make('Type')->onlyOnDetail()->displayUsing(static fn ($value) => Str::title($value)),
 
             // Add data
-            NovaEditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),
+            EditorJs::make('Inhoud', 'contents')->hideFromIndex()->stacked(),
         ];
     }
 }

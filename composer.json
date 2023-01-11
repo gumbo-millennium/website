@@ -17,6 +17,7 @@
         "eluceo/ical": "^2.5",
         "endroid/qr-code": "^4.4",
         "enshrined/svg-sanitize": "^0.15",
+        "ezyang/htmlpurifier": "^4.16",
         "fideloper/proxy": "^4.4",
         "giggsey/libphonenumber-for-php": "^8.10",
         "google/apiclient": "^2.4",
