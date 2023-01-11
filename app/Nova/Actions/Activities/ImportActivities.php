@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -81,7 +82,7 @@ class ImportActivities extends Action
     {
         $hideIfDownloading = function (array $rules) {
             return function (Fields\Field $field, NovaRequest $novaRequest, FormData $formData) use ($rules) {
-                if ($formData->action === 'export') {
+                if ($formData->action === 'download') {
                     $field->hide();
                 } else {
                     $field->rules($rules);
@@ -92,8 +93,8 @@ class ImportActivities extends Action
         return [
             Fields\Select::make(__('Action'), 'action')
                 ->options([
-                    'download' => __('Import Activities'),
-                    'import' => __('Download Template'),
+                    'download' => __('Download Template'),
+                    'import' => __('Import Activities'),
                 ])
                 ->rules([
                     'required',
@@ -112,5 +113,10 @@ class ImportActivities extends Action
                     'mimes:ods,xls,xlsx',
                 ])),
         ];
+    }
+
+    public function authorizedToSee(HttpRequest $request)
+    {
+        return $request->user()->can('create', Activity::class) && parent::authorizedToSee($request);
     }
 }

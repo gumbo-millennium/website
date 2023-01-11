@@ -87,7 +87,7 @@ class ReplaceBarcodes extends Action
         /** @var User */
         $user = Request::user();
 
-        if ($fields->get('action') === 'export') {
+        if ($fields->get('action') === 'download') {
             $filename = sprintf('%s.xlsx', __('Barcodes enrollments :name', ['name' => Str::of($activity->name)->ascii()]));
 
             Log::info('User {user} is downloading a barcode transfer template for activity {activity}', [
@@ -133,17 +133,17 @@ class ReplaceBarcodes extends Action
         return [
             Fields\Select::make(__('Action'), 'action')
                 ->options([
+                    'download' => __('Download Transfer Template'),
                     'import' => __('Import Filled-in Template'),
-                    'export' => __('Download Transfer Template'),
                 ])
                 ->rules([
                     'required',
-                    Rule::in(['import', 'export']),
+                    Rule::in(['import', 'download']),
                 ]),
 
             Fields\File::make(__('Import File'), 'import')
                 ->dependsOn(['action'], function (Fields\Field $field, NovaRequest $request, FormData $formData) {
-                    if ($formData->action === 'export') {
+                    if ($formData->action === 'download') {
                         $field->hide();
                     } else {
                         $field->rules([

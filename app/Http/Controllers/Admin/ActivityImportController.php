@@ -26,7 +26,7 @@ class ActivityImportController extends Controller
     {
         Gate::authorize('create', Activity::class);
 
-        return Excel::download(new ActivityImport(), 'Activity Template.xslsx');
+        return Excel::download(new ActivityImport(), 'template.xlsx');
     }
 
     /**
@@ -36,6 +36,6 @@ class ActivityImportController extends Controller
     {
         Gate::authorize('manage', $activity);
 
-        return Excel::download(new EnrollmentBarcodeImport($activity), 'barcodes.xslx');
+        return Excel::download(new EnrollmentBarcodeImport($activity), 'barcodes.xlsx');
     }
 }

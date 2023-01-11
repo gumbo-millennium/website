@@ -457,7 +457,7 @@
 
   "Download import format": "Download importformaat",
 
-  "Import Items": "Items importeren",
+  "Import Activities": "Activiteiten importeren",
   "Download Template": "Download sjabloon",
   "Group": "Groep",
   "Import File": "Bestand",
@@ -475,6 +475,9 @@
     "Let op dat inschrijvingen met aangepaste barcodes niet een nieuwe barcode krijgen bij ticketoverdracht. Dit kan hergebruik van barcodes mogelijk maken.",
   "Import Filled-in Template": "Importeer ingevuld sjabloon",
   "Download Transfer Template": "Download overdrachtsjabloon",
+  "Name of Participant": "Naam deelnemer",
+  "Ticket Type": "Tickettype",
+  "Barcode Type": "Barcodetype",
 
   "Location": "Locatie",
   "Location Address": "Adres locatie",

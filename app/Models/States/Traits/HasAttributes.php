@@ -11,6 +11,22 @@ use App\Helpers\Str;
  */
 trait HasAttributes
 {
+    private function getAttributeMethod(string $name): string
+    {
+        $keyCaps = Str::studly($name);
+
+        return "get{$keyCaps}Attribute";
+    }
+
+    private function hasAttribute(string $name): bool
+    {
+        // Get proper method
+        $keyMethod = $this->getAttributeMethod($name);
+
+        // Check if method exists
+        return method_exists($this, $keyMethod);
+    }
+
     /**
      * Get the property.
      */
@@ -22,12 +38,13 @@ trait HasAttributes
         }
 
         // Get proper method
-        $keyCaps = Str::studly($key);
-        $keyMethod = "get{$keyCaps}Attribute";
-
-        // Check if method exists
-        if (method_exists($this, "get{$keyCaps}Attribute")) {
-            return $this->{$keyMethod}();
+        if ($this->hasAttribute($key)) {
+            return $this->{$this->getAttributeMethod($key)}();
         }
+    }
+
+    public function __isset($key)
+    {
+        return $this->hasAttribute($key);
     }
 }

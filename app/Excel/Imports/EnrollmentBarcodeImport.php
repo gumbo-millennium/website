@@ -48,10 +48,11 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
         ],
         'state' => [
             'name' => 'Status',
-            'source' => 'state',
+            'source' => 'state.title',
         ],
         'barcode_type' => [
             'name' => 'Barcode Type',
+            'default' => 'qrcode',
             'rules' => [
                 'nullable',
                 'in:aztec,code39,code128,ean13,ean8,ean13,qrcode,text',
@@ -82,7 +83,8 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
             $row = [];
 
             foreach (self::COLUMNS as $column => $data) {
-                $row[] = $enrollment->{$data['source'] ?? $column};
+                // Get data from source, which can be a dot notation path. If unset, use default (if set).
+                $row[] = (isset($data['source']) ? object_get($enrollment, $data['source']) : null) ?? $data['default'] ?? null;
             }
 
             $result->push($row);
@@ -211,7 +213,7 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
     {
         return $this->enrollments ??= $this->activity
             ->enrollments()
-            ->with('user:id,first_name,insert,last_name')
+            ->with('user:id,first_name,insert,last_name,name')
             ->with('ticket:id,title')
             ->active()
             ->get()
