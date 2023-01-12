@@ -52,7 +52,7 @@ function copy_node() {
     # Check if any files were copied
     if [ "$COUNT_BEFORE" -eq "$COUNT_AFTER" ]; then
         echo "Skipping Font Awesome $PACK / $NAME. No new files found"
-        return 1
+        return 0
     fi
 
     echo "Copied Font Awesome $PACK / $NAME ($((COUNT_AFTER - COUNT_BEFORE)) files)"
