@@ -9,7 +9,7 @@
 }
 
 .form__field--checkbox {
-  @apply block;
+  @apply flex flex-row items-center;
 }
 
 .form__field-label {
@@ -38,6 +38,10 @@
 
 .form__field-help {
   @apply mt-2 text-gray-600 text-sm;
+}
+
+.form__field-input--checkbox {
+  @apply flex-none;
 }
 
 .form__field--checkbox .form__field-label {

@@ -1,75 +1,50 @@
 <?php
 use App\Models\User;
 $testUsers = App::isLocal() ? User::where('email', 'LIKE', '%@example.gumbo-millennium.nl')->get() : [];
+$title = $seenBefore ? __('Welcome back') : __('Welcome');
 ?>
 <x-auth-page title="Login">
   <x-sections.transparent-header
-    title="Welkom terug"
-    subtitle="Log in om bij de ledensystemen te komen en je aan te melden voor activiteiten"
+    :title="$title"
+    :subtitle="$purpose"
   />
 
   {{-- Auto login form --}}
   @includeWhen($testUsers, 'auth.test.login', ['users' => $testUsers])
 
   {{-- Form --}}
-  <form method="POST" action="{{ route('login') }}" class="login__form">
+  <form method="POST" action="{{ route('login') }}" class="form grid grid-cols-1 gap-4">
     @csrf
 
     {{-- Login e-mail --}}
-    <div class="form__field">
-      {{-- Label --}}
-      <label for="email" class="form__field-label form__field-label--required">E-mailadres</label>
-
-      {{-- Input --}}
-      <input id="email" type="email" class="form__field-input form-input" name="email" value="{{ old('email') }}"
-        required autocomplete="email" autofocus>
-
-      {{-- Error --}}
-      @error('email')
-      <div class="form__field-error" role="alert">
-        <strong>{{ $message }}</strong>
-      </div>
-      @enderror
-    </div>
+    <x-input name="email" :label="__('E-mail address')" type="email" required autofocus />
 
     {{-- Login password --}}
-    <div class="login__field mb-4">
-      {{-- Label --}}
-      <div class="flex flex-row items-center">
-        <label for="password" class="form__field-label form__field-label--required flex-grow">Wachtwoord</label>
-        <a class="text-sm" href="{{ route('password.request') }}">Wachtwoord vergeten?</a>
-      </div>
+    <x-input name="password" :label="__('Password')" type="password" required autocomplete="current-password" />
 
-      {{-- Input --}}
-      <input id="password" type="password" class="form__field-input form-input" name="password"
-        value="{{ old('password') }}" required autocomplete="current-password">
+    {{-- Submit --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <x-button type="submit" style="primary">
+        {{ __('Login') }}
+      </x-button>
 
-      {{-- Error --}}
-      @error('password')
-      <div class="form__field-error" role="alert">
-        <strong>{{ $message }}</strong>
-      </div>
-      @enderror
+      <x-button href="{{ route('password.request') }}" style="outline">
+        {{ __('Forgot your password?') }}
+      </x-button>
     </div>
 
-    {{-- Don't you, forget about me --}}
-    <div class="form__field form__field--checkbox">
-      <input class="form__field-input form__field-input--checkbox form-checkbox" id="remember" name="remember"
-        type="checkbox" value="1" {{ old('remember') ? 'checked' : '' }}>
-      <label for="remember_me" class="form__field-label">Blijf ingelogd</label>
-    </div>
+    <hr class="my-4 bg-gray-400" />
 
-    <div class="sm:flex flex-row items-center">
-      {{-- Register links --}}
-      <p class="m-0 text-sm flex-shrink-0 flex flex-row">
-        <span class="mr-1">Nog geen account?</span>
-        <a class="login__link block flex-shrink-0" href="{{ route('register') }}">Aanmelden</a>
+    <div>
+      <h3 class="heading-3 mb-2">@lang("Don't have an account yet")</h3>
+      <p>
+        @lang("Register to get started.")
+        @lang("Don't worry, a website-account doesn't constitute a membership.")
       </p>
-
-      {{-- Spacing --}}
-      <div class="flex-grow mr-8"></div>
-      {{-- Submit button --}}
-      <button class="btn btn--brand" type="submit">Inloggen</button>
     </div>
+
+    <x-button href="{{ route('register') }}">
+      {{ __('Sign Up') }}
+    </x-button>
   </form>
 </x-auth-page>

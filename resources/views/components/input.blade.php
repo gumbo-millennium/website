@@ -36,7 +36,11 @@ $inputAttributes = $attributes
   @endunless
 
   <div @class($groupClass)>
-    <input {{ $inputAttributes }}>
+    @if ($input ?? null)
+      {{ $input }}
+    @else
+      <input {{ $inputAttributes }}>
+    @endif
     @if ($hasError)
     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
       <x-icon icon="solid/exclamation-circle" class="h-5 w-5 text-red-500" />

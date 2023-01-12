@@ -19,11 +19,11 @@ class RegisterPrivacyForm extends Form
         $this
             ->add('accept_terms', 'checkbox', [
                 // phpcs:ignore Generic.Files.LineLength.TooLong
-                'label' => 'Ik ga akkoord met de privacy policy van Gumbo Millennium en begrijp de impact hiervan op mijn privacy.',
+                'label' => 'Ik begrijp en ga akkoord met het privacybeleid van Gumbo Millennium.',
                 'rules' => 'required|accepted',
             ])
             ->add('submit', 'submit', [
-                'label' => 'Registreren',
+                'label' => 'Account aanmaken',
             ]);
     }
 }

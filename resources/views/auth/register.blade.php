@@ -1,14 +1,17 @@
-@extends('layout.variants.login')
+<x-auth-page title="Login">
+  <x-sections.transparent-header title="Account aanmaken" subtitle="Maak maximaal gebruik van de Gumbo site, met een account." />
 
-@php
-$testUsers = app()->isLocal() ? App\Models\User::where('email', 'LIKE', '%@example.gumbo-millennium.nl')->get() : [];
-@endphp
+  <div class="grid grid-cols-1 gap-2">
+    <p>
+      Met een Gumbo account kan je tickets kopen voor activieiten, en krijg je (als je lid bent) toegang
+      tot het documentensysteem, de webshop, besloten activiteiten en nog meer.
+    </p>
 
-@section('basic-content-small')
-{{-- Header --}}
-<h1 class="login__title">Leuk je te <strong class="login__title-fat">ontmoeten</strong></h1>
-<p class="login__subtitle">Wat awesome dat je een account wil maken, let's get to it.</p>
+    <p class="text-sm">
+      Een Gumbo account is geen lidmaatschap.
+    </p>
 
-{{-- Render form --}}
-{!! form($form, ['class' => 'form']) !!}
-@endsection
+    {!! form($form, ['class' => 'form']) !!}
+  </div>
+
+</x-auth-page>

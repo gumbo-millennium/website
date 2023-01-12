@@ -1,24 +1,26 @@
 <div class="card border-gray-200 border">
-    <form method="POST" action="{{ route('login') }}" class="login__form card__body">
+  <div class="card__body">
+    <form method="POST" action="{{ route('login') }}" class="grid grid-cols-1 gap-2">
         @csrf
         <input type="hidden" name="password" value="Gumbo" />
 
-        <h2 class="font-base text-2xl">Test mode <strong>enabled</strong></h2>
-        <p class="mb-8 text-lg">Pick a test user from the drop down below to quickly log in.</p>
+        <p>
+          <strong>Test mode is active!</strong> Would you like to login as a dummy user?
+        </p>
 
-        {{-- Login user --}}
-        <div class="flex flex-col md:flex-row md:items-center">
-            <div class="flex-grow mb-4 md:mb-0">
-                {{-- Field --}}
-                <select name="email" id="user" class="form-select w-full text-gray-900">
-                    @foreach ($testUsers as $user)
-                    <option value="{{ $user->email }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <x-input name="email" :label="__('Account')">
+          <x-slot name="input">
+            <select name="email" id="user" class="block w-full sm:text-sm rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 border-gray-300">
+              @foreach ($users as $user)
+              <option value="{{ $user->email }}">{{ $user->name }}</option>
+              @endforeach
+            </select>
+          </x-slot>
+        </x-input>
 
-            {{-- Submit button --}}
-            <button class="my-0 py-2 btn btn-brand md:ml-4" type="submit">Inloggen</button>
-        </div>
+        <x-button type="submit" style="primary">
+          @lang('Login')
+        </x-button>
     </form>
+  </div>
 </div>

@@ -17,6 +17,8 @@ use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -99,10 +101,10 @@ class RegisterController extends Controller
         $userValues['password'] = Hash::make($userValues['password']);
 
         // Store in session
-        $request->session()->put(self::DATA_SESSION_KEY, $userValues);
+        Session::put(self::DATA_SESSION_KEY, $userValues);
 
         // Redirect to sign-up page
-        return response()->redirectToRoute('register.register-privacy');
+        return Response::redirectToRoute('register.register-privacy');
     }
 
     /**
@@ -113,8 +115,8 @@ class RegisterController extends Controller
     public function showPrivacy(Request $request, Repository $cache)
     {
         // Redirect if wrong
-        if (! $request->session()->has(self::DATA_SESSION_KEY)) {
-            return response()->redirectToRoute('register');
+        if (! Session::has(self::DATA_SESSION_KEY)) {
+            return Response::redirectToRoute('register');
         }
 
         // Title
@@ -146,10 +148,10 @@ class RegisterController extends Controller
         }
 
         // Show page
-        return response()->view('auth.register-privacy', [
+        return Response::view('auth.register-privacy', [
             'companies' => $companies,
             'form' => $form,
-            'user' => $request->session()->get(self::DATA_SESSION_KEY),
+            'user' => Session::get(self::DATA_SESSION_KEY),
         ]);
     }
 
@@ -159,7 +161,7 @@ class RegisterController extends Controller
      * @return Illuminate\Http\RedirectResponse
      * @throws RuntimeException
      */
-    public function savePrivacy(Request $request)
+    public function savePrivacy()
     {
         // Get form
         $form = $this->formBuilder->create(RegisterPrivacyForm::class);
@@ -168,12 +170,12 @@ class RegisterController extends Controller
         $form->redirectIfNotValid();
 
         // Redirect if wrong
-        if (! $request->session()->has(self::DATA_SESSION_KEY)) {
-            return response()->redirectToRoute('register');
+        if (! Session::has(self::DATA_SESSION_KEY)) {
+            return Response::redirectToRoute('register');
         }
 
         // Get user request
-        $userRequest = $request->session()->pull(self::DATA_SESSION_KEY);
+        $userRequest = Session::pull(self::DATA_SESSION_KEY);
 
         // Create a user with the values
         $user = User::create($userRequest);
@@ -185,7 +187,7 @@ class RegisterController extends Controller
         Auth::guard()->login($user);
 
         // Flag as valid
-        $request->session()->put(self::SESSION_ACCESS, 'true');
+        Session::put(self::SESSION_ACCESS, 'true');
 
         // Forward client
         return response()
