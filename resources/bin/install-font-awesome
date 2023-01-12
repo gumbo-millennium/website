@@ -45,7 +45,17 @@ function copy_node() {
     fi
 
     # Copy files
+    COUNT_BEFORE=$(ls -1 "$DEST_PATH" | wc -l)
     cp -fn ${SOURCE_PATH}/*.svg "$DEST_PATH"
+    COUNT_AFTER=$(ls -1 "$DEST_PATH" | wc -l)
+
+    # Check if any files were copied
+    if [ "$COUNT_BEFORE" -eq "$COUNT_AFTER" ]; then
+        echo "Skipping Font Awesome $PACK / $NAME. No new files found"
+        return 1
+    fi
+
+    echo "Copied Font Awesome $PACK / $NAME ($((COUNT_AFTER - COUNT_BEFORE)) files)"
 }
 
 # Make directories
