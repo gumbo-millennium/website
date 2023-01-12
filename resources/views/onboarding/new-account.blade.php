@@ -1,23 +1,22 @@
-@extends('layout.variants.basic')
+<x-auth-page title="Login">
+  <x-sections.transparent-header title="Registratie voltooid"
+    subtitle="Bedankt voor het aanmaken van een account." />
 
-@section('basic-content-small')
-{{-- Header --}}
-<h1 class="login__header font-base text-4xl">Welkom <strong>{{ $user->first_name }}</strong></h1>
-<p class="text-lg text-gray-600 mb-4">Bedankt voor het aanmaken van een account.</p>
+  <p>
+      Je account is aangemaakt, maar voordat je je kan aanmelden voor activiteiten en het
+      documentensysteem kunt bekijken (als je lid bent), moet je eerst even je e-mailadres
+      bevestigen.
+  </p>
+  <div class="my-4 p-4 border border-brand-500 rounded">
+      <p>
+          Klik op <strong>de link in je mail</strong> om je e-mailadres te bevestigen.
+      </p>
+  </div>
 
-<p>
-    Je account is aangemaakt, maar voordat je je kan aanmelden voor activiteiten en het
-    documentensysteem kunt bekijken (als je lid bent), moet je eerst even je e-mailadres
-    bevestigen.
-</p>
-<div class="my-4 p-4 border border-brand-500 rounded">
-    <p>
-        Klik op <strong>de link in je mail</strong> om je e-mailadres te bevestigen.
-    </p>
-</div>
+  <p>Om door te gaan naar de website, kan je hieronder klikken.</p>
 
-<p>Om door te gaan naar de website, kan je hieronder klikken.</p>
+  <div class="mt-4">
+    <x-button href="{{ $nextUrl }}" style="primary">Doorgaan</x-button>
+  </div>
 
-<a href="{{ $nextUrl }}" class="btn btn--brand">Doorgaan</a>
-
-@endsection
+</x-auth-page>

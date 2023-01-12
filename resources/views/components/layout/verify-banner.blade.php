@@ -1,9 +1,9 @@
-  <div class="sticky top-0 inset-x-0 pb-2 sm:pt-5 z-10 h-10 -mb-10">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+<div class="sticky top-0 inset-x-0 pb-2 sm:pt-5 z-20 h-10 -mb-10">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8" role="alert">
       <div class="p-2 rounded-lg bg-brand-600 shadow-lg sm:p-3">
         <div class="flex flex-row items-center gap-3">
           {{-- Icon --}}
-          <span class="hidden sm:flex p-2 rounded-lg bg-brand-800">
+          <span class="hidden sm:flex p-2 rounded-lg bg-brand-800" role="none">
             <div class="w-6 text-center">
               <x-icon icon="solid/bell" class="h-6 text-white" />
             </div>

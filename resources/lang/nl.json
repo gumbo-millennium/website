@@ -362,6 +362,7 @@
   "Sold Out": "Uitverkocht",
   ":quantity tickets, :available left": ":quantity tickets beschikbaar, :available over",
 
+  "You're currently not enrolled into :activity": "Je bent momenteel niet ingeschreven voor :activity",
   "You cannot enroll for an activity that has ended.": "Je kunt je niet inschrijven voor een activiteit die is afgelopen.",
   "Something went wrong enrolling you into :activity, please try again.": "Er is iets fout gegaan bij het inschrijven bij :activity, probeer het opnieuw.",
 
