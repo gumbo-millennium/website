@@ -44,14 +44,19 @@
         <p class="mb-2">
             Meer lezen:
             @foreach ($company['privacy-urls'] as $label => $url)
-            <a href="{{ $url }}" rel="noopener nofollow" target="_blank">{{ $label }}</a>,
+            <a href="{{ $url }}" class="underline hover:no-underline" rel="noopener nofollow" target="_blank">
+              {{ $label }}
+              <span class="no-underline">
+                <x-icon icon="solid/arrow-up-right-from-square" class="inline" />
+              </span>
+            </a>
+            {{ $loop->last ? '' : ',' }}
             @endforeach
         </p>
         @endif
     </details>
     @empty
     @endforelse
-
 
     {{-- Render form --}}
     {!! form($form, ['class' => 'form']) !!}
