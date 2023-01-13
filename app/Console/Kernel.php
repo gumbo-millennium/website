@@ -65,6 +65,9 @@ class Kernel extends ConsoleKernel
         // Clean enrollments hourly
         $schedule->command('enrollment:prune')->hourlyAt(55);
 
+        // Send payment reminders on fridays at 20:30
+        $schedule->command('enrollment:send-reminders')->fridays()->at('20:30');
+
         // Update ticket PDFs from enrollments hourly
         $schedule->command('gumbo:update-ticket-pdfs')->hourly();
 
