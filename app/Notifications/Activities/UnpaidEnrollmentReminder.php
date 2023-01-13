@@ -46,21 +46,22 @@ class UnpaidEnrollmentReminder extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $user = $this->enrollment->user;
-        $activity = $this->enrollment->activity;
+        $enrollment = $this->enrollment;
+        $user = $enrollment->user;
+        $activity = $enrollment->activity;
 
         $message = (new MailMessage())
             ->subject(__('Payment reminder for :activity', ['activity' => $activity->name]))
             ->greeting(__('Hello :name', ['name' => $user->first_name]))
             ->line(__("You've been enrolled into :activity since :date, and while your enrollment has been confirmed, it's still unpaid.", [
                 'activity' => $activity->name,
-                'date' => $this->enrollment->created_at->isoFormat('D MMMM YYYY'),
+                'date' => $enrollment->created_at->isoFormat('D MMMM YYYY'),
             ]))
             ->line(__('Please pay your enrollment fee of :amount before the activity starts on :date.', [
-                'amount' => Str::price($activity->total_price),
+                'amount' => Str::price($enrollment->total_price),
                 'date' => $activity->start_date->isoFormat('D MMMM YYYY, HH:mm'),
             ]))
-            ->action(__('Pay enrollment'), URL::route('enroll.show', $this->enrollment));
+            ->action(__('Pay enrollment'), URL::route('enroll.show', $activity));
 
         if ($activity->start_date->diffInDays() < 7) {
             $message->line(__("This has been your final reminder. If you don't pay your enrollment fee, access to the activity may be denied."));
