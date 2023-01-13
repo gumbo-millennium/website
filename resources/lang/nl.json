@@ -480,5 +480,21 @@
   "Settlement": "Uitbetaling",
   "Settlements": "Uitbetalingen",
 
+  "Payment reminder for :activity": "Betalingsherinnering voor :activity",
+  "Hello :name": "Hallo :name",
+  "You've been enrolled into :activity since :date, and while your enrollment has been confirmed, it's still unpaid.":
+    "Je bent sinds :date ingeschreven voor :activity, en hoewel je inschrijving is bevestigd, is deze nog niet betaald.",
+  "Please pay your enrollment fee of :amount before the activity starts on :date.":
+    "Betaal je inschrijfgeld van :amount voor de activiteit begint op :date.",
+  "Pay enrollment":
+    "Betaal inschrijving",
+  "This has been your final reminder. If you don't pay your enrollment fee, access to the activity may be denied.":
+    "Dit is je laatste herinnering. Als je je inschrijfgeld niet betaalt, kan je toegang tot de activiteit worden geweigerd.",
+  "With robot love,":
+    "Met robotliefde,",
+
+  "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser: [:actionURL](:actionURL)":
+    "Als je problemen hebt met het klikken op de knop \":actionText\", kopieer en plak dan de URL hieronder\nin je browser: [:actionURL](:actionURL)",
+
   "Leave be me down here, please 🥺": "Laat mij benedenaan het bestand staan, voor git diffs"
 }

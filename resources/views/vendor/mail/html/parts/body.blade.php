@@ -20,6 +20,10 @@
                                         </tr>
                                         @endif
 
+                                        @if (!empty($subject))
+                                          <h1 class="heading-1">{{ $subject }}</h1>
+                                        @endif
+
                                         {{-- Body --}}
                                         <tr>
                                             <td>

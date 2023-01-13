@@ -3,11 +3,11 @@
 <td align="center">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 <tr>
-<td align="center">
+<td align="center" class="py-4 px-4">
 {{-- This is illegal, but it's email --}}
-<a href="{{ $url }}" class="btn btn--{{ $color ?? 'brand' }} mail-button" target="_blank">
-<div class="mail-button__inner">{{ $slot }}</div>
-</a>
+<x-button href="{{ $url }}" style="primary" target="_blank" rel="nofollow noopener noreferrer">
+{{ $slot }}
+</x-button>
 </td>
 </tr>
 </table>
