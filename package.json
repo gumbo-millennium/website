@@ -47,7 +47,8 @@
     "postcss-import": "^14.0.2",
     "postcss-rem": "^1.1.5",
     "responsive-loader": "^2.3.0",
-    "sharp": "^0.30.5"
+    "sharp": "^0.30.5",
+    "vuepress": "^2.0.0-beta.60"
   },
   "scripts": {
     "start": "npx mix watch",
@@ -55,6 +56,8 @@
     "dev": "npx mix build",
     "build": "npx mix build -p",
     "format": "eslint resources/js resources/js-build --fix",
+    "docs:dev": "vuepress dev resources/docs",
+    "docs:build": "vuepress build resources/docs",
     "postinstall": "resources/bin/install-font-awesome"
   }
 }
