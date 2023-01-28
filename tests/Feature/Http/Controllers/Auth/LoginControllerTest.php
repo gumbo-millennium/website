@@ -11,6 +11,56 @@ use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
+    /**
+     * Check if login works as expected and sets the "gumbo_logged_in" cookie to signal
+     * the next time the user has logged in before.
+     */
+    public function test_login_return_cookie_assignment(): void
+    {
+        $user = User::factory()->create();
+
+        $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])
+            ->assertRedirect(route('home'))
+            ->assertCookie('gumbo_logged_in');
+
+        $this->assertAuthenticatedAs($user);
+    }
+
+    /**
+     * Check if the locked-flag is respected.
+     */
+    public function test_account_locking(): void
+    {
+        [$lockedUser, $unlockedUser] = User::factory()->createMany([
+            ['locked' => true],
+            ['locked' => false],
+        ]);
+
+        $this->post(route('login'), [
+            'email' => $lockedUser->email,
+            'password' => 'password',
+        ])->assertRedirect(route('login'));
+
+        $this->assertGuest();
+
+        $flashMessage = flash()->getMessage();
+        $this->assertNotNull($flashMessage);
+        $this->assertSame(
+            __('Your account has been locked. Please contact the board to unlock your account.'),
+            $flashMessage->message,
+        );
+
+        $this->post(route('login'), [
+            'email' => $unlockedUser->email,
+            'password' => 'password',
+        ])->assertRedirect(route('home'));
+
+        $this->assertAuthenticatedAs($unlockedUser);
+    }
+
     public function test_logout_redirect(): void
     {
         Date::setTestNow('2021-11-25T23:30:00');

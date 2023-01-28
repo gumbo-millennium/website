@@ -126,7 +126,18 @@ class LoginController extends Controller
      */
     protected function authenticated(HttpRequest $request, $user)
     {
-        // Write that the user has logged in before
+        // Check if the user isn't locked
+        if ($user->isLocked()) {
+            $this->guard()->logout();
+
+            $request->session()->invalidate();
+
+            flash()->error(__('Your account has been locked. Please contact the board to unlock your account.'));
+
+            return Response::redirectToRoute('login');
+        }
+
+        // Account is valid, write that the user has logged in before.
         Cookie::queue(self::LOGGED_IN_COOKIE_NAME, '1', Date::now()->addMonth()->diffInMinutes());
 
         // Do nothing else
