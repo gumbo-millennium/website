@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands\Gumbo;
+namespace App\Console\Commands\Gumbo\User;
 
 use App\Console\Commands\Traits\FindsUserTrait;
 use Illuminate\Console\Command;
@@ -19,7 +19,11 @@ class SetAdmin extends Command
      *
      * @var string
      */
-    protected $signature = 'gumbo:set-admin {user} {--revoke}';
+    protected $signature = <<<'CMD'
+    gumbo:user:admin
+        {user : Email or ID of the user to promote}
+        {--revoke : Remove admin priviliges}
+    CMD;
 
     /**
      * The console command description.
@@ -29,16 +33,6 @@ class SetAdmin extends Command
     protected $description = 'Grants or revokes superadmin';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      */
     public function handle()
@@ -46,9 +40,9 @@ class SetAdmin extends Command
         $user = $this->getUserArgument();
 
         if (! $user) {
-            $this->error('Cannot find user');
+            $this->error('Cannot find user.');
 
-            return false;
+            return Command::FAILURE;
         }
 
         $demote = $this->option('revoke');
@@ -68,9 +62,9 @@ class SetAdmin extends Command
         ));
         $this->line('');
         if (! $this->confirm('Is this the correct user', false)) {
-            $this->warn('User aborted');
+            $this->warn('Command aborted.');
 
-            return false;
+            return Command::FAILURE;
         }
 
         if ($demote) {
@@ -82,7 +76,7 @@ class SetAdmin extends Command
                 $user->name,
             ));
 
-            return true;
+            return Command::SUCCESS;
         }
 
         $user->givePermissionTo('super-admin');
@@ -93,6 +87,6 @@ class SetAdmin extends Command
             $user->name,
         ));
 
-        return true;
+        return Command::SUCCESS;
     }
 }
