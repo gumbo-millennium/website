@@ -44,6 +44,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property null|string $gender
  * @property null|array $address
  * @property null|string $phone
+ * @property bool $locked
  * @property-read \App\Models\Activity[]|\Illuminate\Database\Eloquent\Collection $activities
  * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
  * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
@@ -105,6 +106,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'remember_token',
         'phone',
         'address',
+        'locked',
     ];
 
     /**
@@ -129,6 +131,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'grants' => 'collection',
         'deleted_at' => 'datetime',
         'email_verified_at' => 'datetime',
+        'locked' => 'boolean',
     ];
 
     /**
@@ -199,6 +202,14 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function getIsMemberAttribute(): bool
     {
         return $this->hasRole('member');
+    }
+
+    /**
+     * Retuns if this user account is locked, and cannot login.
+     */
+    public function isLocked(): bool
+    {
+        return (bool) $this->locked;
     }
 
     /**
