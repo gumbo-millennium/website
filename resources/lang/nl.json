@@ -91,9 +91,14 @@
   "No, expires at :expiration": "Nee, loopt ap of :expiration",
 
   "Confirm Enrollment": "Inschrijving bevestigen",
-  "This action can only be used with one enrollment at a time": "Deze actie kan alleen worden gebruikt met één inschrijving tegelijk",
-  "This enrollment has been cancelled": "Deze inschrijving is geannuleerd",
-  "This enrollment has already been confirmed": "Deze inschrijving is al bevestigd",
+  "Apply": "Toepassen",
+  "You can only confirm one enrollment at a time": "Je kunt maar één inschrijving tegelijk bevestigen",
+  "Are you sure you wish to confirm this enrollment?": "Weet je zeker dat je deze inschrijving wilt bevestigen?",
+  "You may optionally choose to also bypass the payment requirement, but doing so is not recommended without prior authorization.":
+    "Je kunt er ook voor kiezen om de betaalverplichting op te heffen, maar dit wordt niet aanbevolen zonder voorafgaande toestemming.",
+  "This enrollment cannot be confirmed:": "Deze inschrijving kan niet worden bevestigd:",
+  "The enrollment was cancelled": "De inschrijving is geannuleerd",
+  "The enrollment is already confirmed": "De inschrijving is al bevestigd",
   "Enrollment confirmed": "Inschrijving bevestigd",
 
   "Cancel Enrollment": "Inschrijving annuleren",
