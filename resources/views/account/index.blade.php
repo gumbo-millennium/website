@@ -25,5 +25,14 @@
           </div>
         @endforelse
       </div>
+
+      <form class="mt-4" action="{{ route('account.request-update') }}" method="POST">
+        @csrf
+
+        <x-button type="submit">
+          @lang('Request account update')
+        </x-button>
+
+      </form>
     </dd>
 </x-account-page>

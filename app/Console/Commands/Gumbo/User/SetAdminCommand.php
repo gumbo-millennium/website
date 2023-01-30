@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 /**
  * Grants or revokes Super Admin priviliges on a user.
  */
-class SetAdmin extends Command
+class SetAdminCommand extends Command
 {
     use FindsUserTrait;
 
