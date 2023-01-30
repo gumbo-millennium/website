@@ -127,7 +127,10 @@ class GoogleMailListService implements MailListHandler
 
         // Ensure email is valid given the name
         if (! $this->validateListNameAgainstEmail($name, $email)) {
-            throw new RuntimeException("Email address {$email} does not meet expectations for [{$name}]");
+            Log::warning('Email address {email} does not meet expectations for {name}', [
+                'email' => $email,
+                'name' => $name,
+            ]);
         }
 
         // Get email and domain name
