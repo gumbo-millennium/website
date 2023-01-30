@@ -202,6 +202,12 @@
   "Export": "Inzageverzoeken",
   "My :part": "Mijn :part",
 
+  "Request account update": "Update aanvragen",
+  "An account update has recently been requested. Please calm down.":
+    "Er is onlangs een verzoek gedaan om je account bij te werken. Even rustig aan.",
+  "An account update has been requested and should be processed within a few minutes.":
+    "Er is een verzoek gedaan om je account bij te werken. Dit zou binnen enkele minuten moeten gebeuren.",
+
   "API Tokens": "API tokens",
   "Create new API Token": "Nieuwe API token aanmaken",
   "Name of token": "Naam van token",

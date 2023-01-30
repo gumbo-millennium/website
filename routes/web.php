@@ -198,6 +198,7 @@ Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(
 Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
     // Home
     Route::get('/', [Account\IndexController::class, 'index'])->name('index');
+    Route::post('/request-update', [Account\IndexController::class, 'requestUpdate'])->name('request-update');
 
     // Create basic enrollment
     Route::get('/tickets', [Account\TicketController::class, 'index'])->name('tickets');
