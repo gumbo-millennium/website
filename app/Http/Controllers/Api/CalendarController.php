@@ -314,14 +314,15 @@ class CalendarController extends Controller
         $event = $this->createCalendarEventFromActivity($activity);
 
         // Update description
-        $updatedDescription = <<<DESC
+        $ticketDescription = $ticket ? <<<DOC
         Ticket: {$ticket->title}
         Prijs: {$eventPrice}
+        DOC : null;
 
-        ---
-
-        {$event->getDescription()}
-        DESC;
+        $updatedDescription = implode("\n\n---\n\n", array_filter([
+            $ticketDescription,
+            $event->getDescription(),
+        ]));
 
         return $event
             ->setDescription($updatedDescription)
