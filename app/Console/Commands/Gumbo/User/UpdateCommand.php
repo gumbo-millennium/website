@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands\Gumbo;
+namespace App\Console\Commands\Gumbo\User;
 
 use App\Jobs\UpdateConscriboUserJob;
 use App\Models\User;
@@ -12,14 +12,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Updates all users from Conscribo.
  */
-class UpdateUser extends Command
+class UpdateCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'gumbo:update-user {user? : User to update}';
+    protected $signature = 'gumbo:user:update {user? : User to update}';
 
     /**
      * The console command description.
@@ -61,7 +61,7 @@ class UpdateUser extends Command
 
             // Update user from API
             $this->line(sprintf('Updating <info>%s</>.', $user->name), null, OutputInterface::VERBOSITY_VERBOSE);
-            UpdateConscriboUserJob::dispatchNow($user);
+            UpdateConscriboUserJob::dispatchSync($user);
 
             // Get new roles
             $user->refresh();
