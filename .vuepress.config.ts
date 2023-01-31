@@ -6,9 +6,8 @@ export default defineUserConfig({
   title: 'Gumbo Millennium Website Documentatie',
   description: 'Documentatie voor leden van Gumbo om het maximale te halen uit het beheer van de site.',
 
-  // Paths
+  // Set base path
   base: '/docs/',
-  dest: path.join(__dirname, 'public/docs'),
 
   // Theming
 theme: defaultTheme({

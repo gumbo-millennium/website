@@ -31,7 +31,9 @@ jobs:
         run: npm run build
 
       - name: Build documentation
-        run: npm run docs:build
+        run: |
+          npm run docs:build
+          mv -hf resources/docs/.vuepress/dist public/docs
 
       - name: Publish front-end
         uses: actions/upload-artifact@master
