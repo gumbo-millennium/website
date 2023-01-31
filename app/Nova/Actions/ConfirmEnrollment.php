@@ -8,12 +8,15 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * @method static static make(Enrollment $enrollment, User $user)
@@ -32,38 +35,24 @@ class ConfirmEnrollment extends Action
     public $name = 'Confirm Enrollment'; // contains non-breaking space (U+00A0)
 
     /**
-     * The text to be used for the action's confirm button.
-     *
-     * @var string
-     */
-    public $confirmButtonText = 'Confirm Enrollment';
-
-    /**
-     * The text to be used for the action's cancel button.
-     *
-     * @var string
-     */
-    public $cancelButtonText = 'Cancel';
-
-    /**
      * Makes a new Confirm Enrollment configured to this model.
      */
-    public static function make(...$arguments): self
+    public function __construct()
     {
-        // Validate arguments
-        throw_unless(count($arguments) === 2, new InvalidArgumentException('ConfirmEnrollment::make requires two arguments.'));
+        $this
+            // The 'confirmation' is the body
+            ->confirmText(implode(PHP_EOL, [
+                __('Are you sure you wish to confirm this enrollment?'),
+                __('You may optionally choose to also bypass the payment requirement, but doing so is not recommended without prior authorization.'),
+            ]))
 
-        // Validate types
-        [$enrollment, $user] = $arguments;
-        throw_unless($enrollment instanceof Enrollment, new InvalidArgumentException('First argument must be an Enrollment.'));
-        throw_unless($user instanceof User, new InvalidArgumentException('Second argument must be a User.'));
+            // The buttons
+            ->confirmButtonText(__('Apply'))
+            ->cancelButtonText(__('Cancel'))
 
-        // Prep proper text
-        $noticeText = [__('Are you sure you wish to confirm this enrollment?')];
-        if ($enrollment->price > 0) {
-            $noticeText[] = __('This will bypass the payment requirement.');
-        }
-        $noticeText = implode(' ', $noticeText);
+            // And make sure it's not chainable
+            ->onlyOnTableRow()
+            ->showOnDetail();
 
         // Make instance
         return (new self())
@@ -107,5 +96,40 @@ class ConfirmEnrollment extends Action
         $model->save();
 
         return Action::message(__('Enrollment confirmed'));
+    }
+
+    /**
+     * Get the fields available on the action.
+     *
+     * @return array<\Laravel\Nova\Fields\Field>
+     */
+    public function fields(NovaRequest $request): array
+    {
+        $enrollment = $request->findModelOrFail($request->resourceId ?? $request->resources);
+
+        // Match `null` and `0`
+        if (! $enrollment->total_price) {
+            return [];
+        }
+
+        return [
+            Fields\Boolean::make('Bypass Payment', 'bypass_payment')
+                ->help(__('Bypassing the payment requirement is not recommended without prior authorization.')),
+        ];
+    }
+
+    public function authorizedToSee(Request $request)
+    {
+        return $request->user()->can('manage', $request->findModelOrFail($request->resourceId ?? $request->resources));
+    }
+
+    /**
+     * Determine if the action is authorized to run.
+     * @param Enrollment $model
+     * @return bool
+     */
+    public function authorizedToRun(Request $request, $model)
+    {
+        return $request->user()->can('manage', $model) && ! $model->is_stable;
     }
 }

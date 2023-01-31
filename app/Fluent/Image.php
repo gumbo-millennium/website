@@ -116,7 +116,7 @@ final class Image extends Fluent implements JsonSerializable, Stringable
      */
     public function fit(string $fit): self
     {
-        throw_unless(in_array($fit, self::VALID_FITS, true), DomainException::class, "Invalid fit type [${fit}] specified.");
+        throw_unless(in_array($fit, self::VALID_FITS, true), DomainException::class, "Invalid fit type [{$fit}] specified.");
 
         $this['fit'] = $fit;
 
@@ -129,7 +129,7 @@ final class Image extends Fluent implements JsonSerializable, Stringable
      */
     public function format(string $format): self
     {
-        throw_unless(in_array($format, self::VALID_FORMATS, true), DomainException::class, "Invalid format [${format}] specified.");
+        throw_unless(in_array($format, self::VALID_FORMATS, true), DomainException::class, "Invalid format [{$format}] specified.");
 
         $this['fm'] = $format;
 
@@ -168,7 +168,7 @@ final class Image extends Fluent implements JsonSerializable, Stringable
      */
     public function square(int $size): self
     {
-        throw_if($size <= 0, OutOfRangeException::class, "Size needs to be larger than zero, ${size} given.");
+        throw_if($size <= 0, OutOfRangeException::class, "Size needs to be larger than zero, {$size} given.");
 
         return $this->width($size)->height($size)->fit(self::FIT_CROP);
     }
@@ -218,7 +218,7 @@ final class Image extends Fluent implements JsonSerializable, Stringable
         // Get key
         $key = "gumbo.image-presets.{$preset}";
         if (! Config::has($key)) {
-            throw new DomainException("Invalid preset [${preset}] specified.");
+            throw new DomainException("Invalid preset [{$preset}] specified.");
         }
 
         // Apply config and map it locally
