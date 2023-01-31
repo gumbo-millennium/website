@@ -1,5 +1,5 @@
 import path from 'path'
-import { defineUserConfig } from 'vuepress'
+import { defaultTheme, defineUserConfig } from 'vuepress'
 
 export default defineUserConfig({
   lang: 'nl-NL',
@@ -9,4 +9,24 @@ export default defineUserConfig({
   // Paths
   base: '/docs/',
   dest: path.join(__dirname, 'public/docs'),
+
+  // Theming
+theme: defaultTheme({
+    // Logo
+    logo: '/images/logo-text-green.svg',
+    logoDark: '/images/logo-text-white.svg',
+
+    // Navigation
+    home: '/docs/',
+    navbar: [
+      {
+        text: 'Home',
+        link: '/',
+      },
+    ],
+
+    // Settings
+    contributors: false,
+  }),
+
 })
