@@ -8,6 +8,5 @@ export default defineUserConfig({
 
   // Paths
   base: '/docs/',
-  public: path.join(__dirname, 'resources/docs/assets'),
   dest: path.join(__dirname, 'public/docs'),
 })
