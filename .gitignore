@@ -127,7 +127,3 @@ storage/debugbar
 /.php-cs-fixer.cache
 .phpunit.result.cache
 /auth.json
-
-# Vuepress
-.vuepress/.cache
-.vuepress/.temp
