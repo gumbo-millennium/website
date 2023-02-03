@@ -96,31 +96,34 @@ class Role extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\Text::make('Naam', 'name')
+            Fields\Text::make(__('Name'), 'name')
                 ->rules(['required', 'string', 'max:255'])
                 ->creationRules('unique:roles')
                 ->updateRules('unique:roles,name,{{resourceId}}'),
 
-            Fields\Text::make('Titel', 'title')
+            Fields\Text::make(__('Title'), 'title')
                 ->rules(['required', 'string', 'max:255']),
 
-            Fields\Select::make('Guard Name', 'guard_name')
+            Fields\Boolean::make(__('Linked to Conscribo'), fn () => $this->conscribo_id !== null)
+                ->onlyOnDetail(),
+
+            Fields\Select::make(__('Guard Name'), 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)])
                 ->hideFromIndex(),
 
-            Fields\DateTime::make('Aangemaakt op', 'created_at')
+            Fields\DateTime::make(__('Created At'), 'created_at')
                 ->onlyOnDetail(),
-            Fields\DateTime::make('Laatst bewerkt op', 'updated_at')
+            Fields\DateTime::make(__('Updated At'), 'updated_at')
                 ->onlyOnDetail(),
 
-            Fields\Number::make('Aantal permissies', fn () => $this->permissions()->count())->onlyOnIndex(),
-            Fields\Number::make('Aantal gebruikers', fn () => $this->users()->count())->onlyOnIndex(),
+            Fields\Number::make(__('Permission Count'), fn () => $this->permissions()->count())->onlyOnIndex(),
+            Fields\Number::make(__('User Count'), fn () => $this->users()->count())->onlyOnIndex(),
 
-            Fields\BelongsToMany::make('permissies', 'permissions', Permission::class)
+            Fields\BelongsToMany::make(__('Permissions'), 'permissions', Permission::class)
                 ->searchable(),
 
-            Fields\MorphToMany::make('gebruikers', 'users', $userResource)
+            Fields\MorphToMany::make(__('Users'), 'users', $userResource)
                 ->searchable(),
         ];
     }
