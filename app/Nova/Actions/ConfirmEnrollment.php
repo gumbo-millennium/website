@@ -50,16 +50,8 @@ class ConfirmEnrollment extends Action
             ->confirmButtonText(__('Apply'))
             ->cancelButtonText(__('Cancel'))
 
-            // And make sure it's not chainable
-            ->onlyOnTableRow()
-            ->showOnDetail();
-
-        // Make instance
-        return (new self())
-            ->canSee(static fn () => in_array(States\Confirmed::$name, $enrollment->state->transitionableStates(), true))
-            ->canRun(static fn () => $user->can('manage', $enrollment))
-            ->confirmText($noticeText)
-            ->onlyOnTableRow();
+            // And make sure it's only on the detail row
+            ->onlyOnDetail();
     }
 
     // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -105,10 +97,10 @@ class ConfirmEnrollment extends Action
      */
     public function fields(NovaRequest $request): array
     {
-        $enrollment = $request->findModelOrFail($request->resourceId ?? $request->resources);
+        $enrollment = $request->findModel($request->resourceId ?? $request->resources);
 
         // Match `null` and `0`
-        if (! $enrollment->total_price) {
+        if (! $enrollment?->total_price) {
             return [];
         }
 
@@ -120,7 +112,9 @@ class ConfirmEnrollment extends Action
 
     public function authorizedToSee(Request $request)
     {
-        return $request->user()->can('manage', $request->findModelOrFail($request->resourceId ?? $request->resources));
+        $model = $request->findModel($request->resourceId ?? $request->resources);
+
+        return $model && $request->user()->can('manage', $model);
     }
 
     /**
