@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Gallery;
 
 use App\Enums\AlbumVisibility;
+use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -79,6 +80,15 @@ class Album extends Model
         'description',
         'visibility',
     ];
+
+    public static function booted(): void
+    {
+        static::slugged(function (self $model) {
+            if (empty($model->slug)) {
+                $model->slug = (string) Str::of(Str::uuid())->slug();
+            }
+        });
+    }
 
     public function activity(): BelongsTo
     {
