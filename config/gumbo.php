@@ -5,9 +5,11 @@ declare(strict_types=1);
 use App\Fluent\Image;
 use App\Helpers\Str;
 
+$appHost = parse_url(env('APP_URL') ?? '', PHP_URL_HOST);
+
 return [
     // Application status, based on URL
-    'beta' => env('GUMBO_BETA', env('APP_URL', 'http://localhost') !== 'https://www.gumbo-millennium.nl'),
+    'beta' => env('GUMBO_BETA', $appHost !== 'www.gumbo-millennium.nl'),
 
     // Cost of a single payment transaction
     'transfer-fee' => 40,
@@ -45,7 +47,7 @@ return [
         'gumbo.nu',
 
         // And bind to <redirect>.<your-domain-name> for testing
-        sprintf('redirect.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
+        sprintf('redirect.%s', $appHost),
     ],
 
     // Payment settings
@@ -62,7 +64,7 @@ return [
         'langzalgumboleven.nl',
 
         // And bind to <redirect>.<your-domain-name> for testing
-        sprintf('lustrum.%s', parse_url(env('APP_URL'), PHP_URL_HOST)),
+        sprintf('lustrum.%s', $appHost),
     ],
 
     // Page groups
