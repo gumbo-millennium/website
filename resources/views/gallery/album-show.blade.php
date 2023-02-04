@@ -12,7 +12,7 @@ $stats = array_filter([
   ['icon' => 'solid/calendar-days', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
   ['icon' => 'solid/user', 'label' => $album->user?->public_name],
   ['icon' => 'solid/images', 'label' => trans_choice(":count photo|:count photos", $album->photos->count())],
-  ['icon' => 'solid/pencil-alt', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],
+  ['icon' => 'solid/pencil', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],
 ], fn ($row) => !empty($row['label']));
 ?>
 <x-page :title="[$album->name, 'Galerij']" hide-flash="true">
@@ -29,7 +29,7 @@ $stats = array_filter([
           @method('PATCH')
         </form>
         <x-button color="" size="small" href="{{ route('gallery.album.edit', $album) }}" class="flex items-center">
-          <x-icon icon="solid/pencil-alt" class="h-4" />
+          <x-icon icon="solid/pencil" class="h-4" />
           <span class="ml-2 md:sr-only">Bewerken</span>
         </x-button>
 

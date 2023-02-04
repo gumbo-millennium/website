@@ -31,7 +31,7 @@
       @elsecanany(['like', 'report'], $photo)
       <!--
       <div class="inline-block text-center py-1 px-2 rounded border">
-        <x-icon icon="solid/fist-raised" class="h-4 mr-2" />
+        <x-icon icon="solid/hand-fist" class="h-4 mr-2" />
         <span class="text-sm">Respect</span>
       </div>
 

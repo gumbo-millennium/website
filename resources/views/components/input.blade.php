@@ -43,7 +43,7 @@ $inputAttributes = $attributes
     @endif
     @if ($hasError)
     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-      <x-icon icon="solid/exclamation-circle" class="h-5 w-5 text-red-500" />
+      <x-icon icon="solid/circle-exclamation" class="h-5 w-5 text-red-500" />
     </div>
     @endif
   </div>

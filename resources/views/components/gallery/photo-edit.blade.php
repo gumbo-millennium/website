@@ -12,7 +12,7 @@
       @endif
     </div>
     <div class="absolute inset-0 flex items-center justify-center">
-      <x-icon icon="solid/trash-alt" x-cloak class="h-12 text-red-600" x-show="deleted == true" />
+      <x-icon icon="solid/trash-can" x-cloak class="h-12 text-red-600" x-show="deleted == true" />
       <x-icon icon="solid/eye-slash" x-cloak class="h-12 text-red-500" x-show="deleted != true && hidden == true" />
     </div>
   </div>

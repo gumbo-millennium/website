@@ -10,13 +10,13 @@ $isSoldOut = $activity->available_seats === 0;
 
 // Enrollment state
 $statusText = 'Openbaar';
-$statusIcon = 'solid/globe';
+$statusIcon = 'solid/earth';
 $statusStyle = '';
 
 // Get a proper status
 if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
     $statusText = 'Actie vereist';
-    $statusIcon = 'solid/exclamation-triangle';
+    $statusIcon = 'solid/triangle-exclamation';
     $statusStyle = 'text-red-600';
 } elseif ($isEnrolled) {
     $statusText = "Ingeschreven";
@@ -26,7 +26,7 @@ if ($isEnrolled && !$enrollments[$activity->id]->is_stable) {
     $statusIcon = 'solid/xmark';
 } elseif (!$activity->is_public) {
     $statusText = 'Besloten';
-    $statusIcon = 'solid/user-friends';
+    $statusIcon = 'solid/user-group';
 }
 
 // Determine price label

@@ -22,7 +22,7 @@
           <form method="post" action="{{ url('auth/email/resend') }}" class="flex-shrink-0" data-action="verify-email">
             @csrf
             <x-button type="submit" color="light" size="small">
-              <x-icon icon="solid/redo" class="h-4 sm:hidden" role="none" />
+              <x-icon icon="solid/arrow-rotate-right" class="h-4 sm:hidden" role="none" />
               <span class="sr-only sm:not-sr-only">Opnieuw sturen</span>
             </x-button>
           </form>

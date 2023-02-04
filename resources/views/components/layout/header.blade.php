@@ -39,7 +39,7 @@
           <x-slot name="footer">
             <button type="submit" form="logout-form"
               class="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
-              <x-icon icon="solid/sign-out-alt" class="flex-shrink-0 h-6 w-6 text-gray-400 mr-3" />
+              <x-icon icon="solid/right-from-bracket" class="flex-shrink-0 h-6 w-6 text-gray-400 mr-3" />
               <span>Uitloggen</span>
             </a>
           </x-slot>
@@ -140,7 +140,7 @@
             <button type="submit" form="logout-form"
               class="ml-auto bg-white flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
               <span class="sr-only">Log uit</span>
-              <x-icon icon="solid/sign-out-alt" class="h-6 w-6" />
+              <x-icon icon="solid/right-from-bracket" class="h-6 w-6" />
             </button>
           </div>
           <nav class="mt-6 grid gap-y-4">

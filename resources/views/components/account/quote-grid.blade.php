@@ -49,7 +49,7 @@
                 aria-label="Verwijder je wist-je-datje"
                 data-delete-quote-id="{{ $quote->id }}"
             >
-                <x-icon icon="solid/trash-alt" class="icon" />
+                <x-icon icon="solid/trash-can" class="icon" />
             </button>
         </div>
         @endif

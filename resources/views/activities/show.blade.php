@@ -18,7 +18,7 @@ if ($ticketPrices->isEmpty()) {
 } else {
     $ticketPrices = Str::lower(sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last()));
 }
-$visibilityIcon = $activity->is_public ? 'solid/globe-europe' : 'solid/user-friends';
+$visibilityIcon = $activity->is_public ? 'solid/earth-europe' : 'solid/user-group';
 $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten activiteit";
 ?>
 
@@ -57,11 +57,11 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
                 </x-activities.header-tile>
 
                 @if ($activity->tickets->isEmpty())
-                <x-activities.header-tile icon="solid/ticket-alt" title="Geen kaartjes">
+                <x-activities.header-tile icon="solid/ticket-simple" title="Geen kaartjes">
                   <p>Je hebt geen kaartje nodig</p>
                 </x-activities.header-tile>
                 @else
-                <x-activities.header-tile icon="solid/ticket-alt" :title="$ticketPrices">
+                <x-activities.header-tile icon="solid/ticket-simple" :title="$ticketPrices">
                     <p>{{ $activity->tickets->count() }} soorten tickets</p>
                 </x-activities.header-tile>
                 @endif
@@ -70,7 +70,7 @@ $visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten acti
                     <x-activities.header-tile :icon="$visibilityIcon" :title="$visibilityTitle" />
                 </div>
 
-                <x-activities.header-tile icon="solid/map-marked-alt" :title="$activity->location">
+                <x-activities.header-tile icon="solid/map-location-dot" :title="$activity->location">
                     <p>{{ $activity->location_address }}</p>
                 </x-activities.header-tile>
             </div>

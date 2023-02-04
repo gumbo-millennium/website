@@ -2,7 +2,7 @@
     <ul class="flex flex-row items-center list-none my-4 breadcrumbs">
         <li>
             <a href="{{ route('home') }}" class="no-underline hover:underline breadcrumbs__item">
-                <x-icon icon="solid/home" class="h-4" />
+                <x-icon icon="solid/house" class="h-4" />
                 <div class="sr-only">Home</div>
             </a>
         </li>
