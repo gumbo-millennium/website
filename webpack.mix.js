@@ -10,6 +10,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
  */
 mix
   .js('resources/js/app.js', 'public')
+  .vue({ version: 3 })
 
 /**
  * Extract vendor code in node_modules
@@ -35,6 +36,23 @@ mix
   .copyDirectory('resources/assets/images', 'public/images')
   .copyDirectory('resources/assets/images-mail', 'public/images-mail')
   .copyDirectory('resources/assets/icons', 'public/icons')
+
+/**
+ * Support for loading Yaml files, and use the `@resources` alias
+ * for the resources folder
+ */
+mix.webpackConfig({
+  module: {
+    rules: [
+      {
+        test: /\.ya?ml$/,
+        use: 'yaml-loader',
+      },
+    ],
+  },
+}).alias({
+  '@resources': path.resolve(__dirname, 'resources'),
+})
 
 /**
  * Support for browserSync
