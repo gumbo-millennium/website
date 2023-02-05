@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $variants = $product->variants;
 $variant = optional($variants->first());
 

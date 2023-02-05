@@ -19,7 +19,7 @@ if ($ticketPrices->isEmpty()) {
     $ticketPrices = Str::lower(sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last()));
 }
 $visibilityIcon = $activity->is_public ? 'solid/earth-europe' : 'solid/user-group';
-$visibilityTitle = $activity->is_public ? "Openbare activiteit" : "Besloten activiteit";
+$visibilityTitle = $activity->is_public ? 'Openbare activiteit' : 'Besloten activiteit';
 ?>
 
 @section('content')

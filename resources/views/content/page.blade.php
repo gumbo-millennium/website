@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 // Set the metadata
 SEOMeta::setTitle($page->title);
 SEOMeta::setCanonical($page->url);
 
 $crumbs = ['/' => 'Home'];
 if ($page->group) {
-  $crumbs["/$page->group"] = Str::title($page->group);
+    $crumbs["/{$page->group}"] = Str::title($page->group);
 }
 ?>
 <x-page :title="$page->title" hide-flash="true">

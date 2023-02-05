@@ -7,26 +7,26 @@
 ])
 <?php
 $hasError = $errors->has($name);
-$hasHelp = ! empty ($help);
+$hasHelp = ! empty($help);
 $inputClass = [
-  'h-4 w-4',
-  'rounded' => $type === 'checkbox',
-  'rounded-full' => $type === 'radio',
-  'text-brand-600 border-gray-300',
-  'hover:ring-brand-500' => !$hasError,
-  'ring-red-500 hover:ring-red-600' => $hasError,
+    'h-4 w-4',
+    'rounded' => $type === 'checkbox',
+    'rounded-full' => $type === 'radio',
+    'text-brand-600 border-gray-300',
+    'hover:ring-brand-500' => ! $hasError,
+    'ring-red-500 hover:ring-red-600' => $hasError,
 ];
 $inputAttributes = array_filter([
-  'id' => $name,
-  'name' => $name,
-  'type' => $type,
-  'aria-invalid' => $hasError ? 'true' : null,
-  'aria-labelledby' => "$name-label",
-  'aria-describedby' => $hasError ? "$name-error" : ($hasHelp ? "$name-help" : null),
-  'checked' => match($type) {
-    'checkbox' => (old($name) ? 'checked' : $value),
-    'radio' => (array_has(Arr::wrap(old($name) ?? $value), $name) ? 'checked' : null)
-  },
+    'id' => $name,
+    'name' => $name,
+    'type' => $type,
+    'aria-invalid' => $hasError ? 'true' : null,
+    'aria-labelledby' => "{$name}-label",
+    'aria-describedby' => $hasError ? "{$name}-error" : ($hasHelp ? "{$name}-help" : null),
+    'checked' => match ($type) {
+        'checkbox' => (old($name) ? 'checked' : $value),
+        'radio' => (array_has(Arr::wrap(old($name) ?? $value), $name) ? 'checked' : null)
+    },
 ]);
 ?>
 <div class="relative flex items-start">

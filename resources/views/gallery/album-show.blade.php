@@ -1,19 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 use App\Enums\AlbumVisibility;
 
 $activityName = $album->activity?->name;
 $isPrivate = $album->visibility == AlbumVisibility::Private;
 
 $stats = array_filter([
-  $isPrivate
-    ? ['icon' => 'solid/eye-slash', 'label' => 'Privé album']
-    : ['icon' => 'solid/users', 'label' => 'Zichtbaar voor leden'],
+    $isPrivate
+      ? ['icon' => 'solid/eye-slash', 'label' => 'Privé album']
+      : ['icon' => 'solid/users', 'label' => 'Zichtbaar voor leden'],
 
-  ['icon' => 'solid/calendar-days', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
-  ['icon' => 'solid/user', 'label' => $album->user?->public_name],
-  ['icon' => 'solid/images', 'label' => trans_choice(":count photo|:count photos", $album->photos->count())],
-  ['icon' => 'solid/pencil', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],
-], fn ($row) => !empty($row['label']));
+    ['icon' => 'solid/calendar-days', 'label' => $activityName ? "Hoort bij {$activityName}" : null],
+    ['icon' => 'solid/user', 'label' => $album->user?->public_name],
+    ['icon' => 'solid/images', 'label' => trans_choice(':count photo|:count photos', $album->photos->count())],
+    ['icon' => 'solid/pencil', 'label' => $album->updated_at->isoFormat('D MMM YYYY') ],
+], fn ($row) => ! empty($row['label']));
 ?>
 <x-page :title="[$album->name, 'Galerij']" hide-flash="true">
   <x-sections.header

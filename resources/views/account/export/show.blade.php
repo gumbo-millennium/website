@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $data = [
     'Aangemaakt op' => $export->created_at->isoFormat('LLL'),
     'Afgerond op' => optional($export->completed_at)->isoFormat('LLL') ?? 'Nog niet afgerond',

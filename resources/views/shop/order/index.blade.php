@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $user = Auth::user();
 ?>
 <x-page :title="['Bestellingen', 'Webshop']" hide-flash="true">

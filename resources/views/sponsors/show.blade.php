@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 $pageTitle = array_filter([
-  $sponsor->contents_title,
-  $sponsor->name,
-  'Sponsoren'
+    $sponsor->contents_title,
+    $sponsor->name,
+    'Sponsoren',
 ])
 ?>
 <x-page :title="$pageTitle" hide-flash="true">

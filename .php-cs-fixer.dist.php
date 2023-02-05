@@ -12,6 +12,7 @@ $finder = Finder::create()
         __DIR__ . '/config',
         __DIR__ . '/database',
         __DIR__ . '/resources/lang',
+        __DIR__ . '/resources/views',
         __DIR__ . '/routes',
         __DIR__ . '/tests',
     ]);

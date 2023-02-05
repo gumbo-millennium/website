@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // Set the metadata
 SEOMeta::setTitle($page->title);
 SEOMeta::setCanonical(route('group.index', ['group' => $page->slug]));
