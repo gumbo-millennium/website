@@ -62,10 +62,11 @@ $stats = array_filter([
 
 <x-container>
   @if ($album->photos->isNotEmpty())
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    @foreach ($album->photos as $photo)
-    <x-gallery.photo-tile :photo="$photo" />
-    @endforeach
+  <div data-content="gallery">
+    <script type="application/json" data-content="gallery-data">
+      @json($album)
+    </script>
+
   </div>
   @else
   <x-empty-state.message title="Leeg album" icon="solid/images">

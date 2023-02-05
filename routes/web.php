@@ -313,6 +313,8 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
     Route::get('/photo/{photo}/report', [Controllers\Gallery\PhotoController::class, 'report'])->name('photo.report');
     Route::post('/photo/{photo}/report', [Controllers\Gallery\PhotoController::class, 'storeReport']);
 
+    Route::post('/photo/{photo}/react', [Controllers\Gallery\PhotoController::class, 'react'])->name('photo.react');
+
     // Album viewing (uses wildcard on second segment, must be last)
     Route::get('/{album}', [Controllers\Gallery\AlbumController::class, 'show'])->name('album');
 

@@ -3,6 +3,7 @@ import share from './share'
 import countdowns from './countdowns'
 import galleryFilepond from './gallery-filepond'
 import scanner from './scanner'
+import { init as galleryView } from './gallery-view'
 
 const init = () => {
   navbar()
@@ -10,6 +11,7 @@ const init = () => {
   countdowns()
   galleryFilepond()
   scanner()
+  galleryView()
 }
 
 export default init

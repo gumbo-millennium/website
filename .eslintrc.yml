@@ -1,6 +1,6 @@
 extends:
   - standard
-  - plugin:vue/vue3-strongly-recommended
+  - plugin:vue/vue3-recommended
 
 env:
   browser: true
