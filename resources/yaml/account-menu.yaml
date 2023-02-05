@@ -4,7 +4,7 @@
 
 - route: account.tickets
   title: Tickets
-  icon: solid/ticket-alt
+  icon: solid/ticket-simple
 
 - route: account.profile.edit
   title: Profile

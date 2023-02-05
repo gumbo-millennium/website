@@ -14,19 +14,19 @@ class Alert extends Component
     private const ALERT_CLASSES = [
         'info' => [
             'containerColor' => 'bg-blue-50',
-            'iconName' => 'solid/info-circle',
+            'iconName' => 'solid/circle-info',
             'iconColor' => 'text-blue-400',
             'textColor' => 'text-blue-800',
         ],
         'success' => [
             'containerColor' => 'bg-brand-50',
-            'iconName' => 'solid/check-circle',
+            'iconName' => 'solid/circle-check',
             'iconColor' => 'text-brand-400',
             'textColor' => 'text-brand-800',
         ],
         'warning' => [
             'containerColor' => 'bg-yellow-50',
-            'iconName' => 'solid/exclamation-circle',
+            'iconName' => 'solid/circle-exclamation',
             'iconColor' => 'text-yellow-400',
             'textColor' => 'text-yellow-800',
         ],

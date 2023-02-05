@@ -5,7 +5,7 @@
     </p>
 
     @if ($activities->isEmpty())
-      <x-empty-state.message title="Geen tickets" data-content="ticket-state-empty" icon="solid/ticket-alt">
+      <x-empty-state.message title="Geen tickets" data-content="ticket-state-empty" icon="solid/ticket-simple">
         Je hebt nog geen tickets gekocht, of al je tickets
         zijn voor evenementen die al zijn geweest.
       </x-empty-state.message>

@@ -34,7 +34,7 @@ class Header extends Component
             [
                 'title' => 'Mijn tickets',
                 'href' => route('account.tickets'),
-                'icon' => 'solid/ticket-alt',
+                'icon' => 'solid/ticket-simple',
             ],
             [
                 'title' => 'Mijn wist-je-datjes',
@@ -44,7 +44,7 @@ class Header extends Component
             Gate::allows('enter-admin') ? [
                 'title' => 'Administratie',
                 'href' => Nova::path(),
-                'icon' => 'solid/cogs',
+                'icon' => 'solid/gears',
             ] : null,
         ]);
 

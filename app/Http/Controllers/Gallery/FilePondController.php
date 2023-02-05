@@ -7,14 +7,13 @@ namespace App\Http\Controllers\Gallery;
 use App\Enums\PhotoVisibility;
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
+use App\Jobs\Gallery\ProcessPhotoMetadata;
 use App\Models\Gallery\Album;
 use App\Models\Gallery\Photo;
-use Carbon\Exceptions\InvalidDateException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -44,18 +43,6 @@ class FilePondController extends Controller
             ],
         ]);
 
-        // Get exif info about taken date
-        $takenDate = null;
-        if ($data = exif_read_data($request->file('file')->path()) !== false) {
-            if ($exifDate = $data['DateTimeOriginal'] ?? null) {
-                try {
-                    $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
-                } catch (InvalidDateException) {
-                    // Ignore
-                }
-            }
-        }
-
         // Store file in storage
         $storagePath = $request->file('file')->store(
             Config::get('gumbo.gallery.filepond.path'),
@@ -67,7 +54,6 @@ class FilePondController extends Controller
             'path' => $storagePath,
             'name' => $request->file('file')->getClientOriginalName(),
             'visibility' => PhotoVisibility::Pending,
-            'taken_at' => $takenDate,
         ]);
 
         // Associate with user
@@ -75,6 +61,9 @@ class FilePondController extends Controller
 
         // Save photo
         $photo->save();
+
+        // Dispatch job to process metadata
+        ProcessPhotoMetadata::dispatchAfterResponse($photo);
 
         // Return the ID as plain text
         return Response::make($photo->id)

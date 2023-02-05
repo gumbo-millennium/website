@@ -11,11 +11,11 @@ will be prefixed with `icon-`, which means a file named `fa-eye.svg` will be pla
 ## Usage
 
 The best way to use the spritemap is by using the `<x-icon />` blade directive. The directive takes up to two arguments: the icon
-name without `icon-` and a CSS class name (or multiple, they're used in `class="…"`).
+name without `icon-` or `fa-` and a CSS class name (or multiple, they're used in `class="…"`).
 
 ```blade
 <div class="message">
-    <x-icon icon="solid/fa-info-circle" class="message__icon" />
+    <x-icon icon="solid/circle-info" class="message__icon" />
     <span class="message_text">…</span>
 </div>
 ```
