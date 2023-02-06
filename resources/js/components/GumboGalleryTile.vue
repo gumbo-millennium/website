@@ -13,6 +13,7 @@
           loading="lazy"
           :srcset="imageSources"
           :alt="image.description"
+          :style="imageStyles"
         >
       </picture>
 
@@ -59,6 +60,11 @@ export default {
       return this.image._links.thumbnails.map(source => {
         return `${source.url} ${source.width}w`
       }).join(', ')
+    },
+    imageStyles () {
+      return {
+        aspectRatio: this.image.aspect_ratio,
+      }
     },
   },
 }

@@ -52,25 +52,72 @@ class ProcessPhotoMetadata implements ShouldQueue
         // Get mime
         $mime = finfo_file(new finfo(FILEINFO_MIME_TYPE), $tempFile);
 
-        // Get exif info about taken date
-        $takenDate = null;
-        if ($mime === 'image/jpeg' && ($data = exif_read_data($tempFile)) !== false) {
-            if ($exifDate = $data['DateTimeOriginal'] ?? $data['DateTimeDigitized'] ?? $data['DateTime'] ?? null) {
-                try {
-                    $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
-
-                    // Update taken_at if it's different
-                    if ($takenDate) {
-                        $photo->taken_at = $takenDate;
-                        $photo->save();
-                    }
-                } catch (InvalidDateException) {
-                    // Ignore
-                }
+        try {
+            // Handle upon file
+            switch($mime) {
+                case 'image/jpeg':
+                    $this->figureOutTakenAtDate($photo, $tempFile);
+                    // no break
+                case 'image/png':
+                case 'image/gif':
+                case 'image/webp':
+                    $this->updateImageDimensions($photo, $tempFile);
             }
+        } finally {
+            // Delete temp file
+            @unlink($tempFile);
         }
 
-        // Delete temp file
-        @unlink($tempFile);
+        // Persist changes
+        if ($photo->isDirty()) {
+            $photo->save();
+        }
+    }
+
+    /**
+     * Update the image dimensions and size.
+     * @param Photo $photo Photo file to update
+     * @param string $tempFile File to check
+     * @return void Nothing is returned, but the Photo object is updated
+     */
+    private function updateImageDimensions(Photo &$photo, string $tempFile): void
+    {
+        if ($imageSize = getimagesize($tempFile)) {
+            [$width, $height] = $imageSize;
+
+            $photo->width = $width;
+            $photo->height = $height;
+        }
+
+        $photo->size = filesize($tempFile);
+    }
+
+    /**
+     * Figure out the taken at date from the exif data.
+     * @param Photo $photo Photo file to update
+     * @param string $tempFile File to read
+     * @return void Nothing is returned, but the Photo object is updated
+     */
+    private function figureOutTakenAtDate(Photo &$photo, string $tempFile): void
+    {
+        $data = exif_read_data($tempFile);
+        if (($data = exif_read_data($tempFile)) === false) {
+            return;
+        }
+
+        if (! $exifDate = $data['DateTimeOriginal'] ?? $data['DateTimeDigitized'] ?? $data['DateTime'] ?? null) {
+            return;
+        }
+
+        try {
+            $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
+
+            // Update taken_at if it's different
+            if ($takenDate) {
+                $photo->taken_at = $takenDate;
+            }
+        } catch (InvalidDateException) {
+            // Ignore
+        }
     }
 }

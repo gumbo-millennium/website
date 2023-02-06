@@ -10,6 +10,7 @@
           class="w-full h-full object-contain"
           :src="activeImageSrc"
           :alt="activeImage?.description"
+          :style="imageStyles"
         >
       </div>
 
@@ -91,6 +92,11 @@ export default {
     },
     previousImageIndex () {
       return this.images[this.activeImageIndex - 1] ? this.activeImageIndex - 1 : this.images.length - 1
+    },
+    imageStyles () {
+      return {
+        aspectRatio: this.activeImage?.aspect_ratio,
+      }
     },
   },
   watch: {
