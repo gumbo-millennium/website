@@ -16,7 +16,7 @@ class AddExifDataToGalleryPhotos extends Migration
     public function up()
     {
         Schema::table('photos', function (Blueprint $table) {
-            $table->json('exif');
+            $table->json('exif')->nullable();
         });
     }
 
