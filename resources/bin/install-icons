@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+INSTALL_TARGET="${1:-local}"
+
+# Computed directories
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_PATH="$( git -C "${SCRIPT_DIR}" rev-parse --show-toplevel 2>/dev/null )"
+
+# Determine backup path
+if [ -z "$ROOT_PATH" ]; then
+    ROOT_PATH="$( realpath -s "${SCRIPT_DIR}/../../" )"
+fi
+
+# Directories
+ICON_STORAGE_DIR="${ROOT_PATH}/storage/app/_icons"
+OLD_FA_DIR="${ROOT_PATH}/storage/app/font-awesome"
+NODE_DIR="${ROOT_PATH}/node_modules"
+
+# Check for a deployment
+if [ "$INSTALL_TARGET" = "deployment" ]; then
+    echo "Switching over to use server repository..."
+    NODE_DIR="${HOME}/repository/node_modules"
+fi
+
+# Check if an old Font Awesome directory exists, and move it over to the new location
+if [ -d "$OLD_FA_DIR" -a ! -L "$OLD_FA_DIR" ]; then
+    echo "Renaming old folder to new folder"
+    mv "$OLD_FA_DIR" "$ICON_STORAGE_DIR"
+fi
+
+# Ensure the icon storage directory exists
+if [ ! -d "$ICON_STORAGE_DIR" ]; then
+    mkdir -p "$ICON_STORAGE_DIR"
+fi
+
+# Ensure a symlink from OLD_FA_DIR to ICON_STORAGE_DIR exists
+if [ ! -L "$OLD_FA_DIR" ]; then
+    ln --relative --symbolic "$ICON_STORAGE_DIR" "$OLD_FA_DIR"
+fi
+
+function copy_icon_set() {
+    # Allocate variables
+    PACK_NAME="$1"
+    PACK_SOURCE="$2"
+    PACK_DEST="$3"
+
+    # Check path
+    SOURCE_PATH="${NODE_DIR}/${PACK_SOURCE}"
+    if [ ! -d "${SOURCE_PATH}" ]; then
+        echo "Skipping ${PACK_NAME}. Directory not found"
+        return 127
+    fi
+
+    # Make directory if not found
+    DEST_PATH="${ICON_STORAGE_DIR}/${PACK_DEST}"
+    if [ ! -d "$DEST_PATH" ]; then
+        mkdir -p "$DEST_PATH"
+    fi
+
+    # Copy files
+    COUNT_BEFORE=$(ls -1 "$DEST_PATH" | wc -l)
+    cp -fn ${SOURCE_PATH}/*.svg "$DEST_PATH"
+    COUNT_AFTER=$(ls -1 "$DEST_PATH" | wc -l)
+
+    # Check if any files were copied
+    if [ "$COUNT_BEFORE" -eq "$COUNT_AFTER" ]; then
+        echo "Skipping ${PACK_NAME}. No new files found"
+        return 0
+    fi
+
+    echo "Copied ${PACK_NAME} ($((COUNT_AFTER - COUNT_BEFORE)) files)"
+}
+
+# Copy Font Awesome iconsets
+copy_icon_set "Font Awesome Free Brands" "@fortawesome/fontawesome-free/svgs/brands" "brands"
+copy_icon_set "Font Awesome Free Regular" "@fortawesome/fontawesome-free/svgs/regular" "regular"
+copy_icon_set "Font Awesome Free Solid" "@fortawesome/fontawesome-free/svgs/solid" "solid"
