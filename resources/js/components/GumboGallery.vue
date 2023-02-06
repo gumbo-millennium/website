@@ -50,47 +50,28 @@ export default {
     },
   },
   mounted () {
-    console.log('Mounted with route %o', this.$route)
     this.handleHistoryChange(this.$route, { name: 'home' })
   },
   methods: {
     handleHistoryChange (newRoute, oldRoute) {
-      console.log('History changed from %o to %o', oldRoute, newRoute)
-
       if (newRoute.name === 'view' && oldRoute.name !== 'view') {
         const imageId = parseInt(newRoute.params.image, 10)
         const foundImage = this.images.find(image => image.id === imageId)
 
-        console.log('Opening overlay')
         this.openOverlay(foundImage, false)
       }
 
       if (newRoute.name === 'home' && oldRoute.name !== 'home') {
-        console.log('Closing overlay')
         this.closeOverlay(false)
       }
     },
     imageChanged (image) {
-      console.log('Image was changed: %o', image)
-      this.$router.replace({
-        name: 'view',
-        params: { image: image.id },
-        meta: {
-          title: `${image.description ?? image.name} ${this.baseTitle}`,
-        },
-      })
+      this.$router.replace({ name: 'view', params: { image: image.id } })
     },
     openOverlay (image, pushRoute = true) {
       this.activeImage = image
       if (pushRoute && this.$route.name !== 'view') {
-        this.$router.push({
-          name: 'view',
-          params: { image: image.id },
-
-          meta: {
-            title: `${image.description ?? image.name} ${this.baseTitle}`,
-          },
-        })
+        this.$router.push({ name: 'view', params: { image: image.id } })
       }
     },
     closeOverlay (pushRoute = true) {
