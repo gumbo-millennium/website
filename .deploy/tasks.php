@@ -42,9 +42,9 @@ task('gumbo:upload-frontend', function () {
     upload('public/', '{{release_path}}/public');
 });
 
-desc('Links the Font Awesome icons from the shared root folder');
+desc('Links the required icons from the shared root folder');
 task('gumbo:link-icons', function () {
-    run('{{release_path}}/resources/bin/install-font-awesome deployment');
+    run('{{release_path}}/resources/bin/install-icons deployment');
 });
 
 desc('Helper to run all front-end commands');
