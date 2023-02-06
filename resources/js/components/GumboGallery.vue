@@ -4,8 +4,8 @@
     <teleport to="body">
       <GumboGalleryOverlay
         ref="overlay"
-        :images="images"
         :current-image="activeImage"
+        @image-changed="imageChanged"
         @close="closeOverlay()"
       />
     </teleport>
@@ -32,9 +32,10 @@ export default {
     GumboGalleryTile,
     GumboGalleryOverlay,
   },
+  inject: ['baseTitle', 'images'],
   props: {
-    images: {
-      type: Array,
+    album: {
+      type: Object,
       required: true,
     },
   },
@@ -43,12 +44,62 @@ export default {
       activeImage: null,
     }
   },
-  methods: {
-    openOverlay (image) {
-      this.activeImage = image
+  watch: {
+    $route (newRoute, oldRoute) {
+      this.handleHistoryChange(newRoute, oldRoute)
     },
-    closeOverlay () {
+  },
+  mounted () {
+    console.log('Mounted with route %o', this.$route)
+    this.handleHistoryChange(this.$route, { name: 'home' })
+  },
+  methods: {
+    handleHistoryChange (newRoute, oldRoute) {
+      console.log('History changed from %o to %o', oldRoute, newRoute)
+
+      if (newRoute.name === 'view' && oldRoute.name !== 'view') {
+        const imageId = parseInt(newRoute.params.image, 10)
+        const foundImage = this.images.find(image => image.id === imageId)
+
+        console.log('Opening overlay')
+        this.openOverlay(foundImage, false)
+      }
+
+      if (newRoute.name === 'home' && oldRoute.name !== 'home') {
+        console.log('Closing overlay')
+        this.closeOverlay(false)
+      }
+    },
+    imageChanged (image) {
+      console.log('Image was changed: %o', image)
+      this.$router.replace({
+        name: 'view',
+        params: { image: image.id },
+        meta: {
+          title: `${image.description ?? image.name} ${this.baseTitle}`,
+        },
+      })
+    },
+    openOverlay (image, pushRoute = true) {
+      this.activeImage = image
+      if (pushRoute && this.$route.name !== 'view') {
+        this.$router.push({
+          name: 'view',
+          params: { image: image.id },
+
+          meta: {
+            title: `${image.description ?? image.name} ${this.baseTitle}`,
+          },
+        })
+      }
+    },
+    closeOverlay (pushRoute = true) {
       this.activeImage = null
+
+      document.title = this.baseTitle
+      if (pushRoute && this.$route.name !== 'home') {
+        this.$router.push({ name: 'home' })
+      }
     },
   },
 }

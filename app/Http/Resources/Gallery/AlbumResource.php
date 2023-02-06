@@ -24,6 +24,9 @@ class AlbumResource extends JsonResource
     {
         return Arr::except(parent::toArray($request), ['photos']) + [
             'images' => PhotoResource::collection($this->resource->photos),
+            '_links' => [
+                'self' => route('gallery.album', $this->resource),
+            ],
         ];
     }
 }

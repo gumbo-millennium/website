@@ -23,20 +23,6 @@ class PhotoController extends Controller
 {
     private const LARAVEL_NO_TEMPORARY_URL_SUPPORT = 'This driver does not support creating temporary URLs.';
 
-    public function show(Request $request, Photo $photo): HttpResponse
-    {
-        $this->authorize('view', $photo);
-
-        $photo = Photo::query()
-            ->withUserInteraction($request->user())
-            ->with('album')
-            ->find($photo->getKey());
-
-        return Response::view('gallery.photo-show', [
-            'photo' => $photo,
-        ]);
-    }
-
     public function download(Photo $photo): HttpFoundationResponse
     {
         $this->authorize('view', $photo);
