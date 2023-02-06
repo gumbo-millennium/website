@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Policy;
 
-use App\Helpers\Str;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
-use Spatie\Csp\Policies\Basic as BasicPolicy;
+use Spatie\Csp\Policies\Policy;
 use Spatie\Csp\Value;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Base Content-Security-Policy.
  * Allows most local elements and Google Fonts.
  */
-abstract class BasePolicy extends BasicPolicy
+abstract class BasePolicy extends Policy
 {
     /**
      * Don't act on Nova paths.
@@ -50,85 +49,90 @@ abstract class BasePolicy extends BasicPolicy
      */
     public function configure()
     {
-        // Use basic handler
-        parent::configure();
+        // Allow self for all
+        $this
+            ->addDirective(Directive::BASE, Keyword::SELF)
+            ->addDirective(Directive::CONNECT, Keyword::SELF)
+            ->addDirective(Directive::DEFAULT, Keyword::SELF)
+            ->addDirective(Directive::FORM_ACTION, Keyword::SELF)
+            ->addDirective(Directive::IMG, Keyword::SELF)
+            ->addDirective(Directive::MEDIA, Keyword::SELF)
+            ->addDirective(Directive::OBJECT, Keyword::NONE)
+            ->addDirective(Directive::SCRIPT, Keyword::SELF)
+            ->addDirective(Directive::STYLE, Keyword::SELF);
 
-        // Allow manifest
+        // Allow manifests too
         $this->addDirective(Directive::MANIFEST, Keyword::SELF);
 
         // Allow unsafe-eval, required for AlpineJS
         $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
 
-        // Prevent mixed content from loading on production (testing has no HTTPS)
-        if (App::isProduction()) {
+        // Allow unsafe-inline, required for Vue
+        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);
+        $this->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE);
+
+        // Add Google Fonts
+        $this->addDirective(Directive::STYLE, 'https://fonts.googleapis.com/');
+        $this->addDirective(Directive::FONT, 'https://fonts.gstatic.com/');
+
+        // Add app.url and app.asset_url
+        $this->addApplicationUrlExceptions();
+
+        // Prevent mixed content from loading on non-local environment (local usually has no HTTPS)
+        if (! App::isLocal()) {
             $this->addDirective(Directive::BLOCK_ALL_MIXED_CONTENT, Value::NO_VALUE);
         }
 
-        // Get URLs
-        $appUrl = Config::get('app.url');
-        $appHost = parse_url($appUrl, PHP_URL_HOST);
+        // Add debugbar support (data:-fonts)
+        if (App::hasDebugModeEnabled()) {
+            $this->addDirective(Directive::FONT, 'data:');
+        }
+    }
 
-        $assetUrl = Config::get('app.asset_url') ?? $appUrl;
-        $assetHost = parse_url($assetUrl, PHP_URL_HOST);
+    /**
+     * Removes all policies for a given directive.
+     */
+    protected function purgeDirective(string $directive): self
+    {
+        $this->directives[$directive] = [];
 
-        $requestHost = Request::getHost() ?? Request::getHttpHost() ?? $appHost;
+        return $this;
+    }
+
+    /**
+     * Adds URLs that content may be served from.
+     */
+    private function addApplicationUrlExceptions(): void
+    {
+        $requestDomain = parse_url(Request::url(), PHP_URL_HOST);
+
+        $appUrls = array_filter([
+            Config::get('app.url') => true,
+            Config::get('app.asset_url') => false,
+        ]);
 
         // Add asset host in case it's different from the current request
-        if ($assetHost !== $requestHost) {
-            $assetCspRoot = sprintf(
-                '%s://%s',
-                parse_url($assetUrl, PHP_URL_SCHEME),
-                parse_url($assetUrl, PHP_URL_HOST),
-            );
+        foreach ($appUrls as $appUrl => $interactive) {
+            if (parse_url($appUrl) === $requestDomain) {
+                continue;
+            }
 
-            $this->addDirective(Directive::DEFAULT, $assetCspRoot);
-            $this->addDirective(Directive::STYLE, $assetCspRoot);
-            $this->addDirective(Directive::IMG, $assetCspRoot);
-            $this->addDirective(Directive::SCRIPT, $assetCspRoot);
-        }
-
-        // Add the main host in case it's different from the current request
-        if ($appHost !== $requestHost) {
-            $appCspRoot = sprintf(
+            $cspRoot = sprintf(
                 '%s://%s',
                 parse_url($appUrl, PHP_URL_SCHEME),
                 parse_url($appUrl, PHP_URL_HOST),
             );
 
-            $this->addDirective(Directive::CONNECT, $appCspRoot);
-            $this->addDirective(Directive::FORM_ACTION, $appCspRoot);
+            $this->addDirective(Directive::DEFAULT, $cspRoot);
+            $this->addDirective(Directive::STYLE, $cspRoot);
+            $this->addDirective(Directive::IMG, $cspRoot);
+            $this->addDirective(Directive::SCRIPT, $cspRoot);
+
+            // Also add for connect and form-action for interactive domains
+            if ($interactive) {
+                $this->addDirective(Directive::CONNECT, $cspRoot);
+                $this->addDirective(Directive::FORM_ACTION, $cspRoot);
+            }
         }
-
-        // Google Fonts
-        $this->addDirective(Directive::STYLE, 'https://fonts.googleapis.com/');
-        $this->addDirective(Directive::FONT, 'https://fonts.gstatic.com/');
-
-        // Local
-        if (App::isLocal()) {
-            $this->removeNoncesForLocalDevelopment();
-        }
-    }
-
-    private function removeNoncesForLocalDevelopment(): void
-    {
-        // Remove nonces
-        foreach ($this->directives as $directive => $values) {
-            $this->directives[$directive] = array_filter(
-                $values,
-                fn ($val) => ! Str::contains($val, 'nonce-'),
-            );
-        }
-
-        // Add debugbar nonces
-        if (! class_exists(\DebugBar\DebugBar::class)) {
-            return;
-        }
-
-        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
-        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);
-
-        $this->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE);
-
-        $this->addDirective(Directive::FONT, 'data:');
     }
 }

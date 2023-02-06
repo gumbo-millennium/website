@@ -25,13 +25,15 @@ class LoginPolicy extends BasePolicy
         // Use basic handler
         parent::configure();
 
-        // Disable all scripts
-        $this->directives[Directive::SCRIPT] = [];
+        // Reset scripts to a small subset
+        $this
+            ->purgeDirective(Directive::SCRIPT)
+            ->addDirective(Directive::SCRIPT, Keyword::SELF)
+            ->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL)
+            ->addDirective(Directive::SCRIPT, URL::to('/'));
 
-        // Add some exceptions
-        $this->addDirective(Directive::SCRIPT, Keyword::SELF);
-        $this->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL);
-        $this->addDirective(Directive::SCRIPT, rtrim(URL::to('/'), '/'));
+        // Allow data:-images
+        $this->addDirective(Directive::IMG, 'data:');
 
         if (App::isProduction() || ! App::hasDebugModeEnabled()) {
             $this->addNonceForDirective(Directive::SCRIPT);

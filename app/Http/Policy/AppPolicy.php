@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Policy;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,11 +49,9 @@ class AppPolicy extends BasePolicy
         $this->addDirective(Directive::IMG, 'data:');
 
         // Load local stuff, if local
-        if (! app()->isLocal()) {
-            return;
+        if (App::isLocal()) {
+            $this->configureLocal();
         }
-
-        $this->configureLocal();
     }
 
     /**
