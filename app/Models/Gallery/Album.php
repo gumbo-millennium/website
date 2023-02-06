@@ -70,6 +70,19 @@ class Album extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'activity_id',
+        'user_id',
+        'deleted_at',
+        'editable_from',
+        'editable_until',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]

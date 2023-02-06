@@ -87,6 +87,18 @@ class Photo extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'album_id',
+        'user_id',
+        'removal_reason',
+        'is_visible',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
