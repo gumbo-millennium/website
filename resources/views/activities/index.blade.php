@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $title = 'Aankomende activiteiten';
 $subtitle = 'Binnenkort op de agenda bij Gumbo Millennium';
 if ($past) {

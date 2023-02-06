@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $details = array_filter([
     $activity->location,
     $activity->human_readable_dates,
@@ -6,7 +6,7 @@ $details = array_filter([
 ]);
 
 $enrollment ??= null;
-$blurredImage = image_asset($activity->poster)->square(1920/2)->height(256/2)->blur(40);
+$blurredImage = image_asset($activity->poster)->square(1920 / 2)->height(256 / 2)->blur(40);
 
 $canExpire = $timeout = null;
 
@@ -18,7 +18,7 @@ if ($enrollment) {
             '%02d:%02d:%02d',
             $enrollment->expire->diffInHours(),
             $enrollment->expire->diffInMinutes() % 60,
-            $enrollment->expire->diffInSeconds() % 60
+            $enrollment->expire->diffInSeconds() % 60,
         );
     }
 }

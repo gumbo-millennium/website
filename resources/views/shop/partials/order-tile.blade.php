@@ -1,6 +1,4 @@
-<?php
-use App\Enums\PaymentStatus;
-?>
+@php(use App\Enums\PaymentStatus;)
 <div class="flex bg-gray-50 rounded-lg items-center p-2">
     @if ($firstVariant = $order->variants->first())
     <img class="flex-shrink-0 rounded-sm h-16 w-16 object-cover mr-4"

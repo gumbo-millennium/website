@@ -25,12 +25,16 @@ use Illuminate\Support\Facades\App;
  * @property string $name
  * @property string $path
  * @property null|string $description
+ * @property int $width
+ * @property int $height
+ * @property int $size
  * @property null|string $removal_reason
  * @property null|\Illuminate\Support\Carbon $taken_at
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property-read \App\Models\Gallery\Album $album
+ * @property-read float $aspect_ratio
  * @property-read bool $is_visible
  * @property-read null|self $next_photo
  * @property-read null|self $previous_photo
@@ -71,6 +75,27 @@ class Photo extends Model
     protected $casts = [
         'visibility' => PhotoVisibility::class,
         'taken_at' => 'datetime',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'aspect_ratio',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'album_id',
+        'user_id',
+        'removal_reason',
+        'is_visible',
     ];
 
     /**
@@ -140,5 +165,18 @@ class Photo extends Model
     public function getIsVisibleAttribute(): bool
     {
         return $this->visibility == PhotoVisibility::Visible;
+    }
+
+    /**
+     * Get the aspect ratio of the photo, if known.
+     */
+    public function getAspectRatioAttribute(): ?float
+    {
+        // Assume square if no dimensions are set
+        if (! $this->width || ! $this->height) {
+            return null;
+        }
+
+        return $this->width / $this->height;
     }
 }

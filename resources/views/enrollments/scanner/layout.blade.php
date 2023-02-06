@@ -8,9 +8,9 @@
 
     <link rel="stylesheet" href="{{ mix('app.css') }}">
 
-    <script src="{{ mix('app.js') }}"></script>
     <script src="{{ mix('manifest.js') }}"></script>
     <script src="{{ mix('vendor.js') }}"></script>
+    <script src="{{ mix('app.js') }}"></script>
 </head>
 <body class="bg-gray-900 min-h-screen">
   <div class="h-screen mx-auto max-w-2xl py-4 px-4 flex flex-col">

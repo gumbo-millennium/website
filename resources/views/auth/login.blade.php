@@ -1,5 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 use App\Models\User;
+
 $testUsers = App::isLocal() ? User::where('email', 'LIKE', '%@example.gumbo-millennium.nl')->get() : [];
 $title = $seenBefore ? __('Welcome back') : __('Welcome');
 ?>

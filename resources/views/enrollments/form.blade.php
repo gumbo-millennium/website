@@ -6,7 +6,7 @@
 $dataRecipients = collect([
     'de organisatie',
     'het bestuur',
-    'de digitale commissie'
+    'de digitale commissie',
 ])->join(', ', ' en ');
 ?>
 

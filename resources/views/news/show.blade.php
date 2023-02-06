@@ -1,17 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 $stats = array_filter([
-  [
-    'label' => $item->published_at->isoFormat('D MMMM, Y'),
-    'icon' => 'regular/calendar',
-  ],
-  [
-    'label' => $item->author?->public_name ?: 'Onbekend',
-    'icon' => 'regular/user',
-  ],
-  $item->sponsor ? [
-    'label' => "Gesponsord door {$item->sponsor}",
-    'icon' => 'regular/handshake',
-  ] : null,
+    [
+        'label' => $item->published_at->isoFormat('D MMMM, Y'),
+        'icon' => 'regular/calendar',
+    ],
+    [
+        'label' => $item->author?->public_name ?: 'Onbekend',
+        'icon' => 'regular/user',
+    ],
+    $item->sponsor ? [
+        'label' => "Gesponsord door {$item->sponsor}",
+        'icon' => 'regular/handshake',
+    ] : null,
 ]);
 
 // Share links

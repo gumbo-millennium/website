@@ -8,6 +8,7 @@ use App\Enums\AlbumVisibility;
 use App\Enums\PhotoVisibility;
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Gallery\AlbumResource;
 use App\Models\Gallery\Album;
 use App\Models\Gallery\Photo;
 use Illuminate\Http\RedirectResponse;
@@ -97,7 +98,7 @@ class AlbumController extends Controller
             ->findOrFail($album->getKey());
 
         return Response::view('gallery.album-show', [
-            'album' => $album,
+            'album' => AlbumResource::make($album),
         ]);
     }
 

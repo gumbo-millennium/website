@@ -1,7 +1,7 @@
-<?php
-$title = isset($title) ? $title : 'Gumbo Millennium';
-$header = isset($header) ? $header : null;
-$image = isset($image) ? $image : '';
+<?php declare(strict_types=1);
+$title = $title ?? 'Gumbo Millennium';
+$header = $header ?? null;
+$image = $image ?? '';
 
 $coverImage = image_asset($image)->square(1920)->height(768);
 $coverImageSmall = image_asset($image)->square(768)->height(300);

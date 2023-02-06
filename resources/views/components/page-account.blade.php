@@ -25,13 +25,13 @@
           @foreach ($accountRoutes as $name => [$label, $icon])
           <?php
               $isCurrent = $name === $activeRoute;
-              $linkClass = $isCurrent
-                  ? "bg-gray-50 text-gray-900"
-                  : "text-gray-900 hover:text-gray-900 hover:bg-gray-50";
-              $iconClass = $isCurrent
-                  ? "text-brand-500"
-                  : "text-gray-400 group-hover:text-gray-500";
-              ?>
+          $linkClass = $isCurrent
+              ? 'bg-gray-50 text-gray-900'
+              : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50';
+          $iconClass = $isCurrent
+              ? 'text-brand-500'
+              : 'text-gray-400 group-hover:text-gray-500';
+          ?>
             <a href="{{ route($name) }}"
               class="relative group rounded-lg p-3 flex items-center text-sm font-medium {{ $linkClass }}" @if($isCurrent)
               aria-current="page" @endif>
