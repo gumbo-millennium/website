@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\App;
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property-read \App\Models\Gallery\Album $album
- * @property-read float $aspect_ratio
+ * @property-read null|string $aspect_ratio
  * @property-read bool $is_visible
  * @property-read null|self $next_photo
  * @property-read null|self $previous_photo
@@ -75,6 +75,7 @@ class Photo extends Model
     protected $casts = [
         'visibility' => PhotoVisibility::class,
         'taken_at' => 'datetime',
+        'exif' => 'collection',
     ];
 
     /**
@@ -170,13 +171,13 @@ class Photo extends Model
     /**
      * Get the aspect ratio of the photo, if known.
      */
-    public function getAspectRatioAttribute(): ?float
+    public function getAspectRatioAttribute(): ?string
     {
         // Assume square if no dimensions are set
         if (! $this->width || ! $this->height) {
             return null;
         }
 
-        return $this->height / $this->width;
+        return "{$this->width} / {$this->height}";
     }
 }

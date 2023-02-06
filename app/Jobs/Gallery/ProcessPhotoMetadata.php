@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Gallery;
 
+use App\Helpers\Arr;
 use App\Models\Gallery\Photo;
 use Carbon\Exceptions\InvalidDateException;
 use finfo;
@@ -12,9 +13,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class ProcessPhotoMetadata implements ShouldQueue
 {
@@ -100,24 +104,47 @@ class ProcessPhotoMetadata implements ShouldQueue
      */
     private function figureOutTakenAtDate(Photo &$photo, string $tempFile): void
     {
-        $data = exif_read_data($tempFile);
-        if (($data = exif_read_data($tempFile)) === false) {
-            return;
-        }
-
-        if (! $exifDate = $data['DateTimeOriginal'] ?? $data['DateTimeDigitized'] ?? $data['DateTime'] ?? null) {
-            return;
-        }
+        $data = null;
 
         try {
-            $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
+            $data = exif_read_data($tempFile);
+        } catch (Throwable $exception) {
+            Log::warning('Failed to parse data for {photo}: {exception}', [
+                'photo' => $photo->path,
+                'exception' => $exception,
+                'tempfile' => $tempFile,
+            ]);
 
-            // Update taken_at if it's different
-            if ($takenDate) {
-                $photo->taken_at = $takenDate;
-            }
-        } catch (InvalidDateException) {
-            // Ignore
+            // Just simply fail
+            return;
         }
+
+        // Fail if we have no data
+        if (! $data) {
+            return;
+        }
+
+        // Parse the taken-at date
+        if ($exifDate = $data['DateTimeOriginal'] ?? $data['DateTimeDigitized'] ?? $data['DateTime'] ?? null) {
+            try {
+                $takenDate = Date::createFromFormat('Y:m:d H:i:s', $exifDate);
+
+                // Update taken_at if it's different
+                if ($takenDate) {
+                    $photo->taken_at = $takenDate;
+                }
+            } catch (InvalidDateException) {
+                // Ignore
+            }
+        }
+
+        // Combine data from exif, if any
+        $photo->exif = ($photo->exif ?? Collection::make())->merge([
+            'aperture' => Arr::get($data, 'COMPUTED.ApertureFNumber'),
+            'exposure' => Arr::get($data, 'ExposureTime'),
+            'make' => $cameraMake = Arr::get($data, 'Make'),
+            'model' => $cameraModel = Arr::get($data, 'Model'),
+            'makeModel' => trim(sprintf('%s %s', $cameraMake, $cameraModel)) ?: null,
+        ]);
     }
 }

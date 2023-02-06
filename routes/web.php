@@ -304,6 +304,7 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
 
     // Photo viewing
     Route::get('/photo/{photo}', [Controllers\Gallery\PhotoController::class, 'show'])->name('photo');
+    Route::get('/photo/{photo}/download', [Controllers\Gallery\PhotoController::class, 'download'])->name('photo.download');
 
     // Photo editing
     Route::get('/photo/{photo}/edit', [Controllers\Gallery\PhotoController::class, 'edit'])->name('photo.edit');

@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded shadow grid grid-cols-1 hover:shadow-lg">
+  <div class="rounded shadow grid grid-cols-1 hover:shadow-lg cursor-pointer">
     <div class="relative min-h-32 bg-gray-700 rounded-t overflow-hidden">
       <div class="absolute inset-4 flex items-center">
         <img
@@ -30,7 +30,7 @@
     <div class="p-4">
       <h3 class="text-lg font-title truncate">
         <template v-if="image.description">
-          {{ image.description }}
+          <span>{{ image.description }}</span>
         </template>
         <span
           v-else

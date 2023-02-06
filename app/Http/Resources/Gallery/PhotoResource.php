@@ -33,6 +33,7 @@ class PhotoResource extends JsonResource
             'taken_at_label' => $this->resource->taken_at?->isoFormat('D MMMM YYYY, HH:mm'),
             '_links' => [
                 'album' => route('gallery.album', $this->resource->album),
+                'download' => route('gallery.photo.download', $this->resource),
                 'like' => route('gallery.photo.react', $this->resource),
                 'report' => route('gallery.photo.report', $this->resource),
                 'thumbnails' => [...$this->toImages()],
