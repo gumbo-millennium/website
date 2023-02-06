@@ -75,3 +75,7 @@ function copy_icon_set() {
 copy_icon_set "Font Awesome Free Brands" "@fortawesome/fontawesome-free/svgs/brands" "brands"
 copy_icon_set "Font Awesome Free Regular" "@fortawesome/fontawesome-free/svgs/regular" "regular"
 copy_icon_set "Font Awesome Free Solid" "@fortawesome/fontawesome-free/svgs/solid" "solid"
+
+# Copy new Heroicons iconsets
+copy_icon_set "Heroicons Outline" "heroicons/24/outline" "hero/outline"
+copy_icon_set "Heroicons Solid" "heroicons/24/solid" "hero/solid"
