@@ -146,14 +146,16 @@ class ProcessPhotoMetadata implements ShouldQueue
             'exposure' => Arr::get($data, 'ExposureTime'),
             'make' => $cameraMake = Arr::get($data, 'Make'),
             'model' => $cameraModel = Arr::get($data, 'Model'),
-            'makeModel' => trim(sprintf('%s %s', $cameraMake, $cameraModel)) ?: null,
+            'makeModel' => trim("{$cameraMake} {$cameraModel}"),
         ]);
 
         // Convert model codes to model names
         if ($cameraMake && $cameraModel) {
             $exifService = App::make(GalleryExifService::class);
             $parsedMakeAndModel = $exifService->determineDisplayMakeAndModel($cameraMake, $cameraModel);
-            $photo->exif->set('makeModel', trim("{$parsedMakeAndModel['make']} {$parsedMakeAndModel['model']} ({$cameraModel})"));
+
+            // Write to exif
+            $photo->exif = $photo->exif->put('makeModel', trim("{$parsedMakeAndModel['make']} {$parsedMakeAndModel['model']}"));
         }
     }
 }
