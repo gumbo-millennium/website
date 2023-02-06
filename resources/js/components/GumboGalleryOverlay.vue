@@ -140,16 +140,15 @@ export default {
     SparklesIcon,
     XMarkIcon,
   },
+  inject: ['baseTitle', 'images'],
   props: {
-    images: {
-      type: Array,
-      default: () => [],
-    },
     currentImage: {
       type: Object,
       default: null,
     },
   },
+
+  emits: ['imageChanged'],
   data () {
     return {
       open: false,
@@ -187,8 +186,12 @@ export default {
   },
   watch: {
     currentImage (image) {
-      // New image must be set
+      // If the image is unset, and we're open, close the dialog
       if (!image) {
+        if (this.open) {
+          this.close()
+        }
+
         return
       }
 
@@ -197,6 +200,7 @@ export default {
       if (foundImageIndex === -1) {
         return
       }
+
       // Change the loading state, if the image actually changed.
       if (this.activeImageIndex !== foundImageIndex) {
         this.loading = true
@@ -209,6 +213,12 @@ export default {
       if (!this.open) {
         this.$refs.dialog.showModal()
         this.open = true
+      }
+    },
+    activeImageIndex (newIndex) {
+      // Update the document title, if we're looking at an image
+      if (this.activeImage && newIndex !== null) {
+        document.title = `${this.activeImage.description ?? this.activeImage.name} - ${this.baseTitle}`
       }
     },
     open (newOpen, oldOpen) {
@@ -232,11 +242,11 @@ export default {
     },
     next () {
       this.activeImageIndex = this.nextImageIndex
-      this.$refs.nextButton.focus()
+      this.$emit('imageChanged', this.images[this.activeImageIndex])
     },
     previous () {
       this.activeImageIndex = this.previousImageIndex
-      this.$refs.previousButton.focus()
+      this.$emit('imageChanged', this.images[this.activeImageIndex])
     },
     share () {
       if (!this.shareable || !this.activeImage) {
