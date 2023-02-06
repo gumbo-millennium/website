@@ -126,6 +126,15 @@ final class GalleryExifService
         $database = $this->getDatabase();
 
         // Get them, simple enough
+        $databaseMake = Arr::get($database, "{$makeLower}._brand", $make);
+        $databaseModel = Arr::get($database, "{$makeLower}.{$modelLower}", $model);
+
+        // Always make sure the model doesn't start with the make
+        // e.g. "Nokia Nokia 3310" -> "Nokia 3310"
+        if (Str::startsWith($databaseModel, $databaseMake)) {
+            $databaseModel = self::normalize(Str::after($databaseModel, $databaseMake));
+        }
+
         return [
             'make' => Arr::get($database, "{$makeLower}._brand", $make),
             'model' => Arr::get($database, "{$makeLower}.{$modelLower}", $model),
