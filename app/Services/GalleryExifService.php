@@ -136,8 +136,8 @@ final class GalleryExifService
         }
 
         return [
-            'make' => Arr::get($database, "{$makeLower}._brand", $make),
-            'model' => Arr::get($database, "{$makeLower}.{$modelLower}", $model),
+            'make' => $databaseMake,
+            'model' => $databaseModel,
         ];
     }
 
