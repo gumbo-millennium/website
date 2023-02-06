@@ -303,7 +303,6 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
     Route::post('/create', [Controllers\Gallery\AlbumController::class, 'store']);
 
     // Photo viewing
-    Route::get('/photo/{photo}', [Controllers\Gallery\PhotoController::class, 'show'])->name('photo');
     Route::get('/photo/{photo}/download', [Controllers\Gallery\PhotoController::class, 'download'])->name('photo.download');
 
     // Photo editing
@@ -316,8 +315,10 @@ Route::prefix('gallery')->name('gallery.')->middleware('auth')->group(function (
 
     Route::post('/photo/{photo}/react', [Controllers\Gallery\PhotoController::class, 'react'])->name('photo.react');
 
-    // Album viewing (uses wildcard on second segment, must be last)
+    // Album viewing (uses wildcard on second segment, must be after static URLs)
+    // Also register a /:album/photo/:photo route for compat with Vue router
     Route::get('/{album}', [Controllers\Gallery\AlbumController::class, 'show'])->name('album');
+    Route::get('/{album}/photo/{photo}', [Controllers\Gallery\AlbumController::class, 'show']);
 
     // Album uploading
     Route::get('/{album}/upload', [Controllers\Gallery\AlbumController::class, 'upload'])->name('album.upload');
