@@ -44,7 +44,7 @@ task('gumbo:upload-frontend', function () {
 
 desc('Links the required icons from the shared root folder');
 task('gumbo:link-icons', function () {
-    run('{{release_path}}/resources/bin/install-icons deployment');
+    run('{{release_path}}/resources/bin/install-icons deployment || true');
 });
 
 desc('Helper to run all front-end commands');
