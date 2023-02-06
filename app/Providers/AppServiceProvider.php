@@ -13,6 +13,7 @@ use App\Models\Grant;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\EventService;
+use App\Services\GalleryExifService;
 use App\Services\GalleryService;
 use App\Services\Google\WalletService as GoogleWalletService;
 use App\Services\MarkdownService;
@@ -47,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         // Gallery
         GalleryService::class,
         GoogleWalletService::class,
+        GalleryExifService::class,
     ];
 
     /**

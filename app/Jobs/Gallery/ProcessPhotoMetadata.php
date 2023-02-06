@@ -6,6 +6,7 @@ namespace App\Jobs\Gallery;
 
 use App\Helpers\Arr;
 use App\Models\Gallery\Photo;
+use App\Services\GalleryExifService;
 use Carbon\Exceptions\InvalidDateException;
 use finfo;
 use Illuminate\Bus\Queueable;
@@ -14,6 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
@@ -146,5 +148,12 @@ class ProcessPhotoMetadata implements ShouldQueue
             'model' => $cameraModel = Arr::get($data, 'Model'),
             'makeModel' => trim(sprintf('%s %s', $cameraMake, $cameraModel)) ?: null,
         ]);
+
+        // Convert model codes to model names
+        if ($cameraMake && $cameraModel) {
+            $exifService = App::make(GalleryExifService::class);
+            $parsedMakeAndModel = $exifService->determineDisplayMakeAndModel($cameraMake, $cameraModel);
+            $photo->exif->set('makeModel', trim("{$parsedMakeAndModel['make']} {$parsedMakeAndModel['model']} ({$cameraModel})"));
+        }
     }
 }

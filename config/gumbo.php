@@ -215,6 +215,10 @@ return [
             'disk' => env('GUMBO_IMAGE_DISK', 'public'),
             'path' => 'filepond/images/gallery',
         ],
+
+        'exif' => [
+            'database_path' => 'gumbo/gallery/exif-model-map.json',
+        ],
     ],
 
     /**
