@@ -6,6 +6,7 @@ namespace App\Console\Commands\Gumbo\Gallery;
 
 use App\Jobs\Gallery\ProcessPhotoMetadata;
 use App\Models\Gallery\Photo;
+use Exception;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,8 +54,13 @@ class ProcessPhoto extends Command
             ->lazy(50);
 
         foreach ($photos as $photo) {
-            ProcessPhotoMetadata::dispatchSync($photo);
-            $this->line("Processed <info>{$photo->id}</> (part of {$photo->album->name})");
+            try {
+                ProcessPhotoMetadata::dispatchSync($photo);
+                $this->line("Processed <info>{$photo->id}</> (part of {$photo->album->name})");
+            } catch (Exception $exception) {
+                $this->error("Failed to process <error>{$photo->id}</> (part of {$photo->album->name})");
+                $this->line($exception->getMessage());
+            }
         }
 
         return Command::SUCCESS;

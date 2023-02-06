@@ -177,6 +177,6 @@ class Photo extends Model
             return null;
         }
 
-        return $this->width / $this->height;
+        return $this->height / $this->width;
     }
 }
