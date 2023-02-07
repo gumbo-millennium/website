@@ -30,9 +30,11 @@ class PhotoController extends Controller
         $safeName = (string) Str::of($photo->name)->ascii()->replace('"', '\'');
 
         try {
-            Storage::disk(Config::get('gumbo.images.disk'))->temporaryUrl($photo->path, Date::now()->addMinutes(5), [
+            $url = Storage::disk(Config::get('gumbo.images.disk'))->temporaryUrl($photo->path, Date::now()->addMinutes(5), [
                 'ResponseContentDisposition' => "attachment; filename=\"{$safeName}\"",
             ]);
+
+            return Response::redirectTo($url);
         } catch (Exception $exception) {
             if ($exception->getMessage() !== self::LARAVEL_NO_TEMPORARY_URL_SUPPORT) {
                 Log::error('Failed to generate temporary URL for photo', [
