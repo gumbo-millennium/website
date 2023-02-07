@@ -45,8 +45,8 @@ class CheckActivityForFeatureMails extends ActivityJob
             // Get feature config
             $mailConfig = Config::get("gumbo.activity-features.{$feature}.mail", []);
 
-            // Check against expected values
-            if (! Arr::has($mailConfig, ['send', 'subject', 'body'])) {
+            // Check against expected types and values
+            if (! is_array($mailConfig) || ! Arr::has($mailConfig, ['send', 'subject', 'body'])) {
                 continue;
             }
 
