@@ -324,16 +324,18 @@ class CalendarController extends Controller
             $event->getDescription(),
         ]));
 
+        $lastModified = max(array_filter([
+            $activity->updated_at,
+            $enrollment?->updated_at,
+            $ticket?->updated_at,
+            Date::createFromTimestamp(filemtime(__FILE__)),
+        ]));
+
         return $event
             ->setDescription($updatedDescription)
             ->addAttendee($attendee)
             ->setLastModified(
-                new Timestamp(
-                    $enrollment->updated_at
-                        ->max($activity->updated_at)
-                        ->max($ticket->updated_at)
-                        ->max(Date::createFromTimestamp(filemtime(__FILE__))),
-                ),
+                new Timestamp($lastModified),
             );
     }
 }
