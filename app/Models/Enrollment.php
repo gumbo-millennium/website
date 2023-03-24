@@ -194,7 +194,8 @@ class Enrollment extends Model implements Payable
      */
     public function ticket(): BelongsTo
     {
-        return $this->belongsTo(Ticket::class);
+        return $this->belongsTo(Ticket::class)
+            ->withTrashed();
     }
 
     /**
