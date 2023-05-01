@@ -9,7 +9,7 @@
 }
 
 .form__field--checkbox {
-  @apply flex flex-row items-center;
+  @apply grid grid-cols-[auto_1fr];
 }
 
 .form__field-label {
@@ -54,10 +54,12 @@
   content: '';
 }
 
-.form__field--checkbox .form__field-help {
-  margin-top: 0;
-  margin-left: calc(theme('spacing.6') + calc(theme('spacing.2') * 2));
+.form__field--checkbox .form__field-label,
+.form__field--checkbox .form__field-help,
+.form__field--checkbox .form__field-error {
+  grid-column-start: 2;
 }
+
 
 /**
 <div class="form__field">
