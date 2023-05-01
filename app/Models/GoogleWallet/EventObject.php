@@ -83,6 +83,7 @@ class EventObject extends Model
         'ticket_number',
         'ticket_type',
         'barcode',
+        'barcode_type',
     ];
 
     /**

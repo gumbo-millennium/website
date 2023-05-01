@@ -57,14 +57,14 @@ trait HandlesEventObjects
                 ],
             ],
             'faceValue' => [
-                'micros' => ($eventObject->value ?? Money::zero('EUR'))->getAmount()->toFloat() * 1_000_000,
+                'micros' => round(($eventObject->value ?? Money::zero('EUR'))->getAmount()->toFloat() * 1_000_000),
                 'currencyCode' => 'EUR',
             ],
             'state' => $eventObject->state->value,
             'barcode' => [
-                'type' => 'QR_CODE',
-                'renderEncoding' => 'UTF_8',
+                'type' => $eventObject->barcode_type,
                 'value' => $eventObject->barcode,
+                'alternateText' => $eventObject->barcode,
             ],
             'validTimeInterval' => [
                 'start' => [
