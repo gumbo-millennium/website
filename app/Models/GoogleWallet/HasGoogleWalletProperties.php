@@ -76,10 +76,13 @@ trait HasGoogleWalletProperties
         // If creating for an Enrollment(id: 44), the ID will look like:
         // (class ID).EN00446jbvs6bd
         $this->wallet_id = sprintf(
-            '%s.%s.%s.%s%06d',
-            Str::of(App::environment())->upper()->replace(str_split('AEIOU'), '')->limit(3),
+            '%s.%s%s.%s%06d',
+            // Issuer ID should /always/ be first
             Config::get('services.google.wallet.issuer_id'),
+            // Environment labelling is second
+            Str::of(App::environment())->upper()->replace(str_split('AEIOU'), '')->substr(0, 3),
             hexdec((string) Str::of(md5(URL::to('/')))->substr(0, 8)),
+            // Object labelling is third
             Str::of(class_basename($this->subject))->studly()->upper()->substr(0, 2),
             $this->subject->getKey(),
         );
