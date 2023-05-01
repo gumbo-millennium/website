@@ -22,8 +22,12 @@ final class BarcodeService
      * @param string $barcode Actual barcode, should be compatible with the given type
      * @return string base64 encoded image, might be vector
      */
-    public function toBase64(BarcodeType $type, string $barcode, int $size = 400): string
+    public function toBase64(BarcodeType $type, ?string $barcode, int $size = 400): string
     {
+        if (empty($barcode)) {
+            return '';
+        }
+
         switch ($type) {
             case BarcodeType::CODABAR:
             case BarcodeType::CODE39:

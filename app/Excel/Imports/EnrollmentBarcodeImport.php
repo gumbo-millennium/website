@@ -28,6 +28,10 @@ class EnrollmentBarcodeImport extends StringValueBinder implements FromCollectio
 {
     public const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    public const IMPORT_TYPES = [
+        'codabar', 'code39', 'code128', 'ean8', 'ean13', 'qrcode', 'text',
+    ];
+
     public const COLUMNS = [
         'id' => [
             'name' => 'ID',

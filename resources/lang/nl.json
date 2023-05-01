@@ -58,6 +58,9 @@
   "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
   "1 variant|:count variants": "1 variant|:count varianten",
 
+  "and": "en",
+  "or": "of",
+
   "Welcome": "Welkom",
   "Welcome back": "Welkom terug",
   "Get the most out of the Gumbo website, by logging into your account.": "Haal het meeste uit de Gumbo website, door even in te loggen.",
@@ -448,7 +451,6 @@
   "Deleted :count photos": ":count foto's verwijderd",
   "No changes have been made, album left unchanged": "Er zijn geen wijzigingen gemaakt, album is niet aangepast",
   "Album visibility updated.": "Album zichtbaarheid aangepast.",
-  "and": "en",
 
   "Last updated": "Laatst bijgewerkt",
   ":count photo|:count photos": ":count foto|:count foto's",
@@ -466,6 +468,8 @@
   "Start": "Start",
   "You are not allowed to import activities for this group.": "Je mag geen activiteiten importeren voor deze groep.",
   "The uploaded file is invalid: :message.": "Het geüploade bestand is ongeldig: :message.",
+  "Supported barcode types are :values.":
+    "Ondersteunde barcodes zijn: :values.",
   "Import completed, your activities should now be visible.": "Importeren voltooid, je activiteiten moeten nu in het overzicht staan.",
 
   "Replace Barcodes": "Vervang barcodes",

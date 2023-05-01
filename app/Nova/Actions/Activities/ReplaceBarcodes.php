@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Actions\Activities;
 
 use App\Excel\Imports\EnrollmentBarcodeImport;
+use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\User;
@@ -22,6 +23,7 @@ use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Facades\Excel;
+use ValueError;
 
 /**
  * Action that allows the user to export the participants
@@ -109,15 +111,21 @@ class ReplaceBarcodes extends Action
 
         try {
             // Map the import to a collection
-            $result = Excel::import(new EnrollmentBarcodeImport($activity), $upload);
+            Excel::import(new EnrollmentBarcodeImport($activity), $upload);
 
             // Done :)
             return Action::message(__('Succesfully updated the barcodes.'));
-        } catch (InvalidArgumentException $e) {
-            // Oh no, fucky wucky
-            throw $e;
+        } catch (InvalidArgumentException|ValueError $e) {
+            $messag = rtrim($e->getMessage(), '.');
 
-            return Action::danger(__('The uploaded file is invalid: :message.', ['message' => rtrim($e->getMessage(), '.')]));
+            // Enum error, most likely
+            if ($e instanceof ValueError) {
+                $message = __('Supported barcode types are :values.', [
+                    'values' => Arr::implode(EnrollmentBarcodeImport::IMPORT_TYPES, __('or')),
+                ]);
+            }
+
+            return Action::danger(__('The uploaded file is invalid: :message.', ['message' => trim($message, '.')]));
         }
     }
 
