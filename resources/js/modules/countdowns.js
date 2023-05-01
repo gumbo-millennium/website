@@ -12,15 +12,15 @@ const timeInMillis = {
  * @returns {String}
  */
 const formatDiff = (date) => {
-  let diffInMillis = Math.max(0, Date.now() - date.getTime())
+  let diffInMillis = Math.max(0, date.getTime() - Date.now())
 
-  const diffHours = Math.max(0, diffInMillis / timeInMillis.hour)
+  const diffHours = Math.floor(Math.max(0, diffInMillis / timeInMillis.hour))
   diffInMillis %= timeInMillis.hour
 
-  const diffMinutes = Math.max(0, diffInMillis / timeInMillis.minute)
+  const diffMinutes = Math.floor(Math.max(0, diffInMillis / timeInMillis.minute))
   diffInMillis %= timeInMillis.minute
 
-  const diffSeconds = Math.max(0, diffInMillis / timeInMillis.second)
+  const diffSeconds = Math.floor(Math.max(0, diffInMillis / timeInMillis.second))
   diffInMillis %= timeInMillis.second
 
   return [

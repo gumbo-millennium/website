@@ -31,10 +31,13 @@
           {{-- Title and actions --}}
           <div class="flex flex-col">
             <div class="p-6 leading-none flex-grow">
-              <h2 class="font-title text-xl">
+              <p class="mb-2 text-sm font-medium text-brand-600">{{ $ticket->title }}</p>
+
+              <h2 class="font-title font-semibold text-gray-900 text-xl">
                 <a href="{{ route('activity.show', $activity) }}">{{ $activity->name }}</a>
               </h2>
-              <p class="text-gray-600">{{ $ticket->title }}</p>
+
+              <p class="mt-3 text-base text-gray-500">{{ $activity->tagline }}</p>
             </div>
 
             @if(Config::get('gumbo.features.barcodes') && $enrollment->barcode && $enrollment->is_stable)
