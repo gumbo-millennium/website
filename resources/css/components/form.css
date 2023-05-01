@@ -26,6 +26,7 @@
 
 .form__field--checkbox .form__field-label {
   @apply mb-0 flex-grow block;
+  @apply flex items-center;
 }
 
 .form__field--checkbox .form__field-label,
