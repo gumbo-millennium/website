@@ -2,32 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Controller\Http\Admin;
+namespace Tests\Feature\Http\Controllers\Admin;
 
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
-class ImportTemplateControllerTest extends TestCase
+class ActivityImportControllerTest extends TestCase
 {
     /**
      * Test authentication and proper response.
      */
     public function test_fetch_unknown(): void
     {
-        $route = route('admin.import.template', 'steve');
+        $route = route('admin.activity.import-template');
 
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));
 
-        // Assert guest and all others get a 404
+        // Assert guest and regular member gets denied access
         $this->actingAs($this->getGuestUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertForbidden();
 
+        $this->actingAs($this->getMemberUser());
+        $this->get($route)->assertForbidden();
+
+        // Assert commission and board member gets access
         $this->actingAs($this->getCommissionUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertOk();
 
         $this->actingAs($this->getBoardUser());
-        $this->get($route)->assertNotFound();
+        $this->get($route)->assertOk();
     }
 
     /**
@@ -35,7 +39,7 @@ class ImportTemplateControllerTest extends TestCase
      */
     public function test_fetch_activity_sheet(): void
     {
-        $route = route('admin.import.template', 'activity');
+        $route = route('admin.activity.import-template');
 
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));
@@ -51,6 +55,6 @@ class ImportTemplateControllerTest extends TestCase
         $this->get($route)->assertOk();
 
         // Check download was sent
-        Excel::assertDownloaded('template-activity.ods');
+        Excel::assertDownloaded('template.xlsx');
     }
 }

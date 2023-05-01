@@ -58,6 +58,9 @@
   "Additional properties to add to (variants of) this product.": "Extra eigenschappen die aan (varianten van) dit product moeten worden toegevoegd.",
   "1 variant|:count variants": "1 variant|:count varianten",
 
+  "and": "en",
+  "or": "of",
+
   "Welcome": "Welkom",
   "Welcome back": "Welkom terug",
   "Get the most out of the Gumbo website, by logging into your account.": "Haal het meeste uit de Gumbo website, door even in te loggen.",
@@ -391,6 +394,8 @@
   "The payment is still processing or has failed, please try again.": "De betaling wordt momenteel verwerkt of is mislukt, probeer het opnieuw.",
 
   "You're not currently enrolled into :activity.": "Je bent momenteel niet ingeschreven voor :activity.",
+  "Add to Google Wallet": "Toevoegen aan Google Wallet",
+  "Show barcode": "Toon barcode",
   "You can't add this ticket for :activity to your Google Wallet.": "Je kunt dit ticket voor :activity niet aan je Google Wallet toevoegen.",
 
   "Privacy Policy": "Privacybeleid",
@@ -446,7 +451,6 @@
   "Deleted :count photos": ":count foto's verwijderd",
   "No changes have been made, album left unchanged": "Er zijn geen wijzigingen gemaakt, album is niet aangepast",
   "Album visibility updated.": "Album zichtbaarheid aangepast.",
-  "and": "en",
 
   "Last updated": "Laatst bijgewerkt",
   ":count photo|:count photos": ":count foto|:count foto's",
@@ -457,13 +461,31 @@
 
   "Download import format": "Download importformaat",
 
-  "Import items": "Items importeren",
+  "Import Activities": "Activiteiten importeren",
+  "Download Template": "Download sjabloon",
   "Group": "Groep",
-  "Import file": "Bestand",
-  "Start import": "Start import",
+  "Import File": "Bestand",
+  "Start": "Start",
   "You are not allowed to import activities for this group.": "Je mag geen activiteiten importeren voor deze groep.",
   "The uploaded file is invalid: :message.": "Het geüploade bestand is ongeldig: :message.",
+  "Supported barcode types are :values.":
+    "Ondersteunde barcodes zijn: :values.",
   "Import completed, your activities should now be visible.": "Importeren voltooid, je activiteiten moeten nu in het overzicht staan.",
+
+  "Replace Barcodes": "Vervang barcodes",
+  "Select \":download\" to download a list of all enrollments. You can then modify the barcode type and actual barcode to replace the barcode on the enrollment.":
+    "Selecteer \":download\" om een lijst van alle inschrijvingen te downloaden. Je kunt vervolgens de barcode type en de barcode aanpassen om de barcode op de inschrijving te vervangen.",
+  "Leave entries empty (or remove them) to skip updating them. Their existing barcode will be retained.":
+    "Laat velden leeg (of verwijder ze) om ze over te slaan. De bestaande barcode wordt behouden.",
+  "Note that enrollments with custom barcodes will not have their barcodes rotated in case of a transfer. This may allow for barcode reuse.":
+    "Let op dat inschrijvingen met aangepaste barcodes niet een nieuwe barcode krijgen bij ticketoverdracht. Dit kan hergebruik van barcodes mogelijk maken.",
+  "Import Filled-in Template": "Importeer ingevuld sjabloon",
+  "Download Transfer Template": "Download overdrachtsjabloon",
+  "Name of Participant": "Naam deelnemer",
+  "Ticket Type": "Tickettype",
+  "Barcode Type": "Barcodetype",
+  "You are not allowed to alter enrollments on this activity.": "Je mag geen inschrijvingen aanpassen voor deze activiteit.",
+  "Succesfully updated the barcodes.": "Barcodes succesvol bijgewerkt.",
 
   "Location": "Locatie",
   "Location Address": "Adres locatie",

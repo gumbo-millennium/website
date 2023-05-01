@@ -402,9 +402,9 @@ class Activity extends Resource
                     ->displayUsing(fn ($value) => $value === null ? __('Unlimited') : sprintf('%d', $value)),
                 Fields\Line::make(
                     'Effective Seat Limit Reason',
-                    fn ($value) => $this->effective_seat_limit !== $this->seats
-                    ? __('Calculated from available number of tickets')
-                    : __('Set on the activity'),
+                    fn () => $this->effective_seat_limit !== $this->seats
+                    ? __('Determined by total number of available tickets')
+                    : __('Determined by the activity seat limit'),
                 )->asSmall(),
             ])->onlyOnDetail(),
 
@@ -434,15 +434,14 @@ class Activity extends Resource
     public function actions(NovaRequest $request)
     {
         return [
-            new Actions\CancelActivity(),
-            new Actions\PostponeActivity(),
-            new Actions\RescheduleActivity(),
-            new Actions\SendActivityMail(),
-            new Actions\ExportActivityParticipants(),
+            // Detail only
+            Actions\Activities\SendMessage::make()->onlyOnDetail()->fullscreen(),
+            Actions\Activities\ExportParticipants::make()->onlyOnDetail(),
+            Actions\Activities\ReplaceBarcodes::make()->onlyOnDetail(),
+            Actions\Activities\CancelActivity::make()->onlyOnDetail(),
 
             // Standalones
-            Actions\ImportExport\DownloadImportFormat::make('activity')->standalone(),
-            Actions\ImportExport\ImportActivities::make()->standalone(),
+            Actions\Activities\ImportActivities::make()->standalone()->onlyOnIndex(),
         ];
     }
 

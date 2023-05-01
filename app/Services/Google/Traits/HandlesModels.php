@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Google\Traits;
 
+use App\Enums\Models\BarcodeType;
 use App\Enums\Models\GoogleWallet\ObjectState;
 use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Fluent\Image;
@@ -86,7 +87,8 @@ trait HandlesModels
             'ticket_type' => $enrollment->ticket->title,
 
             // Always provide the barcode.
-            'barcode' => $enrollment->ticket_code,
+            'barcode' => $enrollment->barcode,
+            'barcode_type' => $this->convertBarcodeType($enrollment->barcode_type),
             'state' => $properState,
         ]);
 
@@ -98,6 +100,22 @@ trait HandlesModels
         $eventObject->messages()->sync($messages->pluck('id'));
 
         return $eventObject;
+    }
+
+    /**
+     * Converts a BarcodeType to a string that Google understands.
+     */
+    private function convertBarcodeType(BarcodeType $type): string
+    {
+        return match ($type) {
+            BarcodeType::CODABAR => 'CODABAR',
+            BarcodeType::CODE39 => 'CODE_39',
+            BarcodeType::CODE128 => 'CODE_128',
+            BarcodeType::EAN8 => 'EAN_8',
+            BarcodeType::EAN13 => 'EAN_13',
+            BarcodeType::QRCODE => 'QR_CODE',
+            default => 'textOnly',
+        };
     }
 
     /**

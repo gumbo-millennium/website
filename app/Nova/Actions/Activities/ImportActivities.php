@@ -2,20 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Nova\Actions\ImportExport;
+namespace App\Nova\Actions\Activities;
 
 use App\Excel\Imports\ActivityImport;
 use App\Models\Activity;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -28,16 +31,11 @@ class ImportActivities extends Action
     use InteractsWithQueue;
     use Queueable;
 
-    public $confirmButtonText = 'Start import';
-
-    public function __construct()
-    {
-        $this->standalone();
-    }
+    public $confirmButtonText = 'Start';
 
     public function name()
     {
-        return __('Import items');
+        return __('Import Activities');
     }
 
     /**
@@ -45,6 +43,10 @@ class ImportActivities extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        if ($fields->get('action') === 'download') {
+            return Action::download(route('admin.activity.import-template'), 'Import Template.xlsx');
+        }
+
         $upload = Request::file('import') ?? $fields->import;
         $group = Role::whereActivityAssignable()->firstWhere('name', $fields->group);
 
@@ -78,18 +80,43 @@ class ImportActivities extends Action
      */
     public function fields(NovaRequest $request)
     {
+        $hideIfDownloading = function (array $rules) {
+            return function (Fields\Field $field, NovaRequest $novaRequest, FormData $formData) use ($rules) {
+                if ($formData->action === 'download') {
+                    $field->hide();
+                } else {
+                    $field->rules($rules);
+                }
+            };
+        };
+
         return [
+            Fields\Select::make(__('Action'), 'action')
+                ->options([
+                    'download' => __('Download Template'),
+                    'import' => __('Import Activities'),
+                ])
+                ->rules([
+                    'required',
+                    Rule::in(['download', 'import']),
+                ]),
+
             Fields\Select::make(__('Group'), 'group')
                 ->options(Role::getActivityRoles())
                 ->displayUsingLabels()
-                ->rules('required'),
+                ->dependsOn(['action'], $hideIfDownloading(['required'])),
 
-            Fields\File::make(__('Import file'), 'import')
-                ->rules([
+            Fields\File::make(__('Import File'), 'import')
+                ->dependsOn(['action'], $hideIfDownloading([
                     'required',
                     'file',
                     'mimes:ods,xls,xlsx',
-                ]),
+                ])),
         ];
+    }
+
+    public function authorizedToSee(HttpRequest $request)
+    {
+        return $request->user()->can('create', Activity::class) && parent::authorizedToSee($request);
     }
 }

@@ -55,7 +55,7 @@ class Enrollment extends Resource
     public static $search = [
         'id',
         'previous_id',
-        'ticket_code',
+        'barcode',
     ];
 
     /**
@@ -189,7 +189,7 @@ class Enrollment extends Resource
     public function actions(Request $request)
     {
         return [
-            (new CancelEnrollment())
+            CancelEnrollment::make()
                 ->showInline()
                 ->showOnDetail()
                 ->confirmText('Weet je zeker dat je deze inschrijving wilt annuleren')
@@ -204,7 +204,7 @@ class Enrollment extends Resource
 
                     return $request->user()->can($action, $enrollment);
                 }),
-            (new TransferEnrollment())
+            TransferEnrollment::make()
                 ->showInline()
                 ->showOnDetail()
                 ->confirmText('Weet je zeker dat je deze inschrijving wil overschrijven naar een andere gebruiker?')

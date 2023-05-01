@@ -11,7 +11,7 @@ use Illuminate\Support\Arr as SupportArr;
  */
 class Arr extends SupportArr
 {
-    public static function implode($value): string
+    public static function implode($value, $finalGlue = 'en'): string
     {
         // No 'and' needed
         if (count($value) <= 1) {
@@ -22,6 +22,6 @@ class Arr extends SupportArr
         $last = array_pop($value);
 
         // Merge them
-        return implode(', ', $value) . ' en ' . $last;
+        return implode(' ', [implode(', ', $value), $finalGlue, $last]);
     }
 }

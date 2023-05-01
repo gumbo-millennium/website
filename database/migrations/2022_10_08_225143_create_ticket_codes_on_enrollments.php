@@ -16,7 +16,7 @@ class CreateTicketCodesOnEnrollments extends Migration
                 continue;
             }
 
-            Enroll::updateTicketCode($enrollment);
+            Enroll::updateBarcode($enrollment);
             $enrollment->save();
         }
     }

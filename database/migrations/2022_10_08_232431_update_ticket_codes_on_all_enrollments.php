@@ -22,7 +22,7 @@ class UpdateTicketCodesOnAllEnrollments extends Migration
 
         /** @var Enrollment $enrollment */
         foreach ($query->lazy(100) as $enrollment) {
-            Enroll::updateTicketCode($enrollment);
+            Enroll::updateBarcode($enrollment);
         }
     }
 }

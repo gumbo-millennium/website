@@ -20,11 +20,11 @@ use Spatie\Csp\Directive;
 class BarcodeController extends Controller
 {
     /**
-     * Converst the Enrollment's ticket_code to a salted hash, returning only the first 12 characters.
+     * Converst the Enrollment's barcode to a salted hash, returning only the first 12 characters.
      */
     public static function barcodeToSecretHash(string $salt, Enrollment $enrollment): string
     {
-        return substr(hash('sha256', Str::upper("{$salt}{$enrollment->ticket_code}")), 0, 12);
+        return substr(hash('sha256', Str::upper("{$salt}{$enrollment->barcode}")), 0, 12);
     }
 
     public function __construct()
@@ -87,7 +87,7 @@ class BarcodeController extends Controller
             ->whereState('state', [States\Confirmed::class, States\Paid::class])
             ->get([
                 'id',
-                'ticket_code',
+                'barcode',
             ]);
 
         $salt = Str::upper(Str::random(16));
@@ -120,7 +120,7 @@ class BarcodeController extends Controller
 
         $barcode = $request->input('barcode');
         $enrollment = $activity->enrollments()
-            ->where('ticket_code', $barcode)
+            ->where('barcode', $barcode)
             ->whereState('state', [States\Confirmed::class, States\Paid::class])
             ->first();
 

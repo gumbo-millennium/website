@@ -52,16 +52,17 @@ interface EnrollmentServiceContract
     public function transferEnrollment(Enrollment $enrollment, User $reciever): Enrollment;
 
     /**
-     * Generates a new unique ticket code for the enrollment.
+     * Generates a new unique barcode code for the enrollment.
+     * Should not run if the enrollment has a custom barcode.
      */
-    public function updateTicketCode(Enrollment $enrollment): void;
+    public function updateBarcode(Enrollment $enrollment): void;
 
     /**
-     * Generates a QR code for the given enrollment, to be printed on the ticket.
+     * Generates an image for the barcode of the given enrollment, to be printed on the ticket.
      *
-     * @param Enrollment $enrollment The enrollment to generate the QR code for
-     * @param int $size Size of the QR code in pixels
-     * @return string The QR code as a base64 encoded string
+     * @param Enrollment $enrollment The enrollment to generate the image for
+     * @param int $size the size of the image, if a vector image is created
+     * @return string The barcode as a base64 encoded image
      */
-    public function getTicketQrCode(Enrollment $enrollment, int $size = 400): string;
+    public function getBarcodeImage(Enrollment $enrollment, int $size = 128): string;
 }

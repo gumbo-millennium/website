@@ -41,6 +41,7 @@
         "maatwebsite/excel": "^3.1",
         "mischiefcollective/colorjizz": "^1.0",
         "mollie/laravel-mollie": "^2.14",
+        "picqer/php-barcode-generator": "^2.2",
         "predis/predis": "^1.1",
         "sentry/sentry-laravel": "^2.5",
         "sloveniangooner/searchable-select": "^1.3",
@@ -142,6 +143,9 @@
         "optimize-autoloader": true,
         "platform": {
             "php": "8.1.3"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     },
     "scripts-descriptions": {

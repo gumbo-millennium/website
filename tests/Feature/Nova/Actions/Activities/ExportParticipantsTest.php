@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Nova\Actions;
+namespace Tests\Feature\Nova\Actions\Activities;
 
 use App\Models\Activity;
 use App\Models\States\Enrollment\Confirmed;
@@ -10,11 +10,11 @@ use App\Models\States\Enrollment\Created;
 use App\Models\States\Enrollment\Paid;
 use App\Models\States\Enrollment\Seeded;
 use App\Models\User;
-use App\Nova\Actions\ExportActivityParticipants;
+use App\Nova\Actions\Activities\ExportParticipants;
 use Illuminate\Support\Facades\Auth;
 use Tests\Feature\Nova\NovaTestCase;
 
-class ExportActivityParticipantsTest extends NovaTestCase
+class ExportParticipantsTest extends NovaTestCase
 {
     /**
      * Test activity without any participants.
@@ -23,7 +23,7 @@ class ExportActivityParticipantsTest extends NovaTestCase
     {
         $activity = Activity::factory()->create();
 
-        $this->callActionOnModel(new ExportActivityParticipants(), $activity)
+        $this->callActionOnModel(new ExportParticipants(), $activity)
             ->assertOk()
             ->assertDownload();
     }
@@ -40,8 +40,8 @@ class ExportActivityParticipantsTest extends NovaTestCase
             Seeded::class => 4,
         ]);
 
-        $this->callActionOnModel(new ExportActivityParticipants(), $activity, [
-            'type' => ExportActivityParticipants::TYPE_CHECK_IN,
+        $this->callActionOnModel(new ExportParticipants(), $activity, [
+            'type' => ExportParticipants::TYPE_CHECK_IN,
         ])
             ->assertOk()
             ->assertDownload();
@@ -59,8 +59,8 @@ class ExportActivityParticipantsTest extends NovaTestCase
             Seeded::class => 4,
         ]);
 
-        $this->callActionOnModel(new ExportActivityParticipants(), $activity, [
-            'type' => ExportActivityParticipants::TYPE_ARCHIVE,
+        $this->callActionOnModel(new ExportParticipants(), $activity, [
+            'type' => ExportParticipants::TYPE_ARCHIVE,
         ])
             ->assertOk()
             ->assertDownload();

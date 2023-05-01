@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Payments\Payable;
+use App\Enums\Models\BarcodeType;
 use App\Facades\Enroll;
 use App\Fluent\Payment as PaymentFluent;
 use App\Models\States\Enrollment as States;
@@ -41,7 +42,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $user_type
  * @property null|\Illuminate\Support\Carbon $expire
  * @property null|string $transfer_secret
- * @property null|string $ticket_code
+ * @property null|string $barcode
+ * @property BarcodeType $barcode_type
+ * @property bool $barcode_generated
  * @property null|array $data
  * @property-read \App\Models\Activity $activity
  * @property-read null|array $form
@@ -108,6 +111,27 @@ class Enrollment extends Model implements Payable
         'paid' => 'bool',
         'price' => 'int',
         'total_price' => 'int',
+
+        'barcode_type' => BarcodeType::class,
+        'barcode_generated' => 'bool',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'data',
+        'deleted_at',
+        'deleted_reason',
+        'payment_intent',
+        'payment_invoice',
+        'payment_source',
+        'transfer_secret',
+        'barcode',
+        'barcode_type',
+        'barcode_generated',
     ];
 
     /**
@@ -123,6 +147,10 @@ class Enrollment extends Model implements Payable
         'deleted_reason',
         'price',
         'total_price',
+
+        'barcode',
+        'barcode_type',
+        'barcode_generated',
     ];
 
     /**
@@ -134,8 +162,8 @@ class Enrollment extends Model implements Payable
         parent::booted();
 
         static::saving(function (self $enrollment) {
-            if ($enrollment->ticket_code == null) {
-                Enroll::updateTicketCode($enrollment);
+            if ($enrollment->barcode == null) {
+                Enroll::updateBarcode($enrollment);
             }
         });
     }
@@ -417,6 +445,17 @@ class Enrollment extends Model implements Payable
             || $this->state instanceof States\Seeded
             || $this->state instanceof States\Confirmed
             || $this->state instanceof States\Paid;
+    }
+
+    public function has2dBarcode(): bool
+    {
+        return in_array($this->barcode_type, [
+            BarcodeType::CODABAR,
+            BarcodeType::CODE39,
+            BarcodeType::CODE128,
+            BarcodeType::EAN8,
+            BarcodeType::EAN13,
+        ], true);
     }
 
     public function __toString()

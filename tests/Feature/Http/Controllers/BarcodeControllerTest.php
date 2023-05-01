@@ -44,7 +44,7 @@ class BarcodeControllerTest extends TestCase
         $this->get($showRoute)->assertRedirect(route('login'));
 
         $this->getJson($preloadRoute)->assertUnauthorized();
-        $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
+        $this->postJson($consumeRoute, ['barcode' => $enrollment->barcode])
             ->assertUnauthorized();
 
         $this->actingAs($memberUser);
@@ -53,7 +53,7 @@ class BarcodeControllerTest extends TestCase
         $this->get($showRoute)->assertForbidden();
 
         $this->getJson($preloadRoute)->assertForbidden();
-        $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
+        $this->postJson($consumeRoute, ['barcode' => $enrollment->barcode])
             ->assertForbidden();
 
         $this->actingAs($boardUser);
@@ -62,7 +62,7 @@ class BarcodeControllerTest extends TestCase
         $this->get($showRoute)->assertOk();
 
         $this->getJson($preloadRoute)->assertOk();
-        $this->postJson($consumeRoute, ['barcode' => $enrollment->ticket_code])
+        $this->postJson($consumeRoute, ['barcode' => $enrollment->barcode])
             ->assertOk();
     }
 
@@ -177,7 +177,7 @@ class BarcodeControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->postJson(route('barcode.consume', $activity), [
-            'barcode' => $enrollment->ticket_code,
+            'barcode' => $enrollment->barcode,
         ])->assertOk();
 
         $enrollment->refresh();
@@ -186,7 +186,7 @@ class BarcodeControllerTest extends TestCase
         $this->assertEquals($user->id, $enrollment->consumed_by_id);
 
         $this->postJson(route('barcode.consume', $activity), [
-            'barcode' => $enrollment->ticket_code,
+            'barcode' => $enrollment->barcode,
         ])->assertStatus(Response::HTTP_CONFLICT);
     }
 
@@ -207,7 +207,7 @@ class BarcodeControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->postJson(route('barcode.consume', $activity), [
-            'barcode' => $enrollment->ticket_code,
+            'barcode' => $enrollment->barcode,
         ])->assertNotFound();
     }
 

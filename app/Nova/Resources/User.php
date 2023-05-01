@@ -75,6 +75,11 @@ class User extends Resource
             Fields\Text::make('Alias', 'alias')
                 ->rules('nullable', 'between:2,60'),
 
+            Fields\Boolean::make('Locked')
+                ->help('Als een account gelocked is, kan de gebruiker niet inloggen.')
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+
             Fields\Boolean::make('E-mailadres bevestigd', fn () => $this->hasVerifiedEmail())
                 ->onlyOnDetail(),
 

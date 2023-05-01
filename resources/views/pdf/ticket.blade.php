@@ -30,7 +30,11 @@
       </div>
       <div class="flex-none rounded-xl bg-white p-8 text-center">
         <div class="mb-4">
-          <img src="{{ Enroll::getTicketQrCode($enrollment) }}" alt="QR Code" height="200" width="200">
+          @if ($enrollment->has2dBarcode())
+            <img src="{{ Enroll::getBarcodeImage($enrollment) }}" alt="Barcode" height="80">
+          @else
+            <img src="{{ Enroll::getBarcodeImage($enrollment, 400) }}" alt="Barcode" height="200" width="200">
+          @endif
         </div>
 
         <data class="font-bold block uppercase font-mono">{{ $enrollment->ticket_code }}</data>
