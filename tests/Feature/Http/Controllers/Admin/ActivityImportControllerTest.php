@@ -19,15 +19,19 @@ class ActivityImportControllerTest extends TestCase
         // Assert guest users are redirected to login
         $this->get($route)->assertRedirect(route('login'));
 
-        // Assert guest and all others get a 404
+        // Assert guest and regular member gets denied access
         $this->actingAs($this->getGuestUser());
         $this->get($route)->assertForbidden();
 
-        $this->actingAs($this->getCommissionUser());
+        $this->actingAs($this->getMemberUser());
         $this->get($route)->assertForbidden();
 
+        // Assert commission and board member gets access
+        $this->actingAs($this->getCommissionUser());
+        $this->get($route)->assertOk();
+
         $this->actingAs($this->getBoardUser());
-        $this->get($route)->assertForbidden();
+        $this->get($route)->assertOk();
     }
 
     /**
@@ -51,6 +55,6 @@ class ActivityImportControllerTest extends TestCase
         $this->get($route)->assertOk();
 
         // Check download was sent
-        Excel::assertDownloaded('template-activity.ods');
+        Excel::assertDownloaded('template.xlsx');
     }
 }
