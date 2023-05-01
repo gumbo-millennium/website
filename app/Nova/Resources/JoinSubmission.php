@@ -58,12 +58,11 @@ class JoinSubmission extends Resource
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
 
         // Decide on help text
-        $studentHelpText = null;
+        $studentLabel = 'Zwolse HBO student';
         if ($request->isResourceDetailRequest()) {
             // Magic number (2023-05-01) is the date of the last Windesheim student question could have been answered.
-            $studentHelpText = $request->resource?->created_at > Date::parse('2023-05-01')->endOfDay()
-                ? null
-                : 'De beantwoorde vraag was "Windsheim student", niet "Zwolse HBO student"';
+            $answeredWindesheimQuestion = Date::parse('2023-05-01')->endOfDay()->isAfter($this->created_at);
+            $studentLabel = $answeredWindesheimQuestion ? 'Windsheim student' : 'Zwolse HBO student';
         }
 
         return [
@@ -147,9 +146,8 @@ class JoinSubmission extends Resource
                 // Heading in form
                 Fields\Heading::make('Voorkeuren en inschrijvingsinformatie')->onlyOnForms(),
 
-                Fields\Boolean::make('Student', 'windesheim_student')
-                    ->hideFromIndex()
-                    ->help($studentHelpText),
+                Fields\Boolean::make($studentLabel, 'windesheim_student')
+                    ->hideFromIndex(),
                 Fields\Boolean::make('Aanmelding Gumbode', 'newsletter')
                     ->hideFromIndex(),
                 Fields\Text::make('Referentie', 'referrer')
