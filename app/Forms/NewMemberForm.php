@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Forms\Traits\UseTemplateStrings;
+use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
@@ -15,12 +16,22 @@ class NewMemberForm extends Form
 {
     use UseTemplateStrings;
 
+    private const UNIS = [
+        'Hogeschool Windesheim Zwolle',
+        'Hogeschool Windesheim Almere',
+        'Hogeschool Viaa Zwolle',
+        'Hogeschool KPZ',
+        'ArtEZ University of the Arts',
+    ];
+
     /**
      * Builds the form.
      */
     public function buildForm()
     {
         $dummyName = $this->getTemplateName();
+
+        $unisAsString = Arr::implode(self::UNIS, 'of');
 
         // Name
         $this
@@ -160,12 +171,10 @@ class NewMemberForm extends Form
         // Extra fields
         $this
             ->add('is-student', 'checkbox', [
-                'label' => 'Windesheim student',
+                'label' => 'Zwolse HBO-student',
                 'help_block' => [
-                    'text' => <<<'TEXT'
-                    Binnen Gumbo hebben wij twee lidmaatschapsvormen: leden en
-                    begunstigers. Om te bepalen welke vorm voor jou mogelijk
-                    is, moeten we weten of je op Windesheim studeert.
+                    'text' => <<<TEXT
+                    Studeer je aan {$unisAsString}?
                     TEXT,
                 ],
             ])

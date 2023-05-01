@@ -8,7 +8,9 @@ use App\Models\JoinSubmission as JoinSubmissionModel;
 use App\Nova\Actions\HandleJoinSubmission;
 use App\Nova\Metrics\NewJoinSubmissions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 
 /**
@@ -51,10 +53,18 @@ class JoinSubmission extends Resource
         'phone',
     ];
 
-    // phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter
-    public function fields(Request $request)
+    public function fields(NovaRequest $request)
     {
         $sixteenYears = today()->subYear(16)->format('Y-m-d');
+
+        // Decide on help text
+        $studentHelpText = null;
+        if ($request->isResourceDetailRequest()) {
+            // Magic number (2023-05-01) is the date of the last Windesheim student question could have been answered.
+            $studentHelpText = $request->resource?->created_at > Date::parse('2023-05-01')->endOfDay()
+                ? null
+                : 'De beantwoorde vraag was "Windsheim student", niet "Zwolse HBO student"';
+        }
 
         return [
             new Panel('Basisinformatie', [
@@ -137,8 +147,9 @@ class JoinSubmission extends Resource
                 // Heading in form
                 Fields\Heading::make('Voorkeuren en inschrijvingsinformatie')->onlyOnForms(),
 
-                Fields\Boolean::make('Windesheim Student', 'windesheim_student')
-                    ->hideFromIndex(),
+                Fields\Boolean::make('Student', 'windesheim_student')
+                    ->hideFromIndex()
+                    ->help($studentHelpText),
                 Fields\Boolean::make('Aanmelding Gumbode', 'newsletter')
                     ->hideFromIndex(),
                 Fields\Text::make('Referentie', 'referrer')
