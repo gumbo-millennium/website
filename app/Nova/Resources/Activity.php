@@ -300,7 +300,6 @@ class Activity extends Resource
                 ->from('name')
                 ->creationRules('unique:activities,slug')
                 ->help('Het pad naar deze activiteit (/activiteiten/[pad])')
-                ->readonly(fn () => $this->exists)
                 ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
                     $slug = $request->input($requestAttribute);
                     $model->{$attribute} = Str::slug($slug, '-', 'nl');
