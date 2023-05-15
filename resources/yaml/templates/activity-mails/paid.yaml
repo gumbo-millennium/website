@@ -1,0 +1,18 @@
+name: paid
+
+subject: Inschrijfbevestiging voor :activity 🥳
+
+body: |
+  Beste :first_name,
+
+  Bedankt voor je betaling voor :activity. We hebben je betaling ontvangen en je inschrijving is nu definitief.
+
+  Mocht je wijzigingen willen maken aan je inschrijving, of deze overdragen aan een ander, druk dan op onderstaande knop.
+
+  :cta
+
+  Bedankt voor je inschrijving, en tot :start_date!
+
+  Met vriendelijke groet,
+
+  :group

@@ -1,0 +1,17 @@
+name: removed
+
+subject: Uitgeschreven voor :activity
+
+body: |
+  Beste :first_name,
+
+  Dit bericht dient als mededeling dat je niet meer bent ingeschreven voor :activity.
+
+  Indien je hebt betaald, kan je mogelijk je geld terugkrijgen, je ontvangt hiervan apart bericht
+  van onze betaalprovider Mollie.
+
+  Desondanks bedankt voor je inschrijving, en hopelijk tot een volgende keer!
+
+  Met vriendelijke groet,
+
+  :group

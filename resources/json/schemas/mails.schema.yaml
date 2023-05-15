@@ -1,0 +1,27 @@
+$schema: http://json-schema.org/draft-07/schema
+type: object
+required:
+  - name
+  - subject
+  - body
+properties:
+  name:
+    type: string
+
+  subject:
+    type: string
+
+  body:
+    type: string
+
+  attachments:
+    type: array
+    items:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+        name:
+          type: string

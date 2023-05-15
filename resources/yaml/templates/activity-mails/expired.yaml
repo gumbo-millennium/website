@@ -1,0 +1,20 @@
+name: removed
+
+subject: Uitgeschreven voor :activity
+
+body: |
+  Beste :first_name,
+
+  Je bent begonnen met een inschrijving voor :activity, maar hebt deze niet tijdig afgerond.
+
+  Om plek te houden voor andere deelnemers, hebben we je inschrijving verwijderd.
+
+  Indien mogelijk, kan je je nog opnieuw inschrijven voor de activiteit via onderstaande knop.
+
+  :cta
+
+  Hopelijke ben je bij deze voldoende geïnformeerd, en tot een volgende keer!
+
+  Met vriendelijke groet,
+
+  :group
