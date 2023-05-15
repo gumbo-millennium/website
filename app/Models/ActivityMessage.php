@@ -52,8 +52,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class ActivityMessage extends Model implements HasMedia
 {
     use HasFactory;
-    use SoftDeletes;
     use InteractsWithMedia;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast.
