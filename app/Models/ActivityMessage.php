@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\LazyCollection;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * App\Models\ActivityMessage.
@@ -47,10 +49,11 @@ use Illuminate\Support\LazyCollection;
  * @method static \Illuminate\Database\Query\Builder|ActivityMessage withoutTrashed()
  * @mixin \Eloquent
  */
-class ActivityMessage extends Model
+class ActivityMessage extends Model implements HasMedia
 {
     use HasFactory;
     use SoftDeletes;
+    use InteractsWithMedia;
 
     /**
      * The attributes that should be cast.
