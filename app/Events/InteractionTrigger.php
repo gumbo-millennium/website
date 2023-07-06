@@ -13,6 +13,9 @@ class InteractionTrigger
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * Triggers the event for the specified user.
+     */
     public static triggerFor(User $user, string $interaction, ?Model $subject): static
     {
         $instance = new static($user, $interaction, $subject);
@@ -21,6 +24,9 @@ class InteractionTrigger
         return $instance;
     }
 
+    /**
+     * Triggers the event for the authenticated user, using Auth::user()
+     */
     public static triggerForUser(string $interaction, ?Model $subject): static
     {
         $user = Auth::user();
