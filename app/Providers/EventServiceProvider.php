@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Events\Payments\PaymentPaid;
+use App\Events;
 use App\Listeners;
 use App\Listeners\AddVerifiedPermission;
 use App\Listeners\CheckConscriboWhenVerified;
@@ -40,9 +40,12 @@ class EventServiceProvider extends ServiceProvider
         StateChanged::class => [
             EnrollmentStateListener::class,
         ],
-        PaymentPaid::class => [
+        Events\Payments\PaymentPaid::class => [
             Listeners\Shop\PaymentPaidListener::class,
             Listeners\Enrollments\PaymentPaidListener::class,
+        ],
+        Events\InteractionTrigger::class => [
+            Listeners\RegisterInteractionTriggersInDatabase::class,
         ],
     ];
 
