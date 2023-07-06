@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Events\InteractionTrigger;
@@ -9,7 +11,6 @@ class RegisterInteractionTriggersInDatabase
     /**
      * Handle the event.
      *
-     * @param  \App\Events\InteractionTrigger  $event
      * @return void
      */
     public function handle(InteractionTrigger $event)

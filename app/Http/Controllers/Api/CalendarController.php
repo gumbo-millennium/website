@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\InteractionTrigger;
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
@@ -14,7 +15,6 @@ use DateInterval;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use App\Events\InteractionTrigger;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
