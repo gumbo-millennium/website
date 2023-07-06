@@ -14,6 +14,7 @@ use DateInterval;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use App\Events\InteractionTrigger;
 use Eluceo\iCal\Domain\Entity\Attendee;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
@@ -219,6 +220,10 @@ class CalendarController extends Controller
             $events[] = $this->createCalendarEventFromActivity($activity);
         }
 
+        // Dispatch an interaction event (for measurement)
+        InteractionTrigger::triggerFor($user, 'ical');
+
+        // Done
         return $events;
     }
 
