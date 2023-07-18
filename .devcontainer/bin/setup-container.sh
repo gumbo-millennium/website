@@ -26,7 +26,7 @@ if [ ! -z "$NOVA_USERNAME" -a ! -z "$NOVA_PASSWORD" ]; then
 fi
 
 echo "Installing dependencies"
-composer install
+composer install --no-interaction
 
 if grep -q -E '^APP_KEY=(base64:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=)?$' .env; then
     echo "Setting application key"
