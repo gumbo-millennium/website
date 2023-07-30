@@ -44,6 +44,9 @@ class QuoteCommand extends Command
     dag insturen. Login via /login om deze limiet te verwijderen.
     MSG;
 
+    private function quoteDuplicate($quote){
+        return BotQuote::where('quote', $quote)->exists();
+    }
     /**
      * The name of the Telegram command.
      *
@@ -86,6 +89,9 @@ class QuoteCommand extends Command
 
         // Check the quote, remove the @Username if found
         $quoteText = $this->getCommandBody();
+
+        //check if quote is unique
+        if($this->quoteDuplicate($quoteText) && $quoteText != "") return;
 
         Log::info('Derrived quote {quote} from {message}.', [
             'quote' => $quoteText,
