@@ -84,14 +84,14 @@ class QuoteCommand extends Command
      */
     public function handle()
     {
-        // Send typing status
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-
         // Check the quote, remove the @Username if found
         $quoteText = $this->getCommandBody();
 
         //check if quote is unique
         if($this->quoteDuplicate($quoteText) && $quoteText != "") return;
+
+        // Send typing status
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         Log::info('Derrived quote {quote} from {message}.', [
             'quote' => $quoteText,
