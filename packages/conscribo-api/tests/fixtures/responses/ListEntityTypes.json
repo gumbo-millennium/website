@@ -1,0 +1,19 @@
+{
+    "result": {
+        "success": 1,
+        "entityTypes": [
+            {
+                "typeName": "persoon",
+                "langDeterminer": "deze",
+                "langSingular": "persoon",
+                "langPlural": "personen"
+            },
+            {
+                "typeName": "organisatie",
+                "langDeterminer": "deze",
+                "langSingular": "organisatie",
+                "langPlural": "Organisaties"
+            }
+        ]
+    }
+}

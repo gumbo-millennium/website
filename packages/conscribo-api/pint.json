@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "ordered_class_elements": true,
+        "ordered_interfaces": true,
+        "ordered_traits": true,
+        "php_unit_method_casing": {
+            "case": "snake_case"
+        },
+        "declare_strict_types": true,
+        "strict_param": true
+    }
+}

@@ -1,0 +1,45 @@
+fields:
+  - fieldName: code
+    type: text
+
+  - fieldName: naam
+    type: text
+
+  - fieldName: selector
+    type: text
+
+  - fieldName: rekening
+    type: account
+
+  - fieldName: einddatum_lid
+    type: date
+
+  - fieldName: startdatum_lid
+    type: date
+
+  - fieldName: email
+    type: mailadres
+
+  - fieldName: plaats
+    type: text
+
+  - fieldName: adres
+    type: text
+
+  - fieldName: voornaam
+    type: text
+
+  - fieldName: tussenvoegsel
+    type: text
+
+  - fieldName: aanhef
+    type: enum
+
+  - fieldName: geboortedatum
+    type: date
+
+  - fieldName: telefoonnummer
+    type: number
+
+  - fieldName: achterstallig
+    type: checkbox

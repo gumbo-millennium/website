@@ -1,0 +1,10 @@
+{
+    "result": {
+        "success": 0,
+        "notifications": {
+            "notification": [
+                "Not authenticated."
+            ]
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "name": "gumbo-millennium/conscribo-api",
+    "description": "Conscribo API implementation with proper model support",
+    "type": "library",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Roelof Roos",
+            "email": "github@roelofr.dev",
+            "role": "Project Lead"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.0 | ^9.0 | ^10.0",
+        "illuminate/console": "^8.0 | ^9.0 | ^10.0",
+        "illuminate/contracts": "^8.0 | ^9.0 | ^10.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0 | ^7.0 | ^8.0",
+        "phpunit/phpunit": "^9.5 | ^10.3",
+        "laravel/pint": "^1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gumbo\\ConscriboApi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Gumbo\\ConscriboApi\\ServiceProvider"
+            ],
+            "aliases": {
+                "Conscribo": "Gumbo\\ConscriboApi\\Facades\\Conscribo"
+            }
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Gumbo\\ConscriboApi\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "format": ["pint"],
+        "test": ["phpunit"]
+    }
+}

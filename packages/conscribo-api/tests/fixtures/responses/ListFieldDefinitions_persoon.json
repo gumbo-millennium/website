@@ -1,0 +1,161 @@
+{
+    "result": {
+      "success": 1,
+      "fields": [
+        {
+          "fieldName": "code",
+          "entityType": "persoon",
+          "label": "Relatienummer",
+          "description": "Het gegeven: Relatienummer",
+          "type": "text",
+          "required": true,
+          "readOnly": false,
+          "sharedFieldName": "code"
+        },
+        {
+          "fieldName": "naam",
+          "entityType": "persoon",
+          "label": "Achternaam",
+          "description": "Het gegeven: Achternaam",
+          "type": "text",
+          "required": true,
+          "readOnly": false,
+          "sharedFieldName": "naam"
+        },
+        {
+          "fieldName": "selector",
+          "entityType": "persoon",
+          "label": "Selectienaam",
+          "description": "Het gegeven: Selectienaam",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "sharedFieldName": "selector"
+        },
+        {
+          "fieldName": "rekening",
+          "entityType": "persoon",
+          "label": "Bankrekeningnummer",
+          "description": "Het gegeven: Bankrekeningnummer",
+          "type": "account",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "account"
+        },
+        {
+          "fieldName": "einddatum_lid",
+          "entityType": "persoon",
+          "label": "Eind Lidmaatschap",
+          "description": "Het gegeven: Eind Lidmaatschap",
+          "type": "date",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "einddatum_lid"
+        },
+        {
+          "fieldName": "startdatum_lid",
+          "entityType": "persoon",
+          "label": "Start Lidmaatschap",
+          "description": "Het gegeven: Start Lidmaatschap",
+          "type": "date",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "startdatum_lid"
+        },
+        {
+          "fieldName": "email",
+          "entityType": "persoon",
+          "label": "E-mailadres",
+          "description": "Het gegeven: E-mailadres",
+          "type": "mailadres",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "email"
+        },
+        {
+          "fieldName": "plaats",
+          "entityType": "persoon",
+          "label": "Plaatsnaam",
+          "description": "Het gegeven: Plaatsnaam",
+          "type": "text",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "city_pri"
+        },
+        {
+          "fieldName": "adres",
+          "entityType": "persoon",
+          "label": "Adres",
+          "description": "Het gegeven: Adres",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "sharedFieldName": "postal_address"
+        },
+        {
+          "fieldName": "voornaam",
+          "entityType": "persoon",
+          "label": "Voornaam",
+          "description": "Het gegeven: Voornaam",
+          "type": "text",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "voornaam"
+        },
+        {
+          "fieldName": "tussenvoegsel",
+          "entityType": "persoon",
+          "label": "Tussenvoegsel",
+          "description": "Het gegeven: Tussenvoegsel",
+          "type": "text",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "tussenvoegsel"
+        },
+        {
+          "fieldName": "aanhef",
+          "entityType": "persoon",
+          "label": "Aanhef",
+          "description": "Het gegeven: Aanhef",
+          "type": "enum",
+          "required": false,
+          "readOnly": false,
+          "sharedFieldName": "aanhef",
+          "possibleValues": [
+            "Dhr.",
+            "Mevr."
+          ]
+        },
+        {
+          "fieldName": "geboortedatum",
+          "entityType": "persoon",
+          "label": "Geboortedatum",
+          "description": "Geboortedatum",
+          "type": "date",
+          "required": null,
+          "readOnly": false,
+          "sharedFieldName": "geboortedatum"
+        },
+        {
+          "fieldName": "telefoonnummer",
+          "entityType": "persoon",
+          "label": "Telefoonnummer",
+          "description": "Telefoonnummer",
+          "type": "number",
+          "required": null,
+          "readOnly": false,
+          "sharedFieldName": "telefoonnummer"
+        },
+        {
+          "fieldName": "achterstallig",
+          "entityType": "persoon",
+          "label": "Achterstallig",
+          "description": "Achterstallige contributie",
+          "type": "checkbox",
+          "required": null,
+          "readOnly": false,
+          "sharedFieldName": "achterstallig"
+        }
+      ]
+    }
+  }

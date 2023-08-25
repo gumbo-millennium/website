@@ -1,0 +1,10 @@
+workbench:
+  start: '/'
+
+env:
+    ENV_CONSCRIBO_ACCOUNT: gumbo
+    ENV_CONSCRIBO_USERNAME: website-api
+    ENV_CONSCRIBO_PASSWORD: "?2PU&LS$rf=$}pz3!'t#JD;5'$D#.e"
+
+providers:
+  - Gumbo\ConscriboApi\ServiceProvider
