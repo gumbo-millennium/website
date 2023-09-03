@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Mail\SendBotQuotes as MailSendBotQuotes;
+use App\Mail\BotQuotesMessage;
 use App\Models\BotQuote;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -55,7 +55,7 @@ class SendBotQuotes implements ShouldQueue
 
         // Prepare mail
         Mail::to((string) $recipient)
-            ->send(new MailSendBotQuotes($quotes));
+            ->send(new BotQuotesMessage($quotes));
 
         // Mark quotes as sent
         foreach ($quotes as $quote) {

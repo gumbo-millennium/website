@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Gumbo;
 
-use App\Jobs\SendBotQuotes as JobsSendBotQuotes;
+use App\Jobs\SendBotQuotes;
 use Illuminate\Console\Command;
 
-class SendBotQuotes extends Command
+class SendBotQuotesCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -39,7 +39,7 @@ class SendBotQuotes extends Command
     public function handle()
     {
         // Send quotes
-        JobsSendBotQuotes::dispatchNow();
+        SendBotQuotes::dispatchSync();
 
         // Return OK
         $this->info('Quotes have been sent.');

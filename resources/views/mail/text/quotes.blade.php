@@ -1,16 +1,16 @@
 # Wist-Je-Datjes
 
 {{-- Intro Lines --}}
-Liebe, lieve Klass,
+Lieve leden van de Gumbode,
 
 Bij deze alle wist je datjes van afgelopen periode.
 De quotes zijn ook als bijlage in de mail gezet, voor het gemak.
 
-@foreach ($quotesList as list($date, $quotes))
+@foreach ($quotesList as [$date, $quotes])
 == {{ $date }} ==
 
 @foreach ($quotes as $quote)
-Door {{ optional($quote->user)->name ?? 'Onbekend' }}:
+Door {{ $quote->user?->name ?? "¨{$quote->display_name}„" ?? 'Onbekend' }}:
 > {{ $quote->quote }}
 
 @endforeach
