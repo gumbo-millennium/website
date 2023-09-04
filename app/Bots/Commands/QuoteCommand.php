@@ -124,7 +124,7 @@ class QuoteCommand extends Command
         $quote->quote = $quoteText;
         $quote->display_name = trim("{$tgUser->firstName} {$tgUser->lastName}") ?: "#{$tgUser->id}";
         $quote->user_id = optional($user)->id;
-        $quote->message_id = $this->getMessageId();
+        $quote->message_id =$this->update->message->message_id;
         $quote->save();
 
         $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);
