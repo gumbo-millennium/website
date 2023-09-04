@@ -85,7 +85,9 @@ class QuoteCommand extends Command
         $quoteText = $this->getCommandBody();
 
         //check if quote is unique
-        if( BotQuote::where('message_id', $this->update->message->message_id)->exists()) return;
+        if (BotQuote::where('message_id', $this->update->message->message_id)->exists()) {
+            return;
+        }
 
         // Send typing status
         $this->replyWithChatAction(['action' => Actions::TYPING]);
@@ -124,7 +126,7 @@ class QuoteCommand extends Command
         $quote->quote = $quoteText;
         $quote->display_name = trim("{$tgUser->firstName} {$tgUser->lastName}") ?: "#{$tgUser->id}";
         $quote->user_id = optional($user)->id;
-        $quote->message_id =$this->update->message->message_id;
+        $quote->message_id = $this->update->message->message_id;
         $quote->save();
 
         $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);
