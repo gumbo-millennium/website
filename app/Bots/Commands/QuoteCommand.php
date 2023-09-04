@@ -167,4 +167,9 @@ class QuoteCommand extends Command
             'disable_notification' => true,
         ]);
     }
+
+    private function quoteDuplicate($quote)
+    {
+        return BotQuote::where('quote', $quote)->exists();
+    }
 }
