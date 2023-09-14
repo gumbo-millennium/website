@@ -28,7 +28,7 @@ class AddMessageIdToBotQuotes extends Migration
     public function down()
     {
         Schema::table('bot_quotes', function (Blueprint $table) {
-            //
+            $table->dropColumn('message_id');
         });
     }
 }
