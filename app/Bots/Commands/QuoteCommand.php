@@ -81,11 +81,17 @@ class QuoteCommand extends Command
      */
     public function handle()
     {
-        // Send typing status
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
-
         // Check the quote, remove the @Username if found
         $quoteText = $this->getCommandBody();
+
+        //check if quote is unique
+        $messageId = $this->update->message->message_id;
+        if (BotQuote::where('message_id', $messageId)->exists()) {
+            return;
+        }
+
+        // Send typing status
+        $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         Log::info('Derrived quote {quote} from {message}.', [
             'quote' => $quoteText,
@@ -121,6 +127,7 @@ class QuoteCommand extends Command
         $quote->quote = $quoteText;
         $quote->display_name = trim("{$tgUser->firstName} {$tgUser->lastName}") ?: "#{$tgUser->id}";
         $quote->user_id = optional($user)->id;
+        $quote->message_id = $messageId;
         $quote->save();
 
         $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);

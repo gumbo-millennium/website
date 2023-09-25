@@ -51,3 +51,9 @@ Please have a look at the [Contribution Guide][contrib] on how to get started.
 [conscribo]: https://www.conscribo.nl/api/
 [tailwind]: https://tailwindcss.com
 [contrib]: ./CONTRIBUTING.md
+
+
+## testing the gumbot
+Via [@BotFather](https://t.me/BotFather) you can create a new telegram bot
+Next, replace in the .env file the TELEGRAM_BOT_NAME and TELEGRAM_BOT_TOKEN varbiables with your botname and token.
+The command `php artisan bot:listen` will start polling the bot for updates.
