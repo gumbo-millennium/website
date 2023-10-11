@@ -25,6 +25,9 @@ referral-manage: Manage referrals and associations
 # Manage sponsors
 sponsor-admin: Sponsoren bewerken
 
+# Manage bot quotes
+quotes-export: Alle quotes exporteren
+
 # Manage roles
 role: Beheren leden van eigen groepen
 role-admin: Beheren leden van alle groepen (admin)

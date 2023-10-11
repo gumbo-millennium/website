@@ -75,6 +75,11 @@ class BotQuote extends Model
         $query->whereNull('submitted_at');
     }
 
+    public function scopeWithUser(Builder $query): void
+    {
+        $query->with('user:id,first_name,insert,last_name,alias');
+    }
+
     /**
      * Scope by unsubmitted quotes.
      */
@@ -83,7 +88,7 @@ class BotQuote extends Model
         $query->where(
             fn ($query) => $query
                 ->whereNotNull('submitted_at')
-                ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS))
+                ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS)),
         );
     }
 

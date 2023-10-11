@@ -30,9 +30,15 @@ Route::addRoute(['GET', 'PUT'], 'plazacam/{user}/{webcam}', fn () => Response::j
     ],
 ], 400));
 
-Route::middleware(['auth:sanctum', 'member'])->name('webcam.')->prefix('/webcam/')->group(function () {
-    Route::get('/{camera}', [Api\WebcamController::class, 'show'])->name('show');
-    Route::put('/', [Api\WebcamController::class, 'update'])->name('update');
+Route::middleware(['auth:sanctum', 'member'])->group(function () {
+    Route::name('webcam.')->prefix('/webcam/')->group(function () {
+        Route::get('/{camera}', [Api\WebcamController::class, 'show'])->name('show');
+        Route::put('/', [Api\WebcamController::class, 'update'])->name('update');
+    });
+
+    Route::get('/quotes', [Api\BotQuoteController::class, 'index'])->name('quotes.list');
+    Route::get('/quotes/all', [Api\BotQuoteController::class, 'indexAll'])->name('quotes.list-all');
+    Route::get('/quotes/book', [Api\BotQuoteController::class, 'book'])->name('quotes.book');
 });
 
 // Register Telegram webhooks

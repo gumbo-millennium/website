@@ -100,6 +100,9 @@ board:
     # Allow changing sponsors
     - sponsor-admin
 
+    # Allow exporting bot quotes
+    - quotes-export
+
     # Allow changing roles
     - role-admin
 
@@ -134,3 +137,6 @@ dc:
 
     # Allow managing custom redirects
     - redirects-manage
+
+    # Allow exporting bot quotes
+    - quotes-export
