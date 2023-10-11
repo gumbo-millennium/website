@@ -81,6 +81,10 @@ class QuoteCommand extends Command
      */
     public function handle()
     {
+        if ($this->update->message == null) {
+            return;
+        }
+
         // Check the quote, remove the @Username if found
         $quoteText = $this->getCommandBody();
 
