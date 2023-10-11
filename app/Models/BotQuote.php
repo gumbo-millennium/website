@@ -70,20 +70,21 @@ class BotQuote extends Model
     /**
      * Scope by unsubmitted quotes.
      */
-    public function scopeNotSubmitted(Builder $query): Builder
+    public function scopeNotSubmitted(Builder $query): void
     {
-        return $query->whereNull('submitted_at');
+        $query->whereNull('submitted_at');
     }
 
     /**
      * Scope by unsubmitted quotes.
      */
-    public function scopeOutdated(Builder $query): Builder
+    public function scopeOutdated(Builder $query): void
     {
-        return $query->where(static function ($query) {
-            $query->whereNotNull('submitted_at')
-                ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS));
-        });
+        $query->where(
+            fn ($query) => $query
+                ->whereNotNull('submitted_at')
+                ->andWhere('submitted_at', '<', now()->subDays(self::KEEP_DAYS))
+        );
     }
 
     public function getFormattedQuoteAttribute(): HtmlString
