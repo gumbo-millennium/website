@@ -17,7 +17,6 @@ trait DownloadsImages
     /**
      * Downloads the given URL, and returns a local, public
      * path on success.
-     * @return string
      */
     protected function downloadImage(string $url): ?string
     {

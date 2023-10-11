@@ -107,8 +107,6 @@ class FormController extends Controller
 
     /**
      * Returns form for this activity.
-     *
-     * @return Form
      */
     protected function getForm(Activity $activity, array $options = []): ?Form
     {

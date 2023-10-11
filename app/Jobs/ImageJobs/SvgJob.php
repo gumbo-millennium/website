@@ -68,8 +68,6 @@ abstract class SvgJob implements ShouldQueue
 
     /**
      * Returns path to the svg.
-     *
-     * @return string
      */
     protected function getPath(): ?string
     {

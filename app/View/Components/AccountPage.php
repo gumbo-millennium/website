@@ -39,7 +39,7 @@ class AccountPage extends Page
      * @return void
      */
     public function __construct(
-        array|string $title = null,
+        array|string|null $title = null,
         bool $hideFlash = false,
         bool $hideTitle = false,
         ?string $activeRoute = null,

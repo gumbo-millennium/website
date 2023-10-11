@@ -101,7 +101,6 @@ final class Image extends Fluent implements JsonSerializable, Stringable
 
     /**
      * Creates a new image for the given path.
-     * @param string $path
      */
     public static function make(?string $path): self
     {
