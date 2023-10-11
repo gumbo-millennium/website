@@ -101,6 +101,6 @@ class BotQuote extends Model
         return $this->query()
             ->whereNotNull('created_at')
             ->whereNotNull('submitted_at')
-            ->where('submitted_at', '<', Date::today()->subMonths(6));
+            ->where('submitted_at', '<', Date::today()->subMonths(18));
     }
 }
