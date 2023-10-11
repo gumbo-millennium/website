@@ -49,8 +49,6 @@ class ActivityPolicy
 
     /**
      * Determine whether the user can view the activity.
-     *
-     * @param User $user
      */
     public function view(?User $user, Activity $activity): bool
     {

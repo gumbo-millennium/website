@@ -295,8 +295,6 @@ class Activity extends SluggableModel
 
     /**
      * Returns if the enrollment is still open.
-     *
-     * @return bool
      */
     public function getEnrollmentOpenAttribute(): ?bool
     {

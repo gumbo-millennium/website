@@ -130,8 +130,6 @@ class EnrollmentPolicy
 
     /**
      * Can the given user manage the given enrollment or enrollments in general.
-     *
-     * @param Enrollment $enrollment
      */
     public function manage(User $user, ?Enrollment $enrollment = null): bool
     {

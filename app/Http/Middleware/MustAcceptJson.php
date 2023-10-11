@@ -17,7 +17,7 @@ class MustAcceptJson
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(Request): (Response|RedirectResponse)  $next
+     * @param Closure(Request): (RedirectResponse|Response) $next
      * @return RedirectResponse|Response
      */
     public function handle(Request $request, Closure $next)
