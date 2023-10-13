@@ -38,6 +38,7 @@ class BotQuoteResource extends JsonResource
             'id' => $quote->id,
             'author' => static::getQuoteAuthorName($quote),
             'quote' => $quote->formatted_quote->toHtml(),
+            'date' => $quote->created_at->startOfMinute(),
             'author_verified' => $quote->user !== null,
             'quote_sent' => $quote->submitted_at !== null,
         ];

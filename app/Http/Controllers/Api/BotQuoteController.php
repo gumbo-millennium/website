@@ -17,6 +17,9 @@ class BotQuoteController extends Controller
     {
         // Ensure JSON is supported
         $this->middleware('accept-json');
+
+        // Limit expensive /book request to 1 per minute.
+        $this->middleware('throttle:1,1')->only('book');
     }
 
     /**
