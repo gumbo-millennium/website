@@ -6,26 +6,14 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\BotQuote;
 use App\Models\User;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class BotQuoteControllerTest extends TestCase
 {
-    /**
-     * @before
-     */
-    public function disableRateLimitOnBook(): void
-    {
-        $this->afterApplicationCreated(function () {
-            RateLimiter::for('api-expensive', fn () => Limit::none());
-        });
-    }
-
     /**
      * Ensure authentication is prompted.
      */

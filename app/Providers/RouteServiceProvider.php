@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use LogicException;
 
@@ -78,15 +75,6 @@ class RouteServiceProvider extends ServiceProvider
             ->name('api.')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
-    }
-
-    /**
-     * Configure the rate limiters for the application.
-     */
-    protected function configureRateLimiting(): void
-    {
-        // Allow api-expensive calls just once per minute
-        RateLimiter::for('api-expensive', fn (Request $request) => Limit::perMinute(1)->by($request->user()?->id ?: $request->ip()));
     }
 
     /**
