@@ -125,7 +125,7 @@ class QuoteCommand extends Command
         $user = $this->getUser();
 
         if (Str::length($quoteText) > self::MAX_QUOTE_LENGTH) {
-            Log::warn('Sender {user} sent overly long quote of {length} characters {quote}', [
+            Log::warning('Sender {user} sent overly long quote of {length} characters {quote}', [
                 'user' => $user ?? $tgUser,
                 'length' => Str::length($quoteText),
                 'quote' => Str::limit($quoteText, 500),
