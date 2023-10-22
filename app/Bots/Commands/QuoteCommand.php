@@ -93,7 +93,7 @@ class QuoteCommand extends Command
         }
 
         // Check the quote, remove the @Username if found
-        $quoteText = Str::trim($this->getCommandBody());
+        $quoteText = $this->getCommandBody();
 
         //check if quote is unique
         $messageId = $this->update->message->message_id;
