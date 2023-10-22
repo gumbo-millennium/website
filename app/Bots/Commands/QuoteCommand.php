@@ -126,7 +126,7 @@ class QuoteCommand extends Command
             Log::warn('Sender {user} sent overly long quote of {length} characters. Rejected.', [
                 'user' => $user ?? $tgUser,
                 'length' => Str::length($quoteText),
-                'quote'=> Str::limit($quoteText, 500),
+                'quote' => Str::limit($quoteText, 500),
             ]);
 
             $this->replyWithMessage([
