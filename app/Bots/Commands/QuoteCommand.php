@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use App\Models\BotQuote;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Keyboard\Keyboard;
 
@@ -117,18 +117,17 @@ class QuoteCommand extends Command
 
             return;
         }
-        
 
         // Get user
         $tgUser = $this->getTelegramUser();
         $user = $this->getUser();
 
         if (Str::length($quoteText) > self::MAX_QUOTE_LENGTH) {
-            Log::warn("Sender {user} sent overly long quote of {length} characters. Rejected.", [
+            Log::warn('Sender {user} sent overly long quote of {length} characters. Rejected.', [
                 'user' => $user ?? $tgUser,
                 'length' => Str::length($quoteText),
             ]);
-            
+
             $this->replyWithMessage([
                 'text' => $this->formatText(self::REPLY_TOO_LONG),
                 'parse_mode' => 'HTML',
