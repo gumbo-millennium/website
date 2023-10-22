@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use App\Models\BotQuote;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Actions;
@@ -15,10 +16,16 @@ use Telegram\Bot\Keyboard\Keyboard;
  */
 class QuoteCommand extends Command
 {
-    private const REPLY_INVALID = <<<'MSG'
+    private const REPLY_TO_SHORT = <<<'MSG'
     Geef wist-je-datje 😠
 
     <code>/wjd [bericht]</code>
+    MSG;
+
+    private const REPLY_TOO_LONG = <<<'MSG'
+    🤌 Moet Korter 🤌
+
+    Je verhaal is te lang, maak het maar wat mand.
     MSG;
 
     private const REPLY_GUEST_THROTTLED = <<<'MSG'
@@ -86,7 +93,7 @@ class QuoteCommand extends Command
         }
 
         // Check the quote, remove the @Username if found
-        $quoteText = $this->getCommandBody();
+        $quoteText = Str::trim($this->getCommandBody());
 
         //check if quote is unique
         $messageId = $this->update->message->message_id;
@@ -104,16 +111,31 @@ class QuoteCommand extends Command
 
         if (empty($quoteText)) {
             $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_INVALID),
+                'text' => $this->formatText(self::REPLY_TO_SHORT),
                 'parse_mode' => 'HTML',
             ]);
 
             return;
         }
+        
 
         // Get user
         $tgUser = $this->getTelegramUser();
         $user = $this->getUser();
+
+        if (Str::length($quoteText) > self::MAX_QUOTE_LENGTH) {
+            Log::warn("Sender {user} sent overly long quote of {length} characters. Rejected.", [
+                'user' => $user ?? $tgUser,
+                'length' => Str::length($quoteText),
+            ]);
+            
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::REPLY_TOO_LONG),
+                'parse_mode' => 'HTML',
+            ]);
+
+            return;
+        }
 
         $cacheToken = sprintf('tg.quotes.rate-limit.%s', $tgUser->id);
 
