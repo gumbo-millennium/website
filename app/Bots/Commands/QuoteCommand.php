@@ -22,6 +22,8 @@ class QuoteCommand extends Command
     <code>/wjd [bericht]</code>
     MSG;
 
+    private const MAX_QUOTE_LENGTH = 210;
+
     private const REPLY_TOO_LONG = <<<'MSG'
     🤌 Moet Korter 🤌
 
