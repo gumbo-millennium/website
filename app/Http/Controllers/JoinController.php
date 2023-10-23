@@ -288,13 +288,9 @@ class JoinController extends Controller
     {
         // Get the activity
         $this->activity = Activity::query()
-            // Should start with intro-
-            ->where('slug', 'like', 'intro-%')
-            // Should be available to anons
-            ->whereAvailable(new User())
-            // Should be in the future
-            ->whereInTheFuture()
-            // Load tickets too
+            ->whereSlug(sprintf('intro-%s', Date::now()->year))
+            ->wherePublished()
+            ->whereIsPublic(true)
             ->with(['tickets'])
             ->first();
 
