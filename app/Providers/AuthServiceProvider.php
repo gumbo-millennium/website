@@ -12,7 +12,7 @@ use App\Policies\Shop as ShopPolicies;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models as SpatiePermissionModels;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,7 +33,6 @@ class AuthServiceProvider extends ServiceProvider
         Models\NewsItem::class => Policies\NewsItemPolicy::class,
         Models\Page::class => Policies\PagePolicy::class,
         Models\Payment::class => Policies\PaymentPolicy::class,
-        Models\Permission::class => Policies\PermissionPolicy::class,
         Models\Role::class => Policies\RolePolicy::class,
         Models\Sponsor::class => Policies\SponsorPolicy::class,
         Models\Ticket::class => Policies\TicketPolicy::class,
@@ -61,6 +60,11 @@ class AuthServiceProvider extends ServiceProvider
         // Google Wallet
         Models\GoogleWallet\EventClass::class => Policies\GoogleWallet\EventClassPolicy::class,
         Models\GoogleWallet\EventObject::class => Policies\GoogleWallet\EventObjectPolicy::class,
+
+        // Spatie Permissions (both external and local)
+        SpatiePermissionModels\Permission::class => Policies\Permissions\PermissionPolicy::class,
+        SpatiePermissionModels\Role::class => Policies\Permissions\RolePolicy::class,
+        Models\Role::class => Policies\Permissions\RolePolicy::class,
     ];
 
     /**
