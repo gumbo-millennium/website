@@ -6,10 +6,12 @@ namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJsCast;
 use App\Casts\ActivityFormCast;
+use App\Casts\ImageCast;
 use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
+use App\Models\Traits\HasImages;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -102,6 +104,7 @@ use Spatie\Permission\Models\Role;
 class Activity extends SluggableModel
 {
     use HasFactory;
+    use HasImages;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
 
@@ -132,6 +135,9 @@ class Activity extends SluggableModel
         'description' => NovaEditorJsCast::class,
         'ticket_text' => NovaEditorJsCast::class,
         'enrollment_questions' => ActivityFormCast::class,
+
+        // IMage
+        'poster' => ImageCast::class,
 
         // Number of seats
         'seats' => 'int',

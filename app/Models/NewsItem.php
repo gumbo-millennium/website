@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJsCast;
+use App\Casts\ImageCast;
+use App\Models\Traits\HasImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -40,6 +42,7 @@ use Illuminate\Support\HtmlString;
 class NewsItem extends SluggableModel
 {
     use HasFactory;
+    use HasImages;
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +66,7 @@ class NewsItem extends SluggableModel
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'published_at' => 'datetime',
+        'cover' => ImageCast::class,
     ];
 
     /**

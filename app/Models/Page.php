@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Advoor\NovaEditorJs\NovaEditorJsCast;
+use App\Casts\ImageCast;
+use App\Models\Traits\HasImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -41,6 +43,7 @@ use Illuminate\Support\HtmlString;
 class Page extends SluggableModel
 {
     use HasFactory;
+    use HasImages;
 
     public const TYPE_USER = 'user';
 
@@ -85,6 +88,7 @@ class Page extends SluggableModel
         'user_id' => 'int',
         'hidden' => 'bool',
         'contents' => NovaEditorJsCast::class,
+        'cover' => ImageCast::class,
     ];
 
     /**
