@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\Public\UserJoinedEvent;
 use App\Facades\Enroll;
 use App\Forms\NewMemberForm;
 use App\Helpers\Str;
-use App\Mail\Join\BoardJoinMail;
-use App\Mail\Join\UserJoinMail;
 use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\JoinSubmission;
@@ -192,12 +191,8 @@ class JoinController extends Controller
                 ->withErrors('Er is iets fout gegaan bij het aanmelden.');
         }
 
-        // Send mail to submitter
-        $recipient = $submission->only('name', 'email');
-        Mail::to([$recipient])->queue(new UserJoinMail($submission));
-
-        // Send mail to board
-        Mail::to(self::TO_BOARD)->queue(new BoardJoinMail($submission));
+        // Dispatch an event to indicate we joined
+        UserJoinedEvent::dispatch($submission);
 
         // Write session
         Session::put(self::SESSION_NAME, $submission);
