@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Content;
 
+use App\Casts\Content\MailTemplateParams;
 use App\Models\Traits\HasResponsibleUsers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +53,6 @@ class MailTemplate extends Model
      * @var array
      */
     protected $casts = [
-        'params' => 'collection',
+        'params' => MailTemplateParams::class,
     ];
 }
