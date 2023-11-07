@@ -27,6 +27,25 @@ class JoinControllerTest extends TestCase
         'accept-terms' => 1,
     ];
 
+    private static function makeTestIntroActivity(int $year): Activity
+    {
+        $act = Activity::factory()->create([
+            'start_date' => Date::parse("{$year}-10-01 10:00"),
+            'end_date' => Date::parse("{$year}-10-04 10:00"),
+            'start_enrollment' => Date::parse("{$year}-07-01 10:00"),
+            'end_endrollment' => Date::parse("{$year}-09-14 00:00"),
+            'slug' => "intro-{$year}",
+            'is_public' => true,
+        ]);
+
+        $ticket = $act->tickets()->create([
+            'name' => 'Default',
+            'price' => 40_00,
+        ]);
+
+        return $act;
+    }
+
     /**
      * @return void
      */
@@ -56,6 +75,19 @@ class JoinControllerTest extends TestCase
         $response
             ->assertSessionDoesntHaveErrors()
             ->assertRedirect(route('join.complete'));
+    }
+
+    public function test_intro_activity_determination(): void
+    {
+        $intro22 = self::makeTestIntroActivity(2022);
+        $intro23 = self::makeTestIntroActivity(2023);
+        $intro24 = self::makeTestIntroActivity(2024);
+
+        Date::setTestNow('2023-07-22T10:00:00+00:00');
+
+        $this->get(route('join.form-intro'))
+            ->assertOk()
+            ->assertViewHas('activity', $intro23);
     }
 
     public function test_intro_activity_determination(): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Ticket.
@@ -153,5 +155,43 @@ class Ticket extends Model
             && $this->quantity_available !== 0
             && $this->activity->available_seats !== 0
             && (! $this->members_only || optional($user)->is_member);
+    }
+
+    /**
+     * Scope a query to only include tickets that are on sale right now, and have not
+     * sold out yet.
+     */
+    public function scopeAvailableNow(Builder $query): void
+    {
+        // Must have started selling
+        $query->where(
+            fn ($subquery) => $subquery
+                ->whereNull('available_from')
+                ->orWhere('available_from', '<=', Date::now()),
+        );
+
+        // Must not have stopped selling
+        $query->where(
+            fn ($subquery) => $subquery
+                ->whereNull('available_until')
+                ->orWhere('available_until', '>=', Date::now()),
+        );
+
+        // Must still have spots available
+        $query->where(
+            fn ($sub) => $sub
+                ->whereNull('quantity')
+                ->orWhereHas('enrollments', fn ($sub) => $sub->active(), '<', DB::raw('quantity')),
+        );
+    }
+
+    /**
+     * Scope a query to only include tickets that are on sale right now, and have not
+     * sold out yet, and are available for the given user.
+     */
+    public function scopeAvailableNowFor(Builder $query, ?User $user)
+    {
+        $query->availableNow();
+        $query->unless($user?->is_member, fn ($sub) => $sub->where('is_public', '=', true));
     }
 }

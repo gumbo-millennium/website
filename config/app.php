@@ -171,7 +171,8 @@ return [
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        // Services
+        // Local Service Providers...
+        App\Providers\GumboServiceProvider::class,
         App\Providers\GoogleServiceProvider::class,
     ],
 
