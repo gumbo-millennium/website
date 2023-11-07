@@ -341,8 +341,14 @@ class Activity extends Resource
                 ->readonly()
                 ->onlyOnDetail(),
 
+            Fields\BelongsTo::make('Aangemaakt door', 'created_by', User::class)
+                ->onlyOnDetail(),
+
             Fields\DateTime::make('Laatst bewerkt op', 'updated_at')
                 ->readonly()
+                ->onlyOnDetail(),
+
+            Fields\BelongsTo::make('Laatst bewerkt door', 'updated_by', User::class)
                 ->onlyOnDetail(),
 
             Fields\DateTime::make('Geannuleerd op', 'cancelled_at')

@@ -10,6 +10,7 @@ use App\Contracts\FormLayoutContract;
 use App\Helpers\Str;
 use App\Models\States\Enrollment\Cancelled as CancelledState;
 use App\Models\States\Enrollment\Refunded as RefundedState;
+use App\Models\Traits\HasResponsibleUsers;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -102,6 +103,7 @@ use Spatie\Permission\Models\Role;
 class Activity extends SluggableModel
 {
     use HasFactory;
+    use HasResponsibleUsers;
 
     public const PAYMENT_TYPE_INTENT = 'intent';
 
