@@ -39,7 +39,8 @@ class MailTemplateParam implements JsonSerializable, Stringable
         ?string $description,
     ) {
         throw_if(empty($name), InvalidArgumentException::class, 'Name must be a non-empty string');
-        throw_unless(Str::slug($name) === $name, InvalidArgumentException::class, 'Name must look like a slug');
+        throw_unless(Str::slug($name, '_') === $name, InvalidArgumentException::class, "Name [{$name}] must look like a slug with underscores");
+
         $this->name = $name;
 
         if (empty($description)) {
@@ -57,13 +58,13 @@ class MailTemplateParam implements JsonSerializable, Stringable
     public function jsonSerialize(): array
     {
         return [
-            'label' => $this->name,
+            'name' => $this->name,
             'description' => $this->description,
         ];
     }
 
     /**
-     * Returns just the label name, as a logging helper.
+     * Returns just the parameter name, as a logging helper.
      */
     public function __toString(): string
     {

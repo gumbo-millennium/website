@@ -20,6 +20,7 @@ use Illuminate\Support\Collection;
  * @property string $label
  * @property string $subject
  * @property string $body
+ * @property null|string $footnote
  * @property Collection $params
  * @property null|int $created_by_id
  * @property null|int $updated_by_id
@@ -54,5 +55,16 @@ class MailTemplate extends Model
      */
     protected $casts = [
         'params' => MailTemplateParams::class,
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'subject',
+        'body',
+        'params',
     ];
 }

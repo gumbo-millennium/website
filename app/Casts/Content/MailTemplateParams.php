@@ -6,8 +6,9 @@ namespace App\Casts\Content;
 
 use App\Models\Data\Content\MailTemplateParam;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use JsonException;
+use LogicException;
 use RuntimeException;
 
 class MailTemplateParams implements CastsAttributes
@@ -19,6 +20,10 @@ class MailTemplateParams implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
+        if (empty($value)) {
+            return Collection::make();
+        }
+
         if (is_string($value)) {
             try {
                 $value = json_decode($value, true, 16, JSON_THROW_ON_ERROR);
@@ -33,10 +38,10 @@ class MailTemplateParams implements CastsAttributes
         }
 
         if (! is_array($value)) {
-            return null;
+            throw new LogicException('Invalid mail template parameters stored in database!');
         }
 
-        return Arr::map(fn ($row) => MailTemplateParam::fromArray($row), $value);
+        return array_map(fn ($row) => MailTemplateParam::fromArray($row), $value);
     }
 
     /**

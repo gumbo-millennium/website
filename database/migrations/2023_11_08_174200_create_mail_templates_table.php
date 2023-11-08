@@ -21,6 +21,7 @@ class CreateMailTemplatesTable extends Migration
 
             $table->string('subject');
             $table->text('body');
+            $table->tinyText('footnote')->nullable();
 
             $table->json('params');
 
