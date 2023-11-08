@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\TenorGifService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\RateLimiter;
 use RuntimeException;
 use Telegram\Bot\Commands\Command as TelegramCommand;
 use Telegram\Bot\FileUpload\InputFile;
@@ -132,17 +133,32 @@ abstract class Command extends TelegramCommand
         return false;
     }
 
-    protected function forgetRateLimit(string $key): void
+    protected function getRateLimitKey(string $key): string
     {
-        Cache::forget($this->getRateLimitKey($key));
+        // Prefer the user ID, but fall back to the chat ID
+        $user = $this->update->message?->from?->id ?? $this->update->message?->chat?->id ?? 'shared';
+
+        // Combine all stuff to form the key
+        return "tg:{$key}:{$user}";
     }
 
-    protected function rateLimit(string $key, string $message = '⏸ Nog even wachten...', string $period = 'PT5M'): bool
+    protected function forgetRateLimit(string $key): void
     {
-        // Rate limit
-        $cacheKey = $this->getRateLimitKey($key);
+        RateLimiter::resetAttempts($this->getRateLimitKey($key));
+    }
 
-        if (Cache::get($cacheKey) > Date::now()) {
+    /**
+     * Check if the user has hit a rate limit. This is on a per-Telegram-user basis.
+     * @param string $key Key to use to uniquely identify the rate limit
+     * @param string $message Message to display
+     * @param string $decay Decay time (in ISO 8601 format)
+     * @return bool True if the user has hit the rate limit
+     */
+    protected function rateLimit(string $key, string $message = '⏸ Nog even wachten...', string $decay = 'PT5M'): bool
+    {
+        // Use Laravel rate limiter
+        $fullKey = $this->getRateLimitKey($key);
+        if (RateLimiter::tooManyAttempts($fullKey, 1)) {
             $this->replyWithMessage([
                 'text' => $message,
             ]);
@@ -150,9 +166,8 @@ abstract class Command extends TelegramCommand
             return true;
         }
 
-        // Prep rate limit
-        $next = Date::now()->toImmutable()->add($period);
-        Cache::put($cacheKey, $next, $next->addWeek());
+        // Tap the rate limiter
+        RateLimiter::hit($fullKey, Date::now()->add($decay)->diffInSeconds());
 
         return false;
     }
@@ -200,10 +215,5 @@ abstract class Command extends TelegramCommand
         }
 
         return $message;
-    }
-
-    private function getRateLimitKey(string $key): string
-    {
-        return sprintf('tg.rate-limits.%s.%s', $key, optional($this->getTelegramUser())->id ?? 'shared');
     }
 }
