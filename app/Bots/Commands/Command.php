@@ -7,6 +7,7 @@ namespace App\Bots\Commands;
 use App\Helpers\Str;
 use App\Models\User;
 use App\Services\TenorGifService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\RateLimiter;
@@ -33,9 +34,9 @@ abstract class Command extends TelegramCommand
 
     /**
      * Sends a random, pre-cached reply gif.
-     * @return null|InputFile found Gif as Telegram-sendable file, or null
+     * @return null|InputFile|string URL to the selected GIF, or null if none were available
      */
-    public function getReplyGifUrl(string $group): ?InputFile
+    public function getReplyGifUrl(string $group): null|string|InputFile
     {
         // Search group is invalid
         if (Str::slug($group) !== $group) {
@@ -50,9 +51,13 @@ abstract class Command extends TelegramCommand
         }
 
         try {
-            $chosenGif = $service->getGifPathFromGroup($group);
+            $gif = $service->getGifPathFromGroup($group);
 
-            return InputFile::createFromContents($service->getDisk()->get($chosenGif), "{$group}.gif");
+            if (App::isLocal()) {
+                return InputFile::createFromContents($service->getDisk()->get($gif), "{$group}.gif");
+            }
+
+            return $service->getDisk()->url($gif);
         } catch (RuntimeException) {
             return null;
         }
