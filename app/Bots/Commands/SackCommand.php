@@ -99,7 +99,7 @@ class SackCommand extends Command
         }
 
         // Send as-is, but with a gif
-        if ($gif = $this->getReplyGifUrl('kicked out')) {
+        if ($gif = $this->getReplyGifUrl('fired')) {
             $this->replyWithAnimation([
                 'animation' => $gif,
             ]);

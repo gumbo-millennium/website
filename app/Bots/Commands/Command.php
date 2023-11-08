@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\User;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Uri;
-use Illuminate\Support\Facades\App;
+use App\Services\TenorGifService;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
-use JsonException;
+use RuntimeException;
 use Telegram\Bot\Commands\Command as TelegramCommand;
 use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Objects\Message;
@@ -34,58 +30,31 @@ abstract class Command extends TelegramCommand
         return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
     }
 
-    public function getReplyGifUrl(string $search): ?InputFile
+    /**
+     * Sends a random, pre-cached reply gif.
+     * @return null|InputFile found Gif as Telegram-sendable file, or null
+     */
+    public function getReplyGifUrl(string $group): ?InputFile
     {
-        if (! $apiKey = Config::get('services.tenor.api-key')) {
+        // Search group is invalid
+        if (Str::slug($group) !== $group) {
             return null;
         }
 
-        /** @var GuzzleClient $http */
-        $http = App::make(GuzzleClient::class);
+        /** @var TenorGifService */
+        $service = app(TenorGifService::class);
 
-        $searchUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/search'), [
-            'key' => $apiKey,
-            'q' => $search,
-            'locale' => 'nl_NL',
-            'contentfilter' => 'medium',
-            'media_filter' => 'minimal',
-            'limit' => 15,
-        ]);
-
-        $result = $http->get($searchUrl);
+        if (! $service->getApiKey()) {
+            return null;
+        }
 
         try {
-            $body = json_decode($result->getBody()->getContents(), true, 64, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $body = null;
-        }
+            $chosenGif = $service->getGifPathFromGroup($group);
 
-        if ($result->getStatusCode() !== 200 || ! $body) {
+            return InputFile::createFromContents($service->getDisk()->get($chosenGif), "{$group}.gif");
+        } catch (RuntimeException) {
             return null;
         }
-
-        // Pick a random image from the results
-        $availableImages = Arr::get($body, 'results', []);
-        $chosenImage = Arr::random($availableImages);
-
-        $imageId = Arr::get($chosenImage, 'id');
-        $imagePublicUrl = Arr::get($chosenImage, 'url');
-        $imageUrl = Arr::get($chosenImage, 'media.0.mp4.url');
-
-        if (! $imageId || ! filter_var($imageUrl, FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        $shareUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/registershare'), [
-            'key' => $apiKey,
-            'id' => $imageId,
-            'locale' => 'nl_NL',
-            'q' => $search,
-        ]);
-
-        $http->get($shareUrl);
-
-        return InputFile::create($imageUrl, basename($imagePublicUrl));
     }
 
     protected function isInGroupChat(): bool
