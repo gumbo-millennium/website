@@ -6,7 +6,8 @@ namespace App\Services;
 
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use DateTimeInterface;
-use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Client as HttpClient;use Illuminate\Support\Facades\Http;
+use Http\Client\Exception\RequestException;
 
 use function GuzzleHttp\Psr7\stream_for;
 
@@ -111,8 +112,7 @@ final class ConscriboService implements ConscriboServiceContract
     public function __construct(
         ?string $account = null,
         ?string $username = null,
-        ?string $password = null,
-        ?HttpClient $http = null
+        ?string $password = null
     ) {
         // Get data from config
         $account ??= Config::get('services.conscribo.account');
@@ -132,11 +132,6 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Load key from cache
         $this->sessionId = Cache::get(self::CACHE_KEY);
-
-        // Assign client
-        $this->http = $http ?? new HttpClient([
-            RequestOptions::HTTP_ERRORS => false,
-        ]);
     }
 
     /**
@@ -156,10 +151,7 @@ final class ConscriboService implements ConscriboServiceContract
         $headers = $this->buildHeaders(null);
 
         // Send request
-        $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
-            'headers' => $headers,
-        ]);
+        $psrResponse = Http::withHeaders($headers)->post($this->endpoint, $body);
 
         // Decode body
         try {
@@ -201,10 +193,7 @@ final class ConscriboService implements ConscriboServiceContract
         $headers = $this->buildHeaders($this->sessionId);
 
         // Send request
-        $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
-            'headers' => $headers,
-        ]);
+        $psrResponse = Http::withHeaders($headers)->post($this->endpoint, $body);
 
         // Decode body
         try {
@@ -633,9 +622,7 @@ final class ConscriboService implements ConscriboServiceContract
      */
     private function buildBody(string $command, array $params): string
     {
-        return \json_encode([
-            'request' => array_merge(['command' => $command], $params),
-        ]);
+        return ['request' => array_merge(['command' => $command], $params)]
     }
 
     /**
@@ -647,7 +634,6 @@ final class ConscriboService implements ConscriboServiceContract
     {
         $headers = [
             'X-Conscribo-API-Version' => self::API_VERSION,
-            'Content-Type' => 'application/json; charset=utf-8',
         ];
         if ($sessionId) {
             $headers['X-Conscribo-SessionId'] = $sessionId;

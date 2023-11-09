@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\App;
 
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 /**
  * Auto download an ignore file for this project.
@@ -63,42 +63,41 @@ class MakeGitignore extends Command
             $downloadUrl,
         ));
 
-        $client = new Client();
-        $data = $client->request('GET', $downloadUrl);
+        $response = Http::get($downloadUrl);
 
-        if ($data->getStatusCode() !== 200) {
+        if ($response->successful()) {
             $this->alert(sprintf(
                 'Failed to download file; got %d %s',
-                $data->getStatusCode(),
-                $data->getReasonPhrase(),
+                $response->status(),
+                $response->reason(),
             ));
 
             return false;
         }
 
-        $ignoreContent = $data->getBody() . <<<'IGNORE'
+        $ignoreContent = $response->body() . <<<'IGNORE'
+        ### App config ###
 
-### App config ###
+        # Public files and directories
+        /public/
+        !/public/favicon.ico
+        !/public/index.php
+        !/public/robots.txt
 
-# Public files and directories
-/public/
-!/public/favicon.ico
-!/public/index.php
-!/public/robots.txt
+        # Development helper
+        storage/debugbar
 
-# Development helper
-storage/debugbar
+        # Laravel IDE helper
+        /_ide_helper_models.php
+        /_ide_helper.php
+        /.phpstorm.meta.php
+        IGNORE;
 
-# Laravel IDE helper
-/_ide_helper_models.php
-/_ide_helper.php
-/.phpstorm.meta.php
-IGNORE;
         // Trim lines and add trailing EOL
         $ignoreContent = trim($ignoreContent) . PHP_EOL;
 
         $this->line('Writing contents...');
-        $ignoreFile = "${rootDir}/.gitignore";
+        $ignoreFile = "{$rootDir}/.gitignore";
 
         file_put_contents($ignoreFile, $ignoreContent);
 

@@ -19,7 +19,6 @@ use App\Services\Google\WalletService as GoogleWalletService;
 use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -70,9 +69,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Bind Guzzle client
-        $this->app->bind(GuzzleClient::class, static fn () => new GuzzleClient(config('gumbo.guzzle-config', [])));
-
         // Handle Horizon auth
         Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
 

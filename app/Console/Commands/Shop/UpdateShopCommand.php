@@ -8,13 +8,12 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductVariant;
 use App\Services\InventoryService;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
+use Http\Client\Exception\RequestException;
 use Illuminate\Console\Command;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -37,15 +36,11 @@ class UpdateShopCommand extends Command
      */
     protected $description = 'Updates the shop products and variants';
 
-    protected ?GuzzleClient $client = null;
-
     /**
      * Execute the console command.
      */
-    public function handle(InventoryService $service, GuzzleClient $client)
+    public function handle(InventoryService $service)
     {
-        $this->client = $client;
-
         try {
             Product::unguard();
             ProductVariant::unguard();
@@ -195,22 +190,17 @@ class UpdateShopCommand extends Command
         $sinkFile = tempnam(sys_get_temp_dir(), 'zettle-shop-image');
 
         try {
-            $response = $this->client->get($url, [
-                RequestOptions::TIMEOUT => 5,
-                RequestOptions::SINK => $sinkFile,
-                RequestOptions::ALLOW_REDIRECTS => [
-                    'max' => 3,
-                    'referer' => true,
-                ],
-            ]);
+            $response = Http::timeout(5)->get($url);
 
-            if ($response->getStatusCode() !== 200) {
+            if (! $response->successful()) {
                 return null;
             }
 
-            return Storage::disk(Config::get('gumbo.images.disk'))
-                ->putFile(path_join(Config::get('gumbo.images.path'), 'shop/images'), new File($sinkFile));
-        } catch (GuzzleException $exception) {
+            return Storage::disk(Config::get('gumbo.images.disk'))->putStream(
+                path_join(Config::get('gumbo.images.path'), 'shop/images'),
+                $response->toPsrResponse()->getBody(),
+            );
+        } catch (RequestException) {
             return null;
         } finally {
             if (file_exists($sinkFile)) {
