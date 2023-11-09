@@ -38,7 +38,7 @@ trait UsesPreloadedGifs
                 ? InputFile::createFromContents($service->getDisk()->get($gif), "{$group}.gif")
                 : InputFile::create($service->getDisk()->url($gif), "{$group}.gif");
 
-            GifSharedEvent::dispatch(basename('.gif'), $group);
+            GifSharedEvent::dispatch(basename($gif, '.gif'), $group);
 
             return $result;
         } catch (RuntimeException) {
