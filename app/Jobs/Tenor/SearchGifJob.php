@@ -6,6 +6,7 @@ namespace App\Jobs\Tenor;
 
 use App\Services\TenorGifService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
@@ -75,6 +76,8 @@ class SearchGifJob extends TenorJob
 
         $remainingVideos = $groupConfig['limit'];
 
+        $downloadJobs = [];
+
         // Create a new job to download each result
         foreach ($results as $result) {
             // Find the download URL
@@ -84,7 +87,7 @@ class SearchGifJob extends TenorJob
             }
 
             // Just run somewhere else.
-            DownloadGifJob::dispatch(
+            $downloadJobs[] = new DownloadGifJob(
                 group: $this->group,
                 fileId: $result['id'],
                 fileUrl: $downloadUrl,
@@ -94,6 +97,13 @@ class SearchGifJob extends TenorJob
             if (--$remainingVideos < 1) {
                 break;
             }
+        }
+
+        // Dispatch or batch the jobs
+        if ($batch = $this->batch()) {
+            $batch->add($downloadJobs);
+        } else {
+            Bus::dispatchChain($downloadJobs);
         }
     }
 }
