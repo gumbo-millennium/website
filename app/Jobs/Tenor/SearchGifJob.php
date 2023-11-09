@@ -7,6 +7,7 @@ namespace App\Jobs\Tenor;
 use App\Services\TenorGifService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -49,19 +50,22 @@ class SearchGifJob extends TenorJob
         $response = Http::get('https://tenor.googleapis.com/v2/search', [
             'key' => $apiKey,
             'q' => $groupConfig['term'],
-            'limit' => max($groupConfig['limit'] * 2, 15),
+            'client_key' => parse_url(URL::to('/'), PHP_URL_HOST),
             'country' => 'NL',
             'locale' => 'nl_NL',
             'contentfilter' => 'low',
             'media_filter' => 'mediumgif',
             'ar_range' => 'wide',
+            'limit' => 50,
         ]);
 
         if (! $response->successful()) {
             $httpException = $response->toException();
 
+            $httpError = $response->json('error.message') ?? $httpException->getMessage();
+
             throw new RuntimeException(
-                "Failed to fetch info for {$this->group}: API response {$httpException->getMessage()}",
+                "Failed to fetch info for {$this->group}: {$httpError}",
                 $httpException->getCode(),
                 $httpException,
             );
