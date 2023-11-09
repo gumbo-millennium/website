@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
-use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\User;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Uri;
+use App\Services\TenorGifService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
-use JsonException;
+use Illuminate\Support\Facades\RateLimiter;
+use RuntimeException;
 use Telegram\Bot\Commands\Command as TelegramCommand;
 use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Objects\Message;
@@ -34,58 +32,35 @@ abstract class Command extends TelegramCommand
         return preg_replace('/(?<!\n)\n(?=\S)/', ' ', $out);
     }
 
-    public function getReplyGifUrl(string $search): ?InputFile
+    /**
+     * Sends a random, pre-cached reply gif.
+     * @return null|InputFile|string URL to the selected GIF, or null if none were available
+     */
+    public function getReplyGifUrl(string $group): null|string|InputFile
     {
-        if (! $apiKey = Config::get('services.tenor.api-key')) {
+        // Search group is invalid
+        if (Str::slug($group) !== $group) {
             return null;
         }
 
-        /** @var GuzzleClient $http */
-        $http = App::make(GuzzleClient::class);
+        /** @var TenorGifService */
+        $service = app(TenorGifService::class);
 
-        $searchUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/search'), [
-            'key' => $apiKey,
-            'q' => $search,
-            'locale' => 'nl_NL',
-            'contentfilter' => 'medium',
-            'media_filter' => 'minimal',
-            'limit' => 15,
-        ]);
-
-        $result = $http->get($searchUrl);
+        if (! $service->getApiKey()) {
+            return null;
+        }
 
         try {
-            $body = json_decode($result->getBody()->getContents(), true, 64, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            $body = null;
-        }
+            $gif = $service->getGifPathFromGroup($group);
 
-        if ($result->getStatusCode() !== 200 || ! $body) {
+            if (App::isLocal()) {
+                return InputFile::createFromContents($service->getDisk()->get($gif), "{$group}.gif");
+            }
+
+            return $service->getDisk()->url($gif);
+        } catch (RuntimeException) {
             return null;
         }
-
-        // Pick a random image from the results
-        $availableImages = Arr::get($body, 'results', []);
-        $chosenImage = Arr::random($availableImages);
-
-        $imageId = Arr::get($chosenImage, 'id');
-        $imagePublicUrl = Arr::get($chosenImage, 'url');
-        $imageUrl = Arr::get($chosenImage, 'media.0.mp4.url');
-
-        if (! $imageId || ! filter_var($imageUrl, FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        $shareUrl = Uri::withQueryValues(new Uri('https://g.tenor.com/v1/registershare'), [
-            'key' => $apiKey,
-            'id' => $imageId,
-            'locale' => 'nl_NL',
-            'q' => $search,
-        ]);
-
-        $http->get($shareUrl);
-
-        return InputFile::create($imageUrl, basename($imagePublicUrl));
     }
 
     protected function isInGroupChat(): bool
@@ -163,17 +138,32 @@ abstract class Command extends TelegramCommand
         return false;
     }
 
-    protected function forgetRateLimit(string $key): void
+    protected function getRateLimitKey(string $key): string
     {
-        Cache::forget($this->getRateLimitKey($key));
+        // Prefer the user ID, but fall back to the chat ID
+        $user = $this->update->message?->from?->id ?? $this->update->message?->chat?->id ?? 'shared';
+
+        // Combine all stuff to form the key
+        return "tg:{$key}:{$user}";
     }
 
-    protected function rateLimit(string $key, string $message = '⏸ Nog even wachten...', string $period = 'PT5M'): bool
+    protected function forgetRateLimit(string $key): void
     {
-        // Rate limit
-        $cacheKey = $this->getRateLimitKey($key);
+        RateLimiter::resetAttempts($this->getRateLimitKey($key));
+    }
 
-        if (Cache::get($cacheKey) > Date::now()) {
+    /**
+     * Check if the user has hit a rate limit. This is on a per-Telegram-user basis.
+     * @param string $key Key to use to uniquely identify the rate limit
+     * @param string $message Message to display
+     * @param string $decay Decay time (in ISO 8601 format)
+     * @return bool True if the user has hit the rate limit
+     */
+    protected function rateLimit(string $key, string $message = '⏸ Nog even wachten...', string $decay = 'PT5M'): bool
+    {
+        // Use Laravel rate limiter
+        $fullKey = $this->getRateLimitKey($key);
+        if (RateLimiter::tooManyAttempts($fullKey, 1)) {
             $this->replyWithMessage([
                 'text' => $message,
             ]);
@@ -181,9 +171,8 @@ abstract class Command extends TelegramCommand
             return true;
         }
 
-        // Prep rate limit
-        $next = Date::now()->toImmutable()->add($period);
-        Cache::put($cacheKey, $next, $next->addWeek());
+        // Tap the rate limiter
+        RateLimiter::hit($fullKey, Date::now()->add($decay)->diffInSeconds());
 
         return false;
     }
@@ -231,10 +220,5 @@ abstract class Command extends TelegramCommand
         }
 
         return $message;
-    }
-
-    private function getRateLimitKey(string $key): string
-    {
-        return sprintf('tg.rate-limits.%s.%s', $key, optional($this->getTelegramUser())->id ?? 'shared');
     }
 }

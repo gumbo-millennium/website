@@ -20,10 +20,12 @@ use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
@@ -79,6 +81,13 @@ class AppServiceProvider extends ServiceProvider
             $service = $this->app->make(EventService::class);
 
             return $service->eventActive($event);
+        });
+
+        // Tenor API
+        RateLimiter::for('tenor', function ($job) {
+            return [
+                Limit::perMinute(30),
+            ];
         });
     }
 

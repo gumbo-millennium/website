@@ -74,7 +74,33 @@ return [
 
     // Tenor gif search
     'tenor' => [
-        'api-key' => env('TENOR_API_KEY'),
+        /**
+         * Tenor API key.
+         * @link <https://developers.google.com/tenor/guides/quickstart>
+         */
+        'api_key' => env('TENOR_API_KEY'),
+
+        /**
+         * Storage settings.
+         */
+        'storage' => [
+            'disk' => env('TENOR_DISK', 'public'),
+            'path' => env('TENOR_BASE_DIR', 'gifs/storage'),
+        ],
+
+        /**
+         * Preloaded search settings.
+         */
+        'terms' => [
+            'wrong' => [
+                'term' => 'wrong',
+                'limit' => 10,
+            ],
+            'fired' => [
+                'term' => 'kicked out',
+                'limit' => 10,
+            ],
+        ],
     ],
 
     /*
