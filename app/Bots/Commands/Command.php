@@ -141,6 +141,9 @@ abstract class Command extends TelegramCommand
         return false;
     }
 
+    /**
+     * Returns the name of the key used to rate-limit.
+     */
     protected function getRateLimitKey(string $key): string
     {
         // Prefer the user ID, but fall back to the chat ID
@@ -150,6 +153,9 @@ abstract class Command extends TelegramCommand
         return "tg:{$key}:{$user}";
     }
 
+    /**
+     * Resets the rate limit for a user.
+     */
     protected function forgetRateLimit(string $key): void
     {
         RateLimiter::resetAttempts($this->getRateLimitKey($key));
