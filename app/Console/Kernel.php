@@ -99,6 +99,9 @@ class Kernel extends ConsoleKernel
 
         // Auto-remove old Glide images
         $schedule->command('gumbo:prune-glide-cache')->daily();
+
+        // Update Telegram Gifs every now and then
+        $schedule->command('tenor:preload-gifs', ['--prune'])->thursdays()->at('03:33');
     }
 
     /**
