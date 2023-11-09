@@ -1,9 +1,9 @@
 ---
-label: enroll-paid
-subject: Inschrijfbevestiging voor {activity}
+label: enrollment-cancelled-removed
+subject: Uitgeschreven voor {activity}
 footnote: |
     Deze servicemail is verstuurd omdat je je hebt aangemeld voor {activity}.
-    Je kan je inschrijving beheren via {enrollment_link}.
+    Dit is het laatste bericht over deze activiteit, tenzij je je weer opnieuw aanmeldt.
 parameters:
     - name: activity
       description: Naam van de activiteit
@@ -23,21 +23,19 @@ parameters:
     - name: activity_link
       description: Link naar de activiteit
 
-    - name: enrollment_link
-      description: Link naar de inschrijving
-
     - name: host
       description: Naam organisatie
 ...
 
 Beste {first_name},
 
-Bedankt voor je inschrijving voor voor [{activity}][1]. Deze mail dienst als bevestiging dat je inschrijving is betaald.
+Je bent door een organisator of het bestuur uitgeschreven voor [{activity}][1] en kan niet meer deelnemen aan deze activiteit.
 
-Je kunt nu [je inschrijving beheren][2] en [je tickets downloaden][2] op [de website][2].
+Voor de terugbetaling van eventuele deelnamekosten, kan je contact opnemen met de organisatie.
+
+Gedownloade tickets of tickets in je Google Wallet zijn niet meer geldig.
 
 Namens {host},
 De Digitale Commissie.
 
 [1]: {activity_link}
-[2]: {enrollment_link}

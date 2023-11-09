@@ -1,9 +1,9 @@
 ---
-label: enroll-paid
-subject: Inschrijfbevestiging voor {activity}
+label: enrollment-cancelled-timeout
+subject: Inschrijving verlopen
 footnote: |
     Deze servicemail is verstuurd omdat je je hebt aangemeld voor {activity}.
-    Je kan je inschrijving beheren via {enrollment_link}.
+    Dit is het laatste bericht over deze activiteit, tenzij je je weer opnieuw aanmeldt.
 parameters:
     - name: activity
       description: Naam van de activiteit
@@ -23,21 +23,18 @@ parameters:
     - name: activity_link
       description: Link naar de activiteit
 
-    - name: enrollment_link
-      description: Link naar de inschrijving
-
     - name: host
       description: Naam organisatie
 ...
 
 Beste {first_name},
 
-Bedankt voor je inschrijving voor voor [{activity}][1]. Deze mail dienst als bevestiging dat je inschrijving is betaald.
+Je bent begonnen met je aan te melden voor [{activity}][1], maar hebt deze inschrijving niet binnen de gestelde tijd
+afgerond. Om plek vrij te houden voor andere deelnemers, is je inschrijving weer verwijderd.
 
-Je kunt nu [je inschrijving beheren][2] en [je tickets downloaden][2] op [de website][2].
+Indien er nog plek is (en je nog wil), kan je je [opnieuw aanmelden][1].
 
 Namens {host},
 De Digitale Commissie.
 
 [1]: {activity_link}
-[2]: {enrollment_link}
