@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Bots\Commands;
 
+use App\Events\Tenor\GifSharedEvent;
 use App\Helpers\Str;
 use App\Models\User;
 use App\Services\TenorGifService;
@@ -53,11 +54,13 @@ abstract class Command extends TelegramCommand
         try {
             $gif = $service->getGifPathFromGroup($group);
 
-            if (App::isLocal()) {
-                return InputFile::createFromContents($service->getDisk()->get($gif), "{$group}.gif");
-            }
+            $result = App::isLocal()
+                ? InputFile::createFromContents($service->getDisk()->get($gif), "{$group}.gif")
+                : $service->getDisk()->url($gif);
 
-            return $service->getDisk()->url($gif);
+            GifSharedEvent::dispatch(basename('.gif'), $group);
+
+            return $result;
         } catch (RuntimeException) {
             return null;
         }
