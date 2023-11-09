@@ -42,16 +42,17 @@ class SearchGifJob extends TenorJob
         }
 
         // Check the API key
-        $apiKey = $gifService->getApiKey();
-        if (empty($apiKey)) {
+        if (empty($gifService->getApiKey())) {
             throw new RuntimeException('No API key configured for Tenor.');
         }
 
         // Make the request
         $response = Http::get('https://tenor.googleapis.com/v2/search', [
-            'key' => $apiKey,
+            'key' => $gifService->getApiKey(),
+            'client_key' => $gifService->getClientApiKey(),
+
             'q' => $groupConfig['term'],
-            'client_key' => parse_url(URL::to('/'), PHP_URL_HOST),
+
             'country' => 'NL',
             'locale' => 'nl_NL',
             'contentfilter' => 'low',

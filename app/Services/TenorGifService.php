@@ -25,11 +25,25 @@ class TenorGifService
         return Config::get('services.tenor.api_key');
     }
 
+    /**
+     * Returns an API key to identify this client.
+     */
+    public function getClientApiKey(): string
+    {
+        return parse_url(Config::get('app.url'), PHP_URL_HOST);
+    }
+
+    /**
+     * Terms to pre-load.
+     */
     public function getTerms(): array
     {
         return Config::get('services.tenor.terms', []);
     }
 
+    /**
+     * Get the config for a single pre-loaded term.
+     */
     public function getTermConfig(string $term): ?array
     {
         return Arr::get($this->getTerms(), $term);
