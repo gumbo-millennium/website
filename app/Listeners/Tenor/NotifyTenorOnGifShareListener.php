@@ -8,6 +8,7 @@ use App\Events\Tenor\GifSharedEvent;
 use App\Services\TenorGifService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Http;
+use RuntimeException;
 
 /**
  * Notifies Tenor when a Gif is shared by a user.
@@ -34,7 +35,7 @@ class NotifyTenorOnGifShareListener implements ShouldQueue
         $gifService = $this->gifService;
 
         // Make the request
-        Http::get('https://tenor.googleapis.com/v2/registershare', [
+        $result = Http::get('https://tenor.googleapis.com/v2/registershare', [
             'key' => $gifService->getApiKey(),
             'client_key' => $gifService->getClientApiKey(),
             'id' => $event->getFileId(),
@@ -43,5 +44,11 @@ class NotifyTenorOnGifShareListener implements ShouldQueue
             'country' => 'NL',
             'locale' => 'nl_NL',
         ]);
+
+        if ($result->successful()) {
+            return;
+        }
+
+        throw new RuntimeException('Failed to notify Tenor of a shared GIF.', 0, $result->toException());
     }
 }
