@@ -7,6 +7,7 @@ namespace App\Console\Commands\Tenor;
 use App\Jobs\Tenor\SearchGifJob;
 use App\Services\TenorGifService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Bus;
 
 class PreloadGifsCommand extends Command
 {
@@ -55,10 +56,14 @@ class PreloadGifsCommand extends Command
         }
 
         $groups = array_keys($gifService->getTerms());
+        $jobs = [];
         foreach ($groups as $group) {
-            $this->line("Requesting download for <comment>{$group}</>...");
-            SearchGifJob::dispatch($group);
+            $this->line("Preparing for <comment>{$group}</>...");
+            $jobs[] = new SearchGifJob($group);
         }
+
+        $this->line('Dispatching jobs...');
+        Bus::batch($jobs)->dispatch();
 
         return 0;
     }
