@@ -8,13 +8,8 @@ use App\Models\User;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\User as TelegramUser;
 
-trait UsesUsersAndChats
+trait IdentifiesUsers
 {
-    protected function isInGroupChat(): bool
-    {
-        return $this->getTelegramUser()->id !== $this->update->getChat()->id;
-    }
-
     /**
      * Returns Telegram User.
      */

@@ -14,9 +14,10 @@ use Telegram\Bot\Commands\Command as TelegramCommand;
  */
 abstract class Command extends TelegramCommand
 {
-    use Traits\UsesPreloadedGifs;
-    use Traits\UsesRateLimits;
-    use Traits\UsesUsersAndChats;
+    use Traits\ChecksRateLimits;
+    use Traits\IdentifiesChatTypes;
+    use Traits\IdentifiesUsers;
+    use Traits\SendsTenorGifs;
 
     /**
      * Runs a string through sprintf, and unwraps single newlines.

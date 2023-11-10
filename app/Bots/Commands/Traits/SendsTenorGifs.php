@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\App;
 use RuntimeException;
 use Telegram\Bot\FileUpload\InputFile;
 
-trait UsesPreloadedGifs
+trait SendsTenorGifs
 {
     /**
      * Sends a random, pre-cached reply gif.
