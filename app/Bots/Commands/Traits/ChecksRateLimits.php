@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
-trait UsesRateLimits
+trait ChecksRateLimits
 {
     /**
      * Resets the rate limit for a user.
