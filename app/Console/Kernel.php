@@ -104,7 +104,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('tenor:preload-gifs', ['--prune'])->thursdays()->at('03:33');
 
         // Update the Google Wallet objects twice-daily
-        $schedule->command('google-wallet:activity', ['--with-enrollments'])->twiceDaily('08:05', '17:05');
+        $schedule->command('google-wallet:activity', ['--with-enrollments'])->twiceDaily(9, 21);
     }
 
     /**
