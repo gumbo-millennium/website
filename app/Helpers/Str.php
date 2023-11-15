@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use Brick\Money\Money;
 use Illuminate\Support\Str as SupportStr;
 use Spatie\MediaLibrary\Support\File;
 
@@ -29,6 +30,11 @@ class Str extends SupportStr
     // Price formatting
     public static function price($value, ?bool $decimals = null): ?string
     {
+        // Support Money
+        if ($value instanceof Money) {
+            $value = $value->getMinorAmount()->toInt();
+        }
+
         // Validate number and return null if empty
         $value = self::getValidNumber($value);
         if ($value === null) {
