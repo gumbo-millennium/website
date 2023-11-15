@@ -6,11 +6,12 @@ namespace App\Models\Payments;
 
 use App\Casts\MoneyCast;
 use App\Models\Enrollment;
+use App\Models\Payment;
 use App\Models\Shop\Order;
 use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Mollie Payment settlements.
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string $status
  * @property Money $amount
  * @property null|string $export_path
+ * @property Collection $missing_payments
+ * @property Collection $missing_refunds
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $settled_at
@@ -44,13 +47,26 @@ class Settlement extends Model
     protected $table = 'payment_settlements';
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'missing_payments' => '[]',
+        'missing_refunds' => '[]',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
         'amount' => MoneyCast::class,
+        'fees' => MoneyCast::class,
         'settled_at' => 'datetime',
+        'missing_payments' => 'collection',
+        'missing_refunds' => 'collection',
     ];
 
     protected $fillable = [
@@ -58,8 +74,11 @@ class Settlement extends Model
         'reference',
         'status',
         'amount',
+        'fees',
         'created_at',
         'settled_at',
+        'missing_payments',
+        'missing_refunds',
     ];
 
     /**
@@ -68,28 +87,33 @@ class Settlement extends Model
      * @var array
      */
     protected $hidden = [
-        'mollie_id',
+        'missing_payments',
+        'missing_refunds',
     ];
 
     /**
-     * Get all of the enrollments that are part of this settlement.
-     * @return Enrollment[]|MorphToMany
+     * Payments settled with this settlement.
      */
-    public function enrollments(): MorphToMany
+    public function payments(): BelongsToMany
     {
-        return $this->morphedByMany(Enrollment::class, 'subject')
-            ->using(SettlementSubject::class)
-            ->as('settlement');
+        return $this->belongsToMany(
+            related: Payment::class,
+            table: 'payment_settlement_payment',
+            foreignPivotKey: 'settlement_id',
+            relatedPivotKey: 'payment_id',
+        )->using(PaymentSettlement::class);
     }
 
     /**
-     * Get all shop orders that are part of this settlement.
-     * @return MorphToMany|Order[]
+     * Refunds refunded through this settlement.
      */
-    public function shopOrders(): MorphToMany
+    public function refunds(): BelongsToMany
     {
-        return $this->morphedByMany(Order::class, 'subject')
-            ->using(SettlementSubject::class)
-            ->as('settlement');
+        return $this->belongsToMany(
+            related: Payment::class,
+            table: 'payment_settlement_refunded_payment',
+            foreignPivotKey: 'settlement_id',
+            relatedPivotKey: 'payment_id',
+        )->using(PaymentSettlement::class);
     }
 }
