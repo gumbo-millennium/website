@@ -35,7 +35,8 @@ class Kernel extends ConsoleKernel
         // Ensure Google Wallet data is updated, if enabled
         if (Config::get('services.google.wallet.enabled', false)) {
             $schedule->command('google-wallet:prune-nonces')->daily();
-            $schedule->command('google-wallet:create-missing-activities')->twiceDaily();
+            $schedule->command('google-wallet:create-missing-activities')->twiceDailyAt(offset: 10);
+            $schedule->command('google-wallet:activity', ['--with-enrollments'])->twiceDailyAt(offset: 20);
         }
 
         // Wipe old enrollment exports
@@ -106,9 +107,6 @@ class Kernel extends ConsoleKernel
 
         // Update Telegram Gifs every now and then
         $schedule->command('tenor:preload-gifs', ['--prune'])->thursdays()->at('03:33');
-
-        // Update the Google Wallet objects twice-daily
-        $schedule->command('google-wallet:activity', ['--with-enrollments'])->twiceDaily(9, 21);
 
         // Update the Mollie settlements every night, when an org key is set
         if (Config::get('mollie.org_key')) {
