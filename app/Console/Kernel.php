@@ -15,6 +15,10 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
+     * HEADS UP
+     * Never schedule stuff between 02:00 - 03:00 due to Daylight Saving Time.
+     * Events might not run in that period.
+     *
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -105,6 +109,11 @@ class Kernel extends ConsoleKernel
 
         // Update the Google Wallet objects twice-daily
         $schedule->command('google-wallet:activity', ['--with-enrollments'])->twiceDaily(9, 21);
+
+        // Update the Mollie settlements every night, when an org key is set
+        if (Config::get('mollie.org_key')) {
+            $schedule->command('payments:settlements')->dailyAt('06:00');
+        }
     }
 
     /**

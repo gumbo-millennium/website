@@ -6,6 +6,8 @@ namespace App\Jobs\Payments;
 
 use App\Models\Payment;
 use App\Models\Payments\Settlement;
+use Brick\Math\RoundingMode;
+use Brick\Money\Context\CustomContext;
 use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,11 +22,10 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Payment as MolliePayment;
 use Mollie\Api\Resources\Refund as MollieRefund;
 use Mollie\Api\Resources\Settlement as MollieSettlement;
-use Mollie\Laravel\Facades\Mollie;
 use Mollie\Laravel\Wrappers\MollieApiWrapper;
 use RuntimeException;
 
-class BuildMollieSettlementDocument implements ShouldQueue
+class UpdateMollieSettlement implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -38,17 +39,19 @@ class BuildMollieSettlementDocument implements ShouldQueue
      */
     public static function determineTotalCost(MollieSettlement $settlement): Money
     {
-        $totalSum = money_value(0);
+        // Mollie uses FOUR decimals!
+        $mollieContext = new CustomContext(4);
+        $totalSum = money_value(0, $mollieContext);
 
-        foreach ($settlement->periods as $yearPeriod) {
-            foreach ($yearPeriod as $monthPeriod) {
-                foreach ($monthPeriod->costs as $costGroup) {
-                    $totalSum = $totalSum->plus(money_value($costGroup['amountGross']));
+        foreach ($settlement->periods as $yearKey => $yearPeriod) {
+            foreach ($yearPeriod as $monthKey => $monthPeriod) {
+                foreach ($monthPeriod->costs as $costKey => $costGroup) {
+                    $totalSum = $totalSum->plus(money_value($costGroup->amountGross, $mollieContext));
                 }
             }
         }
 
-        return $totalSum;
+        return $totalSum->to(Money::zero('EUR')->getContext(), RoundingMode::HALF_UP);
     }
 
     /**
@@ -152,7 +155,7 @@ class BuildMollieSettlementDocument implements ShouldQueue
         $amountByPayment = $this->determineTotalValueByKey($molliePayments, 'id', 'settlementAmount');
 
         return $involvedPayments
-            ->only($molliePayments->pluck('id'))
+            ->only($molliePayments->pluck('id')->all())
             ->mapWithKeys(fn (Payment $payment) => [$payment->id => [
                 'amount' => $amountByPayment[$payment->transaction_id],
             ]]);
@@ -170,7 +173,7 @@ class BuildMollieSettlementDocument implements ShouldQueue
         $amountByPayment = $this->determineTotalValueByKey($mollieRefunds, 'paymentId', 'settlementAmount');
 
         return $involvedPayments
-            ->only($mollieRefunds->pluck('id'))
+            ->only($mollieRefunds->pluck('paymentId')->all())
             ->mapWithKeys(fn (Payment $payment) => [$payment->id => [
                 'amount' => $amountByPayment[$payment->transaction_id],
             ]]);

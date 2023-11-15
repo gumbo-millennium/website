@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Payments;
 
 use App\Helpers\Str;
+use App\Jobs\Payments\UpdateMollieSettlement;
 use App\Models\Enrollment;
 use App\Models\Payment;
 use App\Models\Payments\Settlement;
@@ -12,7 +13,6 @@ use App\Models\Shop\Order as ShopOrder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Mollie\Api\Resources\Payment as MolliePayment;
 use Mollie\Api\Resources\PaymentCollection;
 use Mollie\Api\Resources\Settlement as MollieSettlement;
@@ -59,31 +59,44 @@ class ImportSettlements extends Command
             $this->api->setAccessToken($orgKey);
         }
 
-        // Get start page
-        $nextId = $this->option('all')
-            ? null
-            : Settlement::query()
-                ->where('status', '!=', 'paidout')
-                ->orderBy('created_at', 'desc')
-                ->first('mollie_id')
-                ?->mollie_id;
+        $finalSettlementId = null;
+        if (! $this->option('all')) {
+            $finalSettlementId = Settlement::query()
+                ->whereNotNull('settled_at')
+                ->orderByDesc('created_at')
+                ->value('mollie_id');
+        }
 
-        // Keep iterating
-        while ($settlements = $this->api->settlements()->page($nextId)) {
-            // Import settlements
+        // Iterate while we're not out of pages
+        $nextPageId = null;
+        while ($settlements = $this->api->settlements()->page($nextPageId, 50)) {
             /** @var MollieSettlement $settlement */
-            foreach ($settlements as $settlement) {
+            foreach ($settlements as $index => $settlement) {
+                // Skip empty rows
                 if (! $settlement->id) {
-                    break;
+                    $this->line("Skipping settlement {$index} with no ID", null, OutputInterface::VERBOSITY_DEBUG);
+
+                    continue;
                 }
 
-                $model = $this->importSettlement($settlement);
+                // Stop pagination entirely when the expected settlement is found (never used on --all)
+                if ($settlement->id === $finalSettlementId) {
+                    $this->line("Found final settlement {$finalSettlementId}, stopping pagination", null, OutputInterface::VERBOSITY_DEBUG);
 
-                if ($this->verbosity >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $this->reportSettlement($model);
+                    break 2;
                 }
 
-                $nextId = $settlement->id;
+                $this->line("Importing settlement <info>{$settlement->id}</>", null, OutputInterface::VERBOSITY_DEBUG);
+
+                UpdateMollieSettlement::dispatchSync($settlement->id);
+
+                $this->info('Import completed', OutputInterface::VERBOSITY_DEBUG);
+
+                if ($this->output->isVerbose()) {
+                    $this->reportSettlement(Settlement::firstWhere('mollie_id', $settlement->id));
+                }
+
+                $nextPageId = $settlement->id;
             }
 
             // Stop if no next page is available
@@ -96,90 +109,64 @@ class ImportSettlements extends Command
     }
 
     /**
-     * Imports a single settlement.
-     */
-    private function importSettlement(MollieSettlement $settlement): Settlement
-    {
-        // Find or start model
-        /** @var Settlement $model */
-        $model = Settlement::firstOrNew(['mollie_id' => $settlement->id]);
-
-        // Fill required data
-        $model->updateOrCreate([
-            'mollie_id' => $settlement->id,
-        ], [
-            'reference' => $settlement->reference,
-            'status' => $settlement->status,
-            'amount' => money_value($settlement->amount),
-            'fees' => money_value(0),
-            'created_at' => $settlement->createdAt ? Date::parse($settlement->createdAt) : null,
-            'settled_at' => $settlement->settledAt ? Date::parse($settlement->settledAt) : null,
-        ]);
-
-        $this->line("Created payment for {$model->reference} {$model->created_at?->format('Y-m-d')}");
-
-        // Find all payments
-        $payments = Collection::make($settlement->payments());
-        $paymentIds = $payments->pluck('id');
-
-        // Link existing payments
-        $foundPaymentIds = Payment::query()
-            ->whereIn('transaction_id', $paymentIds)
-            ->where('provider', 'mollie')
-            ->pluck('id');
-
-        // Associate IDs
-        $model->payments()->sync($foundPaymentIds);
-
-        // Associate missing IDs
-        $model->missing_payments = $paymentIds->diff($foundPaymentIds);
-
-        // Save model
-        $model->save();
-
-        return $model;
-    }
-
-    /**
      * Report about the imported settlement.
      */
     private function reportSettlement(Settlement $settlement): void
     {
         $this->line(sprintf(
-            'Settlement %s: %s',
+            'Settlement <fg=green>%s</>: %s',
             $settlement->reference,
-            $settlement->status,
+            $settlement->status === 'paidout' ? "Paid out on <fg=magenta>{$settlement->settled_at->isoFormat('D MMM YYYY')}</>" : 'Not paid out yet',
         ));
 
-        if ($this->verbosity < OutputInterface::VERBOSITY_VERY_VERBOSE) {
+        if (! $this->output->isVeryVerbose()) {
             return;
         }
 
-        $enrollmentPayments = $settlement->payments()->whereMorphedTo('payable', Enrollment::class)->get();
-        $enrollmentShopOrders = $settlement->payments()->whereMorphedTo('payable', ShopOrder::class)->get();
+        $settlementPayments = $settlement->payments()->with('payable')->get();
+        $settlementEnrollments = $settlementPayments->filter(fn (Payment $payment) => $payment->payable instanceof Enrollment);
+        $settlementShopOrders = $settlementPayments->filter(fn (Payment $payment) => $payment->payable instanceof ShopOrder);
 
-        /** @var Payment $payments */
-        foreach ($enrollmentPayments as $payments) {
-            $enrollment = $payments->payable;
+        /** @var Payment $payment */
+        foreach ($settlementEnrollments as $payment) {
+            $enrollment = $payment->payable;
 
             $this->line(sprintf(
-                'Enrollment of <comment>%s</> for <comment>%s</>; settled for <info>%s</>',
+                'Enrollment of <fg=green>%s</> for <fg=cyan>%s</>; settled for <fg=gray>%s</>',
                 $enrollment->user?->name ?? 'n/a',
                 $enrollment->activity?->name ?? 'n/a',
                 Str::price($enrollment->settlement->amount),
             ));
         }
 
-        /** @var Payment $payments */
-        foreach ($enrollmentShopOrders as $payments) {
-            $order = $payments->payable;
+        /** @var Payment $payment */
+        foreach ($settlementShopOrders as $payment) {
+            $order = $payment->payable;
 
             $this->line(sprintf(
-                'Shop Order <comment>%s</> by <comment>%s</> with <comment>%d</> product(s); settled for <info>%s</>',
+                'Shop Order <fg=green>%s</> by <fg=cyan>%s</> with <fg=yellow>%d</> product(s); settled for <fg=gray>%s</>',
                 $order->number,
                 $order->user?->name ?? 'n/a',
                 $order->variants_count ?? 'n/a',
                 Str::price($order->settlement->amount),
+            ));
+        }
+
+        foreach ($settlement->missing_payments as $payment) {
+            $this->line(sprintf(
+                'Unkown payment <fg=green>%s</> of <fg=gray>%s</>, settled for <fg=gray>%s</>',
+                $payment['id'],
+                Str::price(money_value($payment['amount'])),
+                Str::price(money_value($payment['settlementAmount'])),
+            ));
+        }
+
+        foreach ($settlement->missing_refunds as $refund) {
+            $this->line(sprintf(
+                'Unkown refund <fg=green>%s</> of <fg=gray>%s</>, settled for <fg=gray>%s</>',
+                $refund['id'],
+                Str::price(money_value($refund['amount'])),
+                Str::price(money_value($refund['settlementAmount'])),
             ));
         }
     }
