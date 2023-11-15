@@ -56,7 +56,7 @@ class ImportSettlements extends Command
 
         // Switch the API to the org key
         if ($orgKey = Config::get('mollie.org_key')) {
-            $this->api->setApiKey($orgKey);
+            $this->api->setAccessToken($orgKey);
         }
 
         // Get start page
@@ -73,6 +73,10 @@ class ImportSettlements extends Command
             // Import settlements
             /** @var MollieSettlement $settlement */
             foreach ($settlements as $settlement) {
+                if (! $settlement->id) {
+                    break;
+                }
+
                 $model = $this->importSettlement($settlement);
 
                 if ($this->verbosity >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -101,23 +105,34 @@ class ImportSettlements extends Command
         $model = Settlement::firstOrNew(['mollie_id' => $settlement->id]);
 
         // Fill required data
-        $model->fill([
+        $model->updateOrCreate([
+            'mollie_id' => $settlement->id,
+        ], [
             'reference' => $settlement->reference,
             'status' => $settlement->status,
             'amount' => money_value($settlement->amount),
-            'created_at' => $settlement->settledAt ? Date::parse($settlement->createdAt) : null,
+            'fees' => money_value(0),
+            'created_at' => $settlement->createdAt ? Date::parse($settlement->createdAt) : null,
             'settled_at' => $settlement->settledAt ? Date::parse($settlement->settledAt) : null,
         ]);
 
-        // Find payments
-        $settlementPayments = $this->mapPaymentsCollectionToPayments($settlement->payments());
-        $paymentModels = $this->mapMolliePaymentsToPaymentModels($settlementPayments);
+        $this->line("Created payment for {$model->reference} {$model->created_at?->format('Y-m-d')}");
 
-        // Attach payments
-        $model->enrollments()->sync($this->determineModels(Enrollment::class, $settlementPayments, $paymentModels));
+        // Find all payments
+        $payments = Collection::make($settlement->payments());
+        $paymentIds = $payments->pluck('id');
 
-        // Attach shop orders
-        $model->shopOrders()->sync($this->determineModels(ShopOrder::class, $settlementPayments, $paymentModels));
+        // Link existing payments
+        $foundPaymentIds = Payment::query()
+            ->whereIn('transaction_id', $paymentIds)
+            ->where('provider', 'mollie')
+            ->pluck('id');
+
+        // Associate IDs
+        $model->payments()->sync($foundPaymentIds);
+
+        // Associate missing IDs
+        $model->missing_payments = $paymentIds->diff($foundPaymentIds);
 
         // Save model
         $model->save();
@@ -140,8 +155,13 @@ class ImportSettlements extends Command
             return;
         }
 
-        /** @var Enrollment $enrollment */
-        foreach ($settlement->enrollments()->with(['activity', 'user'])->get() as $enrollment) {
+        $enrollmentPayments = $settlement->payments()->whereMorphedTo('payable', Enrollment::class)->get();
+        $enrollmentShopOrders = $settlement->payments()->whereMorphedTo('payable', ShopOrder::class)->get();
+
+        /** @var Payment $payments */
+        foreach ($enrollmentPayments as $payments) {
+            $enrollment = $payments->payable;
+
             $this->line(sprintf(
                 'Enrollment of <comment>%s</> for <comment>%s</>; settled for <info>%s</>',
                 $enrollment->user?->name ?? 'n/a',
@@ -150,8 +170,10 @@ class ImportSettlements extends Command
             ));
         }
 
-        /** @var ShopOrder $order */
-        foreach ($settlement->shopOrder()->with('user')->withCount('variants')->get() as $order) {
+        /** @var Payment $payments */
+        foreach ($enrollmentShopOrders as $payments) {
+            $order = $payments->payable;
+
             $this->line(sprintf(
                 'Shop Order <comment>%s</> by <comment>%s</> with <comment>%d</> product(s); settled for <info>%s</>',
                 $order->number,
