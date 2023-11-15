@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Payments;
 
-use App\Nova\Resources\Enrollment;
+use App\Nova\Resources\Payment;
 use App\Nova\Resources\Resource;
-use App\Nova\Resources\Shop\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Fields;
@@ -25,7 +24,7 @@ class Settlement extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'reference';
 
     /**
      * Name of the group.
@@ -60,9 +59,9 @@ class Settlement extends Resource
                 ->failedWhen(['failed'])
                 ->filterable(fn ($request, $query, $value, $attrbiute) => $query->whereIn('status', Arr::wrap($value))),
 
-            Fields\MorphToMany::make('Inschrijvingen', 'enrollments', Enrollment::class),
+            Fields\HasMany::make('Betalingen', 'payments', Payment::class),
 
-            Fields\MorphToMany::make('Shop bestellingen', 'shopOrders', Order::class),
+            Fields\HasMany::make('Terugbetalingen', 'refunds', Payment::class),
         ];
     }
 }
