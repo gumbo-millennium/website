@@ -271,7 +271,7 @@ class CalendarController extends Controller
             )
             ->setOrganizer(
                 (new Organizer(
-                    new EmailAddress(Config::get('mail.from.address')),
+                    new EmailAddress(Config::get('mail.from.address') ?? 'noreply@example.com'),
                     $activity->organiser ?? Config::get('app.name'),
                 )),
             )
