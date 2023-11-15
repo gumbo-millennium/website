@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $status
  * @property Money $amount
  * @property null|string $export_path
+ * @property Collection $missing_payments
+ * @property Collection $missing_refunds
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $settled_at
@@ -51,6 +53,7 @@ class Settlement extends Model
      */
     protected $attributes = [
         'missing_payments' => '[]',
+        'missing_refunds' => '[]',
     ];
 
     /**
@@ -84,9 +87,6 @@ class Settlement extends Model
      * @var array
      */
     protected $hidden = [
-        'mollie_id',
-        'amount',
-        'fees',
         'missing_payments',
         'missing_refunds',
     ];
