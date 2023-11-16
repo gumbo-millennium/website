@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Payments;
 
+use App\Nova\Actions\Payments\UpdateSettlement;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Payment;
 use App\Nova\Resources\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Settlement extends Resource
 {
@@ -74,5 +77,19 @@ class Settlement extends Resource
 
             Fields\BelongsToMany::make('Terugbetalingen', 'refunds', Payment::class),
         ];
+    }
+
+    /**
+     * Get the actions available on the entity.
+     *
+     * @return array<Action>
+     */
+    public function actions(NovaRequest $request)
+    {
+        return static::defaultsWith([
+            UpdateSettlement::make()
+                ->showOnDetail()
+                ->showOnIndex(),
+        ]);
     }
 }

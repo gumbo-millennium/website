@@ -514,6 +514,9 @@
   "Settlement": "Uitbetaling",
   "Settlements": "Uitbetalingen",
 
+  "Some of the specified models aren't settlements.": "Sommige van de opgegeven modellen zijn geen uitbetalingen.",
+  "Settlements will be updated shortly.": "De uitbetalingen worden binnenkort bijgewerkt.",
+
   "Payment reminder for :activity": "Betalingsherinnering voor :activity",
   "Hello :name": "Hallo :name",
   "You've been enrolled into :activity since :date, and while your enrollment has been confirmed, it's still unpaid.":
