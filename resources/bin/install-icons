@@ -35,7 +35,7 @@ fi
 
 # Ensure a symlink from OLD_FA_DIR to ICON_STORAGE_DIR exists
 if [ ! -L "$OLD_FA_DIR" ]; then
-    ln --relative --symbolic "$ICON_STORAGE_DIR" "$OLD_FA_DIR"
+    ln -s "$ICON_STORAGE_DIR" "$OLD_FA_DIR"
 fi
 
 function copy_icon_set() {
