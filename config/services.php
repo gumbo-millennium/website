@@ -92,12 +92,19 @@ return [
          * Preloaded search settings.
          */
         'terms' => [
+            // User messed up
             'wrong' => [
                 'term' => 'wrong',
                 'limit' => 10,
             ],
+            // User wants to sack someone
             'fired' => [
                 'term' => 'kicked out',
+                'limit' => 10,
+            ],
+            // User wants to sack themselves
+            'fired-self' => [
+                'term' => 'suicide',
                 'limit' => 10,
             ],
         ],
