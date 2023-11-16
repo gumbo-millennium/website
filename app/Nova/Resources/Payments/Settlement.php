@@ -49,19 +49,22 @@ class Settlement extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\Text::make('Referentie', 'referentie'),
+            Fields\Text::make('Referentie', 'reference'),
 
-            Fields\Date::make('Datum', 'date')
+            Fields\DateTime::make('Datum aangemaakt', 'created_at')
                 ->sortable(),
+
+            Fields\DateTime::make('Datum uitbetaald', 'settled_at')
+            ->sortable(),
 
             Fields\Status::make('Status', 'status')
                 ->loadingWhen(['open', 'pending'])
                 ->failedWhen(['failed'])
                 ->filterable(fn ($request, $query, $value, $attrbiute) => $query->whereIn('status', Arr::wrap($value))),
 
-            Fields\HasMany::make('Betalingen', 'payments', Payment::class),
+            Fields\BelongsToMany::make('Betalingen', 'payments', Payment::class),
 
-            Fields\HasMany::make('Terugbetalingen', 'refunds', Payment::class),
+            Fields\BelongsToMany::make('Terugbetalingen', 'refunds', Payment::class),
         ];
     }
 }
