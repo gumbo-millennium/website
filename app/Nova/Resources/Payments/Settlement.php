@@ -55,7 +55,7 @@ class Settlement extends Resource
                 ->sortable(),
 
             Fields\DateTime::make('Datum uitbetaald', 'settled_at')
-            ->sortable(),
+                ->sortable(),
 
             Fields\Status::make('Status', 'status')
                 ->loadingWhen(['open', 'pending'])
