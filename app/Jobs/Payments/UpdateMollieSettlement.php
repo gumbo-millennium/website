@@ -12,6 +12,7 @@ use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
@@ -25,6 +26,10 @@ use Mollie\Api\Resources\Settlement as MollieSettlement;
 use Mollie\Laravel\Wrappers\MollieApiWrapper;
 use RuntimeException;
 
+/**
+ * @method static PendingDispatch dispatch(string $settlementId)
+ * @method static PendingDispatch dispatchNow(string $settlementId)
+ */
 class UpdateMollieSettlement implements ShouldQueue
 {
     use Dispatchable;
@@ -51,7 +56,7 @@ class UpdateMollieSettlement implements ShouldQueue
             }
         }
 
-        return $totalSum->to(Money::zero('EUR')->getContext(), RoundingMode::HALF_UP);
+        return $totalSum->to(money_value(0)->getContext(), RoundingMode::HALF_UP);
     }
 
     /**
