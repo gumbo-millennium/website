@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Payments;
 
+use App\Nova\Fields\Price;
 use App\Nova\Resources\Payment;
 use App\Nova\Resources\Resource;
 use Illuminate\Http\Request;
@@ -51,10 +52,17 @@ class Settlement extends Resource
 
             Fields\Text::make('Referentie', 'reference'),
 
-            Fields\DateTime::make('Datum aangemaakt', 'created_at')
+            Price::make('Bedrag', 'amount')
+                ->nullable(),
+
+            Price::make('Mollie kosten', 'fees')
+                ->onlyOnDetail()
+                ->nullable(),
+
+            Fields\Date::make('Datum aangemaakt', 'created_at')
                 ->sortable(),
 
-            Fields\DateTime::make('Datum uitbetaald', 'settled_at')
+            Fields\Date::make('Datum uitbetaald', 'settled_at')
                 ->sortable(),
 
             Fields\Status::make('Status', 'status')
