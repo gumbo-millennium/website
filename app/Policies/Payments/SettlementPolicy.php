@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies\Payments;
 
+use App\Models\Payment;
 use App\Models\Payments\Settlement;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -78,6 +79,26 @@ class SettlementPolicy
      * @return bool|\Illuminate\Auth\Access\Response
      */
     public function forceDelete(User $user, Settlement $settlement)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can attach a payment to the model.
+     *
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function attachPayment(User $user, Settlement $settlement, Payment $payment)
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can attach a payment to the model.
+     *
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function detachPayment(User $user, Settlement $settlement, Payment $payment)
     {
         return false;
     }
