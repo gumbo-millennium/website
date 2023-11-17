@@ -11,10 +11,7 @@ use App\Models\Payment;
 use App\Models\Payments\Settlement;
 use App\Models\Shop\Order as ShopOrder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Mollie\Api\Resources\Payment as MolliePayment;
-use Mollie\Api\Resources\PaymentCollection;
 use Mollie\Api\Resources\Settlement as MollieSettlement;
 use Mollie\Laravel\Facades\Mollie;
 use Mollie\Laravel\Wrappers\MollieApiWrapper;
@@ -169,91 +166,5 @@ class ImportSettlements extends Command
                 Str::price(money_value($refund['settlementAmount'])),
             ));
         }
-    }
-
-    /**
-     * Determine models for a set of Mollie Payments and Payment models.
-     * @param Collection<string,MolliePayment> $settlementPayments
-     * @param Collection<string,Payment> $paymentModels
-     * @return array<int,array>
-     */
-    private function determineModels(string $model, Collection $settlementPayments, Collection $paymentModels): array
-    {
-        $models = $model::query()
-            ->whereHas('payments', fn ($query) => $query->whereIn('id', $paymentModels->pluck('id')))
-            ->get();
-
-        $matchedModels = [];
-        foreach ($settlementPayments as $payment) {
-            // Skip payments without orderId
-            if (! $orderId = $payment->orderId) {
-                continue;
-            }
-
-            // Find enrollment
-            $model = $models->first(fn ($model) => $model->payments->contains('provider_id', $orderId));
-            if (! $model) {
-                continue;
-            }
-
-            $matchedModels[$model->id] = [
-                'amount' => money_value($payment->amount),
-            ];
-        }
-
-        return $matchedModels;
-    }
-
-    /**
-     * Return all payments as models, instead of in a magic collection.
-     * @return Collection<MolliePayment>|MolliePayment[]
-     */
-    private function mapPaymentsCollectionToPayments(PaymentCollection $paymentCollection): Collection
-    {
-        $settlementPayments = Collection::make();
-        do {
-            foreach ($paymentCollection as $payment) {
-                $settlementPayments->put($payment->id, $payment);
-            }
-        } while ($paymentCollection->hasNext() && $paymentCollection = $paymentCollection->next());
-
-        return $settlementPayments;
-    }
-
-    /**
-     * Resolves Mollie Payments to our Payment models, which are mapped to orders.
-     * @param Collection<MolliePayment> $settlementPayments
-     * @return Collection<string,Payment>|Payment[]
-     */
-    private function mapMolliePaymentsToPaymentModels(Collection $settlementPayments): Collection
-    {
-        // Get all payment IDs on their order ID
-        $paymentIdsByOrder = [];
-        do {
-            /** @var MolliePayment $payment */
-            foreach ($settlementPayments as $payment) {
-                if ($payment->orderId === null) {
-                    continue;
-                }
-
-                $paymentIdsByOrder[$payment->orderId] = $payment->id;
-            }
-        } while ($settlementPayments->hasNext() && $settlementPayments = $settlementPayments->next());
-
-        // Get payments
-        $payments = Payment::query()
-            ->where('provider', 'mollie')
-            ->whereIn('provider_id', array_keys($paymentIdsByOrder))
-            ->get()
-            ->keyBy('provider_id');
-
-        // Remap payments
-        $result = Collection::make();
-        foreach ($paymentIdsByOrder as $orderId => $paymentId) {
-            $result->put($paymentId, $payments->get($orderId));
-        }
-
-        // Skip null-values
-        return $result->filter();
     }
 }
