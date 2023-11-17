@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Http\Controllers\LustrumController;
 use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;
@@ -18,27 +19,43 @@ class LustrumControllerTest extends TestCase
 {
     use WithFaker;
 
-    private ?string $host = null;
+    private const LUSTRUM_DOMAIN = 'gumbolustrum.nl';
+
+    private const LUSTRUM_HOST = 'http://gumbolustrum.nl';
 
     /**
+     * Ensure the minisite is setup correctly.
      * @before
      */
-    public function setLustrumHost(): void
+    public function setupMinisiteBeforeTest(): void
     {
         $this->afterApplicationCreated(function () {
-            $this->host = Config::get('gumbo.lustrum-domains', [])[0] ?? null;
-
-            if ($this->host === null) {
-                $this->markTestSkipped('No Lustrum domains specified');
+            $minisites = Config::get('gumbo.minisites');
+            if (! array_key_exists(self::LUSTRUM_DOMAIN, $minisites)) {
+                $this->markTestSkipped('Lustrum minisite is not enabled');
             }
 
-            $this->host = "http://{$this->host}";
+            $configuredController = $minisites[self::LUSTRUM_DOMAIN]['controller'] ?? null;
+            if ($configuredController !== LustrumController::class) {
+                $this->fail(sprintf(
+                    'Lustrum minisite is configured to use controller [%s], where [%s] was expected',
+                    $configuredController,
+                    LustrumController::class,
+                ));
+            }
+
+            Config::set('gumbo.minisites', [
+                self::LUSTRUM_DOMAIN => [
+                    'enabled' => true,
+                    'controller' => LustrumController::class,
+                ],
+            ]);
         });
     }
 
     public function test_get_index(): void
     {
-        $this->get($this->host)
+        $this->get(self::LUSTRUM_HOST)
             ->assertOk()
             ->assertSee('Er is er een jarig');
     }
@@ -52,7 +69,7 @@ class LustrumControllerTest extends TestCase
             'role_id' => $lustrumRole->getKey(),
         ]);
 
-        $this->get($this->host)
+        $this->get(self::LUSTRUM_HOST)
             ->assertOk()
             ->assertSee($activities->name);
     }
@@ -68,7 +85,7 @@ class LustrumControllerTest extends TestCase
             ->withSummary()
             ->create(['slug' => 'lustrum']);
 
-        $this->get($this->host)
+        $this->get(self::LUSTRUM_HOST)
             ->assertOk()
             ->assertSee($lustrumPage->title)
             ->assertSee($lustrumPage->summary)
@@ -86,7 +103,7 @@ class LustrumControllerTest extends TestCase
         /** @var Collection<Product> $shopProducts */
         $shopProducts = $shopCategory->products;
 
-        $result = $this->get($this->host)
+        $result = $this->get(self::LUSTRUM_HOST)
             ->assertOk();
 
         foreach ($shopProducts as $product) {
@@ -97,13 +114,13 @@ class LustrumControllerTest extends TestCase
 
     public function test_get_main_site_routes(): void
     {
-        $this->get($this->host . route('activity.index', [], false))
+        $this->get(self::LUSTRUM_HOST . route('activity.index', [], false))
             ->assertNotFound();
 
-        $this->get($this->host . route('account.index', [], false))
+        $this->get(self::LUSTRUM_HOST . route('account.index', [], false))
             ->assertNotFound();
 
-        $this->get($this->host . route('login', [], false))
+        $this->get(self::LUSTRUM_HOST . route('login', [], false))
             ->assertNotFound();
     }
 }

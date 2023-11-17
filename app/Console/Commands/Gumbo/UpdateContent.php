@@ -139,7 +139,7 @@ class UpdateContent extends Command
         // Mark all pages as required or user, but remove the git flag anyway.
         foreach ($existingPages as $page) {
             // Change type if not empty
-            $page->type = \array_key_exists($page->slug, $requiredPages) ? Page::TYPE_REQUIRED : Page::TYPE_USER;
+            $page->type = array_key_exists($page->slug, $requiredPages) ? Page::TYPE_REQUIRED : Page::TYPE_USER;
             $page->save(['type']);
 
             // Increase count

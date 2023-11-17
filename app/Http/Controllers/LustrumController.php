@@ -46,7 +46,7 @@ class LustrumController extends Controller
 
         // Assign canonical link, to prevent duplicate content
         if (! App::isLocal()) {
-            $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
+            $lustrumRoot = 'https://gumbolustrum.nl';
             SEOMeta::setCanonical($lustrumRoot);
         }
 
