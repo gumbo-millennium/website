@@ -57,28 +57,12 @@ class SackCommand extends Command
 
         // Check the quote
         $target = ucwords(trim($this->arguments['custom'] ?? ''));
+        $gifToUse = 'fired';
 
-        // Send a gif if wrong
+        // Allow self-firing
         if (empty($target)) {
-            $gif = $this->getReplyGifUrl('wrong');
-
-            if ($gif) {
-                $this->replyWithAnimation([
-                    'animation' => $gif,
-                ]);
-            }
-
-            $this->replyWithMessage([
-                'text' => <<<'MARKDOWN'
-                Nee, **fout** 😠
-                Het commando is `/royatieverzoek <tekst>`, of wil je soms jezelf royeren?
-                MARKDOWN,
-                'parse_mode' => 'MarkdownV2',
-            ]);
-
-            $this->forgetRateLimit('sack');
-
-            return;
+            $target = $user->name;
+            $gifToUse = 'fired-self';
         }
 
         // Get random lines
@@ -99,7 +83,7 @@ class SackCommand extends Command
         }
 
         // Send as-is, but with a gif
-        if ($gif = $this->getReplyGifUrl('fired')) {
+        if ($gif = $this->getReplyGifUrl($gifToUse)) {
             $this->replyWithAnimation([
                 'animation' => $gif,
             ]);
