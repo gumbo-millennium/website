@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Http\Controllers;
+namespace Tests\Feature\Http\Controllers\Minisite;
 
-use App\Http\Controllers\LustrumController;
+use App\Http\Controllers\Minisite\LustrumController;
 use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;

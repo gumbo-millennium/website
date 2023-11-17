@@ -248,7 +248,7 @@ return [
     'minisites' => [
         'gumbolustrum.nl' => [
             'enabled' => false,
-            'controller' => \App\Http\Controllers\LustrumController::class,
+            'controller' => \App\Http\Controllers\Minisite\LustrumController::class,
         ],
         'gumbointro.nl' => [
             'enabled' => false,
