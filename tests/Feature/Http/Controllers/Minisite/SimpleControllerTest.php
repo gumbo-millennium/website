@@ -16,17 +16,10 @@ class SimpleControllerTest extends TestCase
     public function setupSitePages(): void
     {
         $this->afterApplicationCreated(function () {
-            Page::factory()->createMany([
-                [
-                    'slug' => 'home',
-                    'title' => 'Test Site Homepage Localhost',
-                    'group' => 'test-site.localhost',
-                ],
-                [
-                    'slug' => 'about',
-                    'title' => 'Test Site AboutPage Localhost',
-                    'group' => 'test-site.localhost',
-                ],
+            Page::factory()->create([
+                'slug' => 'about',
+                'title' => 'Test Site AboutPage Localhost',
+                'group' => 'test-site.localhost',
             ]);
         });
     }
