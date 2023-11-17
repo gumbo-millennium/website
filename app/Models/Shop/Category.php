@@ -66,7 +66,7 @@ class Category extends SluggableModel
      */
     protected static function newFactory()
     {
-        return new CategoryFactory();
+        return CategoryFactory::new();
     }
 
     /**

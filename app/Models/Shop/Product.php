@@ -99,7 +99,7 @@ class Product extends SluggableModel
      */
     protected static function newFactory()
     {
-        return new ProductFactory();
+        return ProductFactory::new();
     }
 
     public function sluggable(): array
