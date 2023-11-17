@@ -120,7 +120,7 @@ class ProductVariant extends SluggableModel
      */
     protected static function newFactory()
     {
-        return new ProductVariantFactory();
+        return ProductVariantFactory::new();
     }
 
     public function sluggable(): array

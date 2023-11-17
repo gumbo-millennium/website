@@ -25,9 +25,47 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'paid_at' => $this->faker->optional()->dateTimeBetween('-1 year', '5 seconds ago'),
-            'user_id' => User::inRandomOrder()->first()->id,
             'price' => $this->faker->numberBetween(150, 15000),
         ];
+    }
+
+    /**
+     * Configure the factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->for(User::factory());
+    }
+
+    /**
+     * The order has been paid.
+     */
+    public function paid(): self
+    {
+        return $this->state([
+            'paid_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
+        ]);
+    }
+
+    /**
+     * The order has expired.
+     */
+    public function expired(): self
+    {
+        return $this->state([
+            'expires_at' => $this->faker->dateTimeBetween('-1 week', '-1 day'),
+        ]);
+    }
+
+    /**
+     * The order has been cancelled.
+     */
+    public function cancelled(): self
+    {
+        return $this->state([
+            'cancelled_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
+        ]);
     }
 }

@@ -129,7 +129,7 @@ class Order extends Model implements Payable
      */
     protected static function newFactory()
     {
-        return new OrderFactory();
+        return OrderFactory::new();
     }
 
     public function user(): BelongsTo

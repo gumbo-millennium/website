@@ -1,4 +1,12 @@
-@php(use App\Enums\PaymentStatus;)
+<?php
+declare(strict_types=1);
+
+use App\Enums\PaymentStatus;
+
+$isPaid = $order->status === PaymentStatus::PAID;
+$isOpen = $order->status === PaymentStatus::OPEN;
+$isCancelled = $order->status === PaymentStatus::CANCELLED;
+?>
 <div class="flex bg-gray-50 rounded-lg items-center p-2">
     @if ($firstVariant = $order->variants->first())
     <img class="flex-shrink-0 rounded-sm h-16 w-16 object-cover mr-4"
@@ -22,17 +30,17 @@
         </div>
 
         <div>
-            @if ($order->status === PaymentStatus::PAID)
+            @if ($isPaid)
                 <p class="text-center uppercase rounded-full select-none text-sm py-1 px-2 border border-brand-400 text-brand-500">
                     Betaald
                 </p>
-            @elseif ($order->status === PaymentStatus::OPEN)
+            @elseif ($isOpen)
                 <p class="text-center rounded-full select-none text-sm py-1 px-2 border border-gray-400">
                     {{ Str::price($order->price) }}
                 </p>
             @else
                 <p class="text-center uppercase rounded-full select-none text-sm py-1 px-2 border border-red-400 text-red-500">
-                    {{ $order->status === PaymentStatus::CANCELLED ? 'Geannuleerd' : 'Verlopen' }}
+                    {{ $isCancelled ? 'Geannuleerd' : 'Verlopen' }}
                 </p>
             @endif
         </div>

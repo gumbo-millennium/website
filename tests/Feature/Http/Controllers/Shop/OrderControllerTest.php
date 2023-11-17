@@ -9,6 +9,7 @@ use App\Models\Shop\Order;
 use App\Models\Shop\ProductVariant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Tests\Feature\Http\Controllers\Shop\Traits\TestsShop;
 use Tests\TestCase;
@@ -77,6 +78,44 @@ class OrderControllerTest extends TestCase
         $this->assertEquals($payFee + $variantPrice * 2, $lastOrder->price);
     }
 
+    /**
+     * Test if the index page loads when no orders are present.
+     */
+    public function test_show_index_empty(): void
+    {
+        $this->actingAs($this->getMemberUser());
+
+        $this->get(route('shop.order.index'))
+            ->assertOk();
+    }
+
+    /**
+     * Test if the index page shows all orders, and works as expected.
+     */
+    public function test_show_full_index(): void
+    {
+        $user = $this->getMemberUser();
+        $this->actingAs($user);
+
+        $openOrders = Order::factory()->for($user)->count(3)->create();
+        $paidOrders = Order::factory()->for($user)->count(3)->paid()->create();
+        $cancelledOrders = Order::factory()->for($user)->count(3)->cancelled()->create();
+        $expiredOrders = Order::factory()->for($user)->count(3)->expired()->create();
+
+        $response = $this->get(route('shop.order.index'))
+            ->assertOk();
+
+        $allOrders = Collection::make()
+            ->merge($openOrders)
+            ->merge($paidOrders)
+            ->merge($cancelledOrders)
+            ->merge($expiredOrders);
+
+        foreach ($allOrders as $order) {
+            $response->assertSee($order->number);
+        }
+    }
+
     public function test_view_order(): void
     {
         $memberUser = $this->getMemberUser();
@@ -90,31 +129,26 @@ class OrderControllerTest extends TestCase
         $orderUrl = route('shop.order.show', [$order]);
 
         // Test logged out
-        $this
-            ->get($orderUrl)
+        $this->get($orderUrl)
             ->assertRedirect(route('login'));
 
         // Test guest (members only)
-        $this
-            ->actingAs($this->getGuestUser())
-            ->get($orderUrl)
+        $this->actingAs($this->getGuestUser());
+        $this->get($orderUrl)
             ->assertForbidden();
 
         // Test different user than owner
-        $this
-            ->actingAs($this->getBoardUser())
-            ->get($orderUrl)
+        $this->actingAs($this->getBoardUser());
+        $this->get($orderUrl)
             ->assertNotFound();
 
         // Test actual user
-        $this
-            ->actingAs($memberUser)
-            ->get($orderUrl);
+        $this->actingAs($memberUser);
+        $this->get($orderUrl);
 
         // Test index route
-        $this
-            ->actingAs($memberUser)
-            ->get(route('shop.order.index'))
+        $this->actingAs($memberUser);
+        $this->get(route('shop.order.index'))
             ->assertSee($order->number);
     }
 
