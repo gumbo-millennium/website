@@ -81,26 +81,26 @@ DROP TABLE IF EXISTS `activity_enrollments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `activity_enrollments` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `previous_id` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `previous_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `activity_id` bigint unsigned NOT NULL,
   `ticket_id` bigint unsigned DEFAULT NULL,
   `user_id` bigint unsigned NOT NULL,
-  `state` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'created',
+  `state` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'created',
   `price` smallint unsigned DEFAULT NULL,
   `total_price` smallint unsigned DEFAULT NULL,
-  `user_type` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal',
+  `user_type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal',
   `expire` timestamp NULL DEFAULT NULL,
-  `transfer_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transfer_secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `barcode` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `barcode_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'qrcode',
+  `barcode_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'qrcode',
   `barcode_generated` tinyint(1) NOT NULL DEFAULT '0',
   `consumed_at` timestamp NULL DEFAULT NULL,
   `consumed_by_id` bigint unsigned DEFAULT NULL,
-  `data` mediumtext COLLATE utf8mb4_unicode_ci,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deleted_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `activity_enrollments_previous_id_unique` (`previous_id`),
   KEY `activity_enrollments_activity_id_foreign` (`activity_id`),
@@ -388,18 +388,18 @@ DROP TABLE IF EXISTS `google_wallet_event_classes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `google_wallet_event_classes` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `wallet_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `wallet_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `subject_id` bigint unsigned NOT NULL,
-  `review_status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `review_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `review` json DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `location_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `location_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `location_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_time` timestamp NOT NULL,
   `end_time` timestamp NOT NULL,
-  `uri` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `hero_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hero_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -413,16 +413,16 @@ DROP TABLE IF EXISTS `google_wallet_event_objects`;
 CREATE TABLE `google_wallet_event_objects` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `class_id` bigint unsigned NOT NULL,
-  `wallet_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `wallet_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `subject_id` bigint unsigned NOT NULL,
   `owner_id` bigint unsigned DEFAULT NULL,
-  `state` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `state` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `value` smallint unsigned DEFAULT NULL,
-  `ticket_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ticket_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `barcode` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `barcode_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'qrcode',
+  `ticket_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ticket_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `barcode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `barcode_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'qrcode',
   `installs` tinyint unsigned NOT NULL DEFAULT '0',
   `removals` tinyint unsigned NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -442,7 +442,7 @@ DROP TABLE IF EXISTS `google_wallet_message_morphs`;
 CREATE TABLE `google_wallet_message_morphs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `message_id` bigint unsigned NOT NULL,
-  `object_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `object_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `object_id` bigint unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `google_wallet_message_morphs_unique` (`message_id`,`object_id`,`object_type`),
@@ -457,8 +457,8 @@ CREATE TABLE `google_wallet_messages` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `header` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `body` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `header` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_time` timestamp NOT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
   `activity_message_id` bigint unsigned NOT NULL,
@@ -471,13 +471,13 @@ DROP TABLE IF EXISTS `job_batches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `job_batches` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_jobs` int NOT NULL,
   `pending_jobs` int NOT NULL,
   `failed_jobs` int NOT NULL,
-  `failed_job_ids` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `failed_job_ids` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `cancelled_at` int DEFAULT NULL,
   `created_at` int NOT NULL,
   `finished_at` int DEFAULT NULL,
@@ -629,11 +629,11 @@ DROP TABLE IF EXISTS `nova_field_attachments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `nova_field_attachments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `attachable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attachable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `attachable_id` bigint unsigned NOT NULL,
-  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `disk` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attachment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `disk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -645,11 +645,11 @@ DROP TABLE IF EXISTS `nova_notifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `nova_notifications` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notifiable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `notifiable_id` bigint unsigned NOT NULL,
-  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -663,9 +663,9 @@ DROP TABLE IF EXISTS `nova_pending_field_attachments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `nova_pending_field_attachments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `draft_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `disk` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `draft_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attachment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `disk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -704,19 +704,34 @@ CREATE TABLE `password_resets` (
   KEY `password_resets_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `payment_settlement_subject`;
+DROP TABLE IF EXISTS `payment_settlement_payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `payment_settlement_subject` (
+CREATE TABLE `payment_settlement_payment` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `settlement_id` bigint unsigned NOT NULL,
-  `subject_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject_id` bigint unsigned NOT NULL,
-  `amount` smallint NOT NULL DEFAULT '0',
+  `payment_id` bigint unsigned NOT NULL,
+  `amount` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `payment_settlement_subject_settlement_id_foreign` (`settlement_id`),
-  KEY `payment_settlement_subject_subject_type_subject_id_index` (`subject_type`,`subject_id`),
-  CONSTRAINT `payment_settlement_subject_settlement_id_foreign` FOREIGN KEY (`settlement_id`) REFERENCES `payment_settlements` (`id`) ON DELETE CASCADE
+  UNIQUE KEY `payment_settlement_payment_settlement_id_payment_id_unique` (`settlement_id`,`payment_id`),
+  KEY `payment_settlement_payment_payment_id_foreign` (`payment_id`),
+  CONSTRAINT `payment_settlement_payment_payment_id_foreign` FOREIGN KEY (`payment_id`) REFERENCES `payment_settlements` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `payment_settlement_payment_settlement_id_foreign` FOREIGN KEY (`settlement_id`) REFERENCES `payment_settlements` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `payment_settlement_refunded_payment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payment_settlement_refunded_payment` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `settlement_id` bigint unsigned NOT NULL,
+  `payment_id` bigint unsigned NOT NULL,
+  `amount` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `payment_settlement_refunded_payment_unique` (`settlement_id`,`payment_id`),
+  KEY `payment_settlement_refunded_payment_payment_id_foreign` (`payment_id`),
+  CONSTRAINT `payment_settlement_refunded_payment_payment_id_foreign` FOREIGN KEY (`payment_id`) REFERENCES `payment_settlements` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `payment_settlement_refunded_payment_settlement_id_foreign` FOREIGN KEY (`settlement_id`) REFERENCES `payment_settlements` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `payment_settlements`;
@@ -724,11 +739,14 @@ DROP TABLE IF EXISTS `payment_settlements`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payment_settlements` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `mollie_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reference` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
-  `amount` smallint unsigned NOT NULL,
-  `export_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mollie_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reference` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
+  `amount` int NOT NULL,
+  `fees` int NOT NULL,
+  `missing_payments` json NOT NULL,
+  `missing_refunds` json NOT NULL,
+  `export_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `settled_at` timestamp NULL DEFAULT NULL,
@@ -1162,9 +1180,9 @@ DROP TABLE IF EXISTS `webcam_devices`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `webcam_devices` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `device` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `device` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `owner_id` bigint unsigned NOT NULL,
   `camera_id` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1372,3 +1390,7 @@ INSERT INTO `migrations` VALUES (172,'2023_02_06_165846_add_exif_data_to_gallery
 INSERT INTO `migrations` VALUES (173,'2023_09_03_190145_add_message_id_to_bot_quotes',3);
 INSERT INTO `migrations` VALUES (174,'2023_11_07_132759_add_responsible_users_to_activities',3);
 INSERT INTO `migrations` VALUES (175,'2023_11_09_122947_create_job_batches_table',3);
+INSERT INTO `migrations` VALUES (176,'2023_11_10_125533_delete_payment_settlement_subject',4);
+INSERT INTO `migrations` VALUES (177,'2023_11_10_125538_create_payment_settlement_payments',4);
+INSERT INTO `migrations` VALUES (178,'2023_11_10_145823_add_additional_data_to_payment_settlements',4);
+INSERT INTO `migrations` VALUES (179,'2023_11_15_175146_create_payment_settlement_refunded_payment',4);

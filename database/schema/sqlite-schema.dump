@@ -104,11 +104,6 @@ CREATE TABLE IF NOT EXISTS "nova_notifications" ("id" varchar not null, "type" v
 CREATE INDEX "nova_notifications_notifiable_type_notifiable_id_index" on "nova_notifications" ("notifiable_type", "notifiable_id");
 CREATE TABLE IF NOT EXISTS "webcam_devices" ("id" integer not null primary key autoincrement, "device" varchar not null, "name" varchar not null, "path" varchar, "owner_id" integer not null, "camera_id" integer, "created_at" datetime, "updated_at" datetime, foreign key("owner_id") references "users"("id") on delete cascade, foreign key("camera_id") references "webcam_cameras"("id") on delete set null);
 CREATE UNIQUE INDEX "webcam_devices_device_name_unique" on "webcam_devices" ("device", "name");
-CREATE TABLE IF NOT EXISTS "payment_settlements" ("id" integer not null primary key autoincrement, "mollie_id" varchar not null, "reference" varchar, "status" varchar not null default 'open', "amount" integer not null, "export_path" varchar, "created_at" datetime, "updated_at" datetime, "settled_at" datetime);
-CREATE UNIQUE INDEX "payment_settlements_mollie_id_unique" on "payment_settlements" ("mollie_id");
-CREATE UNIQUE INDEX "payment_settlements_reference_unique" on "payment_settlements" ("reference");
-CREATE TABLE IF NOT EXISTS "payment_settlement_subject" ("id" integer not null primary key autoincrement, "settlement_id" integer not null, "subject_type" varchar not null, "subject_id" integer not null, "amount" integer not null default '0', foreign key("settlement_id") references "payment_settlements"("id") on delete cascade);
-CREATE INDEX "payment_settlement_subject_subject_type_subject_id_index" on "payment_settlement_subject" ("subject_type", "subject_id");
 CREATE TABLE IF NOT EXISTS "google_wallet_event_classes" ("id" integer not null primary key autoincrement, "wallet_id" varchar not null, "subject_type" varchar not null, "subject_id" integer not null, "review_status" varchar not null default '', "review" text, "name" varchar not null, "location_name" varchar, "location_address" varchar, "start_time" datetime not null, "end_time" datetime not null, "uri" varchar, "hero_image" varchar, "created_at" datetime, "updated_at" datetime);
 CREATE INDEX "google_wallet_event_classes_subject_type_subject_id_index" on "google_wallet_event_classes" ("subject_type", "subject_id");
 CREATE UNIQUE INDEX "google_wallet_event_classes_wallet_id_unique" on "google_wallet_event_classes" ("wallet_id");
@@ -129,6 +124,13 @@ CREATE UNIQUE INDEX "google_wallet_message_morphs_unique" on "google_wallet_mess
 CREATE TABLE activity_enrollments (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, previous_id VARCHAR(255) DEFAULT NULL COLLATE BINARY, activity_id INTEGER NOT NULL, ticket_id INTEGER DEFAULT NULL, user_id INTEGER NOT NULL, state VARCHAR(255) DEFAULT 'created' NOT NULL COLLATE BINARY, price INTEGER DEFAULT NULL, total_price INTEGER DEFAULT NULL, user_type VARCHAR(255) DEFAULT 'normal' NOT NULL COLLATE BINARY, expire DATETIME DEFAULT NULL, transfer_secret VARCHAR(255) DEFAULT NULL COLLATE BINARY, consumed_at DATETIME DEFAULT NULL, consumed_by_id INTEGER DEFAULT NULL, data CLOB DEFAULT NULL COLLATE BINARY, created_at DATETIME DEFAULT NULL, updated_at DATETIME DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, deleted_reason VARCHAR(255) DEFAULT NULL COLLATE BINARY, barcode VARCHAR(32) DEFAULT NULL COLLATE BINARY, "barcode_type" varchar not null default 'qrcode', "barcode_generated" tinyint(1) not null default '0');
 CREATE UNIQUE INDEX activity_enrollments_previous_id_unique ON activity_enrollments (previous_id);
 CREATE TABLE IF NOT EXISTS "job_batches" ("id" varchar not null, "name" varchar not null, "total_jobs" integer not null, "pending_jobs" integer not null, "failed_jobs" integer not null, "failed_job_ids" text not null, "options" text, "cancelled_at" integer, "created_at" integer not null, "finished_at" integer, primary key ("id"));
+CREATE TABLE IF NOT EXISTS "payment_settlement_payment" ("id" integer not null primary key autoincrement, "settlement_id" integer not null, "payment_id" integer not null, "amount" integer not null, foreign key("settlement_id") references "payment_settlements"("id") on delete cascade, foreign key("payment_id") references "payment_settlements"("id") on delete restrict);
+CREATE UNIQUE INDEX "payment_settlement_payment_settlement_id_payment_id_unique" on "payment_settlement_payment" ("settlement_id", "payment_id");
+CREATE TABLE payment_settlements (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, mollie_id VARCHAR(255) NOT NULL COLLATE BINARY, reference VARCHAR(255) DEFAULT NULL COLLATE BINARY, status VARCHAR(255) DEFAULT 'open' NOT NULL COLLATE BINARY, export_path VARCHAR(255) DEFAULT NULL COLLATE BINARY, created_at DATETIME DEFAULT NULL, updated_at DATETIME DEFAULT NULL, settled_at DATETIME DEFAULT NULL, amount INTEGER NOT NULL, "fees" integer not null, "missing_payments" text not null, "missing_refunds" text not null);
+CREATE UNIQUE INDEX payment_settlements_reference_unique ON payment_settlements (reference);
+CREATE UNIQUE INDEX payment_settlements_mollie_id_unique ON payment_settlements (mollie_id);
+CREATE TABLE IF NOT EXISTS "payment_settlement_refunded_payment" ("id" integer not null primary key autoincrement, "settlement_id" integer not null, "payment_id" integer not null, "amount" integer not null, foreign key("settlement_id") references "payment_settlements"("id") on delete cascade, foreign key("payment_id") references "payment_settlements"("id") on delete restrict);
+CREATE UNIQUE INDEX "payment_settlement_refunded_payment_unique" on "payment_settlement_refunded_payment" ("settlement_id", "payment_id");
 INSERT INTO migrations VALUES(1,'2018_01_01_000000_create_action_events_table',1);
 INSERT INTO migrations VALUES(2,'2018_08_08_100000_create_telescope_entries_table',1);
 INSERT INTO migrations VALUES(3,'2019_05_10_000000_add_fields_to_action_events_table',1);
@@ -304,3 +306,7 @@ INSERT INTO migrations VALUES(172,'2023_02_06_165846_add_exif_data_to_gallery_ph
 INSERT INTO migrations VALUES(173,'2023_09_03_190145_add_message_id_to_bot_quotes',3);
 INSERT INTO migrations VALUES(174,'2023_11_07_132759_add_responsible_users_to_activities',3);
 INSERT INTO migrations VALUES(175,'2023_11_09_122947_create_job_batches_table',3);
+INSERT INTO migrations VALUES(176,'2023_11_10_125533_delete_payment_settlement_subject',4);
+INSERT INTO migrations VALUES(177,'2023_11_10_125538_create_payment_settlement_payments',4);
+INSERT INTO migrations VALUES(178,'2023_11_10_145823_add_additional_data_to_payment_settlements',4);
+INSERT INTO migrations VALUES(179,'2023_11_15_175146_create_payment_settlement_refunded_payment',4);
