@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Minisite;
 
 use App\Contracts\SponsorService;
+use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Page;
 use App\Models\Role;
@@ -46,7 +47,7 @@ class LustrumController extends Controller
 
         // Assign canonical link, to prevent duplicate content
         if (! App::isLocal()) {
-            $lustrumRoot = sprintf('https://%s', Config::get('gumbo.lustrum-domains')[0]);
+            $lustrumRoot = 'https://gumbolustrum.nl';
             SEOMeta::setCanonical($lustrumRoot);
         }
 
@@ -65,7 +66,7 @@ class LustrumController extends Controller
      * Ensures all other minisite pages throw a 404, but
      * with the right nav.
      */
-    public function other(Request $request): HttpResponse
+    public function page(Request $request): HttpResponse
     {
         // Ensure all links are egress
         URL::forceRootUrl(Config::get('app.url'));

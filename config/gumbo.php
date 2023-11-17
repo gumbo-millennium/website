@@ -58,15 +58,6 @@ return [
         ],
     ],
 
-    // Lustrum mini-site
-    'lustrum-domains' => [
-        'gumbolustrum.nl',
-        'langzalgumboleven.nl',
-
-        // And bind to <redirect>.<your-domain-name> for testing
-        sprintf('lustrum.%s', $appHost),
-    ],
-
     // Page groups
     'page-groups' => [
         'commissies' => 'Commissies',
@@ -249,6 +240,27 @@ return [
          * Location disk to use for backups.
          */
         'storage_disk' => env('BACKUP_DISK', 'glacier'),
+    ],
+
+    /**
+     * Minisites. Information-only sites that may have their own controllers.
+     */
+    'minisites' => [
+        'gumbolustrum.nl' => [
+            'enabled' => false,
+            'controller' => \App\Http\Controllers\Minisite\LustrumController::class,
+        ],
+        'gumbointro.nl' => [
+            'enabled' => false,
+        ],
+        'landhuisweekend.nl' => [
+            'enabled' => false,
+        ],
+
+        // Testing only
+        'test-site.localhost' => [
+            'enabled' => true,
+        ],
     ],
 
     /**

@@ -10,9 +10,9 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\EnrollNew;
 use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\LustrumController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
+use App\Http\Middleware\Minisite\BlockRequestIfDisabled;
 use App\Http\Policy\LoginPolicy;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -25,16 +25,17 @@ $loginCsp = vsprintf('%s:%s', [AddCspHeaders::class, LoginPolicy::class]);
 foreach (Config::get('gumbo.redirect-domains') as $domain) {
     Route::domain($domain)->group(function () {
         Route::get('/', [RedirectController::class, 'index']);
-        Route::get('/{slug}', [RedirectController::class, 'redirect'])
-            ->where('slug', '.+');
+        Route::get('/{slug}', [RedirectController::class, 'redirect'])->where('slug', '.+');
     });
 }
 
-// Bind Lustrum minisite
-foreach (Config::get('gumbo.lustrum-domains') as $domain) {
-    Route::domain($domain)->group(function () {
-        Route::get('/', [LustrumController::class, 'index']);
-        Route::get('/{any}', [LustrumController::class, 'other'])
+// Bind minisites
+foreach (Config::get('gumbo.minisites') as $domain => $settings) {
+    $controllerName = $settings['controller'] ?? Controllers\Minisite\SimpleController::class;
+
+    Route::domain($domain)->middleware(BlockRequestIfDisabled::class)->group(function () use ($controllerName) {
+        Route::get('/', [$controllerName, 'index']);
+        Route::get('/{any}', [$controllerName, 'page'])
             ->where('any', '.+');
     });
 }
