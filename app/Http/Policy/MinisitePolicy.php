@@ -29,7 +29,7 @@ class MinisitePolicy extends AppPolicy
             config('app.asset_url'),
             config('app.mix_url'),
         ])->map(function ($row) {
-            if ($url = parse_url($row ?? '')) {
+            if ($row && $url = parse_url($row)) {
                 return "{$url['scheme']}://{$url['host']}";
             }
 

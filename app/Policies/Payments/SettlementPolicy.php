@@ -84,11 +84,21 @@ class SettlementPolicy
     }
 
     /**
+     * Determine whether the user can run an action on the model.
+     *
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function runAction(User $user, Settlement $settlement, Payment $payment)
+    {
+        return $user->hasPermissionTo('payments-monitor');
+    }
+
+    /**
      * Determine whether the user can attach a payment to the model.
      *
      * @return bool|\Illuminate\Auth\Access\Response
      */
-    public function attachPayment(User $user, Settlement $settlement, Payment $payment)
+    public function attachAnyPayment(User $user, Settlement $settlement)
     {
         return false;
     }
