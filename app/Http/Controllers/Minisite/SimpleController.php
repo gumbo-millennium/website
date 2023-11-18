@@ -29,17 +29,6 @@ class SimpleController extends Controller
         $this->siteconfig = $minisites[$this->sitename] ?? [
             'enabled' => false,
         ];
-
-        // Attach a middleware to disable the site when, well, disabled.
-        $this->middleware(function ($request, $next) {
-            if (! $this->siteconfig['enabled']) {
-                return Response::view('minisite.disabled', [
-                    'sitename' => $this->sitename,
-                ], 503);
-            }
-
-            return $next($request);
-        });
     }
 
     /**
