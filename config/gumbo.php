@@ -247,19 +247,22 @@ return [
      */
     'minisites' => [
         'gumbolustrum.nl' => [
-            'enabled' => false,
+            'enabled' => (bool) env('MINISITE_LUSTRUM_ENABLED', false),
             'controller' => \App\Http\Controllers\Minisite\LustrumController::class,
+            'groups' => ['lustrum'],
         ],
         'gumbointro.nl' => [
-            'enabled' => false,
+            'enabled' => (bool) env('MINISITE_INTRO_ENABLED', false),
+            'groups' => ['ic'],
         ],
         'landhuisweekend.nl' => [
-            'enabled' => false,
+            'enabled' => (bool) env('MINISITE_LHW_ENABLED', false),
+            'groups' => ['lhw'],
         ],
 
         // Testing only
         'test-site.localhost' => [
-            'enabled' => true,
+            'enabled' => false,
         ],
     ],
 

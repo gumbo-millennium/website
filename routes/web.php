@@ -13,13 +13,13 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
 use App\Http\Middleware\Minisite\BlockRequestIfDisabled;
-use App\Http\Policy\LoginPolicy;
+use App\Http\Policy;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Spatie\Csp\AddCspHeaders;
 
-$loginCsp = vsprintf('%s:%s', [AddCspHeaders::class, LoginPolicy::class]);
+$addCsp = fn (string $csp) => sprintf('%s:%s', AddCspHeaders::class, $csp);
 
 // Bind redirects as very, very first.
 foreach (Config::get('gumbo.redirect-domains') as $domain) {
@@ -33,11 +33,16 @@ foreach (Config::get('gumbo.redirect-domains') as $domain) {
 foreach (Config::get('gumbo.minisites') as $domain => $settings) {
     $controllerName = $settings['controller'] ?? Controllers\Minisite\SimpleController::class;
 
-    Route::domain($domain)->middleware(BlockRequestIfDisabled::class)->group(function () use ($controllerName) {
-        Route::get('/', [$controllerName, 'index']);
-        Route::get('/{any}', [$controllerName, 'page'])
-            ->where('any', '.+');
-    });
+    Route::domain($domain)
+        ->middleware([
+            $addCsp(Policy\MinisitePolicy::class),
+            BlockRequestIfDisabled::class,
+        ])
+        ->group(function () use ($controllerName) {
+            Route::get('/', [$controllerName, 'index']);
+            Route::get('/{any}', [$controllerName, 'page'])
+                ->where('any', '.+');
+        });
 }
 
 // Home
@@ -186,7 +191,7 @@ Route::prefix('word-lid')->name('join.')->group(static function () {
 });
 
 // Authentication and forgotten passwords
-Route::prefix('auth')->middleware([$loginCsp, 'no-cache', 'no-sponsor'])->group(static function () {
+Route::prefix('auth')->middleware([$addCsp(Policy\LoginPolicy::class), 'no-cache', 'no-sponsor'])->group(static function () {
     Route::auth(['verify' => true]);
 
     // Register privacy

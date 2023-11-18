@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Minisite;
 
 use App\Models\Page;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class SimpleControllerTest extends TestCase
@@ -16,10 +17,23 @@ class SimpleControllerTest extends TestCase
     public function setupSitePages(): void
     {
         $this->afterApplicationCreated(function () {
-            Page::factory()->create([
-                'slug' => 'about',
-                'title' => 'Test Site AboutPage Localhost',
-                'group' => 'test-site.localhost',
+            Config::set('gumbo.minisites', [
+                'test-site.localhost' => [
+                    'enabled' => true,
+                ],
+            ]);
+
+            Page::factory()->createMany([
+                [
+                    'slug' => 'home',
+                    'title' => 'Test Site Homepage Localhost',
+                    'group' => 'test-site.localhost',
+                ],
+                [
+                    'slug' => 'about',
+                    'title' => 'Test Site AboutPage Localhost',
+                    'group' => 'test-site.localhost',
+                ],
             ]);
         });
     }
@@ -40,5 +54,20 @@ class SimpleControllerTest extends TestCase
     {
         $this->get('http://test-site.localhost/home')
             ->assertRedirect('http://test-site.localhost');
+    }
+
+    public function test_csp_headers_contain_the_mix_url(): void
+    {
+        Config::set([
+            'app.url' => 'http://example.net',
+            'app.mix_url' => 'http://example.com/assets',
+        ]);
+
+        $cspHeader = $this->get('http://test-site.localhost')
+            ->assertOk()
+            ->headers->get('Content-Security-Policy');
+
+        $this->assertStringContainsString('http://example.net', $cspHeader);
+        $this->assertStringContainsString('http://example.com', $cspHeader);
     }
 }
