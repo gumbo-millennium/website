@@ -48,7 +48,7 @@
     "postcss-import": "^14.1.0",
     "postcss-rem": "^1.1.5",
     "responsive-loader": "^2.3.0",
-    "sharp": "^0.30.7",
+    "sharp": "^0.32.6",
     "vue-loader": "^16.8.3",
     "vuepress": "^2.0.0-beta.60",
     "yaml-loader": "^0.8.0"
