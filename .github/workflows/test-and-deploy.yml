@@ -153,7 +153,15 @@ jobs:
       - name: Run unit tests
         run: |
           vendor/bin/phpunit \
+            --log-junit ./report-junit.xml \
             --coverage-clover coverage-clover.xml
+
+      - name: Report test results
+        if: ${{ success() || failure() }}
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: ./report-junit.xml
+          check_name: PHPUnit Results for PHP ${{ matrix.php }}
 
       - name: Report coverage to Pull Request
         uses: slavcodev/coverage-monitor-action@v1
