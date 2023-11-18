@@ -6,6 +6,10 @@
     "css.lint.unknownAtRules": "ignore",
     "css.validate": false,
 
+    // Explicitly set the php-cs-fixer path
+    "php-cs-fixer.executablePath": "${workspaceRoot}/vendor/bin/php-cs-fixer",
+    "php-cs-fixer.executablePathWindows": "${workspaceRoot}\\vendor\\bin/php-cs-fixer",
+
     "[php]":{
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "junstyle.php-cs-fixer"
