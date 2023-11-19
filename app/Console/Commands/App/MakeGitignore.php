@@ -98,7 +98,7 @@ IGNORE;
         $ignoreContent = trim($ignoreContent) . PHP_EOL;
 
         $this->line('Writing contents...');
-        $ignoreFile = "${rootDir}/.gitignore";
+        $ignoreFile = "{$rootDir}/.gitignore";
 
         file_put_contents($ignoreFile, $ignoreContent);
 

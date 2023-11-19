@@ -32,7 +32,7 @@ class MoveMinisitePagesToSitePages extends Migration
             ]);
 
             $pageWithAuthor = $pagesToMove->where('group', $siteName)
-                ->orderBy('created_at')
+                ->sortBy('created_at')
                 ->firstWhere('author', '!=', null);
 
             if ($pageWithAuthor) {
@@ -86,8 +86,8 @@ class MoveMinisitePagesToSitePages extends Migration
         $site->pages()->save($sitePage);
 
         if ($page->type !== Page::TYPE_USER) {
-            $sitePage->type = Page::TYPE_USER;
-            $sitePage->save();
+            $page->type = Page::TYPE_USER;
+            $page->save();
         }
     }
 

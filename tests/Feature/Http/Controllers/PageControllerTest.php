@@ -35,7 +35,7 @@ class PageControllerTest extends TestCase
                 'slug' => $slug,
             ]);
 
-            $this->get("/${slug}")->assertOk();
+            $this->get("/{$slug}")->assertOk();
         }
     }
 }

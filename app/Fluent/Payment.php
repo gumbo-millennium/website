@@ -53,7 +53,7 @@ final class Payment extends Fluent
             }
 
             if (! is_array($line)) {
-                throw new InvalidArgumentException("Payment line on index [${index}] must be an array");
+                throw new InvalidArgumentException("Payment line on index [{$index}] must be an array");
             }
 
             $this->attributes['lines'][$index] = PaymentLine::fromArray($line);

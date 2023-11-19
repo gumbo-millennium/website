@@ -43,11 +43,11 @@ class Header extends Component
         // Validate crumbs
         foreach ($crumbs as $url => $label) {
             if (! is_string($url) || ! (URL::isValidUrl($url) || URL::to($url) !== $url)) {
-                throw new InvalidArgumentException("Invalid URL for crumb '${label}': ${url}");
+                throw new InvalidArgumentException("Invalid URL for crumb '{$label}': {$url}");
             }
 
             if (! is_string($label) || empty($label)) {
-                throw new InvalidArgumentException("Invalid label for crumb '${url}': ${label}");
+                throw new InvalidArgumentException("Invalid label for crumb '{$url}': {$label}");
             }
         }
 
@@ -75,11 +75,11 @@ class Header extends Component
             }
 
             if (! is_array($value)) {
-                throw new InvalidArgumentException("Invalid value for stat at '${index}'");
+                throw new InvalidArgumentException("Invalid value for stat at '{$index}'");
             }
 
             if (($value['label'] ?? '') === '') {
-                throw new InvalidArgumentException("Missing label for stat at '${index}'");
+                throw new InvalidArgumentException("Missing label for stat at '{$index}'");
             }
 
             $actualStats[] = [

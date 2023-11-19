@@ -70,7 +70,7 @@ class PruneGlideCacheCommand extends Command
 
             $toDelete[] = $file;
 
-            $this->line("Would delete <comment>${file}</comment>", null, OutputInterface::VERBOSITY_VERBOSE);
+            $this->line("Would delete <comment>{$file}</comment>", null, OutputInterface::VERBOSITY_VERBOSE);
         }
 
         // Check if empty

@@ -101,7 +101,7 @@ class Settlement extends Model
             table: 'payment_settlement_payment',
             foreignPivotKey: 'settlement_id',
             relatedPivotKey: 'payment_id',
-        )->using(PaymentSettlement::class);
+        )->withPivot('amount')->using(PaymentSettlement::class);
     }
 
     /**

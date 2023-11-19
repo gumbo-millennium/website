@@ -90,7 +90,11 @@ class ImportSettlements extends Command
                 $this->info('Import completed', OutputInterface::VERBOSITY_DEBUG);
 
                 if ($this->output->isVerbose()) {
-                    $this->reportSettlement(Settlement::firstWhere('mollie_id', $settlement->id));
+                    $this->reportSettlement(
+                        Settlement::query()
+                            ->with(['payments', 'refunds'])
+                            ->firstWhere('mollie_id', $settlement->id),
+                    );
                 }
 
                 $nextPageId = $settlement->id;
@@ -111,18 +115,24 @@ class ImportSettlements extends Command
     private function reportSettlement(Settlement $settlement): void
     {
         $this->line(sprintf(
-            'Settlement <fg=green>%s</>: %s',
+            'Settlement <fg=green>%s</>: %s, (<fg=cyan>%s</>, <fg=gray>%s fees</>)',
             $settlement->reference,
             $settlement->status === 'paidout' ? "Paid out on <fg=magenta>{$settlement->settled_at->isoFormat('D MMM YYYY')}</>" : 'Not paid out yet',
+            Str::price($settlement->amount),
+            Str::price($settlement->fees),
         ));
 
         if (! $this->output->isVeryVerbose()) {
             return;
         }
 
-        $settlementPayments = $settlement->payments()->with('payable')->get();
+        $settlementPayments = $settlement->payments->each->loadMissing('payable')->keyBy('id');
         $settlementEnrollments = $settlementPayments->filter(fn (Payment $payment) => $payment->payable instanceof Enrollment);
         $settlementShopOrders = $settlementPayments->filter(fn (Payment $payment) => $payment->payable instanceof ShopOrder);
+
+        $otherPayments = $settlementPayments
+            ->whereNotIn('id', $settlementEnrollments->pluck('id'))
+            ->whereNotIn('id', $settlementShopOrders->pluck('id'));
 
         /** @var Payment $payment */
         foreach ($settlementEnrollments as $payment) {
@@ -132,20 +142,34 @@ class ImportSettlements extends Command
                 'Enrollment of <fg=green>%s</> for <fg=cyan>%s</>; settled for <fg=gray>%s</>',
                 $enrollment->user?->name ?? 'n/a',
                 $enrollment->activity?->name ?? 'n/a',
-                Str::price($enrollment->settlement->amount),
+                Str::price($payment->pivot->amount),
             ));
         }
 
         /** @var Payment $payment */
         foreach ($settlementShopOrders as $payment) {
-            $order = $payment->payable;
+            $order = $payment->payable->loadMissing('variants');
 
             $this->line(sprintf(
                 'Shop Order <fg=green>%s</> by <fg=cyan>%s</> with <fg=yellow>%d</> product(s); settled for <fg=gray>%s</>',
                 $order->number,
                 $order->user?->name ?? 'n/a',
-                $order->variants_count ?? 'n/a',
-                Str::price($order->settlement->amount),
+                $order->variants->count() ?? 'n/a',
+                Str::price($payment->pivot->amount),
+            ));
+        }
+
+        foreach ($otherPayments as $payment) {
+            $target = $payment->payable
+                ? sprintf('%s:%s', class_basename($payment->payable), $payment->payable->getKey())
+                : ($payment->payable_type
+                    ? sprintf('<error>%s</>:%s', $payment->payable_type, $payment->payable_id)
+                    : '<error>UNKNOWN</>');
+
+            $this->line(sprintf(
+                'Payment for <fg=cyan>%s</>; settled for <fg=gray>%s</>',
+                $target,
+                Str::price($payment->pivot->amount),
             ));
         }
 

@@ -173,11 +173,7 @@ class SitePage extends Model
         $this->loadMissing('site');
 
         if ($this->site === null) {
-            dump([
-                'attrs' => $this->attributes,
-                'relations' => $this->relations,
-                'exists' => $this->exists,
-            ]);
+            return "/{$this->slug}";
         }
 
         return "https://{$this->site->domain}/{$this->slug}";

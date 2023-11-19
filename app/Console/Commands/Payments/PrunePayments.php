@@ -103,10 +103,10 @@ class PrunePayments extends Command
                     continue;
                 }
 
-                $this->line("Cancelling payment for ${name}…", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->line("Cancelling payment for {$name}…", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
                 if ($payment->status === PaymentStatus::OPEN) {
-                    $this->line("Requesting cancellation for ${name} on <info>{$payment->service}</>…", null, OutputInterface::VERBOSITY_DEBUG);
+                    $this->line("Requesting cancellation for {$name} on <info>{$payment->service}</>…", null, OutputInterface::VERBOSITY_DEBUG);
 
                     Payments::find($payment->service)->cancel($payment);
                 }

@@ -117,7 +117,7 @@ class BeerCommand extends Command
 
         // Send as-is
         $this->replyWithMessage([
-            'text' => "🍻 ${format}",
+            'text' => "🍻 {$format}",
         ]);
     }
 }

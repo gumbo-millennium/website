@@ -60,7 +60,7 @@ class SendMail extends Command
         \assert($user instanceof User);
 
         if (! $user) {
-            $this->line("Cannot find a user with the email address <info>${email}</>.");
+            $this->line("Cannot find a user with the email address <info>{$email}</>.");
 
             return false;
         }

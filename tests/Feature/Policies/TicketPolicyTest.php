@@ -29,7 +29,7 @@ class TicketPolicyTest extends TestCase
         }
 
         foreach ($scopes as $scope) {
-            $this->assertSame(Gate::allows($scope, $activity), Gate::allows($scope, $ticket), "Failed to check ${scope} on Activity matches Ticket");
+            $this->assertSame(Gate::allows($scope, $activity), Gate::allows($scope, $ticket), "Failed to check {$scope} on Activity matches Ticket");
         }
     }
 

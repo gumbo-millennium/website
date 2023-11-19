@@ -114,8 +114,8 @@ class UpdateMollieSettlement implements ShouldQueue
         $involvedPayments = Payment::query()
             ->where('provider', 'mollie')
             ->whereIn('transaction_id', Collection::make()
-                ->merge($molliePayments->pluck('id'))
-                ->merge($mollieRefunds->pluck('paymentId')))
+                ->merge($molliePayments->pluck('orderId'))
+                ->merge($mollieRefunds->pluck('orderId')))
             ->with('payable')
             ->get()
             ->keyBy('transaction_id');
@@ -130,14 +130,14 @@ class UpdateMollieSettlement implements ShouldQueue
         );
 
         // Find the Mollie objects that target a payment that we don't know about
-        $settlementModel->missing_payments = $molliePayments->whereNotIn('id', $involvedPayments->keys())
+        $settlementModel->missing_payments = $molliePayments->whereNotIn('orderId', $involvedPayments->keys())
             ->map(fn (MolliePayment $payment) => [
                 'id' => $payment->id,
                 'amount' => money_value($payment->amount),
                 'settlementAmount' => money_value($payment->settlementAmount),
             ]);
 
-        $settlementModel->missing_refunds = $mollieRefunds->whereNotIn('paymentId', $involvedPayments)
+        $settlementModel->missing_refunds = $mollieRefunds->whereNotIn('orderId', $involvedPayments)
             ->map(fn (MollieRefund $refund) => [
                 'id' => $refund->id,
                 'payment_id' => $refund->paymentId,
@@ -157,10 +157,11 @@ class UpdateMollieSettlement implements ShouldQueue
      */
     private function buildPaymentMap(Collection $molliePayments, Collection $involvedPayments): Collection
     {
-        $amountByPayment = $this->determineTotalValueByKey($molliePayments, 'id', 'settlementAmount');
+        $amountByPayment = $this->determineTotalValueByKey($molliePayments, 'orderId', 'settlementAmount');
 
         return $involvedPayments
-            ->only($molliePayments->pluck('id')->all())
+            ->whereIn('transaction_id', $molliePayments->pluck('orderId'))
+            ->unique('transaction_id')
             ->mapWithKeys(fn (Payment $payment) => [$payment->id => [
                 'amount' => $amountByPayment[$payment->transaction_id],
             ]]);
@@ -175,10 +176,10 @@ class UpdateMollieSettlement implements ShouldQueue
      */
     private function buildRefundMap(Collection $mollieRefunds, Collection $involvedPayments): Collection
     {
-        $amountByPayment = $this->determineTotalValueByKey($mollieRefunds, 'paymentId', 'settlementAmount');
+        $amountByPayment = $this->determineTotalValueByKey($mollieRefunds, 'orderId', 'settlementAmount');
 
         return $involvedPayments
-            ->only($mollieRefunds->pluck('paymentId')->all())
+            ->only($mollieRefunds->pluck('orderId')->all())
             ->mapWithKeys(fn (Payment $payment) => [$payment->id => [
                 'amount' => $amountByPayment[$payment->transaction_id],
             ]]);

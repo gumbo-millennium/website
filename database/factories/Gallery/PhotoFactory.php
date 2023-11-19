@@ -61,7 +61,7 @@ class PhotoFactory extends Factory
                 $image = resource_path('assets/images/geen-foto.jpg');
             }
 
-            $storedImage = Storage::disk($photoDisk)->putFile("${photoPath}/seeded/gallery-photos", new File($image));
+            $storedImage = Storage::disk($photoDisk)->putFile("{$photoPath}/seeded/gallery-photos", new File($image));
             if ($storedImage === false) {
                 Log::error('Failed to write image to disk');
 

@@ -107,7 +107,7 @@ class TelegramController extends Controller
         $username = BotUserLink::getName('telegram', $telegramId);
 
         // Forward
-        flash()->success("Je account is nu gekoppeld aan de Telegram account \"${username}\"");
+        flash()->success("Je account is nu gekoppeld aan de Telegram account \"{$username}\"");
 
         return Response::redirectToRoute('account.tg.show');
     }
@@ -141,7 +141,7 @@ class TelegramController extends Controller
 
         // Get the data used to sign the request
         $dataList = Collection::make($request->except('hash'))
-            ->map(static fn ($val, $key) => "${key}=${val}")
+            ->map(static fn ($val, $key) => "{$key}={$val}")
             ->sort()
             ->implode("\n");
 
@@ -197,7 +197,7 @@ class TelegramController extends Controller
                 $username = $request->get('username');
             }
             if (empty($username)) {
-                $username = "#${telegramId}";
+                $username = "#{$telegramId}";
             }
             BotUserLink::setName('telegram', $telegramId, $username);
 

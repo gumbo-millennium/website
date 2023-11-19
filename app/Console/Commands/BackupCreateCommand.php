@@ -157,7 +157,7 @@ class BackupCreateCommand extends Command
 
             // Write model data
             $this->write(
-                "${path}/model.json",
+                "{$path}/model.json",
                 json_encode($modelData, JSON_PRETTY_PRINT),
             );
 
@@ -186,7 +186,7 @@ class BackupCreateCommand extends Command
                 $assetValue = $modelInstance->getAttribute($asset);
 
                 // Report for debug
-                $this->line("{$logPrefix} <fg=gray>Writing model property [${asset}]</>", null, OutputInterface::VERBOSITY_DEBUG);
+                $this->line("{$logPrefix} <fg=gray>Writing model property [{$asset}]</>", null, OutputInterface::VERBOSITY_DEBUG);
 
                 $this->createBackupForResourceProperty(
                     $modelInstance,
@@ -196,7 +196,7 @@ class BackupCreateCommand extends Command
                 );
 
                 // Report for verbose
-                $this->line("{$logPrefix} <info>Wrote model property [${asset}]</>", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->line("{$logPrefix} <info>Wrote model property [{$asset}]</>", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
             }
 
             $this->line("{$logPrefix} <info>Completed backup</>", null, OutputInterface::VERBOSITY_VERBOSE);
@@ -214,12 +214,12 @@ class BackupCreateCommand extends Command
     {
         $modelName = Str::of(class_basename($model))->snake()->plural();
         if (is_string($model)) {
-            return ["models/${modelName}", "[${modelName}]"];
+            return ["models/{$modelName}", "[{$modelName}]"];
         }
 
         $modelKey = $model->getKey();
 
-        return ["models/${modelName}/${modelKey}", "[${modelName}][${modelKey}]"];
+        return ["models/{$modelName}/{$modelKey}", "[{$modelName}][{$modelKey}]"];
     }
 
     protected function createBackupForResourceProperty(Model $model, string $asset, mixed $path, string $disk): bool
@@ -228,7 +228,7 @@ class BackupCreateCommand extends Command
 
         // Check if empty
         if (empty($path)) {
-            $this->line("{$logPrefix} <fg=gray>Skipping empty asset [${asset}]</>", null, OutputInterface::VERBOSITY_DEBUG);
+            $this->line("{$logPrefix} <fg=gray>Skipping empty asset [{$asset}]</>", null, OutputInterface::VERBOSITY_DEBUG);
 
             return true;
         }
