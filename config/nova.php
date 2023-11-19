@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'domain' => env('NOVA_DOMAIN_NAME', null),
+    'domain' => parse_url(env('APP_URL', 'https://gumbo-millennium.nl'), PHP_URL_HOST),
 
     /*
     |--------------------------------------------------------------------------
