@@ -26,7 +26,7 @@ class SitePolicy
      */
     public function viewAny(User $user): Response|bool
     {
-        if ($user->hasPermissionTo('admin', Site::class)) {
+        if ($user->can('admin', Site::class)) {
             return true;
         }
 
@@ -42,7 +42,7 @@ class SitePolicy
      */
     public function view(User $user, Site $site): Response|bool
     {
-        if ($user->hasPermissionTo('admin', Site::class)) {
+        if ($user->can('admin', Site::class)) {
             return true;
         }
 
