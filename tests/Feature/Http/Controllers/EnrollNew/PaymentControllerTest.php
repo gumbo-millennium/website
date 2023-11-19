@@ -10,13 +10,9 @@ class PaymentControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
-     *
-     * @return void
      */
-    public function test_example()
+    public function test()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 }

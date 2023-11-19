@@ -6,29 +6,31 @@ namespace App\Services;
 
 use App\Contracts\MarkdownServiceContract;
 use Illuminate\Support\HtmlString;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
+use League\CommonMark\ConverterInterface;
+use League\CommonMark\Environment\Environment;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\SmartPunct\SmartPunctExtension;
-use League\CommonMark\Inline\Element\Image;
+use League\CommonMark\MarkdownConverter;
 
 final class MarkdownService implements MarkdownServiceContract
 {
-    private CommonMarkConverter $converter;
+    private readonly ConverterInterface $converter;
 
     public function __construct()
     {
-        // get basic environment, not the GFM one (we don't want tables and such)
-        $environment = Environment::createCommonMarkEnvironment();
-
         // Ensure safety, we're sending user input as mails in the end.
-        $environment->mergeConfig([
+        $environment = new Environment([
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
             'max_nesting_level' => 5,
         ]);
+
+        // prep basic environment, not the GFM one (we don't want tables and such)
+        $environment->addExtension(new CommonMarkCoreExtension());
 
         // Add security observer
         $environment->addEventListener(
@@ -42,12 +44,12 @@ final class MarkdownService implements MarkdownServiceContract
         $environment->addExtension(new SmartPunctExtension());
 
         // Instantiate the converter engine
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function parse(string $body): string
     {
-        return $this->converter->convertToHtml($body);
+        return $this->converter->convert($body)->getContent();
     }
 
     public function parseSafe(string $body): HtmlString

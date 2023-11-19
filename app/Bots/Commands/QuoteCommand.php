@@ -55,17 +55,15 @@ class QuoteCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'wjd';
+    protected string $name = 'wjd';
 
     /**
      * Command Aliases - Helpful when you want to trigger command with more than one name.
      *
      * @var array<string>
      */
-    protected $aliases = [
+    protected array $aliases = [
         'quote',
         'wistjedat',
         'wistjedatje',
@@ -73,17 +71,13 @@ class QuoteCommand extends Command
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Stuur een wist-je-datje of quote in.';
+    protected string $description = 'Stuur een wist-je-datje of quote in.';
 
     /**
      * Command Argument Pattern.
-     *
-     * @var string
      */
-    protected $pattern = '.+';
+    protected string $pattern = '.+';
 
     /**
      * Handle the activity.

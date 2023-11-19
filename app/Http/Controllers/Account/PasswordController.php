@@ -37,11 +37,7 @@ class PasswordController extends Controller
                 'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) use ($user) {
-                    if (! $user->password || ! Hash::check($value, $user->password)) {
-                        return $fail(__('The current password is incorrect.'));
-                    }
-                },
+                'current_password',
             ],
             'new_password' => [
                 'required',

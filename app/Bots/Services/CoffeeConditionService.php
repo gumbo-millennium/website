@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Bots\Services;
 
 use App\Models\User;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
@@ -44,7 +43,7 @@ class CoffeeConditionService
             return implode(PHP_EOL, [
                 __('There is no more coffee.'),
                 __('The state was last updated by :user :ago.', [
-                    'user' => $status->user->first_name,
+                    'user' => $status->user?->first_name,
                     'ago' => $date->diffForHumans(),
                 ]),
             ]);
@@ -83,23 +82,23 @@ class CoffeeConditionService
      */
     private function readCoffeeStatus(): ?object
     {
-        try {
-            $raw = Storage::get(self::COFFEE_FILE);
-            $data = json_decode($raw, true, 4, JSON_THROW_ON_ERROR);
-
-            $data = array_merge([
-                'coffee' => null,
-                'user' => null,
-                'date' => null,
-            ], json_decode($raw, true, 4, JSON_THROW_ON_ERROR));
-
-            $data['user'] = User::find($data['user'] ?? -1);
-            $data['date'] = Date::parse($data['date'] ?? 'now');
-
-            return (object) $data;
-        } catch (FileNotFoundException) {
+        if (! Storage::exists(self::COFFEE_FILE)) {
             return null;
         }
+
+        $raw = Storage::get(self::COFFEE_FILE);
+        $data = json_decode($raw, true, 4, JSON_THROW_ON_ERROR);
+
+        $data = array_merge([
+            'coffee' => null,
+            'user' => null,
+            'date' => null,
+        ], json_decode($raw, true, 4, JSON_THROW_ON_ERROR));
+
+        $data['user'] = User::find($data['user'] ?? -1);
+        $data['date'] = Date::parse($data['date'] ?? 'now');
+
+        return (object) $data;
     }
 
     /**

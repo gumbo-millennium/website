@@ -306,7 +306,7 @@ class BackupCreateCommand extends Command
         $this->info("Writing file [<info>{$path}</>]", null, OutputInterface::VERBOSITY_DEBUG);
 
         try {
-            Storage::disk($this->backup->disk)->put("{$this->backup->path}/{$path}", value($data));
+            Storage::disk($this->backup->disk)->write("{$this->backup->path}/{$path}", value($data));
         } catch (Exception $exception) {
             /** @var Exception $exception */
             $this->line("<error>Failed to write file [{$path}]</>: {$exception->getMessage()}");

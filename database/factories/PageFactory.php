@@ -40,4 +40,11 @@ class PageFactory extends Factory
             'contents' => json_encode($this->getEditorBlocks()),
         ]);
     }
+
+    public function hidden(bool $hidden = true): self
+    {
+        return $this->state([
+            'hidden' => $hidden,
+        ]);
+    }
 }

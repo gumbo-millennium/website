@@ -50,17 +50,13 @@ class LoginCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'login';
+    protected string $name = 'login';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Koppel je Telegram account';
+    protected string $description = 'Koppel je Telegram account';
 
     /**
      * Handle the activity.

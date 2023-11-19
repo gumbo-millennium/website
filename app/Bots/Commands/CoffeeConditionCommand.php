@@ -28,17 +28,13 @@ class CoffeeConditionCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'koffie';
+    protected string $name = 'koffie';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Meld of bekijk de koffie conditie.';
+    protected string $description = 'Meld of bekijk de koffie conditie.';
 
     /**
      * Handle the activity.

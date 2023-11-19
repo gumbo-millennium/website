@@ -185,7 +185,7 @@ class RestoreImages extends Command
                 file_put_contents($tempFile, $zip->getFromIndex($fileIndex));
 
                 // Check file
-                $storagePath = Storage::disk('public')->putFile("images/{$pathName}", new File($tempFile));
+                $storagePath = Storage::disk('public')->writeFile("images/{$pathName}", new File($tempFile));
                 if (! $storagePath) {
                     continue;
                 }

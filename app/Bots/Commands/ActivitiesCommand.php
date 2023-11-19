@@ -39,17 +39,13 @@ class ActivitiesCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'activiteiten';
+    protected string $name = 'activiteiten';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Toon de (besloten) activiteiten';
+    protected string $description = 'Toon de (besloten) activiteiten';
 
     /**
      * Handle the activity.

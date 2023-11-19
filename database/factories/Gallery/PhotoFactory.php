@@ -5,17 +5,36 @@ declare(strict_types=1);
 namespace Database\Factories\Gallery;
 
 use App\Enums\PhotoVisibility;
+use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Models\Gallery\Album;
 use App\Models\Gallery\Photo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\File;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use SplFileInfo;
 
 class PhotoFactory extends Factory
 {
+    private static array $testImages = [];
+
+    private static function getRandomImage(): string
+    {
+        if (! self::$testImages) {
+            $filesystem = new Filesystem();
+            self::$testImages = Collection::make($filesystem->allFiles(resource_path('assets/images-seeding')))
+                ->filter(fn (SplFileInfo $file) => $file->getExtension() === 'jpg')
+                ->map(fn (SplFileInfo $file) => $file->getPathname())
+                ->toArray();
+        }
+
+        return Arr::random(self::$testImages);
+    }
+
     /**
      * Define the model's default state.
      *
@@ -56,12 +75,9 @@ class PhotoFactory extends Factory
                 return;
             }
 
-            if (! $image = $this->faker->image()) {
-                Log::notice('Failed to generate image for photo, using placeholder');
-                $image = resource_path('assets/images/geen-foto.jpg');
-            }
+            $storedImage = Storage::disk($photoDisk)
+                ->putFile("{$photoPath}/seeded/gallery-photos", new File(self::getRandomImage()));
 
-            $storedImage = Storage::disk($photoDisk)->putFile("{$photoPath}/seeded/gallery-photos", new File($image));
             if ($storedImage === false) {
                 Log::error('Failed to write image to disk');
 

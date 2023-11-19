@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Helpers\Arr;
 use App\Models\Sponsor;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -95,23 +94,21 @@ class SponsorService implements SponsorServiceContract
             return $value ? new HtmlString($value) : null;
         }
 
-        try {
-            // Get SVG
-            $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->{$property});
-        } catch (FileNotFoundException $exception) {
-            // Handle not founds
-            report(new RuntimeException(
-                "Could not find image for {$sponsor->name} (Sponsor #{$sponsor->id})",
-                404,
-                $exception,
-            ));
+        $fileDisk = Storage::disk(Sponsor::LOGO_DISK);
+        $filePath = $sponsor->{$property};
+        if ($fileDisk->missing($filePath)) {
+            // Fail the sponsor handling
+            report(new RuntimeException("Could not find image for {$sponsor->name} (Sponsor #{$sponsor->id})", 404));
 
-            // Cache null
+            // Cache invalid
             Cache::put($cacheKey, null, now()->addHours(6));
 
             // Return null
             return null;
         }
+
+        // Get SVG
+        $content = Storage::disk(Sponsor::LOGO_DISK)->get($sponsor->{$property});
 
         // Build attributes
         $attributes = [''];

@@ -25,24 +25,20 @@ class BeerCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'bier';
+    protected string $name = 'bier';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Bedenkt een goed excuus om bier te drinken';
+    protected string $description = 'Bedenkt een goed excuus om bier te drinken';
 
     /**
      * Command Aliases - Helpful when you want to trigger command with more than one name.
      *
      * @var array<string>
      */
-    protected $aliases = ['beer'];
+    protected array $aliases = ['beer'];
 
     /**
      * Handle the activity.

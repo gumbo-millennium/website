@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Models\FileBundle;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Http\File;
 
 class FileBundleFactory extends Factory
 {
@@ -26,7 +25,7 @@ class FileBundleFactory extends Factory
     public function withFile(): self
     {
         return $this->afterMaking(function (FileBundle $bundle) {
-            $bundle->addMedia(new File(resource_path('test-assets/pdf/chicken.pdf')))
+            $bundle->addMedia(resource_path('test-assets/pdf/chicken.pdf'))
                 ->preservingOriginal()
                 ->toMediaCollection();
         });

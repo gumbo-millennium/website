@@ -17,17 +17,13 @@ class StartCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'start';
+    protected string $name = 'start';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Toont het welkomstbericht';
+    protected string $description = 'Toont het welkomstbericht';
 
     /**
      * Handle the activity.

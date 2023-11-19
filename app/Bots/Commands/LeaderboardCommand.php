@@ -32,17 +32,13 @@ class LeaderboardCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'leaderboard';
+    protected string $name = 'leaderboard';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Toon het Werving Commissie Leaderboard';
+    protected string $description = 'Toon het Werving Commissie Leaderboard';
 
     /**
      * Handle the activity.

@@ -17,13 +17,15 @@
     </coverage>
 
     <php>
-        <server name="APP_ENV" value="testing"/>
+        <server name="APP_ENV" value="testing" />
         <server name="APP_KEY" value="base64:IOb91gGT8Aq/ZYnCM9Xh594T2bgRrfCVOA+1OaR0ZCE="/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="DB_CONNECTION" value="sqlite"/>
         <server name="DB_DATABASE" value="storage/app/test-database.db"/>
         <server name="CACHE_DRIVER" value="array"/>
         <server name="MAIL_DRIVER" value="array"/>
+        <server name="MAIL_FROM_NAME" value="Test User"/>
+        <server name="MAIL_FROM_ADDRESS" value="test@example.com"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
         <server name="SCOUT_DRIVER" value="null"/>
