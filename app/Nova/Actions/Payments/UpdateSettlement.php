@@ -19,6 +19,14 @@ class UpdateSettlement extends Action
     use Queueable;
 
     /**
+     * Get the displayable name of the action.
+     */
+    public function name()
+    {
+        return __(parent::name());
+    }
+
+    /**
      * Perform the action on the given models.
      */
     public function handle(ActionFields $fields, Collection $models)

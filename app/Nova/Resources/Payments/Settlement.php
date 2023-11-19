@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources\Payments;
 
+use App\Helpers\Str;
 use App\Nova\Actions\Payments\UpdateSettlement;
 use App\Nova\Fields\Price;
 use App\Nova\Resources\Payment;
@@ -71,11 +72,27 @@ class Settlement extends Resource
             Fields\Status::make('Status', 'status')
                 ->loadingWhen(['open', 'pending'])
                 ->failedWhen(['failed'])
-                ->filterable(fn ($request, $query, $value, $attrbiute) => $query->whereIn('status', Arr::wrap($value))),
+                ->filterable(fn ($_, $query, $value) => $query->whereIn('status', Arr::wrap($value))),
 
-            Fields\BelongsToMany::make('Betalingen', 'payments', Payment::class),
+            Fields\KeyValue::make(
+                'Niet-gevonden betalingen',
+                fn () => $this->missing_payments->mapWithKeys(fn ($row) => [$row['id'] => Str::price(money_value($row['settlementAmount']))])->all(),
+            )->onlyOnDetail()->keyLabel('Mollie ID')->valueLabel('Bedrag'),
 
-            Fields\BelongsToMany::make('Terugbetalingen', 'refunds', Payment::class),
+            Fields\KeyValue::make(
+                'Niet-gevonden terugbetalingen',
+                fn () => $this->missing_refunds->mapWithKeys(fn ($row) => [$row['id'] => Str::price(money_value($row['settlementAmount']))])->all(),
+            )->onlyOnDetail()->keyLabel('Mollie ID')->valueLabel('Bedrag'),
+
+            Fields\BelongsToMany::make('Betalingen', 'payments', Payment::class)
+                ->fields(fn () => [
+                    Price::make('Uitbetaald', 'amount'),
+                ]),
+
+            Fields\BelongsToMany::make('Terugbetalingen', 'refunds', Payment::class)
+                ->fields(fn () => [
+                    Price::make('Teruggevorderd', 'amount'),
+                ]),
         ];
     }
 

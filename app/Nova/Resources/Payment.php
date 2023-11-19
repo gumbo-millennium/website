@@ -68,9 +68,11 @@ class Payment extends Resource
             Fields\MorphTo::make(__('Subject'), 'payable')
                 ->exceptOnForms(),
 
-            Fields\Text::make(__('Payment service'), 'provider'),
+            Fields\Text::make(__('Payment service'), 'provider')
+                ->onlyOnDetail(),
 
-            Fields\Text::make(__('Transaction ID'), 'transaction_id'),
+            Fields\Text::make(__('Transaction ID'), 'transaction_id')
+                ->onlyOnDetail(),
 
             Fields\Text::make('Mollie link', function () {
                 if (! $this->transaction_id) {
