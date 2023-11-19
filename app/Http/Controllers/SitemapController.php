@@ -95,12 +95,12 @@ class SitemapController extends Controller
         $mostRecent = (clone $query)->max('updated_at');
 
         // Index page
-        $sitemap->add(route("${base}.index"), $mostRecent, '0.9', 'daily');
+        $sitemap->add(route("{$base}.index"), $mostRecent, '0.9', 'daily');
 
         // Item page
         foreach ($query->cursor() as $model) {
             $sitemap->add(
-                route("${base}.show", $model),
+                route("{$base}.show", $model),
                 $model->updated_at,
                 '0.8',
                 'weekly',

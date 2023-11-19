@@ -21,7 +21,7 @@ class PruneGlideCacheCommandTest extends TestCase
         Storage::fake($disk);
 
         Storage::disk($disk)->put('/test.jpg', 'test');
-        Storage::disk($disk)->put("${path}/test.jpg", 'test');
+        Storage::disk($disk)->put("{$path}/test.jpg", 'test');
 
         $this->travel(6)->weeks();
 
@@ -29,6 +29,6 @@ class PruneGlideCacheCommandTest extends TestCase
             ->assertSuccessful();
 
         Storage::disk($disk)->assertExists('/test.jpg');
-        Storage::disk($disk)->assertMissing("${path}/test.jpg");
+        Storage::disk($disk)->assertMissing("{$path}/test.jpg");
     }
 }

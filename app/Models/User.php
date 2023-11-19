@@ -316,7 +316,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         $lines = [
             $line1,
             $line2,
-            "${postcode}, ${city}",
+            "{$postcode}, {$city}",
         ];
 
         $address = collect($lines)

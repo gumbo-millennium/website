@@ -204,7 +204,7 @@ class GoogleMailListService implements MailListHandler
             if ($action === MailList::CHANGE_DELETE) {
                 $this->callGoogleService(
                     static fn () => $aliasManager->delete($list->getServiceId(), $alias),
-                    "delete alias ${alias}",
+                    "delete alias {$alias}",
                     $list->getEmail(),
                 );
 
@@ -213,7 +213,7 @@ class GoogleMailListService implements MailListHandler
 
             // Check
             if ($action !== MailList::CHANGE_ADD) {
-                throw new LogicException("Invalid action on [${index}]: [{$action}] [{$alias}]");
+                throw new LogicException("Invalid action on [{$index}]: [{$action}] [{$alias}]");
             }
 
             // Make object
@@ -224,7 +224,7 @@ class GoogleMailListService implements MailListHandler
             // Add
             $this->callGoogleService(
                 static fn () => $aliasManager->insert($list->getServiceId(), $aliasObj),
-                "create alias ${alias}",
+                "create alias {$alias}",
                 $list->getEmail(),
             );
         }
@@ -235,7 +235,7 @@ class GoogleMailListService implements MailListHandler
             if ($action === MailList::CHANGE_DELETE) {
                 $this->callGoogleService(
                     static fn () => $memberManager->delete($list->getServiceId(), $email),
-                    "delete member ${email}",
+                    "delete member {$email}",
                     $list->getEmail(),
                 );
 
@@ -244,7 +244,7 @@ class GoogleMailListService implements MailListHandler
 
             // Check
             if ($action !== MailList::CHANGE_ADD && $action !== MailList::CHANGE_UPDATE) {
-                throw new LogicException("Invalid action on [${index}]: [{$action}] [{$alias}]");
+                throw new LogicException("Invalid action on [{$index}]: [{$action}] [{$alias}]");
             }
 
             // Prep object
@@ -257,7 +257,7 @@ class GoogleMailListService implements MailListHandler
             if ($action === MailList::CHANGE_UPDATE) {
                 $this->callGoogleService(
                     static fn () => $memberManager->patch($list->getServiceId(), $email, $memberObj),
-                    "update member ${email}",
+                    "update member {$email}",
                     $list->getEmail(),
                 );
 
@@ -267,7 +267,7 @@ class GoogleMailListService implements MailListHandler
             // Insert new member
             $this->callGoogleService(
                 static fn () => $memberManager->insert($list->getServiceId(), $memberObj),
-                "add member ${email}",
+                "add member {$email}",
                 $list->getEmail(),
             );
         }

@@ -63,7 +63,7 @@ class EmailList extends Resource
                         return null;
                     }
 
-                    return array_map(static fn ($val) => "* ${val}\n", $values);
+                    return array_map(static fn ($val) => "* {$val}\n", $values);
                 })
                 ->readonly()
                 ->onlyOnDetail(),

@@ -98,7 +98,7 @@ class DataExport extends Model
             'date' => $this->created_at->format('Y-m-d H:i:s'),
         ]);
 
-        return "${localName}.${extension}";
+        return "{$localName}.{$extension}";
     }
 
     /**

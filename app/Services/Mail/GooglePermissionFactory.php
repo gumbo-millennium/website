@@ -86,7 +86,7 @@ class GooglePermissionFactory
 
         // Throw a fit if file is missing
         if (! \file_exists($configPath) || ! \is_file($configPath)) {
-            throw new InvalidArgumentException("Config named [${configName}] does not exist at [${configPath}]");
+            throw new InvalidArgumentException("Config named [{$configName}] does not exist at [{$configPath}]");
         }
 
         // Get contents
@@ -96,7 +96,7 @@ class GooglePermissionFactory
             // Decode contents on receive
             return \json_decode($contents, true, 512, \JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
-            throw new InvalidArgumentException("Config named [${configName}] is invalid", 0, $exception);
+            throw new InvalidArgumentException("Config named [{$configName}] is invalid", 0, $exception);
         }
     }
 
@@ -130,10 +130,10 @@ class GooglePermissionFactory
         // Validate each key
         foreach ($options as $key => $value) {
             if (! is_string($key)) {
-                throw new InvalidArgumentException("Config key [${key}] is invalid");
+                throw new InvalidArgumentException("Config key [{$key}] is invalid");
             }
             if (! is_scalar($value) && $value !== null) {
-                throw new InvalidArgumentException("Config value on [${key}] is invalid");
+                throw new InvalidArgumentException("Config value on [{$key}] is invalid");
             }
         }
 
@@ -238,12 +238,12 @@ class GooglePermissionFactory
         foreach ($config as $key => $value) {
             // Re-check keys
             if (! \is_string($key)) {
-                throw new LogicException("Key [${key}] is not a string, filtering is failing.");
+                throw new LogicException("Key [{$key}] is not a string, filtering is failing.");
             }
 
             // Re-check values
             if (! \is_scalar($value) && null !== $value) {
-                throw new LogicException("Value at [${key}] is not scalar or null, filtering is failing.");
+                throw new LogicException("Value at [{$key}] is not scalar or null, filtering is failing.");
             }
 
             // Format value

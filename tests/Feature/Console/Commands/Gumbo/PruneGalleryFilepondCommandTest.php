@@ -23,18 +23,18 @@ class PruneGalleryFilepondCommandTest extends TestCase
         $this->markTestIncomplete('Need to finish this');
 
         Storage::disk($disk)->put('/test.jpg', 'test');
-        Storage::disk($disk)->put("${path}/test.jpg", 'test');
+        Storage::disk($disk)->put("{$path}/test.jpg", 'test');
 
         $this->travel(6)->weeks();
 
-        Storage::disk($disk)->put("${path}/test2.jpg", 'test');
+        Storage::disk($disk)->put("{$path}/test2.jpg", 'test');
 
         $this->artisan('gumbo:prune-glide-cache')
             ->assertSuccessful();
 
         Storage::disk($disk)->assertExists('/test.jpg');
-        Storage::disk($disk)->assertExists("${path}/test2.jpg");
-        Storage::disk($disk)->assertMissing("${path}/test.jpg");
+        Storage::disk($disk)->assertExists("{$path}/test2.jpg");
+        Storage::disk($disk)->assertMissing("{$path}/test.jpg");
     }
 
     /**

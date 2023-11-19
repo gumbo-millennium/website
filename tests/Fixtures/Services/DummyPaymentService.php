@@ -78,7 +78,7 @@ class DummyPaymentService implements PaymentService
     {
         throw_unless(in_array($key, ['paid', 'expired', 'cancelled'], true), new LogicException('Invalid property key'));
 
-        Arr::set($this->data, "{$this->objectKey($subject)}.${key}", $value);
+        Arr::set($this->data, "{$this->objectKey($subject)}.{$key}", $value);
 
         return $this;
     }
@@ -116,7 +116,7 @@ class DummyPaymentService implements PaymentService
         $key = $this->objectKey($payment);
 
         PHPUnit::assertArrayHasKey($key, $this->data, 'Failed asserting the payment was seen');
-        PHPUnit::assertArrayHasKey("checked-${check}", $this->data[$key], "Failed asserting the payment was checked for [${check}]");
+        PHPUnit::assertArrayHasKey("checked-{$check}", $this->data[$key], "Failed asserting the payment was checked for [{$check}]");
     }
 
     /**

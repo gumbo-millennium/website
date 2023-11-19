@@ -184,7 +184,7 @@ class PermissionSeeder extends VerboseSeeder
 
             // Log result
             $action = $role->wasRecentlyCreated ? 'Created' : 'Updated';
-            Log::info("${action} role {role}.", [
+            Log::info("{$action} role {role}.", [
                 'role' => $role ?? $name,
             ]);
         }

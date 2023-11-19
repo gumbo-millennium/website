@@ -52,7 +52,7 @@ class ReindexMediaFiles extends Command
             $to = ($chunkCount += $perChunkCount) * $perChunkCount;
 
             // Report
-            $this->info("Parsed chunk {$chunkCount} (items <comment>${from}</> – <comment>{$to}</>).");
+            $this->info("Parsed chunk {$chunkCount} (items <comment>{$from}</> – <comment>{$to}</>).");
         });
     }
 }

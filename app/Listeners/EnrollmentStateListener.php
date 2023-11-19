@@ -44,7 +44,7 @@ class EnrollmentStateListener implements ShouldQueue
         }
 
         // Prevent queue racing
-        $cacheKey = "race-prevention.enroll.{$enrollment->id}.${finalState}";
+        $cacheKey = "race-prevention.enroll.{$enrollment->id}.{$finalState}";
         if (Cache::has($cacheKey)) {
             return;
         }

@@ -55,7 +55,7 @@ class MigrateMediaLibraryCommand extends Command
         /** @var Media $mediaItem */
         foreach ($localDisk->allFiles('medialibrary/media') as $mediaFile) {
             $mediaItemName = sprintf('%s/<info>%s</>', dirname($mediaFile), basename($mediaFile));
-            $this->line("Checking file ${mediaItemName}", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+            $this->line("Checking file {$mediaItemName}", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
             $existsOnCloud = $cloudDisk->exists($mediaFile);
 

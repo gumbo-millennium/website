@@ -238,7 +238,7 @@ class GoogleMailList implements JsonSerializable, MailList
 
         // Test against existence
         if ($this->hasAlias($valid['email'])) {
-            throw new InvalidArgumentException("Alias [${email}] already exists");
+            throw new InvalidArgumentException("Alias [{$email}] already exists");
         }
 
         // Add mutation
@@ -255,12 +255,12 @@ class GoogleMailList implements JsonSerializable, MailList
 
         // Test against existence
         if (! $this->hasAlias($valid['email'])) {
-            throw new InvalidArgumentException("Alias [${email}] not found");
+            throw new InvalidArgumentException("Alias [{$email}] not found");
         }
 
         // Test if locked
         if (\in_array($valid['email'], $this->lockedAliases, true)) {
-            throw new InvalidArgumentException("Alias [${email}] is locked", 420);
+            throw new InvalidArgumentException("Alias [{$email}] is locked", 420);
         }
 
         // Add mutation
@@ -364,7 +364,7 @@ class GoogleMailList implements JsonSerializable, MailList
     protected function assertEmailExists(string $email): void
     {
         if (! $this->hasMember($email)) {
-            throw new UnderflowException("Email address [${email}] does not exist");
+            throw new UnderflowException("Email address [{$email}] does not exist");
         }
     }
 
@@ -376,7 +376,7 @@ class GoogleMailList implements JsonSerializable, MailList
     protected function assertEmailNotExists(string $email): void
     {
         if ($this->hasMember($email)) {
-            throw new OverflowException("Email address [${email}] already exists");
+            throw new OverflowException("Email address [{$email}] already exists");
         }
     }
 
@@ -388,7 +388,7 @@ class GoogleMailList implements JsonSerializable, MailList
     protected function assertEmailMutable(string $email): void
     {
         if (! $this->canMutate($email)) {
-            throw new InvalidArgumentException("Email address [${email}] is not mutable");
+            throw new InvalidArgumentException("Email address [{$email}] is not mutable");
         }
     }
 

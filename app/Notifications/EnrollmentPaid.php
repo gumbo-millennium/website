@@ -74,6 +74,6 @@ class EnrollmentPaid extends Notification implements ShouldQueue
 
         // Send the mail with the final goodbye
         return $mail
-            ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, ${tail}.");
+            ->line("Bedankt voor het gebruiken van de Gumbo Millennium website, {$tail}.");
     }
 }

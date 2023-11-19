@@ -539,7 +539,7 @@ final class ConscriboService implements ConscriboServiceContract
             $fieldType = $fields[$fieldName]['type'];
             if (! in_array($fieldType, self::FILTER_OPERATOR_MAP[$operator], true)) {
                 throw new InvalidArgumentException(
-                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [${fieldType}].",
+                    "Filter at index [{$key}] has operator [{$operator}]. which is invalid for data type [{$fieldType}].",
                 );
             }
 
