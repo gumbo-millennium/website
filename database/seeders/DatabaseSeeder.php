@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
 
         // Required pages
         $this->call(PageSeeder::class);
+        $this->call(MinisiteSeeder::class);
 
         // Redirects
         $this->call(RedirectInstructionSeeder::class);

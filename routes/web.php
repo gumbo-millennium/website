@@ -12,7 +12,6 @@ use App\Http\Controllers\FileExportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\Shop;
-use App\Http\Middleware\Minisite\BlockRequestIfDisabled;
 use App\Http\Policy;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -27,22 +26,6 @@ foreach (Config::get('gumbo.redirect-domains') as $domain) {
         Route::get('/', [RedirectController::class, 'index']);
         Route::get('/{slug}', [RedirectController::class, 'redirect'])->where('slug', '.+');
     });
-}
-
-// Bind minisites
-foreach (Config::get('gumbo.minisites') as $domain => $settings) {
-    $controllerName = $settings['controller'] ?? Controllers\Minisite\SimpleController::class;
-
-    Route::domain($domain)
-        ->middleware([
-            $addCsp(Policy\MinisitePolicy::class),
-            BlockRequestIfDisabled::class,
-        ])
-        ->group(function () use ($controllerName) {
-            Route::get('/', [$controllerName, 'index']);
-            Route::get('/{any}', [$controllerName, 'page'])
-                ->where('any', '.+');
-        });
 }
 
 // Home

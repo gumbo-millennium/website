@@ -129,6 +129,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ])->icon('collection')->collapsable();
             }
 
+            if ($user->can('viewAny', Models\Minisite\SitePage::class)) {
+                yield MenuSection::make(__('Minisites'), [
+                    MenuItem::resource(Resources\Minisite\Site::class)->name('Sites'),
+                    MenuItem::resource(Resources\Minisite\SitePage::class)->name("Pagina's"),
+                ])->icon('globe')->collapsable();
+            }
+
             if ($user?->can('viewAny', Models\User::class)) {
                 yield MenuSection::make('Bestuurszaken', [
                     MenuItem::resource(Resources\User::class),

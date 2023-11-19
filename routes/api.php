@@ -30,6 +30,11 @@ Route::addRoute(['GET', 'PUT'], 'plazacam/{user}/{webcam}', fn () => Response::j
     ],
 ], 400));
 
+Route::get('/minisite/{domain}/config', [Api\MinisiteController::class, 'config'])->name('minisite.config');
+Route::get('/minisite/{domain}/sitemap', [Api\MinisiteController::class, 'sitemap'])->name('minisite.sitemap');
+Route::get('/minisite/{domain}/page/{page}', [Api\MinisiteController::class, 'showPage'])->name('minisite.page')
+    ->where('page', '[a-z0-9][a-z0-9-/]*');
+
 Route::middleware(['auth:sanctum', 'member'])->group(function () {
     Route::name('webcam.')->prefix('/webcam/')->group(function () {
         Route::get('/{camera}', [Api\WebcamController::class, 'show'])->name('show');
