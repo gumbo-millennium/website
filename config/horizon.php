@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'domain' => env('HORIZON_DOMAIN', null),
+    'domain' => parse_url(env('APP_URL', 'https://gumbo-millennium.nl'), PHP_URL_HOST),
 
     /*
     |--------------------------------------------------------------------------

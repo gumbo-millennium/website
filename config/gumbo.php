@@ -243,30 +243,6 @@ return [
     ],
 
     /**
-     * Minisites. Information-only sites that may have their own controllers.
-     */
-    'minisites' => [
-        'gumbolustrum.nl' => [
-            'enabled' => (bool) env('MINISITE_LUSTRUM_ENABLED', false),
-            'controller' => \App\Http\Controllers\Minisite\LustrumController::class,
-            'groups' => ['lustrum'],
-        ],
-        'gumbointro.nl' => [
-            'enabled' => (bool) env('MINISITE_INTRO_ENABLED', false),
-            'groups' => ['ic'],
-        ],
-        'landhuisweekend.nl' => [
-            'enabled' => (bool) env('MINISITE_LHW_ENABLED', false),
-            'groups' => ['lhw'],
-        ],
-
-        // Testing only
-        'test-site.localhost' => [
-            'enabled' => false,
-        ],
-    ],
-
-    /**
      * Feature flags.
      */
     'features' => [

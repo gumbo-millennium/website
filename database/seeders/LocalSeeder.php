@@ -16,6 +16,7 @@ class LocalSeeder extends Seeder
     public function run()
     {
         // Add users
+        $this->call(LocalRoleSeeder::class);
         $this->call(UserSeeder::class);
 
         // Seed shop

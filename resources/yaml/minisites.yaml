@@ -1,0 +1,12 @@
+sites:
+  - domain: gumbolustrum.nl
+    name: Gumbo Lustrum
+    group: lustrum
+
+  - domain: gumbointro.nl
+    name: Gumbo Introductie
+    group: ic
+
+  - domain: landhuisweekend.nl
+    name: Landhuisweekend
+    group: lhw

@@ -65,6 +65,10 @@ class AuthServiceProvider extends ServiceProvider
         SpatiePermissionModels\Permission::class => Policies\Permissions\PermissionPolicy::class,
         SpatiePermissionModels\Role::class => Policies\Permissions\RolePolicy::class,
         Models\Role::class => Policies\Permissions\RolePolicy::class,
+
+        // Minisites
+        Models\Minisite\Site::class => Policies\Minisite\SitePolicy::class,
+        Models\Minisite\SitePage::class => Policies\Minisite\SitePagePolicy::class,
     ];
 
     /**

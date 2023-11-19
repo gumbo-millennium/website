@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Gates;
 
+use App\Models;
 use App\Models\Activity;
 use App\Models\File;
 use App\Models\FileCategory;
@@ -35,6 +36,7 @@ class AdminGate
             || $user->can('manage', MemberReferral::class)
             || $user->can('manage', NewsItem::class)
             || $user->can('manage', Page::class)
+            || $user->can('viewAny', Models\Minisite\SitePage::class)
             || $user->can('manage', Payment::class)
             || $user->can('manage', Sponsor::class)
             || $user->can('manage', User::class);

@@ -151,13 +151,14 @@ jobs:
           php artisan optimize:clear -vv
 
       - name: Run unit tests
+        id: unit-tests
         run: |
           vendor/bin/phpunit \
             --log-junit ./report-junit.xml \
             --coverage-clover coverage-clover.xml
 
       - name: Report test results
-        if: ${{ success() || failure() }}
+        if: ${{ success() || steps.unit-tests.result == 'failure' }}
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: ./report-junit.xml

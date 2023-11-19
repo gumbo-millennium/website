@@ -514,6 +514,11 @@
   "Settlement": "Uitbetaling",
   "Settlements": "Uitbetalingen",
 
+  "Minisite": "Minisite",
+  "Minisites": "Minisites",
+  "Site Page": "Pagina",
+  "Site Pages": "Pagina's",
+
   "Some of the specified models aren't settlements.": "Sommige van de opgegeven modellen zijn geen uitbetalingen.",
   "Settlements will be updated shortly.": "De uitbetalingen worden binnenkort bijgewerkt.",
 
