@@ -104,9 +104,9 @@ class MoveMinisitePagesToSitePages extends Migration
         $page->forceFill($sitePage->only([
             'title',
             'cover',
-            'hidden',
             'contents',
         ]));
+        $page->hidden = ! $sitePage->visible;
 
         if ($sitePage->createdBy) {
             $page->author()->associate($sitePage->createdBy);

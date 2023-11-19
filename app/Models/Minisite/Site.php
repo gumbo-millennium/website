@@ -50,6 +50,15 @@ class Site extends Model
         'enabled' => 'bool',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'domain',
+        'name',
+        'enabled',
+    ];
+
     public function pages(): HasMany
     {
         return $this->hasMany(SitePage::class, 'site_id');
