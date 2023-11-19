@@ -10,10 +10,10 @@ namespace App\Bots\Commands;
 class StartCommand extends Command
 {
     private const MSG = <<<'TEXT'
-    😄 Welkom bij de Gumbot :)
+        😄 Welkom bij de Gumbot :)
 
-    Typ /help om de commando's te zien, of /login om in te loggen op de bot.
-    TEXT;
+        Typ /help om de commando's te zien, of /login om in te loggen op de bot.
+        TEXT;
 
     /**
      * The name of the Telegram command.

@@ -17,41 +17,41 @@ use Telegram\Bot\Keyboard\Keyboard;
 class QuoteCommand extends Command
 {
     private const REPLY_TO_SHORT = <<<'MSG'
-    Geef wist-je-datje 😠
+        Geef wist-je-datje 😠
 
-    <code>/wjd [bericht]</code>
-    MSG;
+        <code>/wjd [bericht]</code>
+        MSG;
 
     private const MAX_QUOTE_LENGTH = 210;
 
     private const REPLY_TOO_LONG = <<<'MSG'
-    🤌 Moet Korter 🤌
+        🤌 Moet Korter 🤌
 
-    Je verhaal is te lang, maak het maar wat mand.
-    MSG;
+        Je verhaal is te lang, maak het maar wat mand.
+        MSG;
 
     private const REPLY_GUEST_THROTTLED = <<<'MSG'
-    ⏰ Sorry, je mag nog geen wist-je-datje insturen.
+        ⏰ Sorry, je mag nog geen wist-je-datje insturen.
 
-    Log in via /login om deze beperking weg te halen.
-    MSG;
+        Log in via /login om deze beperking weg te halen.
+        MSG;
 
     private const REPLY_OK = <<<'MSG'
-    Je wist-je-datje is opgeslagen.
+        Je wist-je-datje is opgeslagen.
 
-    Je hebt het volgende ingestuurd:
-    %s
-    MSG;
+        Je hebt het volgende ingestuurd:
+        %s
+        MSG;
 
     private const REPLY_PUBLIC = <<<'MSG'
-    Wil je je wist-je-datjes voortaan in het geheim insturen?
-    Stuur ze dan als DM naar de bot 😉
-    MSG;
+        Wil je je wist-je-datjes voortaan in het geheim insturen?
+        Stuur ze dan als DM naar de bot 😉
+        MSG;
 
     private const REPLY_GUEST = <<<'MSG'
-    Je bent niet ingelogd, dus je kan maximaal 1 wist-je-datje per
-    dag insturen. Login via /login om deze limiet te verwijderen.
-    MSG;
+        Je bent niet ingelogd, dus je kan maximaal 1 wist-je-datje per
+        dag insturen. Login via /login om deze limiet te verwijderen.
+        MSG;
 
     /**
      * The name of the Telegram command.

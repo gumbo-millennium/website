@@ -35,8 +35,8 @@ class UpdateGroups extends Command
      * @var string
      */
     protected $description = <<<'DESC'
-    Synchronises groups from Conscribo, optionally purging old ones and creating missing ones
-    DESC;
+        Synchronises groups from Conscribo, optionally purging old ones and creating missing ones
+        DESC;
 
     /**
      * Create a new command instance.

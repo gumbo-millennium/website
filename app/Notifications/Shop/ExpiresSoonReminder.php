@@ -68,10 +68,10 @@ class ExpiresSoonReminder extends ShopNotification implements TelegramNotificati
         $value = Str::price($this->order->price);
 
         $message = <<<TEXT
-        ⏰ Je bestelling verloopt bijna!
+            ⏰ Je bestelling verloopt bijna!
 
-        Je hebt nog {$expiresIn} om je Gumbo webwinkel bestelling {$order->number} af te ronden!
-        TEXT;
+            Je hebt nog {$expiresIn} om je Gumbo webwinkel bestelling {$order->number} af te ronden!
+            TEXT;
 
         return Message::make($message)
             ->addKeyboardRow(

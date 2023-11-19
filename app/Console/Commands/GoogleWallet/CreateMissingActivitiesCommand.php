@@ -22,10 +22,10 @@ class CreateMissingActivitiesCommand extends GoogleWalletCommand
      * @var string
      */
     protected $signature = <<<'CMD'
-    google-wallet:create-missing-activities
-        {--dry-run : Only show what would be created}
-        {--all : Update all eligible activities}
-    CMD;
+        google-wallet:create-missing-activities
+            {--dry-run : Only show what would be created}
+            {--all : Update all eligible activities}
+        CMD;
 
     /**
      * The console command description.

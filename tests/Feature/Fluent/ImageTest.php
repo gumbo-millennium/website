@@ -44,8 +44,8 @@ class ImageTest extends TestCase
         $actual = Image::make('test')->width(500);
 
         $template = <<<'HTML'
-        <img src="%s" alt="test" />
-        HTML;
+            <img src="%s" alt="test" />
+            HTML;
 
         $this->assertSame(
             sprintf($template, $expected),

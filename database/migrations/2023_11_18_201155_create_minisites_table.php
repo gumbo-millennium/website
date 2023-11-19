@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMinisitesTable extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -41,4 +40,4 @@ class CreateMinisitesTable extends Migration
     {
         Schema::dropIfExists('minisites');
     }
-}
+};

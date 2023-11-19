@@ -26,9 +26,9 @@ class UpdateShopCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    shop:update
-        {--prune : Remove unmatched items}
-    CMD;
+        shop:update
+            {--prune : Remove unmatched items}
+        CMD;
 
     /**
      * The console command description.

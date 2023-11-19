@@ -78,22 +78,22 @@ class MakeGitignore extends Command
 
         $ignoreContent = $data->getBody() . <<<'IGNORE'
 
-### App config ###
+            ### App config ###
 
-# Public files and directories
-/public/
-!/public/favicon.ico
-!/public/index.php
-!/public/robots.txt
+            # Public files and directories
+            /public/
+            !/public/favicon.ico
+            !/public/index.php
+            !/public/robots.txt
 
-# Development helper
-storage/debugbar
+            # Development helper
+            storage/debugbar
 
-# Laravel IDE helper
-/_ide_helper_models.php
-/_ide_helper.php
-/.phpstorm.meta.php
-IGNORE;
+            # Laravel IDE helper
+            /_ide_helper_models.php
+            /_ide_helper.php
+            /.phpstorm.meta.php
+            IGNORE;
         // Trim lines and add trailing EOL
         $ignoreContent = trim($ignoreContent) . PHP_EOL;
 

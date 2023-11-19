@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ruleset xmlns="http://pmd.sf.net/ruleset/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
+    name="Gumbo Millennium Ruleset"
+    language="php">
+    <description>
+        Gumbo Millennium Ruleset
+    </description>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>tests/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>_ide_helper.php</exclude-pattern>
+
+    <!-- Clean Code Rules-->
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="StaticAccess" />
+    </rule>
+    <rule ref="rulesets/cleancode.xml/StaticAccess">
+        <properties>
+            <property name="exceptions">
+                <value>
+                    Illuminate\Support\Facades\Gate
+                    Illuminate\Support\Facades\Redirect
+                    Illuminate\Support\Facades\Log
+                    Illuminate\Support\Facades\Cookie
+                    Illuminate\Support\Facades\ParallelTesting
+                    Illuminate\Support\Facades\Config
+                    Illuminate\Support\Facades\Date
+                    Illuminate\Support\Facades\Vite
+                    Illuminate\Support\Facades\Artisan
+                    Illuminate\Support\Facades\Bus
+                    Illuminate\Support\Facades\Schema
+                    Illuminate\Support\Facades\Broadcast
+                    Illuminate\Support\Facades\Notification
+                    Illuminate\Support\Facades\Event
+                    Illuminate\Support\Facades\Crypt
+                    Illuminate\Support\Facades\URL
+                    Illuminate\Support\Facades\Hash
+                    Illuminate\Support\Facades\Storage
+                    Illuminate\Support\Facades\Lang
+                    Illuminate\Support\Facades\Queue
+                    Illuminate\Support\Facades\View
+                    Illuminate\Support\Facades\Process
+                    Illuminate\Support\Facades\Route
+                    Illuminate\Support\Facades\DB
+                    Illuminate\Support\Facades\Password
+                    Illuminate\Support\Facades\Facade
+                    Illuminate\Support\Facades\Validator
+                    Illuminate\Support\Facades\Mail
+                    Illuminate\Support\Facades\Session
+                    Illuminate\Support\Facades\Auth
+                    Illuminate\Support\Facades\Redis
+                    Illuminate\Support\Facades\Response
+                    Illuminate\Support\Facades\Cache
+                    Illuminate\Support\Facades\Pipeline
+                    Illuminate\Support\Facades\Http
+                    Illuminate\Support\Facades\Blade
+                    Illuminate\Support\Facades\App
+                    Illuminate\Support\Facades\File
+                    Illuminate\Support\Facades\Request
+                    Illuminate\Support\Facades\RateLimiter
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- I completely agree with the Controversial ruleset -->
+    <rule ref="rulesets/controversial.xml" />
+
+    <!-- Design rules -->
+    <rule ref="rulesets/design.xml" />
+
+    <!-- Change naming for some Laravel conventions -->
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortMethodName" />
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortMethodName">
+        <properties>
+            <property name="exceptions" value="up,down" />
+        </properties>
+    </rule>
+
+    <!-- Unused code should be avoided -->
+    <rule ref="rulesets/unusedcode.xml" />
+</ruleset>

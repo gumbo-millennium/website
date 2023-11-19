@@ -19,9 +19,9 @@ class ShopPublishCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-        shop:publish
-            {product* : Products to publish}
-    CMD;
+            shop:publish
+                {product* : Products to publish}
+        CMD;
 
     /**
      * The console command description.

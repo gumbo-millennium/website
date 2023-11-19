@@ -80,8 +80,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Geen Nederlands nummer? Typ dan een internationaal nummer in (zoals +49 201 567 890).
-                    TEXT,
+                        Geen Nederlands nummer? Typ dan een internationaal nummer in (zoals +49 201 567 890).
+                        TEXT,
                 ],
             ]);
 
@@ -95,9 +95,9 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Om je aan te melden voor Gumbo Millennium via de website
-                    moet je minimaal 16 jaar oud zijn.
-                    TEXT,
+                        Om je aan te melden voor Gumbo Millennium via de website
+                        moet je minimaal 16 jaar oud zijn.
+                        TEXT,
                 ],
             ])
             ->add('gender', 'text', [
@@ -108,8 +108,8 @@ class NewMemberForm extends Form
                 ],
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Indien niet van toepassing, zet dan een streepje neer.
-                    TEXT,
+                        Indien niet van toepassing, zet dan een streepje neer.
+                        TEXT,
                 ],
             ]);
 
@@ -174,18 +174,18 @@ class NewMemberForm extends Form
                 'label' => 'Zwolse HBO-student',
                 'help_block' => [
                     'text' => <<<TEXT
-                    Studeer je aan {$unisAsString}?
-                    TEXT,
+                        Studeer je aan {$unisAsString}?
+                        TEXT,
                 ],
             ])
             ->add('is-newsletter', 'checkbox', [
                 'label' => 'Nieuwsbrief',
                 'help_block' => [
                     'text' => <<<'TEXT'
-                    Als je dat wilt, kan je elke maand de Gumbode ontvangen,
-                    met daarin een samenvatting van de maand, leuke verhaaltjes
-                    en de gekste uitspraken van onze leden.
-                    TEXT,
+                        Als je dat wilt, kan je elke maand de Gumbode ontvangen,
+                        met daarin een samenvatting van de maand, leuke verhaaltjes
+                        en de gekste uitspraken van onze leden.
+                        TEXT,
                 ],
             ]);
 
@@ -197,9 +197,9 @@ class NewMemberForm extends Form
                 'help_block' => [
                     'text' => sprintf(
                         <<<'HTML'
-                        <a href="%s" target="_blank">Lees het Privacybeleid</a>
-                        (opent in een nieuw tabblad).
-                        HTML,
+                            <a href="%s" target="_blank">Lees het Privacybeleid</a>
+                            (opent in een nieuw tabblad).
+                            HTML,
                         url('/privacy-policy'),
                     ),
                 ],
@@ -248,9 +248,9 @@ class NewMemberForm extends Form
                 'label' => "Ik ga mee op de introductieweek van {$startDate} t/m {$endDate}",
                 'help_block' => [
                     'text' => <<<TEXT
-                    Maak kennis met Gumbo tijdens de introductieweek. Na je inschrijving sturen we je gelijk
-                    door naar het aanmeldproces. De intro kost {$price} (incl. jaar lidmaatschap).
-                    TEXT,
+                        Maak kennis met Gumbo tijdens de introductieweek. Na je inschrijving sturen we je gelijk
+                        door naar het aanmeldproces. De intro kost {$price} (incl. jaar lidmaatschap).
+                        TEXT,
                 ],
                 'checked' => $forced ? 'checked' : false,
                 'attr' => [

@@ -76,10 +76,10 @@ class CheckActivityFeatureMailsTest extends TestCase
                 'send' => 'PT6H',
                 'subject' => 'Test mail',
                 'body' => <<<'DOC'
-                Hello World,
+                    Hello World,
 
-                This is a test for a mail to {user}.
-                DOC,
+                    This is a test for a mail to {user}.
+                    DOC,
             ],
         ]);
 

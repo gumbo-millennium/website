@@ -372,16 +372,16 @@ class CalendarControllerTest extends TestCase
                     ],
                 ],
                 'result' => <<<'HTML'
-                HELLO WORLD
-                ===========
+                    HELLO WORLD
+                    ===========
 
-                Meet The New Editor
-                -------------------
+                    Meet The New Editor
+                    -------------------
 
-                It is a block-styled editor
+                    It is a block-styled editor
 
-                Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere
-                HTML,
+                    Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere
+                    HTML,
             ],
             'heading and body' => [
                 'input' => [
@@ -402,11 +402,11 @@ class CalendarControllerTest extends TestCase
                     ],
                 ],
                 'result' => <<<'HTML'
-                HELLO WORLD
-                ===========
+                    HELLO WORLD
+                    ===========
 
-                Lorem ipsum dolor sit amet
-                HTML,
+                    Lorem ipsum dolor sit amet
+                    HTML,
             ],
             'list types' => [
                 'input' => [
@@ -436,14 +436,14 @@ class CalendarControllerTest extends TestCase
                     ],
                 ],
                 'result' => <<<'TEXT'
-                * Lorem ipsum
-                * Dolor sit
-                * Amet bacon
+                    * Lorem ipsum
+                    * Dolor sit
+                    * Amet bacon
 
-                * Alpha
-                * Bravo
-                * Charlie
-                TEXT,
+                    * Alpha
+                    * Bravo
+                    * Charlie
+                    TEXT,
             ],
             'non-compatible types' => [
                 'input' => [

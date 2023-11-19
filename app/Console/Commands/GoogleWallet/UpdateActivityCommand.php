@@ -19,10 +19,10 @@ class UpdateActivityCommand extends GoogleWalletCommand
      * @var string
      */
     protected $signature = <<<'CMD'
-        google-wallet:activity
-            {activity : ID or slug of the activity}
-            {--with-enrollments : Also update the enrollments for this activity }
-    CMD;
+            google-wallet:activity
+                {activity : ID or slug of the activity}
+                {--with-enrollments : Also update the enrollments for this activity }
+        CMD;
 
     /**
      * The console command description.

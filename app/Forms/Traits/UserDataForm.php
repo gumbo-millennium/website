@@ -78,9 +78,9 @@ trait UserDataForm
             ],
             'help_block' => [
                 'text' => <<<'HTML'
-                Kies een optionele nickname die wordt getoond op de site in plaats van je voornaam<br />
-                Je kunt a-z, A-Z, 0-9 en eventueel leestekens in het midden gebruiken.
-                HTML,
+                    Kies een optionele nickname die wordt getoond op de site in plaats van je voornaam<br />
+                    Je kunt a-z, A-Z, 0-9 en eventueel leestekens in het midden gebruiken.
+                    HTML,
             ],
             'attr' => [
                 'pattern' => '[a-zA-Z0-9][a-zA-Z0-9-_\.]{2,}[a-zA-Z0-9]',

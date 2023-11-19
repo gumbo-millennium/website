@@ -23,9 +23,9 @@ class UpdateEnrollmentPdfs extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:update-ticket-pdfs
-        {--force : Update all existing tickets too}
-    CMD;
+        gumbo:update-ticket-pdfs
+            {--force : Update all existing tickets too}
+        CMD;
 
     /**
      * The console command description.

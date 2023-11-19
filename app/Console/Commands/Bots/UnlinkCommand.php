@@ -18,10 +18,10 @@ class UnlinkCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    bot:unlink
-        {bot? : Bot alias to unlink}
-        {--force : Force even if URL doesn\'t match}
-    CMD;
+        bot:unlink
+            {bot? : Bot alias to unlink}
+            {--force : Force even if URL doesn\'t match}
+        CMD;
 
     /**
      * The console command description.

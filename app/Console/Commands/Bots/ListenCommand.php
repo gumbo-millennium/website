@@ -16,9 +16,9 @@ class ListenCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    bot:listen
-        {bot? : Bot alias to listen on}
-    CMD;
+        bot:listen
+            {bot? : Bot alias to listen on}
+        CMD;
 
     /**
      * The console command description.

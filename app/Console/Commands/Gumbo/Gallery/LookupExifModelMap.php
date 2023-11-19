@@ -15,10 +15,10 @@ class LookupExifModelMap extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:gallery:exif:lookup
-        {make : The make of the device}
-        {model : The model of the device}
-    CMD;
+        gumbo:gallery:exif:lookup
+            {make : The make of the device}
+            {model : The model of the device}
+        CMD;
 
     /**
      * The console command description.

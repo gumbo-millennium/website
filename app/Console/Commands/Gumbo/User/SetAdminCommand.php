@@ -20,10 +20,10 @@ class SetAdminCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:user:admin
-        {user : Email or ID of the user to promote}
-        {--revoke : Remove admin priviliges}
-    CMD;
+        gumbo:user:admin
+            {user : Email or ID of the user to promote}
+            {--revoke : Remove admin priviliges}
+        CMD;
 
     /**
      * The console command description.

@@ -20,9 +20,9 @@ class PruneWebcams extends Command
      * @var string
      */
     protected $signature = <<<'DOC'
-        gumbo:prune-webcams
-            {--force : Force removal, required if the number of files is above 15}
-    DOC;
+            gumbo:prune-webcams
+                {--force : Force removal, required if the number of files is above 15}
+        DOC;
 
     /**
      * The console command description.

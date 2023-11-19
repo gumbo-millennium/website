@@ -18,10 +18,10 @@ class ActivityMessageFactory extends Factory
         return [
             'subject' => $this->faker->sentence,
             'body' => <<<DOC
-            ## {$this->faker->sentence()}
+                ## {$this->faker->sentence()}
 
-            {$this->faker->sentences(6, true)}
-            DOC,
+                {$this->faker->sentences(6, true)}
+                DOC,
         ];
     }
 

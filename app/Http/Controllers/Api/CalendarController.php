@@ -157,11 +157,11 @@ class CalendarController extends Controller
         // Create the metadata for the calendar
         $calendarName = new TextValue((string) $calendarNameString);
         $calendarDescription = new TextValue(<<<TEXT
-        Persoonlijke agenda van {$user->first_name} met je inschrijvingen en een overzicht
-        van activiteiten waar je zonder inschrijven naartoe kan.
+            Persoonlijke agenda van {$user->first_name} met je inschrijvingen en een overzicht
+            van activiteiten waar je zonder inschrijven naartoe kan.
 
-        Veel plezier bij de activiteiten van Gumbo!
-        TEXT);
+            Veel plezier bij de activiteiten van Gumbo!
+            TEXT);
         $calendarTimezone = new TextValue(Config::get('app.timezone'));
         $calendarUrl = new UriValue(
             new Uri(URL::signedRoute('api.calendar.show', $user)),
@@ -315,9 +315,9 @@ class CalendarController extends Controller
 
         // Update description
         $ticketDescription = $ticket ? <<<DOC
-        Ticket: {$ticket->title}
-        Prijs: {$eventPrice}
-        DOC : null;
+            Ticket: {$ticket->title}
+            Prijs: {$eventPrice}
+            DOC : null;
 
         $updatedDescription = implode("\n\n---\n\n", array_filter([
             $ticketDescription,

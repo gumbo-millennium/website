@@ -19,9 +19,9 @@ class UploadToCloudCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    upload-to-cloud
-        {path?* : Paths to upload, defaults to user-uploads}
-    CMD;
+        upload-to-cloud
+            {path?* : Paths to upload, defaults to user-uploads}
+        CMD;
 
     /**
      * The console command description.

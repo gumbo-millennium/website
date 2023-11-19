@@ -12,48 +12,48 @@ class MarkdownServiceTest extends TestCase
     public function test_basic_use(): void
     {
         $markdown = <<<'MARKDOWN'
-        ## Hello World
+            ## Hello World
 
-        I am a **yellow** bandana!
-        MARKDOWN;
+            I am a **yellow** bandana!
+            MARKDOWN;
 
         $result = trim(Markdown::parse($markdown));
 
         $this->assertEquals(<<<'HTML'
-        <h2>Hello World</h2>
-        <p>I am a <strong>yellow</strong> bandana!</p>
-        HTML, $result);
+            <h2>Hello World</h2>
+            <p>I am a <strong>yellow</strong> bandana!</p>
+            HTML, $result);
     }
 
     public function test_unsafe_markdown(): void
     {
         $markdown = <<<'markdown'
-        ## Hello World
+            ## Hello World
 
-        I am a **yellow** bandana!
+            I am a **yellow** bandana!
 
-        <script>/* fail */</script>
+            <script>/* fail */</script>
 
-        <iframe target="src"></iframe>
-        markdown;
+            <iframe target="src"></iframe>
+            markdown;
 
         $result = trim(Markdown::parseSafe($markdown)->toHtml());
 
         $this->assertEquals(<<<'HTML'
-        <h2>Hello World</h2>
-        <p>I am a <strong>yellow</strong> bandana!</p>
-        HTML, $result);
+            <h2>Hello World</h2>
+            <p>I am a <strong>yellow</strong> bandana!</p>
+            HTML, $result);
     }
 
     public function test_images_are_not_supported(): void
     {
         $markdown = <<<'markdown'
-        ## Hello World
+            ## Hello World
 
-        ![Test image](https://example.com)
+            ![Test image](https://example.com)
 
-        Hehe
-        markdown;
+            Hehe
+            markdown;
 
         $this->assertStringNotContainsString('<img', (string) Markdown::parse($markdown));
         $this->assertStringNotContainsString('<img', (string) Markdown::parseSafe($markdown)->toHtml());

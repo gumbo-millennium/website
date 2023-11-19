@@ -31,7 +31,7 @@ class ResourceBaselineTest extends TestCase
         $resource = new $resourceClass($model);
         assert($resource instanceof \Laravel\Nova\Resource);
 
-        $uriKey = call_user_func([get_class($resource), 'uriKey']);
+        $uriKey = call_user_func([$resource::class, 'uriKey']);
         $routeKey = $model->getKey();
 
         $this->actingAs($this->getSuperAdminUser());

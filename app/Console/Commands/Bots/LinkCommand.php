@@ -18,10 +18,10 @@ class LinkCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    bot:link
-        {bot? : Bot alias to unlink}
-        {--force : Force even if already set}
-    CMD;
+        bot:link
+            {bot? : Bot alias to unlink}
+            {--force : Force even if already set}
+        CMD;
 
     /**
      * The console command description.

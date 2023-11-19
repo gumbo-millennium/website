@@ -17,9 +17,9 @@ class PreloadGifsCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    tenor:preload-gifs
-        {--prune : Prune all gifs that are currently present}
-    CMD;
+        tenor:preload-gifs
+            {--prune : Prune all gifs that are currently present}
+        CMD;
 
     /**
      * The console command description.

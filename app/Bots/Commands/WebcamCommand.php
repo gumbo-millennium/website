@@ -20,30 +20,30 @@ use Telegram\Bot\FileUpload\InputFile;
 class WebcamCommand extends Command
 {
     private const REPLY_GUEST = <<<'MSG'
-    🔒 Deze camera is alleen toegankelijk voor leden.
+        🔒 Deze camera is alleen toegankelijk voor leden.
 
-    Log in via /login.
-    MSG;
+        Log in via /login.
+        MSG;
 
     private const REPLY_NOT_AVAILABLE = <<<'MSG'
-    😕 Deze foto is niet (meer) beschikbaar
+        😕 Deze foto is niet (meer) beschikbaar
 
-    De opgevraagde webcam is momenteel niet beschikbaar,
-    De foto is mogelijk verouderd.
-    MSG;
+        De opgevraagde webcam is momenteel niet beschikbaar,
+        De foto is mogelijk verouderd.
+        MSG;
 
     private const REPLY_NO_SUCH_CAMERA = <<<'MSG'
-    🔒 Deze camera is niet beschikbaar.
+        🔒 Deze camera is niet beschikbaar.
 
-    De opgevraagde camera kon niet worden gevonden.
-    MSG;
+        De opgevraagde camera kon niet worden gevonden.
+        MSG;
 
     private const REPLY_FILE_LOST = <<<'MSG'
-    De-… de foto is zoek 🥺
+        De-… de foto is zoek 🥺
 
-    Sorry, er moet een recente foto van deze camera zijn,
-    maar hij lijkt niet meer te bestaan.
-    MSG;
+        Sorry, er moet een recente foto van deze camera zijn,
+        maar hij lijkt niet meer te bestaan.
+        MSG;
 
     protected ?Collection $cams = null;
 

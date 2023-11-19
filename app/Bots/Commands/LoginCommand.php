@@ -16,37 +16,37 @@ use Telegram\Bot\Keyboard\Keyboard;
 class LoginCommand extends Command
 {
     private const LOGOUT_MSG = <<<'TEXT'
-    👋 Hoi <strong>%s</strong>
+        👋 Hoi <strong>%s</strong>
 
-    Je bent al ingelogd op de bot. Typ /logout om uit te loggen.
-    TEXT;
+        Je bent al ingelogd op de bot. Typ /logout om uit te loggen.
+        TEXT;
 
     private const LOGIN_MSG = <<<'TEXT'
-    🛂 Login bij Gumbo
+        🛂 Login bij Gumbo
 
-    Je kunt je Telegram account koppelen aan je Gumbo account om extra
-    functionaliteiten uit de bot te halen.
+        Je kunt je Telegram account koppelen aan je Gumbo account om extra
+        functionaliteiten uit de bot te halen.
 
-    Ingelogde leden kunnen bijvoorbeeld de plazacam opvragen of de besloten
-    activiteiten zien, en ben je een documentje vergeten? No worries, we sturen
-    'm naar je op als DM.
+        Ingelogde leden kunnen bijvoorbeeld de plazacam opvragen of de besloten
+        activiteiten zien, en ben je een documentje vergeten? No worries, we sturen
+        'm naar je op als DM.
 
-    Klik hieronder om je accounts te koppelen.
-    TEXT;
+        Klik hieronder om je accounts te koppelen.
+        TEXT;
 
     private const LOGIN_MSG_FAIL = <<<'TEXT'
-    ⚠ Inloggen niet mogelijk
+        ⚠ Inloggen niet mogelijk
 
-    Er is iets misgegaan bij het klaarzetten van het bericht.
-    Foutmelding: %s
-    TEXT;
+        Er is iets misgegaan bij het klaarzetten van het bericht.
+        Foutmelding: %s
+        TEXT;
 
     private const LOGIN_MSG_NO_DMS = <<<'TEXT'
-    ⚠ Inloggen niet mogelijk
+        ⚠ Inloggen niet mogelijk
 
-    De bot mag geen privégesprek <i>starten</i> met gebruikers, en je hebt nog geen chat met de bot lopen.
-    Stuur zelf even /login in een privechat naar de Gumbot.
-    TEXT;
+        De bot mag geen privégesprek <i>starten</i> met gebruikers, en je hebt nog geen chat met de bot lopen.
+        Stuur zelf even /login in een privechat naar de Gumbot.
+        TEXT;
 
     /**
      * The name of the Telegram command.

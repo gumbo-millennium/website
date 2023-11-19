@@ -21,10 +21,10 @@ class PruneGalleryFilepondCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:prune-gallery-filepond
-        {--prune : Prune all photo models that point to non-existing files}
-        {--clean : Remove files not associated with photos}
-    CMD;
+        gumbo:prune-gallery-filepond
+            {--prune : Prune all photo models that point to non-existing files}
+            {--clean : Remove files not associated with photos}
+        CMD;
 
     /**
      * The console command description.

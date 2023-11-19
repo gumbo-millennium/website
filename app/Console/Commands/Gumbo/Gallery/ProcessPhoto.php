@@ -19,10 +19,10 @@ class ProcessPhoto extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:gallery:process
-        {file : File to process}
-        {--all : Process all files}
-    CMD;
+        gumbo:gallery:process
+            {file : File to process}
+            {--all : Process all files}
+        CMD;
 
     /**
      * The console command description.

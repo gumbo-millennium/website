@@ -29,10 +29,10 @@ class SponsorClick extends Model
     use HasFactory;
 
     private const INCREMENT_QUERY = <<<'SQL'
-        INSERT INTO %s (`sponsor_id`, `date`)
-        VALUES (?, NOW())
-        ON DUPLICATE KEY UPDATE `count` = `count` + 1;
-    SQL;
+            INSERT INTO %s (`sponsor_id`, `date`)
+            VALUES (?, NOW())
+            ON DUPLICATE KEY UPDATE `count` = `count` + 1;
+        SQL;
 
     /**
      * Indicates if the model should be timestamped.

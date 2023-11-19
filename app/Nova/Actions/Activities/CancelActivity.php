@@ -49,8 +49,8 @@ class CancelActivity extends Action
      * @var string
      */
     public $confirmText = <<<'TEXT'
-    Weet je zeker dat de activiteit(en) geannuleerd moet(en) worden? Dit kan niet ongedaan worden gemaakt.
-    TEXT;
+        Weet je zeker dat de activiteit(en) geannuleerd moet(en) worden? Dit kan niet ongedaan worden gemaakt.
+        TEXT;
 
     /**
      * Perform the action on the given models.

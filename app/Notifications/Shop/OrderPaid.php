@@ -30,10 +30,10 @@ class OrderPaid extends ShopNotification implements TelegramNotification
         $order = $this->order;
 
         $message = <<<TEXT
-        **💸 Bestelling {$order->number} is betaald**
+            **💸 Bestelling {$order->number} is betaald**
 
-        Het bestuur neemt contact met je op over de levering.
-        TEXT;
+            Het bestuur neemt contact met je op over de levering.
+            TEXT;
 
         return Message::make($message)
             ->addKeyboardRow(
