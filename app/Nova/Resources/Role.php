@@ -65,20 +65,20 @@ class Role extends Resource
      */
     public static function relatableQuery(NovaRequest $request, $query)
     {
-        // Get user shorthand
         $user = $request->user();
-        \assert($user instanceof User);
+        $relatedResource = $request->relatedResource();
 
-        // Return all roles if the user is allowed to admin events
-        if ($user->can('admin', Activity::class) || $user->can('manage', RoleModel::class)) {
-            return parent::relatableQuery($request, $query);
+        if (empty($relatedResource) || ! in_array([User::class, Permission::class], $relatedResource, true)) {
+            $query->whereNotNull('conscribo_id');
+        }
+
+        // Don't allow free-assignment unless users can cross-assign
+        if (! $user->can('manage', Activity::class)) {
+            $query->whereIn('id', $user->roles->pluck('id'));
         }
 
         // Only return own roles in
-        return parent::relatableQuery($request, $query->whereIn(
-            'id',
-            $user->roles->pluck('id'),
-        ));
+        return parent::relatableQuery($request, $query);
     }
 
     /**
