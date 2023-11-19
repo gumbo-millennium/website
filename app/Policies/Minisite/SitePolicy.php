@@ -30,7 +30,8 @@ class SitePolicy
             return true;
         }
 
-        if ($user->hasRole(Site::pluck('role_id')->unique())) {
+        $usedRoles = Site::pluck('group_id')->filter()->unique()->all();
+        if ($user->hasRole($usedRoles)) {
             return true;
         }
 
@@ -46,7 +47,7 @@ class SitePolicy
             return true;
         }
 
-        if ($site->role && $user->hasRole($site->role)) {
+        if ($site->group && $user->hasRole($site->group)) {
             return true;
         }
 

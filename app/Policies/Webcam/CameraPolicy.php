@@ -17,10 +17,7 @@ class CameraPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasAnyPermission([
-            'camera-view',
-            'camera-admin',
-        ]);
+        return $user->hasPermissionTo('camera-admin');
     }
 
     /**
@@ -28,7 +25,7 @@ class CameraPolicy
      */
     public function view(User $user, Camera $camera)
     {
-        return $this->viewAny($user);
+        return $user->hasPermissionTo('camera-admin');
     }
 
     /**

@@ -71,7 +71,7 @@ class SitePage extends Model
      * The model's attributes.
      */
     protected $attributes = [
-        'contents' => '[]',
+        'contents' => '{"time": 0, "blocks": [], "version": "1.0.0"}',
     ];
 
     /**

@@ -8,6 +8,7 @@ use App\Models\Minisite\Site as SiteModel;
 use App\Nova\Resources\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * Minisites.
@@ -66,6 +67,22 @@ class Site extends Resource
     }
 
     /**
+     * Build an "index" query for the given resource.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $user = $request->user();
+        if (! $user->can('admin', SiteModel::class)) {
+            $query->whereIn('group_id', $user->roles->pluck('id'));
+        }
+
+        return parent::indexQuery($request, $query);
+    }
+
+    /**
      * Get the search result subtitle for the resource.
      *
      * @return null|string
@@ -83,12 +100,14 @@ class Site extends Resource
         return [
             Fields\ID::make()->sortable(),
 
-            Fields\Stack::make('Meta', [
-                Fields\Text::make('Naam', 'name'),
-                Fields\Text::make('Domeinnaam', 'domain')
-                    ->displayUsing(fn ($domain) => "https://{$domain}/")
-                    ->readonly(),
-            ]),
+            Fields\Text::make('Naam', 'name')
+                ->rules([
+                    'required',
+                    'string',
+                    'between:3,100',
+                ]),
+
+            Fields\Text::make('Domeinnaam', fn ($model) => "https://{$model->domain}/"),
 
             Fields\Boolean::make('Actief', 'enabled'),
 

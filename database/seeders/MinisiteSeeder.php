@@ -13,8 +13,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Symfony\Component\Yaml\Yaml;
-use Throwable;
 
 class MinisiteSeeder extends Seeder
 {
@@ -47,7 +47,8 @@ class MinisiteSeeder extends Seeder
 
             try {
                 $site->group()->associate(Role::findByName($siteConfig['group']));
-            } catch (Throwable $e) {
+                $site->save();
+            } catch (RoleDoesNotExist) {
                 Log::error("Invalid group [{$siteConfig['group']}] for site [{$site->name}]");
             }
 

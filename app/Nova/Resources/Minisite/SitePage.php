@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
  * Pages for Minisites.
@@ -75,6 +76,22 @@ class SitePage extends Resource
     public static function label()
     {
         return 'Minisite Pagina\'s';
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        $user = $request->user();
+        if (! $user->can('admin', SitePageModel::class)) {
+            $query->whereHas('site', fn ($query) => $query->whereIn('group_id', $user->roles->pluck('id')));
+        }
+
+        return parent::indexQuery($request, $query);
     }
 
     /**
@@ -162,11 +179,11 @@ class SitePage extends Resource
                     'required',
                     'min:3',
                     'max:255',
-                    Rule::unique('site_pages', 'slug')->where('site_id', $this->site->id)->ignore($request->resourceId),
+                    Rule::unique('minisite_pages', 'slug')->where('site_id', $this->site->id)->ignore($request->resourceId),
                 ]),
 
-            Fields\Boolean::make('Verbergen', 'hidden')
-                ->placeholder('Een verborgen pagina is te bezoeken, maar verschijnt niet in de sitemap.')
+            Fields\Boolean::make('Zichtbaar', 'visible')
+                ->placeholder('Een onzichtbare pagina is te bezoeken, maar verschijnt niet in de sitemap.')
                 ->showOnUpdating($notWhenRequired)
                 ->filterable(),
 
