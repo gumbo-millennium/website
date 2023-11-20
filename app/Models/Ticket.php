@@ -100,8 +100,8 @@ class Ticket extends Model
     public function getIsBeingSoldAttribute(): bool
     {
         return (
-            ($this->available_from === null || $this->available_from < Date::now())
-            && ($this->available_until === null || $this->available_until > Date::now())
+            ($this->effectively_available_from === null || $this->effectively_available_from < Date::now())
+            && ($this->effectively_available_until === null || $this->effectively_available_until > Date::now())
         );
     }
 
@@ -132,15 +132,15 @@ class Ticket extends Model
 
     public function getAvailableRangeAttribute(): string
     {
-        if ($this->available_from && $this->available_from > Date::now()) {
+        if ($this->available_from && $this->effectively_available_from > Date::now()) {
             return __('Available from :date', [
-                'date' => $this->available_from->isoFormat('ddd DD MMM, HH:mm'),
+                'date' => $this->effectively_available_from->isoFormat('ddd DD MMM, HH:mm'),
             ]);
         }
 
-        if ($this->available_until) {
+        if ($this->effectively_available_until) {
             return __('Available until :date', [
-                'date' => $this->available_until->isoFormat('ddd DD MMM, HH:mm'),
+                'date' => $this->effectively_available_until->isoFormat('ddd DD MMM, HH:mm'),
             ]);
         }
 
