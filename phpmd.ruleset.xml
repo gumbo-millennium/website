@@ -14,57 +14,9 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>_ide_helper.php</exclude-pattern>
 
-    <!-- Clean Code Rules-->
+    <!-- Adopt clean code rules, but exclude StaticAcces, it's too widely used -->
     <rule ref="rulesets/cleancode.xml">
         <exclude name="StaticAccess" />
-    </rule>
-    <rule ref="rulesets/cleancode.xml/StaticAccess">
-        <properties>
-            <property name="exceptions">
-                <value>
-                    Illuminate\Support\Facades\Gate
-                    Illuminate\Support\Facades\Redirect
-                    Illuminate\Support\Facades\Log
-                    Illuminate\Support\Facades\Cookie
-                    Illuminate\Support\Facades\ParallelTesting
-                    Illuminate\Support\Facades\Config
-                    Illuminate\Support\Facades\Date
-                    Illuminate\Support\Facades\Vite
-                    Illuminate\Support\Facades\Artisan
-                    Illuminate\Support\Facades\Bus
-                    Illuminate\Support\Facades\Schema
-                    Illuminate\Support\Facades\Broadcast
-                    Illuminate\Support\Facades\Notification
-                    Illuminate\Support\Facades\Event
-                    Illuminate\Support\Facades\Crypt
-                    Illuminate\Support\Facades\URL
-                    Illuminate\Support\Facades\Hash
-                    Illuminate\Support\Facades\Storage
-                    Illuminate\Support\Facades\Lang
-                    Illuminate\Support\Facades\Queue
-                    Illuminate\Support\Facades\View
-                    Illuminate\Support\Facades\Process
-                    Illuminate\Support\Facades\Route
-                    Illuminate\Support\Facades\DB
-                    Illuminate\Support\Facades\Password
-                    Illuminate\Support\Facades\Facade
-                    Illuminate\Support\Facades\Validator
-                    Illuminate\Support\Facades\Mail
-                    Illuminate\Support\Facades\Session
-                    Illuminate\Support\Facades\Auth
-                    Illuminate\Support\Facades\Redis
-                    Illuminate\Support\Facades\Response
-                    Illuminate\Support\Facades\Cache
-                    Illuminate\Support\Facades\Pipeline
-                    Illuminate\Support\Facades\Http
-                    Illuminate\Support\Facades\Blade
-                    Illuminate\Support\Facades\App
-                    Illuminate\Support\Facades\File
-                    Illuminate\Support\Facades\Request
-                    Illuminate\Support\Facades\RateLimiter
-                </value>
-            </property>
-        </properties>
     </rule>
 
     <!-- I completely agree with the Controversial ruleset -->
@@ -83,6 +35,11 @@
         </properties>
     </rule>
 
-    <!-- Unused code should be avoided -->
-    <rule ref="rulesets/unusedcode.xml" />
+    <!-- Unused code should be avoided, but can be warnings -->
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter" />
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter">
+        <priority>4</priority>
+    </rule>
 </ruleset>
