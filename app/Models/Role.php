@@ -60,7 +60,7 @@ class Role extends SpatieRole
     public static function bootRole(): void
     {
         static::deleting(static function (self $role) {
-            if (\in_array($role->name, self::REQUIRED_GROUPS, true)) {
+            if (in_array($role->name, self::REQUIRED_GROUPS, true)) {
                 throw new LogicException("Cannot remove required role {$role->name}");
             }
         });
