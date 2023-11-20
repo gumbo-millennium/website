@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\Ticket;
 use Database\Factories\Traits\HasEditorjs;
 use Database\Factories\Traits\HasFileFinder;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
@@ -25,17 +26,11 @@ class ActivityFactory extends Factory
      */
     public function definition()
     {
-        $eventStart = $this->faker->dateTimeBetween(today()->addDay(1), today()->addYear(1));
-        $eventStartCarbon = Date::instance($eventStart)->toImmutable();
-
-        $eventEnd = $this->faker->dateTimeBetween($eventStartCarbon->addHours(2), $eventStartCarbon->addHours(8));
-        $eventEndCarbon = Date::instance($eventEnd)->toImmutable();
-
-        $enrollStart = $this->faker->dateTimeBetween($eventStartCarbon->subWeeks(4), $eventStartCarbon);
-        $enrollStartCarbon = Date::instance($enrollStart)->toImmutable();
-
-        $enrollEnd = $this->faker->dateTimeBetween($eventStartCarbon->addHours(1), $eventEndCarbon);
-        $enrollEndCarbon = Date::instance($enrollEnd)->toImmutable();
+        $eventStart = $this->faker->dateTimeBetween(Date::now()->addMonth(), Date::now()->addYear(1));
+        $eventEnd = $this->faker->dateTimeBetween(
+            Date::instance($eventStart)->addHours(2),
+            Date::instance($eventStart)->addHours(8),
+        );
 
         return [
             // Sometimes add a publish date
@@ -46,10 +41,8 @@ class ActivityFactory extends Factory
             'tagline' => $this->faker->sentence($this->faker->numberBetween(3, 8)),
 
             // Dates
-            'start_date' => $eventStartCarbon,
-            'end_date' => $eventEndCarbon,
-            'enrollment_start' => $enrollStartCarbon,
-            'enrollment_end' => $enrollEndCarbon,
+            'start_date' => $eventStart,
+            'end_date' => $eventEnd,
 
             // Mark public by default
             'is_public' => true,
@@ -62,6 +55,32 @@ class ActivityFactory extends Factory
             'description' => $this->faker->optional()->passthrough($this->getEditorBlocks()),
             'ticket_text' => $this->faker->optional(0.25)->passthrough($this->getEditorBlocks()),
         ];
+    }
+
+    /**
+     * Set when this activity takes place.
+     */
+    public function dates(
+        DateTimeInterface|string|null $start = null,
+        DateTimeInterface|string|null $end = null
+    ): self {
+        return $this->state(array_filter([
+            'start_date' => $start ? Date::parse($start) : null,
+            'end_date' => $end ? Date::parse($end) : null,
+        ]));
+    }
+
+    /**
+     * Set when enrollment for this activity starts and ends.
+     */
+    public function enrollmentDates(
+        DateTimeInterface|string|null $start = null,
+        DateTimeInterface|string|null $end = null,
+    ): self {
+        return $this->state([
+            'enrollment_start' => $start ? Date::parse($start) : null,
+            'enrollment_end' => $end ? Date::parse($end) : null,
+        ]);
     }
 
     public function cancelled(): self

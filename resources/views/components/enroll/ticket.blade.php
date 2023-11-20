@@ -31,9 +31,9 @@
             <li class="flex items-start">
                 <div class="flex-shrink-0">
                     @if ($ticket->members_only)
-                    <x-icon icon="solid/user-group" class="h-6 w-6 text-green-600" />
+                    <x-icon icon="solid/user-group" data-test="scope:private" class="h-6 w-6 text-green-600" />
                     @else
-                    <x-icon icon="solid/earth-europe" class="h-6 w-6 text-green-600" />
+                    <x-icon icon="solid/earth-europe" data-test="scope:public" class="h-6 w-6 text-green-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">
@@ -47,10 +47,10 @@
 
             <li class="flex items-start">
                 <div class="flex-shrink-0">
-                    @if ($ticketsRemaining === 0)
-                    <x-icon icon="solid/ticket-simple" class="h-6 w-6 text-red-600" />
+                    @if ($ticketsRemaining !== 0)
+                    <x-icon icon="solid/ticket-simple" data-test="seats:true" class="h-6 w-6 text-green-600" />
                     @else
-                    <x-icon icon="solid/ticket-simple" class="h-6 w-6 text-green-600" />
+                    <x-icon icon="solid/ticket-simple" data-test="seats:false" class="h-6 w-6 text-red-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">
@@ -70,9 +70,9 @@
             <li class="flex items-start">
                 <div class="flex-shrink-0">
                     @if ($ticket->is_being_sold)
-                    <x-icon icon="solid/clock" class="h-6 w-6 text-green-600" />
+                    <x-icon icon="solid/clock" data-test="dates:true" class="h-6 w-6 text-green-600" />
                     @else
-                    <x-icon icon="solid/clock" class="h-6 w-6 text-red-600" />
+                    <x-icon icon="solid/clock" data-test="dates:false" class="h-6 w-6 text-red-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">

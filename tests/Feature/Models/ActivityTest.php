@@ -122,6 +122,52 @@ class ActivityTest extends TestCase
         );
     }
 
+    public function test_enrollments_open_attribute(): void
+    {
+        $pastTime = Date::now()->subWeek();
+        $futureTime = Date::now()->addWeek();
+
+        /** @var Activity $ activity */
+        $activity = Activity::factory()->create([
+            'enrollment_start' => null,
+            'enrollment_end' => null,
+        ]);
+
+        $this->assertTrue($activity->enrollment_open);
+
+        $activity->update(['end_date' => $pastTime]);
+        $this->assertFalse($activity->enrollment_open);
+
+        // Enrollment dates, but open
+        $activity->update([
+            'end_date' => $futureTime,
+            'enrollment_end' => $futureTime,
+            'enrollment_start' => $pastTime,
+        ]);
+        $this->assertTrue($activity->enrollment_open);
+
+        // Enrollment not yet started
+        $activity->update([
+            'enrollment_start' => $futureTime,
+        ]);
+        $this->assertFalse($activity->enrollment_open);
+
+        // Enrollment ended
+        $activity->update([
+            'enrollment_start' => $pastTime,
+            'enrollment_end' => $pastTime,
+        ]);
+        $this->assertFalse($activity->enrollment_open);
+
+        // Enrollment cancelled
+        $activity->forceFill([
+            'enrollment_start' => null,
+            'enrollment_end' => null,
+            'cancelled_at' => $pastTime,
+        ])->save();
+        $this->assertFalse($activity->enrollment_open);
+    }
+
     public function test_load_with_enrollments(): void
     {
         $this->markTestIncomplete("Doesn't seem to be reliable just yet");
