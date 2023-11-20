@@ -15,10 +15,146 @@ use Illuminate\Support\Facades\URL;
 use Sabre\VObject;
 use Sabre\VObject\Component\VCalendar;
 use Sabre\VObject\Component\VEvent;
-use Tests\TestCase;
 
-class CalendarControllerTest extends TestCase
+class CalendarControllerTest extends ApiTestCase
 {
+    public static function cleanBodyTextProvider(): array
+    {
+        return [
+            'empty' => [
+                'input' => [],
+                'result' => '',
+            ],
+            'headings' => [
+                'input' => [
+                    [
+                        'id' => '1',
+                        'type' => 'header',
+                        'data' => [
+                            'text' => 'Hello world',
+                            'level' => 2,
+                        ],
+                    ],
+                    [
+                        'id' => '2',
+                        'type' => 'header',
+                        'data' => [
+                            'text' => 'Meet the new Editor',
+                            'level' => 3,
+                        ],
+                    ],
+                    [
+                        'id' => '3',
+                        'type' => 'header',
+                        'data' => [
+                            'text' => 'It is a block-styled editor',
+                            'level' => 4,
+                        ],
+                    ],
+                    [
+                        'id' => '4',
+                        'type' => 'paragraph',
+                        'data' => [
+                            'text' => 'Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere',
+                        ],
+                    ],
+                ],
+                'result' => <<<'HTML'
+                    HELLO WORLD
+                    ===========
+
+                    Meet The New Editor
+                    -------------------
+
+                    It is a block-styled editor
+
+                    Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere
+                    HTML,
+            ],
+            'heading and body' => [
+                'input' => [
+                    [
+                        'id' => '1',
+                        'type' => 'header',
+                        'data' => [
+                            'text' => 'Hello world',
+                            'level' => 2,
+                        ],
+                    ],
+                    [
+                        'id' => '2',
+                        'type' => 'paragraph',
+                        'data' => [
+                            'text' => 'Lorem ipsum dolor sit amet',
+                        ],
+                    ],
+                ],
+                'result' => <<<'HTML'
+                    HELLO WORLD
+                    ===========
+
+                    Lorem ipsum dolor sit amet
+                    HTML,
+            ],
+            'list types' => [
+                'input' => [
+                    [
+                        'id' => '1',
+                        'type' => 'list',
+                        'data' => [
+                            'style' => 'ordered',
+                            'items' => [
+                                'Lorem ipsum',
+                                'Dolor sit',
+                                'Amet bacon',
+                            ],
+                        ],
+                    ],
+                    [
+                        'id' => '2',
+                        'type' => 'list',
+                        'data' => [
+                            'style' => 'unordered',
+                            'items' => [
+                                'Alpha',
+                                'Bravo',
+                                'Charlie',
+                            ],
+                        ],
+                    ],
+                ],
+                'result' => <<<'TEXT'
+                    * Lorem ipsum
+                    * Dolor sit
+                    * Amet bacon
+
+                    * Alpha
+                    * Bravo
+                    * Charlie
+                    TEXT,
+            ],
+            'non-compatible types' => [
+                'input' => [
+                    [
+                        'id' => '1',
+                        'type' => 'image',
+                        'data' => [
+                            'file' => [
+                                'url' => 'https://example.com/image.jpg',
+                            ],
+                        ],
+                    ],
+                    [
+                        'id' => '2',
+                        'type' => 'delimiter',
+                        'data' => [],
+                    ],
+                ],
+                'result' => '',
+            ],
+        ];
+    }
+
     public function test_signature_is_always_required(): void
     {
         $user = User::factory()->create();
@@ -328,142 +464,5 @@ class CalendarControllerTest extends TestCase
             $expected,
             CalendarController::createCleanBodyText($activity),
         );
-    }
-
-    public function cleanBodyTextProvider(): array
-    {
-        return [
-            'empty' => [
-                'input' => [],
-                'result' => '',
-            ],
-            'headings' => [
-                'input' => [
-                    [
-                        'id' => '1',
-                        'type' => 'header',
-                        'data' => [
-                            'text' => 'Hello world',
-                            'level' => 2,
-                        ],
-                    ],
-                    [
-                        'id' => '2',
-                        'type' => 'header',
-                        'data' => [
-                            'text' => 'Meet the new Editor',
-                            'level' => 3,
-                        ],
-                    ],
-                    [
-                        'id' => '3',
-                        'type' => 'header',
-                        'data' => [
-                            'text' => 'It is a block-styled editor',
-                            'level' => 4,
-                        ],
-                    ],
-                    [
-                        'id' => '4',
-                        'type' => 'paragraph',
-                        'data' => [
-                            'text' => 'Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere',
-                        ],
-                    ],
-                ],
-                'result' => <<<'HTML'
-                    HELLO WORLD
-                    ===========
-
-                    Meet The New Editor
-                    -------------------
-
-                    It is a block-styled editor
-
-                    Use it in Web, mobile, AMP, Instant Articles, speech readers - everywhere
-                    HTML,
-            ],
-            'heading and body' => [
-                'input' => [
-                    [
-                        'id' => '1',
-                        'type' => 'header',
-                        'data' => [
-                            'text' => 'Hello world',
-                            'level' => 2,
-                        ],
-                    ],
-                    [
-                        'id' => '2',
-                        'type' => 'paragraph',
-                        'data' => [
-                            'text' => 'Lorem ipsum dolor sit amet',
-                        ],
-                    ],
-                ],
-                'result' => <<<'HTML'
-                    HELLO WORLD
-                    ===========
-
-                    Lorem ipsum dolor sit amet
-                    HTML,
-            ],
-            'list types' => [
-                'input' => [
-                    [
-                        'id' => '1',
-                        'type' => 'list',
-                        'data' => [
-                            'style' => 'ordered',
-                            'items' => [
-                                'Lorem ipsum',
-                                'Dolor sit',
-                                'Amet bacon',
-                            ],
-                        ],
-                    ],
-                    [
-                        'id' => '2',
-                        'type' => 'list',
-                        'data' => [
-                            'style' => 'unordered',
-                            'items' => [
-                                'Alpha',
-                                'Bravo',
-                                'Charlie',
-                            ],
-                        ],
-                    ],
-                ],
-                'result' => <<<'TEXT'
-                    * Lorem ipsum
-                    * Dolor sit
-                    * Amet bacon
-
-                    * Alpha
-                    * Bravo
-                    * Charlie
-                    TEXT,
-            ],
-            'non-compatible types' => [
-                'input' => [
-                    [
-                        'id' => '1',
-                        'type' => 'image',
-                        'data' => [
-                            'file' => [
-                                'url' => 'https://example.com/image.jpg',
-                            ],
-                        ],
-                    ],
-                    [
-                        'id' => '2',
-                        'type' => 'delimiter',
-                        'data' => [],
-                    ],
-                ],
-                'result' => '',
-            ],
-        ];
     }
 }

@@ -27,6 +27,30 @@ class JoinControllerTest extends TestCase
         'accept-terms' => 1,
     ];
 
+    public static function formSubmissionFields(): array
+    {
+        $validFields = self::VALID_FIELDS;
+
+        // Firstly test happy path
+        $output = [
+            'valid' => [
+                'data' => $validFields,
+                'errors' => [],
+            ],
+        ];
+
+        // Then skip each field separately
+        foreach (array_keys($validFields) as $field) {
+            $invalidFields = Arr::except($validFields, $field);
+            $output["missing {$field}"] = [
+                'data' => $invalidFields,
+                'errors' => [$field],
+            ];
+        }
+
+        return $output;
+    }
+
     /**
      * @return void
      */
@@ -147,29 +171,5 @@ class JoinControllerTest extends TestCase
             'user_id' => $user->id,
             'activity_id' => $introActivity->id,
         ]);
-    }
-
-    public function formSubmissionFields(): array
-    {
-        $validFields = self::VALID_FIELDS;
-
-        // Firstly test happy path
-        $output = [
-            'valid' => [
-                'data' => $validFields,
-                'errors' => [],
-            ],
-        ];
-
-        // Then skip each field separately
-        foreach (array_keys($validFields) as $field) {
-            $invalidFields = Arr::except($validFields, $field);
-            $output["missing {$field}"] = [
-                'data' => $invalidFields,
-                'errors' => [$field],
-            ];
-        }
-
-        return $output;
     }
 }

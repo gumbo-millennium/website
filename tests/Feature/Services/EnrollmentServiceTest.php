@@ -11,6 +11,7 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use App\Models\User;
+use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use LogicException;
@@ -18,11 +19,31 @@ use Tests\TestCase;
 
 class EnrollmentServiceTest extends TestCase
 {
+    public static function enrollmentOptions(): array
+    {
+        return [
+            'no user' => [false, false],
+            'not enrolled' => [false, true, null],
+            'enrolled' => [true, true, [
+                'state' => States\Seeded::class,
+            ]],
+            'confirmed' => [true, true, [
+                'state' => States\Confirmed::class,
+            ]],
+            'cancelled' => [false, true, [
+                'state' => States\Cancelled::class,
+            ]],
+            'deleted' => [false, true, fn () => [
+                'deleted_at' => now(),
+            ]],
+        ];
+    }
+
     /**
      * Test the enrollment service.
      * @dataProvider enrollmentOptions
      */
-    public function test_get_enrollment_function(bool $shouldMatch, bool $makeUser, ?array $enrollmentData = null): void
+    public function test_get_enrollment_function(bool $shouldMatch, bool $makeUser, array|Closure|null $enrollmentData = null): void
     {
         $user = $makeUser ? User::factory()->create() : null;
         $user and $this->actingAs($user);
@@ -35,7 +56,7 @@ class EnrollmentServiceTest extends TestCase
             $enrollment->ticket()->associate($ticket);
             $enrollment->user()->associate($user);
 
-            $enrollment->forceFill($enrollmentData);
+            $enrollment->forceFill(value($enrollmentData));
 
             $activity->enrollments()->save($enrollment);
         }
@@ -570,25 +591,5 @@ class EnrollmentServiceTest extends TestCase
 
         $this->assertFalse(Enroll::canEnroll($activity), 'Failed asserting users cannot enroll after end');
         $this->assertFalse(Enroll::canTransfer($enrollment), 'Failed asserting users cannot transfer after end');
-    }
-
-    public function enrollmentOptions(): array
-    {
-        return [
-            'no user' => [false, false],
-            'not enrolled' => [false, true, null],
-            'enrolled' => [true, true, [
-                'state' => States\Seeded::class,
-            ]],
-            'confirmed' => [true, true, [
-                'state' => States\Confirmed::class,
-            ]],
-            'cancelled' => [false, true, [
-                'state' => States\Cancelled::class,
-            ]],
-            'deleted' => [false, true, [
-                'deleted_at' => now(),
-            ]],
-        ];
     }
 }

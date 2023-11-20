@@ -15,6 +15,29 @@ use Tests\TestCase;
 
 class ImageTest extends TestCase
 {
+    public static function seedFits(): array
+    {
+        return [
+            'invalid' => ['invalid-fit', false],
+            'contain' => [Image::FIT_CONTAIN, true],
+            'max' => [Image::FIT_MAX, true],
+            'fill' => [Image::FIT_FILL, true],
+            'stretch' => [Image::FIT_STRETCH, true],
+            'crop' => [Image::FIT_CROP, true],
+        ];
+    }
+
+    public static function seedFormats(): array
+    {
+        return [
+            'invalid' => ['tiff', false],
+            'gif' => [Image::FORMAT_GIF, true],
+            'jpg' => [Image::FORMAT_JPG, true, 'jpg'],
+            'png' => [Image::FORMAT_PNG, true, 'png'],
+            'webp' => [Image::FORMAT_WEBP, true, 'webp'],
+        ];
+    }
+
     public function test_simple_make(): void
     {
         $this->assertSame(
@@ -187,28 +210,5 @@ class ImageTest extends TestCase
 
         $explicitlyNotExpiringImage = Image::make('test')->shouldExpire(false);
         $this->assertStringNotContainsString($expirationUrlPart, $explicitlyNotExpiringImage->getUrl());
-    }
-
-    public function seedFits(): array
-    {
-        return [
-            'invalid' => ['invalid-fit', false],
-            'contain' => [Image::FIT_CONTAIN, true],
-            'max' => [Image::FIT_MAX, true],
-            'fill' => [Image::FIT_FILL, true],
-            'stretch' => [Image::FIT_STRETCH, true],
-            'crop' => [Image::FIT_CROP, true],
-        ];
-    }
-
-    public function seedFormats(): array
-    {
-        return [
-            'invalid' => ['tiff', false],
-            'gif' => [Image::FORMAT_GIF, true],
-            'jpg' => [Image::FORMAT_JPG, true, 'jpg'],
-            'png' => [Image::FORMAT_PNG, true, 'png'],
-            'webp' => [Image::FORMAT_WEBP, true, 'webp'],
-        ];
     }
 }

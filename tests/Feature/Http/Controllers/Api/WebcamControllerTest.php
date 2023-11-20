@@ -11,12 +11,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 
 /**
  * Tests device uploads and webcam retrieval.
  */
-class WebcamControllerTest extends TestCase
+class WebcamControllerTest extends ApiTestCase
 {
     /**
      * Try uploading a webcam.

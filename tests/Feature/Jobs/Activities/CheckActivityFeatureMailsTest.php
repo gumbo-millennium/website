@@ -23,7 +23,7 @@ class CheckActivityFeatureMailsTest extends TestCase
             'start_date' => Date::parse('2021-06-01 21:00:00'),
         ]);
 
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
 
         Notification::assertNothingSent();
     }
@@ -44,7 +44,7 @@ class CheckActivityFeatureMailsTest extends TestCase
             ],
         ]);
 
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
 
         Notification::assertNothingSent();
     }
@@ -62,7 +62,7 @@ class CheckActivityFeatureMailsTest extends TestCase
             ],
         ]);
 
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
 
         Notification::assertNothingSent();
     }
@@ -100,22 +100,22 @@ class CheckActivityFeatureMailsTest extends TestCase
 
         // Check if before the window, nothing is sent
         Date::setTestNow('2021-06-01 12:00:00');
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
         Notification::assertNothingSent();
 
         // Check if after start nothing is sent
         Date::setTestNow('2021-06-01 23:00:00');
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
         Notification::assertNothingSent();
 
         // Check that, when the window is reached, the mail is sent
         Date::setTestNow('2021-06-01 16:00:00');
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
         Notification::assertSentToTimes($user, ActivityFeatureNotification::class, 1);
 
         // Check that running the job again won't re-send mails
         Notification::fake();
-        CheckActivityForFeatureMails::dispatchNow($activity);
+        CheckActivityForFeatureMails::dispatchSync($activity);
         Notification::assertNothingSent();
     }
 }

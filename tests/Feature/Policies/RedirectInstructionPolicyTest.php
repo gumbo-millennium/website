@@ -11,6 +11,26 @@ use Tests\TestCase;
 
 class RedirectInstructionPolicyTest extends TestCase
 {
+    public static function userProvider(): array
+    {
+        return [
+            'no-roles' => [[], false, false],
+            'restricted' => ['restricted', false, false],
+            'verified' => ['verified', false, false],
+            'guest' => ['guest', false, false],
+
+            // Start of read-only access
+            'member' => ['member', true, false],
+            'ac' => ['ac', true, false],
+            'lhw' => ['lhw', true, false],
+            'pr' => ['pr', true, false],
+
+            // Start of admins
+            'board' => ['board', true, true],
+            'dc' => ['dc', true, true],
+        ];
+    }
+
     public function test_guest(): void
     {
         $redirect = RedirectInstruction::factory()->create();
@@ -45,25 +65,5 @@ class RedirectInstructionPolicyTest extends TestCase
         $this->assertSame($canEdit, Gate::allows('delete', $redirect));
         $this->assertSame($canEdit, Gate::allows('restore', $redirect));
         $this->assertSame(false, Gate::allows('forceDelete', $redirect));
-    }
-
-    public function userProvider(): array
-    {
-        return [
-            'no-roles' => [[], false, false],
-            'restricted' => ['restricted', false, false],
-            'verified' => ['verified', false, false],
-            'guest' => ['guest', false, false],
-
-            // Start of read-only access
-            'member' => ['member', true, false],
-            'ac' => ['ac', true, false],
-            'lhw' => ['lhw', true, false],
-            'pr' => ['pr', true, false],
-
-            // Start of admins
-            'board' => ['board', true, true],
-            'dc' => ['dc', true, true],
-        ];
     }
 }

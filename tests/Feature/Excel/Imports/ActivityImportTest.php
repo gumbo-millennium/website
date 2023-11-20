@@ -16,6 +16,35 @@ use Tests\TestCase;
 class ActivityImportTest extends TestCase
 {
     /**
+     * @return array<string, array<string, string>>
+     */
+    public static function invalidSheetProvider(): array
+    {
+        return [
+            'end date is before start date' => [
+                'invalid-field-end-before-start',
+                'Einddatum moet een datum na startdatum zijn.',
+            ],
+            'location is too long' => [
+                'invalid-field-location-too-long',
+                'Locatie moet tussen 4 en 64 karakters zijn.',
+            ],
+            'end date is missing' => [
+                'invalid-field-missing-end',
+                'Einddatum is verplicht.',
+            ],
+            'location is missing' => [
+                'invalid-field-missing-location',
+                'Locatie is verplicht.',
+            ],
+            'missing required columns' => [
+                'invalid-columns',
+                'Startdatum is verplicht.',
+            ],
+        ];
+    }
+
+    /**
      * Ensure the created import "export" is proper.
      */
     public function test_export_creation(): void
@@ -118,34 +147,5 @@ class ActivityImportTest extends TestCase
         $this->expectExceptionMessage($message);
 
         Excel::import(new ActivityImport(), test_path("Fixtures/resources/excel/{$file}.ods"));
-    }
-
-    /**
-     * @return array<string, array<string, string>>
-     */
-    public function invalidSheetProvider(): array
-    {
-        return [
-            'end date is before start date' => [
-                'invalid-field-end-before-start',
-                'Einddatum moet een datum na startdatum zijn.',
-            ],
-            'location is too long' => [
-                'invalid-field-location-too-long',
-                'Locatie moet tussen 4 en 64 karakters zijn.',
-            ],
-            'end date is missing' => [
-                'invalid-field-missing-end',
-                'Einddatum is verplicht.',
-            ],
-            'location is missing' => [
-                'invalid-field-missing-location',
-                'Locatie is verplicht.',
-            ],
-            'missing required columns' => [
-                'invalid-columns',
-                'Startdatum is verplicht.',
-            ],
-        ];
     }
 }

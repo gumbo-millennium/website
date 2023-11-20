@@ -13,6 +13,24 @@ class PasswordControllerTest extends TestCase
 {
     use WithFaker;
 
+    public static function provideBadNewPasswords(): array
+    {
+        return [
+            'too short' => ['hello'],
+            'too long' => [str_repeat('a', 256)],
+            'compromised' => ['password1234'],
+        ];
+    }
+
+    public static function provideBadOldPasswords(): array
+    {
+        return [
+            'empty' => [''],
+            'too long' => [str_repeat('a', 256)],
+            'wrong' => ['not-my-password'],
+        ];
+    }
+
     /**
      * Test form view.
      */
@@ -124,23 +142,5 @@ class PasswordControllerTest extends TestCase
             ->assertRedirect(route('account.password.edit'));
 
         $this->assertEmpty($user->fresh()->password);
-    }
-
-    public function provideBadNewPasswords(): array
-    {
-        return [
-            'too short' => ['hello'],
-            'too long' => [str_repeat('a', 256)],
-            'compromised' => ['password1234'],
-        ];
-    }
-
-    public function provideBadOldPasswords(): array
-    {
-        return [
-            'empty' => [''],
-            'too long' => [str_repeat('a', 256)],
-            'wrong' => ['not-my-password'],
-        ];
     }
 }

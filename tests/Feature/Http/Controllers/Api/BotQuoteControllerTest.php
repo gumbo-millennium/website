@@ -6,31 +6,20 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\BotQuote;
 use App\Models\User;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 
-class BotQuoteControllerTest extends TestCase
+class BotQuoteControllerTest extends ApiTestCase
 {
-    /**
-     * @before
-     */
-    public function disableRateLimitOnBook(): void
-    {
-        $this->afterApplicationCreated(function () {
-            RateLimiter::for('api-expensive', fn () => Limit::none());
-        });
-    }
-
     /**
      * Ensure authentication is prompted.
      */
     public function test_authentication(): void
     {
+        $this->disableRateLimit('api');
+
         [$user1, $user2, $user3] = User::factory(3)->create();
 
         $this->getJson(route('api.quotes.list'))

@@ -19,6 +19,65 @@ use Tests\TestCase;
 class TestMustAcceptJson extends TestCase
 {
     /**
+     * Returns a list of HTTP methods.
+     * @return Generator<string,string[]>
+     */
+    public static function provide_http_methods(): Generator
+    {
+        $methods = [
+            'GET',
+            'POST',
+            'PUT',
+            'PATCH',
+            'DELETE',
+        ];
+
+        foreach ($methods as $method) {
+            yield $method;
+        }
+    }
+
+    /**
+     * Returns headers that match the application/json mime.
+     * @return Generator<string,string[]>
+     */
+    public static function provide_valid_headers(): Generator
+    {
+        $headers = [
+            'Does not specify acceptance' => [],
+            'Accepts JSON only' => ['Accept' => 'application/json'],
+            'Accepts any type' => ['Accept' => '*/*'],
+            'Accepts complex collection' => ['Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'],
+        ];
+
+        // Build matrix
+        foreach (self::provide_http_methods() as $method) {
+            foreach ($headers as $headerDescription => $headerValues) {
+                yield "{$method} × {$headerDescription}" => [$method, $headerValues];
+            }
+        }
+    }
+
+    /**
+     * Returns headers that don't match the application/json mime.
+     * @return Generator<string,string[]>
+     */
+    public static function provide_invalid_headers(): Generator
+    {
+        $headers = [
+            'Accepts text types' => ['Accept' => 'text/plain,text/*;q=0.9'],
+            'Accept binary types' => ['Accept' => 'application/octet-stream'],
+        ];
+
+        // Build matrix
+        foreach (self::provide_http_methods() as $method) {
+            foreach ($headers as $headerDescription => $headerValues) {
+                yield "{$method} × {$headerDescription}" => [$method, $headerValues];
+            }
+        }
+    }
+
+    /**
      * Ensure a dummy route is set up before the test starts.
      * @before
      */
@@ -60,65 +119,6 @@ class TestMustAcceptJson extends TestCase
             ->assertStatus(HttpResponse::HTTP_NOT_ACCEPTABLE);
         $this->call($method, '/tests/middleware/accept-json-via-alias', [], $cookies, [], $server)
             ->assertStatus(HttpResponse::HTTP_NOT_ACCEPTABLE);
-    }
-
-    /**
-     * Returns a list of HTTP methods.
-     * @return Generator<string,string[]>
-     */
-    public function provide_http_methods(): Generator
-    {
-        $methods = [
-            'GET',
-            'POST',
-            'PUT',
-            'PATCH',
-            'DELETE',
-        ];
-
-        foreach ($methods as $method) {
-            yield $method;
-        }
-    }
-
-    /**
-     * Returns headers that match the application/json mime.
-     * @return Generator<string,string[]>
-     */
-    public function provide_valid_headers(): Generator
-    {
-        $headers = [
-            'Does not specify acceptance' => [],
-            'Accepts JSON only' => ['Accept' => 'application/json'],
-            'Accepts any type' => ['Accept' => '*/*'],
-            'Accepts complex collection' => ['Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'],
-        ];
-
-        // Build matrix
-        foreach ($this->provide_http_methods() as $method) {
-            foreach ($headers as $headerDescription => $headerValues) {
-                yield "{$method} × {$headerDescription}" => [$method, $headerValues];
-            }
-        }
-    }
-
-    /**
-     * Returns headers that don't match the application/json mime.
-     * @return Generator<string,string[]>
-     */
-    public function provide_invalid_headers(): Generator
-    {
-        $headers = [
-            'Accepts text types' => ['Accept' => 'text/plain,text/*;q=0.9'],
-            'Accept binary types' => ['Accept' => 'application/octet-stream'],
-        ];
-
-        // Build matrix
-        foreach ($this->provide_http_methods() as $method) {
-            foreach ($headers as $headerDescription => $headerValues) {
-                yield "{$method} × {$headerDescription}" => [$method, $headerValues];
-            }
-        }
     }
 
     /**
