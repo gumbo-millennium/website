@@ -332,9 +332,21 @@
   "Ticket": "Ticket",
   "Tickets": "Tickets",
   "Availability": "Beschikbaarheid",
+
+  "If required, you can __deviate__ from the Activity's set limits (such as enrollment windows and seats).":
+    "Indien nodig, kun je __afwijken__ van de ingestelde limieten van de activiteit (zoals inschrijvingsperiode en aantal plaatsen).",
+  "The limits specified here must be within the Activity's limits.":
+    "De limieten die hier worden ingesteld moeten binnen de limieten van de activiteit vallen.",
+
+  "Custom Constraints": "Aangepaste limieten",
+  "Use custom constraints": "Aangepaste limieten gebruiken",
+  "If enabled, you can set a custom enrollment window and quantity for this ticket.":
+    "Indien ingeschakeld, kun je een aangepaste inschrijvingsperiode en aantal instellen voor dit ticket.",
+
   "Enrollment Start": "Start inschrijvingsperiode",
   "Enrollment End": "Einde inschrijvingsperiode",
-  "Pricing and quantity": "Prijs en aantal",
+  "Note that the number of seats on the activity, if specified, might affect this quantity.":
+    "Let op dat het aantal plaatsen op de activiteit, indien ingesteld, dit aantal kan beïnvloeden.",
   "Seat Limit": "Ticketlimiet",
   "Effective Seat Limit": "Effectieve ticketlimiet",
   "Determined by total number of available tickets": "Bepaald door het totaal aantal beschikbare tickets",

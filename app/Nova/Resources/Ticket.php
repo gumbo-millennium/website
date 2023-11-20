@@ -12,6 +12,7 @@ use App\Nova\Fields\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 /**
@@ -134,22 +135,6 @@ class Ticket extends Resource
 
             Fields\Boolean::make(__('Public'), 'is_public'),
 
-            // Availability
-            Fields\Heading::make(__('Availability')),
-
-            Fields\DateTime::make(__('Available From'), 'available_from')
-                ->rules('nullable', 'date')
-                ->hideFromIndex()
-                ->nullable(),
-
-            Fields\DateTime::make(__('Available Until'), 'available_until')
-                ->rules('nullable', 'date')
-                ->hideFromIndex()
-                ->nullable(),
-
-            // Pricing
-            Fields\Heading::make(__('Pricing and quantity')),
-
             Price::make(__('Price'), 'price')
                 ->hideFromIndex()
                 ->nullable()
@@ -165,12 +150,55 @@ class Ticket extends Resource
                 ->exceptOnForms()
                 ->help(__('Price in euro, including fees.')),
 
-            Fields\Number::make(__('Max Quantity'), 'quantity')
+            // Availability
+            Fields\Heading::make(__('Custom Constraints'))
+                ->help(implode("\n", [
+                    __("If required, you can __deviate__ from the Activity's set limits (such as enrollment windows and seats)."),
+                    __("The limits specified here must be within the Activity's limits."),
+                ])),
+
+            Fields\Boolean::make(__('Use custom constraints'), 'custom_availability')
+                ->help(__('If enabled, you can set a custom enrollment window and quantity for this ticket.'))
+                ->resolveUsing(fn () => (bool) ($this->available_from || $this->available_until || $this->quantity))
+                ->fillUsing(fn () => null) // noop
+                ->default(false),
+
+            Fields\DateTime::make(__('Available From'), 'available_from')
+                ->rules('nullable', 'date')
+                ->hideFromIndex()
+                ->nullable()
+                ->hide()
+                ->dependsOn('custom_availability', function (Fields\Field $field, NovaRequest $request, FormData $formData) {
+                    if ($formData->boolean('custom_availability') === true) {
+                        $field->show();
+                    }
+                }),
+
+            Fields\DateTime::make(__('Available Until'), 'available_until')
+                ->rules('nullable', 'date')
+                ->hideFromIndex()
+                ->nullable()
+                ->hide()
+                ->dependsOn('custom_availability', function (Fields\Field $field, NovaRequest $request, FormData $formData) {
+                    if ($formData->boolean('custom_availability') === true) {
+                        $field->show();
+                    }
+                }),
+
+            Fields\Number::make(__('Quantity'), 'quantity')
+                ->help(__('Note that the number of seats on the activity, if specified, might affect this quantity.'))
                 ->rules([
                     'nullable',
                     'integer',
                     'gt:0',
-                ]),
+                ])
+                ->hideFromIndex()
+                ->hide()
+                ->dependsOn('custom_availability', function (Fields\Field $field, NovaRequest $request, FormData $formData) {
+                    if ($formData->boolean('custom_availability') === true) {
+                        $field->show();
+                    }
+                }),
         ];
     }
 }
