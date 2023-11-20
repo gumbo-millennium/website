@@ -70,7 +70,7 @@ class Kernel extends HttpKernel
         'member' => \App\Http\Middleware\MembersOnlyMiddleware::class,
         'no-sponsor' => \App\Http\Middleware\HideSponsor::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
