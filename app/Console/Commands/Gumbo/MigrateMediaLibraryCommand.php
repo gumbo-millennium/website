@@ -70,7 +70,7 @@ class MigrateMediaLibraryCommand extends Command
 
             // Need to copy via streams
             $localReadStream = $localDisk->readStream($mediaFile);
-            if ($cloudDisk->putStream($mediaFile, $localReadStream)) {
+            if ($cloudDisk->put($mediaFile, $localReadStream)) {
                 $this->info("Successfully migrated {$mediaItemName} to the cloud.", OutputInterface::VERBOSITY_VERBOSE);
 
                 continue;

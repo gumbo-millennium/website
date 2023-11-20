@@ -11,7 +11,6 @@ use App\Models\FileDownload;
 use App\Models\Media;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Closure;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Cache;
@@ -24,8 +23,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Spatie\MediaLibrary\Support\MediaStream;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\GoneHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handles the user aspect of files.
@@ -152,18 +149,9 @@ class FileController extends Controller
         $media = $bundle->getMedia();
 
         // Stream a zip to the user
-        try {
-            return MediaStream::create("{$filename}.zip")
-                ->addMedia($media)
-                ->toResponse($request);
-        } catch (FileNotFoundException $exception) {
-            report(new GoneHttpException(
-                'Bestandensysteem bestand niet gevonden!',
-                $exception,
-            ));
-
-            throw new NotFoundHttpException('Een of meer bestanden konden niet worden gevonden.');
-        }
+        return MediaStream::create("{$filename}.zip")
+            ->addMedia($media)
+            ->toResponse($request);
     }
 
     /**
@@ -197,18 +185,14 @@ class FileController extends Controller
         // Skip if not found
         abort_unless($storageDisk->exists($mediaPath), HttpResponse::HTTP_NOT_FOUND, 'Disk error');
 
-        // Check if the file is external (cloud-hosted)
+        //  Try to get a temporary URL
         try {
-            $temporaryUrl = $storageDisk->temporaryUrl($mediaPath, Date::now()->addMinutes(5));
-            if ($temporaryUrl) {
-                // Redirect but ensure browser won't replay
-                return Response::redirectTo($temporaryUrl, HttpResponse::HTTP_FOUND, [
-                    'Cache-Control' => 'no-store',
-                ]);
-            }
-
-            // No URL, stream it
-        } catch (RuntimeException $exception) {
+            return Response::redirectTo(
+                $storageDisk->temporaryUrl($mediaPath, Date::now()->addMinutes(5)),
+                HttpResponse::HTTP_TEMPORARY_REDIRECT,
+                ['Cache-Control' => 'no-store'],
+            );
+        } catch (RuntimeException) {
             // No worries, stream it
         }
 

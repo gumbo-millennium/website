@@ -49,17 +49,13 @@ class WebcamCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'plazacam';
+    protected string $name = 'plazacam';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Toont de plaza of koffiecam';
+    protected string $description = 'Toont de plaza of koffiecam';
 
     /**
      * Get Command Aliases.

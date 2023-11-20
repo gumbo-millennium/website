@@ -120,7 +120,8 @@ class FileDisplayTest extends TestCase
         $futureMedia = $futureBundle->getFirstMedia();
         $deletedMedia = $deletedBundle->getFirstMedia();
 
-        $this->actingAs($this->getMemberUser());
+        $user = $this->getMemberUser();
+        $this->actingAs($user);
 
         //
         // Check index
@@ -167,10 +168,15 @@ class FileDisplayTest extends TestCase
         $normalMedia->file_name = 'Test File ♯22.pdf';
         $normalMedia->save();
 
+        // Get the single file
         $response = $this->get(route('files.download-single', $normalMedia));
 
-        // There's a bug causing this to 404 some times
-        $this->assertTrue($response->isOk() || $response->isNotFound(), 'Failed checking the single-download request goes at least somwhat to plan');
+        // Can be a 200 or a 307 to the file
+        $this->assertTrue(
+            in_array($response->getStatusCode(), [200, 307], true),
+            "Failed asserting that response code is [200, 307], got [{$response->status()}]",
+        );
+
         if ($response->isOk()) {
             $response->assertHeader('Content-Disposition', sprintf(
                 'attachment; filename="%s"',

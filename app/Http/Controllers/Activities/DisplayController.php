@@ -48,7 +48,9 @@ class DisplayController extends Controller
         }
 
         // Paginate the response
-        $activities = $query->simplePaginate(9);
+        $activities = $query
+            ->simplePaginate(9)
+            ->appends($request->only('past'));
 
         // Collect an empty list of enrollments
         $enrollments = collect();

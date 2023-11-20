@@ -95,7 +95,7 @@ class UploadToCloudCommand extends Command
 
         try {
             $fromStream = $fromDisk->readStream($file);
-            $toDisk->writeStream($file, $fromStream);
+            $toDisk->put($file, $fromStream);
 
             $this->line("<fg=green>OK  </> {$file}", null, OutputInterface::VERBOSITY_VERBOSE);
         } catch (Exception $exception) {

@@ -8,7 +8,6 @@ use DOMDocument;
 use DOMElement;
 use Generator;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
@@ -165,7 +164,6 @@ class Icon extends Component
     /**
      * Returns the contents of the file.
      * @throws BindingResolutionException
-     * @throws FileNotFoundException
      */
     protected function getIconContents(string $path): ?string
     {

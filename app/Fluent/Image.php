@@ -261,9 +261,11 @@ final class Image extends Fluent implements JsonSerializable, Stringable
         );
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return $this->getUrl();
+        return [
+            'url' => $this->getUrl(),
+        ];
     }
 
     public function __toString()

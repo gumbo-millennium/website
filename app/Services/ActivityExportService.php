@@ -10,7 +10,6 @@ use App\Excel\Exports\ActivityParticipantsFullExport;
 use App\Excel\Exports\ActivityParticipantsPresenceExport;
 use App\Helpers\Str;
 use App\Models\Activity;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
@@ -51,11 +50,7 @@ final class ActivityExportService
         }
 
         // Move to final location, removing the existing file if it exists
-        try {
-            Storage::cloud()->delete($exportName);
-        } catch (FileNotFoundException $e) {
-            // Ignore
-        }
+        Storage::cloud()->delete($exportName);
 
         // Move file
         if (! Storage::cloud()->move($tempName, $exportName)) {

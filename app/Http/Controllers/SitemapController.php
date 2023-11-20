@@ -7,10 +7,15 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\NewsItem;
 use App\Models\Page;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Sponsor;
+use DOMDocument;
+use Generator;
 use Illuminate\Http\Request;
-use Laravelium\Sitemap\Sitemap;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
@@ -31,7 +36,7 @@ class SitemapController extends Controller
         // Check for XML support
         abort_unless(
             $request->accepts('text/xml'),
-            Response::HTTP_NOT_ACCEPTABLE,
+            HttpResponse::HTTP_NOT_ACCEPTABLE,
             'You need to be able to understand XML sitemaps',
         );
     }
@@ -39,7 +44,7 @@ class SitemapController extends Controller
     /**
      * Present index sitemap on homepage.
      *
-     * @return Response
+     * @return HttpResponse
      */
     public function index(Request $request)
     {
@@ -50,61 +55,136 @@ class SitemapController extends Controller
             );
         }
 
-        // Get new sitemap
-        $map = app('sitemap');
+        // Return the cached sitemap
+        $document = Cache::remember('sitemap.index', Date::now()->addHour(), fn () => $this->buildSitemap());
 
-        // set cache key (string), duration in minutes (Carbon|Datetime|int), turn on/off (boolean)
-        // by default cache is disabled
-        $map->setCache('laravel.sitemap', now()->addHour());
-
-        // Create new map if not cached or debugging
-        if (! $map->isCached() || config('app.debug', false)) {
-            $this->buildSitemap($map);
-        }
-
-        return $map->render('xml');
+        return Response::make($document)
+            ->header('Content-Type', 'text/xml; charset=utf-8')
+            ->setCache(['public' => true, 'max_age' => Date::now()->addHour()->diffInSeconds()]);
     }
 
-    private function buildSitemap(Sitemap &$sitemap)
+    private function buildSitemap(): string
     {
-        // Most important page, duh
-        $sitemap->add(route('home'), null, '1.0', 'daily');
+        $document = new DOMDocument('1.0', 'UTF-8');
 
-        // Add routes
-        $this->addModelRoute($sitemap, 'activity', 'activity', Activity::whereAvailable());
-        $this->addModelRoute($sitemap, 'news', 'news', NewsItem::whereAvailable());
+        $root = $document->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $document->appendChild($root);
 
-        // Add other pages
-        foreach (Page::cursor() as $page) {
-            if (in_array($page->slug, self::SKIPPED_PAGES, true) || ! $page->html?->isNotEmpty()) {
+        // Add stylesheet in root folder
+        $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
+        $root->setAttributeNS('http://www.w3.org/1999/XSL/Transform', 'xsl:stylesheet', url('/sitemap.xsl'));
+
+        $pages = [
+            ...$this->getSitemapPages(),
+            ...$this->getActivities(),
+            ...$this->getNewsItems(),
+            ...$this->getSponsors(),
+        ];
+
+        foreach ($pages as $page) {
+            if (! Arr::has($page, 'url')) {
                 continue;
             }
 
-            $pageUrl = $page->group ? route('group.show', $page->only('group', 'slug')) : url("/{$page->slug}");
-            $sitemap->add($pageUrl, $page->updated_at, $page->group ? '0.5' : '0.7', 'weekly');
+            $pageNode = $document->createElement('url');
+            $root->appendChild($pageNode);
+
+            $pageNode->appendChild($document->createElement('loc', $page['url']));
+
+            if ($priority = Arr::get($page, 'priority')) {
+                $pageNode->appendChild($document->createElement('priority', $priority));
+            }
+
+            if ($lastMod = Arr::get($page, 'lastmod')) {
+                $pageNode->appendChild($document->createElement('lastmod', $lastMod->toAtomString()));
+            }
+
+            if ($changeFrequency = Arr::get($page, 'changefreq')) {
+                $pageNode->appendChild($document->createElement('changefreq', $changeFrequency));
+            }
+        }
+
+        // Add stylesheet
+        $xslInstruction = $document->createProcessingInstruction(
+            'xml-stylesheet',
+            'type="text/xsl" href="/sitemap.xsl"',
+        );
+        $document->insertBefore($xslInstruction, $root);
+
+        return $document->saveXML(null, LIBXML_NOEMPTYTAG);
+    }
+
+    private function getSitemapPages(): Generator
+    {
+        yield [
+            'url' => route('home'),
+            'priority' => '1.0',
+            'lastmod' => max([
+                Date::parse(NewsItem::max('updated_at')),
+                Date::parse(Activity::max('updated_at')),
+                Date::parse(Page::max('updated_at')),
+            ]),
+            'changefreq' => 'hourly',
+        ];
+
+        foreach (Page::where('hidden', false)->get() as $model) {
+            yield [
+                'url' => $model->url,
+                'priority' => '0.8',
+                'lastmod' => $model->updated_at,
+                'changefreq' => 'weekly',
+            ];
         }
     }
 
-    private function addModelRoute(
-        Sitemap &$sitemap,
-        string $base,
-        string $field,
-        Builder $query
-    ): void {
-        // Get the most recent item
-        $mostRecent = (clone $query)->max('updated_at');
+    private function getActivities(): Generator
+    {
+        yield [
+            'url' => route('activity.index'),
+            'priority' => '0.9',
+            'lastmod' => Date::parse(Activity::max('updated_at')),
+            'changefreq' => 'daily',
+        ];
+        foreach (Activity::whereAvailable()->get() as $model) {
+            yield [
+                'url' => route('activity.show', $model),
+                'priority' => '0.8',
+                'lastmod' => $model->updated_at,
+                'changefreq' => $model->end_date < Date::now() ? 'weekly' : 'daily',
+            ];
+        }
+    }
 
-        // Index page
-        $sitemap->add(route("{$base}.index"), $mostRecent, '0.9', 'daily');
+    private function getNewsItems(): Generator
+    {
+        yield [
+            'url' => route('news.index'),
+            'priority' => '0.9',
+            'lastmod' => Date::parse(NewsItem::max('updated_at')),
+            'changefreq' => 'daily',
+        ];
+        foreach (NewsItem::whereAvailable()->get() as $model) {
+            yield [
+                'url' => route('news.show', $model),
+                'priority' => '0.6',
+                'lastmod' => $model->updated_at,
+            ];
+        }
+    }
 
-        // Item page
-        foreach ($query->cursor() as $model) {
-            $sitemap->add(
-                route("{$base}.show", $model),
-                $model->updated_at,
-                '0.8',
-                'weekly',
-            );
+    private function getSponsors(): Generator
+    {
+        yield [
+            'url' => route('sponsors.index'),
+            'priority' => '0.6',
+            'changefreq' => 'weekly',
+        ];
+        foreach (Sponsor::whereAvailable()->whereNotNull('contents_title')->get() as $model) {
+            yield [
+                'url' => route('sponsors.show', $model),
+                'priority' => '0.5',
+                'lastmod' => $model->updated_at,
+            ];
         }
     }
 }

@@ -40,8 +40,6 @@ class ActivityController extends Controller
             ], 400);
         }
 
-        $isPersonalised = $user != null;
-
         $activities = Activity::query()
             ->whereAvailable($user)
             ->wherePublished()

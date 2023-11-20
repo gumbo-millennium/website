@@ -17,24 +17,18 @@ class SackCommand extends Command
 {
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'royatieverzoek';
+    protected string $name = 'royatieverzoek';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Stuurt iemand De Laan uit';
+    protected string $description = 'Stuurt iemand De Laan uit';
 
     /**
      * Command Argument Pattern.
-     *
-     * @var string
      */
-    protected $pattern = '[^\s].+';
+    protected string $pattern = '[^\s].+';
 
     /**
      * Handle the activity.

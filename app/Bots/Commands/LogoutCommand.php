@@ -22,17 +22,13 @@ class LogoutCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'logout';
+    protected string $name = 'logout';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Ontkoppel je Telegram account';
+    protected string $description = 'Ontkoppel je Telegram account';
 
     /**
      * Handle the activity.

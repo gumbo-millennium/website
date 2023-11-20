@@ -24,17 +24,13 @@ class HelpCommand extends Command
 
     /**
      * The name of the Telegram command.
-     *
-     * @var string
      */
-    protected $name = 'help';
+    protected string $name = 'help';
 
     /**
      * The Telegram command description.
-     *
-     * @var string
      */
-    protected $description = 'Toont de beschikbare commando\'s';
+    protected string $description = 'Toont de beschikbare commando\'s';
 
     /**
      * Handle the activity.
