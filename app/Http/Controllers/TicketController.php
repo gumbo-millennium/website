@@ -30,6 +30,7 @@ class TicketController extends Controller
                 Rule::in(['past', 'future']),
             ],
         ]);
+
         $showGroup = $valid['show'] ?? 'future';
 
         $enrollments = Enrollment::query()

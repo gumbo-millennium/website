@@ -71,10 +71,10 @@ class ActivityFactory extends Factory
         ]);
     }
 
-    public function withSeats(): self
+    public function withSeats(?int $seats = null): self
     {
         return $this->state([
-            'seats' => $this->faker->numberBetween(4, 80),
+            'seats' => $seats ?? $this->faker->numberBetween(4, 80),
         ]);
     }
 
