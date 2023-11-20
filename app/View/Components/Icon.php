@@ -70,7 +70,14 @@ class Icon extends Component
 
         // If not found and in production, fail quietly.
         if ($contents === null && (App::isProduction() || App::runningUnitTests())) {
-            return sprintf('<!-- Missing icon [%s] -->', e($this->icon));
+            $iconName = e($this->icon);
+
+            return fn (array $data) => <<<DOC
+                <!--
+                    Missing icon [{$iconName}]
+                    <svg {$data['attributes']->merge(['class' => 'icon'])}" />
+                -->
+                DOC;
         }
 
         // If not found and not in production, throw an error

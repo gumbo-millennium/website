@@ -61,6 +61,11 @@ class EnrollmentService implements EnrollmentServiceContract
             return false;
         }
 
+        // Check if enrollments of the activity are open
+        if (! $activity->enrollment_open) {
+            return false;
+        }
+
         // Check if there are any tickets left that this user can buy
         $tickets = $this->findTicketsForActivity($activity);
         if ($tickets->isEmpty()) {

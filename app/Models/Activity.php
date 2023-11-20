@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Spatie\Permission\Models\Role;
 
@@ -302,6 +303,10 @@ class Activity extends SluggableModel
     {
         // Prevent if cancelled
         if ($this->is_cancelled) {
+            Log::info('Enrollments on {activity} closed: Activity is cancelled', [
+                'activity' => $this,
+            ]);
+
             return false;
         }
 
@@ -309,31 +314,28 @@ class Activity extends SluggableModel
         $now = Date::now();
 
         // Cannot sell tickets after activity end
-        if ($this->end_date < $now) {
-            logger()->info(
-                'Enrollments on {activity} closed:  Cannot sell tickets after activity end',
-                ['activity' => $this],
-            );
+        if ($now->isAfter($this->end_date)) {
+            Log::info('Enrollments on {activity} closed:  Cannot sell tickets after activity end', [
+                'activity' => $this,
+            ]);
 
             return false;
         }
 
         // Cannot sell tickets after enrollment closure
-        if ($this->enrollment_end !== null && $this->enrollment_end < $now) {
-            logger()->info(
-                'Enrollments on {activity} closed:  Cannot sell tickets after enrollment closure',
-                ['activity' => $this],
-            );
+        if ($this->enrollment_end !== null && $this->enrollment_end->isBefore($now)) {
+            Log::info('Enrollments on {activity} closed:  Cannot sell tickets after enrollment closure', [
+                'activity' => $this,
+            ]);
 
             return false;
         }
 
         // Cannot sell tickets before enrollment start
-        if ($this->enrollment_start !== null && $this->enrollment_start > $now) {
-            logger()->info(
-                'Enrollments on {activity} closed:  Cannot sell tickets before enrollment start',
-                ['activity' => $this],
-            );
+        if ($this->enrollment_start !== null && $this->enrollment_start->isAfter($now)) {
+            Log::info('Enrollments on {activity} closed:  Cannot sell tickets before enrollment start', [
+                'activity' => $this,
+            ]);
 
             return false;
         }

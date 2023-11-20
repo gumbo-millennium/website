@@ -9,6 +9,7 @@ use App\Models\Activity;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\Paid;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Testing\TestView;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -104,6 +105,50 @@ class TicketTest extends TestCase
                 'quantity' => 10,
                 'available' => 9,
             ]));
+    }
+
+    public function test_availability_of_both_ticket_and_activity_is_honored(): void
+    {
+        $activity = Activity::factory()->create();
+
+        // No dates
+        $ticket = Ticket::factory()->for($activity)->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:true"', false);
+
+        // On Sale
+        $ticket = Ticket::factory()->for($activity)->timed(
+            Date::now()->subWeek(),
+            Date::now()->addWeek(),
+        )->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:true"', false);
+
+        // Not yet on sale
+        $ticket = Ticket::factory()->for($activity)->timed(
+            Date::now()->addDay(),
+            Date::now()->addWeek(),
+        )->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:false"', false);
+
+        // No longer on sale
+        $ticket = Ticket::factory()->for($activity)->timed(
+            Date::now()->subWeek(),
+            Date::now()->subDay(),
+        )->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:false"', false);
+
+        // Activity not yet enrolling
+        $activity = Activity::factory()->enrollmentDates(
+            start: Date::now()->addDay(),
+        );
+        $ticket = Ticket::factory()->for($activity)->timed()->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:false"', false);
+
+        // Activity no longer enrolling
+        $activity = Activity::factory()->enrollmentDates(
+            end: Date::now()->subDay(),
+        );
+        $ticket = Ticket::factory()->for($activity)->timed()->create();
+        $this->renderTicket($ticket)->assertSee('data-test="dates:false"', false);
     }
 
     private function renderTicket(Ticket $ticket): TestView
