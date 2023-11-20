@@ -31,5 +31,5 @@
         "resources/json/schemas/grants.schema.json": [
             "resources/yaml/grants.yaml",
         ]
-    }
+    },
 }

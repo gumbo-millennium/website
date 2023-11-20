@@ -47,21 +47,21 @@
 
             <li class="flex items-start">
                 <div class="flex-shrink-0">
-                    @if ($ticket->quantity_available === 0)
+                    @if ($ticketsRemaining === 0)
                     <x-icon icon="solid/ticket-simple" class="h-6 w-6 text-red-600" />
                     @else
                     <x-icon icon="solid/ticket-simple" class="h-6 w-6 text-green-600" />
                     @endif
                 </div>
                 <p class="ml-3 text-base text-gray-700">
-                    @if ($ticket->quantity === null)
+                    @if ($ticketsAvailable === null)
                     @lang('No ticket limit')
-                    @elseif ($ticket->quantity_available === 0)
+                    @elseif ($ticketsRemaining === 0)
                     @lang('Sold Out')
                     @else
                     @lang(':quantity tickets, :available left', [
-                        'quantity' => $ticket->quantity,
-                        'available' => $ticket->quantity_available,
+                        'quantity' => $ticketsAvailable,
+                        'available' => $ticketsRemaining,
                     ])
                     @endif
                 </p>
