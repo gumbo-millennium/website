@@ -154,4 +154,22 @@ class Ticket extends Model
             && $this->activity->available_seats !== 0
             && (! $this->members_only || optional($user)->is_member);
     }
+
+    public function getEffectivelyAvailableFromAttribute():? Carbon
+    {
+        if ($this->available_from && $this->activity->enrollment_start) {
+            return max($this->available_from, $this->activity->enrollment_start);
+        }
+
+        return $this->available_from ?? $this->activity->enrollment_start;
+   }
+
+    public function getEffectivelyAvailableUntilAttribute():? Carbon
+    {
+        if ($this->available_until && $this->activity->enrollment_end) {
+            return min($this->available_until, $this->activity->enrollment_end);
+        }
+
+        return $this->available_until ?? $this->activity->enrollment_end;
+   }
 }
