@@ -16,10 +16,10 @@ class UpdatePayments extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    payments:update
-        {id? : ID of the payment to update}
-        {--all : Update all pending payments}
-    CMD;
+        payments:update
+            {id? : ID of the payment to update}
+            {--all : Update all pending payments}
+        CMD;
 
     /**
      * The console command description.

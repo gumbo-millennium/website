@@ -17,27 +17,7 @@ class ActivityTest extends TestCase
 {
     use WithFaker;
 
-    /**
-     * @dataProvider provideTicketsForPriceRange
-     */
-    public function test_ticket_price_range(string $expected, array ...$tickets): void
-    {
-        Lang::setLocale('en');
-        Config::set('gumbo.transfer-fee', 0);
-
-        /** @var Activity $activity */
-        $activity = Activity::factory()->create();
-
-        foreach ($tickets as &$ticket) {
-            $ticket['title'] ??= $this->faker->sentence();
-        }
-
-        $activity->tickets()->createMany($tickets);
-
-        $this->assertSame($expected, $activity->price_range);
-    }
-
-    public function provideTicketsForPriceRange(): array
+    public static function provideTicketsForPriceRange(): array
     {
         return [
             'no tickets' => ['Price unknown'],
@@ -75,6 +55,26 @@ class ActivityTest extends TestCase
                 ['price' => null],
             ],
         ];
+    }
+
+    /**
+     * @dataProvider provideTicketsForPriceRange
+     */
+    public function test_ticket_price_range(string $expected, array ...$tickets): void
+    {
+        Lang::setLocale('en');
+        Config::set('gumbo.transfer-fee', 0);
+
+        /** @var Activity $activity */
+        $activity = Activity::factory()->create();
+
+        foreach ($tickets as &$ticket) {
+            $ticket['title'] ??= $this->faker->sentence();
+        }
+
+        $activity->tickets()->createMany($tickets);
+
+        $this->assertSame($expected, $activity->price_range);
     }
 
     public function test_is_in_future_scope(): void

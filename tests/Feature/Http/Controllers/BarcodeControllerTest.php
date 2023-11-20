@@ -16,6 +16,15 @@ use Tests\TestCase;
 
 class BarcodeControllerTest extends TestCase
 {
+    public static function invalidStatesProvider(): array
+    {
+        return [
+            'Created' => [States\Created::class],
+            'Seeded' => [States\Seeded::class],
+            'Cancelled' => [States\Cancelled::class],
+        ];
+    }
+
     public function test_unauthorized_access_request(): void
     {
         $memberUser = $this->getMemberUser();
@@ -209,14 +218,5 @@ class BarcodeControllerTest extends TestCase
         $this->postJson(route('barcode.consume', $activity), [
             'barcode' => $enrollment->barcode,
         ])->assertNotFound();
-    }
-
-    public function invalidStatesProvider(): array
-    {
-        return [
-            'Created' => [States\Created::class],
-            'Seeded' => [States\Seeded::class],
-            'Cancelled' => [States\Cancelled::class],
-        ];
     }
 }

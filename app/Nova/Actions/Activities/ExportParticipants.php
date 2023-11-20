@@ -48,8 +48,8 @@ class ExportParticipants extends Action
      * @var string
      */
     public $confirmText = <<<'DOC'
-    Create an export of the participants of this activity.
-    DOC;
+        Create an export of the participants of this activity.
+        DOC;
 
     /**
      * The displayable name of the action.

@@ -178,8 +178,8 @@ class Activity extends Resource
                         'max:190',
                     ])
                     ->help(<<<'LOCATION'
-                        Adres van de locatie, mag een webadres zijn.
-                    LOCATION),
+                            Adres van de locatie, mag een webadres zijn.
+                        LOCATION),
 
                 Fields\BooleanGroup::make('Eigenschappen', 'features')
                     ->options($featuresMap)

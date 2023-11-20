@@ -18,9 +18,9 @@ class SendActivityFeatureMails extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:send-activity-feature-mails
-        {--sync : Force running in sync}
-    CMD;
+        gumbo:send-activity-feature-mails
+            {--sync : Force running in sync}
+        CMD;
 
     /**
      * The console command description.

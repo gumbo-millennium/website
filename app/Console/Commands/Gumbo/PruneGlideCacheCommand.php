@@ -20,9 +20,9 @@ class PruneGlideCacheCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:prune-glide-cache
-        {--force : Actually delete the files}
-    CMD;
+        gumbo:prune-glide-cache
+            {--force : Actually delete the files}
+        CMD;
 
     /**
      * The console command description.

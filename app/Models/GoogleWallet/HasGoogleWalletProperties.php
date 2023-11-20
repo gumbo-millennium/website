@@ -58,7 +58,7 @@ trait HasGoogleWalletProperties
     {
         $query->whereHasMorph(
             'subject',
-            [get_class($subject)],
+            [$subject::class],
             fn (Builder $query) => $query->where($subject->getKeyName(), $subject->getKey()),
         );
     }

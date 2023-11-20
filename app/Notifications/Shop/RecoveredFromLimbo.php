@@ -64,11 +64,11 @@ class RecoveredFromLimbo extends ShopNotification implements TelegramNotificatio
         $value = Str::price($this->order->price);
 
         $message = <<<TEXT
-        Je bestelling is hersteld 💚
+            Je bestelling is hersteld 💚
 
-        Sorry voor de overlast, maar je kan nu je bestelling betalen.
-        De bestelling verloopt over {$expiresIn}, dus voor die tijd betalen of we gooien 'm weg.
-        TEXT;
+            Sorry voor de overlast, maar je kan nu je bestelling betalen.
+            De bestelling verloopt over {$expiresIn}, dus voor die tijd betalen of we gooien 'm weg.
+            TEXT;
 
         return Message::make($message)
             ->addKeyboardRow(

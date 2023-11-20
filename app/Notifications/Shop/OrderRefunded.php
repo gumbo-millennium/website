@@ -81,10 +81,10 @@ class OrderRefunded extends ShopNotification implements TelegramNotification
         $amount = Str::price($this->amount);
 
         $message = <<<TEXT
-        💸 Er is een terugbetaling naar je onderweg.
+            💸 Er is een terugbetaling naar je onderweg.
 
-        Je krijgt binnen een paar dagen {$amount} terug voor het annuleren van {$order->number}.
-        TEXT;
+            Je krijgt binnen een paar dagen {$amount} terug voor het annuleren van {$order->number}.
+            TEXT;
 
         return Message::make($message)
             ->addKeyboardRow(

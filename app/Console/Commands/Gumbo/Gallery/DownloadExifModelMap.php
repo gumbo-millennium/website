@@ -23,9 +23,9 @@ class DownloadExifModelMap extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:gallery:exif:download
-        {--fresh : Download a fresh copy of the device map}
-    CMD;
+        gumbo:gallery:exif:download
+            {--fresh : Download a fresh copy of the device map}
+        CMD;
 
     /**
      * The console command description.

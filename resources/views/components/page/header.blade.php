@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-$title = $title ?? 'Gumbo Millennium';
-$header = $header ?? null;
-$image = $image ?? '';
+$title ??= 'Gumbo Millennium';
+$header ??= null;
+$image ??= '';
 
 $coverImage = image_asset($image)->square(1920)->height(768);
 $coverImageSmall = image_asset($image)->square(768)->height(300);

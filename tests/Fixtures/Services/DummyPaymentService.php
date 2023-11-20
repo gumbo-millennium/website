@@ -125,12 +125,12 @@ class DummyPaymentService implements PaymentService
     private function objectKey($model): string
     {
         if ($model instanceof Model) {
-            return get_class($model) . ':' . $model->getKey();
+            return $model::class . ':' . $model->getKey();
         }
         if ($model instanceof Payable) {
-            return get_class($model) . ':' . $model->toPayment()->number;
+            return $model::class . ':' . $model->toPayment()->number;
         }
 
-        return get_class($model);
+        return $model::class;
     }
 }

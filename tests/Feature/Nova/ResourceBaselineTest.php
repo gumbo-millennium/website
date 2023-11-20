@@ -12,6 +12,26 @@ use Tests\TestCase;
 
 class ResourceBaselineTest extends TestCase
 {
+    public static function resourceProvider(): array
+    {
+        $models = [
+            Resources\Activity::class,
+            Resources\EmailList::class,
+            Resources\FileBundle::class,
+            Resources\FileBundle::class,
+            Resources\JoinSubmission::class,
+            Resources\JoinSubmission::class,
+            Resources\Page::class,
+            Resources\RedirectInstruction::class,
+            Resources\User::class,
+            Resources\Webcam\Camera::class,
+        ];
+
+        return Collection::make($models)
+            ->mapWithKeys(fn ($row) => [class_basename($row) => [$row]])
+            ->all();
+    }
+
     /**
      * Tests listing, viewing create, viewing.
      *
@@ -31,7 +51,7 @@ class ResourceBaselineTest extends TestCase
         $resource = new $resourceClass($model);
         assert($resource instanceof \Laravel\Nova\Resource);
 
-        $uriKey = call_user_func([get_class($resource), 'uriKey']);
+        $uriKey = call_user_func([$resource::class, 'uriKey']);
         $routeKey = $model->getKey();
 
         $this->actingAs($this->getSuperAdminUser());
@@ -41,25 +61,5 @@ class ResourceBaselineTest extends TestCase
 
         $this->get("/nova-api/{$uriKey}/{$routeKey}/update-fields")
             ->assertOk();
-    }
-
-    public function resourceProvider(): array
-    {
-        $models = [
-            Resources\Activity::class,
-            Resources\EmailList::class,
-            Resources\FileBundle::class,
-            Resources\FileBundle::class,
-            Resources\JoinSubmission::class,
-            Resources\JoinSubmission::class,
-            Resources\Page::class,
-            Resources\RedirectInstruction::class,
-            Resources\User::class,
-            Resources\Webcam\Camera::class,
-        ];
-
-        return Collection::make($models)
-            ->mapWithKeys(fn ($row) => [class_basename($row) => [$row]])
-            ->all();
     }
 }

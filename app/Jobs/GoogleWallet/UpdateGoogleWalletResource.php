@@ -48,7 +48,7 @@ class UpdateGoogleWalletResource implements ShouldBeUnique, ShouldQueue
             return;
         }
 
-        match (get_class($model)) {
+        match ($model::class) {
             Activity::class => $service->writeEventClassForActivity($model),
             Enrollment::class => $service->writeEventObjectForEnrollment($model),
             default => throw new LogicException('The model is not supported by the Google Wallet service.'),

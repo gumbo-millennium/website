@@ -57,14 +57,14 @@ trait IdentifiesUsers
         $message = null;
         if (! $user) {
             $message = <<<'EOL'
-            🛂 Je moet ingelogd zijn om dit commando te gebruiken.
+                🛂 Je moet ingelogd zijn om dit commando te gebruiken.
 
-            Log in door /login in een PM te sturen.
-            EOL;
+                Log in door /login in een PM te sturen.
+                EOL;
         } elseif (! $user->is_member) {
             $message = <<<'EOL'
-            ⛔ Dit commando is alleen voor leden.
-            EOL;
+                ⛔ Dit commando is alleen voor leden.
+                EOL;
         }
 
         // Pass

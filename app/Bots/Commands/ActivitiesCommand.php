@@ -24,18 +24,18 @@ class ActivitiesCommand extends Command
      * Message shown for users to login with.
      */
     private const REGISTER_MESSAGE = <<<'TEXT'
-    Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
-    TEXT;
+        Je bent niet ingelogd op de bot, stuur in een PM /login om in te loggen.
+        TEXT;
 
     private const USER_MESSAGE = <<<'MARKDOWN'
-    Activiteiten 🎯
+        Activiteiten 🎯
 
-    %s
+        %s
 
-    Voor meer info, check de site of het activiteitenkanaal.
+        Voor meer info, check de site of het activiteitenkanaal.
 
-    %s
-    MARKDOWN;
+        %s
+        MARKDOWN;
 
     /**
      * The name of the Telegram command.

@@ -13,12 +13,12 @@ use Telegram\Bot\Actions;
 class LogoutCommand extends Command
 {
     private const LOGOUT_OK = <<<'TEXT'
-    🚪 Je bent uitgelogd.
-    TEXT;
+        🚪 Je bent uitgelogd.
+        TEXT;
 
     private const LOGOUT_FAIL = <<<'TEXT'
-    Je was niet eens ingelogd... 😅
-    TEXT;
+        Je was niet eens ingelogd... 😅
+        TEXT;
 
     /**
      * The name of the Telegram command.

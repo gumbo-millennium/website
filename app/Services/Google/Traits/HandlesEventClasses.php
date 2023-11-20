@@ -115,10 +115,10 @@ trait HandlesEventClasses
                 'defaultValue' => [
                     'language' => 'nl',
                     'value' => <<<ADDRESS
-                    {$defaultAddress->line1}
-                    {$defaultAddress->postal_code} {$defaultAddress->city}
-                    {$defaultAddress->country}
-                    ADDRESS,
+                        {$defaultAddress->line1}
+                        {$defaultAddress->postal_code} {$defaultAddress->city}
+                        {$defaultAddress->country}
+                        ADDRESS,
                 ],
             ]);
         }

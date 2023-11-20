@@ -12,10 +12,10 @@ use Telegram\Bot\Commands\CommandInterface;
 class HelpCommand extends Command
 {
     private const MSG = <<<'TEXT'
-    🤖 Beep Boop, this I can do:
+        🤖 Beep Boop, this I can do:
 
-    %s
-    TEXT;
+        %s
+        TEXT;
 
     private const HIDDEN_CMDS = [
         'help',

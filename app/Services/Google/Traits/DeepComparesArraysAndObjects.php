@@ -58,7 +58,7 @@ trait DeepComparesArraysAndObjects
             return null;
         }
 
-        $castTo = $forceCastTo ?? ($actual instanceof GoogleModel ? get_class($actual) : null);
+        $castTo = $forceCastTo ?? ($actual instanceof GoogleModel ? $actual::class : null);
         if (! $castTo) {
             return $changes;
         }

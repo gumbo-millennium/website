@@ -25,10 +25,10 @@ class ExportEnrollments extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    enrollment:export
-        {activity : Activity to export, slug or ID}
-        {format : Format to export into}
-    CMD;
+        enrollment:export
+            {activity : Activity to export, slug or ID}
+            {format : Format to export into}
+        CMD;
 
     /**
      * The console command description.

@@ -10,6 +10,17 @@ use PHPUnit\Framework\TestCase;
 
 class BarcodeServiceTest extends TestCase
 {
+    public static function provideBasicCreation(): iterable
+    {
+        yield [BarcodeType::CODABAR, '123456789'];
+        yield [BarcodeType::CODE39, '123456789'];
+        yield [BarcodeType::CODE128, '081231723897'];
+        yield [BarcodeType::EAN8, '40170725'];
+        yield [BarcodeType::EAN13, '081231723897'];
+        yield [BarcodeType::QRCODE, 'Hello World!'];
+        yield [BarcodeType::TEXT, 'I am a bunch of words'];
+    }
+
     /**
      * @dataProvider provideBasicCreation
      */
@@ -19,16 +30,5 @@ class BarcodeServiceTest extends TestCase
 
         $result = $service->toBase64($type, $value);
         $this->assertNotNull($result);
-    }
-
-    public function provideBasicCreation(): iterable
-    {
-        yield [BarcodeType::CODABAR, '123456789'];
-        yield [BarcodeType::CODE39, '123456789'];
-        yield [BarcodeType::CODE128, '081231723897'];
-        yield [BarcodeType::EAN8, '40170725'];
-        yield [BarcodeType::EAN13, '081231723897'];
-        yield [BarcodeType::QRCODE, 'Hello World!'];
-        yield [BarcodeType::TEXT, 'I am a bunch of words'];
     }
 }

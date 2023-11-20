@@ -11,6 +11,17 @@ use Tests\TestCase;
 
 class TicketPolicyTest extends TestCase
 {
+    public static function provideUserTypes(): array
+    {
+        return [
+            'logged out' => [null],
+            'guest' => ['getGuestUser'],
+            'member' => ['getMemberUser'],
+            'commission' => ['getCommissionUser'],
+            'admin' => ['getSuperAdminUser'],
+        ];
+    }
+
     /**
      * Test tickets inherit all permissions from the Activity model.
      *
@@ -31,17 +42,6 @@ class TicketPolicyTest extends TestCase
         foreach ($scopes as $scope) {
             $this->assertSame(Gate::allows($scope, $activity), Gate::allows($scope, $ticket), "Failed to check {$scope} on Activity matches Ticket");
         }
-    }
-
-    public function provideUserTypes(): array
-    {
-        return [
-            'logged out' => [null],
-            'guest' => ['getGuestUser'],
-            'member' => ['getMemberUser'],
-            'commission' => ['getCommissionUser'],
-            'admin' => ['getSuperAdminUser'],
-        ];
     }
 
     public function test_attaching_to_events(): void

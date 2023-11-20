@@ -16,19 +16,19 @@ class LeaderboardCommand extends Command
     private const EMOJI = ['🥇', '🥈', '🥉'];
 
     private const MESSAGE_EMPTY = <<<'HTML'
-    🏆 Werving Commissie Leaderboard
+        🏆 Werving Commissie Leaderboard
 
-    Het leaderboard is momenteel leeg 😔
-    HTML;
+        Het leaderboard is momenteel leeg 😔
+        HTML;
 
     private const MESSAGE_TEMPLATE = <<<'HTML'
-    🏆 Werving Commissie Leaderboard
+        🏆 Werving Commissie Leaderboard
 
-    %s
+        %s
 
-    Zie je jezelf niet staan, maar hoor je er wel tussen?
-    Controleer dan of je toestemming hebt gegeven om op dit bord te staan.
-    HTML;
+        Zie je jezelf niet staan, maar hoor je er wel tussen?
+        Controleer dan of je toestemming hebt gegeven om op dit bord te staan.
+        HTML;
 
     /**
      * The name of the Telegram command.

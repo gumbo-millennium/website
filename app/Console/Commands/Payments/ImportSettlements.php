@@ -25,9 +25,9 @@ class ImportSettlements extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-        payments:settlements
-            {--all : Import and update all settlements}
-    CMD;
+            payments:settlements
+                {--all : Import and update all settlements}
+        CMD;
 
     /**
      * The console command description.

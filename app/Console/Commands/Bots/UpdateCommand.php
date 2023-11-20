@@ -19,9 +19,9 @@ class UpdateCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    bot:update
-        {bot? : Bot alias to update on}
-    CMD;
+        bot:update
+            {bot? : Bot alias to update on}
+        CMD;
 
     /**
      * The console command description.

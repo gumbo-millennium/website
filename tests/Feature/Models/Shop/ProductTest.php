@@ -11,6 +11,16 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
+    public static function htmlTestProvider(): array
+    {
+        return [
+            'null' => [null, null],
+            'empty string' => ['', null],
+            'html tags' => ['<p>test</p>', 'test'],
+            'newlines' => ["Hello\nWorld", "Hello<br />\nWorld"],
+        ];
+    }
+
     /**
      * @dataProvider htmlTestProvider
      */
@@ -47,15 +57,5 @@ class ProductTest extends TestCase
         $model->save();
 
         $this->assertSame(2, $model->refresh()->applied_order_limit);
-    }
-
-    public function htmlTestProvider(): array
-    {
-        return [
-            'null' => [null, null],
-            'empty string' => ['', null],
-            'html tags' => ['<p>test</p>', 'test'],
-            'newlines' => ["Hello\nWorld", "Hello<br />\nWorld"],
-        ];
     }
 }

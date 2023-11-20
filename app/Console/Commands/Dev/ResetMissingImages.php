@@ -24,9 +24,9 @@ class ResetMissingImages extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    dev:reset-images
-        {--dry-run : Don't actually write the data}
-    CMD;
+        dev:reset-images
+            {--dry-run : Don't actually write the data}
+        CMD;
 
     /**
      * The console command description.

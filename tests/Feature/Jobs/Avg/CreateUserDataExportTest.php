@@ -33,7 +33,7 @@ class CreateUserDataExportTest extends TestCase
 
     public function test_basic_handling(): void
     {
-        CreateUserDataExport::dispatchNow($this->export);
+        CreateUserDataExport::dispatchSync($this->export);
 
         $export = $this->export->refresh();
 
@@ -84,7 +84,7 @@ class CreateUserDataExportTest extends TestCase
         $currentPath = $this->export->path;
         $currentCompletionDate = $this->export->completed_at;
 
-        CreateUserDataExport::dispatchNow($this->export);
+        CreateUserDataExport::dispatchSync($this->export);
 
         $export = $this->export->refresh();
 

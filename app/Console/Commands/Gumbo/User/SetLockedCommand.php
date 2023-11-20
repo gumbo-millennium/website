@@ -21,10 +21,10 @@ class SetLockedCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:user:lock
-        {user : Email or ID of the user to lock}
-        {--unlock : Remove lock from account}
-    CMD;
+        gumbo:user:lock
+            {user : Email or ID of the user to lock}
+            {--unlock : Remove lock from account}
+        CMD;
 
     /**
      * The console command description.

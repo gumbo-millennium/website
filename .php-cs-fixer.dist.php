@@ -23,7 +23,11 @@ return (new Config())
     ->setCacheFile(__DIR__ . '/.php-cs-fixer.cache')
     ->setRules([
         '@PSR12' => true,
-        '@PHP74Migration:risky' => true,
+        '@PHP80Migration:risky' => true,
+        '@PHP82Migration' => true,
+
+        // PHPUnit migrator
+        '@PHPUnit100Migration:risky' => true,
 
         // Alias
         'no_mixed_echo_print' => ['use' => 'echo'],

@@ -19,12 +19,12 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
-            // Fallback to "my account"
-            $fallback = URL::route('account.index');
+        $guards = empty($guards) ? [null] : $guards;
 
-            // Redirect to intended URL or fallback route
-            return Response::redirectToIntended($fallback);
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return Response::redirectToIntended(URL::route('account.index'));
+            }
         }
 
         return $next($request);

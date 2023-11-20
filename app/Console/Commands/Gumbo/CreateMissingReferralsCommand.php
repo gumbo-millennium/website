@@ -17,10 +17,10 @@ class CreateMissingReferralsCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-    gumbo:create-missing-referrals
-        {--since=-6 months : The start date to create items for}
-        {--dry-run : Only pretend}
-    CMD;
+        gumbo:create-missing-referrals
+            {--since=-6 months : The start date to create items for}
+            {--dry-run : Only pretend}
+        CMD;
 
     /**
      * The console command description.

@@ -29,9 +29,9 @@ class BackupCreateCommand extends Command
      * @var string
      */
     protected $signature = <<<'CMD'
-        backup:create
-            {--full : Create a full backup}
-    CMD;
+            backup:create
+                {--full : Create a full backup}
+        CMD;
 
     /**
      * The console command description.

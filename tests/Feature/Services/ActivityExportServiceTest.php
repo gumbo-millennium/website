@@ -16,6 +16,15 @@ use Tests\TestCase;
 
 class ActivityExportServiceTest extends TestCase
 {
+    public static function provideTypes(): array
+    {
+        return [
+            'Check-in' => [ActivityExportType::CheckIn],
+            // 'Medical' => [ActivityExportType::Medical],
+            'Full' => [ActivityExportType::Full],
+        ];
+    }
+
     /**
      * Test exports in general.
      *
@@ -50,14 +59,5 @@ class ActivityExportServiceTest extends TestCase
 
         $this->assertNotEmpty($result);
         Storage::cloud()->assertExists($result);
-    }
-
-    public function provideTypes(): array
-    {
-        return [
-            'Check-in' => [ActivityExportType::CheckIn],
-            // 'Medical' => [ActivityExportType::Medical],
-            'Full' => [ActivityExportType::Full],
-        ];
     }
 }

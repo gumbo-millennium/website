@@ -69,17 +69,17 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
             $expireText = $expire->isoFormat('D MMM YYYY, HH:mm (z)');
             $mail
                 ->line(<<<TEXT
-                Om plek vrij te houden voor andere deelnemers, is er een
-                deadline waarvoor je je inschrijving moet afronden. Voor
-                jouw inschrijving was dit {$expireText}. Je inschrijving
-                is hierom geannuleerd.
-                TEXT);
+                    Om plek vrij te houden voor andere deelnemers, is er een
+                    deadline waarvoor je je inschrijving moet afronden. Voor
+                    jouw inschrijving was dit {$expireText}. Je inschrijving
+                    is hierom geannuleerd.
+                    TEXT);
         }
 
         $mail->line(<<<TEXT
-        Het betaalde bedrag van {$price} zal binnen enkele werkdagen
-        teruggeboekt worden.
-        TEXT);
+            Het betaalde bedrag van {$price} zal binnen enkele werkdagen
+            teruggeboekt worden.
+            TEXT);
 
         // Add action button
         $mail

@@ -7,8 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class ReplaceInvalidForeignKeyOnPaymentSettlements extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -26,4 +25,4 @@ class ReplaceInvalidForeignKeyOnPaymentSettlements extends Migration
             $table->foreign('payment_id')->references('id')->on('payments')->onDelete('cascade');
         });
     }
-}
+};

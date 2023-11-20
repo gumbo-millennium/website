@@ -88,23 +88,23 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
             ->greeting("Je bent nu ingeschreven voor {$activity->name}")
             ->line("Beste {$recipient->first_name},")
             ->line(<<<TEXT
-            *{$oldUser->name}* heeft de inschrijving voor *{$activity->name}* overgedragen aan jou. Dit betekend
-            dat jij nu ingeschreven staat voor deze activiteit, met alle rechten en plichten die hierbij horen.
-            TEXT)
+                *{$oldUser->name}* heeft de inschrijving voor *{$activity->name}* overgedragen aan jou. Dit betekend
+                dat jij nu ingeschreven staat voor deze activiteit, met alle rechten en plichten die hierbij horen.
+                TEXT)
             ->line("Beter loop je even naar {$oldUser->name} toe met je liefste blik als bedankje 🥺.");
 
         if ($enrollment->state instanceof Paid) {
             $mail->line(<<<MARKDOWN
-            Het wordt *nóg* beter, aangezien {$oldUser->first_name} al heeft betaald voor deze inschrijving.
-            Je mag lekker zelf regelen hoe dat geld terugkomt bij {$oldUser->first_name}.
-            MARKDOWN);
+                Het wordt *nóg* beter, aangezien {$oldUser->first_name} al heeft betaald voor deze inschrijving.
+                Je mag lekker zelf regelen hoe dat geld terugkomt bij {$oldUser->first_name}.
+                MARKDOWN);
         } elseif (! $enrollment->state->isStable() && $enrollment->expire) {
             $exprireDate = $enrollment->expire->isoFormat('D MMM YYYY, HH:mm (z)');
             $mail->line(<<<MARKDOWN
-            **Let op**: deze inschrijving is niet afgerond. Dit betekend dat je tot {$exprireDate} hebt
-            om hem af te ronden, anders wordt hij geannuleerd en is alle moeite van {$oldUser->name} voor
-            niets geweest.
-            MARKDOWN);
+                **Let op**: deze inschrijving is niet afgerond. Dit betekend dat je tot {$exprireDate} hebt
+                om hem af te ronden, anders wordt hij geannuleerd en is alle moeite van {$oldUser->name} voor
+                niets geweest.
+                MARKDOWN);
         }
 
         $mail->line('Voor meer info, kan je via onderstaande knop naar de activiteit.')
@@ -134,9 +134,9 @@ class EnrollmentTransferred extends Notification implements ShouldQueue
 
         if ($enrollment->state instanceof Paid) {
             $mail->line(<<<MARKDOWN
-            **Let op**: Omdat je al hebt betaald, is het aan jou om te zorgen dat jij het geld van
-            {$newUser->first_name} weet te plunderen.
-            MARKDOWN);
+                **Let op**: Omdat je al hebt betaald, is het aan jou om te zorgen dat jij het geld van
+                {$newUser->first_name} weet te plunderen.
+                MARKDOWN);
         }
 
         $mail->line(<<<MARKDOWN
