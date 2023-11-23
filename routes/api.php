@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api;
-use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
