@@ -14,7 +14,7 @@ use LogicException;
 
 /**
  * @method static static dispatch(Activity $activity)
- * @method static static dispatchNow(Activity $activity)
+ * @method static static dispatchSync(Activity $activity)
  * @method static static dispatchAfterResponse(Activity $activity)
  */
 abstract class ActivityJob implements ShouldQueue

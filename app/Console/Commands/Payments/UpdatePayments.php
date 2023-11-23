@@ -49,7 +49,7 @@ class UpdatePayments extends Command
         $payments->chunk(100, function ($models) {
             foreach ($models as $payment) {
                 $this->info('Updating payment: ' . $payment->id);
-                UpdatePaymentJob::dispatchNow($payment);
+                UpdatePaymentJob::dispatchSync($payment);
             }
         });
     }

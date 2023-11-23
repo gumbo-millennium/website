@@ -43,7 +43,7 @@ class ReindexMediaFiles extends Command
                     null,
                     OutputInterface::VERBOSITY_VERY_VERBOSE,
                 );
-                IndexFileContents::dispatchNow($media);
+                IndexFileContents::dispatchSync($media);
                 $this->info("Parsed {$media->file_name}.", OutputInterface::VERBOSITY_VERBOSE);
             }
 

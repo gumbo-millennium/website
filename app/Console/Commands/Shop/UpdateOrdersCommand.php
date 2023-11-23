@@ -51,7 +51,7 @@ class UpdateOrdersCommand extends Command
 
             $this->line("Processing <info>{$order->number}</>...", null, OutputInterface::VERBOSITY_VERBOSE);
 
-            UpdateOrderJob::dispatchNow($order);
+            UpdateOrderJob::dispatchSync($order);
 
             $this->line("Processed <info>{$order->number}</>.");
         }

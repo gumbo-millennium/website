@@ -28,7 +28,7 @@ use RuntimeException;
 
 /**
  * @method static PendingDispatch dispatch(string $settlementId)
- * @method static PendingDispatch dispatchNow(string $settlementId)
+ * @method static PendingDispatch dispatchSync(string $settlementId)
  */
 class UpdateMollieSettlement implements ShouldQueue
 {
