@@ -46,21 +46,6 @@ Route::middleware(['auth:sanctum', 'member'])->group(function () {
     Route::get('/quotes/book', [Api\BotQuoteController::class, 'book'])->name('quotes.book');
 });
 
-// Webhooks and frequently polling don't have a rate limit
-Route::withoutMiddleware([\Illuminate\Routing\Middleware\ThrottleRequests::class . ':api'])->group(function () {
-    // Register Telegram webhooks
-    Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('bots.telegram');
-
-    // Register Mollie webhook URL
-    Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name('webhooks.mollie');
-
-    // Register ical route
-    Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->name('calendar.show');
-
-    // Register Google Wallet webhook URL
-    Route::post('/webhooks/google-wallet', [Api\WebhookController::class, 'googleWallet'])->name('webhooks.google-wallet');
-});
-
 // Register resource routes, all protected
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('activities', 'Api\ActivityController')
