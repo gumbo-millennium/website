@@ -34,11 +34,9 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         // Check if locally developing, and then set the root URL if required
-        if (! $this->app->environment('local')) {
-            return;
+        if ($this->app->environment('local')) {
+            $this->updateLocalRootUrl();
         }
-
-        $this->updateRootUrl();
     }
 
     /**
@@ -78,6 +76,12 @@ class RouteServiceProvider extends ServiceProvider
             ->name('api.')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
+
+        Route::prefix('api')
+            ->middleware('api-webhooks')
+            ->name('api.')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/webhooks.php'));
     }
 
     /**
@@ -92,7 +96,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Updates the URL generator's root URL if a HMR program is running an an X-Forwarded-Host is provided.
      */
-    protected function updateRootUrl(): void
+    protected function updateLocalRootUrl(): void
     {
         // We /really/ don't want this in production.
         if (! $this->app->environment('local')) {
@@ -103,7 +107,7 @@ class RouteServiceProvider extends ServiceProvider
         }
 
         // Only run when HMR is active
-        if (! \file_exists(\public_path('hot'))) {
+        if (! file_exists(public_path('hot'))) {
             return;
         }
 
