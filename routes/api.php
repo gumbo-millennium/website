@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api;
-use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -44,21 +43,6 @@ Route::middleware(['auth:sanctum', 'member'])->group(function () {
     Route::get('/quotes', [Api\BotQuoteController::class, 'index'])->name('quotes.list');
     Route::get('/quotes/all', [Api\BotQuoteController::class, 'indexAll'])->name('quotes.list-all');
     Route::get('/quotes/book', [Api\BotQuoteController::class, 'book'])->name('quotes.book');
-});
-
-// Webhooks and frequently polling don't have a rate limit
-Route::withoutMiddleware([\Illuminate\Routing\Middleware\ThrottleRequests::class . ':api'])->group(function () {
-    // Register Telegram webhooks
-    Route::post('/bots/telegram', [TelegramBotController::class, 'handle'])->name('bots.telegram');
-
-    // Register Mollie webhook URL
-    Route::post('/webhooks/mollie', [Api\WebhookController::class, 'mollie'])->name('webhooks.mollie');
-
-    // Register ical route
-    Route::get('/user-calendar/{user}', [Api\CalendarController::class, 'show'])->name('calendar.show');
-
-    // Register Google Wallet webhook URL
-    Route::post('/webhooks/google-wallet', [Api\WebhookController::class, 'googleWallet'])->name('webhooks.google-wallet');
 });
 
 // Register resource routes, all protected
