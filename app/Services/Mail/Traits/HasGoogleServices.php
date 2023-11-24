@@ -71,10 +71,7 @@ trait HasGoogleServices
             $wrappedException = new RuntimeException($message, $firstErrorCode, $exception);
 
             // Report it
-            \report($wrappedException);
-
-            // Return null
-            return null;
+            throw $wrappedException;
         }
     }
 
