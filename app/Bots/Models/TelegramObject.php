@@ -49,7 +49,7 @@ abstract class TelegramObject extends Fluent
     {
         $this->replyMarkup ??= (new Keyboard())->inline();
 
-        $this->replyMarkup->row(...$buttons);
+        $this->replyMarkup->row($buttons);
 
         return $this;
     }
