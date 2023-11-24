@@ -34,7 +34,7 @@ class SendActivityFeatureMails extends Command
      */
     public function handle()
     {
-        $command = $this->option('sync') ? 'dispatchNow' : 'dispatch';
+        $command = $this->option('sync') ? 'dispatchSync' : 'dispatch';
 
         /** @var \Illuminate\Support\Collection<\App\Models\Activity> $activities */
         $activities = Activity::query()

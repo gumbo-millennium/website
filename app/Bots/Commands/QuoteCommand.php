@@ -161,12 +161,12 @@ class QuoteCommand extends Command
         // Send single user message
         if ($user) {
             $keyboard = (new Keyboard())->inline();
-            $keyboard->row(
+            $keyboard->row([
                 Keyboard::inlineButton([
                     'text' => 'Bekijk mijn wist-je-datjes',
                     'url' => route('account.quotes'),
                 ]),
-            );
+            ]);
 
             $this->replyWithMessage([
                 'text' => $preparedMessage,

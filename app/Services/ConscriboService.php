@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\ConscriboService as ConscriboServiceContract;
+use App\Exceptions\Services\ConscriboException;
 use DateTimeInterface;
 use GuzzleHttp\Client as HttpClient;
-
-use function GuzzleHttp\Psr7\stream_for;
-
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -99,7 +98,7 @@ final class ConscriboService implements ConscriboServiceContract
         $password = Config::get('services.conscribo.password');
 
         if (empty($account) || empty($username) || empty($password)) {
-            throw new RuntimeException('Conscribo not configured');
+            throw new ConscriboException('Conscribo not configured', ConscriboException::CODE_AUTH_MISSING);
         }
 
         return new self($account, $username, $password);
@@ -157,7 +156,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
+            'body' => Utils::streamFor($body),
             'headers' => $headers,
         ]);
 
@@ -170,7 +169,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Throw a fit
         if ($psrResponse->getStatusCode() !== 200 || ! Arr::has($response, 'result.sessionId')) {
-            throw new RuntimeException('Failed to authenticate against Conscribo API');
+            throw new ConscriboException('Failed to authenticate against Conscribo API', ConscriboException::CODE_AUTH_FAILED);
         }
 
         // Get session ID
@@ -202,7 +201,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
+            'body' => Utils::streamFor($body),
             'headers' => $headers,
         ]);
 
@@ -215,7 +214,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Skip server failures
         if ($psrResponse->getStatusCode() >= 500) {
-            throw new RuntimeException('Service seems unavailable');
+            throw new ConscriboException('Service seems unavailable', ConscriboException::CODE_API_UNAVAILABLE);
         }
 
         // Get Ok
@@ -234,7 +233,7 @@ final class ConscriboService implements ConscriboServiceContract
         }
 
         // Throw an exception
-        throw new RuntimeException("Command failed: {$error}");
+        throw new ConscriboException("Command failed: {$error}");
     }
 
     /**
@@ -393,7 +392,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         foreach ($fields as $fieldName) {
             if (! \array_key_exists($fieldName, $resourceFields)) {
-                throw new RuntimeException("Field [{$fieldName}] does not exist, so cannot be requested.");
+                throw new ConscriboException("Field [{$fieldName}] does not exist, so cannot be requested.", ConscriboException::CODE_INVALID_REQUEST);
             }
         }
 
@@ -578,7 +577,7 @@ final class ConscriboService implements ConscriboServiceContract
             // Iterate each field
             foreach ($row as $field => $value) {
                 if (! isset($fields[$field])) {
-                    throw new RuntimeException("Recieved unknown field [{$field}] from API");
+                    throw new ConscriboException("Recieved unknown field [{$field}] from API", ConscriboException::CODE_INVALID_RESPONSE);
                 }
 
                 // Mutate data according to format

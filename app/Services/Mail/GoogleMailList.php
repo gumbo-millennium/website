@@ -8,9 +8,9 @@ use App\Contracts\Mail\MailList;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Services\Mail\Traits\ValidatesEmailRequests;
-use Google_Service_Directory_Group;
-use Google_Service_Directory_Member;
-use Google_Service_Directory_Members;
+use Google\Service\Directory\Group as DirectoryGroup;
+use Google\Service\Directory\Member as DirectoryMember;
+use Google\Service\Directory\Members as DirectoryMembers;
 use InvalidArgumentException;
 use JsonSerializable;
 use OverflowException;
@@ -39,12 +39,12 @@ class GoogleMailList implements JsonSerializable, MailList
     private array $lockedAliases;
 
     public static function fromGoogleModel(
-        Google_Service_Directory_Group $group,
-        Google_Service_Directory_Members $members
+        DirectoryGroup $group,
+        DirectoryMembers $members
     ): self {
         $users = [];
         foreach ($members->getMembers() as $member) {
-            \assert($member instanceof Google_Service_Directory_Member);
+            \assert($member instanceof DirectoryMember);
             $users[] = [
                 $member->getEmail(),
                 $member->getRole(),

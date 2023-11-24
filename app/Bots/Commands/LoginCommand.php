@@ -87,7 +87,7 @@ class LoginCommand extends Command
 
         // Prep a keyboard
         $keyboard = (new Keyboard())->inline();
-        $keyboard->row(
+        $keyboard->row([
             Keyboard::inlineButton([
                 'text' => 'Inloggen',
                 'login_url' => [
@@ -95,7 +95,7 @@ class LoginCommand extends Command
                     'request_write_access' => false,
                 ],
             ]),
-        );
+        ]);
 
         $loginMessage = [
             'text' => $this->formatText(self::LOGIN_MSG),

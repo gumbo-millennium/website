@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Mail;
 
-use Google_Service_Groupssettings_Groups as GroupSettings;
+use Google\Service\Groupssettings\Groups as GroupSettings;
 use InvalidArgumentException;
 use JsonException;
 use LogicException;

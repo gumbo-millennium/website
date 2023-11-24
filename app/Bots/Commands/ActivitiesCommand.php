@@ -139,7 +139,7 @@ class ActivitiesCommand extends Command
 
         // Prep a keyboard
         $keyboard = (new Keyboard())->inline();
-        $keyboard->row(
+        $keyboard->row([
             Keyboard::inlineButton([
                 'text' => 'Check de site',
                 'url' => route('activity.index'),
@@ -148,7 +148,7 @@ class ActivitiesCommand extends Command
                 'text' => 'Activiteitenkanaal',
                 'url' => $this->getActivityChannelUrl(),
             ]),
-        );
+        ]);
 
         // Return message
         $this->replyWithMessage([

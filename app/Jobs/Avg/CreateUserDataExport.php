@@ -18,7 +18,7 @@ use ZipArchive;
 
 /**
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatch(DataExport $export)
- * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatchNow(DataExport $export)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatchSync(DataExport $export)
  * @method static \Illuminate\Foundation\Bus\PendingDispatch dispatchAfterResponse(DataExport $export)
  */
 class CreateUserDataExport implements ShouldQueue

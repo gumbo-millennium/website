@@ -6,16 +6,18 @@ namespace App\Services\Mail;
 
 use App\Contracts\Mail\MailList;
 use App\Contracts\Mail\MailListHandler;
+use App\Exceptions\Services\GoogleServiceException;
 use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Services\Mail\Traits\HasGoogleServices;
 use App\Services\Mail\Traits\ValidatesEmailRequests;
-use Google_Service_Directory_Alias as GroupAlias;
-use Google_Service_Directory_Group as Group;
-use Google_Service_Directory_Groups;
-use Google_Service_Directory_Member as GroupMember;
-use Google_Service_Directory_Members as GroupMembers;
-use Google_Service_Groupssettings_Groups as GroupSettings;
+use Google\Exception as GoogleException;
+use Google\Service\Directory\Alias as GroupAlias;
+use Google\Service\Directory\Group as Group;
+use Google\Service\Directory\Groups;
+use Google\Service\Directory\Member as GroupMember;
+use Google\Service\Directory\Members as GroupMembers;
+use Google\Service\Groupssettings\Groups as GroupSettings;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use LogicException;
@@ -32,7 +34,7 @@ class GoogleMailListService implements MailListHandler
     /**
      * Returns all lists.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      */
     public function getAllLists(): array
     {
@@ -70,7 +72,7 @@ class GoogleMailListService implements MailListHandler
 
         // Validate domain
         if (! $this->canProcessList($email)) {
-            throw new RuntimeException("Domain {$domain} is not available for modification");
+            throw new GoogleServiceException("Domain {$domain} is not available for modification", GoogleServiceException::CODE_DOMAIN_LOCKED);
         }
         // Build query
         $query = [
@@ -90,7 +92,7 @@ class GoogleMailListService implements MailListHandler
         );
 
         // Check if the result is valid
-        if (! $result instanceof Google_Service_Directory_Groups || ! $result->valid()) {
+        if (! $result instanceof Groups || ! $result->valid()) {
             return null;
         }
 
@@ -138,7 +140,7 @@ class GoogleMailListService implements MailListHandler
 
         // Validate domain
         if (! $this->canProcessList($email)) {
-            throw new RuntimeException("Domain {$domain} is not available for modification");
+            throw new GoogleServiceException("Domain {$domain} is not available for modification", GoogleServiceException::CODE_DOMAIN_LOCKED);
         }
 
         // Build group model
@@ -148,15 +150,18 @@ class GoogleMailListService implements MailListHandler
         ]);
 
         // Insert it
-        $result = $this->callGoogleService(
-            static fn () => $groupsManager->insert($group),
-            'create group',
-            $email,
-        );
+        try {
+            $result = $this->callGoogleService(
+                static fn () => $groupsManager->insert($group),
+                'create group',
+                $email,
+            );
 
-        // Fail if required
-        if (! $result || ! $result instanceof Group) {
-            throw new RuntimeException('Failed to create group');
+            if (! $result instanceof Group) {
+                throw new GoogleServiceException("Failed to create group {$email}", GoogleServiceException::CODE_GROUP_FAILED);
+            }
+        } catch (RuntimeException $exception) {
+            throw new GoogleServiceException("Failed to create group {$email}", GoogleServiceException::CODE_GROUP_FAILED, $exception);
         }
 
         // Build new item, without members
@@ -174,22 +179,21 @@ class GoogleMailListService implements MailListHandler
         $permissionManager = $this->getGoogleGroupSettingsManager();
 
         // Apply changes
-        $ok = $this->callGoogleService(
-            static fn () => $permissionManager->patch($list->getEmail(), $permissions),
-            'update permssions',
-            $list->getEmail(),
-        );
-
-        // Check
-        if (! $ok) {
-            throw new RuntimeException("Failed to set permissions on [{$list->getEmail()}]");
+        try {
+            $ok = $this->callGoogleService(
+                static fn () => $permissionManager->patch($list->getEmail(), $permissions),
+                'update permssions',
+                $list->getEmail(),
+            );
+        } catch (RuntimeException $exception) {
+            throw new GoogleServiceException("Failed to set permissions on [{$list->getEmail()}]", GoogleServiceException::CODE_GROUP_PERMISSIONS_FAILED, $exception);
         }
     }
 
     /**
      * Updates group.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      * @throws LogicException
      */
     public function save(MailList $list): void
@@ -202,11 +206,15 @@ class GoogleMailListService implements MailListHandler
         foreach ($list->getChangedAliases() as $index => [$action, $alias]) {
             // Delete it
             if ($action === MailList::CHANGE_DELETE) {
-                $this->callGoogleService(
-                    static fn () => $aliasManager->delete($list->getServiceId(), $alias),
-                    "delete alias {$alias}",
-                    $list->getEmail(),
-                );
+                try {
+                    $this->callGoogleService(
+                        static fn () => $aliasManager->delete($list->getServiceId(), $alias),
+                        "delete alias {$alias}",
+                        $list->getEmail(),
+                    );
+                } catch (RuntimeException $exception) {
+                    report(new GoogleServiceException("Failed to delete alias {$alias} from {$list->getEmail()}", GoogleServiceException::CODE_GROUP_ALIAS_FAILED, $exception));
+                }
 
                 continue;
             }
@@ -222,22 +230,30 @@ class GoogleMailListService implements MailListHandler
             ]);
 
             // Add
-            $this->callGoogleService(
-                static fn () => $aliasManager->insert($list->getServiceId(), $aliasObj),
-                "create alias {$alias}",
-                $list->getEmail(),
-            );
+            try {
+                $this->callGoogleService(
+                    static fn () => $aliasManager->insert($list->getServiceId(), $aliasObj),
+                    "create alias {$alias}",
+                    $list->getEmail(),
+                );
+            } catch (RuntimeException $exception) {
+                report(new GoogleServiceException("Failed to create alias {$alias} on {$list->getEmail()}", GoogleServiceException::CODE_GROUP_ALIAS_FAILED, $exception));
+            }
         }
 
         // Update members
         foreach ($list->getChangedEmails() as $index => [$action, $email, $role]) {
             // Delete it
             if ($action === MailList::CHANGE_DELETE) {
-                $this->callGoogleService(
-                    static fn () => $memberManager->delete($list->getServiceId(), $email),
-                    "delete member {$email}",
-                    $list->getEmail(),
-                );
+                try {
+                    $this->callGoogleService(
+                        static fn () => $memberManager->delete($list->getServiceId(), $email),
+                        "delete member {$email}",
+                        $list->getEmail(),
+                    );
+                } catch (RuntimeException $exception) {
+                    report(new GoogleServiceException("Failed to delete member {$email} from {$list->getEmail()}", GoogleServiceException::CODE_GROUP_MEMBER_FAILED, $exception));
+                }
 
                 continue;
             }
@@ -255,21 +271,29 @@ class GoogleMailListService implements MailListHandler
 
             // Patch if update
             if ($action === MailList::CHANGE_UPDATE) {
-                $this->callGoogleService(
-                    static fn () => $memberManager->patch($list->getServiceId(), $email, $memberObj),
-                    "update member {$email}",
-                    $list->getEmail(),
-                );
+                try {
+                    $this->callGoogleService(
+                        static fn () => $memberManager->patch($list->getServiceId(), $email, $memberObj),
+                        "update member {$email}",
+                        $list->getEmail(),
+                    );
+                } catch (RuntimeException $exception) {
+                    report(new GoogleServiceException("Failed to update member {$email} on {$list->getEmail()}", GoogleServiceException::CODE_GROUP_MEMBER_FAILED, $exception));
+                }
 
                 continue;
             }
 
             // Insert new member
-            $this->callGoogleService(
-                static fn () => $memberManager->insert($list->getServiceId(), $memberObj),
-                "add member {$email}",
-                $list->getEmail(),
-            );
+            try {
+                $this->callGoogleService(
+                    static fn () => $memberManager->insert($list->getServiceId(), $memberObj),
+                    "add member {$email}",
+                    $list->getEmail(),
+                );
+            } catch (RuntimeException $exception) {
+                report(new GoogleServiceException("Failed to add member {$email} to {$list->getEmail()}", GoogleServiceException::CODE_GROUP_MEMBER_FAILED, $exception));
+            }
         }
     }
 
@@ -290,14 +314,14 @@ class GoogleMailListService implements MailListHandler
 
         // Check if failed
         if ($res === null) {
-            throw new RuntimeException('Failed to delete group');
+            throw new GoogleServiceException("Failed to delete group {$list->getEmail()}", GoogleServiceException::CODE_GROUP_FAILED);
         }
     }
 
     /**
      * Gets all mailing lists for each domain.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      */
     protected function getAllListsForDomain(string $domain): array
     {

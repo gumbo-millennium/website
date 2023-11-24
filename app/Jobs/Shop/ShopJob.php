@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * @method static static dispatch(Order $order)
- * @method static static dispatchNow(Order $order)
+ * @method static static dispatchSync(Order $order)
  * @method static static dispatchAfterResponse(Order $order)
  */
 abstract class ShopJob implements ShouldQueue

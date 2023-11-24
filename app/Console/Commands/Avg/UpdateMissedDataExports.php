@@ -40,7 +40,7 @@ class UpdateMissedDataExports extends Command
 
             $this->line("Running on export {$export->id} for {$export->user->name}...");
 
-            CreateUserDataExport::dispatchNow($export);
+            CreateUserDataExport::dispatchSync($export);
 
             $this->info("Finished export {$export->id}.");
         }
