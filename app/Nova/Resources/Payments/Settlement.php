@@ -39,6 +39,13 @@ class Settlement extends Resource
     public static $group = 'Bestuurszaken';
 
     /**
+     * Column to sort by.
+     *
+     * @var null|array<int,string>|string
+     */
+    public static $defaultSort = 'created_at';
+
+    /**
      * The columns that should be searched.
      *
      * @var array

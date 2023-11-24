@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Resources;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource as NovaResource;
@@ -14,9 +15,13 @@ use Laravel\Nova\Resource as NovaResource;
 abstract class Resource extends NovaResource
 {
     /**
-     * Column to sort by.
+     * Column to sort by, either null, a column name
+     * or a two-element array with column name and direction.
      *
-     * @var null|string
+     * @var null|array<int,string>|string
+     * @example null
+     * @example 'created_at'
+     * @example ['created_at', 'desc']
      */
     public static $defaultSort;
 
@@ -61,7 +66,7 @@ abstract class Resource extends NovaResource
         if (static::$defaultSort && empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
 
-            return $query->orderBy(static::$defaultSort);
+            return $query->orderBy(...Arr::wrap(static::$defaultSort));
         }
 
         return $query;
