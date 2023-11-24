@@ -49,10 +49,10 @@ class DebugActivity extends GoogleWalletCommand
         $activityQuery = Activity::query()
             ->withoutGlobalScopes()
             ->when($this->option('enrollments'), fn ($query) => $query->with('enrollments'))
-            ->unless($this->option('all'), fn ($query) => $query->orWhere([
-                ['id', '=', $this->argument('activity')],
-                ['slug', '=', $this->argument('activity')],
-            ])->limit(1))
+            ->unless($this->option('all'), fn ($query) => $query
+                ->whereId($this->argument('activity'))
+                ->orWhereSlug($this->argument('activity'))
+                ->limit(1))
             ->orderBy('id');
 
         if ($activityQuery->count() === 0 && ! $this->option('all')) {
