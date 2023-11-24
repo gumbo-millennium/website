@@ -48,7 +48,7 @@ class DebugActivity extends GoogleWalletCommand
         // Find activity
         $activityQuery = Activity::query()
             ->withoutGlobalScopes()
-            ->if($this->option('enrollments'), fn ($query) => $query->with('enrollments'))
+            ->when($this->option('enrollments'), fn ($query) => $query->with('enrollments'))
             ->unless($this->option('all'), fn ($query) => $query->orWhere([
                 ['id', '=', $this->argument('activity')],
                 ['slug', '=', $this->argument('activity')],
