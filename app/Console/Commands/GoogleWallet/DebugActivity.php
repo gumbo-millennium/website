@@ -117,5 +117,7 @@ class DebugActivity extends GoogleWalletCommand
         if ($input->getOption('all')) {
             $input->setArgument('activity', 'all');
         }
+
+        parent::interact($input, $output);
     }
 }
