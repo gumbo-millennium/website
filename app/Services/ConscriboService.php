@@ -7,9 +7,7 @@ namespace App\Services;
 use App\Contracts\ConscriboService as ConscriboServiceContract;
 use DateTimeInterface;
 use GuzzleHttp\Client as HttpClient;
-
-use function GuzzleHttp\Psr7\stream_for;
-
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -157,7 +155,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
+            'body' => Utils::streamFor($body),
             'headers' => $headers,
         ]);
 
@@ -202,7 +200,7 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Send request
         $psrResponse = $this->http->post($this->endpoint, [
-            'body' => stream_for($body),
+            'body' => Utils::streamFor($body),
             'headers' => $headers,
         ]);
 
