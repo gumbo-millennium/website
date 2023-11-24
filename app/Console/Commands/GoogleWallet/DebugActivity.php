@@ -65,8 +65,7 @@ class DebugActivity extends GoogleWalletCommand
 
         foreach ($activityQuery->lazy(10) as $activity) {
             $eventClass = EventClass::forSubject($activity)->first();
-            $tableRows
-            = [
+            $tableRows[] = [
                 $activity->id,
                 $activity->name,
                 $eventClass?->id ?? 'UNKNOWN',
