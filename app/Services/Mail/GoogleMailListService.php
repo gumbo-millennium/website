@@ -11,12 +11,13 @@ use App\Helpers\Arr;
 use App\Helpers\Str;
 use App\Services\Mail\Traits\HasGoogleServices;
 use App\Services\Mail\Traits\ValidatesEmailRequests;
-use Google_Service_Directory_Alias as GroupAlias;
-use Google_Service_Directory_Group as Group;
-use Google_Service_Directory_Groups;
-use Google_Service_Directory_Member as GroupMember;
-use Google_Service_Directory_Members as GroupMembers;
-use Google_Service_Groupssettings_Groups as GroupSettings;
+use Google\Exception as GoogleException;
+use Google\Service\Directory\Alias as GroupAlias;
+use Google\Service\Directory\Group as Group;
+use Google\Service\Directory\Groups;
+use Google\Service\Directory\Member as GroupMember;
+use Google\Service\Directory\Members as GroupMembers;
+use Google\Service\Groupssettings\Groups as GroupSettings;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use LogicException;
@@ -33,7 +34,7 @@ class GoogleMailListService implements MailListHandler
     /**
      * Returns all lists.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      */
     public function getAllLists(): array
     {
@@ -91,7 +92,7 @@ class GoogleMailListService implements MailListHandler
         );
 
         // Check if the result is valid
-        if (! $result instanceof Google_Service_Directory_Groups || ! $result->valid()) {
+        if (! $result instanceof Groups || ! $result->valid()) {
             return null;
         }
 
@@ -192,7 +193,7 @@ class GoogleMailListService implements MailListHandler
     /**
      * Updates group.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      * @throws LogicException
      */
     public function save(MailList $list): void
@@ -320,7 +321,7 @@ class GoogleMailListService implements MailListHandler
     /**
      * Gets all mailing lists for each domain.
      *
-     * @throws Google_Exception
+     * @throws GoogleException
      */
     protected function getAllListsForDomain(string $domain): array
     {

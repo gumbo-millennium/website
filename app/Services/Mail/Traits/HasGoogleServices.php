@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Services\Mail\Traits;
 
 use Closure;
-use Google_Client as GoogleApi;
-use Google_Service_Directory as GoogleDirectoryService;
-use Google_Service_Directory_Resource_Groups as GoogleDirectoryGroupsResource;
-use Google_Service_Directory_Resource_GroupsAliases as GoogleDirectoryAliasesResource;
-use Google_Service_Directory_Resource_Members as GoogleDirectoryMembersResource;
-use Google_Service_Exception as GoogleServiceException;
-use Google_Service_Groupssettings as GoogleGroupsSettingsService;
-use Google_Service_Groupssettings_Resource_Groups as GoogleGroupsSettingsResource;
+use Google\Client as GoogleClient;
+use Google\Service\Directory as DirectoryService;
+use Google\Service\Directory\Resource\Groups as DirectoryGroups;
+use Google\Service\Directory\Resource\GroupsAliases as DirectoryAliases;
+use Google\Service\Directory\Resource\Members as DirectoryMembers;
+use Google\Service\Exception as GoogleServiceException;
+use Google\Service\Groupssettings as GroupsSettingsService;
+use Google\Service\Groupssettings\Resource\Groups as GroupsSettings;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -22,9 +22,9 @@ use RuntimeException;
  */
 trait HasGoogleServices
 {
-    private ?GoogleDirectoryService $googleDirectoryService = null;
+    private ?DirectoryService $googleDirectoryService = null;
 
-    private ?GoogleGroupsSettingsService $googleGroupsSettingsService = null;
+    private ?GroupsSettingsService $googleGroupsSettingsService = null;
 
     /**
      * Safely calls a Google service, handling any errors as they come up.
@@ -81,7 +81,7 @@ trait HasGoogleServices
      * @throws InvalidArgumentException
      * @internal
      */
-    protected function getGoogleGroupManager(): GoogleDirectoryGroupsResource
+    protected function getGoogleGroupManager(): DirectoryGroups
     {
         return $this->getGoogleDirectory()->groups;
     }
@@ -91,7 +91,7 @@ trait HasGoogleServices
      *
      * @throws InvalidArgumentException
      */
-    protected function getGoogleGroupAliasManager(): GoogleDirectoryAliasesResource
+    protected function getGoogleGroupAliasManager(): DirectoryAliases
     {
         return $this->getGoogleDirectory()->groups_aliases;
     }
@@ -101,7 +101,7 @@ trait HasGoogleServices
      *
      * @throws InvalidArgumentException
      */
-    protected function getGoogleGroupMembersManager(): GoogleDirectoryMembersResource
+    protected function getGoogleGroupMembersManager(): DirectoryMembers
     {
         return $this->getGoogleDirectory()->members;
     }
@@ -111,7 +111,7 @@ trait HasGoogleServices
      *
      * @throws InvalidArgumentException
      */
-    protected function getGoogleGroupSettingsManager(): GoogleGroupsSettingsResource
+    protected function getGoogleGroupSettingsManager(): GroupsSettings
     {
         return $this->getGoogleGroupSettings()->groups;
     }
@@ -123,10 +123,10 @@ trait HasGoogleServices
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    private function getGoogleClient(): ?GoogleApi
+    private function getGoogleClient(): ?GoogleClient
     {
         // Get from container
-        return \app(GoogleApi::class);
+        return \app(GoogleClient::class);
     }
 
     /**
@@ -135,11 +135,11 @@ trait HasGoogleServices
      * @throws InvalidArgumentException
      * @internal
      */
-    private function getGoogleDirectory(): GoogleDirectoryService
+    private function getGoogleDirectory(): DirectoryService
     {
         // Create new if missing
         if (! $this->googleDirectoryService) {
-            $this->googleDirectoryService = new GoogleDirectoryService($this->getGoogleClient());
+            $this->googleDirectoryService = new DirectoryService($this->getGoogleClient());
         }
 
         // Create existing
@@ -152,11 +152,11 @@ trait HasGoogleServices
      * @throws InvalidArgumentException
      * @internal
      */
-    private function getGoogleGroupSettings(): GoogleGroupsSettingsService
+    private function getGoogleGroupSettings(): GroupsSettingsService
     {
         // Create new if missing
         if (! $this->googleGroupsSettingsService) {
-            $this->googleGroupsSettingsService = new GoogleGroupsSettingsService($this->getGoogleClient());
+            $this->googleGroupsSettingsService = new GroupsSettingsService($this->getGoogleClient());
         }
 
         // Create existing
