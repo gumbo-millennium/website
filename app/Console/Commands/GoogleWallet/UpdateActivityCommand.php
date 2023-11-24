@@ -62,7 +62,7 @@ class UpdateActivityCommand extends GoogleWalletCommand
             if ($this->option('with-enrollments')) {
                 $this->line('Starting update of enrollments...');
 
-                foreach ($activity->enrollments as $enrollment) {
+                foreach ($activity->enrollments()->withoutGlobalScopes()->lazy(10) as $enrollment) {
                     $this->call('google-wallet:enrollment', [
                         'enrollment' => $enrollment->id,
                     ]);
