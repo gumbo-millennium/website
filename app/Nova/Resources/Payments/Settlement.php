@@ -43,7 +43,7 @@ class Settlement extends Resource
      *
      * @var null|array<int,string>|string
      */
-    public static $defaultSort = 'created_at';
+    public static $defaultSort = ['created_at', 'desc'];
 
     /**
      * The columns that should be searched.
