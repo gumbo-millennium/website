@@ -101,7 +101,7 @@ class OptimizeUserSvg implements ShouldQueue
         }
 
         // Run svgo
-        $ok = $this->runCliCommand([
+        $exitCode = $this->runCliCommand([
             sprintf('%s/svgo', trim($result)),
             '--enable=prefixIds',
             '--enable=removeDimensions',
@@ -115,7 +115,7 @@ class OptimizeUserSvg implements ShouldQueue
         ], $stdout, $stderr, 15, $contents);
 
         // If not ok, stop
-        if ($ok !== 0) {
+        if ($exitCode !== 0) {
             return null;
         }
 

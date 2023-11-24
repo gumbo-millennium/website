@@ -172,10 +172,10 @@ class IndexFileContents implements ShouldQueue
         );
 
         // Run meta command
-        $ok = $this->runCliCommand($command, $stdout, $stderr);
+        $exitCode = $this->runCliCommand($command, $stdout, $stderr);
 
         // Check if everything went OK
-        if (! $ok) {
+        if (! $exitCode) {
             echo 'Exif failed';
             logger()->notice('Failed to retrieve metadata from [{filename}].', [
                 'filename' => $this->media->name,

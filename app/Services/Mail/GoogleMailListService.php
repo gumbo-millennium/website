@@ -180,7 +180,7 @@ class GoogleMailListService implements MailListHandler
 
         // Apply changes
         try {
-            $ok = $this->callGoogleService(
+            $this->callGoogleService(
                 static fn () => $permissionManager->patch($list->getEmail(), $permissions),
                 'update permssions',
                 $list->getEmail(),

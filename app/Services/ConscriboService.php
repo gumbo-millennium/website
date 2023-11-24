@@ -219,8 +219,8 @@ final class ConscriboService implements ConscriboServiceContract
 
         // Get Ok
         $result = Arr::get($response, 'result', []);
-        $ok = Arr::get($result, 'success');
-        if ($ok) {
+        $success = Arr::get($result, 'success');
+        if ($success) {
             return $result;
         }
 
