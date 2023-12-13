@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Facades\Enroll;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ActivityRegisterRequest;
 use App\Http\Resources\Api\ActivityResource;
-use App\Http\Resources\Api\ActivityResourceCollection;
 use App\Models\Activity;
+use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
-use OpenApi\Attributes as OA;
+use Throwable;
 
 class ActivityController extends Controller
 {
@@ -30,40 +33,18 @@ class ActivityController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        if ($request->has('enrolled') && $user == null) {
-            return Response::json([
-                'ok' => false,
-                'error' => [
-                    'code' => 400_401,
-                    'message' => 'You must be logged in to view your enrolled activities.',
-                ],
-            ], 400);
-        }
+        $wantsPast = (bool) $request->input('past', false);
 
         $activities = Activity::query()
             ->whereAvailable($user)
             ->wherePublished()
-            ->when($request->has('enrolled'), function ($query) use ($user) {
-                $query->withEnrollmentsFor($user);
-                $query->whereHas('enrollments', fn ($query) => $query->where('user_id', $user->id));
-            })
-            ->paginate();
+            ->where('end_date', $wantsPast ? '<' : '>=', Date::now())
+            ->paginate()
+            ->appends('past', (int) $wantsPast);
 
-        return Response::json(ActivityResourceCollection::make($activities));
+        return ActivityResource::collection($activities)->toResponse($request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    #[OA\Get(
-        path: '/api/activities',
-        responses: [
-            new OA\Response(response: 200, description: 'AOK'),
-            new OA\Response(response: 401, description: 'Not allowed'),
-        ],
-    )]
     public function show(Request $request, string $slug): JsonResponse
     {
         $user = $request->user();
@@ -76,6 +57,6 @@ class ActivityController extends Controller
 
         abort_unless($activity, HttpResponse::HTTP_NOT_FOUND);
 
-        return Response::json(ActivityResource::make($activity));
+        return ActivityResource::make($activity)->toResponse($request);
     }
 }
