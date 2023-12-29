@@ -104,40 +104,58 @@ the same credentials, the previous session will be terminated).
 > re-establish the session automatically, but might fail and throw a fit at
 > random.
 
-## Requesting relations
+## Making arbitrary requests
 
-To request relations, you can use the `relations` method on the service.
-This helper contains methods to retrieve all members and committes, but
-you can also call the `getTypes()` method to get a list of relation
-types and request arbitrary relations with the `getRelation(string $relation)` method.
-
-Internally, the relations helper takes care of retrieving the fields and caching them,
-and requesting the relation with all known fields.
-
-### Filtering results
-
-Since filters are somewhat complex, we recommend you use the `Filter` helper
-class, which has method like `where` and `whereIn` and gets mapped to
-fields that look very similar.
-
-Please note that the API will throw exceptions if it cannot resolve the filters
-for a given class.
+The simplest approach is one that performs a single request and returns the
+response. This is done using the `request` method on the service.
 
 ```php
-$filters = Filter::make()
-    ->where('voornaam', 'John')
-    ->whereNot('achternaam', 'Doe')
-    ->whereDateBetween('geboortedatum', Date::now(), Date::now()->addWeek());
+Conscribo::request('listArbitraryThing', [
+    'thing' => 'value',
+]);
 ```
 
+The API will take care of authenticating in case no session exists, and re-authenticating
+in case the session was expired. If anything goes wrong, a ConscriboException is thrown with
+a specific error code.
+
+To prevent magic numbers, you may use the `ConscriboErrorCodes` enum, and the specific value returned by the
+`ConscriboException::getConscriboCode()` method.
+
+> {warning} Don't use this method to authenticate manually.
+> The authentication process is completely handled by the service.
+
+## Requesting relations
+
+To request relations, you can use the `query` method on the service.
+This query takes a single parameter: the type of the resource.
+
+This will then return a QueryBuilder instance that you can use to
+define constraints and query the results.
+
+```php
+$sponsors = Conscribo::query('sponsor')
+    ->where('naam', 'Conscribo')
+    ->get();
+```
+
+If you omit any where-filter, the query will return all results in a single response.
 
 ### Requesting users
 
-The most commonly used feature is the ability to request membes.
+Requesting users is similar to a normal relationship request, but since you'll pre-define
+the type in your `config/conscribo.php` file, you may instead use the `userQuery()` method.
 
-A user, often called a `persoon` in "API speak" describes a (former) member
-of the student community. Most fields are variable, but the `relations()`
-
-## Requesting committees
+The rest of the flow is identical to the normal query method.
 
 ## Requesting groups
+
+The groups system of Conscribo is a tad weird. You can only requests all groups and their members,
+or just a single one. No other APIs concerning groups exist. You may also not add filters, so there's
+no chainig required.
+
+```php
+$allGroups = Conscribo::listGroups();
+
+$singleGroup = Conscribo::getGroup(24);
+```
