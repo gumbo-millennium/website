@@ -70,9 +70,9 @@ jobs:
 
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '8.3'
           coverage: none
           tools: phpmd
 
@@ -85,6 +85,7 @@ jobs:
   lint-php-code:
     name: Lint PHP code on PHP ${{ matrix.php }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental == true }}
 
     strategy:
       fail-fast: false
@@ -92,10 +93,16 @@ jobs:
         php:
           - '8.1'
           - '8.2'
+          - '8.3'
+          - '8.4'
+
+        include:
+          - php: '8.4'
+            experimental: true
 
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
@@ -128,13 +135,14 @@ jobs:
         php:
           - '8.1'
           - '8.2'
+          - '8.3'
+          - '8.4'
+
         include:
-          - php: '8.1'
+          - php: '8.3'
             main: true
-          - php: '8.2'
-            experimental: true
-            composer-options: "--ignore-platform-reqs"
-          - php: nightly
+
+          - php: '8.4'
             experimental: true
             composer-options: "--ignore-platform-reqs"
 
@@ -151,7 +159,7 @@ jobs:
 
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: exif, json, mbstring, bcmath, dom, fileinfo, mysql, gd, imagick
