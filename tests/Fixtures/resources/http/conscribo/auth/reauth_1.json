@@ -1,0 +1,15 @@
+{
+    "results": {
+        "result": [
+            {
+                "sessionId": "test-reauth",
+                "success": 1,
+                "requestSequence": "auth"
+            },
+            {
+                "success": 1,
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "results": {
+        "result": [
+            {
+                "entityTypes": [
+                    {
+                        "typeName": "user",
+                        "langDeterminer": "this",
+                        "langSingular": "user",
+                        "langPlural": "users"
+                    }
+                ],
+                "success": 1,
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

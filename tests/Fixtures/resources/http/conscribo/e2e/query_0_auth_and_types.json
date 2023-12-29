@@ -1,0 +1,23 @@
+{
+    "results": {
+        "result": [
+            {
+                "sessionId": "test-auth",
+                "success": 1,
+                "requestSequence": "auth"
+            },
+            {
+                "entityTypes": [
+                    {
+                        "typeName": "user",
+                        "langDeterminer": "this",
+                        "langSingular": "user",
+                        "langPlural": "users"
+                    }
+                ],
+                "success": 1,
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

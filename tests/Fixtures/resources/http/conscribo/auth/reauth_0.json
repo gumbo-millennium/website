@@ -1,0 +1,15 @@
+{
+    "results": {
+        "result": [
+            {
+                "success": 0,
+                "notifications": {
+                    "notification": [
+                        "Not authenticated."
+                    ]
+                },
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

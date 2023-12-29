@@ -1,0 +1,25 @@
+{
+    "results": {
+        "result": [
+            {
+                "success": 0,
+                "notifications": {
+                    "notification": [
+                        "De gebruikersnaam wachtwoord combinatie is niet herkend. Probeer opnieuw.",
+                        "De gebruikersnaam wachtwoord combinatie is niet herkend. Probeer opnieuw."
+                    ]
+                },
+                "requestSequence": "auth"
+            },
+            {
+                "success": 0,
+                "notifications": {
+                    "notification": [
+                        "Not authenticated."
+                    ]
+                },
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "results": {
+        "result": [
+            {
+                "resultCount": "2",
+                "relations": {
+                    "52": {
+                        "code": "2",
+                        "selector": "2: Sam Smith",
+                        "startdatum_lid": "2016-01-01",
+                        "achterstallig_20_21": 0
+                    },
+                    "63": {
+                        "code": "3",
+                        "selector": "3: Alex Davies",
+                        "startdatum_lid": "2018-11-06",
+                        "achterstallig_20_21": 1
+                    }
+                },
+                "success": 1,
+                "requestSequence": "user"
+            }
+        ]
+    }
+}

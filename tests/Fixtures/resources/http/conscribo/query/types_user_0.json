@@ -1,0 +1,52 @@
+{
+    "results": {
+        "result": [
+            {
+                "fields": [
+                    {
+                        "fieldName": "code",
+                        "entityType": "persoon",
+                        "label": "Relatienummer",
+                        "description": "Het gegeven: Relatienummer",
+                        "type": "text",
+                        "required": true,
+                        "readOnly": false,
+                        "sharedFieldName": "code"
+                    },
+                    {
+                        "fieldName": "selector",
+                        "entityType": "persoon",
+                        "label": "Selectienaam",
+                        "description": "Het gegeven: Selectienaam",
+                        "type": "text",
+                        "required": false,
+                        "readOnly": true,
+                        "sharedFieldName": "selector"
+                    },
+                    {
+                        "fieldName": "startdatum_lid",
+                        "entityType": "persoon",
+                        "label": "Start Lidmaatschap",
+                        "description": "Het gegeven: Start Lidmaatschap",
+                        "type": "date",
+                        "required": false,
+                        "readOnly": false,
+                        "sharedFieldName": "startdatum_lid"
+                    },
+                    {
+                        "fieldName": "achterstallig",
+                        "entityType": "persoon",
+                        "label": "Achterstallige contributie",
+                        "description": "Het gegeven: Achterstallige contributie",
+                        "type": "checkbox",
+                        "required": null,
+                        "readOnly": false,
+                        "sharedFieldName": "achterstallig"
+                    }
+                ],
+                "success": 1,
+                "requestSequence": "user"
+            }
+        ]
+    }
+}
