@@ -6,6 +6,7 @@ namespace App\Services\Conscribo;
 
 use App\Services\Conscribo\Contracts\ApiMakeable;
 use App\Services\Conscribo\Data\EntityFieldCollection;
+use App\Services\Conscribo\Data\EntityGroupCollection;
 use App\Services\Conscribo\Data\EntityTypeCollection;
 use App\Services\Conscribo\Enums\ConscriboErrorCodes;
 use App\Services\Conscribo\Exceptions\ConscriboException;
@@ -42,6 +43,11 @@ class Client implements Contracts\Client
     ) {
         $this->baseUrl = $config->get('conscribo.base_url');
         $this->apiUrl = "{$config->get('conscribo.account')}/request.json";
+
+        // We can fail in the constructor, Conscribo isn't called from user-level.
+        if (empty($config->get('conscribo.account')) || empty($config->get('conscribo.username'))) {
+            throw new ConscriboException('Conscribo is not configured.', ConscriboErrorCodes::NotConfigured);
+        }
 
         // Trust the cache to determine if we're logged in (the Conscribo API is stateful)
         if ($cacheKey = $cache->get(self::SESSION_ID_CACHE_KEY)) {
@@ -120,12 +126,14 @@ class Client implements Contracts\Client
 
     public function userQuery(): ResourceQuery
     {
-        return $this->query($this->config->get('conscribo.resources.user'));
+        return $this->query($this->config->get('conscribo.user_resource'));
     }
 
-    public function groupQuery(): ResourceQuery
+    public function listGroups(?int $groupId = null): EntityGroupCollection
     {
-        return $this->query($this->config->get('conscribo.resources.group'));
+        return $this->requestInto('listEntityGroups', array_filter(
+            ['groupId' => $groupId],
+        ), 'entityGroups', EntityGroupCollection::class);
     }
 
     protected function getEntityTypes(): EntityTypeCollection

@@ -26,10 +26,16 @@ class ConscriboTestCase extends TestCase
 
         $this->config = new ConfigRepository([
             'conscribo' => [
+                // Host
                 'base_url' => 'https://secure.example.com',
                 'account' => 'testing',
+
+                // Auth
                 'username' => 'Username',
                 'password' => 'Password',
+
+                // Resources
+                'user_resource' => 'user',
             ],
         ]);
 

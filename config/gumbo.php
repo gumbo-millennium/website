@@ -243,6 +243,24 @@ return [
     ],
 
     /**
+     * Conscribo Connection settings.
+     */
+    'conscribo' => [
+        // This data can be updated using CLI-commands:
+        // - conscribo:dev
+        'member_groups' => [
+            2, // begunstiger
+            3, // lid
+            4, // oud-lid
+            5, // erelid
+            7, // a-lid
+        ],
+
+        // Permission to exclusively grant to members
+        'member_role' => ['member'],
+    ],
+
+    /**
      * Feature flags.
      */
     'features' => [

@@ -10,6 +10,8 @@ use App\Contracts\MarkdownServiceContract;
 use App\Contracts\Payments\PaymentManager;
 use App\Contracts\SponsorService as SponsorServiceContract;
 use App\Models\Grant;
+use App\Services\Conscribo\Client as ConscriboClient;
+use App\Services\Conscribo\Contracts\Client as ConscriboClientContract;
 use App\Services\ConscriboService;
 use App\Services\EnrollmentService;
 use App\Services\EventService;
@@ -51,6 +53,9 @@ class AppServiceProvider extends ServiceProvider
         GalleryService::class,
         GoogleWalletService::class,
         GalleryExifService::class,
+
+        // Conscribo
+        ConscriboClientContract::class => ConscriboClient::class,
     ];
 
     /**

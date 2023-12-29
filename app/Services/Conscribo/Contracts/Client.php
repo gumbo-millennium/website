@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Conscribo\Contracts;
 
+use App\Services\Conscribo\Data\EntityGroupCollection;
 use App\Services\Conscribo\ResourceQuery;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
@@ -48,7 +49,7 @@ interface Client
     public function userQuery(): ResourceQuery;
 
     /**
-     * Returns a query builder to get group resources, using a config-defined resource name.
+     * Returns all groups, or the one that matches this ID, and it's members.
      */
-    public function groupQuery(): ResourceQuery;
+    public function listGroups(?int $groupId = null): EntityGroupCollection;
 }

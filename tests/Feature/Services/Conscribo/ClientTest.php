@@ -87,15 +87,11 @@ class ClientTest extends ConscriboTestCase
 
     public function test_resource_mapping(): void
     {
-        $this->config->set('conscribo.resources', [
-            'user' => $userResource = $this->faker->word(),
-            'group' => $groupResource = $this->faker->word(),
-        ]);
+        $this->config->set('conscribo.user_resource', $resourceName = $this->faker->word());
 
         $this->cache->put('conscribo.session_id', 'testing');
         $this->cache->put('conscribo.entity_types', EntityTypeCollection::apiMake([
-            ['typeName' => $userResource],
-            ['typeName' => $groupResource],
+            ['typeName' => $resourceName],
         ]));
 
         $client = $this->getClient();
@@ -103,12 +99,7 @@ class ClientTest extends ConscriboTestCase
         $userQuery = $client->userQuery();
 
         $this->assertIsObject($userQuery);
-        $this->assertEquals($userResource, $userQuery->getResourceName());
-
-        $groupQuery = $client->groupQuery();
-
-        $this->assertIsObject($groupQuery);
-        $this->assertEquals($groupResource, $groupQuery->getResourceName());
+        $this->assertEquals($resourceName, $userQuery->getResourceName());
     }
 
     public function test_query_creation_queries_objects(): void

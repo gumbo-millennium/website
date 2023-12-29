@@ -19,4 +19,5 @@ enum ConscriboErrorCodes: int
     case AuthInvalid = 101;
     case AuthExpired = 102;
     case HttpError = 201;
+    case NotConfigured = 901;
 }
