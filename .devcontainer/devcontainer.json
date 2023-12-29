@@ -5,16 +5,20 @@
     "service": "app",
     "workspaceFolder": "/workspace",
 
-    // Set *default* container specific settings.json values on container create.
-    "settings": {},
+    "customizations": {
+        "vscode": {
+            // Set *default* container specific settings.json values on container create.
+            "settings": {},
 
-    // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        "bmewburn.vscode-intelephense-client",
-        "felixfbecker.php-debug",
-        "GitHub.copilot",
-        "sleistner.vscode-fileutils",
-    ],
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "felixfbecker.php-debug",
+                "GitHub.copilot",
+                "sleistner.vscode-fileutils"
+            ]
+        }
+    },
 
     // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
     "forwardPorts": [

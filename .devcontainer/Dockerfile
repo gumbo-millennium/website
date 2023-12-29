@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
 #-------------------------------------------------------------------------------------------------------------
 
-FROM php:8.1-fpm
+FROM php:8.3-fpm
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -39,14 +39,14 @@ RUN apt-get update \
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install MySQL client
-COPY ./bin/mysql-apt-config_0.8.22-1_all.deb /tmp/mysql-apt-config_0.8.22-1_all.deb
+COPY ./bin/mysql-apt-config_0.8.29-1_all.deb /tmp/mysql-apt-config.deb
 RUN apt-get update \
     && apt-get install wget \
-    && dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb \
+    && dpkg -i /tmp/mysql-apt-config.deb \
     && apt-get update \
     && apt-get install -y mysql-client \
     && apt-get clean \
-    && rm -rf /tmp/mysql-apt-config_0.8.22-1_all.deb \
+    && rm -rf /tmp/mysql-apt-config.deb \
     && rm -rf /var/cache/apt /var/lib/apt
 
 # Install xdebug
