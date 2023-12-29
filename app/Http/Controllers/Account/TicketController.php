@@ -30,7 +30,7 @@ class TicketController extends Controller
             ->with('enrollments', fn ($query) => $query->where('user_id', $user->id)->active())
             ->get()
             ->sortBy('start_date')
-            ->each(fn (Activity & $activity) => $activity->enrollment = $activity->enrollments->first());
+            ->each(fn (Activity &$activity) => $activity->enrollment = $activity->enrollments->first());
 
         return Response::view('account.tickets', [
             'activities' => $activities,
