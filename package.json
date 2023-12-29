@@ -28,8 +28,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
-    "browser-sync": "^2.29.3",
-    "browser-sync-webpack-plugin": "^2.3.0",
     "color": "^3.2.1",
     "compression-webpack-plugin": "^6.1.2",
     "cssnano": "^5.1.15",

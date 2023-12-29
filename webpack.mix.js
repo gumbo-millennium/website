@@ -55,16 +55,6 @@ mix.webpackConfig({
 })
 
 /**
- * Support for browserSync
- */
-mix.browserSync({
-  https: true,
-  proxy: {
-    target: process.env.APP_URL || 'gumbo.localhost',
-  },
-})
-
-/**
  * Add a version and extract vendor if in production
  */
 if (mix.inProduction()) {
