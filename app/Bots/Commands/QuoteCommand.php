@@ -37,15 +37,14 @@ class QuoteCommand extends Command
         MSG;
 
     private const REPLY_OK = <<<'MSG'
-        Je wist-je-datje is opgeslagen.
+        <quote>%s</quote>
 
-        Je hebt het volgende ingestuurd:
-        %s
+        🖪 Hebben we!
         MSG;
 
     private const REPLY_PUBLIC = <<<'MSG'
-        Wil je je wist-je-datjes voortaan in het geheim insturen?
-        Stuur ze dan als DM naar de bot 😉
+        Hey, <a href="tg://user?id=%s">%s</a>, wil je volgende keer geniepig doen?
+        Stuur je wist-je-datje dan in een privébericht.
         MSG;
 
     private const REPLY_GUEST = <<<'MSG'
@@ -155,7 +154,7 @@ class QuoteCommand extends Command
         $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);
 
         if ($this->isInGroupChat()) {
-            $preparedMessage .= PHP_EOL . PHP_EOL . self::REPLY_PUBLIC;
+            $preparedMessage .= PHP_EOL . PHP_EOL . $this->formatText(self::REPLY_PUBLIC, $tgUser->id, $quote->username ?? $quote->display_name);
         }
 
         // Send single user message
