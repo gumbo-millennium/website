@@ -7,7 +7,7 @@ namespace App\Bots\Commands;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Illuminate\Support\Facades\RateLimiter;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -15,13 +15,23 @@ use Symfony\Component\Yaml\Yaml;
  */
 class BeerCommand extends Command
 {
-    private const BEER_CONFIG_TEMPLATE = 'assets/yaml/%s.yaml';
+    private const RATE_LIMIT_BEER = 3;
 
-    private const BEER_CONFIG_DEFAULT = 'beer-command';
+    private const RATE_LIMIT_ALL = 4;
+
+    private const BEER_CONFIG_TEMPLATE = 'assets/yaml/commands/beer/%s.yaml';
+
+    private const BEER_CONFIG_DEFAULT = 'variants';
+
+    private const BEER_ALTERNATIVES = 'alternatives';
 
     private const BEER_CONFIG_VARIANTS = [
-        ['06-12', '31-12', 'beer-command.christmas'],
+        ['06-12', '31-12', 'variants-christmas'],
     ];
+
+    private const BEER_ALTERNATIVES_LINE = 'Sorry, %s. Wil je anders %s?';
+
+    private const BEER_LINE = '%s %s als %s %s!';
 
     /**
      * The name of the Telegram command.
@@ -48,31 +58,62 @@ class BeerCommand extends Command
         // Get TG user
         $tgUser = $this->getTelegramUser();
 
-        // Rate limit
-        $cacheKey = sprintf('tg.beer.%s', $tgUser->id);
-        if (Cache::get($cacheKey) > now()) {
-            $this->replyWithMessage([
-                'text' => '⏸ Rate limited (1x per min)',
-            ]);
-
-            return;
-        }
-
-        // Prep rate limit
-        Cache::put($cacheKey, now()->addMinute(), now()->addMinutes(5));
-
         // Get user and check member rights
         $user = $this->getUser();
         if (! $this->ensureIsMember($user)) {
             return;
         }
 
-        // Get file
+        // Check the rate limit
+        $rateLimitKey = "tg.beer:{$tgUser->id}";
+        $remaining = RateLimiter::remaining($rateLimitKey, self::RATE_LIMIT_ALL);
+        if ($remaining <= 0) {
+            $this->replyWithMessage([
+                'text' => '⏸ Rate limited',
+            ]);
+
+            return;
+        }
+
+        // Smash that rate limiter
+        RateLimiter::hit($rateLimitKey);
+
+        if ($remaining < (self::RATE_LIMIT_ALL - self::RATE_LIMIT_BEER)) {
+            $this->replyWithMessage([
+                'text' => "🍻 {$this->buildBeerResponse()}",
+            ]);
+
+            return;
+        }
+
+        $this->replyWithMessage([
+            'text' => "🥤\u{a0} {$this->buildAlternativeResponse()}",
+        ]);
+    }
+
+    /**
+     * Load and parse Yaml file, cache for an hour.
+     */
+    private function loadConfigFile(string $file): array
+    {
+        $path = storage_path(sprintf(self::BEER_CONFIG_TEMPLATE, $file));
+        if (! file_exists($path) || ! is_file($path)) {
+            throw new RuntimeException('Invalid config file');
+        }
+
+        $cacheKey = "beer.file.{$file}";
+
+        return Cache::remember($cacheKey, Date::now()->addHour(), fn () => Yaml::parseFile($path));
+    }
+
+    private function buildBeerResponse(): string
+    {
+        // Get intended file
         $configFile = self::BEER_CONFIG_DEFAULT;
-        $nowDate = Date::now()->setTime(0, 0);
+        $nowDate = Date::now()->startOfDay();
         foreach (self::BEER_CONFIG_VARIANTS as [$start, $end, $file]) {
-            $startDate = Date::createFromFormat('d-m', $start)->setTime(0, 0);
-            $endDate = Date::createFromFormat('d-m', $end)->setTime(0, 0);
+            $startDate = Date::createFromFormat('d-m', $start)->startOfDay();
+            $endDate = Date::createFromFormat('d-m', $end)->startOfDay();
 
             if ($startDate <= $nowDate && $endDate >= $nowDate) {
                 $configFile = $file;
@@ -81,39 +122,29 @@ class BeerCommand extends Command
             }
         }
 
-        // Get config
-        $configPath = resource_path(sprintf(self::BEER_CONFIG_TEMPLATE, $configFile));
-        if (! file_exists($configPath) || ! is_file($configPath)) {
-            $this->replyWithMessage([
-                'text' => 'Dit commando is helaas kapot 😢',
-            ]);
-
-            return;
-        }
-
-        // Get config
-        try {
-            $config = Yaml::parseFile($configPath);
-        } catch (ParseException $e) {
-            $this->replyWithMessage([
-                'text' => 'Dit commando is helaas kapot 😢',
-            ]);
-
-            return;
-        }
+        // Get file from cache, or disk if missing
+        $config = $this->loadConfigFile($configFile);
 
         // Get random lines
-        $format = sprintf(
-            '%s %s als %s %s!',
+        return sprintf(
+            self::BEER_LINE,
             Arr::random($config['targets']),
             Arr::random($config['methods']),
             Arr::random($config['adjectives']),
             Arr::random($config['subjects']),
         );
+    }
 
-        // Send as-is
-        $this->replyWithMessage([
-            'text' => "🍻 {$format}",
-        ]);
+    private function buildAlternativeResponse(): string
+    {
+        // Get file from cache, or disk if missing
+        $config = $this->loadConfigFile(self::BEER_ALTERNATIVES);
+
+        // Format string
+        return sprintf(
+            self::BEER_ALTERNATIVES_LINE,
+            Arr::random($config['rejects']),
+            Arr::random($config['alternatives']),
+        );
     }
 }
