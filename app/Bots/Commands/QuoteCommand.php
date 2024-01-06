@@ -151,10 +151,10 @@ class QuoteCommand extends Command
         $quote->message_id = $messageId;
         $quote->save();
 
-        $preparedMessage = $this->formatText(self::REPLY_OK, $quoteText);
+        $preparedMessage = $this->formatText(self::REPLY_OK, e($quoteText));
 
         if ($this->isInGroupChat()) {
-            $preparedMessage .= PHP_EOL . PHP_EOL . $this->formatText(self::REPLY_PUBLIC, $tgUser->id, $quote->username ?? $quote->display_name);
+            $preparedMessage .= PHP_EOL . PHP_EOL . $this->formatText(self::REPLY_PUBLIC, $tgUser->id, e($quote->username ?? $quote->display_name));
         }
 
         // Send single user message
@@ -171,6 +171,7 @@ class QuoteCommand extends Command
                 'text' => $preparedMessage,
                 'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
                 'reply_markup' => $keyboard,
+                'parse_mode' => 'HTML',
             ]);
 
             return;
