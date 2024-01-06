@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\RateLimiter;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -67,6 +68,12 @@ class BeerCommand extends Command
         // Check the rate limit
         $rateLimitKey = "tg.beer:{$tgUser->id}";
         $remaining = RateLimiter::remaining($rateLimitKey, self::RATE_LIMIT_ALL);
+
+        Log::info('Beer command called by telegram user {user} with {remaining} hits remaining.', [
+            'user' => $tgUser->id,
+            'remaining' => $remaining,
+        ]);
+
         if ($remaining <= 0) {
             $this->replyWithMessage([
                 'text' => '⏸ Rate limited',
@@ -87,7 +94,7 @@ class BeerCommand extends Command
         }
 
         $this->replyWithMessage([
-            'text' => "🥤\u{a0} {$this->buildAlternativeResponse()}",
+            'text' => "🥤 {$this->buildAlternativeResponse()}",
         ]);
     }
 
@@ -96,7 +103,7 @@ class BeerCommand extends Command
      */
     private function loadConfigFile(string $file): array
     {
-        $path = storage_path(sprintf(self::BEER_CONFIG_TEMPLATE, $file));
+        $path = resource_path(sprintf(self::BEER_CONFIG_TEMPLATE, $file));
         if (! file_exists($path) || ! is_file($path)) {
             throw new RuntimeException('Invalid config file');
         }

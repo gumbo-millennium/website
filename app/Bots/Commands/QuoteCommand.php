@@ -37,7 +37,7 @@ class QuoteCommand extends Command
         MSG;
 
     private const REPLY_OK = <<<'MSG'
-        <quote>%s</quote>
+        <blockquote>%s</blockquote>
 
         🖪 Hebben we!
         MSG;
