@@ -86,7 +86,7 @@ class BeerCommand extends Command
         // Smash that rate limiter
         RateLimiter::hit($rateLimitKey);
 
-        if ($remaining < (self::RATE_LIMIT_ALL - self::RATE_LIMIT_BEER)) {
+        if ($remaining > (self::RATE_LIMIT_ALL - self::RATE_LIMIT_BEER)) {
             $this->replyWithMessage([
                 'text' => "🍻 {$this->buildBeerResponse()}",
             ]);
