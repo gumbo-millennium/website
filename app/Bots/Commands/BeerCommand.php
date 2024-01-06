@@ -68,6 +68,12 @@ class BeerCommand extends Command
         // Check the rate limit
         $rateLimitKey = "tg.beer:{$tgUser->id}";
         $remaining = RateLimiter::remaining($rateLimitKey, self::RATE_LIMIT_ALL);
+
+        Log::info('Beer command called by telegram user {user} with {remaining} hits remaining.', [
+            'user' => $tgUser->id,
+            'remaining' => $remaining,
+        ]);
+
         if ($remaining <= 0) {
             $this->replyWithMessage([
                 'text' => '⏸ Rate limited',
