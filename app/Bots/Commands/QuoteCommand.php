@@ -37,9 +37,11 @@ class QuoteCommand extends Command
         MSG;
 
     private const REPLY_OK = <<<'MSG'
+        Bedankt voor het insturen van dit pareltje:
+
         <blockquote>%s</blockquote>
 
-        🖪 Hebben we!
+        📬 Maandag gaat 'ie naar de Gumbode.
         MSG;
 
     private const REPLY_PUBLIC = <<<'MSG'
