@@ -7,6 +7,7 @@ namespace App\Bots\Commands;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
