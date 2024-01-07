@@ -101,7 +101,7 @@ class ShopPublishCommand extends Command
             $productNames = [];
             $productIds = [];
             foreach ($products as $product) {
-                $productName = sprintf('%s > %s', optional($product->category)->name ?? '--', $product->name);
+                $productName = sprintf('%s > %s', $product->category?->name ?? '--', $product->name);
                 $productNames[] = $productName;
                 $productIds[$productName] = $product->id;
             }

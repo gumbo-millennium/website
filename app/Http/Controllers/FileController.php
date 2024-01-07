@@ -260,7 +260,7 @@ class FileController extends Controller
         FileDownload::create([
             'user_id' => $request->user()->id,
             'bundle_id' => $bundle ? $bundle->id : $media->model->id,
-            'media_id' => optional($media)->id,
+            'media_id' => $media?->id,
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);

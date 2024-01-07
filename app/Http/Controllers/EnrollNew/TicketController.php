@@ -61,7 +61,7 @@ class TicketController extends Controller
             }
 
             // Ticket is not for sale and not visible to the user
-            if ((! optional($user)->is_member) && $ticket->members_only) {
+            if ((! $user?->is_member) && $ticket->members_only) {
                 continue;
             }
 
@@ -113,7 +113,7 @@ class TicketController extends Controller
         } catch (EnrollmentFailedException $exception) {
             report(new RuntimeException(sprintf(
                 'Failed to enroll user %s in activity %s',
-                optional($request->user())->id,
+                $request->user()?->id,
                 $activity->id,
             ), 0, $exception));
 

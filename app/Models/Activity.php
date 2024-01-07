@@ -276,7 +276,7 @@ class Activity extends SluggableModel
      */
     public function getOrganiserAttribute(): ?string
     {
-        return optional($this->role)->title ?? optional($this->role)->name;
+        return $this->role?->title ?? $this->role?->name;
     }
 
     /**

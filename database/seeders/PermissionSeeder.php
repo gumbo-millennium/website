@@ -229,7 +229,7 @@ class PermissionSeeder extends VerboseSeeder
                 Yaml::parseFile($fullPath),
             );
         } catch (ParseException $parseException) {
-            optional($this->command)->line(sprintf(
+            $this->command?->line(sprintf(
                 '<error>Error</>: Failed to read <info>%s</>: %s',
                 $path,
                 $parseException->getMessage(),

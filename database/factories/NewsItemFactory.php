@@ -28,7 +28,7 @@ class NewsItemFactory extends Factory
         return [
             'title' => Str::title($this->faker->words($this->faker->numberBetween(2, 8), true)),
             'contents' => json_encode($this->getEditorBlock()),
-            'author_id' => optional(User::inRandomOrder()->first())->id,
+            'author_id' => User::inRandomOrder()->first()?->id,
             'sponsor' => $this->faker->optional(0.1)->company,
             'category' => $this->faker->randomElement(Config::get('gumbo.news-categories')),
         ];

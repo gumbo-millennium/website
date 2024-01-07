@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 $data = [
     'Aangemaakt op' => $export->created_at->isoFormat('LLL'),
-    'Afgerond op' => optional($export->completed_at)->isoFormat('LLL') ?? 'Nog niet afgerond',
+    'Afgerond op' => $export->completed_at?->isoFormat('LLL') ?? 'Nog niet afgerond',
     'Verloopt op' => $export->expires_at->isoFormat('LLL'),
 ];
 ?>

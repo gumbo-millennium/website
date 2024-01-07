@@ -1,13 +1,12 @@
-@php
+<?php declare(strict_types=1);
 use Illuminate\Support\HtmlString;
-use App\Models\Activity;
 
 // User flags
 $isMember = $user && $user->is_member;
 
 // Prepare collection of details
 $baseProperties = [
-    'Organisatie' => [optional($activity->role)->title ?? 'Gumbo Millennium', null],
+    'Organisatie' => [$activity->role?->title ?? 'Gumbo Millennium', null],
 ];
 
 // Number of seats
@@ -15,8 +14,8 @@ $seats = 'Geen limiet';
 if ($activity->seats) {
     $seats = "{$activity->seats} plekken";
     if ($activity->available_seats === 0) {
-        $seats .= " (uitverkocht)";
-    } else if ($activity->available_seats < $activity->seats) {
+        $seats .= ' (uitverkocht)';
+    } elseif ($activity->available_seats < $activity->seats) {
         $seats .= " ({$activity->available_seats} beschikbaar)";
     }
 }
@@ -45,7 +44,7 @@ $durationValue = $startTimestamp->diffAsCarbonInterval($endTimestamp)->forHumans
 if ($durationIsLong && $durationIsMultiDay) {
     $dateData = [
         'Aanvang' => [$startTimestamp->isoFormat('D MMM, HH:mm (z)'), null],
-        'Einde' => [$endTimestamp->isoFormat('D MMM, HH:mm (z)'), null]
+        'Einde' => [$endTimestamp->isoFormat('D MMM, HH:mm (z)'), null],
     ];
 } elseif ($durationIsLong) {
     unset($dateData['Duur']);
@@ -55,25 +54,25 @@ if ($durationIsLong && $durationIsMultiDay) {
 // Prep location
 $location = new HtmlString('<span class="text-gray-500">Onbekend</span>');
 $locationIcon = null;
-if (!empty($activity->location) && filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
+if (! empty($activity->location) && filter_var($activity->location_address, FILTER_VALIDATE_URL)) {
     $location = new HtmlString(sprintf(
         '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
         e($activity->location_url),
-        e($activity->location)
+        e($activity->location),
     ));
     $locationIcon = 'globe-europe';
-} elseif (!empty($activity->location) && !empty($activity->location_url)) {
+} elseif (! empty($activity->location) && ! empty($activity->location_url)) {
     $location = new HtmlString(sprintf(
         '<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
         e($activity->location_url),
-        e($activity->location)
+        e($activity->location),
     ));
-} elseif (!empty($activity->location)) {
+} elseif (! empty($activity->location)) {
     $location = $activity->location;
 }
 
 $locationData = [
-    'Locatie' => [$location, $locationIcon]
+    'Locatie' => [$location, $locationIcon],
 ];
 
 // Bundle properties
@@ -88,9 +87,8 @@ $tagline = $activity->tagline ?? vsprintf('Op %s, van %s tot %s.', [
     $endTimestamp->isoFormat('H:mm'),
 ]);
 
-
 // Get link, if any
-$nextLink = isset($link) ? $link : 'list';
+$nextLink = $link ?? 'list';
 $isPublic = $activity->is_public;
 
 // Show-hide stuff
@@ -98,7 +96,7 @@ $mainTitle ??= false;
 $showJoin ??= false;
 $showMeta ??= false;
 $showTagline ??= true;
-@endphp
+?>
 
 {{-- Activity title --}}
 @if ($mainTitle)

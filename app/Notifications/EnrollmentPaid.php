@@ -67,7 +67,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $tail = 'hopelijk tot de volgende!';
 
         // Add thank you from the group if present
-        $group = optional($activity->role)->title;
+        $group = $activity->role?->title;
         if ($group) {
             $tail = "De {$group} is je erg dankbaar :)";
         }

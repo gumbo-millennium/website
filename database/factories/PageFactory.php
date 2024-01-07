@@ -23,7 +23,7 @@ class PageFactory extends Factory
         return [
             'title' => Str::title($this->faker->words($this->faker->numberBetween(2, 8), true)),
             'contents' => '[]',
-            'author_id' => optional(User::inRandomOrder()->first())->id,
+            'author_id' => User::inRandomOrder()->first()?->id,
         ];
     }
 

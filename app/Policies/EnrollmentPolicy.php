@@ -134,7 +134,7 @@ class EnrollmentPolicy
     public function manage(User $user, ?Enrollment $enrollment = null): bool
     {
         // Get activity safely
-        $activity = optional($enrollment)->activity;
+        $activity = $enrollment?->activity;
 
         // Weird edge-case of an unlinked enrollment requires an admin
         if ($enrollment && ! $activity) {

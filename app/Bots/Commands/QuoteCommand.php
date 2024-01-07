@@ -149,7 +149,7 @@ class QuoteCommand extends Command
         $quote = new BotQuote();
         $quote->quote = $quoteText;
         $quote->display_name = trim("{$tgUser->firstName} {$tgUser->lastName}") ?: "#{$tgUser->id}";
-        $quote->user_id = optional($user)->id;
+        $quote->user_id = $user?->id;
         $quote->message_id = $messageId;
         $quote->save();
 

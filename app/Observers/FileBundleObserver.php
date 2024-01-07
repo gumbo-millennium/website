@@ -20,7 +20,7 @@ class FileBundleObserver
 
         // Assign ID, if possible
         if ($bundle->owner_id === null) {
-            $bundle->owner_id = optional(request()->user())->id;
+            $bundle->owner_id = request()->user()?->id;
         }
 
         // Update sizes

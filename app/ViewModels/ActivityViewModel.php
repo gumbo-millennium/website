@@ -85,7 +85,7 @@ class ActivityViewModel extends GumboViewModel
     protected function getIsPaidAttribute(): bool
     {
         // Check what price we need to get
-        $member = optional($this->user)->is_member;
+        $member = $this->user?->is_member;
 
         // Check if true-ish (non-zero and not null)
         return ($member ? $this->activity->is_free_for_members : $this->activity->is_free) === true;

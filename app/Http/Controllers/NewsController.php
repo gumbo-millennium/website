@@ -43,7 +43,7 @@ class NewsController extends Controller
                 'name' => $item->title,
                 'description' => $item->headline,
                 'position' => $index + 1,
-                'author' => $item->sponsor || optional($item->author)->name,
+                'author' => $item->sponsor || $item->author?->name,
                 'datePublished' => $item->published_at,
                 'headline' => $item->headline,
             ];
@@ -111,7 +111,7 @@ class NewsController extends Controller
         JsonLd::setDescription($description);
         JsonLd::setUrl($url);
         JsonLd::addValue('@id', $url);
-        JsonLd::addValue('author', $item->sponsor || optional($item->author)->name);
+        JsonLd::addValue('author', $item->sponsor || $item->author?->name);
         JsonLd::addValue('datePublished', $item->published_at);
         JsonLd::addValue('headline', $item->headline);
 

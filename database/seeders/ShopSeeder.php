@@ -40,7 +40,7 @@ class ShopSeeder extends Seeder
         foreach ($categories as $category) {
             $productCount = $faker->numberBetween(2, 12);
             $products = Product::factory($productCount)->make([
-                'category_id' => optional($category)->id,
+                'category_id' => $category?->id,
             ]);
             $products->each->save();
 

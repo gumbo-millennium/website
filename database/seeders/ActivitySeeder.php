@@ -62,7 +62,7 @@ class ActivitySeeder extends Seeder
             $activity = Activity::factory()->withImage()->create([
                 'name' => "[test] {$name}",
                 'slug' => $slug,
-                'tagline' => optional($faker)->sentence,
+                'tagline' => $faker?->sentence,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'is_public' => $tickets->min('0') === false,
@@ -89,7 +89,7 @@ class ActivitySeeder extends Seeder
             $activity = Activity::factory()->withImage()->withForm()->create([
                 'name' => '[test] With Form',
                 'slug' => 'with-form',
-                'tagline' => optional($faker)->sentence,
+                'tagline' => $faker?->sentence,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
             ]);

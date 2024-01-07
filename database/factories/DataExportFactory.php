@@ -29,7 +29,7 @@ class DataExportFactory extends Factory
             $path = "user-export/data/{$this->faker->uuid}.json";
 
             Storage::put($path, json_encode([
-                'user-id' => optional($dataExport->user)->id,
+                'user-id' => $dataExport->user?->id,
                 'name' => $this->faker->name,
             ]));
 

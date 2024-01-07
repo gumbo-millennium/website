@@ -57,7 +57,7 @@ class ActivitiesCommand extends Command
 
         // Get user
         $user = $this->getUser();
-        $userId = \optional($user)->id;
+        $userId = $user?->id;
 
         // Get activities
         $activities = Activity::getNextActivities($user)

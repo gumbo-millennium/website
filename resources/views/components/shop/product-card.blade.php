@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 $variants = $product->variants;
-$variant = optional($variants->first());
+$variant = $variants->first();
 
 $variantPrices = $variants->map->price;
 
@@ -17,7 +17,7 @@ if ($variants->count() === 2) {
 <div class="rounded bg-white grid grid-cols-1 w-full relative group">
     <div class="w-full min-h-64 relative">
         {{-- Image --}}
-        <img src="{{ $variant->valid_image->width(360) }}" class="w-full min-h-64 object-fill group-hover:opacity-80 rounded"
+        <img src="{{ $variant?->valid_image->width(360) }}" class="w-full min-h-64 object-fill group-hover:opacity-80 rounded"
             alt="Productafbeelding van {{ $product->name }}" />
 
         {{-- Features --}}

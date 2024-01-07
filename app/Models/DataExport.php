@@ -94,7 +94,7 @@ class DataExport extends Model
         $extension = Str::afterLast($this->path, '.');
 
         $localName = __('Data Export :name (:date)', [
-            'name' => Str::ascii(optional($this->user)->name),
+            'name' => Str::ascii($this->user?->name),
             'date' => $this->created_at->format('Y-m-d H:i:s'),
         ]);
 
