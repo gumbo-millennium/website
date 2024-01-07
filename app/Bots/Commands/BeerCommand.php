@@ -84,7 +84,10 @@ class BeerCommand extends Command
         }
 
         // Smash that rate limiter
-        RateLimiter::hit($rateLimitKey);
+        RateLimiter::hit(
+            key: $rateLimitKey,
+            decaySeconds: 60 * 30, // Decays in 30 minutes
+        );
 
         if ($remaining > (self::RATE_LIMIT_ALL - self::RATE_LIMIT_BEER)) {
             $this->replyWithMessage([
