@@ -30,6 +30,9 @@
         ],
         "resources/json/schemas/grants.schema.json": [
             "resources/yaml/grants.yaml",
+        ],
+        "resources/json/schemas/scheduled-mails.schema.json": [
+            "resources/assets/yaml/scheduled-mails.yaml",
         ]
     },
 }
