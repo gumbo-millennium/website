@@ -11,6 +11,7 @@ use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -136,6 +137,12 @@ class SendSystemMessagesCommand extends Command
             return;
         }
 
+        Log::info('Found {applicable_count} activity/activities to send {name} to. Target recipient is {recipient}', [
+            'applicable_count' => $applicable->count(),
+            'name' => $name,
+            'recipient' => $recipient,
+        ]);
+
         // Send messages
         foreach ($applicable as $activity) {
             /** @var Collection $recipients */
@@ -178,6 +185,13 @@ class SendSystemMessagesCommand extends Command
 
                     continue;
                 }
+
+                Log::info('Sending message {name} to {recipient_name} ({recipient_id}) for {activity}', [
+                    'name' => $name,
+                    'recipient_name' => $recipient->name,
+                    'recipient_id' => $recipient->id,
+                    'activity' => $activity->name,
+                ]);
 
                 $this->line("Sending message <fg=cyan>{$name}</> to <fg=green>{$recipient->name} ({$recipient->id})</> for <fg=yellow>{$activity->name}</>");
                 Mail::to($recipient)->queue($mailable);
