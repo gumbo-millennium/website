@@ -101,7 +101,7 @@ class SendSystemMessagesCommand extends Command
 
         // This system should run once every hour
         $startDate = Date::now()->startOfHour()->add($offset);
-        $endDate = (clone $startDate)->addHour();
+        $endDate = (clone $startDate)->addHour()->subSecond();
 
         $this->line("Checking {$name}...", null, OutputInterface::VERBOSITY_VERBOSE);
         $this->line(sprintf('Should be between <info>%s</> - <info>%s</>', $startDate->format(self::LOG_FORMAT), $endDate->format(self::LOG_FORMAT)), null, OutputInterface::VERBOSITY_DEBUG);
