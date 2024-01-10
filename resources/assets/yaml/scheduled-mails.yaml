@@ -1,0 +1,14 @@
+activities:
+  - name: Host information
+    offset: P3D
+    template: App\Mail\Activity\Host\Starting
+    recipient: host
+    requirements:
+      - tickets
+
+  - name: Participant ticket
+    offset: PT2H
+    template: App\Mail\Activity\Guest\TicketReminder
+    recipient: guests
+    requirements:
+      - tickets

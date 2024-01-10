@@ -16,6 +16,9 @@
     },
 
     "yaml.schemas": {
+        "resources/json/schemas/grants.schema.json": [
+            "resources/yaml/grants.yaml",
+        ],
         "resources/json/schemas/menu.schema.json": [
             "resources/yaml/menu.yaml",
         ],
@@ -28,8 +31,8 @@
         "resources/json/schemas/redirects.schema.json": [
             "resources/yaml/redirects.yaml",
         ],
-        "resources/json/schemas/grants.schema.json": [
-            "resources/yaml/grants.yaml",
+        "resources/json/schemas/scheduled-mails.schema.json": [
+            "resources/assets/yaml/scheduled-mails.yaml",
         ]
     },
 }

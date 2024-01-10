@@ -7,5 +7,7 @@
     @slot('subcopy', $subcopy ?? null)
 
     {{-- Body --}}
-    {{ $slot }}
+    <div class="{{ $markdown ?? false ? 'prose' : '' }}">
+        {{ $slot }}
+    </div>
 @endcomponent
