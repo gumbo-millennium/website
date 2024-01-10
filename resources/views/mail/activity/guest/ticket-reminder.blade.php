@@ -1,5 +1,5 @@
 <x-mail::message markdown>
-<h1>Je ticket voor {{ $activity->name }}</h1>
+<h1>Jouw ticket voor {{ $activity->name }}</h1>
 
 Het is bijna zover, over ongeveer twee uur begint {{ $activity->name }}. Hopelijk heb je er al zin in.
 
