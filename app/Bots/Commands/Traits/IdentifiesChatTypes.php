@@ -10,6 +10,6 @@ trait IdentifiesChatTypes
     {
         $message = $this->update?->message;
 
-        return $message && $message->chat->id === $message->from->id;
+        return $message && $message->chat->id !== $message->from->id;
     }
 }
