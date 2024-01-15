@@ -186,6 +186,7 @@ class QuoteCommand extends Command
         $this->replyWithMessage([
             'text' => $preparedMessage,
             'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
+            'parse_mode' => 'HTML',
         ]);
 
         // Render guest response
