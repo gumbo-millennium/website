@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Bots\Commands;
 
 use App\Models\BotQuote;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Keyboard\Keyboard;
@@ -134,15 +135,19 @@ class QuoteCommand extends Command
             return;
         }
 
-        $cacheToken = sprintf('tg.quotes.rate-limit.%s', $tgUser->id);
+        // Check for a rate limit hit
+        if (! $user) {
+            $rateLimitKey = "telegram:quotes:{$tgUser->id}";
+            if (RateLimiter::tooManyAttempts($rateLimitKey, 1)) {
+                $this->replyWithMessage([
+                    'text' => $this->formatText(self::REPLY_GUEST_THROTTLED),
+                ]);
 
-        // Reject if rate-limited
-        if (! $user && Cache::get($cacheToken) > now()) {
-            $this->replyWithMessage([
-                'text' => $this->formatText(self::REPLY_GUEST_THROTTLED),
-            ]);
+                return;
+            }
 
-            return;
+            // Reset rate limit at midnight
+            RateLimiter::hit($rateLimitKey, Date::now()->addDay()->startOfDay()->diffInSeconds());
         }
 
         // Build quote
@@ -156,43 +161,53 @@ class QuoteCommand extends Command
         $preparedMessage = $this->formatText(self::REPLY_OK, e($quoteText));
 
         if ($this->isInGroupChat()) {
-            $preparedMessage .= PHP_EOL . PHP_EOL . $this->formatText(self::REPLY_PUBLIC, $tgUser->id, e($quote->username ?? $quote->display_name));
+            $preparedMessage = <<<DOC
+                {$preparedMessage}
+
+                {$this->formatText(self::REPLY_PUBLIC, $tgUser->id, e($quote->username ?? $quote->display_name))}
+                DOC;
         }
 
-        // Send single user message
-        if ($user) {
-            $keyboard = (new Keyboard())->inline();
-            $keyboard->row([
-                Keyboard::inlineButton([
-                    'text' => 'Bekijk mijn wist-je-datjes',
-                    'url' => route('account.quotes'),
-                ]),
-            ]);
+        $keyboard = (new Keyboard())->inline();
+        $keyboard->row([
+            Keyboard::inlineButton([
+                'text' => 'Bekijk mijn wist-je-datjes',
+                'url' => route('account.quotes'),
+            ]),
+        ]);
 
-            $this->replyWithMessage([
-                'text' => $preparedMessage,
-                'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
-                'reply_markup' => $keyboard,
-                'parse_mode' => 'HTML',
-            ]);
-
-            return;
-        }
-
-        // Apply rate limit
-        Cache::put($cacheToken, now()->addDay()->setTime(6, 0));
-
-        // Send messages
-        $this->replyWithMessage([
+        $message = $this->replyWithMessage([
             'text' => $preparedMessage,
             'reply_to_message_id' => $this->getUpdate()->getMessage()->getMessageId(),
+            'reply_markup' => $keyboard,
             'parse_mode' => 'HTML',
         ]);
 
-        // Render guest response
-        $this->replyWithMessage([
-            'text' => $this->formatText(self::REPLY_GUEST),
-            'disable_notification' => true,
+        Log::info('Recieved and stored bot quote {quote} from {user}.', [
+            'quote' => $quote->id,
+            'user' => $user->email ?? $tgUser->id,
         ]);
+
+        if ($message && $message->message_id) {
+            Log::debug('Message has an ID, storing reply ID for {message}.', [
+                'message' => $message,
+            ]);
+
+            $quote->update([
+                'reply_id' => $message->message_id,
+            ]);
+        } else {
+            Log::warning('Failed to determine a reply ID for bot quote {quote}.', [
+                'quote' => $quote,
+            ]);
+        }
+
+        // Render guest response, if not logged in.
+        if (! $user) {
+            $this->replyWithMessage([
+                'text' => $this->formatText(self::REPLY_GUEST),
+                'disable_notification' => true,
+            ]);
+        }
     }
 }

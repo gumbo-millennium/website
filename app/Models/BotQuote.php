@@ -22,14 +22,17 @@ use Illuminate\Support\HtmlString;
  * @property null|int $user_id
  * @property string $display_name
  * @property string $quote
+ * @property null|int $message_id
+ * @property null|int $reply_id
  * @property-read HtmlString $formatted_quote
  * @property-read null|\App\Models\User $user
- * @method static \Database\Factories\BotQuoteFactory factory(...$parameters)
+ * @method static \Database\Factories\BotQuoteFactory factory($count = null, $state = [])
  * @method static Builder|BotQuote newModelQuery()
  * @method static Builder|BotQuote newQuery()
  * @method static Builder|BotQuote notSubmitted()
  * @method static Builder|BotQuote outdated()
  * @method static Builder|BotQuote query()
+ * @method static Builder|BotQuote withUser()
  * @mixin \Eloquent
  */
 class BotQuote extends Model
@@ -57,6 +60,8 @@ class BotQuote extends Model
         'user_id',
         'display_name',
         'quote',
+        'message_id',
+        'reply_id',
     ];
 
     /**
