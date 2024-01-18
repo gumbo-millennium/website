@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Bots;
 
+use App\Jobs\Bots\HandleUpdateJob;
 use Illuminate\Console\Command;
-use Telegram;
 use Telegram\Bot\Api;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class ListenCommand extends Command
 {
@@ -34,7 +35,7 @@ class ListenCommand extends Command
     {
         // Get bot
         $bot = Telegram::bot($this->argument('bot'));
-        \assert($bot instanceof Api);
+        assert($bot instanceof Api);
 
         // Check for a webhook
         $info = $bot->getWebhookInfo();
@@ -44,14 +45,36 @@ class ListenCommand extends Command
             return 1;
         }
 
+        // Get identity
+        $this->line('<fg=gray>Querying Telegram...</>');
+        $me = $bot->getMe();
+
+        $this->line("Running as Telegram bot <fg=cyan>@{$me->username}</> (<fg=yellow>{$me->id}</>)");
+
         // Send current command list
-        $this->line('Reporting command list');
+        $this->line('<fg=gray>Reporting command list...</>');
         $this->call('bot:update', ['bot' => $this->argument('bot')]);
 
         // Report and start
-        $this->line('Now listening for updates');
+        $this->line('<fg=gray>Now listening for updates...</>');
+        $updateParams = [
+            'limit' => 1,
+            'allowed_updates' => [
+                'message',
+                'message_reaction',
+            ],
+        ];
+
         do {
-            $bot->commandsHandler(false);
+            $updates = $bot->getUpdates($updateParams);
+
+            foreach ($updates as $update) {
+                $updateParams['offset'] = $update->updateId + 1;
+
+                $this->line("Handling update <fg=magenta>{$update->updateId}</> of type <fg=yellow>{$update->objectType()}</>...");
+
+                HandleUpdateJob::dispatchSync($update);
+            }
         } while (true);
     }
 }

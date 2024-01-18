@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Jobs\Bots\HandleUpdatedReactionJob;
+use App\Jobs\Bots\HandleUpdateJob;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -25,17 +25,10 @@ class TelegramBotController extends Controller
     public function handle(): Response
     {
         // Parse an update
-        $update = Telegram::getWebhookUpdate(false);
+        $update = Telegram::getWebhookUpdate(true);
 
-        // Handle message updates
-        if ($update->isType('message')) {
-            Telegram::commandsHandler(true);
-        }
-
-        // Handle message reactions
-        if ($update->isType('message_reaction')) {
-            HandleUpdatedReactionJob::dispatchSync($update);
-        }
+        // Dispatch the handler
+        HandleUpdateJob::dispatchSync($update);
 
         // Respond accordingly
         return ResponseFacade::make(Response::HTTP_NO_CONTENT);
