@@ -8,8 +8,8 @@
   <div class="flex flex-row my-16 md:mx-16">
     {{-- Telegram user --}}
     <div class="flex flex-col items-center w-1/3 flex-grow">
-      <div class="h-20 w-20 rounded-full bg-blue-500 text-white mb-4 flex items-center justify-center">
-        <x-icon icon="brands/telegram-plane" class="h-8" />
+      <div class="h-20 w-20 rounded-full bg-white text-blue-500 mb-4 flex items-center justify-center">
+        <x-icon icon="brands/telegram" class="h-20" />
       </div>
 
       <strong class="text-lg">{{ $telegramName }}</strong>

@@ -8,8 +8,8 @@
     <div class="flex flex-row my-16 md:mx-16">
         {{-- Telegram user --}}
         <div class="flex flex-col items-center w-1/3 flex-grow">
-            <div class="h-20 w-20 rounded-full bg-blue-500 text-white mb-4 flex items-center justify-center">
-                <x-icon icon="brands/telegram-plane" class="h-8" />
+            <div class="h-20 w-20 rounded-full bg-white text-blue-500 mb-4 flex items-center justify-center">
+              <x-icon icon="brands/telegram" class="h-20" />
             </div>
 
             <div class="mb-4">
@@ -66,7 +66,7 @@
 
       <div class="p-4 text-center rounded bg-gray-900 text-white relative md:flex flex-col items-center justify-center">
         <div class="absolute bottom-0 right-0 w-64 h-64 overflow-hidden text-gray-800">
-          <x-icon icon="brands/telegram-plane" class="w-96 h-96" />
+          <x-icon icon="brands/telegram" class="w-96 h-96" />
         </div>
 
         <div class="relative space-y-4">
