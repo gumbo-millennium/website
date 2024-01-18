@@ -38,7 +38,8 @@ class LoginCommand extends Command
         ⚠ Inloggen niet mogelijk
 
         Er is iets misgegaan bij het klaarzetten van het bericht.
-        Foutmelding: %s
+
+        <pre>%s</pre>
         TEXT;
 
     private const LOGIN_MSG_NO_DMS = <<<'TEXT'
@@ -127,7 +128,10 @@ class LoginCommand extends Command
 
             // Check error code if the domain name is misconfigured
             if (Str::contains($e->getMessage(), 'BOT_DOMAIN_INVALID')) {
-                $errorMessage = 'De bot is verkeerd geconfigureerd bij Telegram.';
+                $errorMessage = <<<'ERR'
+                    De bot is verkeerd geconfigureerd bij Telegram:
+                    Het domeinnaam is onjuist.
+                    ERR;
             } elseif ($this->isInGroupChat()) {
                 // The domain is valid but the API call failed. The user has probably
                 // never interacted with the bot, so we can't send a DM.

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 
@@ -22,14 +23,19 @@ use Illuminate\Support\HtmlString;
  * @property null|int $user_id
  * @property string $display_name
  * @property string $quote
+ * @property null|int $message_id
+ * @property null|int $reply_id
  * @property-read HtmlString $formatted_quote
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BotQuoteReaction> $reactions
  * @property-read null|\App\Models\User $user
- * @method static \Database\Factories\BotQuoteFactory factory(...$parameters)
+ * @method static \Database\Factories\BotQuoteFactory factory($count = null, $state = [])
  * @method static Builder|BotQuote newModelQuery()
  * @method static Builder|BotQuote newQuery()
  * @method static Builder|BotQuote notSubmitted()
  * @method static Builder|BotQuote outdated()
  * @method static Builder|BotQuote query()
+ * @method static Builder|BotQuote withReactionCount()
+ * @method static Builder|BotQuote withUser()
  * @mixin \Eloquent
  */
 class BotQuote extends Model
@@ -57,6 +63,8 @@ class BotQuote extends Model
         'user_id',
         'display_name',
         'quote',
+        'message_id',
+        'reply_id',
     ];
 
     /**
@@ -95,6 +103,25 @@ class BotQuote extends Model
     public function getFormattedQuoteAttribute(): HtmlString
     {
         return new HtmlString(nl2br(e($this->quote)));
+    }
+
+    /**
+     * Get the reactions for the quote.
+     */
+    public function reactions(): HasMany
+    {
+        return $this->hasMany(BotQuoteReaction::class, 'quote_id');
+    }
+
+    /**
+     * Adds a reaction_count which is basically just a number of people that
+     * interacted with the post.
+     */
+    public function scopeWithReactionCount(Builder $query): void
+    {
+        $query->withCount([
+            'reactions as reaction_count' => fn (Builder $query) => $query->whereNotNull('reaction'),
+        ]);
     }
 
     /**
