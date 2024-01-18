@@ -24,6 +24,9 @@ class WebhookController extends Controller
 {
     private const GOOGLE_WALLET_PROTOCOL = 'ECv2SigningOnly';
 
+    /**
+     * Mollie payment events webhook.
+     */
     public function mollie(Request $request): HttpResponse
     {
         $paymentId = (string) $request->input('id');

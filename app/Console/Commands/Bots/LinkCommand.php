@@ -69,6 +69,7 @@ class LinkCommand extends Command
             'max_connections' => 5,
             'allowed_updates' => [
                 'message',
+                'message_reaction',
             ],
         ];
 
