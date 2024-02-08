@@ -26,9 +26,10 @@ class KitchenSink extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
+     * @param \App\Models\User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail(object $notifiable)
     {
         // Otherwise, they're updating
         return (new MailMessage())

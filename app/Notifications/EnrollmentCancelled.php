@@ -11,12 +11,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Queue\SerializesModels;
 
 class EnrollmentCancelled extends Notification implements ShouldQueue
 {
     use Queueable;
-    use SerializesModels;
 
     protected Enrollment $enrollment;
 
@@ -43,9 +41,10 @@ class EnrollmentCancelled extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
+     * @param \App\Models\User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail()
+    public function toMail(object $notifiable)
     {
         // Reload enrollment
         $enrollment = $this->enrollment

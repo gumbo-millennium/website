@@ -9,12 +9,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Queue\SerializesModels;
 
 class EnrollmentPaid extends Notification implements ShouldQueue
 {
     use Queueable;
-    use SerializesModels;
 
     protected Enrollment $enrollment;
 
@@ -41,9 +39,10 @@ class EnrollmentPaid extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
+     * @param \App\Models\User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail()
+    public function toMail(object $notifiable)
     {
         // Reload enrollment
         $enrollment = $this->enrollment
@@ -67,7 +66,7 @@ class EnrollmentPaid extends Notification implements ShouldQueue
         $tail = 'hopelijk tot de volgende!';
 
         // Add thank you from the group if present
-        $group = optional($activity->role)->title;
+        $group = $activity->role?->title;
         if ($group) {
             $tail = "De {$group} is je erg dankbaar :)";
         }

@@ -17,11 +17,11 @@ class VerifyEmail extends LaravelVerifyEmail implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
+     * @param User $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        \assert($notifiable instanceof User, 'No valid notifyable');
         $verificationUrl = $this->verificationUrl($notifiable);
 
         // Accounts newer than 15 mins are probably new
