@@ -11,8 +11,7 @@ use App\Notifications\EnrollmentConfirmed;
 use App\Notifications\EnrollmentPaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\RateLimiter;
 use Spatie\ModelStates\Events\StateChanged;
 
 class EnrollmentStateListener implements ShouldQueue
@@ -32,9 +31,26 @@ class EnrollmentStateListener implements ShouldQueue
         }
 
         // Get shorthand
+        $initialState = $event->initialState;
+        $finalState = $event->finalState;
+
         $enrollment = $event->model;
-        $finalState = $enrollment->state;
+        $finalState ??= $enrollment->state;
+
         $user = $enrollment->user;
+
+        // Don't act on non-changes
+        if ($initialState && $finalState && $initialState::class === $finalState::class) {
+            return;
+        }
+
+        // Use the rate limiter to prevent notification flooding
+        $cacheKey = sprintf('racing:enrollments:%d:%s', $enrollment->id, $finalState::class);
+        if (RateLimiter::tooManyAttempts($cacheKey, 1)) {
+            return;
+        }
+
+        RateLimiter::hit($cacheKey);
 
         // Handle payment completion
         if ($finalState instanceof States\Paid) {
@@ -42,13 +58,6 @@ class EnrollmentStateListener implements ShouldQueue
 
             return;
         }
-
-        // Prevent queue racing
-        $cacheKey = "race-prevention.enroll.{$enrollment->id}.{$finalState}";
-        if (Cache::has($cacheKey)) {
-            return;
-        }
-        Cache::put($cacheKey, 1, Date::now()->addMinutes(5));
 
         // Handle non-payment confirmation (Paid extends Confirmed)
         if ($finalState instanceof States\Confirmed) {
