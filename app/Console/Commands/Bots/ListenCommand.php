@@ -47,9 +47,9 @@ class ListenCommand extends Command
 
         // Get identity
         $this->line('<fg=gray>Querying Telegram...</>');
-        $me = $bot->getMe();
+        $botMe = $bot->getMe();
 
-        $this->line("Running as Telegram bot <fg=cyan>@{$me->username}</> (<fg=yellow>{$me->id}</>)");
+        $this->line("Running as Telegram bot <fg=cyan>@{$botMe->username}</> (<fg=yellow>{$botMe->id}</>)");
 
         // Send current command list
         $this->line('<fg=gray>Reporting command list...</>');
