@@ -50,7 +50,7 @@ class SackCommand extends Command
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         // Check the quote
-        $target = ucwords(trim($this->arguments['custom'] ?? ''));
+        $target = ucwords(trim($this->getCommandBody() ?? ''));
         $gifToUse = 'fired';
 
         // Allow self-firing
