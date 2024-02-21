@@ -6,9 +6,9 @@ namespace App\Providers;
 
 use App\Contracts\Mail\MailListHandler;
 use App\Services\Mail\GoogleMailListService;
-use Google_Client as GoogleApi;
-use Google_Exception as GoogleException;
-use Google_Service_Walletobjects as GoogleWalletService;
+use Google\Client as GoogleApi;
+use Google\Exception as GoogleException;
+use Google\Service\Walletobjects as GoogleWalletService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;

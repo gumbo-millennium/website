@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\GoogleWallet\EventClass;
 use App\Models\GoogleWallet\EventObject;
 use App\Models\User;
+use LogicException;
 use RuntimeException;
 
 trait HandlesActivityTypes

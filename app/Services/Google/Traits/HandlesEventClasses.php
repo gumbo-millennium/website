@@ -7,11 +7,12 @@ namespace App\Services\Google\Traits;
 use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Models\GoogleWallet\EventClass;
 use Config;
-use Google_Service_Exception as ServiceException;
-use Google_Service_Walletobjects_EventTicketClass  as EventTicketClass;
-use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
+use Google\Service\Exception as ServiceException;
+use Google\Service\Walletobjects\EventTicketClass  as EventTicketClass;
+use Google\Service\Walletobjects\Resource\Eventticketclass as EventTicketClassResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\URL;
+use LogicException;
 use RuntimeException;
 
 trait HandlesEventClasses

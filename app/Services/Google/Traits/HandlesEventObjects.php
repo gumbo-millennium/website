@@ -7,9 +7,10 @@ namespace App\Services\Google\Traits;
 use App\Models\GoogleWallet\EventObject;
 use App\Models\GoogleWallet\Message;
 use Brick\Money\Money;
-use Google_Service_Exception as ServiceException;
-use Google_Service_Walletobjects_EventTicketObject  as EventTicketObject;
-use Google_Service_Walletobjects_Eventticketobject_Resource as EventTicketObjectResource;
+use Google\Service\Exception as ServiceException;
+use Google\Service\Walletobjects\EventTicketObject  as EventTicketObject;
+use Google\Service\Walletobjects\Resource\Eventticketobject as EventTicketObjectResource;
+use LogicException;
 
 trait HandlesEventObjects
 {
