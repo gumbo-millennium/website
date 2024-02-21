@@ -9,9 +9,9 @@ use App\Services\Google\Traits\HandlesEventClasses;
 use App\Services\Google\Traits\HandlesEventObjects;
 use App\Services\Google\Traits\HandlesJwtUrls;
 use App\Services\Google\Traits\HandlesModels;
-use Google_Service_Walletobjects as GoogleWalletService;
-use Google_Service_Walletobjects_Eventticketclass_Resource as EventTicketClassResource;
-use Google_Service_Walletobjects_Eventticketobject_Resource as EventTicketObjectResource;
+use Google\Service\Walletobjects as GoogleWalletService;
+use Google\Service\Walletobjects\Resource\Eventticketclass as EventTicketClassResource;
+use Google\Service\Walletobjects\Resource\Eventticketobject as EventTicketObjectResource;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 

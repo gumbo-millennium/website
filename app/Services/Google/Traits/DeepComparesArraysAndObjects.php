@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Google\Traits;
 
 use Google\Model as GoogleModel;
+use LogicException;
 
 trait DeepComparesArraysAndObjects
 {
