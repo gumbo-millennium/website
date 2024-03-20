@@ -16,10 +16,6 @@
   @apply h-64 bg-gray-200 relative rounded-t overflow-hidden;
 }
 
-.card__figure--alleen-samen {
-  background-color: #ffb604;
-}
-
 .card__figure-image {
   @apply w-full h-64 object-cover;
 }
