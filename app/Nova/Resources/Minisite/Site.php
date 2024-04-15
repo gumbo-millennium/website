@@ -6,6 +6,7 @@ namespace App\Nova\Resources\Minisite;
 
 use App\Models\Minisite\Site as SiteModel;
 use App\Nova\Resources\Resource;
+use App\Nova\Resources\Role;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -110,6 +111,9 @@ class Site extends Resource
             Fields\Text::make('Domeinnaam', fn ($model) => "https://{$model->domain}/"),
 
             Fields\Boolean::make('Actief', 'enabled'),
+
+            Fields\BelongsTo::make('Groep', 'group', Role::class)
+                ->readonly(fn (Request $request) => ! $request->user()->can('admin', SiteModel::class)),
 
             Fields\HasMany::make('Pagina\'s', 'pages', SitePage::class),
         ];
