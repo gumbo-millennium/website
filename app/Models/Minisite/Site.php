@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Minisite;
 
+use App\Models\Activity;
 use App\Models\Role;
 use App\Models\Traits\HasResponsibleUsers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|int $updated_by_id
  * @property-read null|\App\Models\User $created_by
  * @property-read null|Role $group
+ * @property-read null|Activity $activity
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Minisite\SitePage> $pages
  * @property-read null|\App\Models\User $updated_by
  * @method static \Database\Factories\Minisite\SiteFactory factory(...$parameters)
@@ -67,5 +69,10 @@ class Site extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'group_id');
+    }
+
+    public function activity(): BelongsTo
+    {
+        return $this->belongsTo(Activity::class, 'activity_id');
     }
 }

@@ -24,7 +24,10 @@ class MinisiteController extends Controller
     public function config(string $domain)
     {
         return SiteResource::make(
-            Site::whereDomain($domain)->firstOrFail(),
+            Site::query()
+                ->whereDomain($domain)
+                ->with('activity')
+                ->firstOrFail(),
         );
     }
 

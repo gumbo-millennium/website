@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Models\Activity;
 use App\Models\Minisite\Site;
 use App\Models\Minisite\SitePage as SitePage;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class MinisiteControllerTest extends TestCase
 {
+    use WithFaker;
+
     public function test_config_non_existent(): void
     {
-        $domain = 'config.missing.example.com';
+        $domain = $this->faker->domainName();
+
+        $this->assertDatabaseMissing('minisites', ['domain' => $domain]);
 
         $this->getJson(route('api.minisite.config', [$domain]))
             ->assertNotFound();
@@ -22,7 +28,6 @@ class MinisiteControllerTest extends TestCase
     public function test_config_found(): void
     {
         $site = Site::factory()->create([
-            'domain' => 'config.test.example.com',
             'enabled' => true,
         ]);
 
@@ -35,6 +40,34 @@ class MinisiteControllerTest extends TestCase
             ]);
     }
 
+    public function test_config_with_activity(): void
+    {
+        $site = Site::factory()->create([
+            'enabled' => true,
+        ]);
+
+        $activity = Activity::factory()->create();
+        $site->activity()->associate($activity);
+        $site->save();
+
+        $this->getJson(route('api.minisite.config', [$site->domain]))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    'domain',
+                    'name',
+                    'enabled',
+                    'activity' => [
+                        'id',
+                        'name',
+                        'slug',
+                    ],
+                ],
+            ])
+            ->assertJsonPath('data.activity.id', $activity->id)
+            ->assertJsonPath('data.activity.name', $activity->name);
+    }
+
     public function test_sitemap(): void
     {
         Date::setTestNow('2023-01-01 12:00:00');
@@ -42,7 +75,6 @@ class MinisiteControllerTest extends TestCase
         $site = Site::factory()
             ->hasPages(3)
             ->create([
-                'domain' => 'sitemap.empty.example.com',
                 'enabled' => false,
             ]);
 
@@ -53,7 +85,9 @@ class MinisiteControllerTest extends TestCase
 
     public function test_sitemap_non_existent(): void
     {
-        $domain = 'sitemap.missing.example.com';
+        $domain = $this->faker->domainName();
+
+        $this->assertDatabaseMissing('minisites', ['domain' => $domain]);
 
         $this->getJson(route('api.minisite.sitemap', [$domain]))
             ->assertNotFound();
@@ -64,7 +98,6 @@ class MinisiteControllerTest extends TestCase
         $site = Site::factory()
             ->hasPages(SitePage::factory(6))
             ->create([
-                'domain' => 'sitemap.disabled.example.com',
                 'enabled' => false,
             ]);
 
@@ -79,7 +112,6 @@ class MinisiteControllerTest extends TestCase
     {
         $site = Site::factory()
             ->create([
-                'domain' => 'sitemap.empty.example.com',
                 'enabled' => false,
             ]);
 
@@ -97,7 +129,6 @@ class MinisiteControllerTest extends TestCase
         $site = Site::factory()
             ->hasPages(3, ['visible' => false])
             ->create([
-                'domain' => 'sitemap.empty.example.com',
                 'enabled' => false,
             ]);
 
@@ -145,7 +176,11 @@ class MinisiteControllerTest extends TestCase
 
     public function test_get_page_missing_site(): void
     {
-        $this->getJson(route('api.minisite.page', ['not-found.example.com', 'does-not-exist']))
+        $domain = $this->faker->domainName();
+
+        $this->assertDatabaseMissing('minisites', ['domain' => $domain]);
+
+        $this->getJson(route('api.minisite.page', [$domain, 'does-not-exist']))
             ->assertNotFound();
     }
 }
