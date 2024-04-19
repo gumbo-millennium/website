@@ -161,6 +161,13 @@ class Enrollment extends Model implements Payable
     {
         parent::booted();
 
+        static::creating(function (self $enrollment) {
+            $enrollment->forceFill([
+                'name' => $enrollment->user?->name ?? 'GUEST',
+                'email' => $enrollment->user?->email ?? 'guest@example.invalid',
+            ]);
+        });
+
         static::saving(function (self $enrollment) {
             if ($enrollment->barcode == null) {
                 Enroll::updateBarcode($enrollment);
