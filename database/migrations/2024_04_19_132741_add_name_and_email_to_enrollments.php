@@ -12,7 +12,7 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('activity_enrollments', function (Blueprint $table) {
             $table->after('deleted_at', function ($table) {
                 $table->string('name');
                 $table->string('email')->index();
@@ -25,7 +25,7 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('activity_enrollments', function (Blueprint $table) {
             $table->dropColumn([
                 'name',
                 'email',

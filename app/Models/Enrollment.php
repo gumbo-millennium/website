@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use LogicException;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -82,6 +83,10 @@ class Enrollment extends Model implements Payable
     use HasPayments;
     use HasStates;
     use SoftDeletes;
+
+    public const OWNER_NAME_DEFAULT = 'GUEST';
+
+    public const OWNER_EMAIL_DEFAULT = 'guest@example.invalid';
 
     public const USER_TYPE_MEMBER = 'member';
 
@@ -155,16 +160,24 @@ class Enrollment extends Model implements Payable
 
     /**
      * Ensure a ticket code is set when saving an enrollment.
-     * @return void
      */
-    public static function booted()
+    public static function booted(): void
     {
         parent::booted();
 
         static::creating(function (self $enrollment) {
+            $name = $enrollment->user?->name ?? self::OWNER_NAME_DEFAULT;
+            $email = $enrollment->user?->email ?? self::OWNER_EMAIL_DEFAULT;
+
+            Log::debug('Writing name {name} and email {email} to {enrollment}', [
+                'name' => $name,
+                'email' => $email,
+                'enrollment' => $enrollment,
+            ]);
+
             $enrollment->forceFill([
-                'name' => $enrollment->user?->name ?? 'GUEST',
-                'email' => $enrollment->user?->email ?? 'guest@example.invalid',
+                'name' => $name,
+                'email' => $email,
             ]);
         });
 
