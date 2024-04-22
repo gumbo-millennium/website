@@ -449,7 +449,7 @@ class CalendarControllerTest extends ApiTestCase
     /**
      * @dataProvider cleanBodyTextProvider
      */
-    public function test_clean_body_text(array $input, string $expected)
+    public function test_clean_body_text(array $input, string $result)
     {
         $activity = Activity::factory()->create();
 
@@ -461,8 +461,8 @@ class CalendarControllerTest extends ApiTestCase
         $activity->save();
 
         $this->assertEquals(
-            $expected,
-            CalendarController::createCleanBodyText($activity),
+            expected: $result,
+            actual: CalendarController::createCleanBodyText($activity),
         );
     }
 }
