@@ -2,26 +2,6 @@
 
 @section('title', "{$activity->name} - Activity - Gumbo Millennium")
 
-<?php
-$ticketPrices = $activity->tickets
-    ->pluck('total_price')
-    ->sort()
-    ->unique()
-    ->map(fn ($price) => Str::price($price) ?? __('Free'));
-
-if ($ticketPrices->isEmpty()) {
-    $ticketPrices = 'Geen prijzen bekend';
-} elseif ($ticketPrices->count() == 1) {
-    $ticketPrices = $ticketPrices->first();
-} elseif ($ticketPrices->count() == 2) {
-    $ticketPrices = $ticketPrices->join(' of ');
-} else {
-    $ticketPrices = Str::lower(sprintf('van %s t/m %s', $ticketPrices->first(), $ticketPrices->last()));
-}
-$visibilityIcon = $activity->is_public ? 'solid/earth-europe' : 'solid/user-group';
-$visibilityTitle = $activity->is_public ? 'Openbare activiteit' : 'Besloten activiteit';
-?>
-
 @section('content')
 <div class="">
     <x-page.header :image="$activity->poster" :title="$activity->name">
