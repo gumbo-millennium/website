@@ -22,6 +22,7 @@ class ShopSeeder extends Seeder
      */
     public function run(Generator $faker)
     {
+        // Clear out the old data
         Order::query()->forceDelete();
         ProductVariant::query()->forceDelete();
         Product::query()->forceDelete();

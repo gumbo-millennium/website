@@ -11,13 +11,10 @@ use App\Models\Gallery\PhotoReaction;
 use App\Models\Gallery\PhotoReport;
 use Faker\Generator;
 use Illuminate\Database\Seeder;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 
 class GallerySeeder extends Seeder
 {
-    use WithFaker;
-
     /**
      * Run the database seeds.
      *

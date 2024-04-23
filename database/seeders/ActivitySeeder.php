@@ -7,11 +7,10 @@ namespace Database\Seeders;
 use App\Helpers\Str;
 use App\Models\Activity;
 use App\Models\Ticket;
-use Faker\Generator as Faker;
+use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 
 class ActivitySeeder extends Seeder
 {
@@ -20,18 +19,8 @@ class ActivitySeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Generator $faker)
     {
-        $this->seedTestingEvents();
-    }
-
-    /**
-     * Seeds a bunch of events that start soon.
-     */
-    private function seedTestingEvents(): void
-    {
-        $faker = App::make(Faker::class);
-
         $sets = [
             'private-free' => [[true, null]],
             'private-paid' => [[true, 15_00]],

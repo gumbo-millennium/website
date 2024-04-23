@@ -19,6 +19,7 @@ use App\Services\Google\WalletService as GoogleWalletService;
 use App\Services\MarkdownService;
 use App\Services\Payments\PaymentServiceManager;
 use App\Services\SponsorService;
+use App\View\Composers as ViewComposers;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Collection;
@@ -26,8 +27,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\View;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
 use Symfony\Component\Process\Process;
@@ -76,6 +78,15 @@ class AppServiceProvider extends ServiceProvider
         // Handle Horizon auth
         Horizon::auth(static fn ($request) => $request->user() !== null && $request->user()->hasPermissionTo('devops'));
 
+        // View composers
+        View::composer('activities.*', ViewComposers\ActivityComposer::class);
+
+        // Provide User for all views
+        View::composer('*', ViewComposers\GlobalComposer::class);
+
+        // Configure Vite
+        Vite::macro('image', fn (string $asset) => $this->asset("resources/assets/{$asset}"));
+
         // Special events
         Blade::if('event', function ($event) {
             $service = $this->app->make(EventService::class);
@@ -112,14 +123,6 @@ class AppServiceProvider extends ServiceProvider
             Config::get('gumbo.payments.default'),
             Config::get('gumbo.payments.providers', []),
         ));
-
-        // Provide User for all views
-        view()->composer('*', static function (View $view) {
-            $view->with([
-                'sponsorService' => app(SponsorServiceContract::class),
-                'user' => request()->user(),
-            ]);
-        });
 
         // Boot flash settings
         Flash::levels([

@@ -52,5 +52,5 @@
   - [Overzicht](/{{route}}/{{version}}/shop/overview)
   - [Producten toevoegen](/{{route}}/{{version}}/shop/producten-toevoegen)
   - [Producten beheren](/{{route}}/{{version}}/shop/producten-beheren)
-  - [Bestellingen en bezorging](/{{route}}/{{version}}/shop/bestellingen-en-bezorging.md)
+  - [Bestellingen en bezorging](/{{route}}/{{version}}/shop/bestellingen-en-bezorging)
   - [Inventaris](/{{route}}/{{version}}/shop/inventaris)

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 
 /**
  * App\Models\Shop\Category.
@@ -121,6 +122,6 @@ class Category extends SluggableModel
     public function getValidImageUrlAttribute(): string
     {
         return $this->products->whereNotNull('image_url')->where('active', '=', 1)->first()->image_url
-            ?? (string) mix('images/geen-foto.jpg');
+            ?? (string) Vite::image('images/geen-foto.jpg');
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova\Resources\Minisite;
 
 use App\Models\Minisite\Site as SiteModel;
+use App\Nova\Resources\Activity;
 use App\Nova\Resources\Resource;
 use App\Nova\Resources\Role;
 use Illuminate\Http\Request;
@@ -114,6 +115,9 @@ class Site extends Resource
 
             Fields\BelongsTo::make('Groep', 'group', Role::class)
                 ->readonly(fn (Request $request) => ! $request->user()->can('admin', SiteModel::class)),
+
+            Fields\BelongsTo::make('Activiteit', 'activity', Activity::class)
+                ->nullable(),
 
             Fields\HasMany::make('Pagina\'s', 'pages', SitePage::class),
         ];

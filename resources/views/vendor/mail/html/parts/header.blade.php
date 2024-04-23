@@ -13,7 +13,7 @@
                                             <td class="mail-cell text-left">
                                                 <a href="{{ url('/') }}" class="mail-header__link">
                                                     <img class="mail-header__logo"
-                                                        src="{{ mix('images/logo-text-green.svg') }}"
+                                                        src="{{ Vite::image('images/logo-text-green.svg') }}"
                                                         alt="Logo Gumbo Millennium"
                                                         height="64">
                                                 </a>

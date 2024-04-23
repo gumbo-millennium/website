@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Api\Minisite;
 
+use App\Http\Resources\Api\ActivityResource;
 use App\Models\Minisite\Site;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 use JsonSerializable;
 
 /**
@@ -21,10 +23,15 @@ class SiteResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->resource->only([
-            'domain',
-            'name',
-            'enabled',
-        ]);
+        return Collection::make()
+            ->merge($this->resource->only([
+                'domain',
+                'name',
+                'enabled',
+            ]))
+            ->when(
+                $this->resource->relationLoaded('activity'),
+                fn ($col) => $col->put('activity', ActivityResource::make($this->resource->activity)),
+            );
     }
 }

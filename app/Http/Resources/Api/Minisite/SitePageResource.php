@@ -23,18 +23,21 @@ class SitePageResource extends JsonResource
      */
     public function toArray($request)
     {
-        $resourceCover = Image::make($this->resource->cover);
+        $coverImage = Image::make($this->resource->cover);
+        $resourceCovers = Collection::make(config('gumbo.image-presets'))
+            ->map(fn ($_, string $key) => $coverImage->preset($key)->getUrl());
 
-        return Collection::make($this->resource->only([
-            'id',
-            'title',
-            'url',
-            'slug',
-            'hidden',
-            'contents',
-            'created_at',
-            'updated_at',
-        ]))->put('cover', collect(config('gumbo.image-presets'))
-            ->map(fn ($_, string $key) => $resourceCover->preset($key)->getUrl()));
+        return Collection::make()
+            ->merge($this->resource->only([
+                'id',
+                'title',
+                'url',
+                'slug',
+                'hidden',
+                'contents',
+                'created_at',
+                'updated_at',
+            ]))
+            ->put('cover', $resourceCovers);
     }
 }

@@ -28,11 +28,11 @@
       <picture>
         {{-- <source src="{{ asset('images/header-bg-fhd.webp') }}" type="image/webp"> --}}
         <img class="absolute inset-0 w-full h-full object-cover bg-brand-600"
-          src="{{ mix('images/homepage/scaled-header-4.jpg') }}"
+          src="{{ Vite::image('images/homepage/scaled-header-4.jpg') }}"
           alt="">
       </picture>
       <div class="inset-0 absolute flex items-center justify-center">
-        <img src="{{ mix('images/logo-glass-white.svg') }}"
+        <img src="{{ Vite::image('images/logo-glass-white.svg') }}"
           alt="Logo Gumbo Millennium"
           class="max-h-[50%] max-w-[50%] object-contain w-full h-full lg:hidden" />
       </div>

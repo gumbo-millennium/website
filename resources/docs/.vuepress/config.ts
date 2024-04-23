@@ -1,7 +1,10 @@
-import path from 'path'
-import { defaultTheme, defineUserConfig } from 'vuepress'
+import {defaultTheme} from '@vuepress/theme-default'
+import { viteBundler } from '@vuepress/bundler-vite'
+import { defineUserConfig } from 'vuepress'
 
 export default defineUserConfig({
+    bundler: viteBundler(),
+
     lang: 'nl-NL',
     title: 'Gumbo Millennium Website Documentatie',
     description: 'Documentatie voor leden van Gumbo om het maximale te halen uit het beheer van de site.',
@@ -27,5 +30,4 @@ export default defineUserConfig({
         // Settings
         contributors: false,
     }),
-
 })

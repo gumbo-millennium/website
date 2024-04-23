@@ -17,12 +17,11 @@ class SponsorSeeder extends Seeder
      */
     public function run()
     {
-        // Remove event listener
-        Sponsor::unsetEventDispatcher();
-
-        // Make sponsor
-        Sponsor::factory(15)->create([
-            'slug' => fn () => (string) Str::uuid(),
-        ]);
+        // Quietly create sponsors
+        Sponsor::withoutEvents(function () {
+            Sponsor::factory(15)->create([
+                'slug' => fn () => (string) Str::uuid(),
+            ]);
+        });
     }
 }

@@ -8,7 +8,7 @@
             <table class="mail-table mail-icon-row__icon-table" align="center" cellpadding="16" cellspacing="0" role="presentation" width="160">
                 <tr>
                     <td class="mail-table__cell mail-icon-row__icon-cell">
-                        <img src="{{ $icon ?? mix('images/icon-box.png') }}" class="mail-icon-row__icon" height="64"
+                        <img src="{{ $icon ?? Vite::image('images/icon-box.png') }}" class="mail-icon-row__icon" height="64"
                             alt="{{ $iconAlt ?? 'Icon' }}" />
                     </td>
                 </tr>

@@ -12,6 +12,7 @@ use Google\Service\Walletobjects\EventTicketClass  as EventTicketClass;
 use Google\Service\Walletobjects\Resource\Eventticketclass as EventTicketClassResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use LogicException;
 use RuntimeException;
 
@@ -58,7 +59,7 @@ trait HandlesEventClasses
             ],
             'logo' => [
                 'sourceUri' => [
-                    'uri' => (string) URL::secure(mix('images/logo-google-wallet.png')),
+                    'uri' => (string) URL::secure(Vite::image('images/logo-google-wallet.png')),
                 ],
                 'contentDescription' => [
                     'defaultValue' => [

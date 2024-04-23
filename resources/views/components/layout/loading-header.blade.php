@@ -7,7 +7,7 @@
 <div class="container container-sm my-32">
   @if ($logo)
   <div class="flex flex-col items-center mb-16" role="presentation">
-    <img src="{{ mix('images/logo-text-green.svg') ?? 'images/logo-text-green.svg' }}" alt="Gumbo Millennium"
+    <img src="{{ Vite::image('images/logo-text-green.svg') ?? 'images/logo-text-green.svg' }}" alt="Gumbo Millennium"
       class="block" width="250" height="100" />
   </div>
   @endif
