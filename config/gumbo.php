@@ -14,6 +14,11 @@ return [
     // Cost of a single payment transaction
     'transfer-fee' => 40,
 
+    /**
+     * ID of the user to use for admin tasks.
+     */
+    'admin_id' => env('GUMBO_ADMIN_ID', 1),
+
     'payments' => [
         /**
          * Payment verification rates, all values are in milliseconds.
