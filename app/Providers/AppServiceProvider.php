@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Horizon\Horizon;
 use Spatie\Flash\Flash;
@@ -82,6 +83,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Provide User for all views
         View::composer('*', ViewComposers\GlobalComposer::class);
+
+        // Configure Vite
+        Vite::macro('image', fn (string $asset) => $this->asset("resources/assets/{$asset}"));
 
         // Special events
         Blade::if('event', function ($event) {

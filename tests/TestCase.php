@@ -28,9 +28,6 @@ abstract class TestCase extends BaseTestCase
         // Forward
         parent::setUp();
 
-        // Disable Mix
-        $this->withoutMix();
-
         // Register singletons
         $this->app->singleton(DummyPaymentService::class);
 

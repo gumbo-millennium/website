@@ -36,7 +36,7 @@ jobs:
           mv --force --no-target-directory resources/docs/.vuepress/dist public/docs
 
       - name: Publish front-end
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: front-end
           path: public/
@@ -114,13 +114,14 @@ jobs:
       - name: Lint PHP code
         run: parallel-lint  --exclude vendor --exclude node_modules .
 
-  build-backend:
+  test-backend:
     name: "Build and test backend on PHP ${{ matrix.php }}"
     runs-on: 'ubuntu-latest'
 
     continue-on-error: ${{ matrix.experimental == true }}
 
     needs:
+      - build-frontend
       - lint-configurations
       - lint-phpmd
       - lint-php-code
@@ -175,6 +176,12 @@ jobs:
 
       - name: Configure Laravel Nova auth
         run: composer config http-basic.nova.laravel.com "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
+
+      - name: Download front-end
+        uses: actions/download-artifact@v4
+        with:
+          name: front-end
+          path: public/
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v3
@@ -241,8 +248,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
 
     needs:
-      - build-frontend
-      - build-backend
+      - test-backend
 
     uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@main
     with:

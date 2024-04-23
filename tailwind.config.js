@@ -3,8 +3,10 @@
  */
 
 //  Load our settings
-const { brand } = require('./resources/js-build/branding')
-const defaultTheme = require('tailwindcss/defaultTheme')
+import { brand } from './resources/js-build/branding.js'
+import defaultTheme from 'tailwindcss/defaultTheme'
+import formsPlugin from '@tailwindcss/forms'
+import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
 
 // Build configs
 module.exports = {
@@ -56,8 +58,8 @@ module.exports = {
   },
 
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/aspect-ratio'),
+    formsPlugin,
+    aspectRatioPlugin,
   ],
 
   corePlugins: {

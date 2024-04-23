@@ -75,8 +75,8 @@ $bannerImage2x = (clone $bannerImage)->dpr(2);
             srcset="{{ $bannerImage }} 384w, {{ $bannerImage2x }} 768w">
         @else
         <div class="card__figure-wrapper">
-            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
-            <img src="{{ mix('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
+            <img src="{{ Vite::image('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto block dark:hidden">
+            <img src="{{ Vite::image('images/logo-text-night.svg') }}" alt="Gumbo Millennium" class="h-16 mx-auto hidden dark:block">
         </div>
         @endif
 

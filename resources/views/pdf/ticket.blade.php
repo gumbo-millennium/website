@@ -7,10 +7,10 @@
   <title>Ticket voor {{ $activity->name }}</title>
 
   @if ($showWeb ?? false)
-  <link rel="stylesheet" href="{{ mix('app.css') }}">
+    @vite('resources/css/app.css')
   @else
   <style>
-    {{ mix_file('mail.css') }}
+    {{ mix_file('resources/css/mail.css') }}
   </style>
   @endif
 </head>

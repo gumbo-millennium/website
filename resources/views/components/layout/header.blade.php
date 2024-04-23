@@ -4,7 +4,7 @@
       <div class="flex justify-start lg:w-0 lg:flex-1">
         <a href="{{ route('home') }}">
           <span class="sr-only">Gumbo Millennium</span>
-          <img class="h-10 w-auto sm:h-10" src="{{ mix('images/logo-text-green.svg') }}" alt="Logo">
+          <img class="h-10 w-auto sm:h-10" src="{{ Vite::image('images/logo-text-green.svg') }}" alt="Logo">
         </a>
       </div>
       @unless ($simple)
@@ -93,7 +93,7 @@
       <div class="pt-5 pb-6 px-5">
         <div class="flex items-center justify-between">
           <div class="md:invisible">
-            <img class="h-8 w-auto" src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium">
+            <img class="h-8 w-auto" src="{{ Vite::image('images/logo-text-green.svg') }}" alt="Gumbo Millennium">
           </div>
           <div class="-mr-2">
             <button type="button"

@@ -55,7 +55,7 @@ jobs:
           fetch-depth: 5
 
       - name: Download front-end
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v4
         with:
           name: front-end
           path: public/

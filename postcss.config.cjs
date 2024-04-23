@@ -1,26 +1,20 @@
 /* eslint-disable quote-props */
-// Core
-const path = require('path')
-
-// Plugins
-const autoprefixer = require('autoprefixer')
-const cssnano = require('cssnano')
-const pixrem = require('pixrem')
-const postcssCalc = require('postcss-calc')
-const postcssImport = require('postcss-import')
-const postcssRem = require('postcss-rem')
-const postcssVariables = require('postcss-css-variables')
-const responsiveImages = require('./resources/js-build/postcss-responsive-image')
+const autoprefixer = require( 'autoprefixer')
+const cssnano = require( 'cssnano')
+const pixrem = require( 'pixrem')
+const postcssCalc = require( 'postcss-calc')
+const postcssImport = require( 'postcss-import')
+const postcssRem = require( 'postcss-rem')
+const postcssVariables = require( 'postcss-css-variables')
 const tailwindcss = require('tailwindcss')
 
 module.exports = ({ file, options, env }) => {
   const isProduction = env === 'production'
-  const isMail = file.basename === 'mail.css'
+  const isMail = file?.basename === 'mail.css'
 
   const plugins = [
     postcssImport(),
-    tailwindcss(),
-    responsiveImages(),
+    tailwindcss,
     postcssCalc({}),
     autoprefixer(),
     // cssnano
@@ -40,7 +34,7 @@ module.exports = ({ file, options, env }) => {
 
   if (isProduction) {
     // Add cssnano as last
-    plugins.push(cssnano(options.cssnano))
+    plugins.push(cssnano(options?.cssnano))
   }
 
   return {

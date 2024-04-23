@@ -16,7 +16,7 @@ $coverImageSmall = image_asset($image)->square(768)->height(300);
     @else
     <div class="absolute inset-0 h-[300px] md:h-[500px] bg-gray-100 flex items-center justify-center">
         <div class="hidden md:block h-[275px] md:h-[300px]">
-            <img src="{{ mix('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block mb-8">
+            <img src="{{ Vite::image('images/logo-text-green.svg') }}" alt="Gumbo Millennium" class="h-32 mx-auto block mb-8">
         </div>
     </div>
     @endif

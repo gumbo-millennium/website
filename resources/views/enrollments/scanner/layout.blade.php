@@ -6,11 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Barcode Scanner - Gumbo Millennium</title>
 
-    <link rel="stylesheet" href="{{ mix('app.css') }}">
-
-    <script src="{{ mix('manifest.js') }}"></script>
-    <script src="{{ mix('vendor.js') }}"></script>
-    <script src="{{ mix('app.js') }}"></script>
+    @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 </head>
 <body class="bg-gray-900 min-h-screen">
   <div class="h-screen mx-auto max-w-2xl py-4 px-4 flex flex-col">

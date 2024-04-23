@@ -5,7 +5,7 @@ Update vanuit de organisatie van {{ $activity->name }}
 @endslot
 
 {{-- Image --}}
-@slot('mailImage', mix('images-mail/header-update.png'))
+@slot('mailImage', Vite::image('images-mail/header-update.png'))
 @slot('html')
 <h2>{{ $userTitle }}</h2>
 
