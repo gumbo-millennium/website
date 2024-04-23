@@ -19,8 +19,9 @@ return new class () extends Migration {
         DB::transaction(function () use ($users) {
             /** @var User $user */
             foreach ($users as $user) {
-                if (empty($user->name))
+                if (empty($user->name)) {
                     continue;
+                }
 
                 DB::update('UPDATE activity_enrollments SET name = ?, email = ? WHERE user_id = ?', [
                     $user->name,
