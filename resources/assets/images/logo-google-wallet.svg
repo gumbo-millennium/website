@@ -21,5 +21,5 @@
         </g>
     </defs>
     <rect x="0" y="0" width="1280" height="1280" fill="white"/>
-    <use xlink:href="#gumbo-logo" x="207.2885px" y="199.71px" />
+    <use href="#gumbo-logo" x="207.2885px" y="199.71px"/>
 </svg>

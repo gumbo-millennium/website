@@ -4,6 +4,8 @@ import pluginVue from '@vitejs/plugin-vue'
 import path from 'path'
 import pluginYaml from '@modyfi/vite-plugin-yaml'
 import pluginEslint from 'vite-plugin-eslint'
+import pluginCompression from 'vite-plugin-compression2'
+import { ViteImageOptimizer as imageOptimizerPlugin } from 'vite-plugin-image-optimizer';
 
 export default defineConfig({
   resolve: {
@@ -34,5 +36,10 @@ export default defineConfig({
       },
     }),
     pluginYaml(),
+    imageOptimizerPlugin(),
+
+    // Create gzip and brotli files on build
+    pluginCompression({ algorithm: 'gzip' }),
+    pluginCompression({ algorithm: 'brotliCompress' }),
   ],
 })
