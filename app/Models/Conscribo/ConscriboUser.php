@@ -23,14 +23,14 @@ use Illuminate\Support\Str;
  * @property null|string $address
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboCommittee> $committees
  * @property-read string $conscribo_name
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboGroup> $groups
  * @property-read string $name
+ * @method static \Database\Factories\Conscribo\ConscriboUserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboUser newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboUser query()
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboCommittee> $committees
- * @method static \Database\Factories\Conscribo\ConscriboUserFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class ConscriboUser extends Model

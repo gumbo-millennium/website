@@ -18,17 +18,28 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $name
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboUser> $users
+ * @method static \Database\Factories\Conscribo\ConscriboGroupFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup query()
- * @method static \Database\Factories\Conscribo\ConscriboGroupFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboGroup withoutRole($roles, $guard = null)
  * @mixin \Eloquent
  */
 class ConscriboGroup extends Model
 {
     use HasFactory;
     use HasRoles;
+
+    /**
+     * Ensure web guards are used on these non-user-models.
+     */
+    protected static string $guard_name = 'web';
 
     /**
      * The attributes that are mass assignable.

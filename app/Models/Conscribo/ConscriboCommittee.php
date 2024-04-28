@@ -20,16 +20,27 @@ use Spatie\Permission\Traits\HasRoles;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboUser> $members
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @method static \Database\Factories\Conscribo\ConscriboCommitteeFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee query()
- * @method static \Database\Factories\Conscribo\ConscriboCommitteeFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee withoutPermission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConscriboCommittee withoutRole($roles, $guard = null)
  * @mixin \Eloquent
  */
 class ConscriboCommittee extends Model
 {
     use HasFactory;
     use HasRoles;
+
+    /**
+     * Ensure web guards are used on these non-user-models.
+     */
+    protected static string $guard_name = 'web';
 
     protected $attributes = [
         'aliases' => '[]',

@@ -16,10 +16,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|string $contract_ends_at
+ * @method static \Database\Factories\Conscribo\ConscriboOrganisationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboOrganisation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboOrganisation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboOrganisation query()
- * @method static \Database\Factories\Conscribo\ConscriboOrganisationFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class ConscriboOrganisation extends Model

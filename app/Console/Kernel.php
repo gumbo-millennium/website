@@ -48,11 +48,13 @@ class Kernel extends ConsoleKernel
         // Update enrollments' user_type every day
         $schedule->job(UpdateEnrollmentUserTypes::class)->daily();
 
-        // Update users from API every night
-        $schedule->command('gumbo:user:update')->dailyAt('03:00');
+        // Run a Conscribo update every hour
+        $schedule->command('conscribo:import')->hourlyAt(15);
+        $schedule->command('app:update-user', ['--all' => true])->hourlyAt(20);
 
-        // Update groups from API every night
-        $schedule->command('gumbo:update-groups --missing')->dailyAt('03:30');
+        // Run a Conscribo prune every morning
+        $schedule->command('conscribo:import', ['--prune' => true])->dailyAt('07:45');
+        $schedule->command('app:update-user', ['--all' => true, '--prune' => true])->dailyAt('07:50');
 
         // Update Sponsor logos nightly (in case some were missed)
         $schedule->command('gumbo:update-sponsor-logos')->dailyAt('05:00');
