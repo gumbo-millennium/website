@@ -19,7 +19,7 @@
       <x-pdf.ticket-box>
         <div class="absolute inset-y-3 right-0 border-r border-gray-400 border-dashed" role="none"></div>
 
-        <img src="{{ mix('images/logo-text-green.svg') }}" class="h-16 mb-4" alt="Logo Gumbo Millennium" />
+        <img src="{{ Vite::image('images/logo-text-green.svg') }}" class="h-16 mb-4" alt="Logo Gumbo Millennium" />
 
         <div class="mb-8 space-y-4">
           <h1 class="font-title font-bold text-4xl">{{ $activity->name }}</h1>
