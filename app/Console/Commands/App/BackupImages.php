@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use SplFileInfo;
 use Symfony\Component\Console\Output\OutputInterface;
+use ZipArchive;
 
 class BackupImages extends Command
 {
@@ -39,14 +40,14 @@ class BackupImages extends Command
     public function handle()
     {
         // Prep a temp file
-        $tempname = \tempnam(\sys_get_temp_dir(), 'zipfile');
+        $tempname = tempnam(sys_get_temp_dir(), 'zipfile');
 
         // Out file
         $outFile = sprintf('backup-%s.zip', date('Y-m-d_H-i-s'));
 
         // Get zip handle
-        $zip = new \ZipArchive();
-        $zip->open($tempname, \ZipArchive::OVERWRITE);
+        $zip = new ZipArchive();
+        $zip->open($tempname, ZipArchive::OVERWRITE);
 
         // Add archive comment
         $zip->setArchiveComment(sprintf(
@@ -76,18 +77,16 @@ class BackupImages extends Command
         }
 
         // Delete temp file
-        \unlink($tempname);
+        unlink($tempname);
     }
 
     /**
      * Stores images on the $propeties on $className in $zip.
-     *
-     * @param ZipArchive $zip
      */
-    public function storeImages(\ZipArchive &$zip, string $className, array $properties): void
+    public function storeImages(ZipArchive &$zip, string $className, array $properties): void
     {
         // Prep name
-        $baseName = \ucwords(Str::snake(\class_basename($className), ' '));
+        $baseName = ucwords(Str::snake(class_basename($className), ' '));
         $pathName = Str::snake($baseName, '-');
 
         // Log
@@ -96,15 +95,15 @@ class BackupImages extends Command
 
         // Iterate all nodes
         foreach ($className::cursor() as $item) {
-            \assert($item instanceof Model);
+            assert($item instanceof Model);
             $itemId = $item->getKey();
 
             // Iterate requested properties
             foreach ($properties as $propertyName) {
                 $path = $item->{$propertyName};
 
-                // Skip if missing
-                if (! Storage::disk('public')->exists($path)) {
+                // Skip if missing or empty
+                if (empty($path) || ! Storage::disk('public')->exists($path)) {
                     $this->line(
                         "Skipping <info>{$propertyName}</> on <comment>{$baseName} #{$itemId}</>.",
                         null,
@@ -134,7 +133,7 @@ class BackupImages extends Command
 
                 // Write to zip
                 $zip->addFromString($filename, $contents);
-                $zip->setCompressionName($filename, \ZipArchive::CM_STORE);
+                $zip->setCompressionName($filename, ZipArchive::CM_STORE);
 
                 // Add line
                 $this->line(
