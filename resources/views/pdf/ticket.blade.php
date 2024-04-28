@@ -10,7 +10,7 @@
     @vite('resources/css/app.css')
   @else
   <style>
-    {{ mix_file('resources/css/mail.css') }}
+    {{ Vite::content('resources/css/mail.css') }}
   </style>
   @endif
 </head>

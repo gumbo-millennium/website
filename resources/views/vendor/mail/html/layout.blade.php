@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style type="text/css">{{ mix_file('/mail.css') }}</style>
+    <style type="text/css">{{ Vite::content('resources/css/mail.css') }}</style>
 </head>
 <body>
     {{-- E-mail summary --}}

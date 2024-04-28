@@ -7,21 +7,6 @@ use App\Helpers\Str;
 use Brick\Money\Context;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\HtmlString;
-
-if (! function_exists('mix_file')) {
-    function mix_file(string $file): ?HtmlString
-    {
-        try {
-            // Ask Vite for the file
-            return new HtmlString(Vite::content($file));
-        } catch (Exception $e) {
-            // If the file is not found, return null
-            return null;
-        }
-    }
-}
 
 if (! function_exists('image_asset')) {
     /**
