@@ -15,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
  * A committee in Conscribo.
  *
  * @property int $id
- * @property int $conscribo_id
+ * @property string $conscribo_id
  * @property string $name
  * @property string $email
  * @property mixed $aliases

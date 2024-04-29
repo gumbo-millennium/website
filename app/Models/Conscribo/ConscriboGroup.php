@@ -14,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
  * but we're only tying them to users.
  *
  * @property int $id
- * @property int $conscribo_id
+ * @property string $conscribo_id
  * @property string $name
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at

@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('conscribo_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedSmallInteger('conscribo_id')->unique();
+            $table->string('conscribo_id', 8)->unique();
 
             $table->string('name');
 

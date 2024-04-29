@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * other organisations used for invoicing.
  *
  * @property int $id
- * @property int $conscribo_id
+ * @property string $conscribo_id
  * @property string $name
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at

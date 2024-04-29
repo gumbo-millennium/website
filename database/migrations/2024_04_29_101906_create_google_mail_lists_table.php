@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->id();
 
             $table->string('directory_id')->nullable()->unique();
-            $table->unsignedSmallInteger('conscribo_id')->nullable()->unique();
+            $table->string('conscribo_id', 8)->nullable()->unique();
 
             $table->foreignId('conscribo_committee_id')->nullable()->constrained('conscribo_committees')->nullOnDelete();
 

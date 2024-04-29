@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
  * A user retrieved from Conscribo.
  *
  * @property int $id
- * @property int $conscribo_id
+ * @property string $conscribo_id
  * @property string $conscribo_selector
  * @property string $first_name
  * @property null|string $infix
