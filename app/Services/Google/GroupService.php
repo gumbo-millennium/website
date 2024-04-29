@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use RuntimeException;
 
-final readonly class GroupService
+class GroupService
 {
     public function __construct(
         private \Google\Service\Directory $directoryService
