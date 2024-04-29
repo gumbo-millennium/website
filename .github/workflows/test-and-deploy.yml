@@ -213,7 +213,7 @@ jobs:
             --coverage-clover coverage-clover.xml
 
       - name: Report test results
-        if: ${{ success() || steps.unit-tests.result == 'failure' }}
+        if: success() || steps.unit-tests.outcome == 'failure'
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: ./report-junit.xml
