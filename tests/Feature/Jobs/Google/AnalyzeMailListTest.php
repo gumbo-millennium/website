@@ -17,7 +17,7 @@ class AnalyzeMailListTest extends TestCase
 {
     use WithFaker;
 
-    public function testNewMailListCreation(): void
+    public function test_new_mail_list_creation(): void
     {
         /** @var GoogleMailList $listModel */
         $listModel = GoogleMailList::factory()->create();
@@ -44,7 +44,7 @@ class AnalyzeMailListTest extends TestCase
         ]);
     }
 
-    public function testExistingListCreation(): void
+    public function test_existing_list_creation(): void
     {
         $listId = $this->faker->word();
 
@@ -80,7 +80,7 @@ class AnalyzeMailListTest extends TestCase
         ]);
     }
 
-    public function testDeletedLocally(): void
+    public function test_deleted_locally(): void
     {
         $listId = $this->faker->word();
 
@@ -117,8 +117,7 @@ class AnalyzeMailListTest extends TestCase
         ]);
     }
 
-
-    public function testDirectoryIdReassign(): void
+    public function test_directory_id_reassign(): void
     {
         $initialListId = $this->faker->word();
         $actualListId = $this->faker->word();

@@ -76,13 +76,13 @@ class UpdateUserCommand extends Command
         return self::SUCCESS;
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): int
     {
         $wantsAll = $this->option('all');
         $wantsSingle = $this->argument('user');
 
         if ($wantsAll xor $wantsSingle) {
-            return;
+            return self::SUCCESS;
         }
 
         if ($wantsAll && $wantsSingle) {
@@ -118,5 +118,7 @@ class UpdateUserCommand extends Command
 
         $input->setArgument('user', $user);
         $input->setOption('all', false);
+
+        return self::SUCCESS;
     }
 }

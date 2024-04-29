@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models\Conscribo;
 
+use App\Models\Google\GoogleMailList;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -19,6 +21,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property mixed $aliases
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property-read null|GoogleMailList $mailList
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Conscribo\ConscriboUser> $members
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
@@ -63,6 +66,15 @@ class ConscriboCommittee extends Model
     {
         return $this->belongsToMany(ConscriboUser::class, 'conscribo_committee_user')
             ->using(CommitteeUser::class);
+    }
+
+    /**
+     * Returns the mailing list created for this committee, if any.
+     * @return HasOne<GoogleMailList>
+     */
+    public function mailList(): HasOne
+    {
+        return $this->hasOne(GoogleMailList::class);
     }
 
     /**

@@ -46,6 +46,7 @@ class GoogleMailList extends Model
 
     protected $fillable = [
         'directory_id',
+        'conscribo_id',
         'name',
         'email',
         'aliases',
