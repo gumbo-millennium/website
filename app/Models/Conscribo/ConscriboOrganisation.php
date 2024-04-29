@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
- * @property null|string $contract_ends_at
+ * @property null|\Illuminate\Support\Carbon $contract_ends_at
  * @method static \Database\Factories\Conscribo\ConscriboOrganisationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboOrganisation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ConscriboOrganisation newQuery()
@@ -28,6 +28,15 @@ class ConscriboOrganisation extends Model
     use HasFactory;
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'contract_ends_at' => 'datetime',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
@@ -35,14 +44,4 @@ class ConscriboOrganisation extends Model
         'name',
         'contract_ends_at',
     ];
-
-    /**
-     * Get the attributes that should be cast.
-     */
-    protected function casts(): array
-    {
-        return [
-            'contract_ends_at' => 'datetime',
-        ];
-    }
 }
