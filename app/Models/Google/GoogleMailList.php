@@ -8,6 +8,7 @@ use App\Models\Conscribo\ConscriboCommittee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Google\GoogleMailListChange> $changes
  * @property-read null|ConscriboCommittee $conscriboCommittee
  * @method static \Database\Factories\Google\GoogleMailListFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|GoogleMailList newModelQuery()
@@ -52,5 +54,13 @@ class GoogleMailList extends Model
     public function conscriboCommittee(): BelongsTo
     {
         return $this->belongsTo(ConscriboCommittee::class);
+    }
+
+    /**
+     * @return HasMany<GoogleMailListChange>
+     */
+    public function changes(): HasMany
+    {
+        return $this->hasMany(GoogleMailListChange::class);
     }
 }
