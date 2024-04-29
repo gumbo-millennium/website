@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Orders;
 
 use App\Casts\MoneyCast;
+use App\Models\Shop\ProductVariant;
 use App\Models\Ticket;
 use App\Models\User;
 use Brick\Money\Money;
@@ -36,6 +37,7 @@ use RuntimeException;
  * @property null|\Brick\Money\Money $fee
  * @property null|\Brick\Money\Money $total_amount
  * @property string $description
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductVariant> $productVariants
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Ticket> $tickets
  * @property-read null|User $user
  * @method static \Database\Factories\Orders\OrderFactory factory($count = null, $state = [])
@@ -114,6 +116,12 @@ class Order extends Model
     {
         return $this->belongsToMany(Ticket::class)
             ->using(OrderTicket::class);
+    }
+
+    public function productVariants(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductVariant::class, 'order_products')
+            ->using(OrderProduct::class);
     }
 
     /**
