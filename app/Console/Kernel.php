@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
         // Backups
         $schedule->command('backup:create')->daily()->at('01:00');
         $schedule->command('backup:create', ['--full' => true])->weekly()->at('01:30');
+        $schedule->command('backup:images')->weeklyOn(0, '06:30');
 
         // Expunge data past it's retention period
         $schedule->command('avg:prune-enrollment-data')->twiceMonthly();
@@ -78,9 +79,6 @@ class Kernel extends ConsoleKernel
 
         // Update ticket PDFs from enrollments hourly
         $schedule->command('gumbo:update-ticket-pdfs')->hourly();
-
-        // Weekly make a backup of the images
-        $schedule->command('app:backup-images')->weeklyOn(0, '06:30');
 
         // Send quotes weekly, if Telegram bot is configured
         if (Config::get('telegram.bots.gumbot.token')) {
