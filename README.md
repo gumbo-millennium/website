@@ -1,22 +1,15 @@
 # Gumbo Millennium
 
-[![Build status][shield-build]][link-build]
-[![Code Climate maintainability rating][shield-cc-maintainability]][link-cc-maintainability]
-[![Code Climate coverage rating][shield-cc-coverage]][link-cc-coverage]
+This is the website for the Gumbo Millennium student association. It boasts information about
+the association, with support for activities, a shop and member-only areas for documents and photos.
 
-[![Javascript code style: standard][shield-js]][link-js]
-[![PHP code style: PSR-12][shield-php]][link-php]
-[![License: Mozilla Public License v2][shield-license]][link-license]
+## Used integrations
 
-This is the website for the Gumbo Millennium student association.
-
-## Used features
-
-- [Laravel Framework][laravel]
-- [Laravel Nova][laravel-nova]
-- [Mollie Payments API][mollie]
-- [Conscribo API][conscribo] (to fetch our members)
-- [Google Admin SDK][google-directory] (for syncing our mailing lists easily)
+- [Laravel Framework][laravel] as foundation
+- [Laravel Nova][laravel-nova] for administration
+- [Mollie Payments API][mollie] for payments
+- [Conscribo API][conscribo] for user information retreival
+- [Google Admin SDK][google-directory] for syncing our mailing lists
 
 We're using [Tailwind][tailwind], drawing inspiration from the Tailwind Components.
 
