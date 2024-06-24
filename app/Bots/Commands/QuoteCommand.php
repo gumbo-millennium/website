@@ -38,21 +38,20 @@ class QuoteCommand extends Command
         MSG;
 
     private const REPLY_OK = <<<'MSG'
-        Bedankt voor het insturen van dit pareltje:
-
         <blockquote>%s</blockquote>
 
-        📬 Maandag gaat 'ie naar de Gumbode.
-        MSG;
+        💾 Hebben we!
 
-    private const REPLY_PUBLIC = <<<'MSG'
-        Hey, <a href="tg://user?id=%s">%s</a>, wil je volgende keer geniepig doen?
-        Stuur je wist-je-datje dan in een privébericht.
+        Bedankt voor het insturen %s, maandag gooien we 'm naar de Gumbode.
         MSG;
 
     private const REPLY_GUEST = <<<'MSG'
         Je bent niet ingelogd, dus je kan maximaal 1 wist-je-datje per
         dag insturen. Login via /login om deze limiet te verwijderen.
+        MSG;
+
+    private const LINK_TEMPLATE = <<<'MSG'
+        <a href="tg://user?id=%s">%s</a>
         MSG;
 
     /**
@@ -154,19 +153,14 @@ class QuoteCommand extends Command
         $quote = new BotQuote();
         $quote->quote = $quoteText;
         $quote->display_name = trim("{$tgUser->firstName} {$tgUser->lastName}") ?: "#{$tgUser->id}";
-        $quote->user_id = optional($user)->id;
+        $quote->user_id = $user?->id;
         $quote->message_id = $messageId;
         $quote->save();
 
-        $preparedMessage = $this->formatText(self::REPLY_OK, e($quoteText));
+        $safeQuoteText = e($quoteText);
+        $safeUsername = sprintf(self::LINK_TEMPLATE, $tgUser->id, e($user?->first_name ?? $quote->display_name ?? $tgUser->username));
 
-        if ($this->isInGroupChat()) {
-            $preparedMessage = <<<DOC
-                {$preparedMessage}
-
-                {$this->formatText(self::REPLY_PUBLIC, $tgUser->id, e($quote->username ?? $quote->display_name))}
-                DOC;
-        }
+        $preparedMessage = $this->formatText(self::REPLY_OK, $safeQuoteText, $safeUsername);
 
         $keyboard = (new Keyboard())->inline();
         $keyboard->row([
