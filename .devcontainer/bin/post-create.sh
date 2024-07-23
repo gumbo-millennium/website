@@ -33,9 +33,6 @@ if grep -q -E '^APP_KEY=(base64:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=)?$'
     php artisan key:generate
 fi
 
-echo "Migrating system"
-php artisan migrate --seed
-
 echo "Installing NPM dependencies"
 npm install
 

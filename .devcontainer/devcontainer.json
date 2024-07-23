@@ -1,6 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
     "name": "PHP and MySQL for Laravel",
+    "image": "ghcr.io/gumbo-millennium/website/devcontainer:latest",
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/workspace",
@@ -22,29 +23,30 @@
 
     // For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
     "forwardPorts": [
-        8080,
-        3306
+        3306,
+        8025,
     ],
 
     "portsAttributes": {
-        "8080": {
-            "label": "Application",
-            "onAutoForward": "openBrowserOnce"
-        },
         "3306": {
             "label": "Database",
+            "onAutoForward": "silent"
+        },
+        "8025": {
+            "label": "Mailhog",
             "onAutoForward": "silent"
         }
     },
 
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": [
+        "/workspace/.devcontainer/bin/post-create.sh"
         // noop
     ],
 
     // Use 'postStartCommand' to run commands after the container is started.
     "postStartCommand": [
-        "/workspace/.devcontainer/bin/setup-container.sh",
+        "/workspace/.devcontainer/bin/post-start.sh",
     ],
 
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.

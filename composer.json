@@ -93,6 +93,9 @@
         }
     },
     "scripts": {
+        "pre-install-cmd": [
+            "cd vendor-bundled && unzip searchable-select.zip"
+        ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -179,6 +182,29 @@
                     "classmap": [
                         "./"
                     ]
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "sloveniangooner/searchable-select",
+                "version": "1.3.2",
+                "dist": {
+                    "url": "./vendor-bundled/searchable-select.zip",
+                    "type": "zip"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Sloveniangooner\\SearchableSelect\\": "src/"
+                    }
+                },
+                "extra": {
+                    "laravel": {
+                        "providers": [
+                            "Sloveniangooner\\SearchableSelect\\FieldServiceProvider"
+                        ]
+                    }
                 }
             }
         }
