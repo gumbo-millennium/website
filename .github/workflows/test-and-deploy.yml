@@ -2,6 +2,8 @@ name: Test and deploy
 
 on:
   pull_request:
+    paths-ignore:
+      - .devcontainer/**/*
 
   push:
     branches:

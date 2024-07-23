@@ -1,6 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
     "name": "PHP and MySQL for Laravel",
+    "image": "ghcr.io/gumbo-millennium/website/devcontainer:latest",
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/workspace",
