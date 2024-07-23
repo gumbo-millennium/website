@@ -1,0 +1,36 @@
+name: Prebuild devcontainer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .devcontainer/**/*
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  DOCKER_CONTAINER: ${{ github.repository }}/devcontainer
+
+jobs:
+  build:
+    name: Build devcontainer
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build the devcontainer
+        uses: devcontainers/ci@v0.3
