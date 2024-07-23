@@ -2,11 +2,13 @@ version: "3.6"
 
 services:
   app:
-    image: ghcr.io/gumbo-millennium/website/codespaces
+    image: ghcr.io/gumbo-millennium/devcontainer:main
     volumes:
       - ..:/workspace:cached
     ports:
       - "8080:80"
+    env_file:
+      - devcontainer.env
 
   mysql:
     image: mysql:8
