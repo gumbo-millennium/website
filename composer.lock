@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b232522895e704bc46a555fc95c03f42",
+    "content-hash": "48bbe3322226f74443a377ab3a82bf80",
     "packages": [
         {
             "name": "advoor/nova-editor-js",
@@ -8581,19 +8581,9 @@
         {
             "name": "sloveniangooner/searchable-select",
             "version": "1.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/slovenianGooner/nova-searchable-select.git",
-                "reference": "f946cc2af0f4bc02a20d93b724bbfb67ffd2e211"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slovenianGooner/nova-searchable-select/zipball/f946cc2af0f4bc02a20d93b724bbfb67ffd2e211",
-                "reference": "f946cc2af0f4bc02a20d93b724bbfb67ffd2e211",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
+                "url": "./vendor-bundled/searchable-select.zip"
             },
             "type": "library",
             "extra": {
@@ -8607,21 +8597,7 @@
                 "psr-4": {
                     "Sloveniangooner\\SearchableSelect\\": "src/"
                 }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/slovenianGooner/nova-searchable-select/issues",
-                "source": "https://github.com/slovenianGooner/nova-searchable-select/tree/1.3.2"
-            },
-            "time": "2019-12-04T08:26:43+00:00"
+            }
         },
         {
             "name": "smalot/pdfparser",
@@ -16009,8 +15985,5 @@
         "php": "^8.2"
     },
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "8.2.18"
-    },
     "plugin-api-version": "2.6.0"
 }
