@@ -85,15 +85,7 @@ class AlbumPolicy
      */
     public function create(User $user): Response
     {
-        if ($user->hasPermissionTo('gallery-lock')) {
-            return $this->deny(__(self::REASON_BANNED));
-        }
-
-        if ($user->hasPermissionTo('gallery-use')) {
-            return $this->allow();
-        }
-
-        return $this->deny(__(self::REASON_NO_ACCESS));
+        return $this->deny("Being decomissioned");
     }
 
     /**

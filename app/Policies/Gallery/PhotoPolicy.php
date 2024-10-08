@@ -64,7 +64,7 @@ class PhotoPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create', Album::class);
+        return $this->deny("Being decomissioned");
     }
 
     /**
