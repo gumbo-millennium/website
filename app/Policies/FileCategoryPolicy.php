@@ -33,7 +33,7 @@ class FileCategoryPolicy
      */
     public function create(User $user)
     {
-        return $this->deny("Wordt opgeheven");
+        return $user->can('manage', FileBundle::class);
     }
 
     /**
