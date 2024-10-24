@@ -85,7 +85,7 @@ class AlbumPolicy
      */
     public function create(User $user): Response
     {
-        return $this->deny("Being decomissioned");
+        return $this->deny('Being decomissioned');
     }
 
     /**

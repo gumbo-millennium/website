@@ -64,7 +64,7 @@ class PhotoPolicy
      */
     public function create(User $user)
     {
-        return $this->deny("Being decomissioned");
+        return $this->deny('Being decomissioned');
     }
 
     /**
