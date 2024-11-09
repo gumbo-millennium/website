@@ -54,7 +54,7 @@ class HandleUpdateJob
         $chatId = (string)$chat->id;
         $chatType = $chat->type;
         $chatName = $chatType == 'private'
-            ? Str::trim("{$chat->firstName} {$chat->lastName}")
+            ? trim("{$chat->firstName} {$chat->lastName}")
             : $chat->title;
 
         // Save the data
