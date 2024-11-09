@@ -32,6 +32,15 @@ class Chat extends Model
     protected $table = 'telegram_chats';
 
     /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'chat_id',
+        'type',
+        'name',
+    ];
+
+    /**
      * Finds a single chat, or preps to create a new one.
      * @param string $chatId
      * @return Chat
