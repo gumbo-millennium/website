@@ -5,6 +5,7 @@ import path from 'path'
 import pluginYaml from '@modyfi/vite-plugin-yaml'
 import pluginEslint from 'vite-plugin-eslint'
 import pluginCompression from 'vite-plugin-compression2'
+import { viteStaticCopy as pluginStaticCopy } from 'vite-plugin-static-copy'
 import {
   ViteImageOptimizer as imageOptimizerPlugin
 } from 'vite-plugin-image-optimizer'
@@ -18,6 +19,14 @@ export default defineConfig({
   },
   plugins: [
     pluginEslint(),
+    pluginStaticCopy({
+      targets: [
+        {
+          src: path.resolve(__dirname, 'resources/assets/public/**/*'),
+          dest: 'public',
+        },
+      ],
+    }),
     pluginLaravel({
       input: [
         // JS
