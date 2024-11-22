@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands\Telegram;
 
 use App\Models\Telegram\Chat;
@@ -35,7 +37,7 @@ class ListChatsCommand extends Command
         // Print
         $this->table(
             ['Chat ID', 'type', 'name'],
-            $chats
+            $chats,
         );
     }
 }

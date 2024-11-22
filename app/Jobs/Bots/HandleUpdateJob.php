@@ -47,11 +47,12 @@ class HandleUpdateJob
     private function saveChatData(): void
     {
         $chat = object_get($this->update, 'message.chat');
-        if (!$chat instanceof TelegramChat)
+        if (! $chat instanceof TelegramChat) {
             return;
+        }
 
         // Check variables
-        $chatId = (string)$chat->id;
+        $chatId = (string) $chat->id;
         $chatType = $chat->type;
         $chatName = $chatType == 'private'
             ? trim("{$chat->firstName} {$chat->lastName}")

@@ -19,7 +19,7 @@ class ChatFactory extends Factory
     public function definition(): array
     {
         $type = $this->faker->randomElement([
-            'private', 'group', 'supergroup', 'channel'
+            'private', 'group', 'supergroup', 'channel',
         ]);
 
         return [
