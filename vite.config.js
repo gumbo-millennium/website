@@ -1,4 +1,4 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import pluginLaravel from 'laravel-vite-plugin'
 import pluginVue from '@vitejs/plugin-vue'
 import path from 'path'
@@ -7,7 +7,7 @@ import pluginEslint from 'vite-plugin-eslint'
 import pluginCompression from 'vite-plugin-compression2'
 import { viteStaticCopy as pluginStaticCopy } from 'vite-plugin-static-copy'
 import {
-  ViteImageOptimizer as imageOptimizerPlugin
+  ViteImageOptimizer as imageOptimizerPlugin,
 } from 'vite-plugin-image-optimizer'
 
 export default defineConfig({
@@ -50,7 +50,7 @@ export default defineConfig({
     imageOptimizerPlugin(),
 
     // Create gzip and brotli files on build
-    pluginCompression({algorithm: 'gzip'}),
-    pluginCompression({algorithm: 'brotliCompress'}),
+    pluginCompression({ algorithm: 'gzip' }),
+    pluginCompression({ algorithm: 'brotliCompress' }),
   ],
 })

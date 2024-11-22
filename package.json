@@ -60,7 +60,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "format": "eslint resources/js resources/js-build --fix",
+    "format": "eslint resources/js resources/js-build ./*.config.js --fix",
     "docs:dev": "vuepress dev resources/docs",
     "docs:build": "vuepress build resources/docs",
     "postinstall": "resources/bin/install-icons || true"
