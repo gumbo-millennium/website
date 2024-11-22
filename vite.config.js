@@ -22,7 +22,7 @@ export default defineConfig({
     pluginStaticCopy({
       targets: [
         {
-          src: path.resolve(__dirname, 'resources/assets/public/**/*'),
+          src: path.resolve(__dirname, 'resources/assets/public/*'),
           dest: 'public',
         },
       ],
