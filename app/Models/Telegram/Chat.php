@@ -32,6 +32,15 @@ class Chat extends Model
     protected $table = 'telegram_chats';
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'left_at' => 'datetime',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
