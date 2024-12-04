@@ -270,7 +270,7 @@ class CalendarController extends Controller
 
                 {$description}
             DOC;
-            $endDate = $this->start_date->addDays(3)->endOfDay();
+            $endDate = $activity->start_date->addDays(3)->endOfDay();
         }
 
         return (new Event())
