@@ -16,6 +16,9 @@ trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
 
+[*.blade.php]
+max_line_length = off
+
 [resources/**.json]
 indent_size = 2
 
