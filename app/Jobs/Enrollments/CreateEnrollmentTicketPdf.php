@@ -57,7 +57,7 @@ class CreateEnrollmentTicketPdf implements ShouldQueue
                 $browsershot->scale(0.8);
                 $browsershot->pages('1');
             })
-            ->disk('local')
+            ->disk($enrollment->pdf_disk)
             ->save($enrollment->pdf_path);
     }
 }

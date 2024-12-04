@@ -30,6 +30,7 @@ return [
     ],
 
     'tickets' => [
+        'disk' => env('GUMBO_TICKET_DISK', 'local'),
         'expiration' => [
             'anonymous' => 'PT15M',
             'authenticated' => 'PT1H',

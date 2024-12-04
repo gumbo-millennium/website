@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Spatie\ModelStates\HasStates;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -453,7 +455,20 @@ class Enrollment extends Model implements Payable
             throw new LogicException('Cannot generate ticket PDF for enrollment that have not been saved yet');
         }
 
-        return "tickets/{$this->id}.pdf";
+        return sprintf('tickets/by-user/%06d/%06d.pdf', $this->user_id ?? 0, $this->id);
+    }
+
+    public function getPdfDiskAttribute(): string
+    {
+        return Config::get('gumbo.tickets.disk');
+    }
+
+    /**
+     * Checks if the PDF ticket exists.
+     */
+    public function pdfExists(): bool
+    {
+        return Storage::disk($this->pdf_disk)->fileExists($this->pdf_path);
     }
 
     /**
