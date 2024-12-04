@@ -52,7 +52,7 @@ class CalendarController extends Controller
     {
         return Cache::remember("activity.{$activity->id}.clean_body_text", Date::now()->addHour(), function () use ($activity) {
             // Prep document
-            $doc = new DOMDocument();
+            $doc = new DOMDocument('1.0', 'utf-8');
 
             // Load HTML
             $doc->loadHTML(
@@ -259,9 +259,23 @@ class CalendarController extends Controller
             $activity->location,
         );
 
+        // Shorten the activity if it's overly long.
+        $endDate = $activity->end_date;
+        $description = $this->createCleanBodyText($activity);
+        if ($activity->start_date->diffInDays($endDate) > 3) {
+            $description = <<<DOC
+                Dit evenement eindigt op {$endDate->format('d-m-Y')} om {$endDate->format('H:i')}.
+
+                -----
+
+                {$description}
+            DOC;
+            $endDate = $this->start_date->addDays(3)->endOfDay();
+        }
+
         return (new Event())
             ->setSummary($activity->name)
-            ->setDescription($this->createCleanBodyText($activity))
+            ->setDescription($description)
             ->setLocation($location)
             ->setUrl(
                 new Uri(route('activity.show', $activity)),
@@ -278,7 +292,7 @@ class CalendarController extends Controller
             ->setOccurrence(
                 TimeSpan::create(
                     new DateTime($activity->start_date, true),
-                    new DateTime($activity->end_date, true),
+                    new DateTime($endDate, true),
                 ),
             );
     }
