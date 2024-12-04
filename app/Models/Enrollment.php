@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
@@ -93,6 +94,8 @@ class Enrollment extends Model implements Payable
     public const USER_TYPE_MEMBER = 'member';
 
     public const USER_TYPE_GUEST = 'guest';
+
+    public const PDF_TICKET_DIR = 'tickets/by-user';
 
     /**
      * The table associated with the model.
@@ -455,7 +458,7 @@ class Enrollment extends Model implements Payable
             throw new LogicException('Cannot generate ticket PDF for enrollment that have not been saved yet');
         }
 
-        return sprintf('tickets/by-user/%06d/%06d.pdf', $this->user_id ?? 0, $this->id);
+        return sprintf('%s/%06d/%06d.pdf', self::PDF_TICKET_DIR, $this->user_id ?? 0, $this->id);
     }
 
     public function getPdfDiskAttribute(): string

@@ -123,6 +123,7 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
  */
 Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-sponsor'])->group(function () {
     Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
+    Route::get('/download', [EnrollNew\EnrollmentController::class, 'download'])->name('download');
 
     // Create basic enrollment
     Route::get('/ticket', [EnrollNew\TicketController::class, 'create'])->name('create');

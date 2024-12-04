@@ -56,13 +56,17 @@
     <div class="grid grid-cols-pdf gap-8">
 
       <div class="min-h-32 space-y-8">
-        @if ($activity->ticket_html)
-          <div>
-            <h2 class="font-title text-lg text-brand-800 mb-4">Omschrijving</h2>
+        <div>
+          <h2 class="font-title text-lg text-brand-800 mb-4">Omschrijving</h2>
 
+          @if ($activity->ticket_html)
             {{ $activity->ticket_html }}
-          </div>
-        @endif
+          @else
+            <p class="text-gray-700 font-italic">
+              Deze activiteit heeft geen informatie.
+            </p>
+          @endif
+        </div>
 
         @if ($enrollment->form)
           <div>

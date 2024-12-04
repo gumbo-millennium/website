@@ -7,7 +7,6 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
 use Illuminate\View\Component;
 use InvalidArgumentException;
 
@@ -22,6 +21,7 @@ final class Button extends Component
         private string $type = 'link',
         private ?string $size = 'large',
         private ?string $style = 'light',
+        private bool $withIcon = false,
         ?string $color = null,
     ) {
         if ($color) {
@@ -44,6 +44,8 @@ final class Button extends Component
         throw_unless($styleClass, InvalidArgumentException::class, "Button style {$this->style} not found");
 
         $cssClass = [$sizeClass, $styleClass];
+        if ($this->withIcon)
+            $cssClass[] = 'gap-x-2';
 
         if (in_array($this->type, ['button', 'submit', 'reset'], true)) {
             return fn (array $data) => sprintf(

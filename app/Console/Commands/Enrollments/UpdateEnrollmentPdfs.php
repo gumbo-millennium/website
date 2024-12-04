@@ -10,9 +10,11 @@ use App\Models\States\Enrollment as EnrollmentState;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Prompts\Progress;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateEnrollmentPdfs extends Command
@@ -34,6 +36,8 @@ class UpdateEnrollmentPdfs extends Command
      */
     protected $description = 'Update PDFs for all enrollments, removing those that have expired.';
 
+    private FilesystemAdapter $disk;
+
     /**
      * Execute the console command.
      *
@@ -41,8 +45,11 @@ class UpdateEnrollmentPdfs extends Command
      */
     public function handle()
     {
+        $this->line('Getting disk');
+        $this->disk = Storage::disk(Enrollment::first()->pdf_disk);
+
         $this->line('Loading all ticket PDFs...');
-        $allExistingFiles = Collection::make(Storage::cloud()->files('tickets'));
+        $allExistingFiles = Collection::make($this->disk->allFiles(Enrollment::PDF_TICKET_DIR));
 
         $this->line('Loading all enrollments...');
         $allEnrollments = Enrollment::query()
@@ -52,41 +59,81 @@ class UpdateEnrollmentPdfs extends Command
             // Ensure all relations are set
             ->has('ticket')
             ->has('user')
-            ->whereHas('activity', fn (Builder $query) => $query->where('end_date', '>', Date::today()->subMonth()))
+            ->whereHas('activity', fn (Builder $query) => $query->where('end_date', '>', Date::today()->subYear()))
 
             // Fetch!
-            ->get(['id']);
+            ->get(['id', 'user_id']);
 
-        $allExpectedFiles = $allEnrollments->map(fn (Enrollment $enrollment) => $enrollment->pdf_path)->values();
+        $allExpectedFiles = $allEnrollments->pluck('pdf_path')->values();
 
-        $this->line('Removing expired tickets...');
+        $this->cleanupExistingFiles($allExistingFiles, $allExpectedFiles);
+
+        $this->createOrUpdateTickets($allEnrollments, $allExistingFiles);
+
+        return self::SUCCESS;
+    }
+
+    private function cleanupExistingFiles(Collection $allExistingFiles, Collection $allExpectedFiles): void
+    {
+        if ($allExistingFiles->isEmpty()) {
+            $this->line('No expired tickets to remove');
+
+            return;
+        }
+
+        $progress = new Progress('Removing expired tickets...', $allExistingFiles);
+        $progress->start();
+
         foreach ($allExistingFiles as $ticketFile) {
             if (! $allExpectedFiles->contains($ticketFile)) {
                 $this->line("Deleting <info>{$ticketFile}</>", null, OutputInterface::VERBOSITY_VERBOSE);
-                Storage::cloud()->delete($ticketFile);
+                $this->disk->delete($ticketFile);
             }
+
+            $progress->advance();
         }
 
-        $this->line('Creating missing tickets...');
+        $progress->finish();
+    }
+
+    private function createOrUpdateTickets(Collection $allEnrollments, Collection $allExistingFiles): void
+    {
+        if ($allEnrollments->isEmpty()) {
+            $this->line('No enrollments to check');
+
+            return;
+        }
+
+        $this->line("{$allExistingFiles->count()} bestaat al");
+
+        $progress = new Progress('Creating missing tickets...', $allEnrollments);
+        $progress->start();
+
         foreach ($allEnrollments as $enrollment) {
-            if ($this->option('force') == true || ! $allExistingFiles->contains($enrollment->pdf_path)) {
-                $this->line("Requesting <info>{$enrollment->pdf_path}</>", null, OutputInterface::VERBOSITY_VERBOSE);
+            if (! $this->option('force') && $allExistingFiles->contains($enrollment->pdf_path)) {
+                $progress->advance();
 
-                try {
-                    CreateEnrollmentTicketPdf::dispatch(
-                        Enrollment::find($enrollment->id),
-                    );
-                    $this->line('Generated OK', null, OutputInterface::VERBOSITY_VERY_VERBOSE);
-                } catch (Exception $exception) {
-                    $this->line("<error>FAIL</>: Generation for <info>{$enrollment->id}</> ({$enrollment->user?->name} at {$enrollment->activity?->name}) failed:");
-                    $this->line("      {$exception->getMessage()}");
-                    $this->line("      {$exception->getFile()}:{$exception->getLine()}");
-                }
+                continue;
             }
+
+            $this->line("Requesting <info>{$enrollment->pdf_path}</>", null, OutputInterface::VERBOSITY_VERBOSE);
+
+            try {
+                CreateEnrollmentTicketPdf::dispatch(
+                    Enrollment::find($enrollment->id),
+                );
+                $this->line('Generated OK', null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+            } catch (Exception $exception) {
+                $this->line("<error>FAIL</>: Generation for <info>{$enrollment->id}</> ({$enrollment->user?->name} at {$enrollment->activity?->name}) failed:");
+                $this->line("      {$exception->getMessage()}");
+                $this->line("      {$exception->getFile()}:{$exception->getLine()}");
+            }
+
+            $progress->advance();
         }
+
+        $progress->finish();
 
         $this->info('All tickets updated!');
-
-        return Command::SUCCESS;
     }
 }

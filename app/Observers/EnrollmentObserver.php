@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Jobs\Enrollments\CreateEnrollmentTicketPdf;
 use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
@@ -32,6 +33,10 @@ class EnrollmentObserver
         if ($isStable) {
             if ($enrollment->expire !== null) {
                 $enrollment->expire = null;
+            }
+
+            if (! $enrollment->pdfExists()) {
+                CreateEnrollmentTicketPdf::dispatch($enrollment);
             }
 
             return;
