@@ -46,6 +46,10 @@ class CreateEnrollmentTicketPdf implements ShouldQueue
             'user',
         ]);
 
+        // Check validity before rendering.
+        if (! $enrollment->activity || !$enrollment->ticket || !$enrollment->user)
+            return;
+
         Pdf::view('pdf.ticket', [
             'enrollment' => $enrollment,
             'ticket' => $enrollment->ticket,

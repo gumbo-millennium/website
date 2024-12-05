@@ -35,10 +35,6 @@ class EnrollmentObserver
                 $enrollment->expire = null;
             }
 
-            if (! $enrollment->pdfExists()) {
-                CreateEnrollmentTicketPdf::dispatch($enrollment);
-            }
-
             return;
         }
 
@@ -47,10 +43,13 @@ class EnrollmentObserver
     }
 
     /**
-     * Make sure the Google Wallet integration works properly.
+     * Update some models when the enrollment is saved.
      */
     public function saved(Enrollment $enrollment): void
     {
         UpdateGoogleWalletResource::dispatch($enrollment);
+
+        if ($enrollment->is_stable && ! $enrollment->pdfExists())
+                CreateEnrollmentTicketPdf::dispatch($enrollment);
     }
 }
