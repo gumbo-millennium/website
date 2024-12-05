@@ -249,6 +249,14 @@ return [
     ],
 
     /**
+     * Export settings.
+     */
+    'exports' => [
+        'disk' => env('GUMBO_EXPORT_DISK', 'local'),
+        'path' => env('GUMBO_EXPORT_PATH', 'exports/private'),
+    ],
+
+    /**
      * Feature flags.
      */
     'features' => [
