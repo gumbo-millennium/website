@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Payments;
 
 use App\Casts\MoneyCast;
-use App\Models\Enrollment;
 use App\Models\Payment;
-use App\Models\Shop\Order;
-use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,16 +17,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $mollie_id
  * @property null|string $reference
  * @property string $status
- * @property Money $amount
+ * @property \Brick\Money\Money $amount
+ * @property \Brick\Money\Money $fees
+ * @property \Illuminate\Support\Collection $missing_payments
+ * @property \Illuminate\Support\Collection $missing_refunds
  * @property null|string $export_path
- * @property Collection $missing_payments
- * @property Collection $missing_refunds
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $settled_at
- * @property-read Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
- * @property-read \Illuminate\Database\Eloquent\Collection|Order[] $shopOrder
- * @method static \Database\Factories\Payments\SettlementFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Payment> $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Payment> $refunds
  * @method static \Illuminate\Database\Eloquent\Builder|Settlement newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Settlement newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Settlement query()

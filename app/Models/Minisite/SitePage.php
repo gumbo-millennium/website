@@ -25,7 +25,7 @@ use Illuminate\Support\HtmlString;
  * @property string $title
  * @property string $slug
  * @property bool $visible
- * @property null|null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
  * @property null|string $cover
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
@@ -39,7 +39,7 @@ use Illuminate\Support\HtmlString;
  * @property-read string $url
  * @property-read \App\Models\Minisite\Site $site
  * @property-read null|\App\Models\User $updated_by
- * @method static \Database\Factories\Minisite\SitePageFactory factory(...$parameters)
+ * @method static \Database\Factories\Minisite\SitePageFactory factory($count = null, $state = [])
  * @method static Builder|SitePage findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|SitePage newModelQuery()
  * @method static Builder|SitePage newQuery()

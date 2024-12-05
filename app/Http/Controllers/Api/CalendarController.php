@@ -264,12 +264,12 @@ class CalendarController extends Controller
         $description = $this->createCleanBodyText($activity);
         if ($activity->start_date->diffInDays($endDate) > 3) {
             $description = <<<DOC
-                Dit evenement eindigt op {$endDate->format('d-m-Y')} om {$endDate->format('H:i')}.
+                    Dit evenement eindigt op {$endDate->format('d-m-Y')} om {$endDate->format('H:i')}.
 
-                -----
+                    -----
 
-                {$description}
-            DOC;
+                    {$description}
+                DOC;
             $endDate = $activity->start_date->addDays(3)->endOfDay();
         }
 

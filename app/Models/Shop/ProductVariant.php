@@ -43,18 +43,18 @@ use Illuminate\Support\HtmlString;
  * @property-read string $url
  * @property-read Image $valid_image
  * @property-read string $valid_image_url
- * @property-read \App\Models\Shop\Order[]|\Illuminate\Database\Eloquent\Collection $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shop\Order> $orders
  * @property-read \App\Models\Shop\Product $product
- * @method static \Database\Factories\Shop\ProductVariantFactory factory(...$parameters)
+ * @method static \Database\Factories\Shop\ProductVariantFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|ProductVariant newModelQuery()
  * @method static Builder|ProductVariant newQuery()
- * @method static \Illuminate\Database\Query\Builder|ProductVariant onlyTrashed()
+ * @method static Builder|ProductVariant onlyTrashed()
  * @method static Builder|ProductVariant query()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
- * @method static \Illuminate\Database\Query\Builder|ProductVariant withTrashed()
+ * @method static Builder|ProductVariant withTrashed()
  * @method static Builder|ProductVariant withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
- * @method static \Illuminate\Database\Query\Builder|ProductVariant withoutTrashed()
+ * @method static Builder|ProductVariant withoutTrashed()
  * @mixin \Eloquent
  */
 class ProductVariant extends SluggableModel

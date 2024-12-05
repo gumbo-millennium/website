@@ -27,14 +27,14 @@ use Illuminate\Support\Facades\Date;
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property-read string $file_name
  * @property-read bool $is_expired
- * @property-read \App\Models\User $user
- * @method static \Database\Factories\DataExportFactory factory(...$parameters)
+ * @property-read null|\App\Models\User $user
+ * @method static \Database\Factories\DataExportFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport newQuery()
- * @method static \Illuminate\Database\Query\Builder|DataExport onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|DataExport onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|DataExport query()
- * @method static \Illuminate\Database\Query\Builder|DataExport withTrashed()
- * @method static \Illuminate\Database\Query\Builder|DataExport withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|DataExport withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|DataExport withoutTrashed()
  * @mixin \Eloquent
  */
 class DataExport extends Model

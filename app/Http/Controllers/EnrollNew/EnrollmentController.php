@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\EnrollNew;
 
 use App\Facades\Enroll;
-use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\RequireActiveEnrollment;
 use App\Models\Activity;
@@ -14,9 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EnrollmentController extends Controller
 {

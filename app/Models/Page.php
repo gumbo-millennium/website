@@ -28,7 +28,7 @@ use Illuminate\Support\HtmlString;
  * @property-read null|\App\Models\User $author
  * @property-read null|\Illuminate\Support\HtmlString $html
  * @property-read string $url
- * @method static \Database\Factories\PageFactory factory(...$parameters)
+ * @method static \Database\Factories\PageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Page home()
  * @method static Builder|Page newModelQuery()

@@ -44,8 +44,9 @@ final class Button extends Component
         throw_unless($styleClass, InvalidArgumentException::class, "Button style {$this->style} not found");
 
         $cssClass = [$sizeClass, $styleClass];
-        if ($this->withIcon)
+        if ($this->withIcon) {
             $cssClass[] = 'gap-x-2';
+        }
 
         if (in_array($this->type, ['button', 'submit', 'reset'], true)) {
             return fn (array $data) => sprintf(

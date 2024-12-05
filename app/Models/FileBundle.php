@@ -29,12 +29,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property int $total_size
  * @property string $sort_order
  * @property-read null|\App\Models\FileCategory $category
- * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileDownload> $downloads
  * @property-read bool $is_available
  * @property-read null|string $url
- * @property-read \App\Models\Media[]|\Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection $media
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \App\Models\Media> $media
  * @property-read null|\App\Models\User $owner
- * @method static \Database\Factories\FileBundleFactory factory(...$parameters)
+ * @method static \Database\Factories\FileBundleFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|FileBundle newModelQuery()
  * @method static Builder|FileBundle newQuery()

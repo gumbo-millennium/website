@@ -35,11 +35,11 @@ use RuntimeException;
  * @property int $fee
  * @property-read string $payment_status
  * @property-read string $status
- * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
- * @property-read User $user
- * @property-read \App\Models\Shop\ProductVariant[]|\Illuminate\Database\Eloquent\Collection $variants
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
+ * @property-read null|User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shop\ProductVariant> $variants
  * @method static Builder|Order cancelled()
- * @method static \Database\Factories\Shop\OrderFactory factory(...$parameters)
+ * @method static \Database\Factories\Shop\OrderFactory factory($count = null, $state = [])
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
  * @method static Builder|Order paid()

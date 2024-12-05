@@ -37,11 +37,11 @@ use LogicException;
  * @property-read \App\Models\GoogleWallet\EventClass $class
  * @property-read int $active_installations
  * @property-read null|\Illuminate\Database\Eloquent\Model $class_subject
- * @property-read \App\Models\GoogleWallet\Message[]|\Illuminate\Database\Eloquent\Collection $messages
- * @property-read EventObject[]|\Illuminate\Database\Eloquent\Collection $objects
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GoogleWallet\Message> $messages
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, EventObject> $objects
  * @property-read null|User $owner
  * @property-read Eloquent|Model $subject
- * @method static \Database\Factories\GoogleWallet\EventObjectFactory factory(...$parameters)
+ * @method static \Database\Factories\GoogleWallet\EventObjectFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|EventObject forSubject(\Illuminate\Database\Eloquent\Model $subject)
  * @method static \Illuminate\Database\Eloquent\Builder|EventObject newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EventObject newQuery()

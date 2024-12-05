@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace App\Models\Payments;
 
 use App\Casts\MoneyCast;
-use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Metadata of payment settlements.
  *
- * @property int $id
- * @property int $settlement_id
- * @property string $subject_type
- * @property int $subject_id
- * @property Money $amount
+ * @property \Brick\Money\Money $amount
  * @method static \Illuminate\Database\Eloquent\Builder|SettlementSubject newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SettlementSubject newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SettlementSubject query()

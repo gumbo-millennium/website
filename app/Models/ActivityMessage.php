@@ -33,18 +33,18 @@ use Illuminate\Support\LazyCollection;
  * @property-read int $expected_recipients
  * @property-read bool $has_tickets
  * @property-read null|\App\Models\User $sender
- * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
- * @method static \Database\Factories\ActivityMessageFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ticket> $tickets
+ * @method static \Database\Factories\ActivityMessageFactory factory($count = null, $state = [])
  * @method static Builder|ActivityMessage forEnrollment(\App\Models\Enrollment $enrollment)
  * @method static Builder|ActivityMessage newModelQuery()
  * @method static Builder|ActivityMessage newQuery()
- * @method static \Illuminate\Database\Query\Builder|ActivityMessage onlyTrashed()
+ * @method static Builder|ActivityMessage onlyTrashed()
  * @method static Builder|ActivityMessage query()
  * @method static Builder|ActivityMessage sent()
  * @method static Builder|ActivityMessage shouldBeSent()
  * @method static Builder|ActivityMessage unsent()
- * @method static \Illuminate\Database\Query\Builder|ActivityMessage withTrashed()
- * @method static \Illuminate\Database\Query\Builder|ActivityMessage withoutTrashed()
+ * @method static Builder|ActivityMessage withTrashed()
+ * @method static Builder|ActivityMessage withoutTrashed()
  * @mixin \Eloquent
  */
 class ActivityMessage extends Model

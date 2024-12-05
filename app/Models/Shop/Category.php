@@ -27,19 +27,19 @@ use Illuminate\Support\Facades\Vite;
  * @property string $slug
  * @property bool $visible
  * @property array $meta
- * @property-read Image $valid_image
+ * @property-read null|string $valid_image
  * @property-read string $valid_image_url
- * @property-read \App\Models\Shop\Product[]|\Illuminate\Database\Eloquent\Collection $products
- * @method static \Database\Factories\Shop\CategoryFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shop\Product> $products
+ * @method static \Database\Factories\Shop\CategoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
- * @method static \Illuminate\Database\Query\Builder|Category onlyTrashed()
+ * @method static Builder|Category onlyTrashed()
  * @method static Builder|Category query()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
- * @method static \Illuminate\Database\Query\Builder|Category withTrashed()
+ * @method static Builder|Category withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
- * @method static \Illuminate\Database\Query\Builder|Category withoutTrashed()
+ * @method static Builder|Category withoutTrashed()
  * @mixin \Eloquent
  */
 class Category extends SluggableModel

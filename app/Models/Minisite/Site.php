@@ -18,18 +18,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $domain
  * @property string $name
- * @property int $enabled
+ * @property bool $enabled
  * @property null|int $group_id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|int $created_by_id
  * @property null|int $updated_by_id
+ * @property null|int $activity_id
+ * @property-read null|Activity $activity
  * @property-read null|\App\Models\User $created_by
  * @property-read null|Role $group
- * @property-read null|Activity $activity
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Minisite\SitePage> $pages
  * @property-read null|\App\Models\User $updated_by
- * @method static \Database\Factories\Minisite\SiteFactory factory(...$parameters)
+ * @method static \Database\Factories\Minisite\SiteFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Site newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Site newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Site query()

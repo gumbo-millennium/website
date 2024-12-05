@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read null|\App\Models\Webcam\Device $device
  * @property-read bool $is_expired
  * @property-read null|string $path
- * @method static \Database\Factories\Webcam\CameraFactory factory(...$parameters)
+ * @method static \Database\Factories\Webcam\CameraFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static \Illuminate\Database\Eloquent\Builder|Camera newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Camera newQuery()

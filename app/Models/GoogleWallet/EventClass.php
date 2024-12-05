@@ -32,10 +32,10 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property null|string $hero_image
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
- * @property-read \App\Models\GoogleWallet\Message[]|\Illuminate\Database\Eloquent\Collection $messages
- * @property-read \App\Models\GoogleWallet\EventObject[]|\Illuminate\Database\Eloquent\Collection $objects
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GoogleWallet\Message> $messages
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GoogleWallet\EventObject> $objects
  * @property-read Eloquent|Model $subject
- * @method static \Database\Factories\GoogleWallet\EventClassFactory factory(...$parameters)
+ * @method static \Database\Factories\GoogleWallet\EventClassFactory factory($count = null, $state = [])
  * @method static Builder|EventClass forSubject(\Illuminate\Database\Eloquent\Model $subject)
  * @method static Builder|EventClass newModelQuery()
  * @method static Builder|EventClass newQuery()

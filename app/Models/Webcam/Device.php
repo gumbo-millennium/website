@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read null|\App\Models\Webcam\Camera $camera
  * @property-read bool $is_expired
  * @property-read User $owner
- * @method static \Database\Factories\Webcam\DeviceFactory factory(...$parameters)
+ * @method static \Database\Factories\Webcam\DeviceFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Device newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Device newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Device query()

@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
@@ -30,27 +29,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * App\Models\Enrollment.
  *
  * @property int $id
- * @property int $user_id
+ * @property null|string $previous_id
  * @property int $activity_id
  * @property null|int $ticket_id
- * @property null|\Illuminate\Support\Carbon $created_at
- * @property null|\Illuminate\Support\Carbon $updated_at
- * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property int $user_id
  * @property EnrollmentState $state
- * @property null|string $deleted_reason
  * @property null|int $price
  * @property null|int $total_price
- * @property null|string $payment_intent
- * @property null|string $payment_invoice
- * @property null|string $payment_source
  * @property string $user_type
  * @property null|\Illuminate\Support\Carbon $expire
  * @property null|string $transfer_secret
  * @property null|string $barcode
  * @property BarcodeType $barcode_type
  * @property bool $barcode_generated
- * @property null|array $data
+ * @property null|\Illuminate\Support\Carbon $consumed_at
+ * @property null|int $consumed_by_id
+ * @property null|\Illuminate\Support\Collection $data
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property string $name
+ * @property string $email
+ * @property null|string $deleted_reason
  * @property-read \App\Models\Activity $activity
+ * @property-read null|\App\Models\User $consumedBy
  * @property-read null|array $form
  * @property-read mixed $form_data
  * @property-read bool $has_been_paid
@@ -58,26 +60,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read null|bool $is_form_exportable
  * @property-read bool $is_stable
  * @property-read string $payment_status
+ * @property-read string $pdf_disk
  * @property-read string $pdf_path
  * @property-read bool $requires_payment
  * @property-read null|\App\Models\States\Enrollment\State $wanted_state
- * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
  * @property-read null|\App\Models\Ticket $ticket
  * @property-read \App\Models\User $user
  * @method static Builder|Enrollment active()
- * @method static \Database\Factories\EnrollmentFactory factory(...$parameters)
+ * @method static \Database\Factories\EnrollmentFactory factory($count = null, $state = [])
  * @method static Builder|Enrollment forUser(\App\Models\User|int $user)
  * @method static Builder|Enrollment newModelQuery()
  * @method static Builder|Enrollment newQuery()
- * @method static \Illuminate\Database\Query\Builder|Enrollment onlyTrashed()
+ * @method static Builder|Enrollment onlyTrashed()
+ * @method static Builder|Enrollment orWhereNotState(string $column, $states)
+ * @method static Builder|Enrollment orWhereState(string $column, $states)
  * @method static Builder|Enrollment query()
+ * @method static Builder|Enrollment stable()
  * @method static Builder|Enrollment whereCancelled()
  * @method static Builder|Enrollment whereExpired()
  * @method static Builder|Enrollment whereNotState(string $column, $states)
  * @method static Builder|Enrollment wherePaid()
  * @method static Builder|Enrollment whereState(string $column, $states)
- * @method static \Illuminate\Database\Query\Builder|Enrollment withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Enrollment withoutTrashed()
+ * @method static Builder|Enrollment withTrashed()
+ * @method static Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
  */
 class Enrollment extends Model implements Payable

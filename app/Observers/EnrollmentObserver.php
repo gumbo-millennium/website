@@ -49,7 +49,8 @@ class EnrollmentObserver
     {
         UpdateGoogleWalletResource::dispatch($enrollment);
 
-        if ($enrollment->is_stable && ! $enrollment->pdfExists())
-                CreateEnrollmentTicketPdf::dispatch($enrollment);
+        if ($enrollment->is_stable && ! $enrollment->pdfExists()) {
+            CreateEnrollmentTicketPdf::dispatch($enrollment);
+        }
     }
 }

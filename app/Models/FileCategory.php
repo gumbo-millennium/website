@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property null|string $updated_at
  * @property null|string $title
  * @property string $slug
- * @property-read \App\Models\FileBundle[]|\Illuminate\Database\Eloquent\Collection $bundles
- * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
- * @method static \Database\Factories\FileCategoryFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileBundle> $bundles
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileDownload> $downloads
+ * @method static \Database\Factories\FileCategoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|FileCategory newModelQuery()
  * @method static Builder|FileCategory newQuery()

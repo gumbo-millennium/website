@@ -20,20 +20,20 @@ use Illuminate\Support\Facades\Date;
  * @property null|string $insert
  * @property string $last_name
  * @property string $email
- * @property null|array $phone Encrypted phone number
- * @property null|array $date_of_birth Encrypted date of birth, as dd-mm-yyyy
+ * @property null|mixed $phone Encrypted phone number
+ * @property null|\Illuminate\Support\Carbon $date_of_birth Encrypted date of birth, as dd-mm-yyyy
  * @property null|string $gender User supplied gender
- * @property null|array $street Encrypted street name
- * @property null|array $number Encrypted number
- * @property null|array $city Encrypted city
- * @property null|array $postal_code Encrypted zipcode
- * @property null|array $country Encrypted country
+ * @property null|mixed $street Encrypted street name
+ * @property null|mixed $number Encrypted number
+ * @property null|mixed $city Encrypted city
+ * @property null|mixed $postal_code Encrypted zipcode
+ * @property null|mixed $country Encrypted country
  * @property int $windesheim_student
  * @property int $newsletter
  * @property null|int $granted
  * @property null|string $referrer
  * @property-read string $name
- * @method static \Database\Factories\JoinSubmissionFactory factory(...$parameters)
+ * @method static \Database\Factories\JoinSubmissionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|JoinSubmission query()
