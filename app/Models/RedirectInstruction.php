@@ -19,13 +19,13 @@ use Illuminate\Support\Facades\URL;
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
- * @method static \Database\Factories\RedirectInstructionFactory factory(...$parameters)
+ * @method static \Database\Factories\RedirectInstructionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction newQuery()
- * @method static \Illuminate\Database\Query\Builder|RedirectInstruction onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction query()
- * @method static \Illuminate\Database\Query\Builder|RedirectInstruction withTrashed()
- * @method static \Illuminate\Database\Query\Builder|RedirectInstruction withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|RedirectInstruction withoutTrashed()
  * @mixin \Eloquent
  */
 class RedirectInstruction extends Model

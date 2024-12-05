@@ -30,7 +30,7 @@ use Illuminate\Support\Str;
  * @property-read bool $is_expired
  * @property-read bool $is_valid_export
  * @property-read null|\App\Models\User $owner
- * @method static \Database\Factories\FileExportFactory factory(...$parameters)
+ * @method static \Database\Factories\FileExportFactory factory($count = null, $state = [])
  * @method static Builder|FileExport newModelQuery()
  * @method static Builder|FileExport newQuery()
  * @method static Builder|FileExport query()

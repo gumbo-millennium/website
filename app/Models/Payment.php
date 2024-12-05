@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Date;
  * @property-read string $status
  * @property-read Eloquent|Model $payable
  * @property-read null|\App\Models\User $user
- * @method static \Database\Factories\PaymentFactory factory(...$parameters)
+ * @method static \Database\Factories\PaymentFactory factory($count = null, $state = [])
  * @method static Builder|Payment newModelQuery()
  * @method static Builder|Payment newQuery()
  * @method static Builder|Payment pending()

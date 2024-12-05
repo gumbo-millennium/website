@@ -23,23 +23,28 @@ use Illuminate\Support\Facades\Date;
  * @property null|int $price
  * @property null|int $quantity
  * @property bool $is_public
- * @property null|\Illuminate\Support\Carbon $available_from
- * @property null|\Illuminate\Support\Carbon $available_until
- * @property null|\Illuminate\Support\Carbon $created_at
- * @property null|\Illuminate\Support\Carbon $updated_at
- * @property null|string $deleted_at
+ * @property null|Carbon $available_from
+ * @property null|Carbon $available_until
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|Carbon $deleted_at
  * @property-read null|\App\Models\Activity $activity
- * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Enrollment> $enrollments
  * @property-read string $available_range
+ * @property-read null|\Illuminate\Support\Carbon $effectively_available_from
+ * @property-read null|\Illuminate\Support\Carbon $effectively_available_until
  * @property-read bool $is_being_sold
  * @property-read bool $members_only
  * @property-read null|int $quantity_available
  * @property-read int $quantity_sold
  * @property-read null|int $total_price
- * @method static \Database\Factories\TicketFactory factory(...$parameters)
+ * @method static \Database\Factories\TicketFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Ticket query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ticket withoutTrashed()
  * @mixin \Eloquent
  */
 class Ticket extends Model

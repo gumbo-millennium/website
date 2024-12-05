@@ -22,8 +22,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property null|\Illuminate\Support\Carbon $end_time
  * @property int $activity_message_id
  * @property-read ActivityMessage $activityMessage
- * @property-read \App\Models\GoogleWallet\EventClass[]|\Illuminate\Database\Eloquent\Collection $eventClasses
- * @property-read \App\Models\GoogleWallet\EventObject[]|\Illuminate\Database\Eloquent\Collection $eventObjects
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GoogleWallet\EventClass> $eventClasses
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GoogleWallet\EventObject> $eventObjects
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()

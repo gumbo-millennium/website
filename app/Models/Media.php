@@ -30,17 +30,20 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
  * @property null|int $order_column
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
- * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
+ * @property null|array $generated_conversions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileDownload> $downloads
+ * @property-read mixed $extension
  * @property-read null|\App\Models\FileBundle $bundle
- * @property-read string $extension
- * @property-read string $human_readable_size
- * @property-read string $type
+ * @property-read mixed $human_readable_size
  * @property-read Eloquent|\Illuminate\Database\Eloquent\Model $model
- * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|static[] all($columns = ['*'])
- * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection|static[] get($columns = ['*'])
+ * @property-read mixed $original_url
+ * @property-read mixed $preview_url
+ * @property-read mixed $type
+ * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, static> all($columns = ['*'])
+ * @method static \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, static> get($columns = ['*'])
  * @method static \Illuminate\Database\Eloquent\Builder|Media newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Media newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Media ordered()
+ * @method static Builder|Media ordered()
  * @method static \Illuminate\Database\Eloquent\Builder|Media query()
  * @mixin Eloquent
  */

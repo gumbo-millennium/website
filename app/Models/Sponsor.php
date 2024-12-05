@@ -23,33 +23,33 @@ use Illuminate\Support\HtmlString;
  * @property string $slug
  * @property null|string $cover
  * @property string $url URL of sponsor landing page
- * @property null|string $caption
- * @property null|string $contents_title
- * @property null|mixed $contents
  * @property null|\Illuminate\Support\Carbon $starts_at
  * @property null|\Illuminate\Support\Carbon $ends_at
  * @property null|int $has_page
  * @property int $view_count Number of showings
+ * @property null|string $caption
  * @property null|string $logo_gray
  * @property null|string $logo_color
- * @property-read \App\Models\SponsorClick[]|\Illuminate\Database\Eloquent\Collection $clicks
+ * @property null|string $contents_title
+ * @property null|\Advoor\NovaEditorJs\NovaEditorJsData $contents
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SponsorClick> $clicks
  * @property-read mixed $click_count
- * @property-read null|string $content_html
+ * @property-read null|\Illuminate\Support\HtmlString $content_html
  * @property-read bool $is_active
  * @property-read bool $is_classic
  * @property-read null|string $logo_color_url
  * @property-read null|string $logo_gray_url
- * @method static \Database\Factories\SponsorFactory factory(...$parameters)
+ * @method static \Database\Factories\SponsorFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Sponsor newModelQuery()
  * @method static Builder|Sponsor newQuery()
- * @method static \Illuminate\Database\Query\Builder|Sponsor onlyTrashed()
+ * @method static Builder|Sponsor onlyTrashed()
  * @method static Builder|Sponsor query()
  * @method static Builder|Sponsor whereAvailable()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel whereSlug(string $slug)
- * @method static \Illuminate\Database\Query\Builder|Sponsor withTrashed()
+ * @method static Builder|Sponsor withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
- * @method static \Illuminate\Database\Query\Builder|Sponsor withoutTrashed()
+ * @method static Builder|Sponsor withoutTrashed()
  * @mixin \Eloquent
  */
 class Sponsor extends SluggableModel

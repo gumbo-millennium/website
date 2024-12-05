@@ -132,3 +132,7 @@ storage/debugbar
 # PHPUnit
 .phpunit.result.cache
 .phpunit.cache
+
+# Bundled vendor
+vendor-bundled
+!vendor-bundled/*.zip

@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Facades\Enroll;
+use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
-use App\Services\Google\WalletService;
+use App\Models\Enrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TicketController extends Controller
 {
@@ -37,34 +40,48 @@ class TicketController extends Controller
         ]);
     }
 
-    /**
-     * Redirect the user to their personal redeem URL for the given activity.
-     * Only if the conditions allow it.
-     */
-    public function addToWallet(WalletService $walletService, Request $request, Activity $activity): RedirectResponse
+    public function download(Request $request, string $id): StreamedResponse|RedirectResponse
     {
-        $enrollment = Enroll::getEnrollment($activity);
+        /** @var Enrollment $enrollment */
+        $enrollment = Enrollment::query()
+            ->stable()
+            ->whereId($id)
+            ->whereHas('user', fn ($q) => $q->whereId($request->user()->id))
+            ->with('activity')
+            ->firstOrFail();
 
-        if (! $enrollment) {
-            flash()->warning(__(
-                "You're not currently enrolled into :activity.",
-                ['activity' => $activity->name],
-            ));
-
-            return Response::redirectToRoute('account.tickets');
+        if (! $enrollment->pdfExists()) {
+            throw new NotFoundHttpException();
         }
 
-        $jwtUrl = $walletService->getImportUrlForEnrollment($request->user(), $enrollment);
+        $filename = sprintf(
+            'Ticket %s (%d).pdf',
+            Str::of($enrollment->activity->name)
+                ->ascii()
+                ->replace("[\"']", '')
+                ->toString(),
+            $enrollment->id,
+        );
 
-        if ($enrollment->is_stable && $activity->end_date > Date::now() && $jwtUrl) {
-            return Response::redirectTo($jwtUrl);
+        $disk = Storage::disk($enrollment->pdf_disk);
+
+        // Try to use a simple redirect.
+        if ($disk->providesTemporaryUrls()) {
+            return Response::redirectTo(
+                $disk->temporaryUrl(
+                    $enrollment->pdf_path,
+                    Date::now()->addMinutes(5),
+                    [
+                        'ResponseContentType' => 'application/pdf',
+                        'ResponseContentDisposition' => "attachment; filename=\"{$filename}\".pdf",
+                    ],
+                ),
+            );
         }
 
-        flash()->warning(__(
-            "You can't add this ticket for :activity to your Google Wallet.",
-            ['activity' => $activity->name],
-        ));
-
-        return Response::redirectToRoute('account.tickets');
-    }
+        // Otherwise, stream it
+        return $disk->download($enrollment->pdf_path, $filename, [
+            'Cache-Control' => 'no-cache,no-store,must-revalidate',
+        ]);
+    } // penis
 }

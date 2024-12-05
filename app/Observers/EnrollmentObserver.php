@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Jobs\Enrollments\CreateEnrollmentTicketPdf;
 use App\Jobs\GoogleWallet\UpdateGoogleWalletResource;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State as EnrollmentState;
@@ -42,10 +43,14 @@ class EnrollmentObserver
     }
 
     /**
-     * Make sure the Google Wallet integration works properly.
+     * Update some models when the enrollment is saved.
      */
     public function saved(Enrollment $enrollment): void
     {
         UpdateGoogleWalletResource::dispatch($enrollment);
+
+        if ($enrollment->is_stable && ! $enrollment->pdfExists()) {
+            CreateEnrollmentTicketPdf::dispatch($enrollment);
+        }
     }
 }

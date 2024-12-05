@@ -1,62 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=210mm, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
   <title>Ticket voor {{ $activity->name }}</title>
 
-  @if ($showWeb ?? false)
-    @vite('resources/css/app.css')
-  @else
-  <style>
-    {{ Vite::content('resources/css/mail.css') }}
-  </style>
-  @endif
+  @vite('resources/css/app.css')
 </head>
-<body class="p-8 bg-gray-200 min-h-screen">
-  <div class="container flex">
-      <x-pdf.ticket-box>
-        <div class="absolute inset-y-3 right-0 border-r border-gray-400 border-dashed" role="none"></div>
+<body class="bg-white min-h-screen">
+<main>
+  <div class="bg-brand-600 space-y-8 p-8">
+    <div class="mx-16 flex items-center">
+      <img src="{{ Vite::image('images/logo-text-white.svg') }}" class="h-16" alt="Logo Gumbo Millennium"/>
+    </div>
 
-        <img src="{{ Vite::image('images/logo-text-green.svg') }}" class="h-16 mb-4" alt="Logo Gumbo Millennium" />
+    <div class="mx-16">
+      <div class="grid grid-cols-2">
+        <div>
+          <div class="mb-8 space-y-4">
+            <h1 class="font-title text-3xl text-white">{{ $activity->name }}</h1>
+            <h2 class="font-title text-xl text-white">{{ $ticket->title }}</h2>
+          </div>
 
-        <div class="mb-8 space-y-4">
-          <h1 class="font-title font-bold text-4xl">{{ $activity->name }}</h1>
-          <h2 class="font-title font-bold text-3xl text-gray-800">{{ $ticket->title }}</h2>
+          <dl class="flex items-start flex-col">
+            <dt class="font-normal text-white">Naam</dt>
+            <dd class="font-bold text-white text-lg mb-4">{{ $subject->name }}</dd>
+
+            <dt class="font-normal text-white">Prijs</dt>
+            <dd class="font-bold text-white text-lg">{{ Str::price($enrollment->total_price) }}</dd>
+          </dl>
         </div>
 
-        <h3 class="font-bold text-2xl uppercase">{{ $subject->name }}</h3>
+        <div class="flex items-center justify-end">
+          <div class="flex-none rounded-lg bg-white p-8 text-center">
+            <div class="mb-4">
+              @if ($enrollment->has2dBarcode())
+                <img src="{{ Enroll::getBarcodeImage($enrollment) }}" alt="Barcode" height="80">
+              @else
+                <img src="{{ Enroll::getBarcodeImage($enrollment, 400) }}" alt="Barcode" height="200" width="200">
+              @endif
+            </div>
+
+            <data class="text-black font-bold block uppercase font-mono leading-none">
+              {{ $enrollment->barcode }}
+            </data>
+          </div>
+        </div>
       </div>
-      <div class="flex-none rounded-xl bg-white p-8 text-center">
-        <div class="mb-4">
-          @if ($enrollment->has2dBarcode())
-            <img src="{{ Enroll::getBarcodeImage($enrollment) }}" alt="Barcode" height="80">
+    </div>
+  </div>
+
+  <div class="mx-16 mt-16">
+    <div class="grid grid-cols-pdf gap-8">
+
+      <div class="min-h-32 space-y-8">
+        <div>
+          <h2 class="font-title text-lg text-brand-800 mb-4">Omschrijving</h2>
+
+          @if ($activity->ticket_html)
+            {{ $activity->ticket_html }}
           @else
-            <img src="{{ Enroll::getBarcodeImage($enrollment, 400) }}" alt="Barcode" height="200" width="200">
+            <p class="text-gray-700 font-italic">
+              Deze activiteit heeft geen informatie.
+            </p>
           @endif
         </div>
 
-        <data class="font-bold block uppercase font-mono">{{ $enrollment->ticket_code }}</data>
-      </x-pdf.ticket-box>
-    </div>
+        @if ($enrollment->form)
+          <div>
+            <h2 class="font-title text-lg text-brand-800 mb-4">Gegevens aanmelding</h2>
 
-    <div class="container mt-16 w-full flex h-full">
-      <div class="w-7/12 h-full pr-8">
-        <x-pdf.ticket-box class="w-full">
-          {{ $activity->ticket_html }}
-        </x-pdf.ticket-box>
+            <dl class="grid">
+              @foreach($enrollment->form as $key => $value)
+                <dt class="text-sm">{{ $key  }}</dt>
+                <dd class="ml-4 mb-4">{{ $value  }}</dd>
+              @endforeach
+            </dl>
+          </div>
+        @endif
       </div>
-      <div class="w-5/12 space-y-8">
-        <x-pdf.ticket-box class="bg-brand-600 text-white">
-          <x-slot name="title">Persoonsgebonden ticket</x-slot>
 
-          <p class="text-lg">Dit ticket is persoonsgebonden en niet overdraagbaar.</p>
-          <p>Wil je het overdragen? Ga naar gumbo.nu/ticket-overdragen</p>
-        </x-pdf.ticket-box>
+      <div class="space-y-8">
+        <div class="p-8 bg-gray-100 rounded-lg">
+          <h3 class="font-title text-lg text-brand-800 mb-8">Persoonsgebonden ticket</h3>
 
-        <x-pdf.ticket-box>
-          <x-slot name="title">Locatie</x-slot>
+          <p>Dit ticket is persoonsgebonden en niet overdraagbaar.</p>
+          <p class="text-sm">Wil je het overdragen? Ga naar <a href="https://gumbo.nu/ticket-overdragen">gumbo.nu/ticket-overdragen</a>.</p>
+        </div>
+
+        <div class="p-8 bg-gray-100 rounded-lg">
+          <h3 class="font-title text-lg text-brand-800 mb-8">Locatie</h3>
 
           @if (URL::isValidUrl($activity->location_address))
             <p>
@@ -69,14 +104,15 @@
               </a>
             </p>
           @else
-          <address>
-            <strong class="block font-bold text-lg">{{ $activity->location }}</strong>
-            {{ $activity->location_address }}
-          </address>
+            <address>
+              <strong class="block font-bold text-lg">{{ $activity->location }}</strong>
+              {{ $activity->location_address }}
+            </address>
           @endif
-        </x-pdf.ticket-box>
+        </div>
       </div>
     </div>
   </div>
+</main>
 </body>
 </html>

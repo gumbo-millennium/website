@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Jobs\Enrollments;
 
-use App\Helpers\Str;
 use App\Models\Enrollment;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Enums\Format;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class CreateEnrollmentTicketPdf implements ShouldQueue
 {
@@ -47,18 +46,23 @@ class CreateEnrollmentTicketPdf implements ShouldQueue
             'user',
         ]);
 
-        Config::set('dompdf.debugCss', true);
+        // Check validity before rendering.
+        if (! $enrollment->activity || ! $enrollment->ticket || ! $enrollment->user) {
+            return;
+        }
 
-        $pdf = Pdf::loadView('pdf.ticket', [
+        Pdf::view('pdf.ticket', [
             'enrollment' => $enrollment,
             'ticket' => $enrollment->ticket,
             'activity' => $enrollment->activity,
             'subject' => $enrollment->user,
-        ])->addInfo([
-            'Author' => 'Gumbo Millennium',
-            'Title' => sprintf('Ticket voor %s van %s', Str::ascii($enrollment->activity->name), Str::ascii($enrollment->user->name)),
-        ]);
-
-        Storage::cloud()->put($enrollment->pdf_path, $pdf->output());
+        ])
+            ->format(Format::A4)
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot->scale(0.8);
+                $browsershot->pages('1');
+            })
+            ->disk($enrollment->pdf_disk)
+            ->save($enrollment->pdf_path);
     }
 }

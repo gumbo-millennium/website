@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property PhotoReactionType $reaction
  * @property-read \App\Models\Gallery\Photo $photo
  * @property-read null|User $user
- * @method static \Database\Factories\Gallery\PhotoReactionFactory factory(...$parameters)
+ * @method static \Database\Factories\Gallery\PhotoReactionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReaction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReaction query()

@@ -27,7 +27,7 @@ use Illuminate\Support\HtmlString;
  * @property null|int $author_id
  * @property-read null|\App\Models\User $author
  * @property-read null|\Illuminate\Support\HtmlString $html
- * @method static \Database\Factories\NewsItemFactory factory(...$parameters)
+ * @method static \Database\Factories\NewsItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|NewsItem newModelQuery()
  * @method static Builder|NewsItem newQuery()

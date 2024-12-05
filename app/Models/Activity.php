@@ -57,16 +57,19 @@ use Spatie\Permission\Models\Role;
  * @property null|array<\Whitecube\NovaFlexibleContent\Layouts\Layout>|\Whitecube\NovaFlexibleContent\Layouts\Collection $enrollment_questions
  * @property null|int $role_id
  * @property array $features
- * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
+ * @property null|int $created_by_id
+ * @property null|int $updated_by_id
+ * @property-read null|\App\Models\User $created_by
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Enrollment> $enrollments
  * @property-read int $available_seats
  * @property-read null|\Illuminate\Support\HtmlString $description_html
  * @property-read null|int $discount_price
  * @property-read null|int $discounts_available
  * @property-read null|int $effective_seat_limit
- * @property-read bool $enrollment_open
+ * @property-read null|bool $enrollment_open
  * @property-read Collection $expanded_features
  * @property-read \Whitecube\NovaFlexibleContent\Layouts\Collection $flexible_content
- * @property-read null|\App\Contracts\FormLayout[] $form
+ * @property-read null|\App\Models\FormLayout[] $form
  * @property-read null|bool $form_is_medical
  * @property-read string $full_statement
  * @property-read string $human_readable_dates
@@ -82,11 +85,12 @@ use Spatie\Permission\Models\Role;
  * @property-read null|\Illuminate\Support\HtmlString $ticket_html
  * @property-read null|int $total_discount_price
  * @property-read null|int $total_price
- * @property-read \App\Models\ActivityMessage[]|\Illuminate\Database\Eloquent\Collection $messages
- * @property-read \App\Models\Payment[]|\Illuminate\Database\Eloquent\Collection $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ActivityMessage> $messages
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
  * @property-read null|Role $role
- * @property-read \App\Models\Ticket[]|\Illuminate\Database\Eloquent\Collection $tickets
- * @method static \Database\Factories\ActivityFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ticket> $tickets
+ * @property-read null|\App\Models\User $updated_by
+ * @method static \Database\Factories\ActivityFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SluggableModel findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Activity newModelQuery()
  * @method static Builder|Activity newQuery()

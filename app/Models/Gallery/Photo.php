@@ -25,32 +25,33 @@ use Illuminate\Support\Facades\App;
  * @property string $name
  * @property string $path
  * @property null|string $description
- * @property int $width
- * @property int $height
- * @property int $size
+ * @property null|int $width
+ * @property null|int $height
+ * @property null|int $size
  * @property null|string $removal_reason
  * @property null|\Illuminate\Support\Carbon $taken_at
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
  * @property null|\Illuminate\Support\Carbon $deleted_at
+ * @property null|\Illuminate\Support\Collection $exif
  * @property-read \App\Models\Gallery\Album $album
  * @property-read null|string $aspect_ratio
  * @property-read bool $is_visible
- * @property-read null|self $next_photo
- * @property-read null|self $previous_photo
- * @property-read \App\Models\Gallery\PhotoReaction[]|\Illuminate\Database\Eloquent\Collection $reactions
- * @property-read \App\Models\Gallery\PhotoReport[]|\Illuminate\Database\Eloquent\Collection $reports
+ * @property-read null|\static $next_photo
+ * @property-read null|\static $previous_photo
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Gallery\PhotoReaction> $reactions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Gallery\PhotoReport> $reports
  * @property-read null|User $user
  * @method static Builder|Photo editable()
- * @method static \Database\Factories\Gallery\PhotoFactory factory(...$parameters)
+ * @method static \Database\Factories\Gallery\PhotoFactory factory($count = null, $state = [])
  * @method static Builder|Photo newModelQuery()
  * @method static Builder|Photo newQuery()
- * @method static \Illuminate\Database\Query\Builder|Photo onlyTrashed()
+ * @method static Builder|Photo onlyTrashed()
  * @method static Builder|Photo query()
  * @method static Builder|Photo visible()
- * @method static \Illuminate\Database\Query\Builder|Photo withTrashed()
+ * @method static Builder|Photo withTrashed()
  * @method static Builder|Photo withUserInteraction(\App\Models\User $user)
- * @method static \Illuminate\Database\Query\Builder|Photo withoutTrashed()
+ * @method static Builder|Photo withoutTrashed()
  * @mixin \Eloquent
  */
 class Photo extends Model
@@ -131,12 +132,12 @@ class Photo extends Model
         return $this->hasMany(PhotoReport::class);
     }
 
-    public function getPreviousPhotoAttribute(): ?self
+    public function getPreviousPhotoAttribute(): ?static
     {
         return App::make(GalleryService::class)->photoBefore($this);
     }
 
-    public function getNextPhotoAttribute(): ?self
+    public function getNextPhotoAttribute(): ?static
     {
         return App::make(GalleryService::class)->photoAfter($this);
     }

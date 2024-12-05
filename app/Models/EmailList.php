@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property null|string $name
  * @property array $aliases
  * @property array $members
- * @method static \Database\Factories\EmailListFactory factory(...$parameters)
+ * @method static \Database\Factories\EmailListFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|EmailList newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EmailList newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EmailList query()

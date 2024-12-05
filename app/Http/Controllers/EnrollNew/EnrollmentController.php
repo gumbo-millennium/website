@@ -21,7 +21,7 @@ class EnrollmentController extends Controller
     {
         $this->middleware('auth');
 
-        $this->middleware(RequireActiveEnrollment::class)->only(['show']);
+        $this->middleware(RequireActiveEnrollment::class)->only(['show', 'download']);
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Services\Payments\MolliePaymentService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Testing\TestResponse;
+use Spatie\LaravelPdf\Facades\Pdf;
 use Tests\Fixtures\Services\DummyPaymentService;
 use Tests\Traits\RefreshDatabase;
 use Tests\Traits\TestsFlashMessages;
@@ -39,6 +40,8 @@ abstract class TestCase extends BaseTestCase
                 DummyPaymentService::class,
             ],
         ]);
+
+        Pdf::fake();
 
         // Bind response helper
         TestResponse::macro('dumpOnError', function () {

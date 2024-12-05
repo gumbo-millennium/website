@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace App\Models\Payments;
 
 use App\Casts\MoneyCast;
-use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * @property int settlement_id
- * @property int payment_id
- * @property Money amount
- * @property-read Payment payment
- * @property-read Settlement settlement
+ * App\Models\Payments\PaymentSettlement.
+ *
+ * @property \Brick\Money\Money $amount
+ * @property-read null|\App\Models\Payments\Settlement $settlement
+ * @method static \Illuminate\Database\Eloquent\Builder|PaymentSettlement newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PaymentSettlement newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PaymentSettlement query()
+ * @mixin \Eloquent
  */
 class PaymentSettlement extends Pivot
 {

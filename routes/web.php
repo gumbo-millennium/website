@@ -187,14 +187,14 @@ Route::prefix('auth')->middleware([$addCsp(Policy\LoginPolicy::class), 'no-cache
 });
 
 // My account
-Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
+Route::prefix('mijn-account')->name('account.')->middleware(['auth', 'no-cache'])->group(static function () {
     // Home
     Route::get('/', [Account\IndexController::class, 'index'])->name('index');
     Route::post('/request-update', [Account\IndexController::class, 'requestUpdate'])->name('request-update');
 
     // Create basic enrollment
     Route::get('/tickets', [Account\TicketController::class, 'index'])->name('tickets');
-    Route::get('/tickets/wallet/{activity}', [Account\TicketController::class, 'addToWallet'])->name('tickets.wallet');
+    Route::get('/tickets/{id}/download', [Account\TicketController::class, 'download'])->name('tickets.download');
 
     // Urls
     Route::get('/api-tokens', [Account\ApiTokenController::class, 'index'])->name('tokens.index');

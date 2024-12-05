@@ -9,6 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\BotQuoteReaction.
+ *
+ * @property int $id
+ * @property int $quote_id
+ * @property int $user_id
+ * @property null|string $reaction
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property-read \App\Models\BotQuote $quote
+ * @property-read \App\Models\User $user
+ * @method static \Database\Factories\BotQuoteReactionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|BotQuoteReaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BotQuoteReaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BotQuoteReaction query()
+ * @mixin \Eloquent
+ */
 class BotQuoteReaction extends Model
 {
     use HasFactory;

@@ -24,7 +24,7 @@ use Illuminate\Support\HtmlString;
  * @property string $display_name
  * @property string $quote
  * @property null|int $message_id
- * @property null|int $reply_id
+ * @property null|string $reply_id
  * @property-read HtmlString $formatted_quote
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BotQuoteReaction> $reactions
  * @property-read null|\App\Models\User $user

@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|\Illuminate\Support\Carbon $resolved_at
  * @property-read \App\Models\Gallery\Photo $photo
  * @property-read null|User $user
- * @method static \Database\Factories\Gallery\PhotoReportFactory factory(...$parameters)
+ * @method static \Database\Factories\Gallery\PhotoReportFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PhotoReport query()

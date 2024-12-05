@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $driver
  * @property string $driver_id
  * @property null|string $name
- * @property-read \App\Models\User $user
+ * @property-read null|\App\Models\User $user
  * @method static Builder|BotUserLink newModelQuery()
  * @method static Builder|BotUserLink newQuery()
  * @method static Builder|BotUserLink query()

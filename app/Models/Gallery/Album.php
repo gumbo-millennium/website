@@ -34,22 +34,22 @@ use Illuminate\Support\Facades\Request;
  * @property null|\Illuminate\Support\Carbon $editable_from
  * @property null|\Illuminate\Support\Carbon $editable_until
  * @property-read null|Activity $activity
- * @property-read \App\Models\Gallery\Photo[]|\Illuminate\Database\Eloquent\Collection $allPhotos
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Gallery\Photo> $allPhotos
  * @property-read null|\App\Models\Gallery\Photo $cover
  * @property-read null|string $cover_image
- * @property-read \App\Models\Gallery\Photo[]|\Illuminate\Database\Eloquent\Collection $photos
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Gallery\Photo> $photos
  * @property-read null|User $user
- * @method static \Database\Factories\Gallery\AlbumFactory factory(...$parameters)
+ * @method static \Database\Factories\Gallery\AlbumFactory factory($count = null, $state = [])
  * @method static Builder|Album findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static Builder|Album forUser(\App\Models\User $user)
  * @method static Builder|Album newModelQuery()
  * @method static Builder|Album newQuery()
- * @method static \Illuminate\Database\Query\Builder|Album onlyTrashed()
+ * @method static Builder|Album onlyTrashed()
  * @method static Builder|Album query()
  * @method static Builder|Album visible(?\App\Models\User $user = null)
- * @method static \Illuminate\Database\Query\Builder|Album withTrashed()
+ * @method static Builder|Album withTrashed()
  * @method static Builder|Album withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
- * @method static \Illuminate\Database\Query\Builder|Album withoutTrashed()
+ * @method static Builder|Album withoutTrashed()
  * @mixin \Eloquent
  */
 class Album extends Model

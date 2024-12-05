@@ -16,7 +16,24 @@ use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 /**
+ * App\Models\Backup.
+ *
+ * @property int $id
+ * @property null|int $previous_backup_id
  * @property BackupType $type
+ * @property string $disk
+ * @property string $path
+ * @property null|string $failed_reason
+ * @property null|\Illuminate\Support\Carbon $created_at
+ * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $completed_at
+ * @property null|\Illuminate\Support\Carbon $failed_at
+ * @property-read null|Backup $previous
+ * @method static Builder|Backup expired()
+ * @method static Builder|Backup newModelQuery()
+ * @method static Builder|Backup newQuery()
+ * @method static Builder|Backup query()
+ * @mixin \Eloquent
  */
 class Backup extends Model
 {

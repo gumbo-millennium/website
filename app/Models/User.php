@@ -40,34 +40,37 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $password
  * @property null|string $remember_token
  * @property null|string $alias
- * @property \Illuminate\Support\Collection $grants
+ * @property Collection $grants
  * @property null|string $gender
- * @property null|array $address
+ * @property null|Collection $address
  * @property null|string $phone
  * @property bool $locked
- * @property-read \App\Models\Activity[]|\Illuminate\Database\Eloquent\Collection $activities
- * @property-read \App\Models\FileDownload[]|\Illuminate\Database\Eloquent\Collection $downloads
- * @property-read \App\Models\Enrollment[]|\Illuminate\Database\Eloquent\Collection $enrollments
- * @property-read \App\Models\FileBundle[]|\Illuminate\Database\Eloquent\Collection $files
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Activity> $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileDownload> $downloads
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Enrollment> $enrollments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FileBundle> $files
  * @property-read null|\Illuminate\Support\HtmlString $address_string
- * @property-read \App\Models\Collection $hosted_activity_ids
+ * @property-read Collection $hosted_activity_ids
  * @property-read bool $is_member
  * @property-read string $leaderboard_name
  * @property-read null|string $public_name
- * @property-read \App\Models\Activity[]|\Illuminate\Database\Eloquent\Collection $hostedActivities
- * @property-read \Illuminate\Notifications\DatabaseNotification[]|\Illuminate\Notifications\DatabaseNotificationCollection $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|Order[] $orders
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
- * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Activity> $hostedActivities
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
- * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
- * @method static Builder|User permission($permissions)
+ * @method static Builder|User onlyTrashed()
+ * @method static Builder|User permission($permissions, $without = false)
  * @method static Builder|User query()
- * @method static Builder|User role($roles, $guard = null)
- * @method static \Illuminate\Database\Query\Builder|User withTrashed()
- * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
+ * @method static Builder|User role($roles, $guard = null, $without = false)
+ * @method static Builder|User withTrashed()
+ * @method static Builder|User withoutPermission($permissions)
+ * @method static Builder|User withoutRole($roles, $guard = null)
+ * @method static Builder|User withoutTrashed()
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmailContract
