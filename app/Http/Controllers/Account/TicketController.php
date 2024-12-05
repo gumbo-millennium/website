@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Facades\Enroll;
 use App\Helpers\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Enrollment;
-use App\Services\Google\WalletService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -40,37 +38,6 @@ class TicketController extends Controller
         return Response::view('account.tickets', [
             'activities' => $activities,
         ]);
-    }
-
-    /**
-     * Redirect the user to their personal redeem URL for the given activity.
-     * Only if the conditions allow it.
-     */
-    public function addToWallet(WalletService $walletService, Request $request, Activity $activity): RedirectResponse
-    {
-        $enrollment = Enroll::getEnrollment($activity);
-
-        if (! $enrollment) {
-            flash()->warning(__(
-                "You're not currently enrolled into :activity.",
-                ['activity' => $activity->name],
-            ));
-
-            return Response::redirectToRoute('account.tickets');
-        }
-
-        $jwtUrl = $walletService->getImportUrlForEnrollment($request->user(), $enrollment);
-
-        if ($enrollment->is_stable && $activity->end_date > Date::now() && $jwtUrl) {
-            return Response::redirectTo($jwtUrl);
-        }
-
-        flash()->warning(__(
-            "You can't add this ticket for :activity to your Google Wallet.",
-            ['activity' => $activity->name],
-        ));
-
-        return Response::redirectToRoute('account.tickets');
     }
 
     public function download(Request $request, string $id): StreamedResponse|RedirectResponse

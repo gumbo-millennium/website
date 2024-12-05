@@ -56,12 +56,6 @@
                 <x-icon icon="solid/file-arrow-down" />
                 Download PDF
               </x-button>
-              @if ($activity->end_date > now())
-                <x-button with-icon href="{{ route('account.tickets.wallet', $activity) }}" target="_blank" style="night" class="w-full">
-                  <x-icon icon="solid/wallet" />
-                  @lang("Add to Google Wallet")
-                </x-button>
-              @endif
             @elseif ($enrollment->active())
               <x-button href="{{ route('enroll.show', $activity) }}" class="w-full" :disabled="$activity->end_date < now()">
                 Afronden
