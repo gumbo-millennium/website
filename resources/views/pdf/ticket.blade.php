@@ -88,7 +88,7 @@
 
       <div class="space-y-8">
         <x-pdf.box title="Persoonsgebonden ticket" icon="solid/user-lock">
-          <p>Dit ticket is persoonsgebonden en niet overdraagbaar.</p>
+          <p>Dit ticket is persoonsgebonden.</p>
           <p class="text-sm">Wil je het overdragen? Ga naar <a href="https://gumbo.nu/ticket-overdragen">gumbo.nu/ticket-overdragen</a>.</p>
         </x-pdf.box>
 
