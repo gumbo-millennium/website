@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Progress;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +26,8 @@ class UpdateEnrollmentPdfs extends Command
     protected $signature = <<<'CMD'
         gumbo:update-ticket-pdfs
             {--force : Update all existing tickets too}
+            {--recent : Only update upcoming tickets}
+            {--sync : Run in sync, not using the queue}
         CMD;
 
     /**
@@ -54,7 +57,11 @@ class UpdateEnrollmentPdfs extends Command
 
         $allExpectedFiles = $allEnrollments->pluck('pdf_path')->values();
 
-        $this->cleanupExistingFiles($allExistingFiles, $allExpectedFiles);
+        if ($this->option('recent')) {
+            $this->line('Not cleaning up, scope is narrowed down', null, OutputInterface::VERBOSITY_NORMAL);
+        } else {
+            $this->cleanupExistingFiles($allExistingFiles, $allExpectedFiles);
+        }
 
         $this->createOrUpdateTickets($allEnrollments, $allExistingFiles);
 
@@ -69,6 +76,15 @@ class UpdateEnrollmentPdfs extends Command
         return Enrollment::query()
             // Only create confirmed tickets
             ->whereState('state', [EnrollmentState\Paid::class, EnrollmentState\Confirmed::class])
+
+            // Timebox, if requested
+            ->when(
+                $this->option('recent'),
+                fn ($q) => $q->whereHas(
+                    'activity',
+                    fn ($q2) => $q2->where('end_date', '>', Date::now()),
+                ),
+            )
 
             // Ensure all relations are set
             ->has('ticket')
@@ -136,6 +152,14 @@ class UpdateEnrollmentPdfs extends Command
             return;
         }
 
+        if (! $this->option('sync')) {
+            $this->withProgressBar($ticketsToCreate, fn ($enrollment) => CreateEnrollmentTicketPdf::dispatch(Enrollment::find($enrollment->id)));
+
+            $this->info('Ticket updates queued');
+
+            return;
+        }
+
         $progress = new Progress('Creating missing tickets...', $ticketsToCreate);
         $progress->start();
 
@@ -143,7 +167,7 @@ class UpdateEnrollmentPdfs extends Command
             $this->line("Requesting <info>{$enrollment->pdf_path}</>", null, OutputInterface::VERBOSITY_VERBOSE);
 
             try {
-                CreateEnrollmentTicketPdf::dispatch(
+                CreateEnrollmentTicketPdf::dispatchSync(
                     Enrollment::find($enrollment->id),
                 );
                 $this->line('Generated OK', null, OutputInterface::VERBOSITY_VERY_VERBOSE);

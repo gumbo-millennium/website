@@ -1,3 +1,10 @@
+<?php
+$cost = $enrollment->total_price;
+$trxCost = null;
+if ($cost != null) {
+    $trxCost = sprintf('Incl. %s transactiekosten', Str::price($enrollment->total_price - $enrollment->price));
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,16 +28,21 @@
         <div>
           <div class="mb-8 space-y-4">
             <h1 class="font-title text-3xl text-white">{{ $activity->name }}</h1>
-            <h2 class="font-title text-xl text-white">{{ $ticket->title }}</h2>
           </div>
 
-          <dl class="flex items-start flex-col">
-            <dt class="font-normal text-white">Naam</dt>
-            <dd class="font-bold text-white text-lg mb-4">{{ $subject->name }}</dd>
+          <x-pdf.stat
+            icon="solid/ticket"
+            :title="$ticket->title" />
 
-            <dt class="font-normal text-white">Prijs</dt>
-            <dd class="font-bold text-white text-lg">{{ Str::price($enrollment->total_price) ?? "Gratis" }}</dd>
-          </dl>
+          <x-pdf.stat
+            icon="solid/user"
+            :title="$subject->name"
+            :label="$subject->email" />
+
+          <x-pdf.stat
+            icon="solid/coins"
+            :title="Str::price($cost) ?? 'Gratis'"
+            :label="$trxCost" />
         </div>
 
         <div class="flex items-center justify-end">
@@ -73,14 +85,14 @@
             ->add(['Naam', $subject->name])
             ->add(['E-mailadres', $subject->email])
             ->concat(collect($enrollment->form)->map(fn ($x, $y) => [$y, $x]));
-        ?>
+?>
         <div>
           <h2 class="font-title text-lg text-brand-800 mb-4">Gegevens aanmelding</h2>
 
           <dl class="grid">
             @foreach($props as [$key, $value])
-              <dt class="text-sm">{{ $key  }}</dt>
-              <dd class="ml-4 mb-4">{{ $value  }}</dd>
+              <dt class="text-sm">{{ $key }}</dt>
+              <dd class="ml-4 mb-4">{{ $value }}</dd>
             @endforeach
           </dl>
         </div>
@@ -92,16 +104,16 @@
           <p class="text-sm">Wil je het overdragen? Ga naar <a href="https://gumbo.nu/ticket-overdragen">gumbo.nu/ticket-overdragen</a>.</p>
         </x-pdf.box>
 
-        <x-pdf.box title="Datum en tijd" icon="solid/clock">
+        <x-pdf.box title="Aanvang" icon="solid/clock">
           <p>
-            Je wordt verwacht op <strong>{{ $activity->start_date->isoFormat('D MMM YYYY') }}</strong>
-            om <strong>{{ $activity->start_date->isoFormat('HH:mm') }}</strong>.
+            {{ $activity->start_date->isoFormat('DD-MM-YYYY') }}
+            om {{ $activity->start_date->isoFormat('HH:mm') }}.
           </p>
-          <p class="text-sm">
+          <p class="text-sm text-gray-700">
             @if ($activity->start_date->diffInDays($activity->end_date) > 1)
-              De verwachte einddatum is {{ $activity->end_date->isoFormat('D MMM, \o\m HH:mm') }}
+              Verwachte einddatum: {{ $activity->end_date->isoFormat('D MMM, HH:mm') }}
             @else
-              De verwachte eindtijd is {{ $activity->end_date->isoFormat('HH:mm') }}
+              Verwachte eindtijd: {{ $activity->end_date->isoFormat('HH:mm') }}
             @endif
           </p>
         </x-pdf.box>

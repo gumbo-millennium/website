@@ -3,7 +3,7 @@
   'icon' => null
 ])
 
-<div class="p-8 bg-gray-100 rounded-lg relative overflow-hidden">
+<div class="p-8 border border-gray-300 rounded-lg relative overflow-hidden">
   @if($icon)
     <div class="absolute -bottom-4 -right-4 w-32 flex text-left">
       <x-icon class="h-32 max-w-32 text-gray-200" :icon="$icon"/>
