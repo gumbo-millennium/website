@@ -9,10 +9,8 @@ use App\Models\Enrollment;
 use App\Models\States\Enrollment as EnrollmentState;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Prompts\Progress;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,17 +50,7 @@ class UpdateEnrollmentPdfs extends Command
         $allExistingFiles = Collection::make($this->disk->allFiles(Enrollment::PDF_TICKET_DIR));
 
         $this->line('Loading all enrollments...');
-        $allEnrollments = Enrollment::query()
-            // Only create confirmed tickets
-            ->whereState('state', [EnrollmentState\Paid::class, EnrollmentState\Confirmed::class])
-
-            // Ensure all relations are set
-            ->has('ticket')
-            ->has('user')
-            ->whereHas('activity', fn (Builder $query) => $query->where('end_date', '>', Date::today()->subYear()))
-
-            // Fetch!
-            ->get(['id', 'user_id']);
+        $allEnrollments = $this->getEnrollments();
 
         $allExpectedFiles = $allEnrollments->pluck('pdf_path')->values();
 
@@ -73,25 +61,55 @@ class UpdateEnrollmentPdfs extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * Select eligible tickets.
+     */
+    private function getEnrollments(): Collection
+    {
+        return Enrollment::query()
+            // Only create confirmed tickets
+            ->whereState('state', [EnrollmentState\Paid::class, EnrollmentState\Confirmed::class])
+
+            // Ensure all relations are set
+            ->has('ticket')
+            ->has('user')
+            ->has('activity')
+
+            // Fetch all data required for pdf_path generation
+            ->get(['id', 'user_id']);
+    }
+
+    /**
+     * Remove files we don't need.
+     */
     private function cleanupExistingFiles(Collection $allExistingFiles, Collection $allExpectedFiles): void
     {
         if ($allExistingFiles->isEmpty()) {
-            $this->line('No expired tickets to remove');
+            $this->line('No tickets exist yet.');
 
             return;
         }
 
-        $progress = new Progress('Removing expired tickets...', $allExistingFiles);
+        $ticketsToRemove = collect($allExistingFiles)
+            ->reject(fn ($row) => $allExpectedFiles->contains($row));
+
+        if ($ticketsToRemove->isEmpty()) {
+            $this->line('No tickets to remove.');
+
+            return;
+        }
+
+        $progress = new Progress('Removing tickets...', $ticketsToRemove);
         $progress->start();
 
-        foreach ($allExistingFiles as $ticketFile) {
-            if (! $allExpectedFiles->contains($ticketFile)) {
-                $this->line("Deleting <info>{$ticketFile}</>", null, OutputInterface::VERBOSITY_VERBOSE);
-                $this->disk->delete($ticketFile);
-            }
+        $ticketsToRemove->chunk(10)
+            ->each(function ($files) use ($progress) {
+                $files->each(fn ($file) => $this->line("Deleting <info>{$file}</>", null, OutputInterface::VERBOSITY_VERBOSE));
 
-            $progress->advance();
-        }
+                $this->disk->delete($files);
+
+                $progress->advance($files->count());
+            });
 
         $progress->finish();
     }
@@ -104,18 +122,24 @@ class UpdateEnrollmentPdfs extends Command
             return;
         }
 
-        $this->line("{$allExistingFiles->count()} bestaat al");
+        $ticketsToCreate = $allEnrollments;
+        if ($this->option('force')) {
+            $this->line('<fg=red>--force given, recreating everything</>');
+        } else {
+            $ticketsToCreate = $ticketsToCreate
+                ->reject(fn ($enrollment) => $allExistingFiles->contains($enrollment->pdf_path));
+        }
 
-        $progress = new Progress('Creating missing tickets...', $allEnrollments);
+        if ($ticketsToCreate->isEmpty()) {
+            $this->line('No tickets to create');
+
+            return;
+        }
+
+        $progress = new Progress('Creating missing tickets...', $ticketsToCreate);
         $progress->start();
 
-        foreach ($allEnrollments as $enrollment) {
-            if (! $this->option('force') && $allExistingFiles->contains($enrollment->pdf_path)) {
-                $progress->advance();
-
-                continue;
-            }
-
+        foreach ($ticketsToCreate as $enrollment) {
             $this->line("Requesting <info>{$enrollment->pdf_path}</>", null, OutputInterface::VERBOSITY_VERBOSE);
 
             try {

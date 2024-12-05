@@ -29,7 +29,7 @@
             <dd class="font-bold text-white text-lg mb-4">{{ $subject->name }}</dd>
 
             <dt class="font-normal text-white">Prijs</dt>
-            <dd class="font-bold text-white text-lg">{{ Str::price($enrollment->total_price) }}</dd>
+            <dd class="font-bold text-white text-lg">{{ Str::price($enrollment->total_price) ?? "Gratis" }}</dd>
           </dl>
         </div>
 
@@ -37,9 +37,9 @@
           <div class="flex-none rounded-lg bg-white p-8 text-center">
             <div class="mb-4">
               @if ($enrollment->has2dBarcode())
-                <img src="{{ Enroll::getBarcodeImage($enrollment) }}" alt="Barcode" height="80">
+                <img src="{{ Enroll::getBarcodeImage($enrollment, 80 * 3) }}" alt="Barcode" height="80" class="max-w-full">
               @else
-                <img src="{{ Enroll::getBarcodeImage($enrollment, 400) }}" alt="Barcode" height="200" width="200">
+                <img src="{{ Enroll::getBarcodeImage($enrollment, 200 * 3) }}" alt="Barcode" height="200" width="200">
               @endif
             </div>
 
@@ -68,35 +68,47 @@
           @endif
         </div>
 
-        @if ($enrollment->form)
-          <div>
-            <h2 class="font-title text-lg text-brand-800 mb-4">Gegevens aanmelding</h2>
+        <?php
+        $props = collect()
+            ->add(['Naam', $subject->name])
+            ->add(['E-mailadres', $subject->email])
+            ->concat(collect($enrollment->form)->map(fn ($x, $y) => [$y, $x]));
+        ?>
+        <div>
+          <h2 class="font-title text-lg text-brand-800 mb-4">Gegevens aanmelding</h2>
 
-            <dl class="grid">
-              @foreach($enrollment->form as $key => $value)
-                <dt class="text-sm">{{ $key  }}</dt>
-                <dd class="ml-4 mb-4">{{ $value  }}</dd>
-              @endforeach
-            </dl>
-          </div>
-        @endif
+          <dl class="grid">
+            @foreach($props as [$key, $value])
+              <dt class="text-sm">{{ $key  }}</dt>
+              <dd class="ml-4 mb-4">{{ $value  }}</dd>
+            @endforeach
+          </dl>
+        </div>
       </div>
 
       <div class="space-y-8">
-        <div class="p-8 bg-gray-100 rounded-lg">
-          <h3 class="font-title text-lg text-brand-800 mb-8">Persoonsgebonden ticket</h3>
-
+        <x-pdf.box title="Persoonsgebonden ticket" icon="solid/user-lock">
           <p>Dit ticket is persoonsgebonden en niet overdraagbaar.</p>
           <p class="text-sm">Wil je het overdragen? Ga naar <a href="https://gumbo.nu/ticket-overdragen">gumbo.nu/ticket-overdragen</a>.</p>
-        </div>
+        </x-pdf.box>
 
-        <div class="p-8 bg-gray-100 rounded-lg">
-          <h3 class="font-title text-lg text-brand-800 mb-8">Locatie</h3>
+        <x-pdf.box title="Datum en tijd" icon="solid/clock">
+          <p>
+            Je wordt verwacht op <strong>{{ $activity->start_date->isoFormat('D MMM YYYY') }}</strong>
+            om <strong>{{ $activity->start_date->isoFormat('HH:mm') }}</strong>.
+          </p>
+          <p class="text-sm">
+            @if ($activity->start_date->diffInDays($activity->end_date) > 1)
+              De verwachte einddatum is {{ $activity->end_date->isoFormat('D MMM, \o\m HH:mm') }}
+            @else
+              De verwachte eindtijd is {{ $activity->end_date->isoFormat('HH:mm') }}
+            @endif
+          </p>
+        </x-pdf.box>
 
+        <x-pdf.box title="Locatie" icon="solid/location-pin">
           @if (URL::isValidUrl($activity->location_address))
-            <p>
-              <strong class="block font-bold text-lg">{{ $activity->location }}</strong>
-            </p>
+            <h4 class="block font-bold text-lg">{{ $activity->location }}</h4>
             <p>
               Bekijk online:
               <a href="{{ $activity->location_address }}" target="_blank" class="underline">
@@ -104,12 +116,10 @@
               </a>
             </p>
           @else
-            <address>
-              <strong class="block font-bold text-lg">{{ $activity->location }}</strong>
-              {{ $activity->location_address }}
-            </address>
+            <h4 class="block font-bold text-lg">{{ $activity->location }}</h4>
+            <p>{{ $activity->location_address }}</p>
           @endif
-        </div>
+        </x-pdf.box>
       </div>
     </div>
   </div>
