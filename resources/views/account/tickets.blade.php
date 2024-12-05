@@ -40,12 +40,6 @@
             <p class="mt-3 text-base text-gray-500">{{ $activity->tagline }}</p>
           </div>
 
-          @if(Config::get('gumbo.features.barcodes') && $enrollment->barcode && $enrollment->is_stable)
-            <div class="bg-brand-600 p-6 text-center">
-              <x-enroll.barcode :enrollment="$enrollment"/>
-            </div>
-          @endif
-
           <div class="div p-6 grid grid-cols-1 gap-4">
             @if ($enrollment->is_stable)
               <x-button with-icon href="{{ route('enroll.show', $activity) }}" class="w-full" :disabled="$activity->end_date < now()">
