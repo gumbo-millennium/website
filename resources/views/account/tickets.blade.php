@@ -1,7 +1,7 @@
 <x-account-page title="Mijn tickets">
   <p class="leading-loose mb-2">
-    Hieronder zie je de tickets die in je account zijn gekoppeld. Je kunt ze vanaf hier toevoegen
-    aan Google Wallet, of de barcode bekijken.
+    Hieronder zie je de tickets die in je account zijn gekoppeld.
+    Hier kan je de tickets downloaden of een overzicht inzien.
   </p>
 
   @if ($activities->isEmpty())
