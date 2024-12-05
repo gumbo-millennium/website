@@ -68,31 +68,4 @@ class EnrollmentController extends Controller
             'enrollment' => $enrollment,
         ]);
     }
-
-    public function download(Activity $activity)
-    {
-        if (! $enrollment = Enroll::getEnrollment($activity)) {
-            throw new NotFoundHttpException();
-        }
-
-        if (! $enrollment->is_stable) {
-            throw new NotFoundHttpException();
-        }
-
-        if (! $enrollment->pdfExists()) {
-            throw new NotFoundHttpException();
-        }
-
-        $filename = sprintf(
-            'Ticket %s (%d).pdf',
-            Str::of($activity->name)
-                ->ascii()
-                ->replace("[\"']", '')
-                ->toString(),
-            $enrollment->id,
-        );
-
-        return Storage::disk($enrollment->pdf_disk)
-            ->download($enrollment->pdf_path, $filename);
-    } // penis
 }

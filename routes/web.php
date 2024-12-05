@@ -123,7 +123,6 @@ Route::permanentRedirect('/activiteit', '/activiteiten');
  */
 Route::prefix('activiteiten/{activity}/inschrijven')->name('enroll.')->middleware(['auth', 'no-sponsor'])->group(function () {
     Route::get('/', [EnrollNew\EnrollmentController::class, 'show'])->name('show');
-    Route::get('/download', [EnrollNew\EnrollmentController::class, 'download'])->name('download');
 
     // Create basic enrollment
     Route::get('/ticket', [EnrollNew\TicketController::class, 'create'])->name('create');
@@ -188,13 +187,14 @@ Route::prefix('auth')->middleware([$addCsp(Policy\LoginPolicy::class), 'no-cache
 });
 
 // My account
-Route::prefix('mijn-account')->name('account.')->middleware('auth', 'no-cache')->group(static function () {
+Route::prefix('mijn-account')->name('account.')->middleware(['auth', 'no-cache'])->group(static function () {
     // Home
     Route::get('/', [Account\IndexController::class, 'index'])->name('index');
     Route::post('/request-update', [Account\IndexController::class, 'requestUpdate'])->name('request-update');
 
     // Create basic enrollment
     Route::get('/tickets', [Account\TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/download', [Account\TicketController::class, 'download'])->name('tickets.download');
     Route::get('/tickets/wallet/{activity}', [Account\TicketController::class, 'addToWallet'])->name('tickets.wallet');
 
     // Urls

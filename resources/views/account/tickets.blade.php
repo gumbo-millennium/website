@@ -52,7 +52,7 @@
                 <x-icon icon="solid/circle-info" />
                 Details
               </x-button>
-              <x-button with-icon href="{{ route('enroll.download', $activity) }}" class="w-full" :disabled="$enrollment->pdfExists()">
+              <x-button with-icon href="{{ route('account.tickets.download', $enrollment) }}" class="w-full" :disabled="$enrollment->pdfExists()">
                 <x-icon icon="solid/file-arrow-down" />
                 Download PDF
               </x-button>
