@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\User;
 
-use App\Mail\AccountDeletedMail;
+use App\Mail\Account\AccountDeletedMail;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment\State;
 use App\Models\User;
@@ -32,12 +32,17 @@ class DeleteOldUserJob implements ShouldQueue
         'deny-delete',
     ];
 
+    private ?User $user = null;
+
+    private bool $force = false;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(private User $user, private bool $force = false)
+    public function __construct(?User $user = null, bool $force = false)
     {
-        //
+        $this->user = $user;
+        $this->force = $force;
     }
 
     /**
@@ -67,6 +72,8 @@ class DeleteOldUserJob implements ShouldQueue
             $user->forceDelete();
 
             DB::commit();
+
+            $this->user = null;
         } catch (Throwable $exception) {
             DB::rollBack();
 

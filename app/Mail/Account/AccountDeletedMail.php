@@ -2,27 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\Mail;
+namespace App\Mail\Account;
 
 use App\Models\User;
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class AccountDeletedMail extends Mailable
 {
-    use Queueable;
     use SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(private readonly User $user)
+    public function __construct(public readonly User $user)
     {
         //
+    }
+
+    /**
+     * Get the message headers.
+     */
+    public function headers(): Headers
+    {
+        return new Headers(
+            text: [
+                'Sensitivity' => 'personal',
+                'Language' => 'nl',
+                'Autosubmitted' => 'true',
+            ],
+        );
     }
 
     /**
@@ -45,7 +58,7 @@ class AccountDeletedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.account-deleted-mail',
+            markdown: 'mail.account.deleted',
             with: [
                 'subject' => $this->user,
             ],

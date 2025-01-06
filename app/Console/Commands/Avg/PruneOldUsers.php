@@ -8,6 +8,8 @@ use App\Jobs\User\DeleteOldUserJob;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Queue;
+use Laravel\Prompts\Progress;
 
 class PruneOldUsers extends Command
 {
@@ -30,13 +32,24 @@ class PruneOldUsers extends Command
      */
     public function handle(): void
     {
-        $accountQuery = User::query()
-            ->where('last_seen_at', '<', Date::today()->subyear());
+        $users = User::query()
+            ->withoutGlobalScopes()
+            ->where('last_seen_at', '<', Date::today()->subyear())
+            ->get();
 
-        $this->line("Targetted <info>{$accountQuery->count()}</info> users");
+        $this->line("Targetted <info>{$users->count()}</info> users");
 
-        foreach ($accountQuery->lazy() as $account) {
-            DeleteOldUserJob::dispatch($account);
+        $progress = new Progress('Pruning users', $users);
+        $progress->start();
+
+        foreach ($users as $user) {
+            Queue::push(new DeleteOldUserJob(
+                user: $user,
+            ));
+
+            $progress->advance();
         }
+
+        $progress->finish();
     }
 }

@@ -11,5 +11,5 @@
     <h3 class="mb-1 text-lg font-medium text-gray-900">{{ $title }}</h3>
   @endif
 
-  <p class="text-md text-gray-500">{{ $slot }}</p>
+  <p class="text-md text-gray-900">{{ $slot }}</p>
 </div>
