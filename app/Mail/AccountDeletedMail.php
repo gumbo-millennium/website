@@ -31,8 +31,10 @@ class AccountDeletedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('Gumbo Millennium', 'noreply@gumbo-millennium.nl'),
-            replyTo: new Address('Bestuur Gumbo Millennium', 'bestuur@gumbo-millennium.nl'),
+            from: new Address('noreply@gumbo-millennium.nl', 'Gumbo Millennium'),
+            replyTo: [
+                new Address('bestuur@gumbo-millennium.nl', 'Bestuur Gumbo Millennium'),
+            ],
             subject: 'Gumbo account verwijderd',
         );
     }
@@ -45,7 +47,7 @@ class AccountDeletedMail extends Mailable
         return new Content(
             markdown: 'mail.account-deleted-mail',
             with: [
-                'user' => $this->user,
+                'subject' => $this->user,
             ],
         );
     }

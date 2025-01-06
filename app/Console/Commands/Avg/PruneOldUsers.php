@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Console\Commands\Avg;
 
 use App\Jobs\User\DeleteOldUserJob;
-use App\Jobs\User\NotifyDeletedUserJob;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Date;
 
 class PruneOldUsers extends Command
@@ -30,17 +28,15 @@ class PruneOldUsers extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        $accounts = User::query()
-            ->where('last_seen_at', '<', Date::today()->subyear())
-            ->cursor();
+        $accountQuery = User::query()
+            ->where('last_seen_at', '<', Date::today()->subyear());
 
-        foreach ($accounts as $account) {
-            Bus::chain([
-                new DeleteOldUserJob($account),
-                new NotifyDeletedUserJob($account),
-            ])->dispatch();
+        $this->line("Targetted <info>{$accountQuery->count()}</info> users");
+
+        foreach ($accountQuery->lazy() as $account) {
+            DeleteOldUserJob::dispatch($account);
         }
     }
 }
