@@ -15,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use JsonException;
 use Smalot\PdfParser\Parser as PDFParser;
-use Spatie\MediaLibrary\Filesystem\Filesystem;
+use Spatie\MediaLibrary\MediaCollections\Filesystem;
 use Throwable;
 
 class IndexFileContents implements ShouldQueue
