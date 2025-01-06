@@ -6,7 +6,6 @@ namespace App\Jobs\User;
 
 use App\Mail\Account\AccountDeletedMail;
 use App\Models\Enrollment;
-use App\Models\States\Enrollment\State;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -52,6 +51,8 @@ class DeleteOldUserJob implements ShouldQueue
 
         if (! $this->canBeDeleted()) {
             $this->fail(sprintf('User %s (%d) cannot be deleted', $user->name, $user->id));
+
+            return;
         }
 
         try {
@@ -96,13 +97,12 @@ class DeleteOldUserJob implements ShouldQueue
             return false;
         }
 
-        $hasActiveEnrollments = Enrollment::query()
+        $hasFutureEnrollments = Enrollment::query()
             ->whereHas('user', fn ($q) => $q->where('id', $user->id))
             ->whereHas('activity', fn ($q) => $q->where('end_date', '>', Date::today()))
-            ->whereNotState('state', [State::CANCELLED_STATES])
             ->exists();
 
-        if ($hasActiveEnrollments) {
+        if ($hasFutureEnrollments) {
             return false;
         }
 
