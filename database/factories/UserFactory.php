@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'gender' => $this->faker->randomElement(['Man', 'Vrouw', $this->faker->word, null]),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
+            'last_seen_at' => $this->faker->dateTime,
         ];
     }
 

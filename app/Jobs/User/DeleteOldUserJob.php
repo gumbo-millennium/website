@@ -32,17 +32,14 @@ class DeleteOldUserJob implements ShouldQueue
         'deny-delete',
     ];
 
-    private ?User $user = null;
-
-    private bool $force = false;
+    private ?User $user;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(?User $user = null, bool $force = false)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->force = $force;
     }
 
     /**
@@ -102,10 +99,10 @@ class DeleteOldUserJob implements ShouldQueue
         $hasActiveEnrollments = Enrollment::query()
             ->whereHas('user', fn ($q) => $q->where('id', $user->id))
             ->whereHas('activity', fn ($q) => $q->where('end_date', '>', Date::today()))
-            ->whereState('state', [State::CONFIRMED_STATES])
+            ->whereNotState('state', [State::CANCELLED_STATES])
             ->exists();
 
-        if ($hasActiveEnrollments && ! $this->force) {
+        if ($hasActiveEnrollments) {
             return false;
         }
 

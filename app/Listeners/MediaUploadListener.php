@@ -6,7 +6,7 @@ namespace App\Listeners;
 
 use App\Jobs\IndexFileContents;
 use App\Models\FileBundle;
-use Spatie\MediaLibrary\Events\MediaHasBeenAdded;
+use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAdded;
 
 class MediaUploadListener
 {
