@@ -39,6 +39,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property null|\Illuminate\Support\Carbon $email_verified_at
  * @property string $password
  * @property null|string $remember_token
+ * @property null|\Illuminate\Support\Carbon $last_seen_at
  * @property null|string $alias
  * @property Collection $grants
  * @property null|string $gender
@@ -95,6 +96,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'last_name',
         'email',
         'password',
+        'last_seen_at',
         'alias',
     ];
 
@@ -107,6 +109,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'conscribo_id',
         'password',
         'remember_token',
+        'last_seen_at',
         'phone',
         'address',
         'locked',
@@ -134,6 +137,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'grants' => 'collection',
         'deleted_at' => 'datetime',
         'email_verified_at' => 'datetime',
+        'last_seen_at' => 'datetime',
         'locked' => 'boolean',
     ];
 
