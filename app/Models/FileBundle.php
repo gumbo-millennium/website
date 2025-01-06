@@ -104,12 +104,10 @@ class FileBundle extends SluggableModel implements HasMedia
     public function scopeWhereAvailable(Builder $query): Builder
     {
         // phpcs:ignore SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction
-        return $query->where(static function ($builder) {
-            return $builder
-                ->whereNull('published_at')
-                ->has('media')
-                ->orWhere('published_at', '<', now());
-        });
+        return $query->where(static fn ($builder) => $builder
+            ->whereNull('published_at')
+            ->has('media')
+            ->orWhere('published_at', '<', now()));
     }
 
     /**

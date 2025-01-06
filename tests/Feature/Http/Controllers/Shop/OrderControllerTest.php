@@ -173,14 +173,12 @@ class OrderControllerTest extends TestCase
 
         // Assign variants, mapped as a proper table
         $variantWithAmount = collect($variants)
-            ->mapWithKeys(function (ProductVariant $variant) {
-                return [
-                    $variant->id => [
-                        'price' => $variant->price,
-                        'quantity' => 1,
-                    ],
-                ];
-            });
+            ->mapWithKeys(fn (ProductVariant $variant) => [
+                $variant->id => [
+                    'price' => $variant->price,
+                    'quantity' => 1,
+                ],
+            ]);
 
         $order->variants()->sync($variantWithAmount);
 

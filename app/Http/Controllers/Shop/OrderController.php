@@ -36,10 +36,8 @@ class OrderController extends Controller
                 'variants',
                 'variants.product',
             ])
-            ->where(function (Builder $query) {
-                return $query->where('cancelled_at', '>', Date::now()->subMonth())
-                    ->orWhereNull('cancelled_at');
-            })
+            ->where(fn (Builder $query) => $query->where('cancelled_at', '>', Date::now()->subMonth())
+                ->orWhereNull('cancelled_at'))
             ->orderBy('created_at')
             ->get();
 

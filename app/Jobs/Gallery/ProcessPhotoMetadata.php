@@ -60,7 +60,7 @@ class ProcessPhotoMetadata implements ShouldQueue
 
         try {
             // Handle upon file
-            switch($mime) {
+            switch ($mime) {
                 case 'image/jpeg':
                     $this->figureOutTakenAtDate($photo, $tempFile);
                     // no break

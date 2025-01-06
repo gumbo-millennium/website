@@ -8,7 +8,7 @@ use App\Models\GoogleWallet\EventObject;
 use App\Models\GoogleWallet\Message;
 use Brick\Money\Money;
 use Google\Service\Exception as ServiceException;
-use Google\Service\Walletobjects\EventTicketObject  as EventTicketObject;
+use Google\Service\Walletobjects\EventTicketObject as EventTicketObject;
 use Google\Service\Walletobjects\Resource\Eventticketobject as EventTicketObjectResource;
 use LogicException;
 
@@ -75,21 +75,19 @@ trait HandlesEventObjects
                     'date' => $eventClass->end_time->toIso8601String(),
                 ],
             ],
-            'messages' => $eventObject->messages->map(function (Message $message) {
-                return [
-                    'id' => $message->id,
-                    'header' => $message->header,
-                    'body' => $message->body,
-                    'displayInterval' => [
-                        'start' => [
-                            'date' => $message->start_time->toIso8601String(),
-                        ],
-                        'end' => [
-                            'date' => $message->end_time->toIso8601String(),
-                        ],
+            'messages' => $eventObject->messages->map(fn (Message $message) => [
+                'id' => $message->id,
+                'header' => $message->header,
+                'body' => $message->body,
+                'displayInterval' => [
+                    'start' => [
+                        'date' => $message->start_time->toIso8601String(),
                     ],
-                ];
-            }),
+                    'end' => [
+                        'date' => $message->end_time->toIso8601String(),
+                    ],
+                ],
+            ]),
         ];
     }
 

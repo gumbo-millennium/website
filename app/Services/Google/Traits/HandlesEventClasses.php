@@ -8,7 +8,7 @@ use App\Enums\Models\GoogleWallet\ReviewStatus;
 use App\Models\GoogleWallet\EventClass;
 use Config;
 use Google\Service\Exception as ServiceException;
-use Google\Service\Walletobjects\EventTicketClass  as EventTicketClass;
+use Google\Service\Walletobjects\EventTicketClass as EventTicketClass;
 use Google\Service\Walletobjects\Resource\Eventticketclass as EventTicketClassResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\URL;

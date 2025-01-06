@@ -78,11 +78,9 @@ class Camera extends Resource
                     'unique:webcam_cameras,command,{{resourceId}}',
                 ]),
 
-            Fields\Text::make(__('Webcam Device'), function () {
-                return ($this->device)
+            Fields\Text::make(__('Webcam Device'), fn () => ($this->device)
                     ? (new Device($this->device))->title()
-                    : null;
-            }),
+                    : null),
 
             Fields\Image::make(__('Most recent image'), 'device.path')
                 ->disk(Config::get('gumbo.images.disk'))

@@ -95,11 +95,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Tenor API
-        RateLimiter::for('tenor', function ($job) {
-            return [
-                Limit::perMinute(30),
-            ];
-        });
+        RateLimiter::for('tenor', fn ($job) => [
+            Limit::perMinute(30),
+        ]);
     }
 
     /**

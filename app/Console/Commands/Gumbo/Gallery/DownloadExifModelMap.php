@@ -87,7 +87,7 @@ class DownloadExifModelMap extends Command
         try {
             $service->parseDatabaseFromCsv($databaseStream);
             $this->info('Device map built.');
-        } catch(RuntimeException $exception) {
+        } catch (RuntimeException $exception) {
             $this->error('Failed to parse device map!');
             $this->line($exception->getMessage());
 
