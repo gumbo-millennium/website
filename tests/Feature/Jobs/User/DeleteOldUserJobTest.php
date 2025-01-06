@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\Jobs\User;
 
 use App\Facades\Enroll;
-use App\Jobs\User\DeleteUserJob;
+use App\Jobs\User\DeleteOldUserJob;
 use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 
-class DeleteUserJobTest extends TestCase
+class DeleteOldUserJobTest extends TestCase
 {
     public function test_simple_user_delete(): void
     {
@@ -20,7 +20,7 @@ class DeleteUserJobTest extends TestCase
         $this->assertTrue($user->exists);
         $this->assertFalse($user->trashed());
 
-        DeleteUserJob::dispatch($user);
+        DeleteOldUserJob::dispatch($user);
 
         $user->refresh();
 
@@ -36,7 +36,7 @@ class DeleteUserJobTest extends TestCase
 
         $this->assertFalse($this->getCanBeDeleted($user));
 
-        DeleteUserJob::dispatch($user);
+        DeleteOldUserJob::dispatch($user);
 
         $this->assertFalse($user->refresh()->trashed());
     }
@@ -61,6 +61,6 @@ class DeleteUserJobTest extends TestCase
 
     private function getCanBeDeleted(User $user): bool
     {
-        return App::make(DeleteUserJob::class, [$user])->canBeDeleted();
+        return App::make(DeleteOldUserJob::class, [$user])->canBeDeleted();
     }
 }

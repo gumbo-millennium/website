@@ -31,9 +31,9 @@ class AccountDeletedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: 'noreply@gumbo-millennium.nl',
+            from: new Address('Gumbo Millennium', 'noreply@gumbo-millennium.nl'),
+            replyTo: new Address('Bestuur Gumbo Millennium', 'bestuur@gumbo-millennium.nl'),
             subject: 'Gumbo account verwijderd',
-            replyTo: new Address('bestuur@gumbo-millennium.nl', 'Bestuur Gumbo Millennium'),
         );
     }
 

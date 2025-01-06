@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Avg;
 
-use App\Jobs\User\DeleteUserJob;
+use App\Jobs\User\DeleteOldUserJob;
 use App\Jobs\User\NotifyDeletedUserJob;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -38,7 +38,7 @@ class PruneOldUsers extends Command
 
         foreach ($accounts as $account) {
             Bus::chain([
-                new DeleteUserJob($account),
+                new DeleteOldUserJob($account),
                 new NotifyDeletedUserJob($account),
             ])->dispatch();
         }
