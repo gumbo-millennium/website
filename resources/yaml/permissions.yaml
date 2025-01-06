@@ -61,5 +61,8 @@ impersonate: Inloggen als andere gebruikers
 # Super Admin (only directly)
 super-admin: Super Admin
 
+# Prevent deletion
+deny-delete: Disallow deletion
+
 # Verified e-mails (for UI purposes, not for actual validaton)
 verfied: E-mail geverifiëerd (alleen UI)

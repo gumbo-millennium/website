@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-final class EnrollmentCancellationReason
+enum EnrollmentCancellationReason: string
 {
-    public const TIMEOUT = 'timeout';
-
-    public const USER_REQUEST = 'user-request';
-
-    public const ACTIVITY_CANCELLED = 'activity-cancelled';
-
-    public const ADMIN = 'admin';
+    case TIMEOUT = 'timeout';
+    case USER_REQUEST = 'user-request';
+    case ACTIVITY_CANCELLED = 'activity-cancelled';
+    case ADMIN = 'admin';
+    case DELETION = 'account-deletion';
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\EnrollNew;
 
+use App\Enums\EnrollmentCancellationReason;
 use App\Facades\Enroll;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\RequireActiveEnrollment;
@@ -40,7 +41,7 @@ class CancelController extends Controller
         }
 
         // Cancel enrollment
-        CancelEnrollmentJob::dispatch($enrollment);
+        CancelEnrollmentJob::dispatch($enrollment, EnrollmentCancellationReason::USER_REQUEST);
 
         // Flash message
         flash()->success(__(

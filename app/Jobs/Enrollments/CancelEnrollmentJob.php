@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs\Enrollments;
 
 use App\Enums\EnrollmentCancellationReason;
+use App\Listeners\EnrollmentStateListener;
 use App\Models\Enrollment;
 use App\Models\States\Enrollment as States;
 use Illuminate\Bus\Queueable;
@@ -14,6 +15,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use RuntimeException;
 
+/**
+ * @method static void dispatch(Enrollment $enrollment, null|EnrollmentCancellationReason $reason = null, bool $quiet = false)
+ * @method static void dispatchSync(Enrollment $enrollment, null|EnrollmentCancellationReason $reason = null, bool $quiet = false)
+ */
 class CancelEnrollmentJob implements ShouldQueue
 {
     use Dispatchable;
@@ -21,19 +26,17 @@ class CancelEnrollmentJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private Enrollment $enrollment;
-
-    private bool $adminIssued;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Enrollment $enrollment, bool $adminIssued = false)
-    {
-        $this->enrollment = $enrollment;
-        $this->adminIssued = $adminIssued;
+    public function __construct(
+        private Enrollment $enrollment,
+        private ?EnrollmentCancellationReason $reason = null,
+        private bool $quiet = false,
+    ) {
+        //
     }
 
     /**
@@ -42,7 +45,7 @@ class CancelEnrollmentJob implements ShouldQueue
     public function handle(): void
     {
         $enrollment = $this->enrollment;
-        $adminIssued = $this->adminIssued;
+        $adminIssued = $this->reason == EnrollmentCancellationReason::ADMIN;
 
         // Already cancelled, might be a race condition
         if ($enrollment->state instanceof States\Cancelled) {
@@ -57,11 +60,10 @@ class CancelEnrollmentJob implements ShouldQueue
         }
 
         // Store reason first
-        $enrollment->deleted_reason = $adminIssued
-            ? EnrollmentCancellationReason::ADMIN
-            : EnrollmentCancellationReason::USER_REQUEST;
+        $enrollment->deleted_reason = $this->reason ?? EnrollmentCancellationReason::USER_REQUEST;
 
         // Cancel the enrollment
+        EnrollmentStateListener::setSilenced($this->quiet === true);
         $enrollment->state->transitionTo(States\Cancelled::class);
 
         // Done

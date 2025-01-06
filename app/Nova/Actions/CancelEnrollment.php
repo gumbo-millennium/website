@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Actions;
 
+use App\Enums\EnrollmentCancellationReason;
 use App\Jobs\Enrollments\CancelEnrollmentJob;
 use App\Models\Enrollment;
 use Illuminate\Bus\Queueable;
@@ -35,7 +36,7 @@ class CancelEnrollment extends Action
     {
         $count = 0;
         foreach ($models as $model) {
-            CancelEnrollmentJob::dispatch($model, true);
+            CancelEnrollmentJob::dispatch($model, EnrollmentCancellationReason::ADMIN);
 
             $count++;
         }

@@ -9,15 +9,21 @@ use App\Models\States\Enrollment as States;
 use App\Notifications\EnrollmentCancelled;
 use App\Notifications\EnrollmentConfirmed;
 use App\Notifications\EnrollmentPaid;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Spatie\ModelStates\Events\StateChanged;
 
-class EnrollmentStateListener implements ShouldQueue
+class EnrollmentStateListener
 {
     use InteractsWithQueue;
+
+    private static bool $silenced = false;
+
+    public static function setSilenced(bool $silenced): void
+    {
+        self::$silenced = $silenced;
+    }
 
     /**
      * Handle the event.
@@ -26,6 +32,11 @@ class EnrollmentStateListener implements ShouldQueue
      */
     public function handle(StateChanged $event)
     {
+        // Exit early if silenced.
+        if (self::$silenced) {
+            return;
+        }
+
         // Don't act on enrollments
         if (! $event->model instanceof Enrollment) {
             return;

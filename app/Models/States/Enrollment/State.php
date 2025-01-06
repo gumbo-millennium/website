@@ -31,6 +31,11 @@ abstract class State extends BaseState
         Paid::class,
     ];
 
+    public const CANCELLED_STATES = [
+        Cancelled::class,
+        Refunded::class,
+    ];
+
     /**
      * States that are not eligible for automatic deletion.
      */

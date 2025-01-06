@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\Payments\Payable;
+use App\Enums\EnrollmentCancellationReason;
 use App\Enums\Models\BarcodeType;
 use App\Facades\Enroll;
 use App\Fluent\Payment as PaymentFluent;
@@ -50,7 +51,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|\Illuminate\Support\Carbon $deleted_at
  * @property string $name
  * @property string $email
- * @property null|string $deleted_reason
+ * @property null|EnrollmentCancellationReason $deleted_reason
  * @property-read \App\Models\Activity $activity
  * @property-read null|\App\Models\User $consumedBy
  * @property-read null|array $form
@@ -122,6 +123,7 @@ class Enrollment extends Model implements Payable
         'expire' => 'datetime',
         'consumed_at' => 'datetime',
 
+        'deletion_reason' => EnrollmentCancellationReason::class,
         'state' => EnrollmentState::class,
         'data' => 'encrypted:collection',
         'paid' => 'bool',

@@ -124,6 +124,9 @@ board:
     # Allow managing payments
     - payments-monitor
 
+    # Prevent deletion
+    - deny-delete
+
 # Digital committee
 dc:
   title: Digitale Commissie

@@ -152,7 +152,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     /**
      * Returns downloads the user has performed.
      *
-     * @return BelongsToMany
+     * @return HasMany
      */
     public function downloads(): Relation
     {
@@ -189,6 +189,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     /**
      * Returns the shop orders.
+     * @return HasMany
      */
     public function orders(): Relation
     {
