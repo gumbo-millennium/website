@@ -29,6 +29,7 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
             {chat}
             {--all : Leave all chats}
             {--force : Don\'t ask for verification}
+            {--dry-run : Pretend to leave}
         CMD;
 
     /**
@@ -87,17 +88,13 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
                 TEXT,
         ]);
 
-        $bot->sendMessage([
-            'chat_id' => $chat->id,
-            'message' => "/leave {$chat->id}",
-        ]);
+        if (! $this->option('dry-run')) {
+            Telegram::bot()->leaveChat([
+                'chat_id' => $chat->id,
+            ]);
+        }
 
-        //        Telegram::bot()->leaveChat([
-        //            'chat_id' => $chat->id,
-        //        ]);
-
-        $chat->left_at = now();
-        $chat->save();
+        $chat->update(['left_at' => now()]);
     }
 
     protected function leaveAllChats(TelegramApi $bot): void
