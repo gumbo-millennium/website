@@ -13,7 +13,6 @@ use function Laravel\Prompts\search;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Telegram\Bot\Api as TelegramApi;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 class LeaveChatCommand extends Command implements PromptsForMissingInput
 {
@@ -145,7 +144,8 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
 
         return Chat::query()->where(
             fn ($query) => $query
-                ->where('telegram_id', $chatId)
+                ->where('chat_id', $chatId)
+                ->orWhere('chat_id', "-{$chatId}")
                 ->orWhere('id', $chatId),
         )->first();
     }
