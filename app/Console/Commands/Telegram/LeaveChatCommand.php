@@ -74,12 +74,12 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
         }
 
         $bot->sendAnimation([
-            'chat_id' => $chat->id,
+            'chat_id' => $chat->chat_id,
             'animation' => InputFile::create(resource_path('assets/public/telegram-bot/goodbye-telegram.mp4'), 'goodbye-telegram.mp4'),
         ]);
 
         $bot->sendMessage([
-            'chat_id' => $chat->id,
+            'chat_id' => $chat->chat_id,
             'message' => <<<'TEXT'
                 Het is tijd voor mij om te gaan.
                 Bedankt voor al jullie spam.
@@ -90,7 +90,7 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
 
         if (! $this->option('dry-run')) {
             Telegram::bot()->leaveChat([
-                'chat_id' => $chat->id,
+                'chat_id' => $chat->chat_id,
             ]);
         }
 
