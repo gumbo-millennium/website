@@ -76,11 +76,8 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
         $bot->sendAnimation([
             'chat_id' => $chat->chat_id,
             'animation' => InputFile::create(resource_path('assets/public/telegram-bot/goodbye-telegram.mp4'), 'goodbye-telegram.mp4'),
-        ]);
-
-        $bot->sendMessage([
-            'chat_id' => $chat->chat_id,
-            'text' => <<<'TEXT'
+            'show_caption_above_media' => false,
+            'caption' => <<<'TEXT'
                 Het is tijd voor mij om te gaan.
                 Bedankt voor al jullie spam.
 
