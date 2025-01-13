@@ -86,7 +86,7 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
         ]);
 
         if (! $this->option('dry-run')) {
-            Telegram::bot()->leaveChat([
+            $bot->leaveChat([
                 'chat_id' => $chat->chat_id,
             ]);
         }
