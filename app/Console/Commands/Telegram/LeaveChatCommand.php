@@ -7,6 +7,7 @@ namespace App\Console\Commands\Telegram;
 use App\Models\Telegram\Chat;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Laravel\Prompts\Progress;
 
 use function Laravel\Prompts\search;
 
@@ -97,13 +98,21 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
     protected function leaveAllChats(TelegramApi $bot): void
     {
         $chats = Chat::query()
-            ->whereNull('chat_id')
+            ->whereNotNull('left_at')
             ->whereIn('type', self::LEAVABLE_CHAT_TYPES)
             ->all();
 
+        $progress = new Progress('Leaving chats', $chats->count());
+
         foreach ($chats as $chat) {
             $this->leaveChat($bot, $chat);
+
+            $progress->advance();
+
+            usleep(2_000_000);
         }
+
+        $progress->finish();
     }
 
     /**
