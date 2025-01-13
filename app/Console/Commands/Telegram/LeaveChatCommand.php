@@ -80,7 +80,7 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
 
         $bot->sendMessage([
             'chat_id' => $chat->chat_id,
-            'message' => <<<'TEXT'
+            'text' => <<<'TEXT'
                 Het is tijd voor mij om te gaan.
                 Bedankt voor al jullie spam.
 
