@@ -7,6 +7,7 @@ namespace App\Console\Commands\Telegram;
 use App\Models\Telegram\Chat;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Facades\URL;
 
 use function Laravel\Prompts\search;
 
@@ -73,7 +74,7 @@ class LeaveChatCommand extends Command implements PromptsForMissingInput
 
         $bot->sendAnimation([
             'chat_id' => $chat->id,
-            'animation' => mix('public/telegram-bot/goodbye-telegram.mp4'),
+            'animation' => URL::asset('build/public/telegram-bot/goodbye-telegram.mp4'),
         ]);
 
         $bot->sendMessage([
