@@ -60,6 +60,7 @@ class HandleUpdateJob
 
         // Save the data
         Chat::forChat($chatId)->fill([
+            'left_at' => null,
             'type' => $chatType,
             'name' => Str::limit($chatName, 120),
         ])->save();

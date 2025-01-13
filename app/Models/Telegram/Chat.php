@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property null|\Illuminate\Support\Carbon $created_at
  * @property null|\Illuminate\Support\Carbon $updated_at
+ * @property null|\Illuminate\Support\Carbon $left_at
  * @property string $chat_id
  * @property string $type
  * @property null|string $name
@@ -44,6 +45,7 @@ class Chat extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+        'left_at',
         'chat_id',
         'type',
         'name',
