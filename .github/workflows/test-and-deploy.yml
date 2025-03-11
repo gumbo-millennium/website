@@ -51,19 +51,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install Yaml linter
-        run: pip3 install pyyaml jsonschema-lint
-
       - name: Check for Gumbo Millennium typos
         run: .github/assets/find-typos.sh
 
-      - name: Lint Yaml files
-        run: composer run yamllint
+      - name: Setup jsonschema
+        uses: sourcemeta/jsonschema@v7.0.3
+
+      - name: Lint JSON schema files
+        run: jsonschema metaschema -v resources/json/schemas/*.schema.json
+
+      - name: Lint YAML files
+        run: |
+          jsonschema validate -v resources/json/schemas/scheduled-mails.schema.json resources/assets/yaml/scheduled-mails.yaml
+          jsonschema validate -v resources/json/schemas/menu.schema.json resources/yaml/menu.yaml
+          jsonschema validate -v resources/json/schemas/permissions.schema.json resources/yaml/permissions.yaml
+          jsonschema validate -v resources/json/schemas/redirects.schema.json resources/yaml/redirects.yaml
+          jsonschema validate -v resources/json/schemas/grants.schema.json resources/yaml/grants.yaml
+          jsonschema validate -v resources/json/schemas/roles.schema.json resources/yaml/roles.yaml
 
   lint-phpmd:
     name: Run PHP Mess Detector (Advisory)

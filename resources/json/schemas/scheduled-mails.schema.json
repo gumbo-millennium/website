@@ -6,7 +6,6 @@
     "activities": {
       "description": "A list of emails sent concerning each activity",
       "type": "array",
-      "minItems": 0,
       "items": {
         "type": "object",
         "additionalItems": false,

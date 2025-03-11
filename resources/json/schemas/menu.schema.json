@@ -195,7 +195,6 @@
             "footer": {
               "description": "Secondary menu items, shown with just text in a 2-column grid",
               "type": "array",
-              "minItems": 0,
               "items": {
                 "type": "object",
                 "required": [
