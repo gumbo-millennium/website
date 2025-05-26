@@ -45,7 +45,7 @@
     "pixrem": "^5.0.0",
     "postcss": "^8.5.3",
     "postcss-calc": "^7.0.5",
-    "postcss-css-variables": "^0.18.0",
+    "postcss-custom-properties": "^14.0.4",
     "postcss-import": "^14.1.0",
     "postcss-rem": "^1.1.5",
     "sass-embedded": "^1.85.1",
@@ -60,7 +60,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "format": "eslint resources/js resources/js-build ./*.config.js --fix",
+    "format": "eslint resources/js resources/js-build ./*.config.js ./*.config.cjs --fix",
     "docs:dev": "vuepress dev resources/docs",
     "docs:build": "vuepress build resources/docs",
     "postinstall": "resources/bin/install-icons || true"

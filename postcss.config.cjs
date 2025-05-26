@@ -1,12 +1,12 @@
 /* eslint-disable quote-props */
-const autoprefixer = require( 'autoprefixer')
-const cssnano = require( 'cssnano')
-const pixrem = require( 'pixrem')
-const postcssCalc = require( 'postcss-calc')
-const postcssImport = require( 'postcss-import')
-const postcssRem = require( 'postcss-rem')
-const postcssVariables = require( 'postcss-css-variables')
+const autoprefixer = require('autoprefixer')
+const cssnano = require('cssnano')
+const pixrem = require('pixrem')
+const postcssCalc = require('postcss-calc')
+const postcssImport = require('postcss-import')
+const postcssRem = require('postcss-rem')
 const tailwindcss = require('tailwindcss')
+const postcssCustomProperties = require('postcss-custom-properties')
 
 module.exports = ({ file, options, env }) => {
   const isProduction = env === 'production'
@@ -21,10 +21,10 @@ module.exports = ({ file, options, env }) => {
   ]
 
   // Inline variables if required
-  if (isMail && isProduction) {
+  if (isMail) {
     // Remove dark, variables and convert rem to px
     plugins.splice(plugins.length - 1, 0, [
-      postcssVariables({
+      postcssCustomProperties({
         preserve: false,
       }),
       postcssRem({ convert: 'px' }),

@@ -12,7 +12,7 @@ max_line_length = 80
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{js,jsx,css,scss,yaml,yml,blade.php,vue}]
+[*.{js,jsx,cjs,css,scss,yaml,yml,blade.php,vue}]
 indent_style = space
 indent_size = 2
 
