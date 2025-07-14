@@ -136,3 +136,6 @@ storage/debugbar
 # Bundled vendor
 vendor-bundled
 !vendor-bundled/*.zip
+
+# Editor configs
+.idea/

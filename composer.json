@@ -93,9 +93,6 @@
         }
     },
     "scripts": {
-        "pre-install-cmd": [
-            "cd vendor-bundled && unzip searchable-select.zip"
-        ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -153,57 +150,18 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {
+    "repositories": {
+        "izettle-api": {
             "type": "vcs",
             "url": "https://github.com/gumbo-millennium/izettle-api.git"
         },
-        {
+        "laravel-nova": {
             "type": "composer",
             "url": "https://nova.laravel.com"
         },
-        {
-            "type": "package",
-            "package": {
-                "name": "google/google-apiclient-walletobjects",
-                "version": "v1.20220426",
-                "homepage":"https://developers.google.com/wallet/generic/resources/libraries#php",
-                "dist": {
-                    "url": "./vendor-bundled/google-walletobjects-v1-rev_20220426-php.zip",
-                    "type": "zip"
-                },
-                "require": {
-                    "google/apiclient": "^1.1 | ^2.0"
-                },
-                "autoload": {
-                    "classmap": [
-                        "./"
-                    ]
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "sloveniangooner/searchable-select",
-                "version": "1.3.2",
-                "dist": {
-                    "url": "./vendor-bundled/searchable-select.zip",
-                    "type": "zip"
-                },
-                "autoload": {
-                    "psr-4": {
-                        "Sloveniangooner\\SearchableSelect\\": "src/"
-                    }
-                },
-                "extra": {
-                    "laravel": {
-                        "providers": [
-                            "Sloveniangooner\\SearchableSelect\\FieldServiceProvider"
-                        ]
-                    }
-                }
-            }
+        "vendor-bundled": {
+            "type": "artifact",
+            "url": "./vendor-bundled/"
         }
-    ]
+    }
 }
