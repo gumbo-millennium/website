@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mail\Activity\Guest;
 
 use App\Models\Activity;
+use App\Models\Enrollment;
 use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -56,6 +57,12 @@ class TicketReminder extends Mailable
      */
     public function attachments(): array
     {
+        $enrollment = Enrollment::findActive($this->user, $this->activity);
+
+        if ($enrollment?->pdfExists()) {
+            return [$enrollment];
+        }
+
         return [];
     }
 }
