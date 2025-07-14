@@ -127,6 +127,14 @@
         "test": [
             "vendor/bin/phpunit"
         ],
+        "use-fake-nova": [
+            "git update-index --assume-unchanged composer.json composer.lock",
+            "composer config repositories.laravel-nova artifact ./vendor-proprietary"
+        ],
+        "use-real-nova": [
+            "git update-index --no-assume-unchanged composer.json composer.lock",
+            "composer config repositories.laravel-nova composer https://nova.laravel.com"
+        ],
         "yamllint": [
             "jsonschema metaschema -v resources/json/schemas/*.schema.json",
             "jsonschema validate -v resources/json/schemas/scheduled-mails.schema.json resources/assets/yaml/scheduled-mails.yaml",
