@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Notifications\Activities;
 
 use App\Models\Activity;
+use App\Models\Enrollment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -71,6 +72,11 @@ class ActivityFeatureNotification extends Notification implements ShouldQueue
         $message
             ->line("Als je geen behoefte meer hebt om naar deze activiteit te gaan, kan je je [hier]({$this->getLink()}) uitschijven.")
             ->salutation('Tot snel!');
+
+        $enrollment = Enrollment::findActive($notifiable, $this->activity);
+        if ($enrollment?->pdfExists()) {
+            $message->attach($enrollment);
+        }
 
         return $message;
     }

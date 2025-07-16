@@ -90,7 +90,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Enrollment withoutTrashed()
  * @mixin \Eloquent
  */
-class Enrollment extends Model implements Payable, Attachable
+class Enrollment extends Model implements Attachable, Payable
 {
     use HasFactory;
     use HasPayments;
@@ -507,6 +507,20 @@ class Enrollment extends Model implements Payable, Attachable
         ], true);
     }
 
+    /**
+     * Get the attachable representation of the model.
+     */
+    public function toMailAttachment(): Attachment
+    {
+        if (! $this->pdfExists()) {
+            throw new RuntimeException('No PDF exists for this ticket!');
+        }
+
+        return Attachment::fromStorageDisk($this->pdf_disk, $this->pdf_path)
+            ->as("Ticket {$this->id}.pdf")
+            ->withMime('application/pdf');
+    }
+
     public function __toString()
     {
         $out = "Ticket for {$this->activity->name}, owned by {$this->user->name}";
@@ -519,18 +533,5 @@ class Enrollment extends Model implements Payable, Attachable
         }
 
         return $out;
-    }
-
-    /**
-     * Get the attachable representation of the model.
-     */
-    public function toMailAttachment(): Attachment
-    {
-        if (!$this->pdfExists())
-            throw new RuntimeException("No PDF exists for this ticket!");
-
-        return Attachment::fromStorageDisk($this->pdf_disk, $this->pdf_path)
-            ->as("Ticket {$this->id}.pdf")
-            ->withMime('application/pdf');
     }
 }
