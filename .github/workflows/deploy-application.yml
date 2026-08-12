@@ -74,9 +74,10 @@ jobs:
           echo "    Port ${{ secrets.deploy_port }}" >> ~/.ssh/config
           echo "    User ${{ secrets.deploy_user }}" >> ~/.ssh/config
           echo "    IdentityFile ~/.ssh/github-deploy-key" >> ~/.ssh/config
+          echo "    IdentitiesOnly yes" >> ~/.ssh/config
 
           echo "Installing SSH key"
-          echo "${{ secrets.deploy_ssh_key }}" > ~/.ssh/github-deploy-key
+          printf '%s\n' "${{ secrets.deploy_ssh_key }}" | tr -d '\r' > ~/.ssh/github-deploy-key
           chmod 0700 ~/.ssh
           chmod 0600 ~/.ssh/github-deploy-key ~/.ssh/config
 
