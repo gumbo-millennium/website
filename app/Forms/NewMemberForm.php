@@ -189,6 +189,18 @@ class NewMemberForm extends Form
                 ],
             ]);
 
+        // Honeypot field (spam prevention)
+        $this
+            ->add('website', 'text', [
+                'rules' => 'nullable|honeypot',
+                'attr' => [
+                    'style' => 'display:none;',
+                    'autocomplete' => 'off',
+                    'tabindex' => '-1',
+                    'aria-hidden' => 'true',
+                ],
+            ]);
+
         // Terms
         $this
             ->add('accept-terms', 'checkbox', [

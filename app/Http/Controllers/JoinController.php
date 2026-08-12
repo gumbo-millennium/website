@@ -152,6 +152,18 @@ class JoinController extends Controller
             'intro-ticket' => $introTicket,
         ]);
 
+        // Check honeypot field to prevent spam
+        if ($request->filled('website')) {
+            Log::warning('Honeypot field filled in join form', [
+                'ip' => $request->ip(),
+                'website' => substr($request->input('website'), 0, 50),
+            ]);
+
+            return Redirect::back()
+                ->withInput()
+                ->withErrors('Er is een probleem opgetreden bij het aanmelden. PS. Je hebt een verborgen veld ingevuld, wat niet mag. Als je dit niet expres hebt gedaan, neem dan contact op met het bestuur.');
+        }
+
         // Or automatically redirect on error. This will throw an HttpResponseException with redirect
         $form->redirectIfNotValid();
 
