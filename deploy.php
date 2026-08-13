@@ -44,6 +44,7 @@ task('deploy', [
     'artisan:storage:link',
     'gumbo:down',
     'gumbo:horizon:pause', // Pause the horizon supervisor
+    'gumbo:debug-env',
     'gumbo:migrate', // Run the database migrations
     'artisan:view:cache',
     'artisan:config:cache',

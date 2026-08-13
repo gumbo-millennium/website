@@ -59,3 +59,28 @@ task('gumbo:migrate', [
     'artisan:migrate',
     'artisan:db:seed',
 ]);
+desc('Debug deployment environment');
+task('gumbo:debug-env', function () {
+    run('echo "RELEASE={{release_path}}"');
+    run('ls -la {{release_path}}/.env || true');
+    run('readlink -f {{release_path}}/.env || true');
+    run('ls -la {{deploy_path}}/shared/.env || true');
+});
+desc('Debug deployment environment');
+task('gumbo:debug-env', function () {
+    run('echo "=== RELEASE ==="');
+    run('echo "{{release_path}}"');
+
+    run('echo "=== ENV FILE ==="');
+    run('ls -la {{release_path}}/.env || true');
+    run('readlink -f {{release_path}}/.env || true');
+
+    run('echo "=== SHARED ENV ==="');
+    run('ls -la {{deploy_path}}/shared/.env || true');
+
+    run('echo "=== CONFIG CACHE ==="');
+    run('ls -la {{release_path}}/bootstrap/cache/config.php || true');
+
+    run('echo "=== DATABASE ENV ==="');
+    run('grep -E "^DB_(CONNECTION|HOST|PORT|DATABASE|USERNAME)=" {{release_path}}/.env || true');
+});
