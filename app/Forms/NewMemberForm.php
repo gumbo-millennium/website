@@ -177,6 +177,16 @@ class NewMemberForm extends Form
                         Studeer je aan {$unisAsString}?
                         TEXT,
                 ],
+            ])
+            ->add('is-newsletter', 'checkbox', [
+                'label' => 'Nieuwsbrief',
+                'help_block' => [
+                    'text' => <<<'TEXT'
+                        Als je dat wilt, kan je elke maand de Gumbode ontvangen,
+                        met daarin een samenvatting van de maand, leuke verhaaltjes
+                        en de gekste uitspraken van onze leden.
+                        TEXT,
+                ],
             ]);
 
         // Honeypot field (spam prevention)
