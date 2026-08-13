@@ -243,7 +243,7 @@ jobs:
   deploy-acceptance:
     name: Deploy to acceptance
 
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ false }}
 
     needs:
       - test-backend
@@ -264,14 +264,15 @@ jobs:
   deploy-production:
     name: Deploy to production
 
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.ENABLE_PRODUCTION_DEPLOY == 'true' }}
 
     needs:
-      - deploy-acceptance
+      - test-backend
 
     uses: gumbo-millennium/website/.github/workflows/deploy-application.yml@main
     with:
       environment: production
+      deploy_host: ${{ secrets.DEPLOY_HOST }}
     secrets:
       # Deployer
       deploy_port: ${{ secrets.DEPLOY_PORT }}
