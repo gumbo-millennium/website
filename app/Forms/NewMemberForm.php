@@ -177,7 +177,7 @@ class NewMemberForm extends Form
                         Studeer je aan {$unisAsString}?
                         TEXT,
                 ],
-            ])
+            ]);
 
         // Honeypot field (spam prevention)
         $this
