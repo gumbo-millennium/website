@@ -194,7 +194,7 @@ class NewMemberForm extends Form
             ->add('website', 'text', [
                 'rules' => 'nullable|honeypot',
                 'attr' => [
-                    'style' => 'display:visible;',
+                    'style' => 'display:none;',
                     'autocomplete' => 'off',
                     'tabindex' => '-1',
                     'aria-hidden' => 'true',
