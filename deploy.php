@@ -19,7 +19,7 @@ set('repository', 'https://github.com/gumbo-millennium/website.git');
 set('git_recursive', false);
 
 // Shared files/dirs between deploys, merged with the Laravel recipe
-add('shared_files', []);
+add('shared_files', ['.env']);
 add('shared_dirs', []);
 
 // Writable dirs by web server, merged with the Laravel recipe
