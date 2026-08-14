@@ -192,12 +192,14 @@ class NewMemberForm extends Form
         // Honeypot field (spam prevention)
         $this
             ->add('website', 'text', [
+                'label' => 'Vul hier NIKS in als je geen bot bent',
                 'rules' => 'nullable|honeypot',
                 'attr' => [
-                    'style' => 'display:none;',
+                    'style' => 'display:block; width:100%;',
                     'autocomplete' => 'off',
-                    'tabindex' => '-1',
-                    'aria-hidden' => 'true',
+                    'tabindex' => '0',
+                    'aria-hidden' => 'false',
+                    'placeholder' => 'Vul hier NIKS in als je geen bot bent',
                 ],
             ]);
 
